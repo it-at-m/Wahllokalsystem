@@ -120,19 +120,51 @@ class WahlvorschlaegeRepositoryTest {
 
       val kandidat1Vorschlag1 =
           new Kandidat(
-              null, wahlvorschlag1.getIdentifikator() + "_1", null, "kandidat", 1L, true, 1L, true);
+              null,
+              wahlvorschlag1.getIdentifikator() + "_1",
+              null,
+              "kandidat",
+              1L,
+              true,
+              1L,
+              true,
+              1);
       wahlvorschlag1.addKandidat(kandidat1Vorschlag1);
       val kandidat2Vorschlag1 =
           new Kandidat(
-              null, wahlvorschlag1.getIdentifikator() + "_2", null, "kandidat", 1L, true, 1L, true);
+              null,
+              wahlvorschlag1.getIdentifikator() + "_2",
+              null,
+              "kandidat",
+              1L,
+              true,
+              1L,
+              true,
+              1);
       wahlvorschlag1.addKandidat(kandidat2Vorschlag1);
       val kandidat1Vorschlag2 =
           new Kandidat(
-              null, wahlvorschlag2.getIdentifikator() + "_1", null, "kandidat", 1L, true, 1L, true);
+              null,
+              wahlvorschlag2.getIdentifikator() + "_1",
+              null,
+              "kandidat",
+              1L,
+              true,
+              1L,
+              true,
+              2);
       wahlvorschlag2.addKandidat(kandidat1Vorschlag2);
       val kandidat2Vorschlag2 =
           new Kandidat(
-              null, wahlvorschlag2.getIdentifikator() + "_2", null, "kandidat", 1L, true, 1L, true);
+              null,
+              wahlvorschlag2.getIdentifikator() + "_2",
+              null,
+              "kandidat",
+              1L,
+              true,
+              1L,
+              true,
+              3);
       wahlvorschlag2.addKandidat(kandidat2Vorschlag2);
 
       return wahlvorschlaege;

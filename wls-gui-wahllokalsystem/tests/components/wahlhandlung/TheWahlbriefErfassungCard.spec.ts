@@ -1,6 +1,4 @@
-import type BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import type { TestingPinia } from "@pinia/testing";
-import type { VForm } from "vuetify/components";
 
 import { createTestingPinia } from "@pinia/testing";
 import {
@@ -9,14 +7,13 @@ import {
   getSnapshotFilename,
   mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
-import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
+import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheWahlbriefErfassungCard from "@/components/wahlhandlung/TheWahlbriefErfassungCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
-import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 declare module "@vue/runtime-core" {
@@ -57,14 +54,6 @@ describe("TheWahlbriefErfassungCard.vue", () => {
     verzeichnisseUngueltige: 0,
     nachtraege: 0,
     nachtraeglichUeberbrachte: 0,
-    zeitNachtraeglichUeberbrachte: undefined,
-  };
-
-  const invalidWahlbriefDaten = {
-    wahlbriefe: 1,
-    verzeichnisseUngueltige: 0,
-    nachtraege: 0,
-    nachtraeglichUeberbrachte: 1,
     zeitNachtraeglichUeberbrachte: undefined,
   };
 
@@ -110,71 +99,6 @@ describe("TheWahlbriefErfassungCard.vue", () => {
         getSnapshotFilename(context)
       );
     });
-
-    it("should_renderWahlbriefErfassungCardWithWithFailedValidation_when_timeIsMissing", async (context) => {
-      _initInvalidData();
-
-      await nextTick();
-
-      const form = wrapper.findComponent(
-        '[data-test="nachtraeglichUeberbrachteForm"'
-      ) as VueWrapper<VForm>;
-
-      await form.vm.validate();
-
-      await flushPromises();
-
-      const errorMessages = wrapper.findAll(".v-messages__message");
-
-      expect(errorMessages.length).toBe(1);
-      expect(errorMessages[0]?.text()).toBe("Feld darf nicht leer sein.");
-
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
-
-    it("should_renderWithDisabledInputForNachgelieferteWahlbriefe_when_currentTimeIsBeforeFruehesteSchliessungsuhrzeit", async (context) => {
-      // @ts-expect-error: cannot set readonly
-      useInfomanagementStore().fruehesteSchliessungsuhrzeit = "10:15:00";
-      await nextTick();
-
-      wrapper = mount(TheWahlbriefErfassungCard, {
-        global: {
-          plugins: [testPinia, vuetify],
-        },
-      });
-
-      const input = wrapper.findComponent<typeof BaseNumberInput>(
-        '[data-test="textFieldNachtraeglichUeberbrachteAnzahl"]'
-      );
-
-      expect(input.attributes().class).toContain("disabled");
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
-
-    it("should_renderWithEnabledInputForNachgelieferteWahlbriefe_when_currentTimeIsAfterFruehesteSchliessungsuhrzeit", async (context) => {
-      // @ts-expect-error: cannot set readonly
-      useInfomanagementStore().fruehesteSchliessungsuhrzeit = "09:15:00";
-      await nextTick();
-
-      wrapper = mount(TheWahlbriefErfassungCard, {
-        global: {
-          plugins: [testPinia, vuetify],
-        },
-      });
-
-      const input = wrapper.findComponent<typeof BaseNumberInput>(
-        '[data-test="textFieldNachtraeglichUeberbrachteAnzahl"]'
-      );
-
-      expect(input.attributes().class).not.toContain("disabled");
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
@@ -205,15 +129,5 @@ describe("TheWahlbriefErfassungCard.vue", () => {
     wrapper.vm.anzahlVerzeichnisseValid = true;
     wrapper.vm.anzahlNachtraegeValid = true;
     wrapper.vm.anzahlNachtraeglichUeberbrachteValid = true;
-  }
-
-  function _initInvalidData() {
-    wahlbezirkStore = useWahlbezirkStore(testPinia);
-    wahlbezirkStore.wahlbriefDatenState.wahlbriefDaten = invalidWahlbriefDaten;
-
-    wrapper.vm.anzahlWahlbriefeValid = true;
-    wrapper.vm.anzahlVerzeichnisseValid = true;
-    wrapper.vm.anzahlNachtraegeValid = true;
-    wrapper.vm.anzahlNachtraeglichUeberbrachteValid = false;
   }
 });

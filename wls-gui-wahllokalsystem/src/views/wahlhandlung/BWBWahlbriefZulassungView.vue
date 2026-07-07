@@ -1,49 +1,22 @@
 <template>
-  <div>
-    <v-tabs
-      v-model="tab"
-      bg-color="grey-lighten-3"
-      slider-color="primary"
-      color="primary"
-      class="rounded-t border-b"
-    >
-      <v-tab
-        value="one"
-        :prepend-icon="
-          beanstandeteWahlbriefeState.isBeanstandeteWahlbriefeTableValid
-            ? `$valid`
-            : `$edit`
-        "
-        data-test="wahlbriefe-zulassen-tab"
-      >
-        Wahlbriefe zulassen oder zurückweisen
-      </v-tab>
-      <v-tab
-        value="two"
-        prepend-icon="$summary"
-      >
-        Beschlussergebnis
-      </v-tab>
-    </v-tabs>
-    <v-tabs-window v-model="tab">
-      <v-tabs-window-item value="one">
-        <the-beanstandete-wahlbriefe-erfassen-card />
-      </v-tabs-window-item>
-      <v-tabs-window-item value="two">
-        <the-beanstandete-wahlbriefe-beschlussergebnis />
-      </v-tabs-window-item>
-    </v-tabs-window>
-  </div>
+  <base-beanstandete-wahlbriefe-tabs
+    title-tab-data-input="Wahlbriefe zulassen oder zurückweisen"
+    :has-nachlieferungen="false"
+    @save="onSaveClicked"
+  />
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { ref } from "vue";
-
-import TheBeanstandeteWahlbriefeBeschlussergebnis from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeBeschlussergebnis.vue";
-import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeErfassenCard.vue";
+import BaseBeanstandeteWahlbriefeTabs from "@/components/wahlhandlung/beanstandeteWahlbriefe/BaseBeanstandeteWahlbriefeTabs.vue";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
+import router from "@/plugins/router.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { beanstandeteWahlbriefeState } = storeToRefs(useWahlenStore());
-const tab = ref(null);
+const { beanstandeteWahlbriefeActions } = useWahlenStore();
+const { getNextRoute } = useNavigationService();
+
+async function onSaveClicked() {
+  await beanstandeteWahlbriefeActions.saveBeanstandeteWahlbriefe();
+  await router.push(getNextRoute());
+}
 </script>

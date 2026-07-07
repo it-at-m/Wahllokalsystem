@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
@@ -10,4 +11,5 @@ public record KandidatModel(
     @NotNull long listenposition,
     @NotNull boolean direktkandidat,
     @NotNull long tabellenSpalteInNiederschrift,
-    @NotNull boolean einzelbewerber) {}
+    @NotNull boolean einzelbewerber,
+    @NotNull @Min(1) int anzahlNennungen) {}

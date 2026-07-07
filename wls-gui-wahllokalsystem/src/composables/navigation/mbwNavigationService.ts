@@ -1,13 +1,13 @@
 import type { NavigationDefinition } from "@/types/navigation/NavigationDefinition.ts";
+import type { RouteLocationAsRelativeGenericWithStringName } from "@/types/navigation/RouteLocationAsRelativeGenericWithStringName.ts";
 import type { ComputedRef } from "vue";
 
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
-import { createMbwRoute } from "@/plugins/router/mbwRoutes.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
   const { getStimmzettelTermForWahlID } = useTextFormatter();
@@ -28,8 +28,8 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
     return [
       {
         title: `Zählen der ${getStimmzettelTermForWahlID(wahlID)}`,
-        targetRoute: createMbwRoute(
-          MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
           wahlID,
           wahlbezirkID
         ),
@@ -37,43 +37,43 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Bedenkliche Stimmzettel`,
-        targetRoute: createMbwRoute(
-          MbwRoutesEnum.MBW_STAPEL_E,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_STAPEL_E,
           wahlID,
           wahlbezirkID
         ),
         disabled: mbwWorkflow.value
           ? !mbwWorkflow.value.stepsDone[
-              MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+              MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
             ]
           : false,
       },
       {
         title: `Ungültige Stimmzettel`,
-        targetRoute: createMbwRoute(
-          MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG,
           wahlID,
           wahlbezirkID
         ),
         disabled: mbwWorkflow.value
-          ? !mbwWorkflow.value.stepsDone[MbwRoutesEnum.MBW_STAPEL_E]
+          ? !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_STAPEL_E]
           : false,
       },
       {
         title: `Gültige Stimmzettel`,
-        targetRoute: createMbwRoute(
-          MbwRoutesEnum.MBW_STAPEL_A_AND_B,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_STAPEL_A_AND_B,
           wahlID,
           wahlbezirkID
         ),
         disabled: mbwWorkflow.value
-          ? !mbwWorkflow.value.stepsDone[MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG]
+          ? !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG]
           : false,
       },
       {
         title: `Stimmzettel erfassen`,
-        targetRoute: createMbwRoute(
-          MbwRoutesEnum.MBW_STIMMZETTEL,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_STIMMZETTEL,
           wahlID,
           wahlbezirkID
         ),
@@ -81,30 +81,30 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Schnellmeldung`,
-        targetRoute: createMbwRoute(
-          MbwRoutesEnum.MBW_SCHNELLMELDUNG,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_SCHNELLMELDUNG,
           wahlID,
           wahlbezirkID
         ),
         disabled: mbwWorkflow.value
-          ? !mbwWorkflow.value.stepsDone[MbwRoutesEnum.MBW_STAPEL_A_AND_B]
+          ? !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_STAPEL_A_AND_B]
           : false,
       },
       {
         title: `Kandidatinnen- und Kandidatenstimmen`,
-        targetRoute: createMbwRoute(
-          MbwRoutesEnum.MBW_STAPEL_BC,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_STAPEL_BC,
           wahlID,
           wahlbezirkID
         ),
         disabled: mbwWorkflow.value
-          ? !mbwWorkflow.value.stepsDone[MbwRoutesEnum.MBW_SCHNELLMELDUNG]
+          ? !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_SCHNELLMELDUNG]
           : false,
       },
       {
         title: "Beschlussfassung",
-        targetRoute: createMbwRoute(
-          MbwRoutesEnum.MBW_STIMMZETTEL_BESCHLUESSE,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_STIMMZETTEL_BESCHLUESSE,
           wahlID,
           wahlbezirkID
         ),
@@ -112,19 +112,44 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Niederschrift`,
-        targetRoute: createMbwRoute(
-          MbwRoutesEnum.MBW_NIEDERSCHRIFT,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_NIEDERSCHRIFT,
           wahlID,
           wahlbezirkID
         ),
         disabled: mbwWorkflow.value
-          ? !mbwWorkflow.value.stepsDone[MbwRoutesEnum.MBW_STAPEL_BC]
+          ? !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_STAPEL_BC]
           : false,
       },
     ];
   });
 
+  function getNextRouteOrNull() {
+    const navigationWithStepNotDone = navigation.value.find(
+      (navigationValue) =>
+        !mbwWorkflow.value?.stepsDone[navigationValue.targetRoute.name]
+    );
+    return navigationWithStepNotDone
+      ? navigationWithStepNotDone.targetRoute
+      : null;
+  }
+
+  function _createMbwRoute(
+    routeName: MbwStepsEnum,
+    wahlId: string,
+    wahlbezirkId: string
+  ): RouteLocationAsRelativeGenericWithStringName {
+    return {
+      name: routeName,
+      params: {
+        wahlId,
+        wahlbezirkId,
+      },
+    };
+  }
+
   return {
     navigation,
+    getNextRouteOrNull,
   };
 }

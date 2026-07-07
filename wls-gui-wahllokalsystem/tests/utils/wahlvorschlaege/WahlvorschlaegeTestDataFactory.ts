@@ -77,6 +77,7 @@ export function useWahlvorschlaegeTestDataFactory() {
       direktkandidat: generateRandomBoolean(),
       tabellenSpalteInNiederschrift: generateRandomNumber(2),
       einzelbewerber: generateRandomBoolean(),
+      anzahlNennungen: generateRandomNumber(1),
     };
   }
 
@@ -88,6 +89,7 @@ export function useWahlvorschlaegeTestDataFactory() {
       direktkandidat: generateRandomBoolean(),
       tabellenSpalteInNiederschrift: generateRandomNumber(2),
       einzelbewerber: generateRandomBoolean(),
+      anzahlNennungen: generateRandomNumber(1),
     };
   }
 

@@ -194,8 +194,10 @@ class WahltermindatenServiceTest {
     private static BasisdatenModel createMockedBasisdatenModel(LocalDate wahltagDate) {
       val mockedWahldatenWahlen =
           Set.of(
-              new WahlModel("wahlID1", "wahl 1", 1L, 1L, wahltagDate, WahlartModel.BTW, null, "1"),
-              new WahlModel("wahlID2", "wahl 2", 1L, 1L, wahltagDate, WahlartModel.BTW, null, "2"));
+              new WahlModel(
+                  "wahlID1", "wahl 1", 1L, 1L, wahltagDate, WahlartModel.BTW, null, "1", "B"),
+              new WahlModel(
+                  "wahlID2", "wahl 2", 1L, 1L, wahltagDate, WahlartModel.BTW, null, "2", "B"));
       val mockedWahldatenWahlbezirke =
           Set.of(
               new WahlbezirkModel("wbz1", WahlbezirkArtModel.UWB, "1", wahltagDate, "1", "1"),

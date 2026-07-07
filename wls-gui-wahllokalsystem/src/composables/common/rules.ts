@@ -24,10 +24,14 @@ export function useRules() {
     `Minimale Länge ist ${length} Zeichen.`;
 
   const maxNumber = (max: number) => (value: number) =>
-    value <= max || `Eingabe darf nicht größer als ${max} sein.`;
+    (!value && value !== 0) ||
+    value <= max ||
+    `Eingabe darf nicht größer als ${max} sein.`;
 
   const minNumber = (min: number) => (value: number) =>
-    value >= min || `Eingabe darf nicht kleiner als ${min} sein.`;
+    (!value && value !== 0) ||
+    value >= min ||
+    `Eingabe darf nicht kleiner als ${min} sein.`;
 
   const timeNotInFuture = (value: string) =>
     createTodayWithTime(value) <= new Date() ||

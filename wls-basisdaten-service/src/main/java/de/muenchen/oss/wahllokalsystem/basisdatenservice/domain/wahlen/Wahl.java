@@ -40,4 +40,6 @@ public class Wahl {
   @Embedded @NotNull private Farbe farbe;
 
   @Size(max = 255) private String nummer;
+
+  @NotNull @Size(min = 1, max = 5) private String kennzeichen;
 }

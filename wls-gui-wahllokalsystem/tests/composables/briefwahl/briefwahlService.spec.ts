@@ -4,11 +4,13 @@ import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl
 import { useWahlbriefdatenTestDataFactory } from "@tests/utils/briefwahl/WahlbriefdatenTestDataFactory.ts";
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -83,6 +85,7 @@ describe("briefwahlService.ts", () => {
     useCommonTestDataFactory();
   const { prepareWahl } = useWahlTestDataFactory();
   const { createAxiosResponse } = useAxiosTestDataFactory();
+  const { prepareUser } = useUserTestDataFactory();
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -259,6 +262,36 @@ describe("briefwahlService.ts", () => {
       const result = await getWahlbriefdaten(wahlbezirkID);
 
       expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(true);
+      expect(result).toEqual(mockedWahlbriefdaten);
+    });
+
+    it("should_setNachlieferungenBearbeitetErfasst_when_isNachlieferungsbezirk", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const wahlbriefdatenDTO = createWahlbriefdatenDTO();
+      const mockedWahlbriefdaten = createWahlbriefdaten();
+
+      mockDefinitions.getWahlbriefdaten.mockReturnValue(
+        Promise.resolve({
+          status: 200,
+          data: wahlbriefdatenDTO,
+        })
+      );
+      mockDefinitions.toWahlbriefdatenModel.mockReturnValue(
+        mockedWahlbriefdaten
+      );
+
+      useUserStore().setUser(
+        prepareUser()
+          .wahlbezirkID(wahlbezirkID)
+          .isNachlieferungsbezirk(true)
+          .build()
+      );
+
+      expect(useWorkflowStore().isNachlieferungenBearbeitenErfasst).toBe(false);
+
+      const result = await getWahlbriefdaten(wahlbezirkID);
+
+      expect(useWorkflowStore().isNachlieferungenBearbeitenErfasst).toBe(true);
       expect(result).toEqual(mockedWahlbriefdaten);
     });
 

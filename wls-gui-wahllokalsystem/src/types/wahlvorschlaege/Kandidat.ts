@@ -5,4 +5,5 @@ export interface Kandidat {
   direktkandidat: boolean;
   tabellenSpalteInNiederschrift: number;
   einzelbewerber: boolean;
+  anzahlNennungen: number;
 }

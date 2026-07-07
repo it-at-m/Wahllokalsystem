@@ -2,10 +2,10 @@
   <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2">Wahlschein prüfen</div>
   <div class="v-card-text pb-0">
     <form class="v-form" novalidate="">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--error v-text-field v-number-input" style="max-width: 300px;" data-test="number-input-wahlscheinnummer">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--error v-input--dirty v-text-field v-number-input" style="max-width: 300px;" data-test="number-input-wahlscheinnummer">
         <!---->
         <div class="v-input__control">
-          <div class="v-field v-field--appended v-field--center-affix v-field--error v-field--persistent-clear v-field--variant-filled v-theme--light v-locale--is-ltr">
+          <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--error v-field--persistent-clear v-field--variant-filled v-theme--light v-locale--is-ltr">
             <div class="v-field__overlay"></div>
             <div class="v-field__loader">
               <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
@@ -22,16 +22,16 @@
               </div>
             </div>
             <!---->
-            <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true">
+            <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="false" for="input-v-1">
                 <!---->Wahlscheinnummer
-              </label><label class="v-label v-field-label" id="input-v-1-label" aria-hidden="false" for="input-v-1">
+              </label><label class="v-label v-field-label" id="input-v-1-label" aria-hidden="true">
                 <!---->Wahlscheinnummer
               </label>
-              <!----><input size="1" type="text" aria-labelledby="input-v-1-label" id="input-v-1" aria-describedby="input-v-1-messages" inputmode="decimal" class="v-field__input">
+              <!----><input size="1" type="text" aria-labelledby="input-v-1-label" id="input-v-1" aria-describedby="input-v-1-messages" inputmode="decimal" class="v-field__input" value="0">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
-              <div class="v-field__clearable" style="display: none;"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Wahlscheinnummer"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <div class="v-field__clearable" style=""><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Wahlscheinnummer"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                     <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
                   </svg></i></div>
             </transition-stub>
@@ -47,7 +47,7 @@
         <!---->
         <div id="input-v-1-messages" class="v-input__details" role="alert" aria-live="polite">
           <transition-group-stub name="slide-y-transition" tag="div" appear="false" persisted="false" css="true" class="v-messages">
-            <div class="v-messages__message">Feld darf nicht leer sein.</div>
+            <div class="v-messages__message">Eingabe darf nicht kleiner als 1 sein.</div>
           </transition-group-stub>
           <!---->
         </div>
@@ -97,7 +97,7 @@
       </div>
     </form>
   </div>
-  <div class="v-card-actions"><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-btn--disabled v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" data-test="button-search" disabled=""><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
+  <div class="v-card-actions"><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" data-test="button-search"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
       <!----><span class="v-btn__content" data-no-activator="">Suchen</span>
       <!---->
       <!---->

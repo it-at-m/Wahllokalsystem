@@ -169,6 +169,10 @@ export default withMermaid({
                   text: "Styling von Tabellen",
                   link: `${PATH_ADR_UI}adr008-tabellen-styling.md`,
                 },
+                {
+                  text: "Anzeige der Buttons bei unvollständigen Formularen",
+                  link: `${PATH_ADR_UI}adr009-button-status.md`,
+                },
               ],
             },
           ],

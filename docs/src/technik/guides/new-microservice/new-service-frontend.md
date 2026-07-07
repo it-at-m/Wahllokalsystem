@@ -81,7 +81,6 @@ on:
 
 :::
 
-
 ## Releases
 
 Zusätzlich muss die neue GUI im Workflow `populate-release-pr.yml`, sowie im passenden PR-Template ergänzt werden:

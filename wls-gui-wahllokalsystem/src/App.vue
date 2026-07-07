@@ -103,7 +103,9 @@ onMounted(async () => {
   } catch (error) {
     console.debug(error);
   } finally {
-    startBroadcastMessageInterval();
+    if (hasRoleSchriftfuehrung.value) {
+      startBroadcastMessageInterval();
+    }
   }
 });
 

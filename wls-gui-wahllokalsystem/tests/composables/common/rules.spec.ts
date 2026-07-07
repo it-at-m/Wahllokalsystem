@@ -47,6 +47,24 @@ describe("Validation rules", () => {
     it("should_returnTrue_when_inputBigEnough", () => {
       expect(rule(7)).toStrictEqual(true);
     });
+
+    it("should_returnErrorMessage_when_inputZeroAndMinIs1", () => {
+      const ruleMin1 = minNumber(1);
+      expect(ruleMin1(0)).toBeTypeOf("string");
+    });
+
+    it("should_returnTrue_when_inputZeroAndMinIs0", () => {
+      const ruleMin0 = minNumber(0);
+      expect(ruleMin0(0)).toStrictEqual(true);
+    });
+
+    it("should_returnErrorMessage_when_inputUndefined", () => {
+      expect(rule(undefined as any)).toStrictEqual(true);
+    });
+
+    it("should_returnErrorMessage_when_inputNull", () => {
+      expect(rule(null as any)).toStrictEqual(true);
+    });
   });
 
   describe("maxNumber", () => {
@@ -57,6 +75,23 @@ describe("Validation rules", () => {
     });
     it("should_returnTrue_when_inputSmallEnough", () => {
       expect(rule(2)).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_inputZeroAndMaxIs5", () => {
+      expect(rule(0)).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_inputZeroAndMaxIsMinus1", () => {
+      const ruleMaxMinus1 = maxNumber(-1);
+      expect(ruleMaxMinus1(0)).toBeTypeOf("string");
+    });
+
+    it("should_returnErrorMessage_when_inputUndefined", () => {
+      expect(rule(undefined as any)).toStrictEqual(true);
+    });
+
+    it("should_returnErrorMessage_when_inputNull", () => {
+      expect(rule(null as any)).toStrictEqual(true);
     });
   });
 

@@ -205,9 +205,9 @@ function onRefreshClicked() {
   ungueltigeWahlscheineActions.loadUngueltigeWahlscheine();
 }
 
-const wahlscheinnummerTouched = ref(false);
+const searchTriggered = ref(false);
 const requiredWahlscheinnummer = (v: number | null | undefined) => {
-  if (!wahlscheinnummerTouched.value) return true;
+  if (!searchTriggered.value) return true;
   return v === null || v === undefined
     ? "Bitte Wahlscheinnummer angeben"
     : true;
@@ -215,14 +215,14 @@ const requiredWahlscheinnummer = (v: number | null | undefined) => {
 
 async function onSearchClicked() {
   if (ungueltigerWahlschein.value !== undefined) {
-    wahlscheinnummerTouched.value = false;
+    searchTriggered.value = false;
     resetUngueltigerWahlschein();
     wahlscheinValidationForm.value.reset();
     isFormValid.value = null;
     return;
   }
 
-  wahlscheinnummerTouched.value = true;
+  searchTriggered.value = true;
   const validationResult = await wahlscheinValidationForm.value.validate?.();
   const isValid = validationResult?.valid ?? false;
   isFormValid.value = isValid;
@@ -257,7 +257,7 @@ function onWahlscheinnummerChanged(newValue: number | null | undefined) {
 
 function resetWahlscheinnummerValidation() {
   if (wahlscheinnummer.value === null || wahlscheinnummer.value === undefined) {
-    wahlscheinnummerTouched.value = false;
+    searchTriggered.value = false;
     wahlscheinValidationForm.value.resetValidation?.();
   }
 }

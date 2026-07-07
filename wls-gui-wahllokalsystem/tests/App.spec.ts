@@ -14,11 +14,7 @@ import { defineComponent } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 import App from "@/App.vue";
-import {
-  AUTHORITY_WAHLVORSTAND,
-  ROUTE_WAHLVORSTAND,
-  ROUTES_HOME,
-} from "@/constants.ts";
+import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
@@ -212,9 +208,9 @@ describe("App", () => {
       expect(loadUser).toHaveBeenCalled();
     });
 
-    it("should_callStartBroadcastMessageInterval_when_isSchriftfuehrer", async () => {
+    it("should_callStartBroadcastMessageInterval_when_hasRoleSchriftfuehrer", async () => {
       const store = useUserStore();
-      store.user.authorities = [AUTHORITY_WAHLVORSTAND];
+      store.user.authorities = [""]; //empty default mapping for schriftfuehrung
 
       mount(App, {
         global: {
@@ -227,9 +223,9 @@ describe("App", () => {
       expect(startBroadcastMessageIntervalMock).toHaveBeenCalled();
     });
 
-    it("should_notCallStartBroadcastMessageInterval_when_isNoSchriftfuehrer", async () => {
+    it("should_notCallStartBroadcastMessageInterval_when_hasNoRoleSchriftfuehrer", async () => {
       const store = useUserStore();
-      store.user.authorities = ["NO_" + AUTHORITY_WAHLVORSTAND];
+      store.user.authorities = ["WRONG_ROLE"];
 
       mount(App, {
         global: {

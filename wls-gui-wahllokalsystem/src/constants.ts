@@ -77,5 +77,3 @@ export const SUBTITLE_AUSZAEHLUNG_IN_ARBEIT = "Auszählung in Arbeit";
 export const SUBTITLE_AUSZAEHLUNG_ERFASST = "Abgeschlossen";
 
 export const SAVE_CONTINUE = "Speichern und Weiter";
-
-export const AUTHORITY_WAHLVORSTAND = "WLS_WAHLVORSTAND";

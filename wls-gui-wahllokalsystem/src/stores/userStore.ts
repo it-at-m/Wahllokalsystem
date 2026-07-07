@@ -10,7 +10,6 @@ import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useRolesService } from "@/composables/user/rolesService.ts";
 import { useUserService } from "@/composables/user/userService.ts";
-import { AUTHORITY_WAHLVORSTAND } from "@/constants.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
@@ -113,12 +112,6 @@ export const useUserStore = defineStore("user", () => {
     return user.value.wahlbezirksArt === WahlbezirksArtEnum.BWB;
   });
 
-  const isSchriftfuehrer = computed((): boolean => {
-    return user.value.authorities.some(
-      (authority) => authority === AUTHORITY_WAHLVORSTAND
-    );
-  });
-
   const currentUserWahlbezirksArt = computed((): WahlbezirksArtEnum => {
     return user.value.wahlbezirksArt;
   });
@@ -174,7 +167,6 @@ export const useUserStore = defineStore("user", () => {
     hasRoleSchriftfuehrung,
     isUWB,
     isBWB,
-    isSchriftfuehrer,
     isUserLoggedIn,
     isNachlieferungsbezirk,
     initIsNachlieferungsbezirk,

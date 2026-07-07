@@ -180,7 +180,9 @@ public class ErgebnismeldungMappingService {
         wahldatenSet.getVermerke().stream()
             .mapToLong(
                 vermerke ->
-                    vermerke.getStimmzettel().stream().mapToLong(StimmabgabevermerkeStimmzettel::getAnzahl).sum())
+                    vermerke.getStimmzettel().stream()
+                        .mapToLong(StimmabgabevermerkeStimmzettel::getAnzahl)
+                        .sum())
             .sum();
     bWerte.setB1(erfassteStimmabgabevermerke);
     bWerte.setB(erfassteStimmabgabevermerke + eingenommeneWahlscheine);

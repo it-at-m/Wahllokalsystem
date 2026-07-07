@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
+import static de.muenchen.oss.wahllokalsystem.authservice.rest.WahllokalBenutzerControllerIntegrationTest.PROP_USER_AUTHORITY_ERFASSUNGSTEAM;
 import static de.muenchen.oss.wahllokalsystem.authservice.rest.WahllokalBenutzerControllerIntegrationTest.PROP_USER_AUTHORITY_SCHRIFTFUEHRERUNG;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -17,6 +18,7 @@ import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -34,7 +36,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 @SpringBootTest(
     classes = MicroServiceApplication.class,
     properties = {
-      "service.config.user.authority.schriftfuehrung=" + PROP_USER_AUTHORITY_SCHRIFTFUEHRERUNG
+      "service.config.user.authority.schriftfuehrung=" + PROP_USER_AUTHORITY_SCHRIFTFUEHRERUNG,
+      "service.config.user.authority.erfassungsteam=" + PROP_USER_AUTHORITY_ERFASSUNGSTEAM
     })
 @AutoConfigureMockMvc
 @ActiveProfiles({
@@ -46,6 +49,8 @@ class WahllokalBenutzerControllerIntegrationTest {
 
   public static final String PROP_USER_AUTHORITY_SCHRIFTFUEHRERUNG =
       "WLS_USER_AUTHORITY_WAHLVORSTAND";
+
+  public static final String PROP_USER_AUTHORITY_ERFASSUNGSTEAM = "WLS_USER_AUTHORITY_ERFASSUNG";
 
   @Autowired EntityManager entityManager;
 
@@ -90,6 +95,10 @@ class WahllokalBenutzerControllerIntegrationTest {
               Collections.emptySet(),
               Collections.emptySet()));
 
+      authorityRepository.save(
+          new Authority(
+              PROP_USER_AUTHORITY_ERFASSUNGSTEAM, Collections.emptySet(), Collections.emptySet()));
+
       val request =
           MockMvcRequestBuilders.post("/generateAndExportWahllokalbenutzer/" + wahltagID)
               .contentType(MediaType.APPLICATION_JSON)
@@ -99,11 +108,12 @@ class WahllokalBenutzerControllerIntegrationTest {
 
       final List<User> persistedUsers =
           (List) entityManager.createQuery("SELECT u FROM User u").getResultList();
-      val username1 = cryptoUtils.decrypt(persistedUsers.get(0).getUsername());
-      val username2 = cryptoUtils.decrypt(persistedUsers.get(1).getUsername());
-      val expectedResult = username1 + "\r\n" + username2;
+      val expectedResult =
+          persistedUsers.stream()
+              .map(user -> cryptoUtils.decrypt(user.getUsername()))
+              .collect(Collectors.joining("\r\n"));
 
-      Assertions.assertThat(persistedUsers).hasSize(2);
+      Assertions.assertThat(persistedUsers).hasSize(10);
       Assertions.assertThat(result.getResponse().getContentAsString()).isEqualTo(expectedResult);
     }
 
@@ -138,6 +148,10 @@ class WahllokalBenutzerControllerIntegrationTest {
               Collections.emptySet(),
               Collections.emptySet()));
 
+      authorityRepository.save(
+          new Authority(
+              PROP_USER_AUTHORITY_ERFASSUNGSTEAM, Collections.emptySet(), Collections.emptySet()));
+
       val request =
           MockMvcRequestBuilders.post("/generateAndExportWahllokalbenutzer/" + wahltagID)
               .contentType(MediaType.APPLICATION_JSON)
@@ -148,7 +162,7 @@ class WahllokalBenutzerControllerIntegrationTest {
       final List<User> persistedUsers =
           (List) entityManager.createQuery("SELECT u FROM User u").getResultList();
 
-      Assertions.assertThat(persistedUsers).hasSize(3);
+      Assertions.assertThat(persistedUsers).hasSize(11);
       Assertions.assertThat(userRepository.exists(oldUser1Saved.getUsername())).isFalse();
       Assertions.assertThat(userRepository.exists(oldUser2Saved.getUsername())).isFalse();
       Assertions.assertThat(userRepository.exists(oldUserToKeepSaved.getUsername())).isTrue();

@@ -33,6 +33,12 @@ fi
 for SERVICE_DIR in "$BASE_DIR"/*; do
     if [ -d "$SERVICE_DIR" ]; then
         SERVICE_NAME=$(basename "$SERVICE_DIR")
+
+        echo ""
+        echo "################################################"
+        echo "# Führe Flyway-Migrate für ${SERVICE_DIR} aus..."
+        echo "################################################"
+
         # Pfad zur flyway.conf-Datei
         FLYWAY_CONFIG_FILES="$ENVIRONMENT/$SERVICE_NAME/flyway.conf"
         FLYWAY_LOCATIONS="filesystem:$PATH_TO_SCRIPTS/$SERVICE_NAME"
@@ -45,8 +51,6 @@ for SERVICE_DIR in "$BASE_DIR"/*; do
             echo "Die Datei 'flyway.conf' existiert nicht in $FLYWAY_CONFIG_FILES."
             continue
         fi
-
-        echo "Führe Flyway-Migrate für ${SERVICE_DIR} aus..."
 
         # Flyway-Befehl ausführen
 

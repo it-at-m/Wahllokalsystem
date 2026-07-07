@@ -11,7 +11,7 @@ frisch zu beginnen.
 
 ## Lösung
 
-Über ein Datenbankskript können alle Daten, die durch Nutzer erfasst wurden, gelöscht werden. Das Skript ist  
+Über ein Datenbankskript können alle Daten, die durch Nutzer\*innen erfasst wurden, gelöscht werden. Das Skript ist  
 sehr rudimentär. Es ist weder eine Filterung auf einen Benutzer noch auf eine Wahl möglich.
 
 Das Skript liegt im `stack` unter `scripts` im Ordner `database-init`. Um das Bash-Skript auszuführen, verwenden Sie das Kommando:  

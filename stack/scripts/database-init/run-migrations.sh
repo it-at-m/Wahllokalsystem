@@ -8,7 +8,7 @@ SCRIPT_PATH="$(dirname "$(realpath "$0")")"
 # Überprüfen, ob die Umgebung bereits als Argument übergeben wurde
 if [ -z "$1" ]; then
     # Benutzer nach der Umgebung fragen
-    echo "Bitte geben Sie die Umgebung ein (wls3-c, wls3-k, usw): "
+    echo "Bitte geben Sie die Umgebung ein (local): "
     read ENVIRONMENT
 else
     ENVIRONMENT="$1"

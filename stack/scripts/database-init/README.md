@@ -14,13 +14,13 @@ Die Namen der Unterordner mit den Flyway-Konfigurationen müssen identisch sein 
 ## Anleitung
 
 1. In diesen Ordner mit dem Skript wechseln.
-2. Dort `./run-migrations.sh <umgebungsname> [<Skriptordner>]` ausführen.
+2. Dort `./run-migrations.sh local [<Skriptordner>]` ausführen.
 
 ### Parameterbeschreibung
 
 #### Umgebungsname
 
-Beschreibt den Namen des Ordners, in dem die Flyway-Konfigurationen liegen. Die Angabe muss relativ zum Skript erfolgen. In der Regel wird es `local` sein.
+Beschreibt den Namen des Ordners, in dem die Flyway-Konfigurationen liegen. Die Angabe muss relativ zum Skript erfolgen. Aktuell kann es nur `local` sein.
 
 #### Skriptordner
 

@@ -51,7 +51,7 @@ jobs:
       service: 'wls-<domain>-service'
 ```
 
-```yml {1,6-7,14} [wls-&lt;domain&gt;-service_pull-request.yml]
+```yml {1,6-7,16} [wls-&lt;domain&gt;-service_pull-request.yml]
 name: verify pull request <domain>-service
 
 on:

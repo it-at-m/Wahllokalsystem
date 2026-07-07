@@ -42,7 +42,7 @@ jobs:
       service: "wls-gui-<frontend-name>"
 ```
 
-```yml {1,6-7,13} [wls-gui-&ltfrontend-name&gt_pull-request.yml]
+```yml {1,6-7,15} [wls-gui-&ltfrontend-name&gt_pull-request.yml]
 name: verify pull request gui <frontend-name>
 
 on:

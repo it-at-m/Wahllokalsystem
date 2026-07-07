@@ -442,7 +442,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   }
 
   function _createBarcodeString(wahl: Wahl, meldungsart: MeldungsartEnum) {
-    const wahlartKurzbezeichnung = Array.from(wahl.wahlart)[0];
     const wahlbezirkKurzbezeichnung =
       currentUserWahlbezirksArt.value == WahlbezirksArtEnum.UWB
         ? "SBZ" // Stimmbezirk (Urnenwahl)
@@ -451,8 +450,8 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       meldungsart == MeldungsArtEnum.Schnellmeldung ? "S" : "N";
     const wahlbezirkNummer = parseInt(currentUserWahlbezirkNummer.value, 10);
     const wahlDatum = toGermanDate(wahl.wahltag);
-    if (wahlartKurzbezeichnung && wahlbezirkNummer && wahlDatum) {
-      return `${wahlartKurzbezeichnung}${wahlDatum}-${meldungsartKurzbezeichnung}-${wahlbezirkKurzbezeichnung}-${wahlbezirkNummer}`;
+    if (wahl.kennzeichen && wahlbezirkNummer && wahlDatum) {
+      return `${wahl.kennzeichen}${wahlDatum}-${meldungsartKurzbezeichnung}-${wahlbezirkKurzbezeichnung}-${wahlbezirkNummer}`;
     } else {
       addNotification(
         "Fehler beim Erstellen des Barcodes",

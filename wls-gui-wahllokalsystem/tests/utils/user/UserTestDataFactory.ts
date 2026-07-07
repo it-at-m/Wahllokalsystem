@@ -1,5 +1,9 @@
-import type { UserDTO } from "@/api/wls-clients/generated-auth-api";
+import type {
+  RoleMappingsDTO,
+  UserDTO,
+} from "@/api/wls-clients/generated-auth-api";
 import type { User } from "@/types/User.ts";
+import type { RoleMapping } from "@/types/user/RoleMapping.ts";
 import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
@@ -15,6 +19,25 @@ const {
 } = useCommonTestDataFactory();
 
 export function useUserTestDataFactory() {
+  function createRoleMapping(): RoleMapping {
+    return {
+      erfassungsteam: generateRandomString(10),
+      schriftfuehrung: generateRandomString(10),
+    };
+  }
+
+  function createRoleMappingDTO(): RoleMappingsDTO {
+    return {
+      admin: generateRandomString(10),
+      erfassungsteam: generateRandomString(10),
+      schriftfuehrung: generateRandomString(10),
+    };
+  }
+
+  function prepareRoleMapping(): Builder<RoleMapping> {
+    return proxyBuilder<RoleMapping>(createRoleMapping());
+  }
+
   function prepareUser(): Builder<User> {
     return proxyBuilder<User>(_createUserWithDefaultValues());
   }
@@ -83,7 +106,10 @@ export function useUserTestDataFactory() {
   }
 
   return {
+    createRoleMapping,
+    createRoleMappingDTO,
     mapValidUserDtoToUser,
+    prepareRoleMapping,
     prepareUser,
     prepareUserDTO,
   };

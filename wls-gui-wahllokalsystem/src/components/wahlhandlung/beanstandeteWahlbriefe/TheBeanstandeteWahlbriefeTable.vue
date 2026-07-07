@@ -248,11 +248,6 @@ function onZulassungsgrundWahlscheinChanged(
   rowIndex: number
 ) {
   const selectedValue = zurueckweisungsgrundStringToEnumValue(newValue);
-  console.debug(
-    "onZulassungsgrundWahlscheinChanged: ",
-    newValue,
-    selectedValue
-  );
   wahlscheinGruende.value[rowIndex] = selectedValue;
 
   if (
@@ -276,11 +271,6 @@ function onZulassungsgrundStimmzettelChanged(
   wahl: Wahl
 ) {
   const selectedValue = zurueckweisungsgrundStringToEnumValue(newValue);
-  console.debug(
-    "onZulassungsgrundStimmzettelChanged: ",
-    newValue,
-    selectedValue
-  );
   wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue;
 
   if (wahlenState.value.wahlen) {

@@ -15,7 +15,7 @@ import { VNumberInput, VTextarea } from "vuetify/components";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
-import TheUnguetilgeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUnguetilgeWahlscheineVerifyCard.vue";
+import TheUngueltigeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUngueltigeWahlscheineVerifyCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -53,7 +53,7 @@ const WAHLSCHEIN_MIN_VALUE = 1;
 const WAHLSCHEIN_MAX_VALUE = 9999999;
 const ABSTIMMUNGSERGEBNIS = "einstimmig zurückgewiesen";
 
-describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
+describe("TheUngueltigeWahlscheineVerifyCard.vue", () => {
   let wrapper: VueWrapper;
   let testPinia: TestingPinia;
 
@@ -65,7 +65,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
         stubActions: false,
         createSpy: vi.fn,
       });
-      wrapper = mount(TheUnguetilgeWahlscheineVerifyCard, {
+      wrapper = mount(TheUngueltigeWahlscheineVerifyCard, {
         global: {
           plugins: [testPinia, vuetify],
         },
@@ -96,7 +96,6 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
     it("should_renderValidWahlscheinAndChangeSearchButtonLabel_when_wahlscheinnummerIsNotPartOfUngueltigeWahlscheine", async (context) => {
       const wahlscheinnummerInput = getInputWahlscheinnummer();
       await wahlscheinnummerInput.setValue(123);
-      await wahlscheinnummerInput.vm.validate();
 
       useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheine = [
         prepareUngueltigerWahlschein().wahlscheinnummer("1").build(),
@@ -115,7 +114,6 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
     it("should_renderInvalidWahlscheinWithDisabledSaveButtonAndChangeSearchButtonLabel_when_wahlscheinnummerIsPartOfUngueltigeWahlscheine", async (context) => {
       const wahlscheinnummerInput = getInputWahlscheinnummer();
       await wahlscheinnummerInput.setValue(123);
-      await wahlscheinnummerInput.vm.validate();
 
       useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheine = [
         prepareUngueltigerWahlschein()
@@ -127,10 +125,10 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
 
       const searchButton = getSearchButton();
       await searchButton.trigger("click");
+      await flushPromises();
+
       const saveBeschlussBtn = getSaveBeschlussButton();
       const inputAbstimmung = getInputStimmenZurueckweisung();
-
-      await flushPromises();
 
       expect(saveBeschlussBtn.props("disabled")).toStrictEqual(true);
       expect(inputAbstimmung.props("modelValue")).toStrictEqual(undefined);
@@ -142,7 +140,6 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
     it("should_renderInvalidWahlscheinWithEnabledSaveButtonAndChangeSearchButtonLabel_when_wahlscheinnummerIsPartOfUngueltigeWahlscheineAndAbstimmungEingetragen", async (context) => {
       const wahlscheinnummerInput = getInputWahlscheinnummer();
       await wahlscheinnummerInput.setValue(123);
-      await wahlscheinnummerInput.vm.validate();
 
       useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheine = [
         prepareUngueltigerWahlschein()
@@ -154,10 +151,11 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
 
       const searchButton = getSearchButton();
       await searchButton.trigger("click");
+      await flushPromises();
+
       const saveBeschlussBtn = getSaveBeschlussButton();
       const inputAbstimmung = getInputStimmenZurueckweisung();
       await inputAbstimmung.setValue(ABSTIMMUNGSERGEBNIS);
-
       await flushPromises();
 
       expect(saveBeschlussBtn.props("disabled")).toStrictEqual(false);
@@ -250,7 +248,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
         createSpy: vi.fn,
         stubActions: false,
       });
-      wrapper = mount(TheUnguetilgeWahlscheineVerifyCard, {
+      wrapper = mount(TheUngueltigeWahlscheineVerifyCard, {
         global: {
           plugins: [testPinia, vuetify],
         },
@@ -275,6 +273,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
 
       const searchButton = getSearchButton();
       await searchButton.trigger("click");
+      await flushPromises();
 
       expect(getWahlscheinSpy).toHaveBeenCalledWith("123");
     });
@@ -284,7 +283,6 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
 
       const wahlscheinnummerInput = getInputWahlscheinnummer();
       await wahlscheinnummerInput.setValue(123);
-      await wahlscheinnummerInput.vm.validate();
 
       wahlbezirkStore.ungueltigeWahlscheineActions.getUngueltigerWahlscheinByWahlscheinnummer =
         vi.fn(() => {
@@ -294,6 +292,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       expect(wahlscheinnummerInput.vm.value).toStrictEqual("123");
       const searchButton = getSearchButton();
       await searchButton.trigger("click");
+      await flushPromises();
 
       const inputAbstimmung = getInputStimmenZurueckweisung();
       await inputAbstimmung.setValue(ABSTIMMUNGSERGEBNIS);
@@ -327,7 +326,6 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
 
       const wahlscheinnummerInput = getInputWahlscheinnummer();
       await wahlscheinnummerInput.setValue(123);
-      await wahlscheinnummerInput.vm.validate();
 
       useWahlbezirkStore().ungueltigeWahlscheineActions.getUngueltigerWahlscheinByWahlscheinnummer =
         vi.fn(() => {
@@ -336,6 +334,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
 
       const searchButton = getSearchButton();
       await searchButton.trigger("click");
+      await flushPromises();
 
       const inputAbstimmung = getInputStimmenZurueckweisung();
       await inputAbstimmung.setValue(ABSTIMMUNGSERGEBNIS);

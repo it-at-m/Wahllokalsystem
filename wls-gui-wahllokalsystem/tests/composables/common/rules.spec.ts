@@ -14,7 +14,7 @@ const {
   dateNotInFuture,
   dateGreaterOrEqual,
 } = useRules();
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 describe("Validation rules", () => {
   describe("maxLength", () => {
     const rule = maxLength(10);
@@ -85,7 +85,6 @@ describe("Validation rules", () => {
       const ruleMaxMinus1 = maxNumber(-1);
       expect(ruleMaxMinus1(0)).toBeTypeOf("string");
     });
-
     it("should_returnErrorMessage_when_inputUndefined", () => {
       expect(rule(undefined as any)).toStrictEqual(true);
     });

@@ -88,7 +88,7 @@
   },
   "overrides": {
     "@storybook/vue3": {
-      "vue-component-type-helpers": "3.3.5"
+      "vue-component-type-helpers": "3.3.6"
     }
   }
 }

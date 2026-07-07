@@ -12,7 +12,7 @@ permissions:
 jobs:
   populate-links:
     # Nur bei Release-PRs ausführen (mit Label "release" oder "Release" im Titel)
-    if: contains(github.event.pull_request.title, 'Release') || contains(github.event.pull_request.labels.*.name, 'release')
+    if: contains(github.event.pull_request.title, 'Release')
     runs-on: ubuntu-latest
 
     steps:
@@ -81,7 +81,6 @@ jobs:
                     if (version.metadata && version.metadata.container && version.metadata.container.tags) {
                       if (version.metadata.container.tags.includes('latest')) {
                         packageId = version.id;
-                        console.log(`  Package ID: ${packageId}`);
                         break;
                       }
                     }

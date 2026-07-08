@@ -103,6 +103,7 @@ function createWahlvorschlaege(): WahlvorschlaegeDTO {
             einzelbewerber: false,
             listenposition: 2,
             tabellenSpalteInNiederschrift: 1,
+            anzahlNennungen: 1,
           },
           {
             identifikator: "Kandidat21",
@@ -111,6 +112,7 @@ function createWahlvorschlaege(): WahlvorschlaegeDTO {
             einzelbewerber: false,
             listenposition: 1,
             tabellenSpalteInNiederschrift: 1,
+            anzahlNennungen: 1,
           },
         ],
         identifikator: "wahlvorschlagID2",
@@ -127,6 +129,7 @@ function createWahlvorschlaege(): WahlvorschlaegeDTO {
             einzelbewerber: false,
             listenposition: 2,
             tabellenSpalteInNiederschrift: 1,
+            anzahlNennungen: 1,
           },
           {
             identifikator: "Kandidat11",
@@ -135,6 +138,7 @@ function createWahlvorschlaege(): WahlvorschlaegeDTO {
             einzelbewerber: false,
             listenposition: 1,
             tabellenSpalteInNiederschrift: 1,
+            anzahlNennungen: 1,
           },
         ],
         identifikator: "wahlvorschlagID1",

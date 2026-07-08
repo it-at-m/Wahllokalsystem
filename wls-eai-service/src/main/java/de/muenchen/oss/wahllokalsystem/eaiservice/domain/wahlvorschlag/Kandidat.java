@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -28,4 +29,7 @@ public class Kandidat extends BaseEntity {
   @NotNull @ToString.Include long tabellenSpalteInNiederschrift;
 
   @NotNull @ToString.Include boolean einzelbewerber;
+
+  @NotNull @Min(1) @ToString.Include
+  int anzahlNennungen;
 }

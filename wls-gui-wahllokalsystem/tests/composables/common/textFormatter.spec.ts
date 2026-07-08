@@ -58,7 +58,7 @@ describe("textFormatter.ts", () => {
       wahlenStore.wahlenState.wahlen = [wahl];
 
       expect(getStimmzettelTermForWahl(wahl)).toStrictEqual(
-        "Stimmzettelumschläge"
+        "Stimmzettel\u00adumschläge"
       );
     });
 
@@ -97,7 +97,7 @@ describe("textFormatter.ts", () => {
         if (i == 0) {
           expect(
             getStimmzettelTermForWahl(wahlenStore.wahlenState.wahlen[i])
-          ).toStrictEqual("Stimmzettelumschläge");
+          ).toStrictEqual("Stimmzettel\u00adumschläge");
         } else {
           expect(
             getStimmzettelTermForWahl(wahlenStore.wahlenState.wahlen[i])
@@ -124,7 +124,7 @@ describe("textFormatter.ts", () => {
       );
 
       const result = getStimmzettelTermForWahlID(wahlId);
-      expect(result).toStrictEqual("Stimmzettelumschläge");
+      expect(result).toStrictEqual("Stimmzettel\u00adumschläge");
     });
 
     it("should_returnStimmzettel_when_userIsBwbButCurrentUserHauptwahlIdDoestNotMatch", () => {

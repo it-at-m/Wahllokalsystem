@@ -51,7 +51,8 @@ class WahlDTOMapperTest {
               LocalDate.now(),
               WahlartDTO.BAW,
               new FarbeDTO(1, 1, 1),
-              "1");
+              "1",
+              "B");
       val wahl2 =
           new WahlDTO(
               "wahlID2",
@@ -61,7 +62,8 @@ class WahlDTOMapperTest {
               LocalDate.now(),
               WahlartDTO.BAW,
               new FarbeDTO(1, 1, 1),
-              "2");
+              "2",
+              "B");
       val wahl3 =
           new WahlDTO(
               "wahlID3",
@@ -71,7 +73,8 @@ class WahlDTOMapperTest {
               LocalDate.now().plusMonths(2),
               WahlartDTO.BAW,
               new FarbeDTO(1, 1, 1),
-              "3");
+              "3",
+              "B");
 
       return List.of(wahl1, wahl2, wahl3);
     }
@@ -86,7 +89,8 @@ class WahlDTOMapperTest {
               LocalDate.now(),
               WahlartModel.BAW,
               new FarbeModel(1, 1, 1),
-              "1");
+              "1",
+              "B");
       val wahl2 =
           new WahlModel(
               "wahlID2",
@@ -96,7 +100,8 @@ class WahlDTOMapperTest {
               LocalDate.now(),
               WahlartModel.BAW,
               new FarbeModel(1, 1, 1),
-              "2");
+              "2",
+              "B");
       val wahl3 =
           new WahlModel(
               "wahlID3",
@@ -106,7 +111,8 @@ class WahlDTOMapperTest {
               LocalDate.now().plusMonths(2),
               WahlartModel.BAW,
               new FarbeModel(1, 1, 1),
-              "3");
+              "3",
+              "B");
 
       return List.of(wahl1, wahl2, wahl3);
     }

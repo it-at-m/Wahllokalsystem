@@ -44,6 +44,7 @@ const meta = {
           direktkandidat: false,
           tabellenSpalteInNiederschrift: 1,
           einzelbewerber: false,
+          anzahlNennungen: 1,
         },
       ],
     },

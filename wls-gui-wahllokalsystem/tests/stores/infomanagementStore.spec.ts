@@ -638,6 +638,14 @@ describe("infomanagementStore.ts", () => {
         DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_BW
       );
     });
+  });
+
+  describe("waehlerverzeichnis", () => {
+    let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
+
+    beforeEach(() => {
+      infomanagementStore = useInfomanagementStore();
+    });
 
     it("should_returnValue_when_waehlerverzeichnisKonfigKeyHasValue", async () => {
       infomanagementStore.konfigurationsparameter = [
@@ -680,6 +688,57 @@ describe("infomanagementStore.ts", () => {
 
     it("should_returnNull_when_waehlerverzeichnisKonfigKeyNotAvailable", () => {
       expect(infomanagementStore.waehlerverzeichnisUrl).toStrictEqual(null);
+    });
+  });
+
+  describe("wahllokalfinder", () => {
+    let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
+
+    beforeEach(() => {
+      infomanagementStore = useInfomanagementStore();
+    });
+
+    it("should_returnValue_when_wahlraumKonfigKeyHasValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAHLLOKALFINDER_URL")
+          .wert("test")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.wahlraumUrl).toStrictEqual("test");
+    });
+
+    it("should_returnNull_when_wahlraumKonfigKeyHasEmptyValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAHLLOKALFINDER_URL")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.wahlraumUrl).toStrictEqual(null);
+    });
+
+    it("should_returnNull_when_wahlraumKonfigKeyHasUndefinedValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAHLLOKALFINDER_URL")
+          .wert(undefined)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.wahlraumUrl).toStrictEqual(null);
+    });
+
+    it("should_returnNull_when_wahlraumKonfigKeyNotAvailable", () => {
+      expect(infomanagementStore.wahlraumUrl).toStrictEqual(null);
     });
   });
 });

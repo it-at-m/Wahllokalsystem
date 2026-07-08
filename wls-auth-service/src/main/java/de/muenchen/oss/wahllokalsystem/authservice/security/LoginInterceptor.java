@@ -19,10 +19,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoginInterceptor {
 
-  private static final String MONITORING_AUTHORITY = "MONITORING".toLowerCase();
-  private static final String WAHLVORSTAND_AUTHORITY = "WAHLVORSTAND".toLowerCase();
-  private static final String ROLE_LOGIN_WLS_WAHLLOKAL = "WLS_WAHLVORSTAND";
-
   @Value("${service.config.loginCheckMessage}")
   private String loginCheckMessage;
 
@@ -85,13 +81,16 @@ public class LoginInterceptor {
   }
 
   private boolean hasWahllokalAuthority(Collection<String> authorities) {
-    return authorities.stream().anyMatch(ROLE_LOGIN_WLS_WAHLLOKAL::equals);
+    return authorities.contains(userService.getSchriftfuehrungAuthorityName());
   }
 
   private boolean isLoginTimeToCheck(LdapUserDetails principal) {
+    val schriftfuehrungAuthorityName = userService.getSchriftfuehrungAuthorityName().toLowerCase();
+    val adminAuthorityName = userService.getAdminAuthorityName().toLowerCase();
+
     for (GrantedAuthority eAuthority : principal.getAuthorities()) {
-      if (eAuthority.getAuthority().toLowerCase().contains(WAHLVORSTAND_AUTHORITY)
-          || eAuthority.getAuthority().toLowerCase().contains(MONITORING_AUTHORITY)) {
+      if (eAuthority.getAuthority().toLowerCase().contains(schriftfuehrungAuthorityName)
+          || eAuthority.getAuthority().toLowerCase().contains(adminAuthorityName)) {
         return true;
       }
     }

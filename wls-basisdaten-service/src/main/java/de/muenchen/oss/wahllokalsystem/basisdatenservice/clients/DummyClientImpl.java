@@ -60,9 +60,9 @@ public class DummyClientImpl
                 true,
                 Set.of(
                     new KandidatModel(
-                        UUID.randomUUID().toString(), "kandidat11", 1L, true, 1L, true),
+                        UUID.randomUUID().toString(), "kandidat11", 1L, true, 1L, true, 1),
                     new KandidatModel(
-                        UUID.randomUUID().toString(), "kandidat21", 2L, false, 1L, false))),
+                        UUID.randomUUID().toString(), "kandidat21", 2L, false, 1L, false, 1))),
             new WahlvorschlagModel(
                 UUID.randomUUID().toString(),
                 2L,
@@ -70,9 +70,9 @@ public class DummyClientImpl
                 true,
                 Set.of(
                     new KandidatModel(
-                        UUID.randomUUID().toString(), "kandidat21", 1L, true, 1L, true),
+                        UUID.randomUUID().toString(), "kandidat21", 1L, true, 1L, true, 2),
                     new KandidatModel(
-                        UUID.randomUUID().toString(), "kandidat22", 2L, false, 1L, false)))));
+                        UUID.randomUUID().toString(), "kandidat22", 2L, false, 1L, false, 3)))));
   }
 
   @Override
@@ -100,7 +100,8 @@ public class DummyClientImpl
             wahltagWithNummerModel.wahltag(),
             WahlartModel.BTW,
             new FarbeModel(0, 1, 2),
-            "1"),
+            "1",
+            "B"),
         new WahlModel(
             "wahl2",
             "remoteWahl 1",
@@ -109,7 +110,8 @@ public class DummyClientImpl
             wahltagWithNummerModel.wahltag(),
             WahlartModel.EUW,
             new FarbeModel(3, 4, 5),
-            "1"),
+            "1",
+            "E"),
         new WahlModel(
             "wahl3",
             "remoteWahl 2",
@@ -118,7 +120,8 @@ public class DummyClientImpl
             wahltagWithNummerModel.wahltag(),
             WahlartModel.LTW,
             new FarbeModel(6, 7, 8),
-            "1"));
+            "1",
+            "L"));
   }
 
   @Override
@@ -174,7 +177,8 @@ public class DummyClientImpl
                 wahltagWithNummerModel.wahltag(),
                 WahlartModel.BTW,
                 new FarbeModel(0, 1, 2),
-                "0"),
+                "0",
+                "B"),
             new WahlModel(
                 "wahlID2",
                 "Europawahl",
@@ -183,7 +187,8 @@ public class DummyClientImpl
                 wahltagWithNummerModel.wahltag(),
                 WahlartModel.EUW,
                 new FarbeModel(3, 4, 5),
-                "1")),
+                "1",
+                "E")),
         Set.of(
             new WahlbezirkModel(
                 "wahlbezirkID1_1",
@@ -226,13 +231,15 @@ public class DummyClientImpl
                 "120",
                 "Munich",
                 wahltagWithNummerModel.wahltag(),
-                StimmzettelgebietsartModel.SG),
+                StimmzettelgebietsartModel.SG,
+                null),
             new StimmzettelgebietModel(
                 "szgIDOther",
                 "920",
                 "Munich Center",
                 wahltagWithNummerModel.wahltag(),
-                StimmzettelgebietsartModel.SB)));
+                StimmzettelgebietsartModel.SB,
+                40)));
   }
 
   @Override

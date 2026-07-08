@@ -15,6 +15,9 @@ public interface WahlenClientMapper {
   @Mapping(target = "reihenfolge", constant = "1l")
   @Mapping(target = "farbe", expression = "java(new FarbeModel(0, 0, 0))")
   @Mapping(target = "wahlID", source = "identifikator")
+  @Mapping(
+      target = "kennzeichen",
+      expression = "java(wahlDTO.getWahlart().name().substring(0, 1).toUpperCase())")
   WahlModel toModel(WahlDTO wahlDTO);
 
   List<WahlModel> fromRemoteClientSetOfWahlDTOtoListOfWahlModel(Set<WahlDTO> wahlDTO);

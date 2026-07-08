@@ -13,6 +13,7 @@ export interface User {
   pin: string;
   authorities: string[];
   wahlMetaData: WahlMetaData[];
+  isNachlieferungsbezirk?: boolean;
 }
 
 export function createUserLocalDevelopment(): User {

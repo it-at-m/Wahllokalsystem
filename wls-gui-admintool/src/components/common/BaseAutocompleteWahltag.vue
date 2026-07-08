@@ -10,35 +10,23 @@
     no-data-text="Keine Wahltage gefunden"
   >
     <template #item="{ props: itemProps, item }">
-      <v-list-item
-        v-bind="itemProps"
-        :title="item.title"
-      >
+      <v-list-item v-bind="itemProps">
         <template
-          v-if="item.raw.aktiv"
+          v-if="item.raw.active"
           #append
         >
-          <v-chip
-            color="success"
-            size="small"
-            data-test="aktivKennzeichen"
-          >
-            aktiv
-          </v-chip>
+          <base-chip-active>aktiv</base-chip-active>
         </template>
       </v-list-item>
     </template>
     <template #selection="{ item }">
-      <span class="v-autocomplete__selection-text">{{ item.title }}</span>
-      <v-chip
-        v-if="item.raw.aktiv"
+      <span>{{ item.title }}</span>
+      <base-chip-active
+        v-if="item.raw.active"
         class="ml-2"
-        color="success"
-        size="small"
-        data-test="aktivKennzeichen"
       >
         aktiv
-      </v-chip>
+      </base-chip-active>
     </template>
   </v-autocomplete>
 </template>
@@ -48,7 +36,9 @@ import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import type { PropType } from "vue";
 
 import { useDate } from "vuetify";
-import { VAutocomplete, VChip, VListItem } from "vuetify/components";
+import { VAutocomplete, VListItem } from "vuetify/components";
+
+import BaseChipActive from "@/components/wahltag/BaseChipActive.vue";
 
 const date = useDate();
 

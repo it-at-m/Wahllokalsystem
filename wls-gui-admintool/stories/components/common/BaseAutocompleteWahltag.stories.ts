@@ -127,7 +127,7 @@ export const ActiveWahltag: Story = {
   args: {
     ...Default.args,
     items: wahltage.map((wahltag, index) =>
-      index === 2 ? { ...wahltag, aktiv: true } : wahltag
+      index === 2 ? { ...wahltag, active: true } : wahltag
     ),
   },
 };

@@ -44,7 +44,7 @@ const wahltage: Wahltag[] = [
         nummer: "3.1",
       },
     ],
-    aktiv: true,
+    active: true,
   },
 ];
 
@@ -82,13 +82,11 @@ describe("BaseAutocompleteWahltag.vue", () => {
       );
     });
 
-    it("should_renderAktivKennzeichen_when_activeWahltagIsSelected", async (context) => {
+    it("should_renderActiveChip_when_activeWahltagIsSelected", async (context) => {
       const aktiverWahltag = wahltage[2];
       await wrapper.setProps({ modelValue: aktiverWahltag });
 
-      expect(wrapper.find("[data-test='aktivKennzeichen']").exists()).toBe(
-        true
-      );
+      expect(wrapper.find("[data-test='activeChip']").exists()).toBe(true);
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );

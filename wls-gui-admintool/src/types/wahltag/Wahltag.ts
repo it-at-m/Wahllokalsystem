@@ -7,5 +7,5 @@ export interface Wahltag {
    * Kennzeichnet, ob es sich um den aktuell aktiven (konfigurierten) Wahltag
    * handelt. Wird von der einbindenden View befüllt.
    */
-  aktiv?: boolean;
+  active?: boolean;
 }

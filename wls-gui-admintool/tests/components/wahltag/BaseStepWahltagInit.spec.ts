@@ -18,7 +18,7 @@ import {
 } from "vitest";
 import { nextTick, ref } from "vue";
 
-import BaseDialogWahltagOverrideWahlterminConfirmation from "@/components/wahltag/BaseDialogWahltagOverrideWahlterminConfirmation.vue";
+import BaseDialogConfirmation from "@/components/wahltag/BaseDialogConfirmation.vue";
 import BaseStepWahltagInit from "@/components/wahltag/BaseStepWahltagInit.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
@@ -198,7 +198,7 @@ describe("BaseStepWahltagInit.vue", () => {
 
       const referencedConfirmDialog = wrapper.vm.$refs
         .wahltageOverrideConfirmationDialog as InstanceType<
-        typeof BaseDialogWahltagOverrideWahlterminConfirmation
+        typeof BaseDialogConfirmation
       >;
       const dialogHideSpy = vi.spyOn(referencedConfirmDialog, "hideDialog");
 
@@ -230,7 +230,7 @@ describe("BaseStepWahltagInit.vue", () => {
 
       const referencedConfirmDialog = wrapper.vm.$refs
         .wahltageOverrideConfirmationDialog as InstanceType<
-        typeof BaseDialogWahltagOverrideWahlterminConfirmation
+        typeof BaseDialogConfirmation
       >;
       const dialogHideSpy = vi.spyOn(referencedConfirmDialog, "hideDialog");
       referencedConfirmDialog.$emit("cancelDelete");

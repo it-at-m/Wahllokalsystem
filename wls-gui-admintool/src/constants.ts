@@ -6,6 +6,8 @@ export const ROUTES_KONFIGURATION = "konfiguration";
 
 export const APPSWITCHER_URL = import.meta.env.VITE_APPSWITCHER_URL;
 
+export const DEFAULT_TEXT_CONFIRMATION_TEXT = "Löschen";
+
 export const enum STATUS_INDICATORS {
   SUCCESS = "success",
   INFO = "info",

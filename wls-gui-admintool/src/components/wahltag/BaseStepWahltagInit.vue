@@ -28,11 +28,17 @@
       Zustand der konfigurierten Wahltage ist unbekannt
     </div>
 
-    <base-dialog-wahltag-override-wahltermin-confirmation
+    <base-dialog-confirmation
       ref="wahltageOverrideConfirmationDialog"
       @confirmDelete="onOverrideDialogConfirmDelete"
       @cancelDelete="onOverrideDialogCancelDelete"
-    />
+      ><div data-test="div-confirm-information">
+        Für diesen Wahltag existieren bereits Wahltermindaten. Bitte geben Sie
+        "{{ DEFAULT_TEXT_CONFIRMATION_TEXT }}" in das Eingabefeld ein und
+        bestätigen Sie, um die alten Wahltermindaten zu löschen und neue zu
+        erstellen.
+      </div>
+    </base-dialog-confirmation>
   </div>
 </template>
 <script setup lang="ts">
@@ -42,9 +48,10 @@ import type { PropType } from "vue";
 import { useTemplateRef } from "vue";
 import { VBtn } from "vuetify/components";
 
-import BaseDialogWahltagOverrideWahlterminConfirmation from "@/components/wahltag/BaseDialogWahltagOverrideWahlterminConfirmation.vue";
+import BaseDialogConfirmation from "@/components/wahltag/BaseDialogConfirmation.vue";
 import BaseStepWahllokalBenutzer from "@/components/wahltag/BaseStepWahllokalBenutzer.vue";
 import { useWahltermindatenService } from "@/composables/wahltermindaten/wahltermindatenService.ts";
+import { DEFAULT_TEXT_CONFIRMATION_TEXT } from "@/constants.ts";
 
 const {
   importWahlterminDaten,
@@ -69,7 +76,7 @@ const emits = defineEmits<{
 }>();
 
 const templateRefWahltagDeleteConfirmationDialog = useTemplateRef<
-  InstanceType<typeof BaseDialogWahltagOverrideWahlterminConfirmation>
+  InstanceType<typeof BaseDialogConfirmation>
 >("wahltageOverrideConfirmationDialog");
 
 async function onInitWahltagClicked() {

@@ -1,16 +1,12 @@
 <template>
   <v-dialog
     :model-value="visible"
-    data-test="dialog-wahllokalbenutzer-delete-confirmation"
+    data-test="dialog-wahltag-override-wahltermindaten-confirmation"
   >
     <v-card>
-      <v-card-title>Wahllokalbenutzer löschen</v-card-title>
+      <v-card-title>Wahltermindaten erneut anlegen</v-card-title>
       <v-card-text>
-        <div data-test="div-confirm-information">
-          Alle Wahllokalbenutzer für diesen Wahltag werden unwiderruflich
-          gelöscht. Bitte geben Sie "{{ requiredConfirmText }}" in das
-          Eingabefeld ein und bestätigen Sie, um die Benutzer zu löschen.
-        </div>
+        <slot />
         <v-text-field
           v-model="confirmText"
           ref="confirmTextField"
@@ -31,6 +27,7 @@
     </v-card>
   </v-dialog>
 </template>
+
 <script setup lang="ts">
 import type { ShallowRef } from "vue";
 
@@ -47,12 +44,13 @@ import {
 import BaseButtonCancel from "@/components/common/BaseButtonCancel.vue";
 import BaseButtonConfirm from "@/components/common/BaseButtonConfirm.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { DEFAULT_TEXT_CONFIRMATION_TEXT } from "@/constants.ts";
 
 const props = defineProps({
   requiredConfirmText: {
     type: String,
     required: false,
-    default: "Löschen",
+    default: DEFAULT_TEXT_CONFIRMATION_TEXT,
   },
 });
 
@@ -74,7 +72,7 @@ const confirmTextField = useTemplateRef("confirmTextField") as Readonly<
 >;
 
 const confirmTextFieldLabel = computed(
-  () => `Bitte geben Sie "${props.requiredConfirmText}" ein`
+  () => `Bitte geben sie "${props.requiredConfirmText}" ein`
 );
 const hasUserEnteredConfirmText = computed(
   () => props.requiredConfirmText === confirmText.value

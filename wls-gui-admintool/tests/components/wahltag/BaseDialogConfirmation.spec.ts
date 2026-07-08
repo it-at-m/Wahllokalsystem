@@ -10,13 +10,11 @@ import { VTextField } from "vuetify/components";
 
 import BaseButtonCancel from "@/components/common/BaseButtonCancel.vue";
 import BaseButtonConfirm from "@/components/common/BaseButtonConfirm.vue";
-import BaseDialogWahltagOverrideWahlterminConfirmation from "@/components/wahltag/BaseDialogWahltagOverrideWahlterminConfirmation.vue";
+import BaseDialogConfirmation from "@/components/wahltag/BaseDialogConfirmation.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
-describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
-  let wrapper: VueWrapper<
-    InstanceType<typeof BaseDialogWahltagOverrideWahlterminConfirmation>
-  >;
+describe("BaseDialogConfirmation.vue", () => {
+  let wrapper: VueWrapper<InstanceType<typeof BaseDialogConfirmation>>;
   vi.stubGlobal("visualViewport", new EventTarget());
 
   beforeEach(() => {
@@ -121,9 +119,12 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
 });
 
 function setupWrapper(props?: Record<string, unknown>) {
-  return mount(BaseDialogWahltagOverrideWahlterminConfirmation, {
+  return mount(BaseDialogConfirmation, {
     attachTo: document.body,
     props: props,
+    slots: {
+      default: "Das ist ein Test Dialog.",
+    },
     global: { plugins: [vuetify] },
   });
 }

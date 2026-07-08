@@ -1,3 +1,4 @@
+import type BaseDialogConfirmation from "@/components/wahltag/BaseDialogConfirmation.vue";
 import type { VueWrapper } from "@vue/test-utils";
 
 import {
@@ -17,7 +18,6 @@ import {
 } from "vitest";
 import { nextTick, ref } from "vue";
 
-import BaseDialogWahllokalBenutzerDeleteConfirmation from "@/components/wahltag/BaseDialogWahllokalBenutzerDeleteConfirmation.vue";
 import BaseStepWahllokalBenutzer from "@/components/wahltag/BaseStepWahllokalBenutzer.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
@@ -196,7 +196,7 @@ describe("BaseStepWahllokalBenutzer.vue", () => {
 
       const referencedConfirmDialog = wrapper.vm.$refs
         .benutzerDeleteConfirmationDialog as InstanceType<
-        typeof BaseDialogWahllokalBenutzerDeleteConfirmation
+        typeof BaseDialogConfirmation
       >;
       const dialogHideSpy = vi.spyOn(referencedConfirmDialog, "hideDialog");
 
@@ -222,7 +222,7 @@ describe("BaseStepWahllokalBenutzer.vue", () => {
 
       const referencedConfirmDialog = wrapper.vm.$refs
         .benutzerDeleteConfirmationDialog as InstanceType<
-        typeof BaseDialogWahllokalBenutzerDeleteConfirmation
+        typeof BaseDialogConfirmation
       >;
       const dialogHideSpy = vi.spyOn(referencedConfirmDialog, "hideDialog");
 

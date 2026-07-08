@@ -37,21 +37,28 @@
       class="mt-4"
     />
 
-    <base-dialog-wahllokal-benutzer-delete-confirmation
+    <base-dialog-confirmation
       ref="benutzerDeleteConfirmationDialog"
       @confirmDelete="onDeleteDialogConfirmDelete"
       @cancelDelete="onDeleteDialogCancelDelete"
-    />
+    >
+      <div data-test="div-confirm-information">
+        Alle Wahllokalbenutzer für diesen Wahltag werden unwiderruflich
+        gelöscht. Bitte geben Sie "{{ DEFAULT_TEXT_CONFIRMATION_TEXT }}" in das
+        Eingabefeld ein und bestätigen Sie, um die Benutzer zu löschen.
+      </div>
+    </base-dialog-confirmation>
   </div>
 </template>
 <script setup lang="ts">
 import { computed, onMounted, ref, useTemplateRef, watch } from "vue";
 import { VBtn } from "vuetify/components";
 
-import BaseDialogWahllokalBenutzerDeleteConfirmation from "@/components/wahltag/BaseDialogWahllokalBenutzerDeleteConfirmation.vue";
+import BaseDialogConfirmation from "@/components/wahltag/BaseDialogConfirmation.vue";
 import BaseListWahllokalBenutzer from "@/components/wahltag/BaseListWahllokalBenutzer.vue";
 import { useWahllokalBenutzerFormatter } from "@/composables/wahllokalbenutzer/wahllokalbenutzerFormatter.ts";
 import { useWahllokalBenutzerService } from "@/composables/wahllokalbenutzer/wahllokalbenutzerService.ts";
+import { DEFAULT_TEXT_CONFIRMATION_TEXT } from "@/constants.ts";
 
 const {
   generateBenutzer,
@@ -73,7 +80,7 @@ const props = defineProps({
 });
 
 const templateRefBenutzerDeleteConfirmationDialog = useTemplateRef<
-  InstanceType<typeof BaseDialogWahllokalBenutzerDeleteConfirmation>
+  InstanceType<typeof BaseDialogConfirmation>
 >("benutzerDeleteConfirmationDialog");
 
 const benutzerCsv = ref("");

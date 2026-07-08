@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { delay, http, HttpResponse } from "msw";
 
-import BaseDialogWahltagOverrideWahlterminConfirmation from "@/components/wahltag/BaseDialogWahltagOverrideWahlterminConfirmation.vue";
+import BaseDialogConfirmation from "@/components/wahltag/BaseDialogConfirmation.vue";
 import { default as StoryComponent } from "@/components/wahltag/BaseStepWahltagInit.vue";
 
 const meta: Meta<typeof StoryComponent> = {
   component: StoryComponent,
-  subcomponents: { BaseDialogWahltagOverrideWahlterminConfirmation },
+  subcomponents: { BaseDialogConfirmation },
   args: {
     wahltagEvent: {
       nummer: "Nummer 1",

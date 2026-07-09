@@ -15,7 +15,7 @@ CREATE TABLE Stimmzettel_Kandidat
     fk_wahlID             VARCHAR(1024) NOT NULL,
     fk_wahlbezirkID       VARCHAR(1024) NOT NULL,
     fk_teamID             VARCHAR(1024) NOT NULL,
-    fk_stimmzettelkennung VARCHAR(1024) NOT NULL,
+    fk_stimmzettelkennung NUMBER(19, 0) NOT NULL,
 
     kandidatId            VARCHAR(1024) NOT NULL,
     isDiscarded           NUMBER        NOT NULL,

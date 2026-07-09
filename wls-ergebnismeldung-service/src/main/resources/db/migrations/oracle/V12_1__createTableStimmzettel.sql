@@ -18,7 +18,7 @@ CREATE TABLE Stimmzettel_Kandidat
     fk_stimmzettelkennung NUMBER(19, 0) NOT NULL,
 
     kandidatId            VARCHAR(1024) NOT NULL,
-    isDiscarded           NUMBER        NOT NULL,
+    isDiscarded           NUMBER(0,1)   NOT NULL,
     votesByVoter          NUMBER        NOT NULL,
 
     CONSTRAINT fk_Stimmzettel

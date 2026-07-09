@@ -29,7 +29,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
 
     const result: NavigationDefinition[] = [];
 
-    if (hasRoleSchriftfuehrung) {
+    if (hasRoleSchriftfuehrung.value) {
       result.push(..._createNavigationForSchriftfuehrung());
     }
 

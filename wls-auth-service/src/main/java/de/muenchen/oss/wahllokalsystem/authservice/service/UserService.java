@@ -207,7 +207,8 @@ public class UserService {
                         user,
                         newSchriftfuehrungAuthorities,
                         generatePin(),
-                        generateName(user.wahlbezirknummer(), startSuffix)))
+                        generateName(user.wahlbezirknummer(), startSuffix),
+                        "" + startSuffix))
             .toList();
     val persistedSchriftfuehrer = userRepository.saveAll(newSchriftfuehrungUsers);
 
@@ -224,7 +225,8 @@ public class UserService {
                 user,
                 newErfassungUserAuthorities,
                 generatePin(),
-                generateName(user.wahlbezirknummer(), suffixChar)));
+                generateName(user.wahlbezirknummer(), suffixChar),
+                "" + startSuffix));
       }
     }
 

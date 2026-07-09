@@ -20,4 +20,5 @@ public record UserDTO(
     WahlbezirksartDTO wahlbezirksArt,
     String pin,
     @NotNull Set<String> authorities,
-    String wbid_wahlnummer) {}
+    String wbid_wahlnummer,
+    String teamID) {}

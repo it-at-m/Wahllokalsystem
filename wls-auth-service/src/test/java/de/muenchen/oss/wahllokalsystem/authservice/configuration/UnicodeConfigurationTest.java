@@ -18,6 +18,7 @@ import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -45,6 +46,9 @@ class UnicodeConfigurationTest {
 
   @Autowired private UserRepository userRepository;
 
+  @Value("${service.config.user.sizeOfTeam:5}")
+  int sizeOfTeam;
+
   @Test
   void should_testForNfcNormalization_when_givenComposedString() {
     val wahltagID = "wahltagID";
@@ -60,7 +64,7 @@ class UnicodeConfigurationTest {
         URI.create(AUTH_ENDPOINT_URL + wahltagID), List.of(wahllokalUser), Void.class);
 
     val users = userRepository.findByWahltagID(wahltagID);
-    Assertions.assertThat(users).hasSize(1);
+    Assertions.assertThat(users).hasSize(sizeOfTeam);
     Assertions.assertThat(users.stream().findFirst().get().getWbid_wahlnummer())
         .isEqualTo(TEXT_ATTRIBUTE_COMPOSED);
   }

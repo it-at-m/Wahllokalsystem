@@ -26,9 +26,15 @@ flowchart LR
     subgraph githubActions
        labeler 
        auto-assign
+       populate-release-pr-links
     end
     anyPR --> labeler
     anyPR --> auto-assign
+    anyPR --> populate-release-pr-links
+    populate-release-pr-links --> note[/Nur wenn im PR Namen "Release" vorkommt,<br/>und das Release-PR-Template verwendet wurde/] 
+    
+    classDef text fill:#ffffff,font-style:italic,stroke:#4f4f4f
+    class note text
 ```
 
 <em>Workflow und Action, die bei jedem Pull-Request ausgeführt wird</em>

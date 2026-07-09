@@ -125,8 +125,7 @@ public class Testdaten {
       return new StimmzettelModel(anzahl, StimmzettelartModel.KLEIN);
     }
 
-    public static StimmabgabevermerkeStimmzettel
-        createEntity(@NotNull long anzahl) {
+    public static StimmabgabevermerkeStimmzettel createEntity(@NotNull long anzahl) {
       return new StimmabgabevermerkeStimmzettel(anzahl, Stimmzettelart.KLEIN);
     }
 

@@ -2,5 +2,4 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzette
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface StimmzettelRepository extends CrudRepository<Stimmzettel, StimmzettelCombinedID> {
-}
+public interface StimmzettelRepository extends CrudRepository<Stimmzettel, StimmzettelID> {}

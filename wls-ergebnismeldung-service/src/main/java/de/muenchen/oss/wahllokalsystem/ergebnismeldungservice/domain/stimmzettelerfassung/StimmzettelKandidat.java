@@ -9,10 +9,9 @@ import lombok.Setter;
 @Setter
 @Embeddable
 public class StimmzettelKandidat {
-    @NotNull
-    private String kandidatId;
+  @NotNull private String kandidatId;
 
-    private boolean isDiscarded;
+  private boolean isDiscarded;
 
-    private int votesByVoter;
+  private int votesByVoter;
 }

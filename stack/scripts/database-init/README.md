@@ -2,7 +2,7 @@
 
 ## Beschreibung
 
-Wir möchten mithilfe eines Shell-Skripts alle erfassten Daten von Nutzern einer Umgebung zurücksetzen.
+Wir möchten mithilfe eines Shell-Skripts alle erfassten Daten von Nutzer\*innen einer Umgebung zurücksetzen.
 
 ## Aufbau
 

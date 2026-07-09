@@ -27,6 +27,7 @@ import {
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
   ROUTE_WAHLVORSTAND,
+  ROUTES_HOME,
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -434,6 +435,148 @@ describe("navigationService.ts", () => {
         expect(result).toEqual(
           unitUnderTest.routeWithName(ROUTE_STIMMABGABEVERMERKE)
         );
+      });
+    });
+
+    describe("when having no role", () => {
+      beforeEach(() => {
+        // @ts-expect-error: cannot set readonly
+        useUserStore().hasRoleSchriftfuehrung = false;
+        // @ts-expect-error: cannot set readonly
+        useUserStore().hasRoleErfassungsteam = false;
+      });
+      it("should_returnRouteToFinished_when_noUnfinishedElectionExists", () => {
+        const wahlID1 = "wahlID1";
+        const wahlbezirkID1 = "wahlbezirkID1";
+
+        const wahlID2 = "wahlID2";
+        const wahlbezirkID2 = "wahlbezirkID2";
+
+        const mbwWahlID = generateRandomString(10);
+        const mbwWahlbezirkID = generateRandomString(10);
+
+        useUserStore().user = prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: wahlbezirkID1,
+              wahlID: wahlID1,
+              wahlnummer: generateRandomString(2),
+            },
+            {
+              wahlbezirkID: mbwWahlbezirkID,
+              wahlID: mbwWahlID,
+              wahlnummer: generateRandomString(2),
+            },
+            {
+              wahlbezirkID: wahlbezirkID2,
+              wahlID: wahlID2,
+              wahlnummer: generateRandomString(2),
+            },
+          ])
+          .build();
+        useWorkflowStore().isElectionFinished = vi.fn().mockReturnValue(true);
+
+        const result = unitUnderTest.getNextRoute();
+        expect(result).toStrictEqual(
+          unitUnderTest.routeWithName(ROUTE_FINISHED)
+        );
+      });
+
+      it("should_returnRouteToNext_when_unfinishedElectionExists", () => {
+        const wahlID1 = "wahlID1";
+        const wahlbezirkID1 = "wahlbezirkID1";
+
+        const wahlID2 = "wahlID2";
+        const wahlbezirkID2 = "wahlbezirkID2";
+
+        const mbwWahlID = generateRandomString(10);
+        const mbwWahlbezirkID = generateRandomString(10);
+
+        useUserStore().user = prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: wahlbezirkID1,
+              wahlID: wahlID1,
+              wahlnummer: generateRandomString(2),
+            },
+            {
+              wahlbezirkID: mbwWahlbezirkID,
+              wahlID: mbwWahlID,
+              wahlnummer: generateRandomString(2),
+            },
+            {
+              wahlbezirkID: wahlbezirkID2,
+              wahlID: wahlID2,
+              wahlnummer: generateRandomString(2),
+            },
+          ])
+          .build();
+        useWorkflowStore().isElectionFinished = vi
+          .fn()
+          .mockImplementation(
+            (wahlID: string, wahlbezirkID: string) =>
+              wahlID !== mbwWahlID || wahlbezirkID !== mbwWahlbezirkID
+          );
+
+        const mockedWahl = prepareWahl().wahlart(WahlWahlartEnum.Mbw).build();
+        useWahlenStore().wahlenActions.getWahlOrUndefinedById = vi
+          .fn()
+          .mockReturnValueOnce(mockedWahl);
+        const mockedNextMbwRoute = unitUnderTest.routeWithName(
+          generateRandomString(10)
+        );
+        mockDefinitions.mbwGetNextRouteOrNull.mockReturnValueOnce(
+          mockedNextMbwRoute
+        );
+
+        const result = unitUnderTest.getNextRoute();
+        expect(result).toStrictEqual(mockedNextMbwRoute);
+      });
+
+      it("should_returnRouteToHome_when_unfinishedElectionExistsButHasNoNextStep", () => {
+        const wahlID1 = "wahlID1";
+        const wahlbezirkID1 = "wahlbezirkID1";
+
+        const wahlID2 = "wahlID2";
+        const wahlbezirkID2 = "wahlbezirkID2";
+
+        const mbwWahlID = generateRandomString(10);
+        const mbwWahlbezirkID = generateRandomString(10);
+
+        useUserStore().user = prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: wahlbezirkID1,
+              wahlID: wahlID1,
+              wahlnummer: generateRandomString(2),
+            },
+            {
+              wahlbezirkID: mbwWahlbezirkID,
+              wahlID: mbwWahlID,
+              wahlnummer: generateRandomString(2),
+            },
+            {
+              wahlbezirkID: wahlbezirkID2,
+              wahlID: wahlID2,
+              wahlnummer: generateRandomString(2),
+            },
+          ])
+          .build();
+        useWorkflowStore().isElectionFinished = vi
+          .fn()
+          .mockImplementation(
+            (wahlID: string, wahlbezirkID: string) =>
+              wahlID !== mbwWahlID || wahlbezirkID !== mbwWahlbezirkID
+          );
+
+        const mockedWahl = prepareWahl().wahlart(WahlWahlartEnum.Mbw).build();
+        useWahlenStore().wahlenActions.getWahlOrUndefinedById = vi
+          .fn()
+          .mockReturnValueOnce(mockedWahl);
+        mockDefinitions.mbwGetNextRouteOrNull.mockReturnValueOnce(null);
+
+        const result = unitUnderTest.getNextRoute();
+        expect(result).toStrictEqual(unitUnderTest.routeWithName(ROUTES_HOME));
       });
     });
   });

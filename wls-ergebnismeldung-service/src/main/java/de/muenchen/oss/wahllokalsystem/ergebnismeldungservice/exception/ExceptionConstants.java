@@ -136,6 +136,11 @@ public class ExceptionConstants {
   public static final ExceptionDataWrapper POST_BEDENKLICHE_STIMMZETTEL_SAVING_FAILED =
       new ExceptionDataWrapper("643", "speichern bedenklicher Stimmzettel fehlgeschlagen");
 
+  public static final ExceptionDataWrapper STIMMZETTELKENNUNG_NON_UNIQUE =
+      new ExceptionDataWrapper("701", "Stimmzettelkennung ist nicht eindeutig");
+  public static final ExceptionDataWrapper STIMMZETTEL_OWNER_IDS_ARE_MISSING =
+      new ExceptionDataWrapper("702", "IDs fehlen");
+
   public static final ExceptionDataWrapper MAPPING_AOUEAI =
       new ExceptionDataWrapper(
           "900",

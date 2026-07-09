@@ -59,7 +59,7 @@ const { loadUser, initIsNachlieferungsbezirk } = useUserStore();
 const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss } = storeToRefs(
   useInfomanagementStore()
 );
-const { isUWB, isBWB } = storeToRefs(useUserStore());
+const { isUWB, isBWB, hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions } = useWahlenStore();
 const { isOfflineCacheReady } = storeToRefs(useOnlineOfflineStore());
@@ -92,7 +92,7 @@ onMounted(async () => {
     isOfflineCacheReady.value = await awaitServiceWorkerActive();
     await syncPin();
     await wahlenActions.initWahlen();
-    if (isBWB.value) {
+    if (isBWB.value && hasRoleSchriftfuehrung.value) {
       await initIsNachlieferungsbezirk();
     }
     await useKopfdatenStore().initKopfdaten();
@@ -103,7 +103,9 @@ onMounted(async () => {
   } catch (error) {
     console.debug(error);
   } finally {
-    startBroadcastMessageInterval();
+    if (hasRoleSchriftfuehrung.value) {
+      startBroadcastMessageInterval();
+    }
   }
 });
 

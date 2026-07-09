@@ -142,32 +142,33 @@ Die Benutzerkonten die zuvor für den Wahltermin vorhanden waren werden gelösch
 
 Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 
-| Name                                               | Beschreibung                                                                                      | Default                                                     |
-|----------------------------------------------------|---------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
-| cors.allowedOrigins                                | Liste mit erlaubten Origins für CORS.                                                             | `http://localhost:8083`, `http://host.docker.internal:8083` |
-| crypto.encryptionPrefix                            | String vor dem verschlüsselten Wert. Auf diese Weise sind verschlüsselte Werte erkennbar          | ENCRYPTED:                                                  |
-| crypto.key                                         | Schlüssel zum ver- und entschlüsseln                                                              |                                                             |
-| falscheLoginZeitstrafe                             | Zeit in Minuten für eine Sperrung                                                                 | 10                                                          |
-| maxLoginAttempts                                   | Maximale Anzahl an Fehlversuchen bis der Account gesperrt wird.                                   | 5                                                           |
-| clients.infomanagement.basepath                    | URL zum Infomanagement-Service                                                                    | `http://localhost:39146`                                    |
-| clients.infomanagement.configkey.welcomeMessage    | Schlüssel für Konfiguration der Willkommensnachricht                                              | WILLKOMMENSTEXT                                             |
-| clients.infomanagement.configkey.fruehesterLogin   | Schlüssel für Konfiguration des frühesten Zeitpunktes für Login                                   | FRUEHESTE_LOGIN_UHRZEIT                                     |
-| clients.infomanagement.configkey.spaetesterLogin   | Schlüssel für Konfiguration des spätesten Zeitpunktes für Login                                   | SPAETESTE_LOGIN_UHRZEIT                                     |
-| clients.infomanagement.dateformat                  | Format des Datums wie es vom Infomanagement-Service kommt                                         | dd.MM.yyyy HH:mm                                            |
-| serviceauth.welcomemessage.default                 | Standard Willkommensnachricht falls die definierte Willkommensnachricht nicht geladen werden kann | Willkommen zur Wahl!                                        |
-| ldap.userDn                                        | Username zur Authentifizierung am LDAP-Server                                                     |                                                             |
-| ldap.userDnPassword                                | Passwort zur Authentifizierung am LDAP-Server                                                     |                                                             |
-| ldap.contextSource                                 | Url zum LDAP-Server, z.B. `ldaps://my-ldap-server.de:636`                                         |                                                             |
-| ldap.userSearchBase                                | Basispfad für Suche, z.b. `o=myOrg,c=de`                                                          | ou=people                                                   |
-| ldap.userSearchFilter                              | Filter für Suche, z.B. `(uid={0})`                                                                | `uid={0}`                                                   |
-| oauth2.logoutUri                                   | Url des AuthServices für den Logout. Ist der selbe Service über den der Login erfolgte            | `http://host.docker.internal:8100/logout`                   |
-| oauth2.clients.wahllokalgui.id                     | ID des Client der Wahllokal-Anwendung                                                             | wahllokalgui                                                |
-| oauth2.clients.admingui.id                         | ID des Client der Admintool-Anwendung                                                             | admingui                                                    |
-| oauth2.jwk.rsa.init.seed                           | Seed für RSA-Schlüsselpaar. Gleiche Seeds sorgen für gleiche Ergebnisse                           |                                                             |
-| rsa.rsa-key-setting                                | Enum (GENERATED_KEY,STATIC_KEY), das bestimmt welcher RSA-Key verwendet werden soll               |                                                             |
-| rsa.public-key                                     | Verwendeter Public-Key                                                                            |                                                             |
-| rsa.private-key                                    | Verwendeter Private-Key                                                                           |                                                             |
-| spring.ldap.embedded.ldif                          | Ort der LDAP-Resource für embedded LDAP-Server (Profil: `dummy.ldap`)                             | classpath:users.ldif                                        |
+| Name                                             | Beschreibung                                                                                      | Default                                                     |
+|--------------------------------------------------|---------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
+| cors.allowedOrigins                              | Liste mit erlaubten Origins für CORS.                                                             | `http://localhost:8083`, `http://host.docker.internal:8083` |
+| crypto.encryptionPrefix                          | String vor dem verschlüsselten Wert. Auf diese Weise sind verschlüsselte Werte erkennbar          | ENCRYPTED:                                                  |
+| crypto.key                                       | Schlüssel zum ver- und entschlüsseln                                                              |                                                             |
+| falscheLoginZeitstrafe                           | Zeit in Minuten für eine Sperrung                                                                 | 10                                                          |
+| maxLoginAttempts                                 | Maximale Anzahl an Fehlversuchen bis der Account gesperrt wird.                                   | 5                                                           |
+| clients.infomanagement.basepath                  | URL zum Infomanagement-Service                                                                    | `http://localhost:39146`                                    |
+| clients.infomanagement.configkey.welcomeMessage  | Schlüssel für Konfiguration der Willkommensnachricht                                              | WILLKOMMENSTEXT                                             |
+| clients.infomanagement.configkey.fruehesterLogin | Schlüssel für Konfiguration des frühesten Zeitpunktes für Login                                   | FRUEHESTE_LOGIN_UHRZEIT                                     |
+| clients.infomanagement.configkey.spaetesterLogin | Schlüssel für Konfiguration des spätesten Zeitpunktes für Login                                   | SPAETESTE_LOGIN_UHRZEIT                                     |
+| clients.infomanagement.dateformat                | Format des Datums wie es vom Infomanagement-Service kommt                                         | dd.MM.yyyy HH:mm                                            |
+| serviceauth.welcomemessage.default               | Standard Willkommensnachricht falls die definierte Willkommensnachricht nicht geladen werden kann | Willkommen zur Wahl!                                        |
+| ldap.userDn                                      | Username zur Authentifizierung am LDAP-Server                                                     |                                                             |
+| ldap.userDnPassword                              | Passwort zur Authentifizierung am LDAP-Server                                                     |                                                             |
+| ldap.contextSource                               | Url zum LDAP-Server, z.B. `ldaps://my-ldap-server.de:636`                                         |                                                             |
+| ldap.userSearchBase                              | Basispfad für Suche, z.b. `o=myOrg,c=de`                                                          | ou=people                                                   |
+| ldap.userSearchFilter                            | Filter für Suche, z.B. `(uid={0})`                                                                | `uid={0}`                                                   |
+| oauth2.logoutUri                                 | Url des AuthServices für den Logout. Ist der selbe Service über den der Login erfolgte            | `http://host.docker.internal:8100/logout`                   |
+| oauth2.clients.wahllokalgui.id                   | ID des Client der Wahllokal-Anwendung                                                             | wahllokalgui                                                |
+| oauth2.clients.admingui.id                       | ID des Client der Admintool-Anwendung                                                             | admingui                                                    |
+| oauth2.jwk.rsa.init.seed                         | Seed für RSA-Schlüsselpaar. Gleiche Seeds sorgen für gleiche Ergebnisse                           |                                                             |
+| rsa.rsa-key-setting                              | Enum (GENERATED_KEY,STATIC_KEY), das bestimmt welcher RSA-Key verwendet werden soll               |                                                             |
+| rsa.public-key                                   | Verwendeter Public-Key                                                                            |                                                             |
+| rsa.private-key                                  | Verwendeter Private-Key                                                                           |                                                             |
+| spring.ldap.embedded.ldif                        | Ort der LDAP-Resource für embedded LDAP-Server (Profil: `dummy.ldap`)                             | classpath:users.ldif                                        |
+| user.sizeOfTeam                                  | Die Anzahl der Benutzerkonten eines Auszählungsteams inklusive der Schriftführung                 | 5                                                           |
 
 ## Token-Settings
 

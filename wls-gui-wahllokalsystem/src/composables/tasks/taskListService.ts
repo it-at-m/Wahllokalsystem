@@ -1,4 +1,5 @@
 import type { ExtendedWahlMetaData } from "@/composables/tasks/ExtendedWahlMetaData.ts";
+import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
 
 import { storeToRefs } from "pinia";
 
@@ -29,8 +30,12 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 export function useTaskListService() {
   const { wahlenActions, waehlerverzeichnisActions } = useWahlenStore();
-  const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
-    storeToRefs(useUserStore());
+  const {
+    currentUserWahlMetadata,
+    currentUserWahlbezirksArt,
+    hasRoleSchriftfuehrung,
+    hasRoleErfassungsteam,
+  } = storeToRefs(useUserStore());
 
   const { createTasks: createWahlvorstandTasks } = useWahlvorstandTaskFactory();
   const { createTasks: createEroeffnungsuhrzeitTasks } =
@@ -94,7 +99,7 @@ export function useTaskListService() {
     ];
   }
 
-  function _createTaskFactoryData() {
+  function _createTaskFactoryData(): TaskFactoryContext {
     const extendedWahlMetaData: ExtendedWahlMetaData[] =
       currentUserWahlMetadata.value.map((wahlMetadata) => {
         const wahl = wahlenActions.getWahlOrUndefinedById(wahlMetadata.wahlID);
@@ -117,6 +122,8 @@ export function useTaskListService() {
       });
     return {
       wahlbezirkArt: currentUserWahlbezirksArt.value,
+      isErfassungsteam: hasRoleErfassungsteam.value,
+      isSchriftfuehrung: hasRoleSchriftfuehrung.value,
       extendedWahlMetaData: extendedWahlMetaData,
     };
   }

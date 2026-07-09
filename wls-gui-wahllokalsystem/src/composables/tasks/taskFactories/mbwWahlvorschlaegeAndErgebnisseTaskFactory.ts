@@ -4,6 +4,7 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 import type { Task } from "@/types/tasks/Task.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
+import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -13,6 +14,8 @@ import {
 } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
+
+const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
 
 export function useMBWWahlvorschlaegeAndErgebnisseTaskFactory(): TaskFactory {
   const wahlvorschlaegeStore = useWahlvorschlaegeStore();
@@ -82,7 +85,5 @@ export function useMBWWahlvorschlaegeAndErgebnisseTaskFactory(): TaskFactory {
     };
   }
 
-  return {
-    createTasks,
-  };
+  return whenUserIsSchriftfuehrung(createTasks);
 }

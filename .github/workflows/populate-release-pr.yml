@@ -1,0 +1,151 @@
+name: Populate Release PR Links
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: read
+  packages: read
+  pull-requests: write
+
+jobs:
+  populate-links:
+    # only execute for release-prs that have "Release" in title
+    if: contains(github.event.pull_request.title, 'Release')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Update PR with Release Links
+        uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const services = [
+              'wls-admin-service',
+              'wls-auth-service',
+              'wls-basisdaten-service',
+              'wls-briefwahl-service',
+              'wls-broadcast-service',
+              'wls-eai-service',
+              'wls-ergebnismeldung-service',
+              'wls-infomanagement-service',
+              'wls-monitoring-service',
+              'wls-vorfaelleundvorkommnisse-service',
+              'wls-wahlvorbereitung-service',
+              'wls-wahlvorstand-service',
+              'wls-api-gateway',
+              'wls-gui-admintool',
+              'wls-gui-wahllokalsystem'
+            ];
+            
+            let body = context.payload.pull_request.body;
+                        
+            // generate links for every service
+            for (const serviceName of services) {
+              try {
+                // 1. get releases
+                const releases = await github.rest.repos.listReleases({
+                  owner: 'it-at-m',
+                  repo: 'Wahllokalsystem',
+                  per_page: 100
+                });
+            
+                // find newest release for service
+                const latestRelease = releases.data.find(r => 
+                  r.tag_name.startsWith(`${serviceName}/`)
+                );
+            
+                if (!latestRelease) {
+                  console.warn(`⚠ ${serviceName}: No release found`);
+                  continue;
+                }
+            
+                const tag = latestRelease.tag_name;
+                // get version from tag (e.g. "wls-admin-service/0.4.16" → "0.4.16")
+                const versionNumber = tag.split('/')[1];
+                        
+                // 2. get packageID from container registry
+                let packageId = null;
+                try {
+                  const packageResponse = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
+                    org: 'it-at-m',
+                    package_name: `wahllokalsystem-${serviceName}`,
+                    package_type: 'container',
+                    per_page: 100
+                  });
+            
+                  // find version with `latest`-tag
+                  for (const version of packageResponse.data) {
+                    if (version.metadata && version.metadata.container && version.metadata.container.tags) {
+                      if (version.metadata.container.tags.includes('latest')) {
+                        packageId = version.id;
+                        break;
+                      }
+                    }
+                  }
+                } catch (pkgError) {
+                  console.warn(`⚠ Could not get packageID for ${serviceName}:`, pkgError.message);
+                }
+            
+                // 3. generate links
+                const releaseUrl = `https://github.com/it-at-m/Wahllokalsystem/releases/tag/${serviceName}%2F${versionNumber}`;
+            
+                let imageUrl;
+                if (packageId) {
+                  imageUrl = `https://github.com/orgs/it-at-m/packages/container/wahllokalsystem-${serviceName}/${packageId}?tag=${versionNumber}`;
+                } else {
+                  // fallback when packageID not found
+                  imageUrl = `https://github.com/orgs/it-at-m/packages/container/wahllokalsystem-${serviceName}?tag=${versionNumber}`;
+                }
+            
+                // 4. replace link placeholders in pr template
+                body = body.replace(
+                  `[${serviceName}-release]: #`,
+                  `[${serviceName}-release]: ${releaseUrl}`
+                );
+                body = body.replace(
+                  `[${serviceName}-image]: #`,
+                  `[${serviceName}-image]: ${imageUrl}`
+                );
+            
+               // 5. replace version number in service heading
+              const serviceHeadings = {
+                'wls-admin-service': 'Admin-Service',
+                'wls-auth-service': 'Auth-Service',
+                'wls-basisdaten-service': 'Basisdaten-Service',
+                'wls-briefwahl-service': 'Briefwahl-Service',
+                'wls-broadcast-service': 'Broadcast-Service',
+                'wls-eai-service': 'EAI-Service',
+                'wls-ergebnismeldung-service': 'Ergebnismeldung-Service',
+                'wls-infomanagement-service': 'Infomanagement-Service',
+                'wls-monitoring-service': 'Monitoring-Service',
+                'wls-vorfaelleundvorkommnisse-service': 'Vorfaelle-Service',
+                'wls-wahlvorbereitung-service': 'Wahlvorbereitung-Service',
+                'wls-wahlvorstand-service': 'Wahlvorstand-Service',
+                'wls-api-gateway': 'API-Gateway-Service',
+                'wls-gui-admintool': 'Admin-Tool GUI',
+                'wls-gui-wahllokalsystem': 'Wahllokalsystem GUI'
+              };
+                  
+              const heading = serviceHeadings[serviceName];
+              if (heading) {
+                body = body.replaceAll(
+                `## ${heading}`,
+                `## ${heading} (${versionNumber})`
+                );
+              }
+                
+              } catch (error) {
+                console.error(`✗ Error in ${serviceName}:`, error.message);
+              }
+            }
+            
+            // update pr description with new links
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: body
+            });

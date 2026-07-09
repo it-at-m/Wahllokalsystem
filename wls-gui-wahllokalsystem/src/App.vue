@@ -92,7 +92,7 @@ onMounted(async () => {
     isOfflineCacheReady.value = await awaitServiceWorkerActive();
     await syncPin();
     await wahlenActions.initWahlen();
-    if (isBWB.value) {
+    if (isBWB.value && hasRoleSchriftfuehrung.value) {
       await initIsNachlieferungsbezirk();
     }
     await useKopfdatenStore().initKopfdaten();

@@ -18,8 +18,8 @@ CREATE TABLE Stimmzettel_Kandidat
     fk_stimmzettelkennung NUMBER(19, 0) NOT NULL,
 
     kandidatId            VARCHAR(1024) NOT NULL,
-    isDiscarded           NUMBER(0,1)   NOT NULL,
-    votesByVoter          NUMBER        NOT NULL,
+    isDiscarded           NUMBER(1, 1)  NOT NULL,
+    votesByVoter          NUMBER(19, 0) NOT NULL,
 
     CONSTRAINT fk_Stimmzettel
         FOREIGN KEY (fk_wahlbezirkID, fk_wahlID, fk_teamID, fk_stimmzettelkennung)

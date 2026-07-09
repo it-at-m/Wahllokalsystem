@@ -73,6 +73,7 @@ class WlsUserTokenCustomizerTest {
               wahlbezirkArt,
               "",
               Collections.emptySet(),
+              "",
               "");
 
       Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUser));
@@ -115,6 +116,7 @@ class WlsUserTokenCustomizerTest {
               null,
               "",
               Collections.emptySet(),
+              "",
               "");
 
       Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUser));
@@ -157,7 +159,8 @@ class WlsUserTokenCustomizerTest {
               null,
               "",
               Collections.emptySet(),
-              wbidWahlnummer);
+              wbidWahlnummer,
+              "");
 
       Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUser));
 

@@ -19,9 +19,6 @@ import { useDseNavigationService } from "@/composables/navigation/dseNavigationS
 const { wahlbezirkId, wahlId } = defineProps<{
   wahlId: string;
   wahlbezirkId: string;
-  disabled: boolean;
-  disabledMessage: string;
-  isWahlFinished: boolean;
 }>();
 
 const { navigation } = useDseNavigationService(wahlId, wahlbezirkId);

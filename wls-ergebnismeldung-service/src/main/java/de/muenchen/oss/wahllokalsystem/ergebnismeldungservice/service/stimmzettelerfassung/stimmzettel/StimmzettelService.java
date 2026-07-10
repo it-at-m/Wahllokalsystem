@@ -32,7 +32,8 @@ public class StimmzettelService {
     stimmzettelValidator.validOrThrow(stimmzettelOwner);
     stimmzettelValidator.validOrThrow(stimmzettelToSave);
 
-    stimmzettelRepository.deleteByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(stimmzettelOwner.wahlbezirkID(), stimmzettelOwner.wahlID(), stimmzettelOwner.teamID());
+    stimmzettelRepository.deleteByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
+        stimmzettelOwner.wahlbezirkID(), stimmzettelOwner.wahlID(), stimmzettelOwner.teamID());
 
     val entitiesToSave =
         stimmzettelToSave.stream()

@@ -9,7 +9,7 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
       String wahlbezirkID, String wahlID, String teamID);
 
   void deleteByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
-          String wahlbezirkID, String wahlID, String teamID);
+      String wahlbezirkID, String wahlID, String teamID);
 
   int countByIdWahlbezirkIDAndIdWahlID(String wahlbezirkID, String wahlID);
 }

@@ -58,13 +58,16 @@ public class StimmzettelController {
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("teamID") final String teamID) {
-    val stimmzettel =  stimmzettelService
-        .getStimmzettel(new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID))
-        .stream()
-        .map(stimmzettelDTOMapper::toDTO)
-        .toList();
+    val stimmzettel =
+        stimmzettelService
+            .getStimmzettel(new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID))
+            .stream()
+            .map(stimmzettelDTOMapper::toDTO)
+            .toList();
 
-    return stimmzettel.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build() : ResponseEntity.ok(stimmzettel);
+    return stimmzettel.isEmpty()
+        ? ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build()
+        : ResponseEntity.ok(stimmzettel);
   }
 
   @PostMapping("wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/stimmzettel")
@@ -81,8 +84,8 @@ public class StimmzettelController {
 
   @GetMapping("wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/anzahlStimmzettel")
   public int getAnzahlStimmzettel(
-          @PathVariable("wahlID") final String wahlID,
-          @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+      @PathVariable("wahlID") final String wahlID,
+      @PathVariable("wahlbezirkID") final String wahlbezirkID) {
     return stimmzettelService.getAnzahlStimmzettel(new BezirkUndWahlID(wahlID, wahlbezirkID));
   }
 }

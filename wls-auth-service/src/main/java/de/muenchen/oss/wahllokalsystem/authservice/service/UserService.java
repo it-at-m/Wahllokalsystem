@@ -226,7 +226,7 @@ public class UserService {
                 newErfassungUserAuthorities,
                 generatePin(),
                 generateName(user.wahlbezirknummer(), suffixChar),
-                "" + startSuffix));
+                "" + suffixChar));
       }
     }
 

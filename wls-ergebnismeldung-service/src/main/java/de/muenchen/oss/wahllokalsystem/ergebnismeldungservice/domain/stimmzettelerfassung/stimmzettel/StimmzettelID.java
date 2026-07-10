@@ -2,9 +2,13 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzette
 
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class StimmzettelID implements Serializable {
   @NotNull private String wahlbezirkID;
 

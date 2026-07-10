@@ -59,6 +59,7 @@ den Auth-Service folgende zusätzliche Claims gesetzt:
 | wahlbezirkID            | technische ID des Hauptwahlbezirkes des Benutzerkontos                   | UUIDv4           |
 | wahlbezirksArt          | Art des Wahlbezirks (Urnenwahl oder Briefwahl)                           | Enum: [BWB, UWB] |
 | wahlbezirkid_wahlnummer | Wahlbezirke und Wahlen, die dem Benutzerkonto zur Pflege zugewiesen sind | JSON-String      |
+| teamID                  | ID des Teams, für das der User zuständig ist                             | String           |
 
 > [!NOTE] Aufbau `wahlbezirkid_wahlnummer`
 >

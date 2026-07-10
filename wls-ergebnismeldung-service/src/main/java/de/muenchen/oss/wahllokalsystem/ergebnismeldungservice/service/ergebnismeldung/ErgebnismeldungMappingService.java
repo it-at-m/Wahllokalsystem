@@ -7,7 +7,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.EingenommenerWahlschein;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeStimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.Stimmzettelumschlaege;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.StimmzettelumschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.*;
@@ -180,7 +180,9 @@ public class ErgebnismeldungMappingService {
         wahldatenSet.getVermerke().stream()
             .mapToLong(
                 vermerke ->
-                    vermerke.getStimmzettel().stream().mapToLong(Stimmzettel::getAnzahl).sum())
+                    vermerke.getStimmzettel().stream()
+                        .mapToLong(StimmabgabevermerkeStimmzettel::getAnzahl)
+                        .sum())
             .sum();
     bWerte.setB1(erfassteStimmabgabevermerke);
     bWerte.setB(erfassteStimmabgabevermerke + eingenommeneWahlscheine);

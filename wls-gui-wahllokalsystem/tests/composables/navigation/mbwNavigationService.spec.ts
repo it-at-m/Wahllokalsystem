@@ -9,6 +9,7 @@ import { flushPromises } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMbwNavigationService } from "@/composables/navigation/mbwNavigationService.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
@@ -49,6 +50,8 @@ describe("mbwNavigationService.ts", () => {
           )
           .build(),
       ];
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleSchriftfuehrung = true;
 
       const unitUnderTest = useMbwNavigationService(wahlID, wahlbezirkID);
 
@@ -58,6 +61,8 @@ describe("mbwNavigationService.ts", () => {
     });
 
     it("should_returnNavigation_when_statusIsSetAfterInit", async () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleSchriftfuehrung = true;
       const unitUnderTest = useMbwNavigationService(wahlID, wahlbezirkID);
       const navigation = unitUnderTest.navigation;
 

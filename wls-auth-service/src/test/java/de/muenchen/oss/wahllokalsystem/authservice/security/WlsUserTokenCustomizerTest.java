@@ -175,6 +175,47 @@ class WlsUserTokenCustomizerTest {
     }
 
     @Test
+    void should_addTeamIDOfUser_when_tokenTypeIsAccessTokenAndUserIsFound() {
+      val username = "username";
+      val teamID = "teamID";
+
+      val jwtContext =
+          JwtEncodingContext.with(JwsHeader.with(MacAlgorithm.HS256), JwtClaimsSet.builder())
+              .context(
+                  context -> {
+                    context.put(OAuth2TokenType.class, OAuth2TokenType.ACCESS_TOKEN);
+                    context.put(
+                        Authentication.class.getName().concat(".PRINCIPAL"),
+                        new TestingAuthenticationToken(username, ""));
+                  })
+              .build();
+
+      val mockedUser =
+          new UserModel(
+              username,
+              "",
+              true,
+              "",
+              LocalDate.now(),
+              "",
+              "",
+              null,
+              "",
+              Collections.emptySet(),
+              "",
+              teamID);
+
+      Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUser));
+
+      unitUnderTest.customize(jwtContext);
+
+      jwtContext
+          .getClaims()
+          .claims(
+              claims -> Assertions.assertThat(claims).contains(Assertions.entry("teamID", teamID)));
+    }
+
+    @Test
     void should_doNothing_when_tokenTypeIsAccessTokenAndUserIsNotFound() {
       val username = "username";
       val wahlbezirkArt = WahlbezirksartModel.BWB;

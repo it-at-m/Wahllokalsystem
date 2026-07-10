@@ -52,6 +52,8 @@ describe("navigationGuards.ts", () => {
     requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
     requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
     requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+    requireRoleErfassungteam,
+    requireRoleSchriftfuehrung,
   } = useNavigationGuards();
 
   describe("isStepDoneInElectionState", () => {
@@ -714,6 +716,40 @@ describe("navigationGuards.ts", () => {
         DUMMY_NEXT_GUARD
       );
       expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("requireRoleErfassungteam", () => {
+    it("should_returnTrue_when_userHasRoleErfassungsTeam", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleErfassungsteam = true;
+      expect(
+        requireRoleErfassungteam(DUMMY_TO, DUMMY_FROM, DUMMY_NEXT_GUARD)
+      ).toStrictEqual(true);
+    });
+    it("should_returnFalse_when_userHasNoRoleErfassungsTeam", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleErfassungsteam = false;
+      expect(
+        requireRoleErfassungteam(DUMMY_TO, DUMMY_FROM, DUMMY_NEXT_GUARD)
+      ).toStrictEqual(false);
+    });
+  });
+
+  describe("requireRoleSchriftfuehrung", () => {
+    it("should_returnTrue_when_userHasRoleSchriftfuehrung", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleSchriftfuehrung = true;
+      expect(
+        requireRoleSchriftfuehrung(DUMMY_TO, DUMMY_FROM, DUMMY_NEXT_GUARD)
+      ).toStrictEqual(true);
+    });
+    it("should_returnFalse_when_userHasNoRoleSchriftfuehrung", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleSchriftfuehrung = false;
+      expect(
+        requireRoleSchriftfuehrung(DUMMY_TO, DUMMY_FROM, DUMMY_NEXT_GUARD)
+      ).toStrictEqual(false);
     });
   });
 });

@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +25,14 @@ public class StimmzettelService {
     return entitiesFound.stream().map(stimmzettelModelMapper::toModel).toList();
   }
 
+  @Transactional
   public void saveStimmzettel(
       final StimmzettelOwnerModel stimmzettelOwner,
       final List<StimmzettelOfTeamModel> stimmzettelToSave) {
     stimmzettelValidator.validOrThrow(stimmzettelOwner);
     stimmzettelValidator.validOrThrow(stimmzettelToSave);
+
+    stimmzettelRepository.deleteByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(stimmzettelOwner.wahlbezirkID(), stimmzettelOwner.wahlID(), stimmzettelOwner.teamID());
 
     val entitiesToSave =
         stimmzettelToSave.stream()

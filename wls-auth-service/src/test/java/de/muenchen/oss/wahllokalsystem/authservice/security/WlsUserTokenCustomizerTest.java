@@ -180,41 +180,39 @@ class WlsUserTokenCustomizerTest {
       val teamID = "teamID";
 
       val jwtContext =
-              JwtEncodingContext.with(JwsHeader.with(MacAlgorithm.HS256), JwtClaimsSet.builder())
-                      .context(
-                              context -> {
-                                context.put(OAuth2TokenType.class, OAuth2TokenType.ACCESS_TOKEN);
-                                context.put(
-                                        Authentication.class.getName().concat(".PRINCIPAL"),
-                                        new TestingAuthenticationToken(username, ""));
-                              })
-                      .build();
+          JwtEncodingContext.with(JwsHeader.with(MacAlgorithm.HS256), JwtClaimsSet.builder())
+              .context(
+                  context -> {
+                    context.put(OAuth2TokenType.class, OAuth2TokenType.ACCESS_TOKEN);
+                    context.put(
+                        Authentication.class.getName().concat(".PRINCIPAL"),
+                        new TestingAuthenticationToken(username, ""));
+                  })
+              .build();
 
       val mockedUser =
-              new UserModel(
-                      username,
-                      "",
-                      true,
-                      "",
-                      LocalDate.now(),
-                      "",
-                      "",
-                      null,
-                      "",
-                      Collections.emptySet(),
-                      "",
-                      teamID);
+          new UserModel(
+              username,
+              "",
+              true,
+              "",
+              LocalDate.now(),
+              "",
+              "",
+              null,
+              "",
+              Collections.emptySet(),
+              "",
+              teamID);
 
       Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUser));
 
       unitUnderTest.customize(jwtContext);
 
       jwtContext
-              .getClaims()
-              .claims(
-                      claims ->
-                              Assertions.assertThat(claims)
-                                      .contains(Assertions.entry("teamID", teamID)));
+          .getClaims()
+          .claims(
+              claims -> Assertions.assertThat(claims).contains(Assertions.entry("teamID", teamID)));
     }
 
     @Test

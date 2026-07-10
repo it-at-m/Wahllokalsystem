@@ -75,6 +75,12 @@ export function useNavigationGuards() {
   const requiresIsNachlieferungsbezirk: NavigationGuard = () =>
     useUserStore().isNachlieferungsbezirk;
 
+  const requireRoleErfassungteam: NavigationGuard = () =>
+    useUserStore().hasRoleErfassungsteam;
+
+  const requireRoleSchriftfuehrung: NavigationGuard = () =>
+    useUserStore().hasRoleSchriftfuehrung;
+
   const permitNavigationOnlyForWahlbezirksArtUwb: NavigationGuard = () =>
     useUserStore().isUWB;
 
@@ -120,5 +126,7 @@ export function useNavigationGuards() {
     requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
     requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
     requiresIsNachlieferungsbezirk,
+    requireRoleErfassungteam,
+    requireRoleSchriftfuehrung,
   };
 }

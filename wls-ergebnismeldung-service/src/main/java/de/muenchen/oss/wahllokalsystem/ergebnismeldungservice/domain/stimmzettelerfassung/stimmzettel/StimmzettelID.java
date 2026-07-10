@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel;
 
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;

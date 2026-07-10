@@ -1,8 +1,8 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.stimmzettel;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.StimmzettelOfTeamModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.StimmzettelOwnerModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.StimmzettelService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelOfTeamModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelOwnerModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

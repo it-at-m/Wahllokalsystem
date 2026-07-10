@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
 import java.util.List;
 

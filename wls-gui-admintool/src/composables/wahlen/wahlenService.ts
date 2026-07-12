@@ -1,19 +1,19 @@
-import type { WahlDTO } from "@/api/wls-clients/generated-admin-api";
+import type { WahlDTO } from "@/api/wls-clients/generated-basisdaten-api";
 
 import { ref } from "vue";
 
 import {
   Configuration,
   WahlenControllerApi,
-} from "@/api/wls-clients/generated-admin-api";
+} from "@/api/wls-clients/generated-basisdaten-api";
 import { useApiUtils } from "@/composables/common/apiUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
-import { ADMIN_SERVICE_API_URL } from "@/constants.ts";
+import { BASISDATEN_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const wahlenAPI = new WahlenControllerApi(
   new Configuration({
-    basePath: ADMIN_SERVICE_API_URL,
+    basePath: BASISDATEN_SERVICE_API_URL,
   })
 );
 const { returnUndefinedOnStatus204OrElseResponseData } = useApiUtils();
@@ -49,7 +49,7 @@ export function useWahlenService() {
   ): Promise<void> {
     isSaving.value = true;
     try {
-      await wahlenAPI.updateWahlen(wahltagID, wahlen);
+      await wahlenAPI.postWahlen(wahltagID, wahlen);
       addNotification(
         "Wahlen wurden gespeichert",
         UserNotificationCategoryEnum.SUCCESS

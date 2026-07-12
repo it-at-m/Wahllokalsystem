@@ -15,6 +15,12 @@
           variant="filled"
           data-test="wahl-name"
         />
+        <v-text-field
+          v-model="kennzeichen"
+          label="Kennzeichen"
+          variant="filled"
+          data-test="wahl-kennzeichen"
+        />
         <!-- Pfeiltasten-Eingabe wird unterbunden (ADR002): in der Capture-Phase
         abgefangen, bevor VNumberInput den Wert verändert. -->
         <div @keydown.capture="onNumberFieldKeydown">
@@ -60,7 +66,10 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import type { FarbeDTO, WahlDTO } from "@/api/wls-clients/generated-admin-api";
+import type {
+  FarbeDTO,
+  WahlDTO,
+} from "@/api/wls-clients/generated-basisdaten-api";
 
 import { computed, reactive, ref } from "vue";
 import {
@@ -91,6 +100,7 @@ const workingCopy = reactive<WahlDTO>(createEmptyWahl());
 // daher eigene, nullbare Refs für die editierbaren Zahlenfelder.
 const waehlerverzeichnisNummer = ref<number | null>(null);
 const reihenfolge = ref<number | null>(null);
+const kennzeichen = ref("");
 const farbeHex = ref("#000000");
 
 const isFormValid = computed(
@@ -110,6 +120,7 @@ function showDialog(wahl: WahlDTO) {
   waehlerverzeichnisNummer.value = wahl.waehlerverzeichnisNummer;
   reihenfolge.value = wahl.reihenfolge;
   farbeHex.value = farbeToHex(wahl.farbe);
+  kennzeichen.value = wahl.kennzeichen;
   visible.value = true;
 }
 
@@ -141,6 +152,7 @@ function onSaveClicked() {
   }
   const updatedWahl: WahlDTO = {
     ...workingCopy,
+    kennzeichen: kennzeichen.value,
     waehlerverzeichnisNummer: Number(waehlerverzeichnisNummer.value),
     reihenfolge: Number(reihenfolge.value),
     farbe: hexToFarbe(farbeHex.value),
@@ -172,7 +184,9 @@ function hexToFarbe(hex: string): FarbeDTO {
 function createEmptyWahl(): WahlDTO {
   return {
     wahlID: "",
+    kennzeichen: "",
     name: "",
+    farbe: { r: 0, g: 0, b: 0 },
     reihenfolge: 0,
     waehlerverzeichnisNummer: 0,
     wahltag: "",

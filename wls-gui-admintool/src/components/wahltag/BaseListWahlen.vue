@@ -5,6 +5,7 @@
         <thead>
           <tr>
             <th>Name der Wahl</th>
+            <th>Kennzeichen</th>
             <th>Nummer des Wählerverzeichnisses</th>
             <th>Wahlreihenfolge</th>
             <th>Wahlfarbe</th>
@@ -18,6 +19,7 @@
             data-test="wahl-row"
           >
             <td data-test="wahl-name">{{ wahl.name }}</td>
+            <td>{{ wahl.kennzeichen }}</td>
             <td>{{ wahl.waehlerverzeichnisNummer }}</td>
             <td>{{ wahl.reihenfolge }}</td>
             <td>
@@ -59,7 +61,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { FarbeDTO, WahlDTO } from "@/api/wls-clients/generated-admin-api";
+import type {
+  FarbeDTO,
+  WahlDTO,
+} from "@/api/wls-clients/generated-basisdaten-api";
 
 import { mdiPencil } from "@mdi/js";
 import { computed, onMounted, ref, useTemplateRef, watch } from "vue";

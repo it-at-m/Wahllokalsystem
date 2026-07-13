@@ -18,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class Stimmzettel {
+public class StimmabgabevermerkeStimmzettel {
 
   @NotNull @ToString.Include private long anzahl;
 

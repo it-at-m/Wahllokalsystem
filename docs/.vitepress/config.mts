@@ -214,6 +214,10 @@ export default withMermaid({
             },
             { text: "Datenbankzugriff", link: `${PATH_GUIDES}db-access.md` },
             {
+              text: "Erfasste Nutzerdaten bereinigen",
+              link: `${PATH_GUIDES}user-data-cleanup.md`,
+            },
+            {
               text: "Microservice anlegen",
               link: `${PATH_MICROSERVICE_GENERATION}`,
               collapsed: true,

@@ -30,7 +30,7 @@ public class StimmzettelController {
   private final StimmzettelDTOMapper stimmzettelDTOMapper;
   private final StimmzettelService stimmzettelService;
 
-  @Operation(description = "Lesen Stimmzettel eines Team in einem Wahlbezirk einer Wahl")
+  @Operation(description = "Lesen von Stimmzetteln eines Team in einem Wahlbezirk einer Wahl")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200", description = "Es sind Stimmzettel gespeichert"),
@@ -56,7 +56,7 @@ public class StimmzettelController {
         : ResponseEntity.ok(stimmzettel);
   }
 
-  @Operation(description = "Lesen Stimmzettel eines Team in einem Wahlbezirk einer Wahl")
+  @Operation(description = "Schreiben von Stimmzetteln eines Team in einem Wahlbezirk einer Wahl")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "201", description = "Die Stimmzettel wurden gespeichert"),

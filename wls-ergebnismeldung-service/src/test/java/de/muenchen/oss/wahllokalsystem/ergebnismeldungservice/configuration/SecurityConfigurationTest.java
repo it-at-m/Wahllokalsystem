@@ -869,15 +869,15 @@ class SecurityConfigurationTest {
       @WithAnonymousUser
       @Test
       void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
-        val request = MockMvcRequestBuilders.get(URL_STIMMZETTEL);
+        val request = MockMvcRequestBuilders.get(URL_ANZAHL_STIMMZETTEL);
         api.perform(request).andExpect(status().isUnauthorized());
       }
 
       @WithMockUser
       @Test
       void should_returnNoContent_when_userIsAuthenticated() throws Exception {
-        val request = MockMvcRequestBuilders.get(URL_STIMMZETTEL);
-        api.perform(request).andExpect(status().isNoContent());
+        val request = MockMvcRequestBuilders.get(URL_ANZAHL_STIMMZETTEL);
+        api.perform(request).andExpect(status().isOk());
       }
     }
   }

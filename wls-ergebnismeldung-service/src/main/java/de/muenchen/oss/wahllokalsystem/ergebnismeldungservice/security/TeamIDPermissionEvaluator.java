@@ -6,5 +6,5 @@ public interface TeamIDPermissionEvaluator {
 
   String COMPONENT_NAME = "teamIDPermissionEvaluator";
 
-  boolean tokenUserteamIdMatches(String bezirkId, Authentication authentication);
+  boolean tokenUserteamIdMatches(String requiredTeamID, Authentication authentication);
 }

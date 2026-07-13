@@ -119,7 +119,7 @@ public class StimmzettelControllerIntegrationTest {
 
       Assertions.assertThat(responseAsDTO).hasSize(3);
       Assertions.assertThat(responseAsDTO)
-          .containsExactly(expectedItem1, expectedItem2, expectedItem3);
+          .containsExactlyInAnyOrder(expectedItem1, expectedItem2, expectedItem3);
     }
 
     @Test

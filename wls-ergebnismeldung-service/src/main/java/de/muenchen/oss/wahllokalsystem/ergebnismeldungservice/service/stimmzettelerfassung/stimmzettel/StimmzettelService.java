@@ -5,6 +5,8 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +18,11 @@ public class StimmzettelService {
   private final StimmzettelModelMapper stimmzettelModelMapper;
   private final StimmzettelRepository stimmzettelRepository;
 
-  public List<StimmzettelOfTeamModel> getStimmzettel(final StimmzettelOwnerModel stimmzettelOwner) {
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelOfTeam')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
+  public List<StimmzettelOfTeamModel> getStimmzettel(
+      @P("param") final StimmzettelOwnerModel stimmzettelOwner) {
     stimmzettelValidator.validOrThrow(stimmzettelOwner);
 
     val entitiesFound =
@@ -25,9 +31,12 @@ public class StimmzettelService {
     return entitiesFound.stream().map(stimmzettelModelMapper::toModel).toList();
   }
 
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_WriteStimmzettelOfTeam')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
   @Transactional
   public void saveStimmzettel(
-      final StimmzettelOwnerModel stimmzettelOwner,
+      @P("param") final StimmzettelOwnerModel stimmzettelOwner,
       final List<StimmzettelOfTeamModel> stimmzettelToSave) {
     stimmzettelValidator.validOrThrow(stimmzettelOwner);
     stimmzettelValidator.validOrThrow(stimmzettelToSave);
@@ -42,7 +51,10 @@ public class StimmzettelService {
     stimmzettelRepository.saveAll(entitiesToSave);
   }
 
-  public int getAnzahlStimmzettel(final BezirkUndWahlID bezirkUndWahlID) {
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_ReadCountStimmzettel')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
+  public int getAnzahlStimmzettel(@P("param") final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
     return stimmzettelRepository.countByIdWahlbezirkIDAndIdWahlID(

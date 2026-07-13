@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -152,7 +153,12 @@ public class StimmzettelControllerIntegrationTest {
               .buildAndExpand(wahlID, wahlbezirkID, teamID)
               .toUriString();
       return MockMvcRequestBuilders.get(uri)
-          .with(jwt().authorities().jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(
+                          "Ergebnismeldung_BUSINESSACTION_GetStimmzettelOfTeam"))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
     }
   }
 
@@ -368,7 +374,12 @@ public class StimmzettelControllerIntegrationTest {
               .toUriString();
       return MockMvcRequestBuilders.post(uri)
           .with(csrf())
-          .with(jwt().authorities().jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(
+                          "Ergebnismeldung_BUSINESSACTION_WriteStimmzettelOfTeam"))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(requestBody));
     }
@@ -492,7 +503,12 @@ public class StimmzettelControllerIntegrationTest {
               .buildAndExpand(wahlID, wahlbezirkID)
               .toUriString();
       return MockMvcRequestBuilders.get(uri)
-          .with(jwt().authorities().jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(
+                          "Ergebnismeldung_BUSINESSACTION_ReadCountStimmzettel"))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
     }
   }
 }

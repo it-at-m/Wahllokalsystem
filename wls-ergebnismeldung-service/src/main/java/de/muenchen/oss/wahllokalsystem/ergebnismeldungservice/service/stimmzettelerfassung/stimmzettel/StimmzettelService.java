@@ -43,6 +43,8 @@ public class StimmzettelService {
   }
 
   public int getAnzahlStimmzettel(final BezirkUndWahlID bezirkUndWahlID) {
+    stimmzettelValidator.validOrThrow(bezirkUndWahlID);
+
     return stimmzettelRepository.countByIdWahlbezirkIDAndIdWahlID(
         bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID());
   }

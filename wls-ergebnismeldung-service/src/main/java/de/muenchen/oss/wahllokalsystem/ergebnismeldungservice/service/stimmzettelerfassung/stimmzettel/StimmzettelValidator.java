@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.DataConflictException;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +25,12 @@ public class StimmzettelValidator {
         || StringUtils.isBlank(stimmzettelOwner.teamID())) {
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.STIMMZETTEL_OWNER_IDS_ARE_MISSING);
+    }
+  }
+
+  public void validOrThrow(final BezirkUndWahlID bezirkUndWahlID) {
+    if (bezirkUndWahlID == null || StringUtils.isBlank(bezirkUndWahlID.getWahlbezirkID()) || StringUtils.isBlank(bezirkUndWahlID.getWahlID())) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.STIMMZETTEL_ANZAHL_IDS_ARE_MISSING);
     }
   }
 

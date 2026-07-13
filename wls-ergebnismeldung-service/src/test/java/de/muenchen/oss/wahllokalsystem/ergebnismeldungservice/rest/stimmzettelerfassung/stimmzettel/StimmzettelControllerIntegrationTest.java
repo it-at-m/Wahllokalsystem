@@ -158,7 +158,11 @@ public class StimmzettelControllerIntegrationTest {
                   .authorities(
                       new SimpleGrantedAuthority(
                           "Ergebnismeldung_BUSINESSACTION_GetStimmzettelOfTeam"))
-                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+                  .jwt(
+                      jwt -> {
+                        jwt.claim("wahlbezirkID", wahlbezirkID);
+                        jwt.claim("teamID", teamID);
+                      }));
     }
   }
 
@@ -379,7 +383,11 @@ public class StimmzettelControllerIntegrationTest {
                   .authorities(
                       new SimpleGrantedAuthority(
                           "Ergebnismeldung_BUSINESSACTION_WriteStimmzettelOfTeam"))
-                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
+                  .jwt(
+                      jwt -> {
+                        jwt.claim("wahlbezirkID", wahlbezirkID);
+                        jwt.claim("teamID", teamID);
+                      }))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(requestBody));
     }

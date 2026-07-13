@@ -20,7 +20,8 @@ public class StimmzettelService {
 
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelOfTeam')"
-          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+          + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
   public List<StimmzettelOfTeamModel> getStimmzettel(
       @P("param") final StimmzettelOwnerModel stimmzettelOwner) {
     stimmzettelValidator.validOrThrow(stimmzettelOwner);
@@ -33,7 +34,8 @@ public class StimmzettelService {
 
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_WriteStimmzettelOfTeam')"
-          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+          + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
   @Transactional
   public void saveStimmzettel(
       @P("param") final StimmzettelOwnerModel stimmzettelOwner,

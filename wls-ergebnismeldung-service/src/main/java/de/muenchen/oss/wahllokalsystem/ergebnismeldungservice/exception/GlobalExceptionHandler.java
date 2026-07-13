@@ -29,9 +29,9 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
     return new ResponseEntity<>(
         new WlsExceptionDTO(
             WlsExceptionCategory.F,
-            dataConflictException.getMessage(),
             dataConflictException.getCode(),
-            getService()),
+            getService(),
+            dataConflictException.getMessage()),
         HttpStatus.CONFLICT);
   }
 

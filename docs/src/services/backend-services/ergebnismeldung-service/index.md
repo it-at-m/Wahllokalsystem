@@ -96,6 +96,12 @@ Ausnahme hierbei sind die bedenklichen Stimmzettel (Stapel E) der MBW, die als e
 Zu Wahlergebnissen können Begründungen verfasst werden, in denen festgehalten wird, wieso ein Wahlergebnis trotz
 Abweichungen in der Anzahl der Stimmen gespeichert wird.
 
+### Lesen und Schreiben von Stimmzetteln
+
+Die von Wähler\*Innen hinterlassenen Kennzeichen auf einem Stimmzettel können verwaltet werden. Im Unterschied zu den
+Ergebnissen, die auf Stapeln aufbauen, hat man hier Rohdaten, welcher erst später für die Übermittlung
+summiert werden.
+
 ### Übermittlung einer Ergebnismeldung
 
 Eine Ergebnismeldung kann eine Schnellmeldung oder eine Niederschrift sein, welche an das externe System übermittelt wird.

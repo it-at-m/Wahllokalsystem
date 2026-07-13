@@ -54,16 +54,17 @@ public class StimmzettelerfassungControllerTest {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = "wahlID";
 
-      val mockedModel = ErfassungStatusModel.STE_ABGESCHLOSSEN;
-      val mockedDto = ErfassungStatusDTO.STE_ABGESCHLOSSEN;
+      val mockedStatusModel = ErfassungStatusModel.STE_ABGESCHLOSSEN;
+      val mockedStatusDto = ErfassungStatusDTO.STE_ABGESCHLOSSEN;
+      val mockedDto = new StimmzettelerfassungStatusDTO(ErfassungStatusDTO.STE_ABGESCHLOSSEN);
 
       Mockito.when(
               stimmzettelerfassungService.getStimmzettelerfassungStatus(
-                  new BezirkUndWahlID(wahlbezirkID, wahlID)))
-          .thenReturn(Optional.of(mockedModel));
-      Mockito.when(erfassungStatusDTOMapper.toDTO(mockedModel)).thenReturn(mockedDto);
+                  new BezirkUndWahlID(wahlID, wahlbezirkID)))
+          .thenReturn(Optional.of(mockedStatusModel));
+      Mockito.when(erfassungStatusDTOMapper.toDTO(mockedStatusModel)).thenReturn(mockedStatusDto);
 
-      val result = unitUnderTest.getStimmzettelerfassungStatus(wahlbezirkID, wahlID);
+      val result = unitUnderTest.getStimmzettelerfassungStatus(wahlID, wahlbezirkID);
 
       Assertions.assertThat(result.getBody()).isEqualTo(mockedDto);
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);

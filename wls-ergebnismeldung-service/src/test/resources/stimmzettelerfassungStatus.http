@@ -3,7 +3,7 @@ GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST Status des DSE-Workflows | user wls_mbw_uwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmmzettelerfassungsWorkflow/wahl/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e/wahlbezirk/d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmzettelerfassungsWorkflow/wahl/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e/wahlbezirk/d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
@@ -12,4 +12,4 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 }
 
 ### GET Status des DSE-Workflows | user wls_mbw_uwb
-GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmmzettelerfassungsWorkflow/wahl/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e/wahlbezirk/d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmzettelerfassungsWorkflow/wahl/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e/wahlbezirk/d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a

@@ -5,6 +5,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,5 +20,5 @@ public class StimmzettelerfassungStatus {
   @EmbeddedId private BezirkUndWahlID bezirkUndWahlID;
 
   @Enumerated(EnumType.STRING)
-  @NotNull private ErfassungStatus status;
+  @Valid @NotNull private ErfassungStatus status;
 }

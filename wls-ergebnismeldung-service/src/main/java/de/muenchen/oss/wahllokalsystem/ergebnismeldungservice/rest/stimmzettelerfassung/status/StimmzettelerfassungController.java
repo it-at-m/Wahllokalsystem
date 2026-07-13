@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/businessActions/stimmmzettelerfassungsWorkflow")
+@RequestMapping("/businessActions/stimmzettelerfassungsWorkflow")
 @RequiredArgsConstructor
 public class StimmzettelerfassungController extends AbstractController {
 
@@ -53,7 +53,9 @@ public class StimmzettelerfassungController extends AbstractController {
             content = {
               @Content(
                   mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = ErfassungStatusDTO.class)))
+                  array =
+                      @ArraySchema(
+                          schema = @Schema(implementation = StimmzettelerfassungStatusDTO.class)))
             }),
         @ApiResponse(
             responseCode = "204",
@@ -61,12 +63,13 @@ public class StimmzettelerfassungController extends AbstractController {
             content = {@Content()})
       })
   @GetMapping("wahl/{wahlID}/wahlbezirk/{wahlbezirkID}")
-  public ResponseEntity<ErfassungStatusDTO> getStimmzettelerfassungStatus(
+  public ResponseEntity<StimmzettelerfassungStatusDTO> getStimmzettelerfassungStatus(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID) {
     return okWithBodyOrNoContent(
         stimmzettelerfassungService
             .getStimmzettelerfassungStatus(new BezirkUndWahlID(wahlID, wahlbezirkID))
-            .map(erfassungStatusDTOMapper::toDTO));
+            .map(erfassungStatusDTOMapper::toDTO)
+            .map(StimmzettelerfassungStatusDTO::new));
   }
 }

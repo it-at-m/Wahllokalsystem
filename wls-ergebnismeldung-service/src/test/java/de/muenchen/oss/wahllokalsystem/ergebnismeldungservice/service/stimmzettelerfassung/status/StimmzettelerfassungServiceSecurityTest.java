@@ -80,7 +80,7 @@ public class StimmzettelerfassungServiceSecurityTest {
     @Test
     void
         should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
-      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE);
+      SecurityUtils.runWith(Authorities.SERVICE_GET_STIMMZETTELERFASSUNGSTATUS);
 
       val wahlbezirkID = "wahlbezirkID";
       val id = new BezirkUndWahlID("wahlID", wahlbezirkID);

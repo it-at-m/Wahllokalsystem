@@ -118,7 +118,7 @@ public class StimmzettelerfassungControllerIntegrationTest {
         final StimmzettelerfassungStatusDTO requestBody)
         throws Exception {
       return MockMvcRequestBuilders.post(
-              "/businessActions/stimmmzettelerfassungsWorkflow/wahl/"
+              "/businessActions/stimmzettelerfassungsWorkflow/wahl/"
                   + wahlID
                   + "/wahlbezirk/"
                   + wahlbezirkID)
@@ -154,9 +154,10 @@ public class StimmzettelerfassungControllerIntegrationTest {
               .andReturn()
               .getResponse();
       val responseBodyAsDTO =
-          objectMapper.readValue(response.getContentAsString(), ErfassungStatusDTO.class);
+          objectMapper.readValue(
+              response.getContentAsString(), StimmzettelerfassungStatusDTO.class);
 
-      val expectedResult = ErfassungStatusDTO.STE_ABGESCHLOSSEN;
+      val expectedResult = new StimmzettelerfassungStatusDTO(ErfassungStatusDTO.STE_ABGESCHLOSSEN);
 
       Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResult);
     }
@@ -184,7 +185,7 @@ public class StimmzettelerfassungControllerIntegrationTest {
     private MockHttpServletRequestBuilder createGetRequest(
         final String wahlID, final String wahlbezirkID, final String claimWahlbezirkID) {
       return MockMvcRequestBuilders.get(
-              "/businessActions/stimmmzettelerfassungsWorkflow/wahl/"
+              "/businessActions/stimmzettelerfassungsWorkflow/wahl/"
                   + wahlID
                   + "/wahlbezirk/"
                   + wahlbezirkID)

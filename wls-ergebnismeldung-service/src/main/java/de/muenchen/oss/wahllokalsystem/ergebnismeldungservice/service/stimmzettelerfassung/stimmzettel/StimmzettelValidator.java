@@ -16,11 +16,16 @@ public class StimmzettelValidator {
   private final ExceptionFactory exceptionFactory;
 
   public void validOrThrow(final List<StimmzettelOfTeamModel> stimmzettels) {
+    if (stimmzettels == null) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.STIMMZETTEL_FEHLEN);
+    }
+
     verifyThatStimmzettelKennungIsUnique(stimmzettels);
   }
 
   public void validOrThrow(final StimmzettelOwnerModel stimmzettelOwner) {
-    if (StringUtils.isBlank(stimmzettelOwner.wahlbezirkID())
+    if (stimmzettelOwner == null
+        || StringUtils.isBlank(stimmzettelOwner.wahlbezirkID())
         || StringUtils.isBlank(stimmzettelOwner.wahlID())
         || StringUtils.isBlank(stimmzettelOwner.teamID())) {
       throw exceptionFactory.createFachlicheWlsException(
@@ -29,8 +34,11 @@ public class StimmzettelValidator {
   }
 
   public void validOrThrow(final BezirkUndWahlID bezirkUndWahlID) {
-    if (bezirkUndWahlID == null || StringUtils.isBlank(bezirkUndWahlID.getWahlbezirkID()) || StringUtils.isBlank(bezirkUndWahlID.getWahlID())) {
-      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.STIMMZETTEL_ANZAHL_IDS_ARE_MISSING);
+    if (bezirkUndWahlID == null
+        || StringUtils.isBlank(bezirkUndWahlID.getWahlbezirkID())
+        || StringUtils.isBlank(bezirkUndWahlID.getWahlID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_ANZAHL_IDS_ARE_MISSING);
     }
   }
 

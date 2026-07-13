@@ -138,10 +138,12 @@ public class ExceptionConstants {
 
   public static final ExceptionDataWrapper STIMMZETTELKENNUNG_NON_UNIQUE =
       new ExceptionDataWrapper("701", "Stimmzettelkennung ist nicht eindeutig");
+  public static final ExceptionDataWrapper STIMMZETTEL_FEHLEN =
+      new ExceptionDataWrapper("701", "Liste mit Stimmzetteln ist null");
   public static final ExceptionDataWrapper STIMMZETTEL_OWNER_IDS_ARE_MISSING =
-      new ExceptionDataWrapper("702", "IDs fehlen");
-  public static final ExceptionDataWrapper STIMMZETTEL_ANZAHL_IDS_ARE_MISSING =
       new ExceptionDataWrapper("703", "IDs fehlen");
+  public static final ExceptionDataWrapper STIMMZETTEL_ANZAHL_IDS_ARE_MISSING =
+      new ExceptionDataWrapper("704", "IDs fehlen");
 
   public static final ExceptionDataWrapper MAPPING_AOUEAI =
       new ExceptionDataWrapper(

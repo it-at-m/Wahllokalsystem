@@ -20,6 +20,8 @@ class ErfassungsteamMonitoringPermissionsTest {
   private static final String PERM_LASTSEEN = "Monitoring_BUSINESSACTION_PostLastSeen";
   private static final String PERM_LETZTE_ABMELDUNG =
       "Monitoring_BUSINESSACTION_PostLetzteAbmeldung";
+  private static final String PERM_SAVE_WAHLLOKALZUSTAND =
+      "aoueai_BUSINESSACTION_SaveWahllokalZustand";
 
   @Autowired private AuthorityRepository authorityRepository;
 
@@ -38,6 +40,6 @@ class ErfassungsteamMonitoringPermissionsTest {
 
     assertThat(permissionNames)
         .withFailMessage("'%s' should contain both monitoring permissions", ERFASSUNGSTEAM)
-        .containsAll(Set.of(PERM_LASTSEEN, PERM_LETZTE_ABMELDUNG));
+        .containsAll(Set.of(PERM_LASTSEEN, PERM_LETZTE_ABMELDUNG, PERM_SAVE_WAHLLOKALZUSTAND));
   }
 }

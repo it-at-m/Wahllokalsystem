@@ -30,7 +30,7 @@ class TeamIDPermissionEvaluatorImplTest {
     }
 
     @Test
-    void should_returnFalse_when_authenticationIsNUll() {
+    void should_returnFalse_when_authenticationIsNull() {
       Assertions.assertThat(
               unitUnderTest.tokenUserteamIdMatches(Instancio.create(String.class), null))
           .isFalse();

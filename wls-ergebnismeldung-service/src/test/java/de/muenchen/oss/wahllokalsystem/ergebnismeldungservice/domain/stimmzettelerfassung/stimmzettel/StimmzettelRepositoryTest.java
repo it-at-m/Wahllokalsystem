@@ -97,7 +97,7 @@ class StimmzettelRepositoryTest {
   }
 
   @Nested
-  class deleteByIdWahlbezirkIDAndIdWahlIDAndIdTeamID {
+  class DeleteByIdWahlbezirkIDAndIdWahlIDAndIdTeamID {
 
     @Test
     void should_deleteOnlyMatchingItems_when_dataExists() {

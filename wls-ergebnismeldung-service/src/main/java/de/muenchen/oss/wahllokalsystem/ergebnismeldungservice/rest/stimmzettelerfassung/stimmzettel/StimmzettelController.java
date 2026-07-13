@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.stimmzettel;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelOfTeamModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelOwnerModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelService;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,21 +33,7 @@ public class StimmzettelController {
   @Operation(description = "Lesen Stimmzettel eines Team in einem Wahlbezirk einer Wahl")
   @ApiResponses(
       value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Es sind Stimmzettel gespeichert",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema =
-                      @Schema(
-                          type = "object",
-                          description = "Map: Key = Stimmzettelkennung, Value = StimmzettelModel",
-                          additionalProperties =
-                              Schema.AdditionalPropertiesValue.USE_ADDITIONAL_PROPERTIES_ANNOTATION,
-                          contentSchema = StimmzettelOfTeamModel.class,
-                          additionalPropertiesSchema = StimmzettelOfTeamModel.class))
-            }),
+        @ApiResponse(responseCode = "200", description = "Es sind Stimmzettel gespeichert"),
         @ApiResponse(
             responseCode = "204",
             description = "Es sind keine Stimmzettel gespeichert",
@@ -70,6 +56,15 @@ public class StimmzettelController {
         : ResponseEntity.ok(stimmzettel);
   }
 
+  @Operation(description = "Lesen Stimmzettel eines Team in einem Wahlbezirk einer Wahl")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "201", description = "Die Stimmzettel wurden gespeichert"),
+        @ApiResponse(
+            responseCode = "409",
+            description = "Die Daten der übermittelten Stimmzettel sind widersprüchlich",
+            content = {@Content(schema = @Schema(implementation = WlsExceptionDTO.class))})
+      })
   @PostMapping("wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/stimmzettel")
   @ResponseStatus(HttpStatus.CREATED)
   public void postStimmzettel(
@@ -82,6 +77,14 @@ public class StimmzettelController {
         new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID), modelValuesToSave);
   }
 
+  @Operation(description = "Lesen der Anzahl an Stimmzetteln in einem Wahlbezirk einer Wahl")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description =
+                "Liefert die Menge an vorhandenen Stimmzetteln. Gibt es zu den IDs keine Stimmzettel ist das Ergebnis 0."),
+      })
   @GetMapping("wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/anzahlStimmzettel")
   public int getAnzahlStimmzettel(
       @PathVariable("wahlID") final String wahlID,

@@ -1,19 +1,19 @@
 <template>
   <div v-if="wahlbezirkIdForWahl">
     <the-o-b-w-scores-list-group
-      v-if="wahl.wahlart === WahlWahlartEnum.Obw"
+      v-if="hasRoleSchriftfuehrung && wahl.wahlart === WahlWahlartEnum.Obw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
     />
     <the-s-r-w-scores-list-group
-      v-if="wahl.wahlart === WahlWahlartEnum.Srw"
+      v-if="hasRoleSchriftfuehrung && wahl.wahlart === WahlWahlartEnum.Srw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
     />
     <the-b-a-w-scores-list-group
-      v-if="wahl.wahlart === WahlWahlartEnum.Baw"
+      v-if="hasRoleSchriftfuehrung && wahl.wahlart === WahlWahlartEnum.Baw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
@@ -75,6 +75,7 @@ const {
   isWahlvorstandErfasst,
 } = storeToRefs(useWorkflowStore());
 const { isBWB, isUWB } = storeToRefs(useUserStore());
+const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 
 const titleStimmenZaehlen = computed(
   () => `Zählen der ${getStimmzettelTermForWahl(props.wahl)}`

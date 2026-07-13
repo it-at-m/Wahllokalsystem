@@ -135,6 +135,14 @@ public class ExceptionConstants {
       new ExceptionDataWrapper("642", "postBedenklicheStimmzettel: Parameter unvollstaendig");
   public static final ExceptionDataWrapper POST_BEDENKLICHE_STIMMZETTEL_SAVING_FAILED =
       new ExceptionDataWrapper("643", "speichern bedenklicher Stimmzettel fehlgeschlagen");
+  public static final ExceptionDataWrapper
+      GET_STIMMZETTELERFASSUNG_STATUS_PARAMETER_UNVOLLSTAENDIG =
+          new ExceptionDataWrapper(
+              "644", "getStimmzettelerfassungStatus: Parameter unvollstaendig");
+  public static final ExceptionDataWrapper
+      POST_STIMMZETTELERFASSUNG_STATUS_PARAMETER_UNVOLLSTAENDIG =
+          new ExceptionDataWrapper(
+              "645", "postStimmzettelerfassungStatus: Parameter unvollstaendig");
 
   public static final ExceptionDataWrapper MAPPING_AOUEAI =
       new ExceptionDataWrapper(

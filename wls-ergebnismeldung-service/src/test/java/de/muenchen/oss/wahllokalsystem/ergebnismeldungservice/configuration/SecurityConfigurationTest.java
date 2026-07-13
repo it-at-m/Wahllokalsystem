@@ -875,7 +875,7 @@ class SecurityConfigurationTest {
 
       @WithMockUser
       @Test
-      void should_returnNoContent_when_userIsAuthenticated() throws Exception {
+      void should_returnOK_when_userIsAuthenticated() throws Exception {
         val request = MockMvcRequestBuilders.get(URL_ANZAHL_STIMMZETTEL);
         api.perform(request).andExpect(status().isOk());
       }

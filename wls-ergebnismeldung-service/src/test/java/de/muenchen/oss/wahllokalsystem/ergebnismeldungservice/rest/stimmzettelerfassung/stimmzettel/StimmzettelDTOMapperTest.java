@@ -17,7 +17,7 @@ class StimmzettelDTOMapperTest {
   class ToModel {
 
     @Test
-    void should_return_model_when_dtoIsGiven() {
+    void should_returnModel_when_dtoIsGiven() {
       val dtoToMap = Instancio.create(StimmzettelOfTeamDTO.class);
 
       val result = unitUnderTest.toModel(dtoToMap);

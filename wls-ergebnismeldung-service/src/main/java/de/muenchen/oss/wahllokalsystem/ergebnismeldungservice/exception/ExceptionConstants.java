@@ -141,9 +141,9 @@ public class ExceptionConstants {
   public static final ExceptionDataWrapper STIMMZETTEL_FEHLEN =
       new ExceptionDataWrapper("702", "Liste mit Stimmzetteln ist null");
   public static final ExceptionDataWrapper STIMMZETTEL_OWNER_IDS_ARE_MISSING =
-      new ExceptionDataWrapper("703", "IDs fehlen");
+      new ExceptionDataWrapper("703", "IDs für den Zugriff auf die Stimmzettelliste fehlen");
   public static final ExceptionDataWrapper STIMMZETTEL_ANZAHL_IDS_ARE_MISSING =
-      new ExceptionDataWrapper("704", "IDs fehlen");
+      new ExceptionDataWrapper("704", "IDs zum Zählen der Stimmenzettel fehlen");
 
   public static final ExceptionDataWrapper MAPPING_AOUEAI =
       new ExceptionDataWrapper(

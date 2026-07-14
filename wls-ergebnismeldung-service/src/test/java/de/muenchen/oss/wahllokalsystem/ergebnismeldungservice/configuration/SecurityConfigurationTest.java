@@ -20,6 +20,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.Meldun
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.StatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.ValidierungsstatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmabgabevermerkeDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.status.ErfassungStatusDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.status.StimmzettelerfassungStatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelumschlaege.StimmzettelumschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine.WahlscheineDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
@@ -30,6 +32,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelumschlaege.StimmzettelumschlaegeService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.wahlscheine.WahlscheineService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -80,6 +83,8 @@ class SecurityConfigurationTest {
   @MockitoBean AWerteService aWerteService;
 
   @MockitoBean MBWBedenklicheStimmzettelService mbwBedenklicheStimmzettelService;
+
+  @MockitoBean StimmzettelerfassungService stimmzettelerfassungService;
 
   @Autowired ObjectMapper objectMapper;
 
@@ -797,6 +802,63 @@ class SecurityConfigurationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBodyAsString);
         api.perform(request).andExpect(status().isCreated());
+      }
+    }
+  }
+
+  @Nested
+  class StimmzettelerfassungWorkflow {
+
+    private static final String URL =
+        "/stimmzettelerfassungsWorkflow/wahl/wahlID/wahlbezirk/wahlbezirkID";
+
+    @Nested
+    class SaveStimmzettelerfassungStatus {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(
+                new StimmzettelerfassungStatusDTO(ErfassungStatusDTO.BE_ABGESCHLOSSEN));
+        val request =
+            MockMvcRequestBuilders.post(URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnCreated_when_userIsAuthenticated() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(
+                new StimmzettelerfassungStatusDTO(ErfassungStatusDTO.BE_ABGESCHLOSSEN));
+        val request =
+            MockMvcRequestBuilders.post(URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+        api.perform(request).andExpect(status().isCreated());
+      }
+    }
+
+    @Nested
+    class GetStimmzettelerfassungStatus {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL);
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnOk_when_userIsAuthenticated() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL);
+        api.perform(request).andExpect(status().isNoContent());
       }
     }
   }

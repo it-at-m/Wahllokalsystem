@@ -99,7 +99,7 @@ Abweichungen in der Anzahl der Stimmen gespeichert wird.
 ### Lesen und Schreiben von Stimmzetteln
 
 Die von Wähler\*Innen hinterlassenen Kennzeichen auf einem Stimmzettel können verwaltet werden. Im Unterschied zu den
-Ergebnissen, die auf Stapeln aufbauen, hat man hier Rohdaten, welcher erst später für die Übermittlung
+Ergebnissen, die auf Stapeln aufbauen, hat man hier Rohdaten, welche erst später für die Übermittlung
 summiert werden.
 
 ### Übermittlung einer Ergebnismeldung

@@ -113,7 +113,8 @@ public class UserControllerIntegrationTest {
                     null,
                     null,
                     new HashSet<>(Set.of(authoritySaved)),
-                    null);
+                    null,
+                    "");
             userRepository.save(userToSave);
           });
 
@@ -134,7 +135,8 @@ public class UserControllerIntegrationTest {
               null,
               null,
               Set.of("permission1", "permission2", testauthorityName),
-              null);
+              null,
+              "");
 
       Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
     }
@@ -156,7 +158,8 @@ public class UserControllerIntegrationTest {
               null,
               null,
               null,
-              null));
+              null,
+              ""));
 
       val request = MockMvcRequestBuilders.get("/user");
       // first call
@@ -177,7 +180,8 @@ public class UserControllerIntegrationTest {
               null,
               null,
               Collections.emptySet(),
-              null);
+              null,
+              "");
 
       Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
       // do two more calls with same user
@@ -226,7 +230,8 @@ public class UserControllerIntegrationTest {
               null,
               null,
               null,
-              null));
+              null,
+              ""));
       loginAttemptRepository.save(createLoginAttemptWithUsername(userName));
 
       val request = MockMvcRequestBuilders.post("/user/" + userName + "/unlock").with(csrf());

@@ -158,6 +158,21 @@ public class StimmzettelerfassungControllerIntegrationTest {
     }
 
     @Test
+    void should_returnNoCotent_when_dataIsNotPresentInRepository() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+
+      val response =
+          mockMvc
+              .perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isNoContent())
+              .andReturn()
+              .getResponse();
+
+      Assertions.assertThat(response.getContentAsString()).isEmpty();
+    }
+
+    @Test
     void should_returnBadRequest_when_requestIsInvalid() throws Exception {
       val wahlbezirkID = "  ";
       val wahlID = " ";

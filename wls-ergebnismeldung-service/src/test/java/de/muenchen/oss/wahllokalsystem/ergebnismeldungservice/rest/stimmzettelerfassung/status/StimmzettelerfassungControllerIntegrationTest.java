@@ -51,8 +51,7 @@ public class StimmzettelerfassungControllerIntegrationTest {
       val wahlID = "wahlID";
 
       val id = new BezirkUndWahlID(wahlID, wahlbezirkID);
-      val status = ErfassungStatus.STE_ABGESCHLOSSEN;
-      val expectedEntity = new StimmzettelerfassungStatus(id, status);
+      val expectedEntity = new StimmzettelerfassungStatus(id, ErfassungStatus.STE_ABGESCHLOSSEN);
 
       val requestBody = new StimmzettelerfassungStatusDTO(ErfassungStatusDTO.STE_ABGESCHLOSSEN);
 
@@ -71,8 +70,7 @@ public class StimmzettelerfassungControllerIntegrationTest {
       val wahlID = "wahlID";
 
       val id = new BezirkUndWahlID(wahlID, wahlbezirkID);
-      val status = ErfassungStatus.STE_BEARBEITUNG;
-      val entityToReplace = new StimmzettelerfassungStatus(id, status);
+      val entityToReplace = new StimmzettelerfassungStatus(id, ErfassungStatus.STE_BEARBEITUNG);
 
       stimmzettelerfassungStatusRepository.save(entityToReplace);
 

@@ -4,9 +4,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractContr
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -49,14 +47,7 @@ public class StimmzettelerfassungController extends AbstractController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Es wurde ein Status gepflegt. Dieser wird zurückgegeben.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array =
-                      @ArraySchema(
-                          schema = @Schema(implementation = StimmzettelerfassungStatusDTO.class)))
-            }),
+            description = "Es wurde ein Status gepflegt. Dieser wird zurückgegeben."),
         @ApiResponse(
             responseCode = "204",
             description = "Es wurden kein Status gepflegt",

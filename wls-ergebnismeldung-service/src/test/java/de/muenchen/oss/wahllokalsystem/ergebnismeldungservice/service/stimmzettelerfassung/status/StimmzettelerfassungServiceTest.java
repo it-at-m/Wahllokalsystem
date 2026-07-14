@@ -1,7 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status;
 
-import static org.mockito.ArgumentMatchers.eq;
-
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.ErfassungStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.StimmzettelerfassungStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.StimmzettelerfassungStatusRepository;
@@ -36,7 +34,7 @@ public class StimmzettelerfassungServiceTest {
   @Nested
   class SaveStimmzettelerfassungStatus {
     @Test
-    void should_callValidator_when_callingService() {
+    void should_throwException_when_callingServiceCreateAnExceptionDuringValidation() {
       val id = new BezirkUndWahlID();
       val erfassungStatusModel = ErfassungStatusModel.STE_ABGESCHLOSSEN;
       val erfassungStatusEntity = ErfassungStatus.STE_ABGESCHLOSSEN;
@@ -47,13 +45,13 @@ public class StimmzettelerfassungServiceTest {
               exceptionFactory.createFachlicheWlsException(
                   ExceptionConstants.POST_STIMMZETTELERFASSUNG_STATUS_PARAMETER_UNVOLLSTAENDIG))
           .thenReturn(mockedWlsException);
-      Mockito.when(erfassungStatusModelMapper.toEntity(erfassungStatusModel))
-          .thenReturn(erfassungStatusEntity);
+      Mockito.doThrow(mockedWlsException)
+          .when(stimmzettelerfassungValidator)
+          .validBezirkUndWahlIdOrThrow(id, mockedWlsException);
 
-      unitUnderTest.saveStimmzettelerfassungStatus(id, erfassungStatusModel);
-
-      Mockito.verify(stimmzettelerfassungValidator)
-          .validBezirkUndWahlIdOrThrow(eq(id), eq(mockedWlsException));
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.saveStimmzettelerfassungStatus(id, erfassungStatusModel))
+          .isSameAs(mockedWlsException);
     }
 
     @Test
@@ -75,7 +73,8 @@ public class StimmzettelerfassungServiceTest {
   @Nested
   class GetStimmzettelerfassungStatus {
     @Test
-    void should_submitFachlicheWlsExceptionForParameter_when_callingValidator() {
+    void
+        should_throwSubmittedFachlicheWlsExceptionForParameter_when_validatorThrowExceptionDuringValidation() {
       val id = new BezirkUndWahlID();
 
       val mockedWlsException =
@@ -84,11 +83,13 @@ public class StimmzettelerfassungServiceTest {
               exceptionFactory.createFachlicheWlsException(
                   ExceptionConstants.GET_STIMMZETTELERFASSUNG_STATUS_PARAMETER_UNVOLLSTAENDIG))
           .thenReturn(mockedWlsException);
+      Mockito.doThrow(mockedWlsException)
+          .when(stimmzettelerfassungValidator)
+          .validBezirkUndWahlIdOrThrow(id, mockedWlsException);
 
-      unitUnderTest.getStimmzettelerfassungStatus(id);
-
-      Mockito.verify(stimmzettelerfassungValidator)
-          .validBezirkUndWahlIdOrThrow(eq(id), eq(mockedWlsException));
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getStimmzettelerfassungStatus(id))
+          .isSameAs(mockedWlsException);
     }
 
     @Test

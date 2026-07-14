@@ -26,6 +26,13 @@
       :disabled-message="disabledMessagePreviousStepsRequired"
       :is-wahl-finished="isMBWAuszaehlungFinished"
     />
+    <the-dse-list-items
+      :wahl-id="wahl.wahlID"
+      :wahlbezirk-id="wahlbezirkIdForWahl"
+      :disabled="false"
+      disabled-message=""
+      :is-wahl-finished="false"
+    />
   </div>
 </template>
 
@@ -40,6 +47,7 @@ import TheBAWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten
 import TheMBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheMBWScoresListGroup.vue";
 import TheOBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheOBWScoresListGroup.vue";
 import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheSRWScoresListGroup.vue";
+import TheDseListItems from "@/components/navigation/dse/TheDSEListItems.vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import {
   DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING,

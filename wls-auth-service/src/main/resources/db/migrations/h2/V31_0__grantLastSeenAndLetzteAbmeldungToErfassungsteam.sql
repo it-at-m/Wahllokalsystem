@@ -1,14 +1,23 @@
--- Grant Monitoring lastSeen and letzteAbmeldung permissions to ERFASSUNGSTEAM
+-- Grant Monitoring lastSeen and letzteAbmeldung permissions to ERFASSUNGSTEAM (idempotent)
 
--- Monitoring_BUSINESSACTION_PostLastSeen
-MERGE INTO Secauthorities_Secpermissions (authority_oid, permission_oid)
-KEY(authority_oid, permission_oid)
-VALUES ('00000000-0000-0000-0004-000000000001', '00000000-0000-0000-0007-000000000006');
--- Monitoring_BUSINESSACTION_PostLetzteAbmeldung
-MERGE INTO Secauthorities_Secpermissions (authority_oid, permission_oid)
-KEY(authority_oid, permission_oid)
-VALUES ('00000000-0000-0000-0004-000000000001', '00000000-0000-0000-0007-000000000007');
--- aoueai_BUSINESSACTION_SaveWahllokalZustand (benoetigt im EAI-Service zum Speichern des Zustandes)
 MERGE INTO Secauthorities_Secpermissions (authority_oid, permission_oid)
     KEY(authority_oid, permission_oid)
-VALUES ('00000000-0000-0000-0004-000000000001', '00000000-0000-0000-0004-000000000013');
+VALUES (
+           (SELECT ID FROM Authority WHERE authority = 'ERFASSUNGSTEAM'),
+           (SELECT ID FROM Permission WHERE permission = 'Monitoring_BUSINESSACTION_PostLastSeen')
+       );
+
+MERGE INTO Secauthorities_Secpermissions (authority_oid, permission_oid)
+    KEY(authority_oid, permission_oid)
+VALUES (
+           (SELECT ID FROM Authority WHERE authority = 'ERFASSUNGSTEAM'),
+           (SELECT ID FROM Permission WHERE permission = 'Monitoring_BUSINESSACTION_PostLetzteAbmeldung')
+       );
+
+-- benoetigt im EAI-Service zum Speichern des Zustandes
+MERGE INTO Secauthorities_Secpermissions (authority_oid, permission_oid)
+    KEY(authority_oid, permission_oid)
+VALUES (
+           (SELECT ID FROM Authority WHERE authority = 'ERFASSUNGSTEAM'),
+           (SELECT ID FROM Permission WHERE permission = 'aoueai_BUSINESSACTION_SaveWahllokalZustand')
+       );

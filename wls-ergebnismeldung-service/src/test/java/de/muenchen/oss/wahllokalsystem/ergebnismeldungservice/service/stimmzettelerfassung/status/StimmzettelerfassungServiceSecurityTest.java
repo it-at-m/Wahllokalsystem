@@ -61,7 +61,7 @@ public class StimmzettelerfassungServiceSecurityTest {
 
     @Test
     @WithMockUser
-    void should_throwAccessDeniedException_when_requiredPropertyIsMissing() {
+    void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
       val wahlbezirkID = "wahlbezirkID";
       val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
 
@@ -117,7 +117,7 @@ public class StimmzettelerfassungServiceSecurityTest {
 
     @Test
     @WithMockUser
-    void should_throwAccessDeniedException_when_requiredPropertyIsMissing() {
+    void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
       val wahlbezirkID = "wahlbezirkID";
       val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
 

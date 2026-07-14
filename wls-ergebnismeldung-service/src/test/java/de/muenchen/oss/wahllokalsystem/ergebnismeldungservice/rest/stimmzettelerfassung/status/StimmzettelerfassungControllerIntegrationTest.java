@@ -116,10 +116,7 @@ public class StimmzettelerfassungControllerIntegrationTest {
         final StimmzettelerfassungStatusDTO requestBody)
         throws Exception {
       return MockMvcRequestBuilders.post(
-              "/businessActions/stimmzettelerfassungsWorkflow/wahl/"
-                  + wahlID
-                  + "/wahlbezirk/"
-                  + wahlbezirkID)
+              "/stimmzettelerfassungsWorkflow/wahl/" + wahlID + "/wahlbezirk/" + wahlbezirkID)
           .with(csrf())
           .with(
               jwt()
@@ -183,10 +180,7 @@ public class StimmzettelerfassungControllerIntegrationTest {
     private MockHttpServletRequestBuilder createGetRequest(
         final String wahlID, final String wahlbezirkID, final String claimWahlbezirkID) {
       return MockMvcRequestBuilders.get(
-              "/businessActions/stimmzettelerfassungsWorkflow/wahl/"
-                  + wahlID
-                  + "/wahlbezirk/"
-                  + wahlbezirkID)
+              "/stimmzettelerfassungsWorkflow/wahl/" + wahlID + "/wahlbezirk/" + wahlbezirkID)
           .with(
               jwt()
                   .authorities(

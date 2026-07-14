@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/businessActions/stimmzettelerfassungsWorkflow")
+@RequestMapping("/stimmzettelerfassungsWorkflow")
 @RequiredArgsConstructor
 public class StimmzettelerfassungController extends AbstractController {
 

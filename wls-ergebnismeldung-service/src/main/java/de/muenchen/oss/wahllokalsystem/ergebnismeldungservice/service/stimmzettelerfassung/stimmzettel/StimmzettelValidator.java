@@ -15,12 +15,12 @@ public class StimmzettelValidator {
 
   private final ExceptionFactory exceptionFactory;
 
-  public void validOrThrow(final List<StimmzettelOfTeamModel> stimmzettels) {
-    if (stimmzettels == null) {
+  public void validOrThrow(final List<StimmzettelOfTeamModel> listOfStimmzettel) {
+    if (listOfStimmzettel == null) {
       throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.STIMMZETTEL_FEHLEN);
     }
 
-    verifyThatStimmzettelKennungIsUnique(stimmzettels);
+    verifyThatStimmzettelKennungIsUnique(listOfStimmzettel);
   }
 
   public void validOrThrow(final StimmzettelOwnerModel stimmzettelOwner) {
@@ -43,9 +43,9 @@ public class StimmzettelValidator {
   }
 
   private void verifyThatStimmzettelKennungIsUnique(
-      final List<StimmzettelOfTeamModel> stimmzettels) {
-    if (stimmzettels.size()
-        != stimmzettels.stream()
+      final List<StimmzettelOfTeamModel> listOfStimmzettel) {
+    if (listOfStimmzettel.size()
+        != listOfStimmzettel.stream()
             .map(StimmzettelOfTeamModel::stimmzettelkennung)
             .distinct()
             .count()) {

@@ -20,6 +20,9 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.Meldun
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.StatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.ValidierungsstatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmabgabevermerkeDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.status.ErfassungStatusDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.status.StimmzettelerfassungStatusDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.stimmzettel.StimmzettelOfTeamDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelumschlaege.StimmzettelumschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine.WahlscheineDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
@@ -30,6 +33,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelumschlaege.StimmzettelumschlaegeService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.wahlscheine.WahlscheineService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -38,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.val;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -80,6 +86,10 @@ class SecurityConfigurationTest {
   @MockitoBean AWerteService aWerteService;
 
   @MockitoBean MBWBedenklicheStimmzettelService mbwBedenklicheStimmzettelService;
+
+  @MockitoBean StimmzettelService stimmzettelService;
+
+  @MockitoBean StimmzettelerfassungService stimmzettelerfassungService;
 
   @Autowired ObjectMapper objectMapper;
 
@@ -797,6 +807,139 @@ class SecurityConfigurationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBodyAsString);
         api.perform(request).andExpect(status().isCreated());
+      }
+    }
+  }
+
+  @Nested
+  class Stimmzettel {
+
+    private static final String URL_STIMMZETTEL =
+        "/stimmzettelerfassung/wahl/wahlID/wahlbezirk/wahlbezirkID/team/teamID/stimmzettel";
+
+    private static final String URL_ANZAHL_STIMMZETTEL =
+        "/stimmzettelerfassung/wahl/wahlID/wahlbezirk/wahlbezirkID/anzahlStimmzettel";
+
+    @Nested
+    class PostStimmzettel {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(List.of(Instancio.create(StimmzettelOfTeamDTO.class)));
+        val request =
+            MockMvcRequestBuilders.post(URL_STIMMZETTEL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnCreated_when_userIsAuthenticated() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(List.of(Instancio.create(StimmzettelOfTeamDTO.class)));
+        val request =
+            MockMvcRequestBuilders.post(URL_STIMMZETTEL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+        api.perform(request).andExpect(status().isCreated());
+      }
+    }
+
+    @Nested
+    class GetStimmzettel {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL_STIMMZETTEL);
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnNoContent_when_userIsAuthenticated() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL_STIMMZETTEL);
+        api.perform(request).andExpect(status().isNoContent());
+      }
+    }
+
+    @Nested
+    class GetAnzahlStimmzettel {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL_ANZAHL_STIMMZETTEL);
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnOK_when_userIsAuthenticated() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL_ANZAHL_STIMMZETTEL);
+        api.perform(request).andExpect(status().isOk());
+      }
+    }
+  }
+
+  @Nested
+  class StimmzettelerfassungWorkflow {
+
+    private static final String URL =
+        "/stimmzettelerfassungsWorkflow/wahl/wahlID/wahlbezirk/wahlbezirkID";
+
+    @Nested
+    class SaveStimmzettelerfassungStatus {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(
+                new StimmzettelerfassungStatusDTO(ErfassungStatusDTO.BE_ABGESCHLOSSEN));
+        val request =
+            MockMvcRequestBuilders.post(URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnCreated_when_userIsAuthenticated() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(
+                new StimmzettelerfassungStatusDTO(ErfassungStatusDTO.BE_ABGESCHLOSSEN));
+        val request =
+            MockMvcRequestBuilders.post(URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+        api.perform(request).andExpect(status().isCreated());
+      }
+    }
+
+    @Nested
+    class GetStimmzettelerfassungStatus {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL);
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnOk_when_userIsAuthenticated() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL);
+        api.perform(request).andExpect(status().isNoContent());
       }
     }
   }

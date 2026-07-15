@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Convert;
@@ -8,7 +8,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -16,9 +19,12 @@ import lombok.ToString;
 @Setter
 @Entity
 @ToString(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Stimmzettel {
 
-  @EmbeddedId @ToString.Include private StimmzettelID id;
+  @EmbeddedId @ToString.Include @EqualsAndHashCode.Include private StimmzettelID id;
 
   @Convert(converter = IntArrayToStringConverter.class)
   @NotNull private List<Integer> selectedWahlvorschlaegeOrdnungszahlen;

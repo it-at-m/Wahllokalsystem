@@ -565,8 +565,7 @@ class UserServiceTest {
 
       Assertions.assertThat(usernameCaptor.getAllValues())
           .allMatch(
-              username ->
-                  username.matches("\\d\\d\\d\\d\\d\\d[A-Z]-" + user1.wahlbezirknummer()));
+              username -> username.matches("\\d\\d\\d\\d\\d\\d[A-Z]-" + user1.wahlbezirknummer()));
     }
   }
 

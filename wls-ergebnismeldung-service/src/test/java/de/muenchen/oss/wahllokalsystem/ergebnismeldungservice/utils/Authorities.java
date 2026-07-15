@@ -80,6 +80,13 @@ public class Authorities {
   public static final String REPOSITORY_DELETE_ERGEBNISSE = "Ergebnismeldung_DELETE_Ergebnisse";
   public static final String REPOSITORY_WRITE_ERGEBNISSE = "Ergebnismeldung_WRITE_Ergebnisse";
 
+  public static final String SERVICE_GET_STIMMZETEL =
+      "Ergebnismeldung_BUSINESSACTION_GetStimmzettelOfTeam";
+  public static final String SERVICE_WRITE_STIMMZETEL =
+      "Ergebnismeldung_BUSINESSACTION_WriteStimmzettelOfTeam";
+  public static final String SERVICE_COUNT_STIMMZETEL =
+      "Ergebnismeldung_BUSINESSACTION_ReadCountStimmzettel";
+
   public static final String[] ALL_AUTHORITIES_USER_GET_AWERTE =
       new String[] {SERVICE_GET_AWERTE, REPOSITORY_READ_AWERTE, REPOSITORY_WRITE_AWERTE};
 

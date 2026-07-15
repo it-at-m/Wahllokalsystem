@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-number-input
+    <!-- bearbeitung per mausklick kommt erst später -->
+    <!--    <v-number-input
       v-model="modelVotes"
       :persistent-clear="false"
       :clearable="false"
@@ -8,7 +9,7 @@
       density="compact"
       hide-details
       :min="0"
-    />
+    />-->
   </div>
 </template>
 

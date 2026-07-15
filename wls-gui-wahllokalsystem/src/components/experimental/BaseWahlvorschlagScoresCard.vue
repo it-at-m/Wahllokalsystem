@@ -1,13 +1,14 @@
 <template>
-  <v-card style="min-width: 400px">
+  <v-card style="min-width: 300px">
     <v-card-title
       >Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}
       <div class="d-flex align-center justify-space-between">
-        <v-checkbox
+        <!-- bearbeitung per mausklick kommt erst später -->
+        <!--        <v-checkbox
           v-model="wahlvorschlagSelected"
           density="compact"
           hide-details
-        />
+        />-->
         <div class="d-flex flex-row ga-1">
           <v-chip
             v-if="sumInvalidUserVotesOfWahlvorschlag > 0"

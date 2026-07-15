@@ -29,6 +29,7 @@
 
         <v-tabs-window-item value="4">
           <the-simple-stimmzettel-erfassung
+            :wahlvorschlaege="wahlvorschlaege"
             :votes-only="stimmzettelWahlvorschlaege"
             :change-history="changeHistory"
             @command="onQuickInputCommand"
@@ -275,5 +276,3 @@ function isStimmzettelEvent(event: unknown): event is StimmzettelEvent {
   return hasCorrectType;
 }
 </script>
-
-<style scoped></style>

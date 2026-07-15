@@ -80,106 +80,33 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col>
+      <v-col cols="8">
         <base-form-stimmzettel-quick-input @command="onQuickInputCommand" />
-        <div class="d-flex ga-2 flex-row mb-1">
-          <template v-if="wahlvorschlaegeWithDecisions.length > 0">
-            <v-card
-              v-for="(wahlvorschlag, index) in wahlvorschlaegeWithDecisions"
-              :key="index"
+        <v-slide-group
+          v-model="activeWahlvorschlagId"
+          center-active
+          mandatory
+        >
+          <v-slide-group-item
+            v-for="wahlvorschlag in stimmzettelWahlvorschlaege"
+            :key="wahlvorschlag.identifikator"
+            v-slot="{ selectedClass }"
+            :value="wahlvorschlag.identifikator"
+          >
+            <div
+              class="mx-2 slide-item-wrapper"
+              :class="selectedClass"
             >
-              <v-card-title>
-                <div class="d-flex align-center ga-2">
-                  <v-icon
-                    v-if="wahlvorschlag.isSelected"
-                    icon="$stimmzettelCommandAcceptList"
-                  />
-                  <div
-                    v-else
-                    style="min-width: 30px"
-                  />
-                  Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}
-
-                  <v-chip
-                    v-if="
-                      compactSimpleWahlvorschlag &&
-                      getCountVotesViaListe(wahlvorschlag) > 0
-                    "
-                    color="info"
-                    >{{ getCountVotesViaListe(wahlvorschlag) }}</v-chip
-                  >
-                </div>
-              </v-card-title>
-              <v-card-text v-if="!useKandidatScoreComponentInSimpleErfassung">
-                <div
-                  v-for="(kandidat, index) in getKandidatenWithVotes(
-                    wahlvorschlag
-                  )"
-                  :key="index"
-                >
-                  <div
-                    v-if="
-                      !(
-                        kandidat.votesByVoter == 0 && compactSimpleWahlvorschlag
-                      )
-                    "
-                    class="d-flex align-center ga-2"
-                  >
-                    <div>{{ kandidat.listenposition }}</div>
-                    <div>{{ kandidat.name }}</div>
-                    <base-kandidate-votes :kandidat="kandidat" />
-                  </div>
-                  <div
-                    v-if="
-                      spacesBetweenNonDirectFollowingKandidatenVotes &&
-                      index <
-                        getKandidatenWithVotes(wahlvorschlag).length - 1 &&
-                      getKandidatenWithVotes(wahlvorschlag)[index]
-                        .listenposition -
-                        getKandidatenWithVotes(wahlvorschlag)[index + 1]
-                          .listenposition !==
-                        -1
-                    "
-                    class="mb-3"
-                  />
-                </div>
-                <v-divider
-                  thickness="2"
-                  class="my-2"
+              <div class="slide-item-scroll">
+                <base-wahlvorschlag-scores-card
+                  :wahlvorschlag="wahlvorschlag"
+                  :max-total-votes="MAX_TOTAL_VOTES"
+                  :total-user-votes="totalUserVotes"
                 />
-                <div
-                  v-for="(kandidat, index) in getKandidatenDiscarded(
-                    wahlvorschlag
-                  )"
-                  :key="index"
-                >
-                  <div class="d-flex align-center ga-2">
-                    <base-button-kandidat-discard
-                      :disabled="true"
-                      :model-value="kandidat.isDiscarded"
-                    />
-                    <div>{{ kandidat.listenposition }}</div>
-                    <div>{{ kandidat.name }}</div>
-                    <base-kandidate-votes :kandidat="kandidat" />
-                  </div>
-                </div>
-              </v-card-text>
-              <v-card-text v-else>
-                <div
-                  v-for="(kandidat, index) in wahlvorschlag.kandidaten"
-                  :key="index"
-                >
-                  <base-kandidat-score
-                    :kandidat="kandidat"
-                    :listennummer="wahlvorschlag.ordnungszahl"
-                    :show-kandidat-name="kandidatScoreShowName"
-                  />
-                </div>
-              </v-card-text>
-            </v-card>
-          </template>
-          <div v-else>Es wurden noch keine Stimmen vergeben.</div>
-        </div>
+              </div>
+            </div>
+          </v-slide-group-item>
+        </v-slide-group>
       </v-col>
       <v-col cols="2">
         <v-card>
@@ -196,21 +123,26 @@
 <script setup lang="ts">
 import type { AbstractCommandEvent } from "@/types/experimental/AbstractCommandEvent.ts";
 import type { InputHistoryItem } from "@/types/experimental/InputHistoryItem.ts";
+import type { KandidatEvent } from "@/types/experimental/KandidatEvent.ts";
+import type { StimmzettelEvent } from "@/types/experimental/StimmzettelEvent.ts";
+import type { StimmzettelSnapshot } from "@/types/experimental/StimmzettelSnapshot.ts";
 import type { StimmzettelWahlvorschlag } from "@/types/experimental/StimmzettelWahlvorschlag.ts";
+import type { WahlvorschlagEvent } from "@/types/experimental/WahlvorschlagEvent.ts";
+import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { PropType } from "vue";
 
-import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
-import BaseButtonKandidatDiscard from "@/components/experimental/BaseButtonKandidatDiscard.vue";
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
-import BaseKandidateVotes from "@/components/experimental/BaseKandidateVotes.vue";
-import BaseKandidatScore from "@/components/experimental/BaseKandidatScore.vue";
+import BaseWahlvorschlagScoresCard from "@/components/experimental/BaseWahlvorschlagScoresCard.vue";
 import InputHistoryIcon from "@/components/experimental/InputHistoryIcon.vue";
 import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
-import { useExperimentalFeaturesStore } from "@/stores/experimentalFeaturesStore.ts";
+import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
+import { KandidatEventTypeEnum } from "@/types/experimental/KandidatEventTypeEnum.ts";
+import { StimmzettelEventTypeEnum } from "@/types/experimental/StimmzettelEventTypeEnum.ts";
+import { WahlvorschlagEventTypeEnum } from "@/types/experimental/WahlvorschlagEventTypeEnum.ts";
 
-const { votesOnly, changeHistory } = defineProps({
+const { changeHistory, wahlvorschlaege } = defineProps({
   votesOnly: {
     type: Array as PropType<StimmzettelWahlvorschlag[]>,
     required: true,
@@ -219,28 +151,16 @@ const { votesOnly, changeHistory } = defineProps({
     type: Array as PropType<InputHistoryItem[]>,
     required: true,
   },
+  wahlvorschlaege: {
+    type: Object as PropType<Wahlvorschlaege>,
+    required: true,
+  },
 });
 
 const emit = defineEmits<{
   command: [command: AbstractCommandEvent];
+  snapshotCreated: [stimmzettelSnapshot: StimmzettelSnapshot];
 }>();
-
-const {
-  compactSimpleWahlvorschlag,
-  spacesBetweenNonDirectFollowingKandidatenVotes,
-  useKandidatScoreComponentInSimpleErfassung,
-  kandidatScoreShowName,
-} = storeToRefs(useExperimentalFeaturesStore());
-
-const wahlvorschlaegeWithDecisions = computed(() =>
-  votesOnly.filter(
-    (wahlvorschlag) =>
-      wahlvorschlag.isSelected ||
-      wahlvorschlag.kandidaten.some(
-        (kandidat) => kandidat.votesByVoter > 0 || kandidat.isDiscarded
-      )
-  )
-);
 
 const firstHistoryItem = computed(() =>
   changeHistory.length > 0 ? changeHistory[0] : null
@@ -248,22 +168,158 @@ const firstHistoryItem = computed(() =>
 const nextFiveItems = computed(() =>
   changeHistory.filter((_, index) => index < 5 && index > 0)
 );
+function isWahlvorschlagEvent(event: unknown): event is WahlvorschlagEvent {
+  if (typeof event !== "object" || event === null) {
+    return false;
+  }
 
-function getCountVotesViaListe(Wahlvorschlag: StimmzettelWahlvorschlag) {
-  return Wahlvorschlag.kandidaten.filter((k) => k.votesByWahlvorschlag).length;
+  const e = event as Record<string, unknown>;
+
+  const hasCorrectType = Object.values(WahlvorschlagEventTypeEnum).includes(
+    e.type as never
+  );
+  const hasWahlvorschlagOrdnungszahl =
+    e.wahlvorschlagOrdnungszahl !== undefined &&
+    typeof e.wahlvorschlagOrdnungszahl === "number";
+
+  return hasCorrectType && hasWahlvorschlagOrdnungszahl;
 }
 
-function getKandidatenWithVotes(wahlvorschlag: StimmzettelWahlvorschlag) {
-  return wahlvorschlag.kandidaten.filter(
-    (kandidat) => kandidat.votesByVoter > 0 || kandidat.votesByWahlvorschlag > 0
+function isKandidatEvent(event: unknown): event is KandidatEvent {
+  if (typeof event !== "object" || event === null) {
+    return false;
+  }
+
+  const e = event as Record<string, unknown>;
+
+  const hasCorrectType = Object.values(KandidatEventTypeEnum).includes(
+    e.type as never
+  );
+  const hasKandidatOrdnungszahl =
+    e.kandidatNummer !== undefined && typeof e.kandidatNummer === "number";
+  const hasCount = e.count !== undefined ? typeof e.count === "number" : true;
+
+  return hasCorrectType && hasKandidatOrdnungszahl && hasCount;
+}
+
+function isStimmzettelEvent(event: unknown): event is StimmzettelEvent {
+  if (typeof event !== "object" || event === null) {
+    return false;
+  }
+
+  const e = event as Record<string, unknown>;
+
+  return Object.values(StimmzettelEventTypeEnum).includes(
+    e.stimmzettelEventType as never
   );
 }
 
-function getKandidatenDiscarded(wahlvorschlag: StimmzettelWahlvorschlag) {
-  return wahlvorschlag.kandidaten.filter((kandidat) => kandidat.isDiscarded);
+function saveCurrentStimmzettelSnapshot() {
+  const stimmzettelSnapshot = stimmzettelManager.createSnapshot();
+  emit("snapshotCreated", stimmzettelSnapshot);
+  stimmzettelManager.reset();
 }
 
 function onQuickInputCommand(command: AbstractCommandEvent) {
-  emit("command", command);
+  if (isWahlvorschlagEvent(command)) {
+    if (command.type === WahlvorschlagEventTypeEnum.SELECT) {
+      stimmzettelManager.selectWahlvorschlagByOrdnungszahl(
+        command.wahlvorschlagOrdnungszahl
+      );
+      setActiveByOrdnungszahl(command.wahlvorschlagOrdnungszahl);
+    } else if (command.type === WahlvorschlagEventTypeEnum.DESELECT) {
+      stimmzettelManager.deselectWahlvorschlagByOrdnungszahl(
+        command.wahlvorschlagOrdnungszahl
+      );
+      setActiveByOrdnungszahl(command.wahlvorschlagOrdnungszahl);
+    }
+  } else if (isKandidatEvent(command)) {
+    // auf den betroffenen Wahlvorschlag fokussieren
+    const ordnungszahl = Math.floor(command.kandidatNummer / 100);
+    setActiveByOrdnungszahl(ordnungszahl);
+    const kandidatId = stimmzettelManager.getKandidatIdForKandidatNummer(
+      command.kandidatNummer
+    );
+    if (!kandidatId) {
+      return;
+    }
+
+    switch (command.type) {
+      case KandidatEventTypeEnum.ADD_VOTE: {
+        if (command.count !== undefined) {
+          stimmzettelManager.addKandidatVote(kandidatId, command.count);
+        }
+        break;
+      }
+      case KandidatEventTypeEnum.REMOVE_VOTE: {
+        if (command.count !== undefined) {
+          stimmzettelManager.removeKandidatVote(kandidatId, command.count);
+        }
+        break;
+      }
+      case KandidatEventTypeEnum.SET_VOTE: {
+        if (command.count !== undefined) {
+          stimmzettelManager.setKandidatVote(kandidatId, command.count);
+        }
+        break;
+      }
+      case KandidatEventTypeEnum.DISCARD: {
+        stimmzettelManager.discardKandidat(kandidatId);
+        break;
+      }
+      case KandidatEventTypeEnum.REMOVE_DISCARD: {
+        stimmzettelManager.revokeDiscardedKandidat(kandidatId);
+        break;
+      }
+    }
+  } else if (isStimmzettelEvent(command)) {
+    saveCurrentStimmzettelSnapshot();
+  }
+}
+
+const MAX_VALID_VOTES_PER_KANDIDAT = 3;
+const MAX_TOTAL_VOTES = 20;
+
+const stimmzettelManager = getStimmzettelManger(
+  {
+    wahlId: "wahlId",
+    wahlbezirkId: "wahlbezirkId",
+  },
+  {
+    maxValidVotesPerKandidat: MAX_VALID_VOTES_PER_KANDIDAT,
+    maxTotalVotes: MAX_TOTAL_VOTES,
+  }
+);
+stimmzettelManager.setWahlvorschlaege(wahlvorschlaege.wahlvorschlaege);
+
+const stimmzettelWahlvorschlaege =
+  stimmzettelManager.stimmzettelWahlvorschlaege;
+
+// Aktives Element für v-slide-group; mit mandatory wird initial das erste Item ausgewählt
+const activeWahlvorschlagId = ref<string | null>(
+  stimmzettelWahlvorschlaege.value.length > 0
+    ? stimmzettelWahlvorschlaege.value[0].identifikator
+    : null
+);
+
+const totalUserVotes = stimmzettelManager.totalKandidatenScores;
+
+function setActiveByOrdnungszahl(ordnungszahl: number) {
+  const item = stimmzettelWahlvorschlaege.value.find(
+    (w) => w.ordnungszahl === ordnungszahl
+  );
+  if (item) {
+    activeWahlvorschlagId.value = item.identifikator;
+  }
 }
 </script>
+<style scoped>
+.slide-item-wrapper {
+  min-width: 300px;
+  max-width: 900px;
+}
+.slide-item-scroll {
+  max-height: 70vh; /* Sichtfenster-Höhe, bei Bedarf anpassen */
+  overflow-y: auto;
+}
+</style>

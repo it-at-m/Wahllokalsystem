@@ -52,6 +52,7 @@ export function useUserTestDataFactory() {
       email: userDto.email,
       userEnabled: userDto.userEnabled,
       /* eslint-disable @typescript-eslint/no-non-null-assertion -- Temporarily disabling because only valid dto is given as input */
+      teamName: userDto.teamID!,
       wahltagID: userDto.wahltagID!,
       wahltag: userDto.wahltag!,
       wahlbezirkID: userDto.wahlbezirkID!,
@@ -70,6 +71,7 @@ export function useUserTestDataFactory() {
       username: "",
       email: "",
       userEnabled: false,
+      teamName: "",
       wahltagID: "",
       wahltag: "",
       wahlbezirkID: "",

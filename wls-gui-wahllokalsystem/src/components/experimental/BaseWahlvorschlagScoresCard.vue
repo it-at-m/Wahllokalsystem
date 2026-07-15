@@ -3,12 +3,12 @@
     <v-card-title
       >Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}
       <div class="d-flex align-center justify-space-between">
-        <!-- bearbeitung per mausklick kommt erst später -->
-        <!--        <v-checkbox
+        <v-checkbox
           v-model="wahlvorschlagSelected"
           density="compact"
           hide-details
-        />-->
+          disabled
+        />
         <div class="d-flex flex-row ga-1">
           <v-chip
             v-if="sumInvalidUserVotesOfWahlvorschlag > 0"

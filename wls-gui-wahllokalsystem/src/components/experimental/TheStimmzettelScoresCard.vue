@@ -1,6 +1,8 @@
 <template>
   <v-card>
-    <v-card-title v-if="showTitle">Stimmzettelerfassung </v-card-title>
+    <v-card-title v-if="showTitle">
+      Erfassung Stimmzettel Nummer B 159
+    </v-card-title>
     <v-card-text>
       <v-tabs-window v-model="subViewStimmzettelerfassung">
         <v-tabs-window-item value="1">
@@ -75,6 +77,10 @@
         </v-tabs-window-item>
       </v-tabs-window>
     </v-card-text>
+    <v-card-actions>
+      <base-text-button>Abbrechen</base-text-button>
+      <base-text-button active>Speichern</base-text-button>
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -90,6 +96,7 @@ import type { PropType } from "vue";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
 import BaseWahlvorschlagScoresCard from "@/components/experimental/BaseWahlvorschlagScoresCard.vue";
 import TheMockedStimmzettelOverviewCard from "@/components/experimental/TheMockedStimmzettelOverviewCard.vue";

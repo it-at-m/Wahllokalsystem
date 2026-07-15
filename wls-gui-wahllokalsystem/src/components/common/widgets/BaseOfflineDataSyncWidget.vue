@@ -70,10 +70,13 @@ const {
 } = storeToRefs(useDataSyncStore());
 const { toHhMm } = useDateTimeFormatter();
 
-const dirtyTasks = defineModel("modelValue", {
-  type: Number,
-  required: true,
+
+const props = defineProps({
+  dirtyTasks: {
+    type: Number,
+    required: true,
+  },
 });
 
-const hasDirtyTasks = computed(() => dirtyTasks.value > 0);
+const hasDirtyTasks = computed(() => props.dirtyTasks > 0);
 </script>

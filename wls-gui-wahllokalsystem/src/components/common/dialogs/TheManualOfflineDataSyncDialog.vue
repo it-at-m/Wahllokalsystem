@@ -9,7 +9,7 @@
     @cancel="onCancelClicked"
     @confirm="onConfirmClicked"
   >
-    <base-offline-data-sync-widget :model-value="dirtyTasks" />
+    <base-offline-data-sync-widget :dirty-tasks="dirtyTasks" />
   </base-dialog>
 </template>
 <script setup lang="ts">
@@ -20,8 +20,9 @@ import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseOfflineDataSyncWidget from "@/components/common/widgets/BaseOfflineDataSyncWidget.vue";
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 
-const { synchronizeOfflineData, getSyncTasks } = useDataSyncStore();
-const { isOfflineDataSyncing } = storeToRefs(useDataSyncStore());
+const dataSyncStore = useDataSyncStore();
+const { synchronizeOfflineData, getSyncTasks } = dataSyncStore;
+const { isOfflineDataSyncing } = storeToRefs(dataSyncStore);
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,

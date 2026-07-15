@@ -73,6 +73,8 @@ describe("TheWlsAppBar.vue", () => {
       userStore.isUserLoggedIn = true;
       // @ts-expect-error: cannot set readonly
       userStore.hasRoleSchriftfuehrung = true;
+      // @ts-expect-error: cannot set readonly
+      userStore.currentUserTeamName = "TestTeam";
       useWorkflowStore().isWahlvorstandErfasst = true;
       useWorkflowStore().isWahlumgebungErfasst = true;
 
@@ -93,6 +95,8 @@ describe("TheWlsAppBar.vue", () => {
       userStore.isUserLoggedIn = true;
       // @ts-expect-error: cannot set readonly
       userStore.hasRoleSchriftfuehrung = true;
+      // @ts-expect-error: cannot set readonly
+      userStore.currentUserTeamName = "TestTeam";
       useWorkflowStore().isWahlvorstandErfasst = true;
       useWorkflowStore().isWahlumgebungErfasst = true;
 

@@ -8,8 +8,8 @@ export function useUserMapper() {
 
     _assertIsNotBlank(userDto.username, "username");
     _assertIsNotUndefinedOrNull(userDto.userEnabled, "userEnabled");
-    _assertIsNotBlank(userDto.wahltagID, "teamID");
-    _assertIsNotBlank(userDto.teamID, "wahltagID");
+    _assertIsNotBlank(userDto.teamID, "teamID");
+    _assertIsNotBlank(userDto.wahltagID, "wahltagID");
     _assertIsNotBlank(userDto.wahltag, "wahltag");
     _assertIsNotBlank(userDto.wahlbezirkID, "wahlbezirkID");
     _assertIsNotBlank(userDto.wahlbezirkNummer, "wahlbezirkNummer");

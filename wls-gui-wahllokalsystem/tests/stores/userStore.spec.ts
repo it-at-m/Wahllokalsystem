@@ -117,6 +117,7 @@ describe("userStore.ts", () => {
         username: "",
         email: "",
         userEnabled: false,
+        teamName: "",
         wahltagID: "",
         wahltag: "",
         wahlbezirkID: "",

@@ -154,10 +154,9 @@ describe("App", () => {
       router.push = vi.fn();
 
       const store = useUserStore();
-      store.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
+      store.user.authorities = [""]; //empty default mapping for schriftfuehrung
       const now = new Date();
-      // @ts-expect-error: cannot set readonly
-      store.currentUserWahltag = `${now.getFullYear() + 1}-12-31`;
+      store.user.wahltag = `${now.getFullYear() + 1}-12-31`;
       useInfomanagementStore().konfigurationsparameter = [
         prepareKonfigurationsparameter()
           .schluessel("MELDUNGSZEIT_ANWESENHEIT_CHECK")

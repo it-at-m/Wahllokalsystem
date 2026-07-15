@@ -21,11 +21,11 @@
     <the-testseite-drucken-dialog v-if="showTestdruckDialog" />
     <the-broadcast-read-confirmation-dialog />
     <the-wahlvorstand-anwesenheits-check-popup-dialog
-      v-if="isUWB && isTimeToCheckAnwesenheitInFuture"
+      v-if="isUWB && hasRoleSchriftfuehrung && isTimeToCheckAnwesenheitInFuture"
       data-test="wahlvorstand-anwesenheits-check-popup-dialog"
     />
     <the-wahlschluss-check-popup-dialog
-      v-if="isTimeToCheckWahlschlussInFuture"
+      v-if="hasRoleSchriftfuehrung && isTimeToCheckWahlschlussInFuture"
     />
   </v-app>
 </template>

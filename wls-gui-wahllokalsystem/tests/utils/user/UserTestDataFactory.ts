@@ -88,6 +88,7 @@ export function useUserTestDataFactory() {
       username: generateRandomString(10),
       email: generateRandomString(10),
       userEnabled: generateRandomBoolean(),
+      teamID: generateRandomString(10),
       wahltagID: generateRandomString(10),
       wahltag: generateRandomDateTimeAsString(),
       wahlbezirkID: generateRandomString(10),

@@ -130,6 +130,10 @@ Des Weiteren müssen folgende Regeln beachtet werden:
 > Damit Benutzerkonten angelegt werden können, muss die definierte Authority vorhanden sein die den entsprechenden
 > Konten zugewiesen werden soll.
 
+> [!IMPORTANT]
+> Die Benutzernamen müssen aus einem nach dem Schema `{Prefix}-{Wahlbezirknummer}` aufgebaut sein, weil andere
+> Verfahren aktuell auf den Benutzernamen aufbauen.
+
 > [!NOTE]
 > Wird der Service mit dem Profil `db-dummydata` gestartet werden Testdaten erzeugt, welche die notwendige Authority umfasst.
 > Im regulären Betrieb werden die Authority sowie Permission mittels Skript erzeugt.

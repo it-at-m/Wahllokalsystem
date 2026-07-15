@@ -102,6 +102,11 @@ Die von Wähler\*Innen hinterlassenen Kennzeichen auf einem Stimmzettel können 
 Ergebnissen, die auf Stapeln aufbauen, hat man hier Rohdaten, welche erst später für die Übermittlung
 summiert werden.
 
+### Lesen und Schreiben vom Status der Stimmzettelerfassung
+
+Der Bearbeitungsstand der Stimmzettelfassung eines Wahlbezirkes einer Wahl wird damit verwaltet. Siehe dazu die
+[Statusbeschreibung](/dse/#neue-statuswerte).
+
 ### Übermittlung einer Ergebnismeldung
 
 Eine Ergebnismeldung kann eine Schnellmeldung oder eine Niederschrift sein, welche an das externe System übermittelt wird.

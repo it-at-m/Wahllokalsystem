@@ -9,7 +9,7 @@
     @cancel="onCancelClicked"
     @confirm="onConfirmClicked"
   >
-    <the-manual-offline-data-sync-widget :model-value="dirtyTasks" />
+    <base-offline-data-sync-widget :model-value="dirtyTasks" />
   </base-dialog>
 </template>
 <script setup lang="ts">
@@ -17,7 +17,7 @@ import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-import TheManualOfflineDataSyncWidget from "@/components/common/widgets/TheManualOfflineDataSyncWidget.vue";
+import BaseOfflineDataSyncWidget from "@/components/common/widgets/BaseOfflineDataSyncWidget.vue";
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 
 const { synchronizeOfflineData, getSyncTasks } = useDataSyncStore();

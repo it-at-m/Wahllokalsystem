@@ -27,7 +27,7 @@ public class StimmzettelerfassungController extends AbstractController {
 
   private final ErfassungStatusDTOMapper erfassungStatusDTOMapper;
 
-  @Operation(description = "Erfassen des Workflow-Status für die digitalen Stimmzettelerfassung")
+  @Operation(description = "Erfassen des Workflow-Status für die digitale Stimmzettelerfassung")
   @ApiResponses(
       value = {@ApiResponse(responseCode = "201", description = "Der Status wurde erfasst")})
   @PostMapping("wahl/{wahlID}/wahlbezirk/{wahlbezirkID}")
@@ -42,7 +42,7 @@ public class StimmzettelerfassungController extends AbstractController {
         erfassungStatusDTOMapper.toModel(stimmzettelerfassungStatusDTO.status()));
   }
 
-  @Operation(description = "Lesen des Workflow-Status für die digitalen Stimmzettelerfassung")
+  @Operation(description = "Lesen des Workflow-Status für die digitale Stimmzettelerfassung")
   @ApiResponses(
       value = {
         @ApiResponse(

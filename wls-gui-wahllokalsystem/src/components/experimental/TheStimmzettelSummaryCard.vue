@@ -1,10 +1,11 @@
 <template>
   <v-card>
-    <v-card-title>Wahlvorschläge</v-card-title>
+    <v-card-title>Zusammenfassung</v-card-title>
     <v-card-text>
+      <h3>Wahlvorschläge</h3>
       <div
-        v-if="selectedWahlvorschlaege.length > 0"
         v-for="wahlvorschlag in selectedWahlvorschlaege"
+        v-if="selectedWahlvorschlaege.length > 0"
         :key="wahlvorschlag.identifikator"
       >
         {{ wahlvorschlag.ordnungszahl }} - {{ wahlvorschlag.kurzname }}
@@ -14,34 +15,34 @@
         Required votes left to fulfil selected wahlvorschlaege:
         {{ requiredVotesLeftToFulfilListenkreuze }}
       </div>
-    </v-card-text>
-
-    <v-card-title>Kandidaten</v-card-title>
-    <v-card-text>
-      <div>Total Kandidaten Votes: {{ totalKandidatenScores }}</div>
-      <div>
-        Total Invalid Kandidaten Votes: {{ totalInvalidKandidatenScores }}
+      <div class="text-warning">
+        Reststimmen können nicht eindeutig zugewiesen werden.
       </div>
-      <div>Total Valid Kandidaten Votes: {{ totalValidKandidatenScores }}</div>
+      <v-divider class="my-2" />
+
+      <h3>Kandidaten</h3>
+      <div>Stimmen gesamt: {{ totalKandidatenScores }}</div>
+      <div>ungültige Stimmen: {{ totalInvalidKandidatenScores }}</div>
+      <div>gültige Stimmen: {{ totalValidKandidatenScores }}</div>
       <div
-        v-if="showAllKandidaten"
         v-for="kandidat in stimmzettelKandidaten"
+        v-if="showAllKandidaten"
         :key="kandidat.identifikator"
       >
         {{ kandidat.identifikator }}: {{ kandidat.votesByVoter }}
       </div>
-      <div>Total Discarded Kandidaten: {{ discardedKandidaten.length }}</div>
+      <div>gestrichene: {{ discardedKandidaten.length }}</div>
       <div
-        v-if="showDebugDiscardedKandidaten"
         v-for="kandidat in discardedKandidaten"
+        v-if="showDebugDiscardedKandidaten"
         :key="kandidat.identifikator"
       >
         {{ kandidat.identifikator }}
       </div>
-    </v-card-text>
+      <v-divider class="my-2" />
 
-    <v-card-title>Gültigkeit: {{ isStimmzettelValid }}</v-card-title>
-    <v-card-text>
+      <h3>Gültigkeit: {{ isStimmzettelValid }}</h3>
+
       <div v-if="!isAtLeastOneScoreGiven">Es wurden keine Stimmen vergeben</div>
       <div v-if="!isMaxVotesFulfilled">
         Es wurden mehr Stimmen vergeben als erlaubt

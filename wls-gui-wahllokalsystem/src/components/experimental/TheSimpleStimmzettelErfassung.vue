@@ -109,12 +109,7 @@
         </v-slide-group>
       </v-col>
       <v-col cols="2">
-        <v-card>
-          <v-card-title>Zusammenfassung</v-card-title>
-          <v-card-text>
-            <the-stimmzettel-summary-card />
-          </v-card-text>
-        </v-card>
+        <the-stimmzettel-summary-card />
       </v-col>
     </v-row>
   </div>

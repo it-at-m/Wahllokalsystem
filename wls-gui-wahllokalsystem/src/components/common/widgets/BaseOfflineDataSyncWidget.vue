@@ -70,7 +70,6 @@ const {
 } = storeToRefs(useDataSyncStore());
 const { toHhMm } = useDateTimeFormatter();
 
-
 const props = defineProps({
   dirtyTasks: {
     type: Number,

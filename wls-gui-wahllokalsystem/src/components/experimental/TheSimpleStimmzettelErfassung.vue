@@ -5,36 +5,6 @@
         cols="2"
         class="d-flex flex-column ga-2"
       >
-        <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-title>Kurzbefehle</v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <strong>Kandidaten</strong>
-              <ul>
-                <li><em>&lt;101&gt;</em> ... Setzt 1 Stimme</li>
-                <li><em>&lt;101&gt;+</em> ... Ergänzt 1 Stimme</li>
-                <li><em>&lt;101&gt;+&lt;Zahl&gt;</em> ... Ergänzt n Stimmen</li>
-                <li><em>&lt;101&gt;-</em> ... Entfernt 1 Stimme</li>
-                <li>
-                  <em>&lt;101&gt;-&lt;Zahl&gt;</em> ... Entfernt n Stimmen
-                </li>
-                <li>-<em>&lt;101&gt;</em> ... Streicht den Kandidat</li>
-                <li>+<em>&lt;101&gt;</em> ... Nimmt Streichung zurück</li>
-              </ul>
-              <strong>Wahvorschlag</strong>
-              <ul>
-                <li>-W<em>&lt;1&gt;</em> ... Setzt Listemkreuz</li>
-                <li>+W<em>&lt;101&gt;</em> ... Nimmt Streichung zurück</li>
-              </ul>
-              <strong>sonstige Befehle</strong>
-              <ul>
-                <li><em>000</em> ... leeren Stimmzettel erfassen</li>
-                <li><em>***</em> ... für Beschluss vormerken</li>
-                <li><em>,,,</em> ... Stimmzettel abschließen</li>
-              </ul>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
         <v-card class="mb-1">
           <v-card-title>Eingabehistorie</v-card-title>
           <v-card-text>
@@ -81,6 +51,45 @@
         </v-card>
       </v-col>
       <v-col cols="8">
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title>Kurzbefehle</v-expansion-panel-title>
+            <v-expansion-panel-text class="px-0">
+              <v-table density="compact">
+                <tbody>
+                  <tr>
+                    <td class="font-weight-bold px-0"><em>&lt;101&gt;</em></td>
+                    <td class="px-0">Setzt 1 Stimme</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold px-0">
+                      <em>&lt;101&gt;+&lt;x&gt;</em>
+                    </td>
+                    <td class="px-0">Ergänzt n Stimmen</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold px-0">
+                      <em>&lt;101&gt;-&lt;105&gt;</em>
+                    </td>
+                    <td class="px-0">Ergänzt je 1 Stimme im Bereich</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold px-0"><em>-&lt;101&gt;</em></td>
+                    <td class="px-0">Streicht den Kandidat</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold px-0"><em>u&lt;101&gt;</em></td>
+                    <td class="px-0">Setzt 1 ungültige Stimme</td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold px-0"><em>&lt;3&gt;</em></td>
+                    <td class="px-0">Setzt Listemkreuz</td>
+                  </tr>
+                </tbody>
+              </v-table>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
         <base-form-stimmzettel-quick-input @command="onQuickInputCommand" />
         <v-slide-group
           v-model="activeWahlvorschlagId"
@@ -314,7 +323,7 @@ function setActiveByOrdnungszahl(ordnungszahl: number) {
   max-width: 900px;
 }
 .slide-item-scroll {
-  max-height: 70vh; /* Sichtfenster-Höhe, bei Bedarf anpassen */
+  max-height: 60vh; /* Sichtfenster-Höhe, bei Bedarf anpassen */
   overflow-y: auto;
 }
 </style>

@@ -23,6 +23,7 @@ import {
   ROUTES_HOME,
 } from "@/constants";
 import { commonRouteDefinitions } from "@/plugins/router/commonRoutes.ts";
+import { dseRouteDefinitions } from "@/plugins/router/dseRoutes.ts";
 import { mbwRouteDefinitions } from "@/plugins/router/mbwRoutes.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -213,6 +214,7 @@ const routes = [
     beforeEnter: [requireRoleSchriftfuehrung],
   },
   ...mbwRouteDefinitions,
+  ...dseRouteDefinitions,
   {
     path: "/finished",
     name: ROUTE_FINISHED,

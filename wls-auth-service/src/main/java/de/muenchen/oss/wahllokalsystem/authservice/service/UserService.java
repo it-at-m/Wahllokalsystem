@@ -261,9 +261,9 @@ public class UserService {
     return pinBuilder.toString();
   }
 
-  private String generateName(final String wahlbezirkNummer, final char suffix) {
+  private String generateName(final String wahlbezirkNummer, final char teamChar) {
     val randomPrefix = RandomStringUtils.secure().next(countCharsPrefix, prefixChars).toLowerCase();
-    return randomPrefix + "-" + wahlbezirkNummer + "-" + suffix;
+    return randomPrefix + teamChar + "-" + wahlbezirkNummer;
   }
 
   private String usersToCSVString(Iterable<User> users) {

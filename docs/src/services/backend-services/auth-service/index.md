@@ -131,7 +131,7 @@ Des Weiteren müssen folgende Regeln beachtet werden:
 > Konten zugewiesen werden soll.
 
 > [!IMPORTANT]
-> Die Benutzernamen müssen aus einem nach dem Schema `{Prefix}-{Wahlbezirknummer}` aufgebaut sein, weil andere
+> Die Benutzernamen müssen nach dem Schema `{Prefix}-{Wahlbezirknummer}` aufgebaut sein, weil andere
 > Verfahren aktuell auf den Benutzernamen aufbauen.
 
 > [!NOTE]

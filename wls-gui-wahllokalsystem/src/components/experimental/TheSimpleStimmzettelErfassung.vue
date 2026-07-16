@@ -50,6 +50,20 @@
             </template>
           </v-card-text>
         </v-card>
+        <v-card>
+          <v-card-title>Beschlussfassung</v-card-title>
+          <v-card-text>
+            <v-checkbox
+              label="für Beschlussfassung vormerken"
+              hide-details
+            />
+            <v-textarea
+              label="Grund für Beschlussfassung"
+              max-width="500"
+              hide-details
+            />
+          </v-card-text>
+        </v-card>
       </v-col>
       <v-col cols="7">
         <v-expansion-panels>
@@ -123,10 +137,11 @@
         <v-card class="mt-3 mb-1">
           <v-card-title>Spezialfälle</v-card-title>
           <v-card-text class="pb-1">
-            <v-row>
+            <v-row align="center">
               <v-col cols="8">
                 <v-checkbox
                   label="es gibt ungültige Stimmen die nicht zugeordnet werden können"
+                  hide-details
                 />
               </v-col>
               <v-col cols="4">

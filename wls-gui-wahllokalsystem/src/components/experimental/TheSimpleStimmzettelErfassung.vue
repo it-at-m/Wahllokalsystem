@@ -21,6 +21,7 @@
                 </div>
               </div>
             </div>
+            <div v-else>Noch keine Stimmen erfasst</div>
             <div
               v-if="nextFiveItems.length > 0"
               class="my-4"
@@ -50,7 +51,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="8">
+      <v-col cols="7">
         <v-expansion-panels>
           <v-expansion-panel>
             <v-expansion-panel-title>Kurzbefehle</v-expansion-panel-title>
@@ -117,8 +118,48 @@
           </v-slide-group-item>
         </v-slide-group>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="3">
         <the-stimmzettel-summary-card />
+        <v-card class="mt-3 mb-1">
+          <v-card-title>Spezialfälle</v-card-title>
+          <v-card-text class="pb-1">
+            <v-row>
+              <v-col cols="8">
+                <v-checkbox
+                  label="es gibt ungültige Stimmen die nicht zugeordnet werden können"
+                />
+              </v-col>
+              <v-col cols="4">
+                <v-number-input
+                  control-variant="stacked"
+                  density="compact"
+                  hide-details
+                  width="100"
+                  :clearable="false"
+                  :min="0"
+                />
+              </v-col>
+            </v-row>
+            <v-radio-group>
+              <v-radio
+                label="Stimmzettel ist leer"
+                value="one"
+              />
+              <v-radio
+                label="Stimmzettel fehlt"
+                value="two"
+              />
+              <v-radio
+                label="Stimmzettel ist offensichtlich ungültig"
+                value="three"
+              />
+            </v-radio-group>
+            <v-text-field
+              label="Begründung"
+              hide-details
+            />
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
   </div>

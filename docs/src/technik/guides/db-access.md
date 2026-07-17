@@ -12,8 +12,10 @@ Diese Benutzerkonten können nur die Tabellen sehen, die im jeweiligen Schema si
 _Auch wenn mehrere Schemata ausgewählt sind ..._
 
 > [!IMPORTANT]
-> Sollten die Schemas der Services nicht sichtbar sein, empfiehlt es sich die Richtigkeit der DB-URL unter den Properties
-> der Datasource zu prüfen. Die URL soll `jdbc:oracle:thin:@//localhost:1521/XEPDB1` sein.
+> Sollten die Schemas der Services nicht sichtbar sein, öffnen Sie für die DB-Quelle `system@localhost`
+> **Properties → General → URL** und ersetzen Sie
+> `jdbc:oracle:thin:`@localhost`:1521/XE` durch
+> `jdbc:oracle:thin:`@//localhost`:1521/XEPDB1`.
 
 ![nur Basisdatenservicetabellen sichtbar](/tipsAndTricks/OnlyBasisdatenServiceTablesAccessible.png)  
 _so sieht man doch nur die Tabellen zum Basisdatenservice_

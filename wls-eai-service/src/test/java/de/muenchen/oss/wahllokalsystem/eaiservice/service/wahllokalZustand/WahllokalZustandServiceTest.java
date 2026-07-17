@@ -30,7 +30,7 @@ class WahllokalZustandServiceTest {
     @Test
     void should_callValidatorAndRepo_when_dtoIsGiven() {
       val wahllokalZustand =
-          new WahllokalZustandDTO("wahlbezirkID", null, null, Collections.emptySet());
+          new WahllokalZustandDTO("wahlbezirkID", "A", null, null, Collections.emptySet());
 
       val mockedMappedWahllokalZustand = new WahllokalZustand();
       Mockito.when(wahllokalZustandMapper.toEntity(wahllokalZustand))

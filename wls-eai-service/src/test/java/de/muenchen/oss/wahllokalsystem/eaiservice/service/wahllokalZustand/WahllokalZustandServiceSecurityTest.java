@@ -33,6 +33,7 @@ public class WahllokalZustandServiceSecurityTest {
                   wahllokalZustandService.setWahllokalZustand(
                       new WahllokalZustandDTO(
                           "2853ba2d-baaa-49ee-93f7-a653d17d6a72",
+                          "A",
                           null,
                           null,
                           Collections.emptySet())));
@@ -47,6 +48,7 @@ public class WahllokalZustandServiceSecurityTest {
                   wahllokalZustandService.setWahllokalZustand(
                       new WahllokalZustandDTO(
                           "2853ba2d-baaa-49ee-93f7-a653d17d6a72",
+                          "A",
                           null,
                           null,
                           Collections.emptySet())))

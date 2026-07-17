@@ -42,6 +42,7 @@ export function useLogoutService() {
 
   async function logout(
     wahlbezirkID: string,
+    teamID: string,
     routingTargetAfterSuccessfulLogout: RouteLocationRaw
   ) {
     try {
@@ -53,6 +54,7 @@ export function useLogoutService() {
 
       await wahllokalZustandControllerApi.postLetzteAbmeldung(
         wahlbezirkID,
+        teamID,
         axiosConfigWrapper().requestAsOnlineOnly()
       );
 

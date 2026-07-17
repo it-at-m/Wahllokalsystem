@@ -10,6 +10,7 @@ import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.Druckzust
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.WahllokalZustandDTO;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.TeamIDPermissionEvaluatorImpl;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
@@ -40,6 +41,7 @@ public class WahllokalZustandServiceSecurityTest {
   @Autowired ObjectMapper objectMapper;
 
   @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
+  @MockitoBean TeamIDPermissionEvaluatorImpl teamIDPermissionEvaluator;
 
   @BeforeEach
   void setup() {
@@ -54,8 +56,11 @@ public class WahllokalZustandServiceSecurityTest {
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
           .thenReturn(true);
+      Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
-      String wahlbezirkID = "wahlbezirkID01";
+      val wahlbezirkID = "wahlbezirkID01";
+      val teamID = "B";
 
       val wahllokalZustandDTO = new WahllokalZustandDTO();
       wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
@@ -70,7 +75,7 @@ public class WahllokalZustandServiceSecurityTest {
                       .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
       Assertions.assertThatNoException()
-          .isThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID));
+          .isThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID, teamID));
     }
 
     @Test
@@ -78,14 +83,18 @@ public class WahllokalZustandServiceSecurityTest {
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
           .thenReturn(true);
+      Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.SERVICE_POST_LAST_LOGOUT);
-      String wahlbezirkID = "wahlbezirkID01";
+      val wahlbezirkID = "wahlbezirkID01";
+      val teamID = "B";
 
       val wahllokalZustandDTO = new WahllokalZustandDTO();
       wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
       wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
 
-      Assertions.assertThatThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID))
+      Assertions.assertThatThrownBy(
+              () -> wahllokalZustandService.postLastSeen(wahlbezirkID, teamID))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -94,12 +103,32 @@ public class WahllokalZustandServiceSecurityTest {
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
           .thenReturn(false);
+      Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
 
       val wahlbezirkID = "wahlbezirkID";
+      val teamID = "B";
 
       Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-          .isThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID))
+          .isThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID, teamID))
+          .withMessageStartingWith("Access Denied");
+    }
+
+    @Test
+    void should_throwException_when_givenAllAuthoritiesButTeamIDDoesNotMatch() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
+      Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(false);
+      SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val teamID = "B";
+
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID, teamID))
           .withMessageStartingWith("Access Denied");
     }
   }
@@ -112,8 +141,11 @@ public class WahllokalZustandServiceSecurityTest {
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
           .thenReturn(true);
+      Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.SERVICE_POST_LAST_LOGOUT);
-      String wahlbezirkID = "wahlbezirkID01";
+      val wahlbezirkID = "wahlbezirkID01";
+      val teamID = "B";
 
       val wahllokalZustandDTO = new WahllokalZustandDTO();
       wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
@@ -128,7 +160,7 @@ public class WahllokalZustandServiceSecurityTest {
                       .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
       Assertions.assertThatNoException()
-          .isThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID));
+          .isThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID, teamID));
     }
 
     @Test
@@ -136,14 +168,18 @@ public class WahllokalZustandServiceSecurityTest {
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
           .thenReturn(true);
+      Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
-      String wahlbezirkID = "wahlbezirkID01";
+      val wahlbezirkID = "wahlbezirkID01";
+      val teamID = "B";
 
       val wahllokalZustandDTO = new WahllokalZustandDTO();
       wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
       wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
 
-      Assertions.assertThatThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID))
+      Assertions.assertThatThrownBy(
+              () -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID, teamID))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -152,12 +188,32 @@ public class WahllokalZustandServiceSecurityTest {
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
           .thenReturn(false);
+      Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.SERVICE_POST_LAST_LOGOUT);
 
       val wahlbezirkID = "wahlbezirkID";
+      val teamID = "B";
 
       Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-          .isThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID))
+          .isThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID, teamID))
+          .withMessageStartingWith("Access Denied");
+    }
+
+    @Test
+    void should_throwException_when_givenAllAuthoritiesButTeamIDDoesNotMatch() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
+      Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(false);
+      SecurityUtils.runWith(Authorities.SERVICE_POST_LAST_LOGOUT);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val teamID = "B";
+
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID, teamID))
           .withMessageStartingWith("Access Denied");
     }
   }

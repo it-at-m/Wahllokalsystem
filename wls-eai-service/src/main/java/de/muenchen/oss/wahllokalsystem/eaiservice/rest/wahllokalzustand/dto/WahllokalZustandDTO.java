@@ -6,6 +6,7 @@ import java.util.Set;
 
 public record WahllokalZustandDTO(
     @NotNull String wahlbezirkID,
+    @NotNull String teamID,
     LocalDateTime zuletztGesehen,
     LocalDateTime letzteAbmeldung,
     Set<DruckzustandDTO> druckzustaende) {}

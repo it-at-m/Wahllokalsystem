@@ -174,14 +174,17 @@ class SecurityConfigurationTest {
     @Test
     @WithMockUser
     void should_return200OK_when_postlastSeenWithAuthorizedMockUser() throws Exception {
-      api.perform(post("/businessActions/lastSeen/wahlbezirkID").with(csrf()))
+      api.perform(
+              post("/businessActions/lastSeen?wahlbezirkID=wahlbezirk&teamID=team").with(csrf()))
           .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser
     void should_return200OK_when_postletzteAbmeldungWithAuthorizedMockUser() throws Exception {
-      api.perform(post("/businessActions/letzteAbmeldung/wahlbezirkID").with(csrf()))
+      api.perform(
+              post("/businessActions/letzteAbmeldung?wahlbezirkID=wahlbezirk&teamID=team")
+                  .with(csrf()))
           .andExpect(status().isOk());
     }
 

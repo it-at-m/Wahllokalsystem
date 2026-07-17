@@ -21,24 +21,36 @@ public class WahllokalZustandService {
 
   @PreAuthorize(
       "hasAuthority('Monitoring_BUSINESSACTION_PostLastSeen')"
-          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
-  public void postLastSeen(@P("wahlbezirkID") final String wahlbezirkID) {
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+          + "and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#teamID, authentication)")
+  public void postLastSeen(
+      @P("wahlbezirkID") final String wahlbezirkID, @P("teamID") final String teamID) {
     wahllokalZustandValidator.validWahlbezirkIDOrThrow(
         wahlbezirkID,
         exceptionFactory.createFachlicheWlsException(
             ExceptionConstants.POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG));
-    wahllokalZustandClient.postLastSeen(wahlbezirkID, LocalDateTime.now());
+    wahllokalZustandValidator.validTeamIDOrThrow(
+        teamID,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG));
+    wahllokalZustandClient.postLastSeen(wahlbezirkID, teamID, LocalDateTime.now());
   }
 
   @PreAuthorize(
       "hasAuthority('Monitoring_BUSINESSACTION_PostLetzteAbmeldung')"
-          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
-  public void postLetzteAbmeldung(@P("wahlbezirkID") final String wahlbezirkID) {
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+          + "and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#teamID, authentication)")
+  public void postLetzteAbmeldung(
+      @P("wahlbezirkID") final String wahlbezirkID, @P("teamID") final String teamID) {
     wahllokalZustandValidator.validWahlbezirkIDOrThrow(
         wahlbezirkID,
         exceptionFactory.createFachlicheWlsException(
             ExceptionConstants.POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG));
-    wahllokalZustandClient.postLetzteAbmeldung(wahlbezirkID, LocalDateTime.now());
+    wahllokalZustandValidator.validTeamIDOrThrow(
+        teamID,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG));
+    wahllokalZustandClient.postLetzteAbmeldung(wahlbezirkID, teamID, LocalDateTime.now());
   }
 
   @PreAuthorize(

@@ -42,6 +42,7 @@ class WahllokalZustandMapperTest {
       private WahllokalZustandDTO createDTO() {
         return new WahllokalZustandDTO(
             "df52e11e-381b-488c-8fe8-f03dd3128536",
+            "A",
             LocalDateTime.parse("2026-06-20T09:15:01.123"),
             LocalDateTime.parse("2026-06-20T09:15:01.123"),
             Set.of(
@@ -62,6 +63,7 @@ class WahllokalZustandMapperTest {
       private WahllokalZustand createExpectedEntity() {
         return new WahllokalZustand(
             UUID.fromString("df52e11e-381b-488c-8fe8-f03dd3128536"),
+            "A",
             LocalDateTime.parse("2026-06-20T09:15:01.123"),
             LocalDateTime.parse("2026-06-20T09:15:01.123"),
             Set.of(

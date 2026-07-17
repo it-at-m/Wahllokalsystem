@@ -75,6 +75,8 @@ public class ExceptionConstants {
   // saveWahllokalZustand
   public static final ExceptionDataWrapper SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT =
       new ExceptionDataWrapper("001", "Die WahlbezirkID fehlt");
+  public static final ExceptionDataWrapper SAVEWAHLLOKALZUSTAND_TEAMID_FEHLT =
+      new ExceptionDataWrapper("001", "Die TeamID fehlt");
 
   // loadWahlvorstand
   public static final ExceptionDataWrapper LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG =

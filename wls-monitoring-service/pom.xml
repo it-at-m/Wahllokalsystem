@@ -36,7 +36,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.springdoc.version>2.8.17</org.springdoc.version>
-        <wls.common.version>1.7.1</wls.common.version>
+        <wls.common.version>1.8.0</wls.common.version>
         <com.tngtech.archunit.version>1.4.2</com.tngtech.archunit.version>
     </properties>
 
@@ -404,7 +404,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.8.6.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.10.0-SNAPSHOT.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>

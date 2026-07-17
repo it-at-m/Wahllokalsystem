@@ -23,5 +23,10 @@ public class WahllokalZustandValidator {
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT);
     }
+
+    if (StringUtils.isBlank(zustand.teamID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEWAHLLOKALZUSTAND_TEAMID_FEHLT);
+    }
   }
 }

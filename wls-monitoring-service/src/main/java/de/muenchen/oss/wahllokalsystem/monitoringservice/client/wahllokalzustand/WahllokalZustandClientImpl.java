@@ -36,19 +36,22 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
   }
 
   @Override
-  public void postLastSeen(final String wahlbezirkID, LocalDateTime zuletztGesehen)
+  public void postLastSeen(
+      final String wahlbezirkID, final String teamID, LocalDateTime zuletztGesehen)
       throws WlsException {
     WahllokalZustandDTO wahllokalZustandDTO = new WahllokalZustandDTO();
     wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+    wahllokalZustandDTO.setTeamID(teamID);
     wahllokalZustandDTO.setZuletztGesehen(zuletztGesehen);
     postWahllokalZustand(wahllokalZustandDTO);
   }
 
   @Override
-  public void postLetzteAbmeldung(String wahlbezirkID, LocalDateTime letzteAbmeldung)
-      throws WlsException {
+  public void postLetzteAbmeldung(
+      String wahlbezirkID, final String teamID, LocalDateTime letzteAbmeldung) throws WlsException {
     WahllokalZustandDTO wahllokalZustandDTO = new WahllokalZustandDTO();
     wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+    wahllokalZustandDTO.setTeamID(teamID);
     wahllokalZustandDTO.setLetzteAbmeldung(letzteAbmeldung);
     postWahllokalZustand(wahllokalZustandDTO);
   }

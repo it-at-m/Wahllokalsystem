@@ -159,6 +159,7 @@ class SecurityConfigurationTest {
           objectMapper.writeValueAsString(
               new WahllokalZustandDTO(
                   "wahlbezirkID",
+                  "A",
                   LocalDateTime.now(),
                   LocalDateTime.now(),
                   Collections.emptySet()));
@@ -177,6 +178,7 @@ class SecurityConfigurationTest {
           objectMapper.writeValueAsString(
               new WahllokalZustandDTO(
                   "wahlbezirkID",
+                  "A",
                   LocalDateTime.now(),
                   LocalDateTime.now(),
                   Collections.emptySet()));

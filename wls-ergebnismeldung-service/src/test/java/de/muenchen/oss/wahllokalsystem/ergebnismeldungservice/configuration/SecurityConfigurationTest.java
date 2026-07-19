@@ -23,6 +23,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabeve
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.status.ErfassungStatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.status.StimmzettelerfassungStatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.stimmzettel.StimmzettelOfTeamDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus.TeamErfassungStatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelumschlaege.StimmzettelumschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine.WahlscheineDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
@@ -35,6 +37,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.Sta
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamStatusService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelumschlaege.StimmzettelumschlaegeService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.wahlscheine.WahlscheineService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -90,6 +93,8 @@ class SecurityConfigurationTest {
   @MockitoBean StimmzettelService stimmzettelService;
 
   @MockitoBean StimmzettelerfassungService stimmzettelerfassungService;
+
+  @MockitoBean TeamStatusService teamStatusService;
 
   @Autowired ObjectMapper objectMapper;
 
@@ -940,6 +945,66 @@ class SecurityConfigurationTest {
       void should_returnOk_when_userIsAuthenticated() throws Exception {
         val request = MockMvcRequestBuilders.get(URL);
         api.perform(request).andExpect(status().isNoContent());
+      }
+    }
+  }
+
+  @Nested
+  class TeamStatus {
+
+    private static final String TEAM_URL =
+        "/stimmzettelerfassung/wahl/wahlID/wahlbezirk/wahlbezirkID/team/teamID/status";
+
+    @Nested
+    class GetTeamStatus {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get(TEAM_URL);
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnNoContent_when_callingAuthenticated() throws Exception {
+        val request = MockMvcRequestBuilders.get(TEAM_URL);
+        api.perform(request).andExpect(status().isNoContent());
+
+        Mockito.verify(teamStatusService).getTeamStatus(notNull());
+      }
+    }
+
+    @Nested
+    class PostTeamStatus {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+        val dto = new StimmzettelerfassungTeamStatusDTO(TeamErfassungStatusDTO.REGISTRIERT);
+        val request =
+            MockMvcRequestBuilders.post(TEAM_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto));
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnCreated_when_callingAuthenticated() throws Exception {
+        val dto = new StimmzettelerfassungTeamStatusDTO(TeamErfassungStatusDTO.REGISTRIERT);
+        val request =
+            MockMvcRequestBuilders.post(TEAM_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto));
+
+        api.perform(request).andExpect(status().isCreated());
+
+        Mockito.verify(stimmzettelerfassungService)
+            .saveStimmzettelerfassungStatus(notNull(), notNull());
       }
     }
   }

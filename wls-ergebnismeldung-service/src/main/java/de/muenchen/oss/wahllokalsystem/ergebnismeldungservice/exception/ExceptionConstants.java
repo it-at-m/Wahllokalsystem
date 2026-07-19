@@ -153,6 +153,11 @@ public class ExceptionConstants {
   public static final ExceptionDataWrapper STIMMZETTEL_ANZAHL_IDS_ARE_MISSING =
       new ExceptionDataWrapper("704", "IDs zum Zählen der Stimmenzettel fehlen");
 
+  public static final ExceptionDataWrapper STIMMZETTELERFASSUNG_TEAM_STATUS_INVALID_IDs =
+      new ExceptionDataWrapper("705", "IDs des Teamstatus fehlen");
+  public static final ExceptionDataWrapper STIMMZETTELERFASSUNG_TEAM_STATUS_SAVE_MODEL_IS_MISSING =
+      new ExceptionDataWrapper("705", "Der Teamstatus fehlt");
+
   public static final ExceptionDataWrapper MAPPING_AOUEAI =
       new ExceptionDataWrapper(
           "900",

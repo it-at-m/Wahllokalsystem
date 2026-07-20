@@ -4,6 +4,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,8 +16,12 @@ public class TeamStatusService {
   private final StimmzettelerfassungTeamStatusRepository stimmzettelerfassungTeamStatusRepository;
   private final TeamErfassungStatusModelMapper teamErfassungStatusModelMapper;
 
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungStatus')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+          + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
   public void saveTeamStatus(
-      final WahlbezirkErfassungsteamID id,
+      @P("param") final WahlbezirkErfassungsteamIDModel id,
       final TeamErfassungStatusModel teamErfassungStatusModel) {
     teamErfassungStatusValidator.isValidOrThrow(id);
     teamErfassungStatusValidator.isValidOrThrow(teamErfassungStatusModel);
@@ -24,7 +30,12 @@ public class TeamStatusService {
     stimmzettelerfassungTeamStatusRepository.save(entityToSave);
   }
 
-  public Optional<TeamErfassungStatusModel> getTeamStatus(final WahlbezirkErfassungsteamID id) {
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelerfassungStatus')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+          + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
+  public Optional<TeamErfassungStatusModel> getTeamStatus(
+      @P("param") final WahlbezirkErfassungsteamIDModel id) {
     teamErfassungStatusValidator.isValidOrThrow(id);
 
     val entityID = teamErfassungStatusModelMapper.toEntity(id);

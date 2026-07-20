@@ -1003,8 +1003,7 @@ class SecurityConfigurationTest {
 
         api.perform(request).andExpect(status().isCreated());
 
-        Mockito.verify(stimmzettelerfassungService)
-            .saveStimmzettelerfassungStatus(notNull(), notNull());
+        Mockito.verify(teamStatusService).saveTeamStatus(notNull(), notNull());
       }
     }
   }

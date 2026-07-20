@@ -17,7 +17,7 @@ public class TeamStatusService {
   private final TeamErfassungStatusModelMapper teamErfassungStatusModelMapper;
 
   @PreAuthorize(
-      "hasAuthority('Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungStatus')"
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungTeamstatus')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
           + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
   public void saveTeamStatus(
@@ -31,7 +31,7 @@ public class TeamStatusService {
   }
 
   @PreAuthorize(
-      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelerfassungStatus')"
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelerfassungTeamstatus')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
           + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
   public Optional<TeamErfassungStatusModel> getTeamStatus(

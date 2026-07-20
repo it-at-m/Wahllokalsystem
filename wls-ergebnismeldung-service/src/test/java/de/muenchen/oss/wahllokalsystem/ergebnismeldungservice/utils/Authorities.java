@@ -45,6 +45,10 @@ public class Authorities {
       "Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungStatus";
   public static final String SERVICE_GET_STIMMZETTELERFASSUNGSTATUS =
       "Ergebnismeldung_BUSINESSACTION_GetStimmzettelerfassungStatus";
+  public static final String SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS =
+      "Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungTeamstatus";
+  public static final String SERVICE_GET_STIMMZETTELERFASSUNGTEAMSTATUS =
+      "Ergebnismeldung_BUSINESSACTION_GetStimmzettelerfassungTeamstatus";
 
   public static final String REPOSITORY_READ_AWERTE = "Ergebnismeldung_READ_AWerte";
   public static final String REPOSITORY_DELETE_AWERTE = "Ergebnismeldung_DELETE_AWerte";

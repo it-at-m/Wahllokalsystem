@@ -47,7 +47,7 @@ public class TeamStatusServiceSecurityTest {
     void should_getAccess_when_requiredAuthorityIsPresent() {
       // grant required authorities
       de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils.runWith(
-          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGSTATUS);
+          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS);
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
@@ -82,7 +82,7 @@ public class TeamStatusServiceSecurityTest {
     void
         should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButTeamIDEvaluatorReturnsFalse() {
       de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils.runWith(
-          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGSTATUS);
+          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS);
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
@@ -103,7 +103,7 @@ public class TeamStatusServiceSecurityTest {
     void
         should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButWahlbezirkIDEvaluatorReturnsFalse() {
       de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils.runWith(
-          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGSTATUS);
+          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS);
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
@@ -125,7 +125,7 @@ public class TeamStatusServiceSecurityTest {
     @Test
     void should_getAccess_when_requiredAuthorityIsPresent() {
       de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils.runWith(
-          Authorities.SERVICE_GET_STIMMZETTELERFASSUNGSTATUS);
+          Authorities.SERVICE_GET_STIMMZETTELERFASSUNGTEAMSTATUS);
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
@@ -159,7 +159,7 @@ public class TeamStatusServiceSecurityTest {
     void
         should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButTeamIDEvaluatorReturnsFalse() {
       de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils.runWith(
-          Authorities.SERVICE_GET_STIMMZETTELERFASSUNGSTATUS);
+          Authorities.SERVICE_GET_STIMMZETTELERFASSUNGTEAMSTATUS);
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
@@ -180,7 +180,7 @@ public class TeamStatusServiceSecurityTest {
     void
         should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButWahlbezirkIDEvaluatorReturnsFalse() {
       de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils.runWith(
-          Authorities.SERVICE_GET_STIMMZETTELERFASSUNGSTATUS);
+          Authorities.SERVICE_GET_STIMMZETTELERFASSUNGTEAMSTATUS);
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);

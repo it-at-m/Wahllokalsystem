@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus;
 
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.instancio.Select.field;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,6 +15,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -48,51 +50,58 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
 
     @Test
     void should_persistData_when_dataIsSent() throws Exception {
-      val teamID = "teamID";
-      val wahlbezirkID = "wahlbezirkID";
-      val wahlID = "wahlID";
+      val id = Instancio.create(TeamBezirkUndWahlID.class);
 
-      val id = new TeamBezirkUndWahlID(wahlID, wahlbezirkID, teamID);
-      val expectedEntity =
-          new StimmzettelerfassungTeamStatus(id, TeamErfassungStatus.IN_BEARBEITUNG);
-
-      val requestBody =
-          new StimmzettelerfassungTeamStatusDTO(TeamErfassungStatusDTO.IN_BEARBEITUNG);
+      val requestBody = Instancio.create(StimmzettelerfassungTeamStatusDTO.class);
 
       mockMvc
           .perform(
-              createPostRequest(wahlID, wahlbezirkID, teamID, wahlbezirkID, teamID, requestBody))
+              createPostRequest(
+                  id.getWahlID(),
+                  id.getWahlbezirkID(),
+                  id.getTeamID(),
+                  id.getWahlbezirkID(),
+                  id.getTeamID(),
+                  requestBody))
           .andExpect(status().isCreated());
 
       val persistedEntity = repository.findById(id).get();
 
+      val expectedEntity =
+          Instancio.of(StimmzettelerfassungTeamStatus.class)
+              .set(field(StimmzettelerfassungTeamStatus::getId), id)
+              .set(
+                  field(StimmzettelerfassungTeamStatus::getStatus),
+                  TeamErfassungStatus.valueOf(requestBody.status().name()))
+              .create();
       Assertions.assertThat(persistedEntity).isEqualTo(expectedEntity);
     }
 
     @Test
     void should_replaceExistingData_when_dataIsSent() throws Exception {
-      val teamID = "teamID";
-      val wahlbezirkID = "wahlbezirkID";
-      val wahlID = "wahlID";
-
-      val id = new TeamBezirkUndWahlID(wahlID, wahlbezirkID, teamID);
+      val id = Instancio.create(TeamBezirkUndWahlID.class);
       val entityToReplace = new StimmzettelerfassungTeamStatus(id, TeamErfassungStatus.REGISTRIERT);
 
       repository.save(entityToReplace);
-
-      val expectedEntity =
-          new StimmzettelerfassungTeamStatus(id, TeamErfassungStatus.IN_BEARBEITUNG);
 
       val requestBody =
           new StimmzettelerfassungTeamStatusDTO(TeamErfassungStatusDTO.IN_BEARBEITUNG);
 
       mockMvc
           .perform(
-              createPostRequest(wahlID, wahlbezirkID, teamID, wahlbezirkID, teamID, requestBody))
+              createPostRequest(
+                  id.getWahlID(),
+                  id.getWahlbezirkID(),
+                  id.getTeamID(),
+                  id.getWahlbezirkID(),
+                  id.getTeamID(),
+                  requestBody))
           .andExpect(status().isCreated());
 
       val persistedEntity = repository.findById(id).get();
 
+      val expectedEntity =
+          new StimmzettelerfassungTeamStatus(id, TeamErfassungStatus.IN_BEARBEITUNG);
       Assertions.assertThat(persistedEntity).isEqualTo(expectedEntity);
 
       Assertions.assertThat(repository.count()).isEqualTo(1);

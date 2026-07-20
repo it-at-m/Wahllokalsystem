@@ -1,0 +1,16 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### get Stimmzettel of team - wls_mbw_uwb - team A
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL}}/stimmzettelerfassung/wahl/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e/wahlbezirk/d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a/team/A/status
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### save Stimmzettel of team - wls_mbw_uwb - team A
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL}}/stimmzettelerfassung/wahl/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e/wahlbezirk/d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a/team/A/status
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "status": "IN_BEARBEITUNG"
+}

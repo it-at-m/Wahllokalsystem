@@ -26,6 +26,7 @@ import {
   mdiHelpCircleOutline,
   mdiHome,
   mdiInformationOutline,
+  mdiListStatus,
   mdiLockOutline,
   mdiLogout,
   mdiMapSearch,
@@ -106,6 +107,7 @@ export default createVuetify({
       stimmzettelCommandAcceptList: mdiPlaylistCheck,
       stimmzettelCommandRemoveAcceptList: mdiPlaylistRemove,
       experimentalFeature: mdiFlask,
+      beschluss: mdiListStatus,
     },
     sets: {
       mdi,

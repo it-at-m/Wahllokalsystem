@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>Zusammenfassung</v-card-title>
     <v-card-text>
-      <h3>Wahlvorschläge</h3>
+      <h3>Listenstimmen</h3>
       <div
         v-for="wahlvorschlag in selectedWahlvorschlaege"
         v-if="selectedWahlvorschlaege.length > 0"
@@ -15,15 +15,57 @@
         Required votes left to fulfil selected wahlvorschlaege:
         {{ requiredVotesLeftToFulfilListenkreuze }}
       </div>
-      <div class="text-warning">
+      <!--      <div class="text-warning">
+        <v-icon
+          icon="$alert"
+          color="warning"
+          size="x-small"
+        />
         Reststimmen können nicht eindeutig zugewiesen werden.
-      </div>
+      </div>-->
       <v-divider class="my-2" />
 
-      <h3>Kandidaten</h3>
-      <div>Stimmen gesamt: {{ totalKandidatenScores }}</div>
-      <div>ungültige Stimmen: {{ totalInvalidKandidatenScores }}</div>
-      <div>gültige Stimmen: {{ totalValidKandidatenScores }}</div>
+      <h3 class="mb-2">Einzelstimmen</h3>
+      <v-row align="center">
+        <v-col class="py-1">
+          <div>Stimmen gesamt:</div>
+        </v-col>
+        <v-col class="py-1">
+          <div class="text-right">{{ totalKandidatenScores }}</div>
+        </v-col>
+      </v-row>
+      <v-row align="center">
+        <v-col class="py-1">
+          <div>ungültige Stimmen:</div>
+        </v-col>
+        <v-col class="py-1">
+          <div class="text-right">{{ totalInvalidKandidatenScores }}</div>
+        </v-col>
+      </v-row>
+      <v-row align="center">
+        <v-col class="py-1">
+          <div>direkt vergebene Stimmen:</div>
+        </v-col>
+        <v-col class="py-1">
+          <div class="text-right">{{ totalValidKandidatenScores }}</div>
+        </v-col>
+      </v-row>
+      <v-row align="center">
+        <v-col class="py-1">
+          <div>Reststimmen:</div>
+        </v-col>
+        <v-col class="py-1">
+          <div class="text-right">{{ totalValidKandidatenScores }}</div>
+        </v-col>
+      </v-row>
+      <v-row align="center">
+        <v-col class="py-1">
+          <div>Streichungen:</div>
+        </v-col>
+        <v-col class="py-1">
+          <div class="text-right">{{ discardedKandidaten.length }}</div>
+        </v-col>
+      </v-row>
       <div
         v-for="kandidat in stimmzettelKandidaten"
         v-if="showAllKandidaten"
@@ -31,7 +73,6 @@
       >
         {{ kandidat.identifikator }}: {{ kandidat.votesByVoter }}
       </div>
-      <div>gestrichene: {{ discardedKandidaten.length }}</div>
       <div
         v-for="kandidat in discardedKandidaten"
         v-if="showDebugDiscardedKandidaten"
@@ -41,15 +82,24 @@
       </div>
       <v-divider class="my-2" />
 
-      <h3>Gültigkeit: {{ isStimmzettelValid }}</h3>
-
-      <div v-if="!isAtLeastOneScoreGiven">Es wurden keine Stimmen vergeben</div>
-      <div v-if="!isMaxVotesFulfilled">
-        Es wurden mehr Stimmen vergeben als erlaubt
-      </div>
-      <div v-if="!isAtLeastOneValidScoreGiven">
-        Es gibt nicht eine gültige Stimme
-      </div>
+      <!-- Beschluss -->
+      <!--      <h3>
+        <v-icon
+          icon="$beschluss"
+          color="warning"
+        />
+        Stimmzettel ist für Beschluss vorgemerkt
+      </h3>-->
+      <!-- Gültigkeit -->
+      <h3>
+        <v-icon
+          :icon="
+            isStimmzettelValid ? '$kandidatNonRemoved' : '$kandidatRemoved'
+          "
+          :color="isStimmzettelValid ? 'success' : 'error'"
+        />
+        Stimmzettel ist {{ isStimmzettelValid ? "gültig" : "ungültig" }}
+      </h3>
     </v-card-text>
   </v-card>
 </template>
@@ -86,9 +136,6 @@ const {
 
 const {
   isStimmzettelValid,
-  isAtLeastOneScoreGiven,
-  isAtLeastOneValidScoreGiven,
-  isMaxVotesFulfilled,
   stimmzettelKandidaten,
   stimmzettelWahlvorschlaege,
   totalKandidatenScores,

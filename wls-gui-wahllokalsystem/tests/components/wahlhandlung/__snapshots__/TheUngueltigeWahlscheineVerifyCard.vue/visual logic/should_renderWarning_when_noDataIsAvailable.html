@@ -2,10 +2,10 @@
   <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2">Wahlschein prüfen</div>
   <div class="v-card-text pb-0">
     <form class="v-form" novalidate="">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-text-field v-number-input" style="max-width: 300px;" data-test="number-input-wahlscheinnummer">
+      <div class="v-input v-input--horizontal v-input--density-default v-theme--light v-locale--is-ltr v-textarea v-text-field v-textarea--auto-grow v-textarea--no-resize" style="max-width: 300px; --v-textarea-scroll-bar-width: 0px;" data-test="input-wahlscheinnummer">
         <!---->
         <div class="v-input__control">
-          <div class="v-field v-field--appended v-field--center-affix v-field--persistent-clear v-field--variant-filled v-theme--light v-locale--is-ltr">
+          <div class="v-field v-field--appended v-field--persistent-clear v-field--variant-filled v-theme--light v-locale--is-ltr" style="--v-textarea-control-height: NaN;">
             <div class="v-field__overlay"></div>
             <div class="v-field__loader">
               <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
@@ -27,7 +27,7 @@
               </label><label class="v-label v-field-label" id="input-v-1-label" aria-hidden="false" for="input-v-1">
                 <!---->Wahlscheinnummer
               </label>
-              <!----><input size="1" type="text" aria-labelledby="input-v-1-label" id="input-v-1" aria-describedby="input-v-1-messages" inputmode="decimal" class="v-field__input">
+              <!----><textarea class="v-field__input" rows="1" aria-labelledby="input-v-1-label" id="input-v-1" aria-describedby="input-v-1-messages"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-1-sizer" readonly="" aria-hidden="true"></textarea>
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">

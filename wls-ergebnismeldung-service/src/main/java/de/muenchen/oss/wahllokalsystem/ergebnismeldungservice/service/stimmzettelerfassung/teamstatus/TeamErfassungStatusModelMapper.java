@@ -11,7 +11,7 @@ public interface TeamErfassungStatusModelMapper {
   TeamErfassungStatusModel toModel(TeamErfassungStatus teamStatus);
 
   StimmzettelerfassungTeamStatus toEntity(
-      WahlbezirkErfassungsteamID id, TeamErfassungStatusModel status);
+      WahlbezirkErfassungsteamIDModel id, TeamErfassungStatusModel status);
 
-  TeamBezirkUndWahlID toEntity(WahlbezirkErfassungsteamID id);
+  TeamBezirkUndWahlID toEntity(WahlbezirkErfassungsteamIDModel id);
 }

@@ -12,7 +12,7 @@ public class TeamErfassungStatusValidator {
 
   private final ExceptionFactory exceptionFactory;
 
-  public void isValidOrThrow(final WahlbezirkErfassungsteamID id) {
+  public void isValidOrThrow(final WahlbezirkErfassungsteamIDModel id) {
     if (id == null
         || StringUtils.isBlank(id.teamID())
         || StringUtils.isBlank(id.wahlbezirkID())

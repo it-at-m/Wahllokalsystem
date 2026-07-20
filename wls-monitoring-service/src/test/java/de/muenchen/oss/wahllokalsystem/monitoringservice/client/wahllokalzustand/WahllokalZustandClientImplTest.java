@@ -10,7 +10,6 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsExcepti
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -40,12 +39,9 @@ class WahllokalZustandClientImplTest {
       val teamID = "B";
       val zeitpunkt = LocalDateTime.now();
 
-      val expectedWahllokalzustandDTO =
-          createWahllokalZustandDTO_POST_LASTSEEN(wahlbezirkID, teamID, zeitpunkt);
-
       unitUnderTest.postLastSeen(wahlbezirkID, teamID, zeitpunkt);
       Mockito.verify(wahllokalzustandControllerApi)
-          .saveWahllokalZustand(expectedWahllokalzustandDTO);
+          .saveWahllokalZustandLastSeen(wahlbezirkID, teamID, zeitpunkt);
     }
 
     @Test
@@ -53,7 +49,6 @@ class WahllokalZustandClientImplTest {
       val wahlbezirkID = "wahlbezirkID01";
       val teamID = "B";
       val zeitpunkt = LocalDateTime.now();
-      val zeitpunktOffset = OffsetDateTime.now();
 
       val mockedWlsException = TechnischeWlsException.withCode("007").buildWithMessage("Dummy-Msg");
       Mockito.when(
@@ -64,7 +59,7 @@ class WahllokalZustandClientImplTest {
       val mockedApiException = new IllegalArgumentException("Nix-Connect");
       Mockito.doThrow(mockedApiException)
           .when(wahllokalzustandControllerApi)
-          .saveWahllokalZustand(any());
+          .saveWahllokalZustandLastSeen(any(), any(), any());
 
       Assertions.assertThatThrownBy(
               () -> unitUnderTest.postLastSeen(wahlbezirkID, teamID, zeitpunkt))
@@ -81,12 +76,9 @@ class WahllokalZustandClientImplTest {
       val teamID = "B";
       val zeitpunkt = LocalDateTime.now();
 
-      val expectedWahllokalzustandDTO =
-          createWahllokalZustandDTO_POST_LETZTEABMELDUNG(wahlbezirkID, teamID, zeitpunkt);
-
       unitUnderTest.postLetzteAbmeldung(wahlbezirkID, teamID, zeitpunkt);
       Mockito.verify(wahllokalzustandControllerApi)
-          .saveWahllokalZustand(expectedWahllokalzustandDTO);
+          .saveWahllokalZustandLetzteAbmeldung(wahlbezirkID, teamID, zeitpunkt);
     }
 
     @Test
@@ -104,7 +96,7 @@ class WahllokalZustandClientImplTest {
       val mockedApiException = new IllegalArgumentException("Nix-Connect");
       Mockito.doThrow(mockedApiException)
           .when(wahllokalzustandControllerApi)
-          .saveWahllokalZustand(any());
+          .saveWahllokalZustandLetzteAbmeldung(any(), any(), any());
 
       Assertions.assertThatThrownBy(
               () -> unitUnderTest.postLetzteAbmeldung(wahlbezirkID, teamID, zeitpunkt))
@@ -286,22 +278,6 @@ class WahllokalZustandClientImplTest {
                       new BezirkUndWahlID(wahlID, wahlbezirkID), zeitpunkt))
           .isSameAs(mockedWlsException);
     }
-  }
-
-  private WahllokalZustandDTO createWahllokalZustandDTO_POST_LASTSEEN(
-      final String wahlbezirkID, final String teamID, final LocalDateTime zeitpunkt) {
-    return new WahllokalZustandDTO()
-        .wahlbezirkID(wahlbezirkID)
-        .teamID(teamID)
-        .zuletztGesehen(zeitpunkt);
-  }
-
-  private WahllokalZustandDTO createWahllokalZustandDTO_POST_LETZTEABMELDUNG(
-      final String wahlbezirkID, final String teamID, final LocalDateTime zeitpunkt) {
-    return new WahllokalZustandDTO()
-        .wahlbezirkID(wahlbezirkID)
-        .teamID(teamID)
-        .letzteAbmeldung(zeitpunkt);
   }
 
   private WahllokalZustandDTO createWahllokalZustandDTO_POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT(

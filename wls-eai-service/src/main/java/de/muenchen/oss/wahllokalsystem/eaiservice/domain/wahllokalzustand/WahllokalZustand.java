@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 @ToString(onlyExplicitlyIncluded = true, callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class WahllokalZustand extends BaseEntity {
 
   @JdbcTypeCode(VARCHAR)

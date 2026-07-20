@@ -52,7 +52,7 @@ public class WahllokalZustandServiceSecurityTest {
   class PostLastSeen {
 
     @Test
-    void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
+    void should_grantAccessAndThrowNoException_when_authoritiesAreValid() {
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
           .thenReturn(true);
@@ -62,17 +62,15 @@ public class WahllokalZustandServiceSecurityTest {
       val wahlbezirkID = "wahlbezirkID01";
       val teamID = "B";
 
-      val wahllokalZustandDTO = new WahllokalZustandDTO();
-      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-      wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
-
       WireMock.stubFor(
-          WireMock.post("/wahllokalzustand")
+          WireMock.post(WireMock.urlPathEqualTo("/wahllokalzustand/lastSeen"))
+              .withQueryParam("wahlbezirkID", WireMock.equalTo(wahlbezirkID))
+              .withQueryParam("teamID", WireMock.equalTo(teamID))
+              .withQueryParam("timestamp", WireMock.matching(".+"))
               .willReturn(
                   WireMock.aResponse()
                       .withHeader("Content-Type", "application/json")
-                      .withStatus(HttpStatus.OK.value())
-                      .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
+                      .withStatus(HttpStatus.OK.value())));
 
       Assertions.assertThatNoException()
           .isThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID, teamID));
@@ -152,12 +150,14 @@ public class WahllokalZustandServiceSecurityTest {
       wahllokalZustandDTO.setLetzteAbmeldung(LocalDateTime.now());
 
       WireMock.stubFor(
-          WireMock.post("/wahllokalzustand")
+          WireMock.post(WireMock.urlPathEqualTo("/wahllokalzustand/letzteAbmeldung"))
+              .withQueryParam("wahlbezirkID", WireMock.equalTo(wahlbezirkID))
+              .withQueryParam("teamID", WireMock.equalTo(teamID))
+              .withQueryParam("timestamp", WireMock.matching(".+"))
               .willReturn(
                   WireMock.aResponse()
                       .withHeader("Content-Type", "application/json")
-                      .withStatus(HttpStatus.OK.value())
-                      .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
+                      .withStatus(HttpStatus.OK.value())));
 
       Assertions.assertThatNoException()
           .isThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID, teamID));

@@ -77,6 +77,8 @@ public class ExceptionConstants {
       new ExceptionDataWrapper("001", "Die WahlbezirkID fehlt");
   public static final ExceptionDataWrapper SAVEWAHLLOKALZUSTAND_TEAMID_FEHLT =
       new ExceptionDataWrapper("001", "Die TeamID fehlt");
+  public static final ExceptionDataWrapper SAVEWAHLLOKALZUSTAND_TIMESTAMP_FEHLT =
+      new ExceptionDataWrapper("001", "Der Timestamp fehlt");
 
   // loadWahlvorstand
   public static final ExceptionDataWrapper LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG =

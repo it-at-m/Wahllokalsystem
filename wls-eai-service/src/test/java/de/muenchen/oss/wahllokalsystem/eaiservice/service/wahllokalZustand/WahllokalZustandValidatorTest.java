@@ -73,57 +73,25 @@ class WahllokalZustandValidatorTest {
           .isSameAs(mockedWlsException);
     }
 
-    @ParameterizedTest(name = "{1}")
-    @MethodSource("invalidTeamIDArguments")
-    void should_throwException_when_teamIdIsMissing(final ArgumentsAccessor arguments) {
-      val mockedWlsException =
-          FachlicheWlsException.withCode("000").buildWithMessage("wahlbezirkID is null");
-      Mockito.when(
-              exceptionFactory.createFachlicheWlsException(
-                  ExceptionConstants.SAVEWAHLLOKALZUSTAND_TEAMID_FEHLT))
-          .thenReturn(mockedWlsException);
-
-      Assertions.assertThatException()
-          .isThrownBy(
-              () ->
-                  unitUnderTest.validWahllokalZustandOrThrow(
-                      arguments.get(0, WahllokalZustandDTO.class)))
-          .isSameAs(mockedWlsException);
-    }
-
     public static Stream<Arguments> minimalValidWahllokalZustandDTOArguments() {
       return Stream.of(
           Arguments.of(
-              new WahllokalZustandDTO("wahlbezirkID", "A", null, null, Collections.emptySet()),
+              new WahllokalZustandDTO("wahlbezirkID", null, null, Collections.emptySet()),
               "Set is empty"),
-          Arguments.of(
-              new WahllokalZustandDTO("wahlbezirkID", "A", null, null, null), "Set is null"));
+          Arguments.of(new WahllokalZustandDTO("wahlbezirkID", null, null, null), "Set is null"));
     }
 
     public static Stream<Arguments> invalidWahlbezirkIDArguments() {
       return Stream.of(
           Arguments.of(
-              new WahllokalZustandDTO(null, "A", null, null, Collections.emptySet()),
+              new WahllokalZustandDTO(null, null, null, Collections.emptySet()),
               "wahlbezirkID is null"),
           Arguments.of(
-              new WahllokalZustandDTO("", "A", null, null, Collections.emptySet()),
+              new WahllokalZustandDTO("", null, null, Collections.emptySet()),
               "wahlbezirkID is empty string"),
           Arguments.of(
-              new WahllokalZustandDTO("   ", "A", null, null, Collections.emptySet()),
+              new WahllokalZustandDTO("   ", null, null, Collections.emptySet()),
               "wahlbezirkID is blank string"));
-    }
-
-    public static Stream<Arguments> invalidTeamIDArguments() {
-      return Stream.of(
-          Arguments.of(
-              new WahllokalZustandDTO("wahlbezirkID", null, null, null, Collections.emptySet()),
-              "teamID is null"),
-          Arguments.of(
-              new WahllokalZustandDTO("wahlbezirkID", "", null, null, Collections.emptySet()),
-              "teamID is empty string"),
-          Arguments.of(
-              new WahllokalZustandDTO("wahlbezirkID", "   ", null, null, Collections.emptySet()),
-              "teamID is blank string"));
     }
   }
 }

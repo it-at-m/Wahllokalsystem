@@ -5,11 +5,13 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahllokalZustand.Wahll
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,5 +33,37 @@ public class WahllokalzustandController {
   @ResponseStatus(HttpStatus.OK)
   public void saveWahllokalZustand(@Valid @RequestBody WahllokalZustandDTO wahllokalZustand) {
     wahllokalZustandService.setWahllokalZustand(wahllokalZustand);
+  }
+
+  @Operation(
+      description = "Speichert den Wahllokalzustand lastSeen. ",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Wahllokalzustand erfolgreich gespeichert.")
+      })
+  @PostMapping("/lastSeen")
+  @ResponseStatus(HttpStatus.OK)
+  public void saveWahllokalZustandLastSeen(
+      @Valid @RequestParam("wahlbezirkID") final String wahlbezirkID,
+      @RequestParam("teamID") final String teamID,
+      @RequestParam("timestamp") final LocalDateTime timestamp) {
+    wahllokalZustandService.setWahllokalZustandLastSeen(wahlbezirkID, teamID, timestamp);
+  }
+
+  @Operation(
+      description = "Speichert den Wahllokalzustand letzteAbmeldung. ",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Wahllokalzustand erfolgreich gespeichert.")
+      })
+  @PostMapping("/letzteAbmeldung")
+  @ResponseStatus(HttpStatus.OK)
+  public void saveWahllokalZustandLetzteAbmeldung(
+      @Valid @RequestParam("wahlbezirkID") final String wahlbezirkID,
+      @RequestParam("teamID") final String teamID,
+      @RequestParam("timestamp") final LocalDateTime timestamp) {
+    wahllokalZustandService.setWahllokalZustandLetzteAbmeldung(wahlbezirkID, teamID, timestamp);
   }
 }

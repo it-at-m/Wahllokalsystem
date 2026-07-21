@@ -5,10 +5,13 @@ import static org.instancio.Select.field;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.DataConflictException;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModelValidator;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -20,6 +23,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,6 +34,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class StimmzettelValidatorTest {
 
   @Mock ExceptionFactory exceptionFactory;
+
+  @Mock TeamBezirkUndWahlIDModelValidator teamBezirkUndWahlIDModelValidator;
 
   @InjectMocks StimmzettelValidator unitUnderTest;
 
@@ -95,80 +102,22 @@ class StimmzettelValidatorTest {
     }
 
     @Nested
-    class OfStimmzettelOwnerModel {
+    class OfTeamBezirkUndWahlIDModel {
+
+      @Captor ArgumentCaptor<Supplier<WlsException>> captor;
 
       @Test
-      void should_notThrowAnyException_when_dataIsCorrect() {
-        Assertions.assertThatNoException()
-            .isThrownBy(
-                () -> unitUnderTest.validOrThrow(Instancio.create(TeamBezirkUndWahlIDModel.class)));
-      }
+      void should_useTeamBezirkUndWahlIDValidator_when_called() {
+        val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
 
-      @ParameterizedTest(name = "throw exception when {1}")
-      @MethodSource("invalidStimmzettelOwnerModel")
-      void should_throwException_when_stimmzettelOwnerIsInvalid(final ArgumentsAccessor arguments) {
-        val objectToValidate = arguments.get(0, TeamBezirkUndWahlIDModel.class);
+        unitUnderTest.validOrThrow(id);
 
-        val mockedWlsException =
-            FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
-        Mockito.when(
+        Mockito.verify(teamBezirkUndWahlIDModelValidator)
+            .isValidOrThrow(Mockito.eq(id), captor.capture());
+        Assertions.assertThat(captor.getValue().get())
+            .isEqualTo(
                 exceptionFactory.createFachlicheWlsException(
-                    ExceptionConstants.STIMMZETTEL_OWNER_IDS_ARE_MISSING))
-            .thenReturn(mockedWlsException);
-
-        Assertions.assertThatThrownBy(() -> unitUnderTest.validOrThrow(objectToValidate))
-            .usingRecursiveComparison()
-            .isEqualTo(mockedWlsException);
-      }
-
-      public static Stream<Arguments> invalidStimmzettelOwnerModel() {
-        return Stream.of(
-            Arguments.of(null, "owner is null"),
-            Arguments.of(
-                Instancio.of(TeamBezirkUndWahlIDModel.class)
-                    .set(field(TeamBezirkUndWahlIDModel::wahlbezirkID), null)
-                    .create(),
-                "wahlbezirkID is null"),
-            Arguments.of(
-                Instancio.of(TeamBezirkUndWahlIDModel.class)
-                    .set(field(TeamBezirkUndWahlIDModel::wahlbezirkID), "")
-                    .create(),
-                "wahlbezirkID is empty string"),
-            Arguments.of(
-                Instancio.of(TeamBezirkUndWahlIDModel.class)
-                    .set(field(TeamBezirkUndWahlIDModel::wahlbezirkID), "   ")
-                    .create(),
-                "wahlbezirkID is blank string"),
-            Arguments.of(
-                Instancio.of(TeamBezirkUndWahlIDModel.class)
-                    .set(field(TeamBezirkUndWahlIDModel::wahlID), null)
-                    .create(),
-                "wahlID is null"),
-            Arguments.of(
-                Instancio.of(TeamBezirkUndWahlIDModel.class)
-                    .set(field(TeamBezirkUndWahlIDModel::wahlID), "")
-                    .create(),
-                "wahlID is empty string"),
-            Arguments.of(
-                Instancio.of(TeamBezirkUndWahlIDModel.class)
-                    .set(field(TeamBezirkUndWahlIDModel::wahlID), "   ")
-                    .create(),
-                "wahlID is blank string"),
-            Arguments.of(
-                Instancio.of(TeamBezirkUndWahlIDModel.class)
-                    .set(field(TeamBezirkUndWahlIDModel::teamID), null)
-                    .create(),
-                "teamID is null"),
-            Arguments.of(
-                Instancio.of(TeamBezirkUndWahlIDModel.class)
-                    .set(field(TeamBezirkUndWahlIDModel::teamID), "")
-                    .create(),
-                "teamID is empty string"),
-            Arguments.of(
-                Instancio.of(TeamBezirkUndWahlIDModel.class)
-                    .set(field(TeamBezirkUndWahlIDModel::teamID), "   ")
-                    .create(),
-                "teamID is blank string"));
+                    ExceptionConstants.STIMMZETTELERFASSUNG_TEAM_STATUS_INVALID_IDs));
       }
     }
 

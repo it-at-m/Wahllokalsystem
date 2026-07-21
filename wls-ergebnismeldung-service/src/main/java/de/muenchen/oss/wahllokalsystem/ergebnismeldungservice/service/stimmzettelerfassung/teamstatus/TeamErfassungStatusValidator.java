@@ -2,9 +2,9 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModelValidator;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,15 +12,14 @@ import org.springframework.stereotype.Component;
 public class TeamErfassungStatusValidator {
 
   private final ExceptionFactory exceptionFactory;
+  private final TeamBezirkUndWahlIDModelValidator teamBezirkUndWahlIDModelValidator;
 
   public void isValidOrThrow(final TeamBezirkUndWahlIDModel id) {
-    if (id == null
-        || StringUtils.isBlank(id.teamID())
-        || StringUtils.isBlank(id.wahlbezirkID())
-        || StringUtils.isBlank(id.wahlID())) {
-      throw exceptionFactory.createFachlicheWlsException(
-          ExceptionConstants.STIMMZETTELERFASSUNG_TEAM_STATUS_INVALID_IDs);
-    }
+    teamBezirkUndWahlIDModelValidator.isValidOrThrow(
+        id,
+        () ->
+            exceptionFactory.createFachlicheWlsException(
+                ExceptionConstants.STIMMZETTELERFASSUNG_TEAM_STATUS_INVALID_IDs));
   }
 
   public void isValidOrThrow(final TeamErfassungStatusModel model) {

@@ -147,4 +147,55 @@ public class StimmzettelerfassungServiceSecurityTest {
           .isInstanceOf(AccessDeniedException.class);
     }
   }
+
+  @Nested
+  class RegisterStimmzettelerfassungStart {
+
+    @Test
+    void should_getAccess_when_requiredAuthorityIsPresent() {
+      SecurityUtils.runWith(Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS_START);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+                      bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+              .thenReturn(true);
+
+      Assertions.assertThatNoException()
+              .isThrownBy(() -> unitUnderTest.registerStimmzettelerfassungStart(id));
+    }
+
+    @Test
+    @WithMockUser
+    void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+                      bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+              .thenReturn(true);
+
+      Assertions.assertThatException()
+              .isThrownBy(() -> unitUnderTest.registerStimmzettelerfassungStart(id))
+              .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void
+    should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS_START);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+                      bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+              .thenReturn(false);
+
+      Assertions.assertThatException()
+              .isThrownBy(() -> unitUnderTest.registerStimmzettelerfassungStart(id))
+              .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 }

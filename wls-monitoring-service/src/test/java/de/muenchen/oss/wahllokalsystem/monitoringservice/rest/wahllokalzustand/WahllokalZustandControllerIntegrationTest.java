@@ -62,10 +62,7 @@ class WahllokalZustandControllerIntegrationTest {
       val teamID = "A";
       val request =
           MockMvcRequestBuilders.post(
-                  "/businessActions/lastSeen/lastSeen?wahlbezirkID="
-                      + wahlbezirkID
-                      + "&teamID="
-                      + teamID)
+                  "/businessActions/lastSeen?wahlbezirkID=" + wahlbezirkID + "&teamID=" + teamID)
               .with(csrf())
               .with(
                   jwt()

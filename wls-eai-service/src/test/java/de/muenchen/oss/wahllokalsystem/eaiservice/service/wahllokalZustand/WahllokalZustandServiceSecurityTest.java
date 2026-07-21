@@ -90,7 +90,7 @@ public class WahllokalZustandServiceSecurityTest {
       Assertions.assertThatNoException()
           .isThrownBy(
               () ->
-                  wahllokalZustandService.setWahllokalZustandLastSeen(
+                  wahllokalZustandService.setWahllokalZustandLetzteAbmeldung(
                       "2853ba2d-baaa-49ee-93f7-a653d17d6a72", "A", LocalDateTime.now()));
     }
 

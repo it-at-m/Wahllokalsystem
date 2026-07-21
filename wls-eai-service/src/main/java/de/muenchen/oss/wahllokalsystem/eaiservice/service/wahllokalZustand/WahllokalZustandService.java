@@ -45,10 +45,17 @@ public class WahllokalZustandService {
           ExceptionConstants.SAVEWAHLLOKALZUSTAND_TIMESTAMP_FEHLT);
     }
 
+    final UUID parsedWahlbezirkID;
+    try {
+      parsedWahlbezirkID = UUID.fromString(wahlbezirkID);
+    } catch (IllegalArgumentException e) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.ID_NICHT_KONVERTIERBAR);
+    }
+
     wahllokalZustandRepository.save(
         WahllokalZustand.builder()
             .zuletztGesehen(timestamp)
-            .wahlbezirkID(UUID.fromString(wahlbezirkID))
+            .wahlbezirkID(parsedWahlbezirkID)
             .teamID(teamID)
             .build());
   }
@@ -70,10 +77,18 @@ public class WahllokalZustandService {
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.SAVEWAHLLOKALZUSTAND_TIMESTAMP_FEHLT);
     }
+
+    final UUID parsedWahlbezirkID;
+    try {
+      parsedWahlbezirkID = UUID.fromString(wahlbezirkID);
+    } catch (IllegalArgumentException e) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.ID_NICHT_KONVERTIERBAR);
+    }
+
     wahllokalZustandRepository.save(
         WahllokalZustand.builder()
             .letzteAbmeldung(timestamp)
-            .wahlbezirkID(UUID.fromString(wahlbezirkID))
+            .wahlbezirkID(parsedWahlbezirkID)
             .teamID(teamID)
             .build());
   }

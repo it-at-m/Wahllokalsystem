@@ -44,13 +44,13 @@ Der Zustand in dem sich die Wahllokale befinden kann mitgeteilt werden.
 
 Übersicht über die Endpunkte und die dafür benötigten Rechte:
 
-| Endpunkt                                                            | erforderliche Rechte                        |
-|---------------------------------------------------------------------|---------------------------------------------|
-| GET /wahldaten/wahlbezirke/{wahlbezirkID}/wahlberechtigte           | aoueai_BUSINESSACTION_LoadWahlberechtigte   |
-| GET /wahldaten/wahltage?includingSince                              | aoueai_BUSINESSACTION_LoadWahltage          |
-| GET /wahldaten/wahlbezirk?forDate&withNummer                        | aoueai_BUSINESSACTION_LoadWahlbezirke       |
-| GET /wahldaten/wahlen?forDate&withNummer                            | aoueai_BUSINESSACTION_LoadWahlen            |
-| GET /wahldaten/basisdaten?forDate&withNummer                        | aoueai_BUSINESSACTION_LoadBasisdaten        |
-| GET /wahllokalzustand                                               | aoueai_BUSINESSACTION_SaveWahllokalZustand  |
-| GET /wahllokalzustand/lastSeen?wahlbezirkID&teamID&timestamp        | aoueai_BUSINESSACTION_SaveWahllokalZustand  |
-| GET /wahllokalzustand/letzteAbmeldung?wahlbezirkID&teamID&timestamp | aoueai_BUSINESSACTION_SaveWahllokalZustand  |
+| Endpunkt                                                             | erforderliche Rechte                        |
+|----------------------------------------------------------------------|---------------------------------------------|
+| GET /wahldaten/wahlbezirke/{wahlbezirkID}/wahlberechtigte            | aoueai_BUSINESSACTION_LoadWahlberechtigte   |
+| GET /wahldaten/wahltage?includingSince                               | aoueai_BUSINESSACTION_LoadWahltage          |
+| GET /wahldaten/wahlbezirk?forDate&withNummer                         | aoueai_BUSINESSACTION_LoadWahlbezirke       |
+| GET /wahldaten/wahlen?forDate&withNummer                             | aoueai_BUSINESSACTION_LoadWahlen            |
+| GET /wahldaten/basisdaten?forDate&withNummer                         | aoueai_BUSINESSACTION_LoadBasisdaten        |
+| POST /wahllokalzustand                                               | aoueai_BUSINESSACTION_SaveWahllokalZustand  |
+| POST /wahllokalzustand/lastSeen?wahlbezirkID&teamID&timestamp        | aoueai_BUSINESSACTION_SaveWahllokalZustand  |
+| POST /wahllokalzustand/letzteAbmeldung?wahlbezirkID&teamID&timestamp | aoueai_BUSINESSACTION_SaveWahllokalZustand  |

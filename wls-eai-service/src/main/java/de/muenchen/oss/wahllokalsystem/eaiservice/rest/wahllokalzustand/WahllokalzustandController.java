@@ -5,9 +5,12 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahllokalZustand.Wahll
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Validated
 @RequestMapping("/wahllokalzustand")
 @RequiredArgsConstructor
 public class WahllokalzustandController {
@@ -45,9 +49,9 @@ public class WahllokalzustandController {
   @PostMapping("/lastSeen")
   @ResponseStatus(HttpStatus.OK)
   public void saveWahllokalZustandLastSeen(
-      @Valid @RequestParam("wahlbezirkID") final String wahlbezirkID,
-      @RequestParam("teamID") final String teamID,
-      @RequestParam("timestamp") final LocalDateTime timestamp) {
+      @RequestParam("wahlbezirkID") @NotBlank(message = "Die wahlbezirkID darf nicht leer sein") final String wahlbezirkID,
+      @RequestParam("teamID") @NotBlank(message = "Die teamID darf nicht leer sein") final String teamID,
+      @RequestParam("timestamp") @NotNull(message = "Der timestamp darf nicht leer sein") final LocalDateTime timestamp) {
     wahllokalZustandService.setWahllokalZustandLastSeen(wahlbezirkID, teamID, timestamp);
   }
 
@@ -61,9 +65,9 @@ public class WahllokalzustandController {
   @PostMapping("/letzteAbmeldung")
   @ResponseStatus(HttpStatus.OK)
   public void saveWahllokalZustandLetzteAbmeldung(
-      @Valid @RequestParam("wahlbezirkID") final String wahlbezirkID,
-      @RequestParam("teamID") final String teamID,
-      @RequestParam("timestamp") final LocalDateTime timestamp) {
+      @RequestParam("wahlbezirkID") @NotBlank(message = "Die wahlbezirkID darf nicht leer sein") final String wahlbezirkID,
+      @RequestParam("teamID") @NotBlank(message = "Die teamID darf nicht leer sein") final String teamID,
+      @RequestParam("timestamp") @NotNull(message = "Der timestamp darf nicht leer sein") final LocalDateTime timestamp) {
     wahllokalZustandService.setWahllokalZustandLetzteAbmeldung(wahlbezirkID, teamID, timestamp);
   }
 }

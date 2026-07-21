@@ -21,8 +21,8 @@ public class WahllokalZustandService {
 
   @PreAuthorize(
       "hasAuthority('Monitoring_BUSINESSACTION_PostLastSeen')"
-          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
-          + "and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#teamID, authentication)")
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+          + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#teamID, authentication)")
   public void postLastSeen(
       @P("wahlbezirkID") final String wahlbezirkID, @P("teamID") final String teamID) {
     wahllokalZustandValidator.validWahlbezirkIDOrThrow(
@@ -38,8 +38,8 @@ public class WahllokalZustandService {
 
   @PreAuthorize(
       "hasAuthority('Monitoring_BUSINESSACTION_PostLetzteAbmeldung')"
-          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
-          + "and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#teamID, authentication)")
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+          + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#teamID, authentication)")
   public void postLetzteAbmeldung(
       @P("wahlbezirkID") final String wahlbezirkID, @P("teamID") final String teamID) {
     wahllokalZustandValidator.validWahlbezirkIDOrThrow(

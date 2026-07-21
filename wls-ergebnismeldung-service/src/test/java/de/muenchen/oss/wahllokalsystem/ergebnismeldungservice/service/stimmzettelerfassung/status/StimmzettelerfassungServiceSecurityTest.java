@@ -159,11 +159,11 @@ public class StimmzettelerfassungServiceSecurityTest {
       val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
 
       Mockito.when(
-                      bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
-              .thenReturn(true);
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
 
       Assertions.assertThatNoException()
-              .isThrownBy(() -> unitUnderTest.registerStimmzettelerfassungStart(id));
+          .isThrownBy(() -> unitUnderTest.registerStimmzettelerfassungStart(id));
     }
 
     @Test
@@ -173,29 +173,29 @@ public class StimmzettelerfassungServiceSecurityTest {
       val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
 
       Mockito.when(
-                      bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
-              .thenReturn(true);
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
 
       Assertions.assertThatException()
-              .isThrownBy(() -> unitUnderTest.registerStimmzettelerfassungStart(id))
-              .isInstanceOf(AccessDeniedException.class);
+          .isThrownBy(() -> unitUnderTest.registerStimmzettelerfassungStart(id))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
     @Test
     void
-    should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
       SecurityUtils.runWith(Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS_START);
 
       val wahlbezirkID = "wahlbezirkID";
       val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
 
       Mockito.when(
-                      bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
-              .thenReturn(false);
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(false);
 
       Assertions.assertThatException()
-              .isThrownBy(() -> unitUnderTest.registerStimmzettelerfassungStart(id))
-              .isInstanceOf(AccessDeniedException.class);
+          .isThrownBy(() -> unitUnderTest.registerStimmzettelerfassungStart(id))
+          .isInstanceOf(AccessDeniedException.class);
     }
   }
 }

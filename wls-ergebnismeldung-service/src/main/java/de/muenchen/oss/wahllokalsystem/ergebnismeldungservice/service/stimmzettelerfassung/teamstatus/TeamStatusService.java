@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class TeamStatusService {
           + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
   @Transactional
   public void saveTeamStatus(
-      @P("param") final WahlbezirkErfassungsteamIDModel id,
+      @P("param") final TeamBezirkUndWahlIDModel id,
       final TeamErfassungStatusModel teamErfassungStatusModel) {
     teamErfassungStatusValidator.isValidOrThrow(id);
     teamErfassungStatusValidator.isValidOrThrow(teamErfassungStatusModel);
@@ -44,7 +45,7 @@ public class TeamStatusService {
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
           + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
   public Optional<TeamErfassungStatusModel> getTeamStatus(
-      @P("param") final WahlbezirkErfassungsteamIDModel id) {
+      @P("param") final TeamBezirkUndWahlIDModel id) {
     teamErfassungStatusValidator.isValidOrThrow(id);
 
     val entityID = teamErfassungStatusModelMapper.toEntity(id);

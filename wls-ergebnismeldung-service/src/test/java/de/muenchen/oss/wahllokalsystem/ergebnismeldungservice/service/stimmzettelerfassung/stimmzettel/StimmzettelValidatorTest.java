@@ -4,6 +4,7 @@ import static org.instancio.Select.field;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.DataConflictException;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -100,13 +101,13 @@ class StimmzettelValidatorTest {
       void should_notThrowAnyException_when_dataIsCorrect() {
         Assertions.assertThatNoException()
             .isThrownBy(
-                () -> unitUnderTest.validOrThrow(Instancio.create(StimmzettelOwnerModel.class)));
+                () -> unitUnderTest.validOrThrow(Instancio.create(TeamBezirkUndWahlIDModel.class)));
       }
 
       @ParameterizedTest(name = "throw exception when {1}")
       @MethodSource("invalidStimmzettelOwnerModel")
       void should_throwException_when_stimmzettelOwnerIsInvalid(final ArgumentsAccessor arguments) {
-        val objectToValidate = arguments.get(0, StimmzettelOwnerModel.class);
+        val objectToValidate = arguments.get(0, TeamBezirkUndWahlIDModel.class);
 
         val mockedWlsException =
             FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
@@ -124,48 +125,48 @@ class StimmzettelValidatorTest {
         return Stream.of(
             Arguments.of(null, "owner is null"),
             Arguments.of(
-                Instancio.of(StimmzettelOwnerModel.class)
-                    .set(field(StimmzettelOwnerModel::wahlbezirkID), null)
+                Instancio.of(TeamBezirkUndWahlIDModel.class)
+                    .set(field(TeamBezirkUndWahlIDModel::wahlbezirkID), null)
                     .create(),
                 "wahlbezirkID is null"),
             Arguments.of(
-                Instancio.of(StimmzettelOwnerModel.class)
-                    .set(field(StimmzettelOwnerModel::wahlbezirkID), "")
+                Instancio.of(TeamBezirkUndWahlIDModel.class)
+                    .set(field(TeamBezirkUndWahlIDModel::wahlbezirkID), "")
                     .create(),
                 "wahlbezirkID is empty string"),
             Arguments.of(
-                Instancio.of(StimmzettelOwnerModel.class)
-                    .set(field(StimmzettelOwnerModel::wahlbezirkID), "   ")
+                Instancio.of(TeamBezirkUndWahlIDModel.class)
+                    .set(field(TeamBezirkUndWahlIDModel::wahlbezirkID), "   ")
                     .create(),
                 "wahlbezirkID is blank string"),
             Arguments.of(
-                Instancio.of(StimmzettelOwnerModel.class)
-                    .set(field(StimmzettelOwnerModel::wahlID), null)
+                Instancio.of(TeamBezirkUndWahlIDModel.class)
+                    .set(field(TeamBezirkUndWahlIDModel::wahlID), null)
                     .create(),
                 "wahlID is null"),
             Arguments.of(
-                Instancio.of(StimmzettelOwnerModel.class)
-                    .set(field(StimmzettelOwnerModel::wahlID), "")
+                Instancio.of(TeamBezirkUndWahlIDModel.class)
+                    .set(field(TeamBezirkUndWahlIDModel::wahlID), "")
                     .create(),
                 "wahlID is empty string"),
             Arguments.of(
-                Instancio.of(StimmzettelOwnerModel.class)
-                    .set(field(StimmzettelOwnerModel::wahlID), "   ")
+                Instancio.of(TeamBezirkUndWahlIDModel.class)
+                    .set(field(TeamBezirkUndWahlIDModel::wahlID), "   ")
                     .create(),
                 "wahlID is blank string"),
             Arguments.of(
-                Instancio.of(StimmzettelOwnerModel.class)
-                    .set(field(StimmzettelOwnerModel::teamID), null)
+                Instancio.of(TeamBezirkUndWahlIDModel.class)
+                    .set(field(TeamBezirkUndWahlIDModel::teamID), null)
                     .create(),
                 "teamID is null"),
             Arguments.of(
-                Instancio.of(StimmzettelOwnerModel.class)
-                    .set(field(StimmzettelOwnerModel::teamID), "")
+                Instancio.of(TeamBezirkUndWahlIDModel.class)
+                    .set(field(TeamBezirkUndWahlIDModel::teamID), "")
                     .create(),
                 "teamID is empty string"),
             Arguments.of(
-                Instancio.of(StimmzettelOwnerModel.class)
-                    .set(field(StimmzettelOwnerModel::teamID), "   ")
+                Instancio.of(TeamBezirkUndWahlIDModel.class)
+                    .set(field(TeamBezirkUndWahlIDModel::teamID), "   ")
                     .create(),
                 "teamID is blank string"));
       }

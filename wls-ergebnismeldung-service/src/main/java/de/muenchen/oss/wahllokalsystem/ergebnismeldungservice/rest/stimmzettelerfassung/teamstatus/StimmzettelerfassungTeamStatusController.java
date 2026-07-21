@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamStatusService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.WahlbezirkErfassungsteamIDModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -38,7 +38,7 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
       @RequestBody final TeamErfassungStatusDTO teamErfassungStatusDTO) {
 
     teamStatusService.saveTeamStatus(
-        new WahlbezirkErfassungsteamIDModel(wahlID, wahlbezirkID, teamID),
+        new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
         teamErfassungStatusDTOMapper.toModel(teamErfassungStatusDTO));
   }
 
@@ -61,7 +61,7 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
 
     return okWithBodyOrNoContent(
         teamStatusService
-            .getTeamStatus(new WahlbezirkErfassungsteamIDModel(wahlID, wahlbezirkID, teamID))
+            .getTeamStatus(new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID))
             .map(teamErfassungStatusDTOMapper::toDTO));
   }
 }

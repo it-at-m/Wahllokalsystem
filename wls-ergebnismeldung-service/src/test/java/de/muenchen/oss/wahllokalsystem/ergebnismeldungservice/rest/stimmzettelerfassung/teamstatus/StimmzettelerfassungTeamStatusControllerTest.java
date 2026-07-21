@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamErfassungStatusModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamStatusService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.WahlbezirkErfassungsteamIDModel;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -43,8 +43,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
 
       Mockito.verify(teamStatusService)
           .saveTeamStatus(
-              new WahlbezirkErfassungsteamIDModel(wahlID, wahlbezirkID, teamID),
-              mockedMappedStatus);
+              new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID), mockedMappedStatus);
     }
   }
 
@@ -60,7 +59,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
       val mockedServiceResponse = Instancio.create(TeamErfassungStatusModel.class);
       Mockito.when(
               teamStatusService.getTeamStatus(
-                  new WahlbezirkErfassungsteamIDModel(wahlID, wahlbezirkID, teamID)))
+                  new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID)))
           .thenReturn(Optional.of(mockedServiceResponse));
 
       val mockedMappeServiceResponse = Instancio.create(TeamErfassungStatusDTO.class);
@@ -82,7 +81,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
 
       Mockito.when(
               teamStatusService.getTeamStatus(
-                  new WahlbezirkErfassungsteamIDModel(wahlID, wahlbezirkID, teamID)))
+                  new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID)))
           .thenReturn(Optional.empty());
 
       val result = underTest.getTeamStimmzettelerfassungStatus(wahlID, wahlbezirkID, teamID);

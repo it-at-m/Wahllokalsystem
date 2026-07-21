@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.DataConflictException;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
@@ -23,7 +24,7 @@ public class StimmzettelValidator {
     verifyThatStimmzettelKennungIsUnique(listOfStimmzettel);
   }
 
-  public void validOrThrow(final StimmzettelOwnerModel stimmzettelOwner) {
+  public void validOrThrow(final TeamBezirkUndWahlIDModel stimmzettelOwner) {
     if (stimmzettelOwner == null
         || StringUtils.isBlank(stimmzettelOwner.wahlbezirkID())
         || StringUtils.isBlank(stimmzettelOwner.wahlID())

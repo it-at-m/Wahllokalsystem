@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.TeamBezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.TeamErfassungStatus;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -37,7 +38,7 @@ class TeamStatusServiceTest {
 
     @Test
     void should_saveMappedEntity_when_idAndStatusAreValid() {
-      val id = Instancio.create(WahlbezirkErfassungsteamIDModel.class);
+      val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val statusToSave = Instancio.create(TeamErfassungStatusModel.class);
       val entityToSave = Instancio.create(StimmzettelerfassungTeamStatus.class);
 
@@ -54,7 +55,7 @@ class TeamStatusServiceTest {
 
     @Test
     void should_triggerRegisterStimmzettelerfassungBearbeitung_when_teamStatusIsInBearbeitung() {
-      val id = Instancio.create(WahlbezirkErfassungsteamIDModel.class);
+      val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val statusToSave = TeamErfassungStatusModel.IN_BEARBEITUNG;
       val entityToSave = Instancio.create(StimmzettelerfassungTeamStatus.class);
 
@@ -73,7 +74,7 @@ class TeamStatusServiceTest {
 
     @Test
     void should_throwException_when_validationOfIdFailed() {
-      val id = Instancio.create(WahlbezirkErfassungsteamIDModel.class);
+      val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val statusToSave = Instancio.create(TeamErfassungStatusModel.class);
       val mockedWlsException =
           FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
@@ -91,7 +92,7 @@ class TeamStatusServiceTest {
 
     @Test
     void should_throwException_when_validationOfStatusFailed() {
-      val id = Instancio.create(WahlbezirkErfassungsteamIDModel.class);
+      val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val statusToSave = Instancio.create(TeamErfassungStatusModel.class);
       val mockedWlsException =
           FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
@@ -117,7 +118,7 @@ class TeamStatusServiceTest {
 
     @Test
     void should_returnMappedStatus_when_entityIsFound() {
-      val id = Instancio.create(WahlbezirkErfassungsteamIDModel.class);
+      val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val entityID = Instancio.create(TeamBezirkUndWahlID.class);
       val entityStatus = Instancio.create(TeamErfassungStatus.class);
       val entityFromRepo = new StimmzettelerfassungTeamStatus(entityID, entityStatus);
@@ -139,7 +140,7 @@ class TeamStatusServiceTest {
 
     @Test
     void should_returnEmptyOptional_when_entityIsNotFound() {
-      val id = Instancio.create(WahlbezirkErfassungsteamIDModel.class);
+      val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val entityID = Instancio.create(TeamBezirkUndWahlID.class);
 
       Mockito.when(teamErfassungStatusModelMapper.toEntity(id)).thenReturn(entityID);
@@ -158,7 +159,7 @@ class TeamStatusServiceTest {
 
     @Test
     void should_throwException_when_validationOfIdFailed() {
-      val id = Instancio.create(WahlbezirkErfassungsteamIDModel.class);
+      val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val mockedWlsException =
           FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
 

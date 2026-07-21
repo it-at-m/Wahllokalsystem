@@ -8,6 +8,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.StimmzettelerfassungStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.security.TeamIDPermissionEvaluator;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
@@ -61,7 +62,7 @@ public class TeamStatusServiceSecurityTest {
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
-      val id = new WahlbezirkErfassungsteamIDModel("wahlID", wahlbezirkID, teamID);
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, "wahlID");
 
       Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(eq(teamID), notNull()))
           .thenReturn(true);
@@ -81,7 +82,7 @@ public class TeamStatusServiceSecurityTest {
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
-      val id = new WahlbezirkErfassungsteamIDModel("wahlID", wahlbezirkID, teamID);
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, "wahlID");
 
       Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(eq(teamID), notNull()))
           .thenReturn(true);
@@ -99,7 +100,7 @@ public class TeamStatusServiceSecurityTest {
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
-      val id = new WahlbezirkErfassungsteamIDModel("wahlID", wahlbezirkID, teamID);
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, "wahlID");
 
       Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(eq(teamID), notNull()))
           .thenReturn(false);
@@ -120,7 +121,7 @@ public class TeamStatusServiceSecurityTest {
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
-      val id = new WahlbezirkErfassungsteamIDModel("wahlID", wahlbezirkID, teamID);
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, "wahlID");
 
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
@@ -147,7 +148,7 @@ public class TeamStatusServiceSecurityTest {
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
-      val id = new WahlbezirkErfassungsteamIDModel("wahlID", wahlbezirkID, teamID);
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, "wahlID");
 
       Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(eq(teamID), notNull()))
           .thenReturn(true);
@@ -163,7 +164,7 @@ public class TeamStatusServiceSecurityTest {
     void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
-      val id = new WahlbezirkErfassungsteamIDModel("wahlID", wahlbezirkID, teamID);
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, "wahlID");
 
       Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(eq(teamID), notNull()))
           .thenReturn(true);
@@ -181,7 +182,7 @@ public class TeamStatusServiceSecurityTest {
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
-      val id = new WahlbezirkErfassungsteamIDModel("wahlID", wahlbezirkID, teamID);
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, "wahlID");
 
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
@@ -202,7 +203,7 @@ public class TeamStatusServiceSecurityTest {
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
-      val id = new WahlbezirkErfassungsteamIDModel("wahlID", wahlbezirkID, teamID);
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, "wahlID");
 
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))

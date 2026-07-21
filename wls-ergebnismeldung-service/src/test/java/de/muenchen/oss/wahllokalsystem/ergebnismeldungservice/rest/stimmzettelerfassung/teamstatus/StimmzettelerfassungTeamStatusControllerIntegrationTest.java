@@ -160,7 +160,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
               jwt()
                   .authorities(
                       new SimpleGrantedAuthority(
-                          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGSTATUS))
+                          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS))
                   .jwt(
                       jwt ->
                           jwt.claim("wahlbezirkID", claimWahlbezirkID)
@@ -254,7 +254,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
               jwt()
                   .authorities(
                       new SimpleGrantedAuthority(
-                          Authorities.SERVICE_GET_STIMMZETTELERFASSUNGSTATUS))
+                          Authorities.SERVICE_GET_STIMMZETTELERFASSUNGTEAMSTATUS))
                   .jwt(
                       jwt ->
                           jwt.claim("wahlbezirkID", claimWahlbezirkID)

@@ -49,6 +49,8 @@ public class Authorities {
       "Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungTeamstatus";
   public static final String SERVICE_GET_STIMMZETTELERFASSUNGTEAMSTATUS =
       "Ergebnismeldung_BUSINESSACTION_GetStimmzettelerfassungTeamstatus";
+  public static final String SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS_START =
+      "Ergebnismeldung_BUSINESSACTION_RegisterStimmzettelerfassungStart";
 
   public static final String REPOSITORY_READ_AWERTE = "Ergebnismeldung_READ_AWerte";
   public static final String REPOSITORY_DELETE_AWERTE = "Ergebnismeldung_DELETE_AWerte";
@@ -191,5 +193,11 @@ public class Authorities {
         SERVICE_GET_STIMMZETTELUMSCHLAEGE,
         REPOSITORY_READ_STIMMZETTELUMSCHLAEGE,
         SERVICE_GET_BEDENKLICHE_STIMMZETTEL
+      };
+
+  public static final String[] ALL_AUTHORITIES_SAVE_TEAMSTATUS =
+      new String[] {
+        Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS,
+        Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS_START
       };
 }

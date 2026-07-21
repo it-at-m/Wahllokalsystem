@@ -8,23 +8,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.ErfassungStatus;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.StimmzettelerfassungStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.TeamBezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.TeamErfassungStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.Arrays;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -34,15 +43,20 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
 
-  @Autowired StimmzettelerfassungTeamStatusRepository repository;
+  @MockitoSpyBean StimmzettelerfassungTeamStatusRepository teamstatusRepository;
+
+  @MockitoSpyBean StimmzettelerfassungStatusRepository stimmzettelerfassungStatusRepository;
 
   @Autowired ObjectMapper objectMapper;
+
+  @Autowired ServiceIDFormatter serviceIDFormatter;
 
   @Autowired MockMvc mockMvc;
 
   @AfterEach
   void teardown() {
-    repository.deleteAll();
+    teamstatusRepository.deleteAll();
+    stimmzettelerfassungStatusRepository.deleteAll();
   }
 
   @Nested
@@ -65,7 +79,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
                   requestBody))
           .andExpect(status().isCreated());
 
-      val persistedEntity = repository.findById(id).get();
+      val persistedTeamStatusEntity = teamstatusRepository.findById(id).get();
 
       val expectedEntity =
           Instancio.of(StimmzettelerfassungTeamStatus.class)
@@ -74,7 +88,47 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
                   field(StimmzettelerfassungTeamStatus::getStatus),
                   TeamErfassungStatus.valueOf(requestBody.name()))
               .create();
-      Assertions.assertThat(persistedEntity).isEqualTo(expectedEntity);
+      Assertions.assertThat(persistedTeamStatusEntity).isEqualTo(expectedEntity);
+    }
+
+    @Test
+    void should_persistDataAndSetStimmzettelErfassungStatus_when_teamStatusIsInBearbeitung()
+        throws Exception {
+      val id = Instancio.create(TeamBezirkUndWahlID.class);
+
+      val requestBody = TeamErfassungStatusDTO.IN_BEARBEITUNG;
+      Assertions.assertThat(
+              stimmzettelerfassungStatusRepository.existsById(
+                  new BezirkUndWahlID(id.getWahlID(), id.getWahlbezirkID())))
+          .isFalse();
+      mockMvc
+          .perform(
+              createPostRequest(
+                  id.getWahlID(),
+                  id.getWahlbezirkID(),
+                  id.getTeamID(),
+                  id.getWahlbezirkID(),
+                  id.getTeamID(),
+                  requestBody))
+          .andExpect(status().isCreated());
+
+      val persistedTeamStatusEntity = teamstatusRepository.findById(id).get();
+
+      val expectedEntity =
+          Instancio.of(StimmzettelerfassungTeamStatus.class)
+              .set(field(StimmzettelerfassungTeamStatus::getId), id)
+              .set(
+                  field(StimmzettelerfassungTeamStatus::getStatus),
+                  TeamErfassungStatus.valueOf(requestBody.name()))
+              .create();
+      Assertions.assertThat(persistedTeamStatusEntity).isEqualTo(expectedEntity);
+
+      val persistedStimmzettelErfassungStatusEntity =
+          stimmzettelerfassungStatusRepository
+              .findById(new BezirkUndWahlID(id.getWahlID(), id.getWahlbezirkID()))
+              .get();
+      Assertions.assertThat(persistedStimmzettelErfassungStatusEntity.getStatus())
+          .isEqualTo(ErfassungStatus.STE_BEARBEITUNG);
     }
 
     @Test
@@ -82,7 +136,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
       val id = Instancio.create(TeamBezirkUndWahlID.class);
       val entityToReplace = new StimmzettelerfassungTeamStatus(id, TeamErfassungStatus.REGISTRIERT);
 
-      repository.save(entityToReplace);
+      teamstatusRepository.save(entityToReplace);
 
       val requestBody = TeamErfassungStatusDTO.IN_BEARBEITUNG;
 
@@ -97,13 +151,13 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
                   requestBody))
           .andExpect(status().isCreated());
 
-      val persistedEntity = repository.findById(id).get();
+      val persistedEntity = teamstatusRepository.findById(id).get();
 
       val expectedEntity =
           new StimmzettelerfassungTeamStatus(id, TeamErfassungStatus.IN_BEARBEITUNG);
       Assertions.assertThat(persistedEntity).isEqualTo(expectedEntity);
 
-      Assertions.assertThat(repository.count()).isEqualTo(1);
+      Assertions.assertThat(teamstatusRepository.count()).isEqualTo(1);
     }
 
     @Test
@@ -112,7 +166,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
           .perform(createPostRequest(" ", " ", " ", " ", " ", null))
           .andExpect(status().isBadRequest());
 
-      Assertions.assertThat(repository.count()).isEqualTo(0);
+      Assertions.assertThat(teamstatusRepository.count()).isEqualTo(0);
     }
 
     @Test
@@ -138,6 +192,90 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
           .andExpect(status().isForbidden());
     }
 
+    @Test
+    void should_notSaveStimmzettelerfassungStatus_when_savingTeamstatusFailed() throws Exception {
+      val id = Instancio.create(TeamBezirkUndWahlID.class);
+
+      val requestBody = TeamErfassungStatusDTO.IN_BEARBEITUNG;
+
+      Mockito.doThrow(new RuntimeException("saving teamstatus failed"))
+          .when(teamstatusRepository)
+          .save(Mockito.any());
+
+      val response =
+          mockMvc
+              .perform(
+                  createPostRequest(
+                      id.getWahlID(),
+                      id.getWahlbezirkID(),
+                      id.getTeamID(),
+                      id.getWahlbezirkID(),
+                      id.getTeamID(),
+                      requestBody))
+              .andExpect(status().isInternalServerError())
+              .andReturn()
+              .getResponse();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
+
+      val persistedTeamStatusEntity = teamstatusRepository.findById(id);
+      val persistedWorkflowStatusEntity =
+          stimmzettelerfassungStatusRepository.findById(
+              new BezirkUndWahlID(id.getWahlID(), id.getWahlbezirkID()));
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              "999",
+              serviceIDFormatter.getId(),
+              "Ursache: class java.lang.RuntimeException, Nachricht: saving teamstatus failed");
+
+      Assertions.assertThat(persistedTeamStatusEntity).isEmpty();
+      Assertions.assertThat(persistedWorkflowStatusEntity).isEmpty();
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
+    }
+
+    @Test
+    void should_notSaveTeamstatus_when_savingStimmzettelerfassungStatusFailed() throws Exception {
+      val id = Instancio.create(TeamBezirkUndWahlID.class);
+
+      val requestBody = TeamErfassungStatusDTO.IN_BEARBEITUNG;
+
+      Mockito.doThrow(new RuntimeException("saving stimmzettelerfassungStatus failed"))
+          .when(stimmzettelerfassungStatusRepository)
+          .save(Mockito.any());
+
+      val response =
+          mockMvc
+              .perform(
+                  createPostRequest(
+                      id.getWahlID(),
+                      id.getWahlbezirkID(),
+                      id.getTeamID(),
+                      id.getWahlbezirkID(),
+                      id.getTeamID(),
+                      requestBody))
+              .andExpect(status().isInternalServerError())
+              .andReturn()
+              .getResponse();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
+
+      val persistedTeamStatusEntity = teamstatusRepository.findById(id);
+      val persistedWorkflowStatusEntity =
+          stimmzettelerfassungStatusRepository.findById(
+              new BezirkUndWahlID(id.getWahlID(), id.getWahlbezirkID()));
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              "999",
+              serviceIDFormatter.getId(),
+              "Ursache: class java.lang.RuntimeException, Nachricht: saving stimmzettelerfassungStatus failed");
+
+      Assertions.assertThat(persistedTeamStatusEntity).isEmpty();
+      Assertions.assertThat(persistedWorkflowStatusEntity).isEmpty();
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
+    }
+
     private MockHttpServletRequestBuilder createPostRequest(
         final String wahlID,
         final String wahlbezirkID,
@@ -158,8 +296,9 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
           .with(
               jwt()
                   .authorities(
-                      new SimpleGrantedAuthority(
-                          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS))
+                      Arrays.stream(Authorities.ALL_AUTHORITIES_SAVE_TEAMSTATUS)
+                          .map(SimpleGrantedAuthority::new)
+                          .toArray(SimpleGrantedAuthority[]::new))
                   .jwt(
                       jwt ->
                           jwt.claim("wahlbezirkID", claimWahlbezirkID)
@@ -183,7 +322,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
           new StimmzettelerfassungTeamStatus(
               new TeamBezirkUndWahlID(wahlID, wahlbezirkID, teamID), status);
 
-      repository.save(entityToFind);
+      teamstatusRepository.save(entityToFind);
 
       val response =
           mockMvc

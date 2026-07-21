@@ -4,7 +4,9 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.TeamBezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.TeamErfassungStatus;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -26,6 +28,8 @@ class TeamStatusServiceTest {
 
   @Mock TeamErfassungStatusModelMapper teamErfassungStatusModelMapper;
 
+  @Mock StimmzettelerfassungService stimmzettelerfassungService;
+
   @InjectMocks TeamStatusService unitUnderTest;
 
   @Nested
@@ -46,6 +50,25 @@ class TeamStatusServiceTest {
       Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(statusToSave);
       Mockito.verify(teamErfassungStatusModelMapper).toEntity(id, statusToSave);
       Mockito.verify(stimmzettelerfassungTeamStatusRepository).save(entityToSave);
+    }
+
+    @Test
+    void should_triggerRegisterStimmzettelerfassungBearbeitung_when_teamStatusIsInBearbeitung() {
+      val id = Instancio.create(WahlbezirkErfassungsteamIDModel.class);
+      val statusToSave = TeamErfassungStatusModel.IN_BEARBEITUNG;
+      val entityToSave = Instancio.create(StimmzettelerfassungTeamStatus.class);
+
+      Mockito.when(teamErfassungStatusModelMapper.toEntity(id, statusToSave))
+          .thenReturn(entityToSave);
+
+      unitUnderTest.saveTeamStatus(id, statusToSave);
+
+      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(id);
+      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(statusToSave);
+      Mockito.verify(teamErfassungStatusModelMapper).toEntity(id, statusToSave);
+      Mockito.verify(stimmzettelerfassungTeamStatusRepository).save(entityToSave);
+      Mockito.verify(stimmzettelerfassungService)
+          .registerStimmzettelerfassungStart(new BezirkUndWahlID(id.wahlID(), id.wahlbezirkID()));
     }
 
     @Test

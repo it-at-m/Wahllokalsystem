@@ -38,6 +38,16 @@ public class StimmzettelerfassungService {
   }
 
   @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_RegisterStimmzettelerfassungStart')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
+  public void registerStimmzettelerfassungStart(
+      @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID) {
+    if (!stimmzettelerfassungStatusRepository.existsById(bezirkUndWahlID)) {
+      saveStimmzettelerfassungStatus(bezirkUndWahlID, ErfassungStatusModel.STE_BEARBEITUNG);
+    }
+  }
+
+  @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelerfassungStatus')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
   public Optional<ErfassungStatusModel> getStimmzettelerfassungStatus(

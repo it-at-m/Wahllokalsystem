@@ -5,16 +5,23 @@ import static org.mockito.ArgumentMatchers.notNull;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.StimmzettelerfassungStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.security.TeamIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,9 +42,12 @@ public class TeamStatusServiceSecurityTest {
 
   @Autowired StimmzettelerfassungTeamStatusRepository teamStatusRepository;
 
+  @Autowired StimmzettelerfassungStatusRepository stimmzettelerfassungStatusRepository;
+
   @AfterEach
   void teardown() {
     teamStatusRepository.deleteAll();
+    stimmzettelerfassungStatusRepository.deleteAll();
   }
 
   @Nested
@@ -47,7 +57,7 @@ public class TeamStatusServiceSecurityTest {
     void should_getAccess_when_requiredAuthorityIsPresent() {
       // grant required authorities
       de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils.runWith(
-          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS);
+          Authorities.ALL_AUTHORITIES_SAVE_TEAMSTATUS);
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
@@ -63,9 +73,12 @@ public class TeamStatusServiceSecurityTest {
           .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, TeamErfassungStatusModel.REGISTRIERT));
     }
 
-    @Test
-    @WithMockUser
-    void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(
+        final ArgumentsAccessor arguments) {
+      SecurityUtils.runWith(arguments.get(0, String[].class));
+
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
       val id = new WahlbezirkErfassungsteamIDModel("wahlID", wahlbezirkID, teamID);
@@ -82,7 +95,7 @@ public class TeamStatusServiceSecurityTest {
     void
         should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButTeamIDEvaluatorReturnsFalse() {
       de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils.runWith(
-          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS);
+          Authorities.ALL_AUTHORITIES_SAVE_TEAMSTATUS);
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
@@ -103,7 +116,7 @@ public class TeamStatusServiceSecurityTest {
     void
         should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButWahlbezirkIDEvaluatorReturnsFalse() {
       de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils.runWith(
-          Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGTEAMSTATUS);
+          Authorities.ALL_AUTHORITIES_SAVE_TEAMSTATUS);
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
@@ -116,6 +129,11 @@ public class TeamStatusServiceSecurityTest {
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, TeamErfassungStatusModel.REGISTRIERT))
           .isInstanceOf(AccessDeniedException.class);
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_SAVE_TEAMSTATUS);
     }
   }
 

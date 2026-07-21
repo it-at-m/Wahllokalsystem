@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.monitoringservice.rest.wahllokalzustand;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand.WahllokalZustandService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,8 +29,8 @@ public class WahllokalZustandController {
       })
   @PostMapping("/lastSeen")
   public void postLastSeen(
-      @RequestParam("wahlbezirkID") @NotBlank(message = "Die wahlbezirkID darf nicht leer sein") final String wahlbezirkID,
-      @RequestParam("teamID") @NotBlank(message = "Die teamID darf nicht leer sein") final String teamID) {
+      @RequestParam("wahlbezirkID") final String wahlbezirkID,
+      @RequestParam("teamID") final String teamID) {
     log.info("postLastSeen Wahlbezirk: {} Team: {}", wahlbezirkID, teamID);
     wahllokalZustandService.postLastSeen(wahlbezirkID, teamID);
   }

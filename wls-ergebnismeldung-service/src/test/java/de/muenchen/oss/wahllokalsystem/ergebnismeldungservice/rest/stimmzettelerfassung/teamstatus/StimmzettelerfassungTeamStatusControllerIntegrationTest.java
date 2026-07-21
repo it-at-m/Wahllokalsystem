@@ -52,7 +52,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
     void should_persistData_when_dataIsSent() throws Exception {
       val id = Instancio.create(TeamBezirkUndWahlID.class);
 
-      val requestBody = Instancio.create(StimmzettelerfassungTeamStatusDTO.class);
+      val requestBody = Instancio.create(TeamErfassungStatusDTO.class);
 
       mockMvc
           .perform(
@@ -72,7 +72,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
               .set(field(StimmzettelerfassungTeamStatus::getId), id)
               .set(
                   field(StimmzettelerfassungTeamStatus::getStatus),
-                  TeamErfassungStatus.valueOf(requestBody.status().name()))
+                  TeamErfassungStatus.valueOf(requestBody.name()))
               .create();
       Assertions.assertThat(persistedEntity).isEqualTo(expectedEntity);
     }
@@ -84,8 +84,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
 
       repository.save(entityToReplace);
 
-      val requestBody =
-          new StimmzettelerfassungTeamStatusDTO(TeamErfassungStatusDTO.IN_BEARBEITUNG);
+      val requestBody = TeamErfassungStatusDTO.IN_BEARBEITUNG;
 
       mockMvc
           .perform(
@@ -122,7 +121,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = "wahlID";
 
-      val requestBody = new StimmzettelerfassungTeamStatusDTO(TeamErfassungStatusDTO.REGISTRIERT);
+      val requestBody = TeamErfassungStatusDTO.REGISTRIERT;
 
       // wrong wahlbezirk claim
       mockMvc
@@ -145,7 +144,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
         final String teamID,
         final String claimWahlbezirkID,
         final String claimTeamID,
-        final StimmzettelerfassungTeamStatusDTO requestBody)
+        final TeamErfassungStatusDTO requestBody)
         throws Exception {
       return MockMvcRequestBuilders.post(
               "/stimmzettelerfassung/wahl/"
@@ -194,11 +193,9 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
               .getResponse();
 
       val responseBodyAsDTO =
-          objectMapper.readValue(
-              response.getContentAsString(), StimmzettelerfassungTeamStatusDTO.class);
+          objectMapper.readValue(response.getContentAsString(), TeamErfassungStatusDTO.class);
 
-      val expectedResult =
-          new StimmzettelerfassungTeamStatusDTO(TeamErfassungStatusDTO.UNTERBROCHEN);
+      val expectedResult = TeamErfassungStatusDTO.UNTERBROCHEN;
 
       Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResult);
     }

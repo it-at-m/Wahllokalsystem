@@ -1,7 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus;
 
-import static org.instancio.Select.field;
-
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamErfassungStatusModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamStatusService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.WahlbezirkErfassungsteamIDModel;
@@ -35,10 +33,10 @@ class StimmzettelerfassungTeamStatusControllerTest {
       val wahlID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
       val teamID = Instancio.create(String.class);
-      val requestBody = Instancio.create(StimmzettelerfassungTeamStatusDTO.class);
+      val requestBody = Instancio.create(TeamErfassungStatusDTO.class);
 
       val mockedMappedStatus = Instancio.create(TeamErfassungStatusModel.class);
-      Mockito.when(teamErfassungStatusDTOMapper.toModel(requestBody.status()))
+      Mockito.when(teamErfassungStatusDTOMapper.toModel(requestBody))
           .thenReturn(mockedMappedStatus);
 
       underTest.saveTeamStimmzettelerfassungStatus(wahlID, wahlbezirkID, teamID, requestBody);
@@ -73,11 +71,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
 
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-      val expectedResponseBody =
-          Instancio.of(StimmzettelerfassungTeamStatusDTO.class)
-              .set(field(StimmzettelerfassungTeamStatusDTO::status), mockedMappeServiceResponse)
-              .create();
-      Assertions.assertThat(result.getBody()).isEqualTo(expectedResponseBody);
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedMappeServiceResponse);
     }
 
     @Test

@@ -11,6 +11,4 @@ POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL}}/stimmzettelerfassung/wahl/b2c3d4e5-f6a
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
-{
-  "status": "IN_BEARBEITUNG"
-}
+"IN_BEARBEITUNG"

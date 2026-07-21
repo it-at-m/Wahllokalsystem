@@ -21,6 +21,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksStimmzettelumschlaege: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
   createTasksWaehler: vi.fn(),
+  createTasksStimmzettel: vi.fn(),
   createTasksEreignisse: vi.fn(),
   createTasksBegruendung: vi.fn(),
   createTasksAWerte: vi.fn(),
@@ -245,6 +246,15 @@ vi.mock(
   () => ({
     useStapelETaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksStapelE,
+    })),
+  })
+);
+
+vi.mock(
+  import("@/composables/tasks/taskFactories/stimmzettelTaskFactory.ts"),
+  () => ({
+    useStimmzettelTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksStimmzettel,
     })),
   })
 );

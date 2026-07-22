@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TeamErfassungStatusValidator {
+public class ErfassungTeamStatusValidator {
 
   private final ExceptionFactory exceptionFactory;
   private final TeamBezirkUndWahlIDModelValidator teamBezirkUndWahlIDModelValidator;
@@ -22,7 +22,7 @@ public class TeamErfassungStatusValidator {
                 ExceptionConstants.STIMMZETTELERFASSUNG_TEAM_STATUS_INVALID_IDs));
   }
 
-  public void isValidOrThrow(final TeamErfassungStatusModel model) {
+  public void isValidOrThrow(final ErfassungTeamStatusModel model) {
     if (model == null) {
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.STIMMZETTELERFASSUNG_TEAM_STATUS_SAVE_MODEL_IS_MISSING);

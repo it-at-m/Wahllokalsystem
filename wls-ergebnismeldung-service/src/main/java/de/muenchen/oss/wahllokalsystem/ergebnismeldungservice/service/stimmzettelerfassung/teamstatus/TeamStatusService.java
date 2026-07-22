@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TeamStatusService {
 
-  private final TeamErfassungStatusValidator teamErfassungStatusValidator;
+  private final ErfassungTeamStatusValidator erfassungTeamStatusValidator;
   private final StimmzettelerfassungTeamStatusRepository stimmzettelerfassungTeamStatusRepository;
-  private final TeamErfassungStatusModelMapper teamErfassungStatusModelMapper;
+  private final ErfassungTeamStatusModelMapper erfassungTeamStatusModelMapper;
   private final StimmzettelerfassungService stimmzettelerfassungService;
 
   @PreAuthorize(
@@ -28,13 +28,13 @@ public class TeamStatusService {
   @Transactional
   public void saveTeamStatus(
       @P("param") final TeamBezirkUndWahlIDModel id,
-      final TeamErfassungStatusModel teamErfassungStatusModel) {
-    teamErfassungStatusValidator.isValidOrThrow(id);
-    teamErfassungStatusValidator.isValidOrThrow(teamErfassungStatusModel);
+      final ErfassungTeamStatusModel erfassungTeamStatusModel) {
+    erfassungTeamStatusValidator.isValidOrThrow(id);
+    erfassungTeamStatusValidator.isValidOrThrow(erfassungTeamStatusModel);
 
-    val entityToSave = teamErfassungStatusModelMapper.toEntity(id, teamErfassungStatusModel);
+    val entityToSave = erfassungTeamStatusModelMapper.toEntity(id, erfassungTeamStatusModel);
     stimmzettelerfassungTeamStatusRepository.save(entityToSave);
-    if (TeamErfassungStatusModel.IN_BEARBEITUNG.equals(teamErfassungStatusModel)) {
+    if (ErfassungTeamStatusModel.IN_BEARBEITUNG.equals(erfassungTeamStatusModel)) {
       stimmzettelerfassungService.registerStimmzettelerfassungStart(
           new BezirkUndWahlID(id.wahlID(), id.wahlbezirkID()));
     }
@@ -44,13 +44,13 @@ public class TeamStatusService {
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelerfassungTeamstatus')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
           + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
-  public Optional<TeamErfassungStatusModel> getTeamStatus(
+  public Optional<ErfassungTeamStatusModel> getTeamStatus(
       @P("param") final TeamBezirkUndWahlIDModel id) {
-    teamErfassungStatusValidator.isValidOrThrow(id);
+    erfassungTeamStatusValidator.isValidOrThrow(id);
 
-    val entityID = teamErfassungStatusModelMapper.toEntity(id);
+    val entityID = erfassungTeamStatusModelMapper.toEntity(id);
     val optionalEntityFromRepo = stimmzettelerfassungTeamStatusRepository.findById(entityID);
     return optionalEntityFromRepo.map(
-        entity -> teamErfassungStatusModelMapper.toModel(entity.getStatus()));
+        entity -> erfassungTeamStatusModelMapper.toModel(entity.getStatus()));
   }
 }

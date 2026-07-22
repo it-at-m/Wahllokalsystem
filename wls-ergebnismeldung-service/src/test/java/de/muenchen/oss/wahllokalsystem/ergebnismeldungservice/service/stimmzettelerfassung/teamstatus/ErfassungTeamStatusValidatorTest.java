@@ -21,13 +21,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class TeamErfassungStatusValidatorTest {
+class ErfassungTeamStatusValidatorTest {
 
   @Mock ExceptionFactory exceptionFactory;
 
   @Mock TeamBezirkUndWahlIDModelValidator teamBezirkUndWahlIDModelValidator;
 
-  @InjectMocks TeamErfassungStatusValidator unitUnderTest;
+  @InjectMocks ErfassungTeamStatusValidator unitUnderTest;
 
   @Nested
   class IsValidOrThrow {
@@ -53,11 +53,11 @@ class TeamErfassungStatusValidatorTest {
     }
 
     @Nested
-    class OfTeamErfassungStatusModel {
+    class OfErfassungTeamStatusModel {
 
       @Test
       void should_notThrowAnyException_when_modelIsValid() {
-        val modelToValidate = Instancio.create(TeamErfassungStatusModel.class);
+        val modelToValidate = Instancio.create(ErfassungTeamStatusModel.class);
 
         Assertions.assertThatNoException()
             .isThrownBy(() -> unitUnderTest.isValidOrThrow(modelToValidate));
@@ -74,7 +74,7 @@ class TeamErfassungStatusValidatorTest {
             .thenReturn(mockedWlsException);
 
         Assertions.assertThatException()
-            .isThrownBy(() -> unitUnderTest.isValidOrThrow((TeamErfassungStatusModel) null))
+            .isThrownBy(() -> unitUnderTest.isValidOrThrow((ErfassungTeamStatusModel) null))
             .usingRecursiveComparison()
             .isEqualTo(mockedWlsException);
       }

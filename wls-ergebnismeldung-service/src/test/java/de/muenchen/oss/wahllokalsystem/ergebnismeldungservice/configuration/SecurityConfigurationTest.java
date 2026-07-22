@@ -23,7 +23,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabeve
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.status.ErfassungStatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.status.StimmzettelerfassungStatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.stimmzettel.StimmzettelOfTeamDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus.TeamErfassungStatusDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus.ErfassungTeamStatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelumschlaege.StimmzettelumschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine.WahlscheineDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
@@ -980,7 +980,7 @@ class SecurityConfigurationTest {
       @WithAnonymousUser
       @Test
       void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-        val dto = TeamErfassungStatusDTO.REGISTRIERT;
+        val dto = ErfassungTeamStatusDTO.REGISTRIERT;
         val request =
             MockMvcRequestBuilders.post(TEAM_URL)
                 .with(csrf())
@@ -993,7 +993,7 @@ class SecurityConfigurationTest {
       @WithMockUser
       @Test
       void should_returnCreated_when_callingAuthenticated() throws Exception {
-        val dto = TeamErfassungStatusDTO.REGISTRIERT;
+        val dto = ErfassungTeamStatusDTO.REGISTRIERT;
         val request =
             MockMvcRequestBuilders.post(TEAM_URL)
                 .with(csrf())

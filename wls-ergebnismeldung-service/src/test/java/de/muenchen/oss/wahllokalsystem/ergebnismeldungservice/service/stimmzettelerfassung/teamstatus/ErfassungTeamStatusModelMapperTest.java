@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.ErfassungTeamStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.TeamBezirkUndWahlID;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.TeamErfassungStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -13,10 +13,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mapstruct.factory.Mappers;
 
-class TeamErfassungStatusModelMapperTest {
+class ErfassungTeamStatusModelMapperTest {
 
-  TeamErfassungStatusModelMapper unitUnderTest =
-      Mappers.getMapper(TeamErfassungStatusModelMapper.class);
+  ErfassungTeamStatusModelMapper unitUnderTest =
+      Mappers.getMapper(ErfassungTeamStatusModelMapper.class);
 
   @Nested
   class ToModel {
@@ -28,7 +28,7 @@ class TeamErfassungStatusModelMapperTest {
 
     @Test
     void should_returnModel_when_givenEntityEnum() {
-      val teamStatusToMap = Instancio.create(TeamErfassungStatus.class);
+      val teamStatusToMap = Instancio.create(ErfassungTeamStatus.class);
 
       val result = unitUnderTest.toModel(teamStatusToMap);
 
@@ -36,9 +36,9 @@ class TeamErfassungStatusModelMapperTest {
     }
 
     @ParameterizedTest
-    @EnumSource(TeamErfassungStatus.class)
+    @EnumSource(ErfassungTeamStatus.class)
     void should_mapToEnumWithSameName_when_givenEntityEnumValue(
-        final TeamErfassungStatus teamStatusToMap) {
+        final ErfassungTeamStatus teamStatusToMap) {
       val result = unitUnderTest.toModel(teamStatusToMap);
 
       Assertions.assertThat(result.name()).isEqualTo(teamStatusToMap.name());
@@ -49,7 +49,7 @@ class TeamErfassungStatusModelMapperTest {
   class ToEntity {
 
     @Nested
-    class OfWahlbezirkErfassungsteamIDModelAndTeamErfassungStatusModel {
+    class OfWahlbezirkErfassungsteamIDModelAndErfassungTeamStatusModel {
 
       @Test
       void should_returnNull_when_givenNull() {
@@ -59,14 +59,14 @@ class TeamErfassungStatusModelMapperTest {
       @Test
       void should_returnEntityWithIdAndStatus_when_givenIdAndStatus() {
         val idToMap = Instancio.create(TeamBezirkUndWahlIDModel.class);
-        val statusToMap = Instancio.create(TeamErfassungStatusModel.class);
+        val statusToMap = Instancio.create(ErfassungTeamStatusModel.class);
 
         val result = unitUnderTest.toEntity(idToMap, statusToMap);
 
         val expectedResult =
             new StimmzettelerfassungTeamStatus(
                 new TeamBezirkUndWahlID(idToMap.wahlID(), idToMap.wahlbezirkID(), idToMap.teamID()),
-                TeamErfassungStatus.valueOf(statusToMap.name()));
+                ErfassungTeamStatus.valueOf(statusToMap.name()));
         Assertions.assertThat(result).isEqualTo(expectedResult);
       }
 
@@ -85,20 +85,20 @@ class TeamErfassungStatusModelMapperTest {
 
       @Test
       void should_returnEntityWithNullId_when_givenIdIsNull() {
-        val statusToMap = Instancio.create(TeamErfassungStatusModel.class);
+        val statusToMap = Instancio.create(ErfassungTeamStatusModel.class);
 
         val result = unitUnderTest.toEntity(null, statusToMap);
 
         val expectedResult =
             new StimmzettelerfassungTeamStatus(
-                null, TeamErfassungStatus.valueOf(statusToMap.name()));
+                null, ErfassungTeamStatus.valueOf(statusToMap.name()));
         Assertions.assertThat(result).isEqualTo(expectedResult);
       }
 
       @ParameterizedTest
-      @EnumSource(TeamErfassungStatusModel.class)
+      @EnumSource(ErfassungTeamStatusModel.class)
       void should_mapToEnumWithSameName_when_givenModelEnumValue(
-          final TeamErfassungStatusModel statusToMap) {
+          final ErfassungTeamStatusModel statusToMap) {
         val idToMap = Instancio.create(TeamBezirkUndWahlIDModel.class);
 
         val result = unitUnderTest.toEntity(idToMap, statusToMap);

@@ -24,22 +24,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class StimmzettelerfassungTeamStatusController extends AbstractController {
 
   private final TeamStatusService teamStatusService;
-  private final TeamErfassungStatusDTOMapper teamErfassungStatusDTOMapper;
+  private final ErfassungTeamStatusDTOMapper erfassungTeamStatusDTOMapper;
 
   @Operation(description = "Erfassen des Team-Status für die digitale Stimmzettelerfassung")
   @ApiResponses(
       value = {@ApiResponse(responseCode = "201", description = "Der Status wurde erfasst")})
   @PostMapping("/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/status")
   @ResponseStatus(HttpStatus.CREATED)
-  public void saveTeamStimmzettelerfassungStatus(
+  public void saveStimmzettelerfassungTeamStatus(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("teamID") final String teamID,
-      @RequestBody final TeamErfassungStatusDTO teamErfassungStatusDTO) {
+      @RequestBody final ErfassungTeamStatusDTO erfassungTeamStatusDTO) {
 
     teamStatusService.saveTeamStatus(
         new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
-        teamErfassungStatusDTOMapper.toModel(teamErfassungStatusDTO));
+        erfassungTeamStatusDTOMapper.toModel(erfassungTeamStatusDTO));
   }
 
   @Operation(description = "Lesen des Team-Status für die digitale Stimmzettelerfassung")
@@ -54,7 +54,7 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
             content = {@Content()})
       })
   @GetMapping("/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/status")
-  public ResponseEntity<TeamErfassungStatusDTO> getTeamStimmzettelerfassungStatus(
+  public ResponseEntity<ErfassungTeamStatusDTO> getStimmzettelerfassungTeamStatus(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("teamID") final String teamID) {
@@ -62,6 +62,6 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
     return okWithBodyOrNoContent(
         teamStatusService
             .getTeamStatus(new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID))
-            .map(teamErfassungStatusDTOMapper::toDTO));
+            .map(erfassungTeamStatusDTOMapper::toDTO));
   }
 }

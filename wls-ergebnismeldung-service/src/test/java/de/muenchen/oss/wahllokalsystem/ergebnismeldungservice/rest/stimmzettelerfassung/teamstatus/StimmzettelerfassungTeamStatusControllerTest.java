@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamErfassungStatusModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.ErfassungTeamStatusModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamStatusService;
 import java.util.Optional;
 import lombok.val;
@@ -21,25 +21,25 @@ class StimmzettelerfassungTeamStatusControllerTest {
 
   @Mock TeamStatusService teamStatusService;
 
-  @Mock TeamErfassungStatusDTOMapper teamErfassungStatusDTOMapper;
+  @Mock ErfassungTeamStatusDTOMapper erfassungTeamStatusDTOMapper;
 
   @InjectMocks private StimmzettelerfassungTeamStatusController underTest;
 
   @Nested
-  class SaveTeamStimmzettelerfassungStatus {
+  class SaveStimmzettelerfassungTeamStatus {
 
     @Test
     void should_callServiceWithMappedRequest_when_called() {
       val wahlID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
       val teamID = Instancio.create(String.class);
-      val requestBody = Instancio.create(TeamErfassungStatusDTO.class);
+      val requestBody = Instancio.create(ErfassungTeamStatusDTO.class);
 
-      val mockedMappedStatus = Instancio.create(TeamErfassungStatusModel.class);
-      Mockito.when(teamErfassungStatusDTOMapper.toModel(requestBody))
+      val mockedMappedStatus = Instancio.create(ErfassungTeamStatusModel.class);
+      Mockito.when(erfassungTeamStatusDTOMapper.toModel(requestBody))
           .thenReturn(mockedMappedStatus);
 
-      underTest.saveTeamStimmzettelerfassungStatus(wahlID, wahlbezirkID, teamID, requestBody);
+      underTest.saveStimmzettelerfassungTeamStatus(wahlID, wahlbezirkID, teamID, requestBody);
 
       Mockito.verify(teamStatusService)
           .saveTeamStatus(
@@ -48,7 +48,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
   }
 
   @Nested
-  class GetTeamStimmzettelerfassungStatus {
+  class GetStimmzettelerfassungTeamStatus {
 
     @Test
     void should_returnOkWithResponse_when_serviceHasData() {
@@ -56,17 +56,17 @@ class StimmzettelerfassungTeamStatusControllerTest {
       val wahlbezirkID = Instancio.create(String.class);
       val teamID = Instancio.create(String.class);
 
-      val mockedServiceResponse = Instancio.create(TeamErfassungStatusModel.class);
+      val mockedServiceResponse = Instancio.create(ErfassungTeamStatusModel.class);
       Mockito.when(
               teamStatusService.getTeamStatus(
                   new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID)))
           .thenReturn(Optional.of(mockedServiceResponse));
 
-      val mockedMappeServiceResponse = Instancio.create(TeamErfassungStatusDTO.class);
-      Mockito.when(teamErfassungStatusDTOMapper.toDTO(mockedServiceResponse))
+      val mockedMappeServiceResponse = Instancio.create(ErfassungTeamStatusDTO.class);
+      Mockito.when(erfassungTeamStatusDTOMapper.toDTO(mockedServiceResponse))
           .thenReturn(mockedMappeServiceResponse);
 
-      val result = underTest.getTeamStimmzettelerfassungStatus(wahlID, wahlbezirkID, teamID);
+      val result = underTest.getStimmzettelerfassungTeamStatus(wahlID, wahlbezirkID, teamID);
 
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -84,7 +84,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
                   new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID)))
           .thenReturn(Optional.empty());
 
-      val result = underTest.getTeamStimmzettelerfassungStatus(wahlID, wahlbezirkID, teamID);
+      val result = underTest.getStimmzettelerfassungTeamStatus(wahlID, wahlbezirkID, teamID);
 
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
       Assertions.assertThat(result.getBody()).isNull();

@@ -19,5 +19,5 @@ public class StimmzettelerfassungTeamStatus {
   @EmbeddedId private TeamBezirkUndWahlID id;
 
   @Enumerated(EnumType.STRING)
-  @Valid @NotNull private TeamErfassungStatus status;
+  @Valid @NotNull private ErfassungTeamStatus status;
 }

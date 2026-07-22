@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.ErfassungTeamStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.TeamBezirkUndWahlID;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.TeamErfassungStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -23,11 +23,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class TeamStatusServiceTest {
 
-  @Mock TeamErfassungStatusValidator teamErfassungStatusValidator;
+  @Mock ErfassungTeamStatusValidator erfassungTeamStatusValidator;
 
   @Mock StimmzettelerfassungTeamStatusRepository stimmzettelerfassungTeamStatusRepository;
 
-  @Mock TeamErfassungStatusModelMapper teamErfassungStatusModelMapper;
+  @Mock ErfassungTeamStatusModelMapper erfassungTeamStatusModelMapper;
 
   @Mock StimmzettelerfassungService stimmzettelerfassungService;
 
@@ -39,34 +39,34 @@ class TeamStatusServiceTest {
     @Test
     void should_saveMappedEntity_when_idAndStatusAreValid() {
       val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
-      val statusToSave = Instancio.create(TeamErfassungStatusModel.class);
+      val statusToSave = Instancio.create(ErfassungTeamStatusModel.class);
       val entityToSave = Instancio.create(StimmzettelerfassungTeamStatus.class);
 
-      Mockito.when(teamErfassungStatusModelMapper.toEntity(id, statusToSave))
+      Mockito.when(erfassungTeamStatusModelMapper.toEntity(id, statusToSave))
           .thenReturn(entityToSave);
 
       unitUnderTest.saveTeamStatus(id, statusToSave);
 
-      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(id);
-      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(statusToSave);
-      Mockito.verify(teamErfassungStatusModelMapper).toEntity(id, statusToSave);
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(statusToSave);
+      Mockito.verify(erfassungTeamStatusModelMapper).toEntity(id, statusToSave);
       Mockito.verify(stimmzettelerfassungTeamStatusRepository).save(entityToSave);
     }
 
     @Test
     void should_triggerRegisterStimmzettelerfassungBearbeitung_when_teamStatusIsInBearbeitung() {
       val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
-      val statusToSave = TeamErfassungStatusModel.IN_BEARBEITUNG;
+      val statusToSave = ErfassungTeamStatusModel.IN_BEARBEITUNG;
       val entityToSave = Instancio.create(StimmzettelerfassungTeamStatus.class);
 
-      Mockito.when(teamErfassungStatusModelMapper.toEntity(id, statusToSave))
+      Mockito.when(erfassungTeamStatusModelMapper.toEntity(id, statusToSave))
           .thenReturn(entityToSave);
 
       unitUnderTest.saveTeamStatus(id, statusToSave);
 
-      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(id);
-      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(statusToSave);
-      Mockito.verify(teamErfassungStatusModelMapper).toEntity(id, statusToSave);
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(statusToSave);
+      Mockito.verify(erfassungTeamStatusModelMapper).toEntity(id, statusToSave);
       Mockito.verify(stimmzettelerfassungTeamStatusRepository).save(entityToSave);
       Mockito.verify(stimmzettelerfassungService)
           .registerStimmzettelerfassungStart(new BezirkUndWahlID(id.wahlID(), id.wahlbezirkID()));
@@ -75,40 +75,40 @@ class TeamStatusServiceTest {
     @Test
     void should_throwException_when_validationOfIdFailed() {
       val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
-      val statusToSave = Instancio.create(TeamErfassungStatusModel.class);
+      val statusToSave = Instancio.create(ErfassungTeamStatusModel.class);
       val mockedWlsException =
           FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
 
-      Mockito.doThrow(mockedWlsException).when(teamErfassungStatusValidator).isValidOrThrow(id);
+      Mockito.doThrow(mockedWlsException).when(erfassungTeamStatusValidator).isValidOrThrow(id);
 
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, statusToSave))
           .isEqualTo(mockedWlsException);
 
-      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(id);
-      Mockito.verifyNoInteractions(teamErfassungStatusModelMapper);
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verifyNoInteractions(erfassungTeamStatusModelMapper);
       Mockito.verifyNoInteractions(stimmzettelerfassungTeamStatusRepository);
     }
 
     @Test
     void should_throwException_when_validationOfStatusFailed() {
       val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
-      val statusToSave = Instancio.create(TeamErfassungStatusModel.class);
+      val statusToSave = Instancio.create(ErfassungTeamStatusModel.class);
       val mockedWlsException =
           FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
 
-      Mockito.doNothing().when(teamErfassungStatusValidator).isValidOrThrow(id);
+      Mockito.doNothing().when(erfassungTeamStatusValidator).isValidOrThrow(id);
       Mockito.doThrow(mockedWlsException)
-          .when(teamErfassungStatusValidator)
+          .when(erfassungTeamStatusValidator)
           .isValidOrThrow(statusToSave);
 
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, statusToSave))
           .isEqualTo(mockedWlsException);
 
-      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(id);
-      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(statusToSave);
-      Mockito.verifyNoInteractions(teamErfassungStatusModelMapper);
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(statusToSave);
+      Mockito.verifyNoInteractions(erfassungTeamStatusModelMapper);
       Mockito.verifyNoInteractions(stimmzettelerfassungTeamStatusRepository);
     }
   }
@@ -120,22 +120,22 @@ class TeamStatusServiceTest {
     void should_returnMappedStatus_when_entityIsFound() {
       val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val entityID = Instancio.create(TeamBezirkUndWahlID.class);
-      val entityStatus = Instancio.create(TeamErfassungStatus.class);
+      val entityStatus = Instancio.create(ErfassungTeamStatus.class);
       val entityFromRepo = new StimmzettelerfassungTeamStatus(entityID, entityStatus);
-      val mappedStatus = Instancio.create(TeamErfassungStatusModel.class);
+      val mappedStatus = Instancio.create(ErfassungTeamStatusModel.class);
 
-      Mockito.when(teamErfassungStatusModelMapper.toEntity(id)).thenReturn(entityID);
+      Mockito.when(erfassungTeamStatusModelMapper.toEntity(id)).thenReturn(entityID);
       Mockito.when(stimmzettelerfassungTeamStatusRepository.findById(entityID))
           .thenReturn(Optional.of(entityFromRepo));
-      Mockito.when(teamErfassungStatusModelMapper.toModel(entityStatus)).thenReturn(mappedStatus);
+      Mockito.when(erfassungTeamStatusModelMapper.toModel(entityStatus)).thenReturn(mappedStatus);
 
       val result = unitUnderTest.getTeamStatus(id);
 
       Assertions.assertThat(result).contains(mappedStatus);
-      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(id);
-      Mockito.verify(teamErfassungStatusModelMapper).toEntity(id);
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verify(erfassungTeamStatusModelMapper).toEntity(id);
       Mockito.verify(stimmzettelerfassungTeamStatusRepository).findById(entityID);
-      Mockito.verify(teamErfassungStatusModelMapper).toModel(entityStatus);
+      Mockito.verify(erfassungTeamStatusModelMapper).toModel(entityStatus);
     }
 
     @Test
@@ -143,18 +143,18 @@ class TeamStatusServiceTest {
       val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val entityID = Instancio.create(TeamBezirkUndWahlID.class);
 
-      Mockito.when(teamErfassungStatusModelMapper.toEntity(id)).thenReturn(entityID);
+      Mockito.when(erfassungTeamStatusModelMapper.toEntity(id)).thenReturn(entityID);
       Mockito.when(stimmzettelerfassungTeamStatusRepository.findById(entityID))
           .thenReturn(Optional.empty());
 
       val result = unitUnderTest.getTeamStatus(id);
 
       Assertions.assertThat(result).isEmpty();
-      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(id);
-      Mockito.verify(teamErfassungStatusModelMapper).toEntity(id);
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verify(erfassungTeamStatusModelMapper).toEntity(id);
       Mockito.verify(stimmzettelerfassungTeamStatusRepository).findById(entityID);
-      Mockito.verify(teamErfassungStatusModelMapper, Mockito.never())
-          .toModel(Mockito.any(TeamErfassungStatus.class));
+      Mockito.verify(erfassungTeamStatusModelMapper, Mockito.never())
+          .toModel(Mockito.any(ErfassungTeamStatus.class));
     }
 
     @Test
@@ -163,14 +163,14 @@ class TeamStatusServiceTest {
       val mockedWlsException =
           FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
 
-      Mockito.doThrow(mockedWlsException).when(teamErfassungStatusValidator).isValidOrThrow(id);
+      Mockito.doThrow(mockedWlsException).when(erfassungTeamStatusValidator).isValidOrThrow(id);
 
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.getTeamStatus(id))
           .isEqualTo(mockedWlsException);
 
-      Mockito.verify(teamErfassungStatusValidator).isValidOrThrow(id);
-      Mockito.verifyNoInteractions(teamErfassungStatusModelMapper);
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verifyNoInteractions(erfassungTeamStatusModelMapper);
       Mockito.verifyNoInteractions(stimmzettelerfassungTeamStatusRepository);
     }
   }

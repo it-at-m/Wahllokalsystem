@@ -71,7 +71,7 @@ public class TeamStatusServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatNoException()
-          .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, TeamErfassungStatusModel.REGISTRIERT));
+          .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, ErfassungTeamStatusModel.REGISTRIERT));
     }
 
     @ParameterizedTest(name = "{index} - {1} missing")
@@ -88,7 +88,7 @@ public class TeamStatusServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatException()
-          .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, TeamErfassungStatusModel.REGISTRIERT))
+          .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, ErfassungTeamStatusModel.REGISTRIERT))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -109,7 +109,7 @@ public class TeamStatusServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatException()
-          .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, TeamErfassungStatusModel.REGISTRIERT))
+          .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, ErfassungTeamStatusModel.REGISTRIERT))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -128,7 +128,7 @@ public class TeamStatusServiceSecurityTest {
           .thenReturn(false);
 
       Assertions.assertThatException()
-          .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, TeamErfassungStatusModel.REGISTRIERT))
+          .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, ErfassungTeamStatusModel.REGISTRIERT))
           .isInstanceOf(AccessDeniedException.class);
     }
 

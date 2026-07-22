@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamErfassungStatusModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.ErfassungTeamStatusModel;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
@@ -10,10 +10,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mapstruct.factory.Mappers;
 
-class TeamErfassungStatusDTOMapperTest {
+class ErfassungTeamStatusDTOMapperTest {
 
-  TeamErfassungStatusDTOMapper unitUnderTest =
-      Mappers.getMapper(TeamErfassungStatusDTOMapper.class);
+  ErfassungTeamStatusDTOMapper unitUnderTest =
+      Mappers.getMapper(ErfassungTeamStatusDTOMapper.class);
 
   @Nested
   class ToDTO {
@@ -25,7 +25,7 @@ class TeamErfassungStatusDTOMapperTest {
 
     @Test
     void should_returnDTO_when_givenModel() {
-      val modelToMap = Instancio.create(TeamErfassungStatusModel.class);
+      val modelToMap = Instancio.create(ErfassungTeamStatusModel.class);
 
       val result = unitUnderTest.toDTO(modelToMap);
 
@@ -33,9 +33,9 @@ class TeamErfassungStatusDTOMapperTest {
     }
 
     @ParameterizedTest
-    @EnumSource(TeamErfassungStatusModel.class)
+    @EnumSource(ErfassungTeamStatusModel.class)
     void should_mapToEnumWithSameName_when_givenModelEnumValue(
-        final TeamErfassungStatusModel modelToMap) {
+        final ErfassungTeamStatusModel modelToMap) {
       val result = unitUnderTest.toDTO(modelToMap);
 
       Assertions.assertThat(result.name()).isEqualTo(modelToMap.name());
@@ -52,7 +52,7 @@ class TeamErfassungStatusDTOMapperTest {
 
     @Test
     void should_returnModel_when_givenDTO() {
-      val dtoToMap = Instancio.create(TeamErfassungStatusDTO.class);
+      val dtoToMap = Instancio.create(ErfassungTeamStatusDTO.class);
 
       val result = unitUnderTest.toModel(dtoToMap);
 
@@ -60,9 +60,9 @@ class TeamErfassungStatusDTOMapperTest {
     }
 
     @ParameterizedTest
-    @EnumSource(TeamErfassungStatusDTO.class)
+    @EnumSource(ErfassungTeamStatusDTO.class)
     void should_mapToEnumWithSameName_when_givenDTOEnumValue(
-        final TeamErfassungStatusDTO dtoToMap) {
+        final ErfassungTeamStatusDTO dtoToMap) {
       val result = unitUnderTest.toModel(dtoToMap);
 
       Assertions.assertThat(result.name()).isEqualTo(dtoToMap.name());

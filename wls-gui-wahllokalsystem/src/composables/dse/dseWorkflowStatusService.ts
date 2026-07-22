@@ -37,7 +37,7 @@ export function useDseWorkflowStatusService() {
     } catch {
       if (sendNotification) {
         addNotification(
-          "Abrufen der Broadcastnachricht ist fehlgeschlagen",
+          "Abrufen des StimmzettelerfassungStatus ist fehlgeschlagen",
           UserNotificationCategoryEnum.ERROR
         );
       }

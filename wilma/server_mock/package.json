@@ -4,7 +4,7 @@
   "private": true,
   "version": "1.0.0",
   "dependencies": {
-    "body-parser": "2.2.2",
+    "body-parser": "2.3.0",
     "cookie-parser": "1.4.7",
     "debug": "4.4.3",
     "express": "5.2.1",

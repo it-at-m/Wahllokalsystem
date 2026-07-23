@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class StimmzettelService {
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
           + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
   public List<StimmzettelOfTeamModel> getStimmzettel(
-      @P("param") final StimmzettelOwnerModel stimmzettelOwner) {
+      @P("param") final TeamBezirkUndWahlIDModel stimmzettelOwner) {
     stimmzettelValidator.validOrThrow(stimmzettelOwner);
 
     val entitiesFound =
@@ -38,7 +39,7 @@ public class StimmzettelService {
           + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
   @Transactional
   public void saveStimmzettel(
-      @P("param") final StimmzettelOwnerModel stimmzettelOwner,
+      @P("param") final TeamBezirkUndWahlIDModel stimmzettelOwner,
       final List<StimmzettelOfTeamModel> stimmzettelToSave) {
     stimmzettelValidator.validOrThrow(stimmzettelOwner);
     stimmzettelValidator.validOrThrow(stimmzettelToSave);

@@ -7,12 +7,19 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.Exceptio
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -119,6 +126,63 @@ public class StimmzettelerfassungServiceTest {
       val result = unitUnderTest.getStimmzettelerfassungStatus(id);
 
       Assertions.assertThat(result).isEmpty();
+    }
+  }
+
+  @Nested
+  class RegisterStimmzettelerfassungStart {
+
+    @Test
+    void should_saveStatusInBearbeitung_when_noStatusExists() {
+      val id = Instancio.create(BezirkUndWahlID.class);
+
+      Mockito.when(stimmzettelerfassungStatusRepository.findById(id)).thenReturn(Optional.empty());
+      Mockito.when(erfassungStatusModelMapper.toEntity(ErfassungStatusModel.STE_BEARBEITUNG))
+          .thenReturn(ErfassungStatus.STE_BEARBEITUNG);
+
+      unitUnderTest.registerStimmzettelerfassungStart(id);
+
+      Mockito.verify(stimmzettelerfassungStatusRepository)
+          .save(new StimmzettelerfassungStatus(id, ErfassungStatus.STE_BEARBEITUNG));
+    }
+
+    @ParameterizedTest
+    @MethodSource("enumValuesThatAreNotInBearbeitung")
+    void should_saveStatusInBearbeitung_when_statusIsNotInBearbeitung(
+        final ArgumentsAccessor arguments) {
+      val id = Instancio.create(BezirkUndWahlID.class);
+
+      Mockito.when(stimmzettelerfassungStatusRepository.findById(id))
+          .thenReturn(
+              Optional.of(
+                  new StimmzettelerfassungStatus(id, arguments.get(0, ErfassungStatus.class))));
+      Mockito.when(erfassungStatusModelMapper.toEntity(ErfassungStatusModel.STE_BEARBEITUNG))
+          .thenReturn(ErfassungStatus.STE_BEARBEITUNG);
+
+      unitUnderTest.registerStimmzettelerfassungStart(id);
+
+      Mockito.verify(stimmzettelerfassungStatusRepository)
+          .save(new StimmzettelerfassungStatus(id, ErfassungStatus.STE_BEARBEITUNG));
+    }
+
+    public static Stream<Arguments> enumValuesThatAreNotInBearbeitung() {
+      return Arrays.stream(ErfassungStatus.values())
+          .filter(status -> status != ErfassungStatus.STE_BEARBEITUNG)
+          .map(Arguments::of);
+    }
+
+    @Test
+    void should_doNothing_when_statusIsAlreadyInBearbeitung() {
+      val id = Instancio.create(BezirkUndWahlID.class);
+
+      val mockedInBearbeitungStatus =
+          new StimmzettelerfassungStatus(id, ErfassungStatus.STE_BEARBEITUNG);
+      Mockito.when(stimmzettelerfassungStatusRepository.findById(id))
+          .thenReturn(Optional.of(mockedInBearbeitungStatus));
+
+      unitUnderTest.registerStimmzettelerfassungStart(id);
+
+      Mockito.verify(stimmzettelerfassungStatusRepository, Mockito.times(0)).save(Mockito.any());
     }
   }
 }

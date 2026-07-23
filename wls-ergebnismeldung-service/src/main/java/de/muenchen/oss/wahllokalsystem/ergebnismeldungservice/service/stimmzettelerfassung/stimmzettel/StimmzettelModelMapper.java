@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelKandidat;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -18,7 +19,7 @@ public interface StimmzettelModelMapper {
   @Mapping(target = "id.wahlbezirkID", source = "owner.wahlbezirkID")
   @Mapping(target = "id.wahlID", source = "owner.wahlID")
   @Mapping(target = "id.stimmzettelkennung", source = "stimmzettelModel.stimmzettelkennung")
-  Stimmzettel toEntity(StimmzettelOwnerModel owner, StimmzettelOfTeamModel stimmzettelModel);
+  Stimmzettel toEntity(TeamBezirkUndWahlIDModel owner, StimmzettelOfTeamModel stimmzettelModel);
 
   @Mapping(target = "discarded", source = "isDiscarded")
   StimmzettelKandidat toEntity(StimmzettelKandidatModel stimmzettelKandidatModel);

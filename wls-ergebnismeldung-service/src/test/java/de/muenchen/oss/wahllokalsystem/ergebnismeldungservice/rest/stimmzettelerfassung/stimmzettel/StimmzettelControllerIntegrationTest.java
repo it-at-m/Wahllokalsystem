@@ -10,8 +10,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplic
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelModelMapper;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelOwnerModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
@@ -203,15 +203,15 @@ public class StimmzettelControllerIntegrationTest {
                     wahlbezirkID, wahlID, teamID);
             val expectedSavedStimmzettel1 =
                 stimmzettelModelMapper.toEntity(
-                    new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID),
+                    new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
                     stimmzettelDTOMapper.toModel(stimmzettel1ToSave));
             val expectedSavedStimmzettel2 =
                 stimmzettelModelMapper.toEntity(
-                    new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID),
+                    new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
                     stimmzettelDTOMapper.toModel(stimmzettel2ToSave));
             val expectedSavedStimmzettel3 =
                 stimmzettelModelMapper.toEntity(
-                    new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID),
+                    new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
                     stimmzettelDTOMapper.toModel(stimmzettel3ToSave));
             Assertions.assertThat(savedStimmzettel)
                 .usingRecursiveComparison()
@@ -273,15 +273,15 @@ public class StimmzettelControllerIntegrationTest {
                     wahlbezirkID, wahlID, teamID);
             val expectedSavedStimmzettel1 =
                 stimmzettelModelMapper.toEntity(
-                    new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID),
+                    new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
                     stimmzettelDTOMapper.toModel(stimmzettel1ToSave));
             val expectedSavedStimmzettel2 =
                 stimmzettelModelMapper.toEntity(
-                    new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID),
+                    new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
                     stimmzettelDTOMapper.toModel(stimmzettel2ToSave));
             val expectedSavedStimmzettel3 =
                 stimmzettelModelMapper.toEntity(
-                    new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID),
+                    new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
                     stimmzettelDTOMapper.toModel(stimmzettel3ToSave));
             Assertions.assertThat(savedStimmzettel)
                 .usingRecursiveComparison()

@@ -107,6 +107,11 @@ summiert werden.
 Der Bearbeitungsstand der Stimmzettelfassung eines Wahlbezirkes einer Wahl wird damit verwaltet. Siehe dazu die
 [Statusbeschreibung](/dse/#neue-statuswerte).
 
+### Lesen und Schreiben vom Status eines Teams bei der Stimmzettelerfassung
+
+Der Bearbeitungsstand eines Teams, Schriftführung oder Erfassungsteam, bei der Stimmzettelfassung eines Wahlbezirkes einer Wahl
+wird damit verwaltet. Siehe dazu die [Statusbeschreibung](/dse/#neue-statuswerte).
+
 ### Übermittlung einer Ergebnismeldung
 
 Eine Ergebnismeldung kann eine Schnellmeldung oder eine Niederschrift sein, welche an das externe System übermittelt wird.

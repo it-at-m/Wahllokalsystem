@@ -3,13 +3,17 @@ import type { TaskFactory } from "@/composables/tasks/TaskFactory.ts";
 import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
-import { useStimmzettelService } from "@/composables/stimmzettelerfassung/stimmzettelService.ts";
+import { storeToRefs } from "pinia";
+
+import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
 
 export function useStimmzettelTaskFactory(): TaskFactory {
-  const { loadAnzahlStimmzettel } = useStimmzettelService();
+  const { getStimmzettel } = useStimmzettelService();
+  const { currentUserTeamName } = storeToRefs(useUserStore());
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     return taskFactoryContext.extendedWahlMetaData.map(
@@ -20,9 +24,10 @@ export function useStimmzettelTaskFactory(): TaskFactory {
   function _createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {
     return {
       callback: () =>
-        loadAnzahlStimmzettel(
+        getStimmzettel(
           taskFactoryMetaData.wahlID,
-          taskFactoryMetaData.wahlbezirkID
+          taskFactoryMetaData.wahlbezirkID,
+          currentUserTeamName.value
         ),
       name: `Stimmzettel für ${taskFactoryMetaData.wahlName}`,
     };

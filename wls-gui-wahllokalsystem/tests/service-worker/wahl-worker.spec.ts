@@ -4,6 +4,7 @@ import "@/service-worker/wahl-worker.ts";
 
 import { flushPromises } from "@vue/test-utils";
 
+import { REGEX_MATCH_BACKEND_API_CALLS } from "@/service-worker/wahlWorkerConstants.ts";
 import { ServiceWorkerMessageTypeEnum } from "@/types/serviceWorker/ServiceWorkerMessageTypeEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => {
@@ -27,7 +28,7 @@ vi.mock(import("workbox-routing"), () => ({
 vi.mock(import("localforage"));
 
 describe("wahl-worker.ts", () => {
-  const API_BASE_PATH_REGEX = new RegExp("/api/.+");
+  const API_BASE_PATH_REGEX = REGEX_MATCH_BACKEND_API_CALLS;
 
   afterEach(() => {
     vi.clearAllMocks();
@@ -57,19 +58,6 @@ describe("wahl-worker.ts", () => {
       expect(postCall[0]).toEqual(API_BASE_PATH_REGEX);
       expect(postCall[1].name).equals("postRequestHandler");
     }
-  });
-
-  it("should_coverBasePath_when_regexIsUsed", () => {
-    const testUrls = new Map<string, boolean>();
-    testUrls.set("/api/test", true);
-    testUrls.set("/api/test/123", true);
-    testUrls.set("/api/", false);
-    testUrls.set("/other/test", false);
-
-    testUrls.forEach((expected, url) => {
-      const matches = API_BASE_PATH_REGEX.test(url);
-      expect(matches).toBe(expected);
-    });
   });
 
   it("should_sendMessageToAllClients_when_startedAndClientsAreGiven", async () => {

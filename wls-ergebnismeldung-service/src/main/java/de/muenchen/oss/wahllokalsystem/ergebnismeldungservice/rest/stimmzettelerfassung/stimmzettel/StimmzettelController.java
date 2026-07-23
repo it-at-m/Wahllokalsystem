@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.stimmzettel;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelOwnerModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -46,7 +46,7 @@ public class StimmzettelController {
       @PathVariable("teamID") final String teamID) {
     val stimmzettel =
         stimmzettelService
-            .getStimmzettel(new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID))
+            .getStimmzettel(new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID))
             .stream()
             .map(stimmzettelDTOMapper::toDTO)
             .toList();
@@ -74,7 +74,7 @@ public class StimmzettelController {
       @RequestBody List<StimmzettelOfTeamDTO> stimmzettel) {
     val modelValuesToSave = stimmzettel.stream().map(stimmzettelDTOMapper::toModel).toList();
     stimmzettelService.saveStimmzettel(
-        new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID), modelValuesToSave);
+        new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID), modelValuesToSave);
   }
 
   @Operation(description = "Lesen der Anzahl an Stimmzetteln in einem Wahlbezirk einer Wahl")

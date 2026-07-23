@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelKandidat;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
@@ -77,7 +78,7 @@ class StimmzettelModelMapperTest {
 
       @Test
       void should_returnEntity_when_modelsAreGiven() {
-        val ownerModel = Instancio.create(StimmzettelOwnerModel.class);
+        val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
         val stimmzettelOfTeamModel = Instancio.create(StimmzettelOfTeamModel.class);
 
         val result = unitUnderTest.toEntity(ownerModel, stimmzettelOfTeamModel);

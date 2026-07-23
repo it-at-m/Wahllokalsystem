@@ -4,6 +4,7 @@ import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstan
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.TeamIDPermissionEvaluator;
@@ -40,7 +41,7 @@ class StimmzettelServiceSecurityTest {
 
     @Test
     void should_getAccess_when_allRequiredAuthoritiesArePresentAndIDsAreMatching() {
-      val ownerModel = Instancio.create(StimmzettelOwnerModel.class);
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
 
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
@@ -58,7 +59,7 @@ class StimmzettelServiceSecurityTest {
     @Test
     void
         should_throwAccessDeniedException_when_requiredAuthorityIsGivenButWahlbezirkIDIsNotMatching() {
-      val ownerModel = Instancio.create(StimmzettelOwnerModel.class);
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
 
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
@@ -73,7 +74,7 @@ class StimmzettelServiceSecurityTest {
 
     @Test
     void should_throwAccessDeniedException_when_requiredAuthorityIsGivenButTeamIDIsNotMatching() {
-      val ownerModel = Instancio.create(StimmzettelOwnerModel.class);
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
 
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
@@ -92,7 +93,7 @@ class StimmzettelServiceSecurityTest {
 
     @Test
     void should_throwAccessDeniedException_when_requiredAuthorityIsNotGivenButIDsAreMatching() {
-      val ownerModel = Instancio.create(StimmzettelOwnerModel.class);
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
 
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
@@ -115,7 +116,7 @@ class StimmzettelServiceSecurityTest {
 
     @Test
     void should_getAccess_when_allRequiredAuthoritiesArePresentAndIDsAreMatching() {
-      val ownerModel = Instancio.create(StimmzettelOwnerModel.class);
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val stimmzettelToSave = Instancio.ofList(StimmzettelOfTeamModel.class).size(5).create();
 
       Mockito.when(
@@ -135,7 +136,7 @@ class StimmzettelServiceSecurityTest {
     @Test
     void
         should_throwAccessDeniedException_when_requiredAuthorityIsGivenButWahlbezirkIDIsNotMatching() {
-      val ownerModel = Instancio.create(StimmzettelOwnerModel.class);
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val stimmzettelToSave = Instancio.ofList(StimmzettelOfTeamModel.class).size(5).create();
 
       Mockito.when(
@@ -151,7 +152,7 @@ class StimmzettelServiceSecurityTest {
 
     @Test
     void should_throwAccessDeniedException_when_requiredAuthorityIsGivenButTeamIDIsNotMatching() {
-      val ownerModel = Instancio.create(StimmzettelOwnerModel.class);
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val stimmzettelToSave = Instancio.ofList(StimmzettelOfTeamModel.class).size(5).create();
 
       Mockito.when(
@@ -171,7 +172,7 @@ class StimmzettelServiceSecurityTest {
 
     @Test
     void should_throwAccessDeniedException_when_requiredAuthorityIsNotGivenButIDsAreMatching() {
-      val ownerModel = Instancio.create(StimmzettelOwnerModel.class);
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val stimmzettelToSave = Instancio.ofList(StimmzettelOfTeamModel.class).size(5).create();
 
       Mockito.when(

@@ -42,7 +42,7 @@ import {
 import { ErfassungTeamStatusEnum } from "@/types/dse/ErfassungTeamStatusEnum";
 import type { ErfassungTeamStatus } from "@/types/dse/ErfassungTeamStatus";
 
-const status = ref<ErfassungTeamStatus>({ status: ErfassungTeamStatusEnum.REGISTRIERT });
+const status = ref<ErfassungTeamStatus | null>(null);
 const erfassungDialog = ref(false);
 const beendenDialog = ref(false);
 const erfassungTeamStatusService = useStimmzettelerfassungStatusTeamService();
@@ -54,11 +54,11 @@ const teamID = (route.params.teamID as string) || "";
 const wahlID = (route.params.wahlID as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkID as string) || "";
 
-const startenBtnActive = computed(() => status.value.status == ErfassungTeamStatusEnum.REGISTRIERT || ErfassungTeamStatusEnum.UNTERBROCHEN);
-const beendenBtnActive = computed(() => status.value.status == ErfassungTeamStatusEnum.IN_BEARBEITUNG);
+const startenBtnActive = computed(() => status.value?.status == ErfassungTeamStatusEnum.REGISTRIERT || status.value?.status == ErfassungTeamStatusEnum.UNTERBROCHEN);
+const beendenBtnActive = computed(() => status.value?.status == ErfassungTeamStatusEnum.IN_BEARBEITUNG);
 
 async function postStatus(sendNotification = true) {
-  if (!teamID || !wahlID || !wahlbezirkID) {
+  if (!teamID || !wahlID || !wahlbezirkID || !status.value) {
     return;
   }
 

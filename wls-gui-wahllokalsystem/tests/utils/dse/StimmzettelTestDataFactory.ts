@@ -62,6 +62,10 @@ export function useStimmzettelTestDataFactory() {
     return proxyBuilder<Stimmzettel>(createStimmzettel());
   }
 
+  function prepareStimmzettelKandidat(): Builder<Kandidat> {
+    return proxyBuilder<Kandidat>(createStimmzettelKandidat());
+  }
+
   return {
     createStimmzettelOfTeamDTO,
     createStimmzettel,
@@ -69,5 +73,6 @@ export function useStimmzettelTestDataFactory() {
     createStimmzettelKandidat,
     prepareStimmzettelOfTeamDTO,
     prepareStimmzettel,
+    prepareStimmzettelKandidat,
   };
 }

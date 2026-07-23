@@ -103,9 +103,9 @@ describe("DseWorkflowStatusService.ts", () => {
         new Error("api called failed")
       );
 
-      const result = await loadDseWorkflowStatus(wahlID, wahlbezirkID);
-
-      expect(result).toBeNull();
+      await expect(async () =>
+        loadDseWorkflowStatus(wahlID, wahlbezirkID)
+      ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         1
@@ -124,9 +124,9 @@ describe("DseWorkflowStatusService.ts", () => {
         new Error("api called failed")
       );
 
-      const result = await loadDseWorkflowStatus(wahlID, wahlbezirkID, false);
-
-      expect(result).toBeNull();
+      await expect(async () =>
+        loadDseWorkflowStatus(wahlID, wahlbezirkID, false)
+      ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0

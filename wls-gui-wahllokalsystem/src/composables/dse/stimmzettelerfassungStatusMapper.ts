@@ -4,28 +4,22 @@ import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassun
 import { StimmzettelerfassungStatusDTOStatusEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
 
+const STATUS_DTO_ENUM_TO_MODEL_ENUM: Record<
+  StimmzettelerfassungStatusDTOStatusEnum,
+  StimmzettelerfassungStatusEnum
+> = {
+  STE_BEARBEITUNG: StimmzettelerfassungStatusEnum.SteBearbeitung,
+  STE_ABGESCHLOSSEN: StimmzettelerfassungStatusEnum.SteAbgeschlossen,
+  BE_ABGESCHLOSSEN: StimmzettelerfassungStatusEnum.BeAbgeschlossen,
+};
+
 export function useStimmzettelerfassungStatusMapper() {
   function dtoToModel(
     dto: StimmzettelerfassungStatusDTO
   ): StimmzettelerfassungStatus {
     return {
-      status: _dtoStatusEnumToToModel(dto.status),
+      status: STATUS_DTO_ENUM_TO_MODEL_ENUM[dto.status],
     };
-  }
-
-  function _dtoStatusEnumToToModel(
-    dto: StimmzettelerfassungStatusDTOStatusEnum
-  ): StimmzettelerfassungStatusEnum {
-    switch (dto) {
-      case StimmzettelerfassungStatusDTOStatusEnum.SteBearbeitung:
-        return StimmzettelerfassungStatusEnum.SteBearbeitung;
-      case StimmzettelerfassungStatusDTOStatusEnum.SteAbgeschlossen:
-        return StimmzettelerfassungStatusEnum.SteAbgeschlossen;
-      case StimmzettelerfassungStatusDTOStatusEnum.BeAbgeschlossen:
-        return StimmzettelerfassungStatusEnum.BeAbgeschlossen;
-      default:
-        throw new Error("StimmzettelerfassungStatus nicht gefunden");
-    }
   }
 
   return {

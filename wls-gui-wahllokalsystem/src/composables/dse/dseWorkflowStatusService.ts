@@ -34,14 +34,14 @@ export function useDseWorkflowStatusService() {
 
       const responseData = getNullOn204OrElseResponseData(response);
       return responseData ? dtoToModel(responseData) : null;
-    } catch {
+    } catch (error) {
       if (sendNotification) {
         addNotification(
           "Abrufen des StimmzettelerfassungStatus ist fehlgeschlagen",
           UserNotificationCategoryEnum.ERROR
         );
       }
-      return null;
+      throw error;
     }
   }
 

@@ -6,12 +6,10 @@
         ref="wahlscheinValidationForm"
         v-model="isFormValid"
       >
-        <v-textarea
+        <v-text-field
           :model-value="wahlscheinnummer"
           :rules="[requiredWahlscheinnummer]"
           label="Wahlscheinnummer"
-          auto-grow
-          rows="1"
           max-width="300"
           data-test="input-wahlscheinnummer"
           @update:model-value="onWahlscheinnummerChanged"

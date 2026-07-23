@@ -11,7 +11,7 @@ import {
 import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/WahlbezirkTestDataFactory.ts";
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { VTextarea } from "vuetify/components";
+import {VTextarea, type VTextField} from "vuetify/components";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
@@ -331,7 +331,7 @@ describe("TheUngueltigeWahlscheineVerifyCard.vue", () => {
   }
 
   function getInputWahlscheinnummer() {
-    return wrapper.findComponent<typeof VTextarea>(
+    return wrapper.findComponent<typeof VTextField>(
       '[data-test="input-wahlscheinnummer"]'
     );
   }

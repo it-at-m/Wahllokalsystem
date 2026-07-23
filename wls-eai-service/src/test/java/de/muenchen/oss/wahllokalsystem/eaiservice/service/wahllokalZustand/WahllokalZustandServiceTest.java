@@ -65,6 +65,11 @@ class WahllokalZustandServiceTest {
               null,
               null);
 
+      Mockito.when(
+              wahllokalZustandMapper.toEntityWithLastSeen(
+                  "2853ba2d-baaa-49ee-93f7-a653d17d6a72", "teamID", timestamp))
+          .thenReturn(mockedMappedWahllokalZustand);
+
       unitUnderTest.setWahllokalZustandLastSeen(
           "2853ba2d-baaa-49ee-93f7-a653d17d6a72", "teamID", timestamp);
 
@@ -134,6 +139,11 @@ class WahllokalZustandServiceTest {
               null,
               timestamp,
               null);
+
+      Mockito.when(
+              wahllokalZustandMapper.toEntityWithLetzteAbmeldung(
+                  "2853ba2d-baaa-49ee-93f7-a653d17d6a72", "teamID", timestamp))
+          .thenReturn(mockedMappedWahllokalZustand);
 
       unitUnderTest.setWahllokalZustandLetzteAbmeldung(
           "2853ba2d-baaa-49ee-93f7-a653d17d6a72", "teamID", timestamp);

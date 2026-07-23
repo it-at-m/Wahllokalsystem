@@ -1,12 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahllokalZustand;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahllokalzustand.WahllokalZustand;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahllokalzustand.WahllokalZustandRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahllokalzustand.dto.WahllokalZustandDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,19 +43,8 @@ public class WahllokalZustandService {
           ExceptionConstants.SAVEWAHLLOKALZUSTAND_TIMESTAMP_FEHLT);
     }
 
-    final UUID parsedWahlbezirkID;
-    try {
-      parsedWahlbezirkID = UUID.fromString(wahlbezirkID);
-    } catch (IllegalArgumentException e) {
-      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.ID_NICHT_KONVERTIERBAR);
-    }
-
     wahllokalZustandRepository.save(
-        WahllokalZustand.builder()
-            .zuletztGesehen(timestamp)
-            .wahlbezirkID(parsedWahlbezirkID)
-            .teamID(teamID)
-            .build());
+        wahllokalZustandMapper.toEntityWithLastSeen(wahlbezirkID, teamID, timestamp));
   }
 
   @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveWahllokalZustand')")
@@ -78,18 +65,7 @@ public class WahllokalZustandService {
           ExceptionConstants.SAVEWAHLLOKALZUSTAND_TIMESTAMP_FEHLT);
     }
 
-    final UUID parsedWahlbezirkID;
-    try {
-      parsedWahlbezirkID = UUID.fromString(wahlbezirkID);
-    } catch (IllegalArgumentException e) {
-      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.ID_NICHT_KONVERTIERBAR);
-    }
-
     wahllokalZustandRepository.save(
-        WahllokalZustand.builder()
-            .letzteAbmeldung(timestamp)
-            .wahlbezirkID(parsedWahlbezirkID)
-            .teamID(teamID)
-            .build());
+        wahllokalZustandMapper.toEntityWithLetzteAbmeldung(wahlbezirkID, teamID, timestamp));
   }
 }

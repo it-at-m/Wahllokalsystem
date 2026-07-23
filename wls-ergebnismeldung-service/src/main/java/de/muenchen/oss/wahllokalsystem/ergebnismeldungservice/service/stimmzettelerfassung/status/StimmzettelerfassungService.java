@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.ErfassungStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.StimmzettelerfassungStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.StimmzettelerfassungStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
@@ -35,6 +36,18 @@ public class StimmzettelerfassungService {
     stimmzettelerfassungStatusRepository.save(
         new StimmzettelerfassungStatus(
             bezirkUndWahlID, erfassungStatusModelMapper.toEntity(erfassungStatusModel)));
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_RegisterStimmzettelerfassungStart')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
+  public void registerStimmzettelerfassungStart(
+      @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID) {
+    val currentStatus = stimmzettelerfassungStatusRepository.findById(bezirkUndWahlID);
+    if (currentStatus.isEmpty()
+        || !ErfassungStatus.STE_BEARBEITUNG.equals(currentStatus.get().getStatus())) {
+      saveStimmzettelerfassungStatus(bezirkUndWahlID, ErfassungStatusModel.STE_BEARBEITUNG);
+    }
   }
 
   @PreAuthorize(

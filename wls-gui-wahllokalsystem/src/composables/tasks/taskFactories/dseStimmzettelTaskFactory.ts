@@ -6,12 +6,9 @@ import type { Task } from "@/types/tasks/Task.ts";
 import { storeToRefs } from "pinia";
 
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
-import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
-const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
-
-export function useStimmzettelTaskFactory(): TaskFactory {
+export function useDSEStimmzettelTaskFactory(): TaskFactory {
   const { getStimmzettel } = useStimmzettelService();
   const { currentUserTeamName } = storeToRefs(useUserStore());
 
@@ -33,5 +30,7 @@ export function useStimmzettelTaskFactory(): TaskFactory {
     };
   }
 
-  return whenUserIsSchriftfuehrung(createTasks);
+  return {
+    createTasks,
+  };
 }

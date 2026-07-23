@@ -21,7 +21,6 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksStimmzettelumschlaege: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
   createTasksWaehler: vi.fn(),
-  createTasksStimmzettel: vi.fn(),
   createTasksEreignisse: vi.fn(),
   createTasksBegruendung: vi.fn(),
   createTasksAWerte: vi.fn(),
@@ -35,6 +34,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createMbwWahlvorschlaegeAndErgebnisseTasks: vi.fn(),
   createTasksStapelE: vi.fn(),
   createDseWorkflowStatusTasks: vi.fn(),
+  createDseStimmzettelTasks: vi.fn(),
 }));
 
 vi.mock(
@@ -261,10 +261,10 @@ vi.mock(
 );
 
 vi.mock(
-  import("@/composables/tasks/taskFactories/stimmzettelTaskFactory.ts"),
+  import("@/composables/tasks/taskFactories/dseStimmzettelTaskFactory.ts"),
   () => ({
-    useStimmzettelTaskFactory: vi.fn().mockImplementation(() => ({
-      createTasks: mockDefinitions.createTasksStimmzettel,
+    useDSEStimmzettelTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createDseStimmzettelTasks,
     })),
   })
 );
@@ -331,6 +331,7 @@ describe("taskListService.ts", () => {
         "MBW Tasks",
         "Stapel E Tasks",
         "DSE-Workflow-Status - " + mockedWahl.name,
+        "Stimmzettel für " + mockedWahl.name,
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -372,6 +373,7 @@ describe("taskListService.ts", () => {
         "MBW Tasks",
         "Stapel E Tasks",
         "DSE-Workflow-Status - " + mockedWahl.name,
+        "Stimmzettel für " + mockedWahl.name,
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -555,6 +557,12 @@ describe("taskListService.ts", () => {
       mockDefinitions.createDseWorkflowStatusTasks.mockReturnValue([
         {
           name: "DSE-Workflow-Status - " + mockedWahl.name,
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createDseStimmzettelTasks.mockReturnValue([
+        {
+          name: "Stimmzettel für " + mockedWahl.name,
           callback: () => Promise.resolve(),
         },
       ]);

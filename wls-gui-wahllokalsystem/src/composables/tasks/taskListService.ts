@@ -6,6 +6,7 @@ import { storeToRefs } from "pinia";
 import { useAWerteTaskFactory } from "@/composables/tasks/taskFactories/aWerteTaskFactory.ts";
 import { useBeanstandeteWahlbriefeTaskFactory } from "@/composables/tasks/taskFactories/beanstandeteWahlbriefeTaskFactory.ts";
 import { useBegruendungTaskFactory } from "@/composables/tasks/taskFactories/begruendungTaskFactory.ts";
+import { useDSEStimmzettelTaskFactory } from "@/composables/tasks/taskFactories/dseStimmzettelTaskFactory.ts";
 import { useDseWorkflowStatusTaskFactory } from "@/composables/tasks/taskFactories/dseWorkflowStatusTaskFactory.ts";
 import { useEreignisseTaskFactory } from "@/composables/tasks/taskFactories/ereignisseTaskFactory.ts";
 import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts";
@@ -16,7 +17,6 @@ import { useMBWWahlvorschlaegeAndErgebnisseTaskFactory } from "@/composables/tas
 import { useStapelETaskFactory } from "@/composables/tasks/taskFactories/stapelETaskFactory.ts";
 import { useStatusTaskFactory } from "@/composables/tasks/taskFactories/statusTaskFactory.ts";
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
-import { useStimmzettelTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelTaskFactory.ts";
 import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
 import { useUrnenwahlSchliessungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts";
@@ -64,7 +64,6 @@ export function useTaskListService() {
   const { createTasks: createAWerteTasks } = useAWerteTaskFactory();
   const { createTasks: createHandbuchTasks } = useHandbuchTaskFactory();
   const { createTasks: createStatusTasks } = useStatusTaskFactory();
-  const { createTasks: createStimmzettelTasks } = useStimmzettelTaskFactory();
   const { createTasks: createWahlvorbereitungTasks } =
     useWahlvorbereitungTaskFactory();
   const { createTasks: createWahlbriefeTasks } = useWahlbriefeTaskFactory();
@@ -75,6 +74,8 @@ export function useTaskListService() {
   const { createTasks: createStapelETasks } = useStapelETaskFactory();
   const { createTasks: createDseWorkflowStatusTasks } =
     useDseWorkflowStatusTaskFactory();
+  const { createTasks: createDSEStimmzettelTasks } =
+    useDSEStimmzettelTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
@@ -96,13 +97,13 @@ export function useTaskListService() {
       ...createAWerteTasks(taskFactoryData),
       ...createHandbuchTasks(taskFactoryData),
       ...createStatusTasks(taskFactoryData),
-      ...createStimmzettelTasks(taskFactoryData),
       ...createWahlvorbereitungTasks(taskFactoryData),
       ...createWahlbriefeTasks(taskFactoryData),
       ...createBeanstandeteWahlbriefeTask(taskFactoryData),
       ...createMbwWahlvorschlaegeAndErgebnisseTasks(taskFactoryData),
       ...createStapelETasks(taskFactoryData),
       ...createDseWorkflowStatusTasks(taskFactoryData),
+      ...createDSEStimmzettelTasks(taskFactoryData),
     ];
   }
 

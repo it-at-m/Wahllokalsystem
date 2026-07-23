@@ -35,8 +35,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 public class TeamStatusServiceSecurityTest {
 
-  @MockitoBean
-  TeamIDPermissionEvaluator teamIDPermissionEvaluator;
+  @MockitoBean TeamIDPermissionEvaluator teamIDPermissionEvaluator;
 
   @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 

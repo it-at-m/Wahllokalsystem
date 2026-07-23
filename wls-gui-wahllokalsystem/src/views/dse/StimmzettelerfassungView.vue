@@ -5,9 +5,9 @@
       <v-skeleton-loader boilerplate type="card-avatar" class="mt-3"/>
     </v-card-text>
     <v-card-actions>
-      <base-text-button :active="status.status !== ErfassungTeamStatusEnum.IN_BEARBEITUNG" @click="startErfassung">Starten</base-text-button>
-      <base-text-button :active="status.status === ErfassungTeamStatusEnum.IN_BEARBEITUNG" @click="unterbrechen">Unterbrechen</base-text-button>
-      <base-text-button class="ms-auto" :active="status.status === ErfassungTeamStatusEnum.ABGESCHLOSSEN" @click="beenden">Beenden</base-text-button>
+      <base-text-button :active="startenBtnActive" @click="startErfassung">Starten</base-text-button>
+      <base-text-button @click="unterbrechen">Unterbrechen</base-text-button>
+      <base-text-button class="ms-auto" :active="beendenBtnActive" @click="beenden">Beenden</base-text-button>
     </v-card-actions>
   </v-card>
   <base-dialog
@@ -32,7 +32,7 @@
   </base-dialog>
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import {ref, onMounted, computed} from "vue";
 import { useRoute } from "vue-router";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
@@ -42,16 +42,20 @@ import {
 import { ErfassungTeamStatusEnum } from "@/types/dse/ErfassungTeamStatusEnum";
 import type { ErfassungTeamStatus } from "@/types/dse/ErfassungTeamStatus";
 
-//TeamErfassungStatus: REGISTRIERT, IN_BEARBEITUNG,    UNTERBROCHEN,    ABGESCHLOSSEN
 const status = ref<ErfassungTeamStatus>({ status: ErfassungTeamStatusEnum.REGISTRIERT });
 const erfassungDialog = ref(false);
 const beendenDialog = ref(false);
 const erfassungTeamStatusService = useStimmzettelerfassungStatusTeamService();
+import { useLogging } from "@/composables/common/logging.ts";
 
 const route = useRoute();
+const { logError } = useLogging("stimmzettelerfassungView");
 const teamID = (route.params.teamID as string) || "";
 const wahlID = (route.params.wahlID as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkID as string) || "";
+
+const startenBtnActive = computed(() => status.value.status == ErfassungTeamStatusEnum.REGISTRIERT || ErfassungTeamStatusEnum.UNTERBROCHEN);
+const beendenBtnActive = computed(() => status.value.status == ErfassungTeamStatusEnum.IN_BEARBEITUNG);
 
 async function postStatus(sendNotification = true) {
   if (!teamID || !wahlID || !wahlbezirkID) {
@@ -63,7 +67,7 @@ async function postStatus(sendNotification = true) {
     wahlbezirkID,
     teamID,
     status.value,
-    true
+    sendNotification
   );
 }
 
@@ -80,9 +84,9 @@ onMounted(async () => {
     if (loaded) {
       status.value = loaded;
     }
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error("Fehler beim Laden des ErfassungTeamStatus:", e);
+  } catch (error) {
+    logError("Fehler beim Laden der ErfassungTeamStatus: ", error);
+    throw error;
   }
 });
 

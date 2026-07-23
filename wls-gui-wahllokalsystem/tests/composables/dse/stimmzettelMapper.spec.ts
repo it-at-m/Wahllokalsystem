@@ -30,6 +30,7 @@ describe("stimmzettelMapper.ts", () => {
       expect(result.kandidaten.length).toBe(dtoToMap.kandidaten?.length ?? 0);
 
       result.kandidaten.forEach((mappedKandidat: Kandidat, index: number) => {
+        // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
         const dtoKandidat = dtoToMap.kandidaten![index];
         const expectedKandidat = prepareStimmzettelKandidat()
           .kandidatId(dtoKandidat.kandidatId)

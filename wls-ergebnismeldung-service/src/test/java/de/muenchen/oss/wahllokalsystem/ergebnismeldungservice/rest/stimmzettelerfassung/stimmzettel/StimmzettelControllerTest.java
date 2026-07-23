@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.stimmzettel;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelOfTeamModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelOwnerModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Collections;
@@ -43,7 +43,7 @@ class StimmzettelControllerTest {
       val mockedServiceStimmzettel = Mockito.mock(StimmzettelOfTeamModel.class);
       Mockito.when(
               stimmzettelService.getStimmzettel(
-                  new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID)))
+                  new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID)))
           .thenReturn(List.of(mockedServiceStimmzettel));
 
       val mockedMappedValue = Instancio.create(StimmzettelOfTeamDTO.class);
@@ -64,7 +64,7 @@ class StimmzettelControllerTest {
 
       Mockito.when(
               stimmzettelService.getStimmzettel(
-                  new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID)))
+                  new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID)))
           .thenReturn(Collections.emptyList());
 
       val result = unitUnderTest.getStimmzettel(wahlID, wahlbezirkID, teamID);
@@ -94,7 +94,7 @@ class StimmzettelControllerTest {
 
       Mockito.verify(stimmzettelService)
           .saveStimmzettel(
-              Mockito.eq(new StimmzettelOwnerModel(wahlbezirkID, wahlID, teamID)),
+              Mockito.eq(new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID)),
               saveStimmzettelStimmzettelListCaptor.capture());
       Assertions.assertThat(saveStimmzettelStimmzettelListCaptor.getAllValues()).hasSize(1);
       Assertions.assertThat(saveStimmzettelStimmzettelListCaptor.getValue()).hasSize(sizeOfList);

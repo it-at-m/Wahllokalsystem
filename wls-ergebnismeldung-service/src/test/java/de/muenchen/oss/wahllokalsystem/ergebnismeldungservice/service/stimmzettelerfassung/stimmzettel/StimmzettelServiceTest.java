@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Collections;
@@ -36,7 +37,7 @@ class StimmzettelServiceTest {
 
     @Test
     void should_returnMappedStimmzettel_when_repoFoundData() {
-      val stimmzettelOwner = Instancio.create(StimmzettelOwnerModel.class);
+      val stimmzettelOwner = Instancio.create(TeamBezirkUndWahlIDModel.class);
 
       val mockedRepoResponse = Instancio.ofList(Stimmzettel.class).size(5).create();
       Mockito.when(
@@ -56,7 +57,7 @@ class StimmzettelServiceTest {
 
     @Test
     void should_returnEmptyList_when_repoFoundNoData() {
-      val stimmzettelOwner = Instancio.create(StimmzettelOwnerModel.class);
+      val stimmzettelOwner = Instancio.create(TeamBezirkUndWahlIDModel.class);
 
       Mockito.when(
               stimmzettelRepository.findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
@@ -71,7 +72,7 @@ class StimmzettelServiceTest {
 
     @Test
     void should_throwException_when_validationOfOwnerFailed() {
-      val stimmzettelOwner = Instancio.create(StimmzettelOwnerModel.class);
+      val stimmzettelOwner = Instancio.create(TeamBezirkUndWahlIDModel.class);
 
       val mockedWlsException =
           FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
@@ -88,7 +89,7 @@ class StimmzettelServiceTest {
 
     @Test
     void should_saveMappedStimmzettel_when_stimmzettelAndOwnerIsGiven() {
-      val stimmzettelOwner = Instancio.create(StimmzettelOwnerModel.class);
+      val stimmzettelOwner = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val stimmzettelToSave = Instancio.ofList(StimmzettelOfTeamModel.class).size(5).create();
 
       Mockito.when(stimmzettelModelMapper.toEntity(Mockito.eq(stimmzettelOwner), Mockito.any()))
@@ -109,7 +110,7 @@ class StimmzettelServiceTest {
 
     @Test
     void should_throwException_when_validationOfOwnerFailed() {
-      val stimmzettelOwner = Instancio.create(StimmzettelOwnerModel.class);
+      val stimmzettelOwner = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val stimmzettelToSave = Instancio.ofList(StimmzettelOfTeamModel.class).size(5).create();
 
       val mockedWlsException =
@@ -124,14 +125,14 @@ class StimmzettelServiceTest {
 
     @Test
     void should_throwException_when_validationOfStimmzettelFailed() {
-      val stimmzettelOwner = Instancio.create(StimmzettelOwnerModel.class);
+      val stimmzettelOwner = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val stimmzettelToSave = Instancio.ofList(StimmzettelOfTeamModel.class).size(5).create();
 
       val mockedWlsException =
           FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
       Mockito.doNothing()
           .when(stimmzettelValidator)
-          .validOrThrow(Mockito.any(StimmzettelOwnerModel.class));
+          .validOrThrow(Mockito.any(TeamBezirkUndWahlIDModel.class));
       Mockito.doThrow(mockedWlsException)
           .when(stimmzettelValidator)
           .validOrThrow(stimmzettelToSave);

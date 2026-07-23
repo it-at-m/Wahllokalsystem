@@ -50,20 +50,7 @@
             </template>
           </v-card-text>
         </v-card>
-        <v-card>
-          <v-card-title>Beschlussfassung</v-card-title>
-          <v-card-text>
-            <v-checkbox
-              label="für Beschlussfassung vormerken"
-              hide-details
-            />
-            <v-textarea
-              label="Grund für Beschlussfassung"
-              max-width="500"
-              hide-details
-            />
-          </v-card-text>
-        </v-card>
+        <the-stimmzettel-summary-card />
       </v-col>
       <v-col cols="7">
         <v-expansion-panels>
@@ -133,101 +120,7 @@
         </v-slide-group>
       </v-col>
       <v-col cols="3">
-        <the-stimmzettel-summary-card />
-        <v-card class="mt-3 mb-1">
-          <v-card-title>Spezialfälle</v-card-title>
-          <v-card-text class="pb-3">
-            <v-row>
-              <v-col class="text-center">
-                <div>
-                  <!-- button toggle -->
-                  <!--                <v-btn-toggle
-                    variant="outlined"
-                    divided
-                    direction="vertical"
-                    :multiple="false"
-                    class="mb-4"
-                  >
-                    <base-text-button> Stimmzettel ist leer </base-text-button>
-                    <base-text-button> Stimmzettel fehlt </base-text-button>
-                    <base-text-button style="font-size: 12px">
-                      Stimmzettel ist <br />
-                      offensichtlich ungültig
-                    </base-text-button>
-                  </v-btn-toggle>-->
-
-                  <!-- radio group -->
-                  <!--                <v-radio-group>
-                    <v-radio
-                      label="Stimmzettel ist ok"
-                      value="zero"
-                    />
-                    <v-radio
-                      label="Stimmzettel ist leer"
-                      value="one"
-                    />
-                    <v-radio
-                      label="Stimmzettel fehlt"
-                      value="two"
-                    />
-                    <v-radio
-                      label="Stimmzettel ist offensichtlich ungültig"
-                      value="three"
-                    />
-                  </v-radio-group>-->
-
-                  <!-- autocomplete -->
-                  <v-autocomplete
-                    label="Sonderfall auswählen"
-                    :items="[
-                      'Stimmzettel ist leer',
-                      'Stimmzettel fehlt',
-                      'Stimmzettel ist offensichtlich ungültig',
-                    ]"
-                  />
-                </div>
-
-                <!-- Begründung -->
-                <v-combobox
-                  label="Begründung auswählen oder eingeben"
-                  :items="[
-                    'unzulässiger Zusatz/Vorbehalt',
-                    'Stimmzettel vollständig durchgestrichen',
-                    'Wählerwille nicht zweifelsfrei erkennbar',
-                    'handschriftlich ergänzte Person',
-                    'Kennzeichnung nicht eindeutig zuzuordnen',
-                  ]"
-                />
-                <!--                <v-text-field
-                  disabled
-                  label="Begründung"
-                  hide-details
-                />-->
-              </v-col>
-            </v-row>
-
-            <v-divider class="my-4" />
-            <v-row align="center">
-              <v-col cols="8">
-                <!--                <v-checkbox
-                  label="es gibt ungültige Stimmen die nicht zugeordnet werden können"
-                  hide-details
-                />-->
-                ungültige Stimmen die nicht zugeordnet werden können
-              </v-col>
-              <v-col cols="4">
-                <v-number-input
-                  control-variant="stacked"
-                  density="compact"
-                  hide-details
-                  width="100"
-                  :clearable="false"
-                  :min="0"
-                />
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
+        <the-sonderfaelle-card />
       </v-col>
     </v-row>
   </div>
@@ -246,10 +139,10 @@ import type { PropType } from "vue";
 
 import { computed, ref } from "vue";
 
-import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
 import BaseWahlvorschlagScoresCard from "@/components/experimental/BaseWahlvorschlagScoresCard.vue";
 import InputHistoryIcon from "@/components/experimental/InputHistoryIcon.vue";
+import TheSonderfaelleCard from "@/components/experimental/TheSonderfaelleCard.vue";
 import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
 import { KandidatEventTypeEnum } from "@/types/experimental/KandidatEventTypeEnum.ts";

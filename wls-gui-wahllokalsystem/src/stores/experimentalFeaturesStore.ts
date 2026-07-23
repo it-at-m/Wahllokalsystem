@@ -11,12 +11,8 @@ const storeID = "experimentalFeaturesStore";
 
 interface StimmzettelSummary {
   index: number;
-  countUserVotes: number;
-  countUserVotesInvalid: number;
-  countListenkreuze: number;
-  countUserDiscards: number;
   isValid: number;
-  isBeschlussGefasst: boolean;
+  beschlussgrund: string;
 }
 
 export const useExperimentalFeaturesStore = defineStore(storeID, () => {
@@ -50,14 +46,14 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
   function _createStimmzettelSummaryItems(count = 20): StimmzettelSummary[] {
     const result: StimmzettelSummary[] = [];
     for (let i = 1; i <= count; i++) {
+      const valid = Math.floor(Math.random() * 4);
       result.push({
         index: i,
-        countUserVotes: Math.floor(Math.random() * 80),
-        countUserVotesInvalid: Math.floor(Math.random() * 10),
-        countListenkreuze: Math.floor(Math.random() * 2),
-        countUserDiscards: Math.floor(Math.random() * 4),
-        isValid: Math.floor(Math.random() * 3),
-        isBeschlussGefasst: Math.floor(Math.random() * 2) % 2 === 0,
+        isValid: valid,
+        beschlussgrund:
+          valid === 3
+            ? "Wählerwille nicht zweifelsfrei erkennbar, Kennzeichnung nicht eindeutig zuzuordnen"
+            : "",
       });
     }
     return result;

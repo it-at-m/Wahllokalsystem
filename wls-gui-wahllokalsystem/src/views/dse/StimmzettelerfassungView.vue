@@ -38,11 +38,11 @@ import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import {
   useStimmzettelerfassungStatusTeamService
-} from "@/composables/ergebnismeldung/common/erfassungTeamStatusService.ts";
-import { ErfassungTeamStatusEnum } from "@/types/dse/ErfassungTeamStatusEnum";
-import type { ErfassungTeamStatus } from "@/types/dse/ErfassungTeamStatus";
+} from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
 
-const status = ref<ErfassungTeamStatus | null>(null);
+const status = ref<StimmzettelerfassungTeamStatus | null>(null);
 const erfassungDialog = ref(false);
 const beendenDialog = ref(false);
 const erfassungTeamStatusService = useStimmzettelerfassungStatusTeamService();
@@ -54,8 +54,8 @@ const teamID = (route.params.teamID as string) || "";
 const wahlID = (route.params.wahlID as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkID as string) || "";
 
-const startenBtnActive = computed(() => status.value?.status == ErfassungTeamStatusEnum.REGISTRIERT || status.value?.status == ErfassungTeamStatusEnum.UNTERBROCHEN);
-const beendenBtnActive = computed(() => status.value?.status == ErfassungTeamStatusEnum.IN_BEARBEITUNG);
+const startenBtnActive = computed(() => status.value?.status == StimmzettelerfassungTeamStatusEnum.REGISTRIERT || status.value?.status == StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN);
+const beendenBtnActive = computed(() => status.value?.status == StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG);
 
 async function postStatus(sendNotification = true) {
   if (!teamID || !wahlID || !wahlbezirkID || !status.value) {
@@ -85,24 +85,24 @@ onMounted(async () => {
       status.value = loaded;
     }
   } catch (error) {
-    logError("Fehler beim Laden der ErfassungTeamStatus: ", error);
+    logError("Fehler beim Laden der StimmzettelerfassungTeamStatus: ", error);
     throw error;
   }
 });
 
 async function startErfassung() {
-  status.value = { status: ErfassungTeamStatusEnum.IN_BEARBEITUNG };
+  status.value = { status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG };
   erfassungDialog.value = true;
   await postStatus();
 }
 
 async function unterbrechen() {
-  status.value = { status: ErfassungTeamStatusEnum.UNTERBROCHEN };
+  status.value = { status: StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN };
   await postStatus();
 }
 
 async function beenden() {
-  status.value = { status: ErfassungTeamStatusEnum.ABGESCHLOSSEN };
+  status.value = { status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN };
   beendenDialog.value = true;
   await postStatus();
 }

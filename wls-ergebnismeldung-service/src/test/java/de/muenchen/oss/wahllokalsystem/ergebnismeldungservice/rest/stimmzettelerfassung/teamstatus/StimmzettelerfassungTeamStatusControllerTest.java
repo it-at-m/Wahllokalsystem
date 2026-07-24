@@ -33,10 +33,10 @@ class StimmzettelerfassungTeamStatusControllerTest {
       val wahlID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
       val teamID = Instancio.create(String.class);
-      val requestBody = Instancio.create(ErfassungTeamStatusDTO.class);
+      val requestBody = Instancio.create(StimmzettelerfassungTeamStatusDTO.class);
 
       val mockedMappedStatus = Instancio.create(ErfassungTeamStatusModel.class);
-      Mockito.when(erfassungTeamStatusDTOMapper.toModel(requestBody))
+      Mockito.when(erfassungTeamStatusDTOMapper.toModel(requestBody.status()))
           .thenReturn(mockedMappedStatus);
 
       underTest.saveStimmzettelerfassungTeamStatus(wahlID, wahlbezirkID, teamID, requestBody);
@@ -70,7 +70,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
 
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-      Assertions.assertThat(result.getBody()).isEqualTo(mockedMappeServiceResponse);
+      Assertions.assertThat(result.getBody().status()).isEqualTo(mockedMappeServiceResponse);
     }
 
     @Test

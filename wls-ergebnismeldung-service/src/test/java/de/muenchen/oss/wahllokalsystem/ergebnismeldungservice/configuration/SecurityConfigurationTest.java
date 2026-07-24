@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.instancio.Select.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -24,6 +25,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzetteler
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.status.StimmzettelerfassungStatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.stimmzettel.StimmzettelOfTeamDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus.ErfassungTeamStatusDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelumschlaege.StimmzettelumschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine.WahlscheineDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
@@ -980,7 +982,12 @@ class SecurityConfigurationTest {
       @WithAnonymousUser
       @Test
       void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-        val dto = ErfassungTeamStatusDTO.REGISTRIERT;
+        val dto =
+            Instancio.of(StimmzettelerfassungTeamStatusDTO.class)
+                .set(
+                    field(StimmzettelerfassungTeamStatusDTO::status),
+                    ErfassungTeamStatusDTO.REGISTRIERT)
+                .create();
         val request =
             MockMvcRequestBuilders.post(TEAM_URL)
                 .with(csrf())
@@ -993,7 +1000,12 @@ class SecurityConfigurationTest {
       @WithMockUser
       @Test
       void should_returnCreated_when_callingAuthenticated() throws Exception {
-        val dto = ErfassungTeamStatusDTO.REGISTRIERT;
+        val dto =
+            Instancio.of(StimmzettelerfassungTeamStatusDTO.class)
+                .set(
+                    field(StimmzettelerfassungTeamStatusDTO::status),
+                    ErfassungTeamStatusDTO.REGISTRIERT)
+                .create();
         val request =
             MockMvcRequestBuilders.post(TEAM_URL)
                 .with(csrf())

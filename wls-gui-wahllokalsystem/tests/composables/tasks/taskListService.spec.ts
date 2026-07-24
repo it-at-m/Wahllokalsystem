@@ -33,6 +33,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksErgebnisse: vi.fn(),
   createMbwWahlvorschlaegeAndErgebnisseTasks: vi.fn(),
   createTasksStapelE: vi.fn(),
+  createDseWorkflowStatusTasks: vi.fn(),
 }));
 
 vi.mock(
@@ -249,6 +250,15 @@ vi.mock(
   })
 );
 
+vi.mock(
+  import("@/composables/tasks/taskFactories/dseWorkflowStatusTaskFactory.ts"),
+  () => ({
+    useDseWorkflowStatusTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createDseWorkflowStatusTasks,
+    })),
+  })
+);
+
 describe("taskListService.ts", () => {
   let unitUnderTest: ReturnType<typeof useTaskListService>;
   const { generateRandomString, generateRandomNumber } =
@@ -310,6 +320,7 @@ describe("taskListService.ts", () => {
         "Wahlvorbereitung",
         "MBW Tasks",
         "Stapel E Tasks",
+        "DSE-Workflow-Status - " + mockedWahl.name,
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -350,6 +361,7 @@ describe("taskListService.ts", () => {
         "Zugelassene Wahlbriefe",
         "MBW Tasks",
         "Stapel E Tasks",
+        "DSE-Workflow-Status - " + mockedWahl.name,
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -527,6 +539,12 @@ describe("taskListService.ts", () => {
       mockDefinitions.createTasksStapelE.mockReturnValue([
         {
           name: "Stapel E Tasks",
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createDseWorkflowStatusTasks.mockReturnValue([
+        {
+          name: "DSE-Workflow-Status - " + mockedWahl.name,
           callback: () => Promise.resolve(),
         },
       ]);

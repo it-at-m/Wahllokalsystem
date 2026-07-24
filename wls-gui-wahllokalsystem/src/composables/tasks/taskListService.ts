@@ -6,6 +6,7 @@ import { storeToRefs } from "pinia";
 import { useAWerteTaskFactory } from "@/composables/tasks/taskFactories/aWerteTaskFactory.ts";
 import { useBeanstandeteWahlbriefeTaskFactory } from "@/composables/tasks/taskFactories/beanstandeteWahlbriefeTaskFactory.ts";
 import { useBegruendungTaskFactory } from "@/composables/tasks/taskFactories/begruendungTaskFactory.ts";
+import { useDseWorkflowStatusTaskFactory } from "@/composables/tasks/taskFactories/dseWorkflowStatusTaskFactory.ts";
 import { useEreignisseTaskFactory } from "@/composables/tasks/taskFactories/ereignisseTaskFactory.ts";
 import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts";
 import { useEroeffnungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactories/eroeffnungsuhrzeitTaskFactory.ts";
@@ -70,6 +71,8 @@ export function useTaskListService() {
   const { createTasks: createMbwWahlvorschlaegeAndErgebnisseTasks } =
     useMBWWahlvorschlaegeAndErgebnisseTaskFactory();
   const { createTasks: createStapelETasks } = useStapelETaskFactory();
+  const { createTasks: createDseWorkflowStatusTasks } =
+    useDseWorkflowStatusTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
@@ -96,6 +99,7 @@ export function useTaskListService() {
       ...createBeanstandeteWahlbriefeTask(taskFactoryData),
       ...createMbwWahlvorschlaegeAndErgebnisseTasks(taskFactoryData),
       ...createStapelETasks(taskFactoryData),
+      ...createDseWorkflowStatusTasks(taskFactoryData),
     ];
   }
 

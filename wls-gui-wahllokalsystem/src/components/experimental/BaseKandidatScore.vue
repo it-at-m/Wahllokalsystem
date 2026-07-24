@@ -6,32 +6,33 @@
         size="12"
       >
         <v-col cols="2">
-          <base-button-kandidat-discard
-            v-model="isDiscarded"
-            :use-switch-component="true"
-          />
+          <div class="userVotesBox">
+            {{ userVotes == 0 ? "" : userVotes }}
+          </div>
         </v-col>
         <v-col
-          class="text-end"
-          cols="2"
-          >{{ kandidatenNummer }}</v-col
+          cols="8"
+          class="text-start"
         >
-        <v-col cols="5">
-          <base-kandidat-score-operator
-            v-model="userVotes"
-            v-model:is-discarded="isDiscarded"
-          />
+          {{ kandidatenNummer }}
+          <div v-if="showKandidatName && !isDiscarded">
+            {{ kandidat.name }}
+          </div>
+          <div
+            v-else
+            class="text-decoration-line-through"
+          >
+            {{ kandidat.name }}
+          </div>
         </v-col>
-        <v-col cols="3">
+
+        <v-col cols="2">
           <base-kandidate-votes
             class="justify-end"
             :kandidat="kandidat"
           />
         </v-col>
       </v-row>
-      <div v-if="showKandidatName">
-        {{ kandidat.name }}
-      </div>
     </div>
   </div>
 </template>
@@ -83,3 +84,12 @@ const isDiscarded = computed({
     stimmzettelManager.discardKandidat(props.kandidat.identifikator, newValue),
 });
 </script>
+
+<style scoped>
+.userVotesBox {
+  border: 1px solid #ababab;
+  border-radius: 2px;
+  width: 30px;
+  height: 25px;
+}
+</style>

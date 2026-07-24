@@ -22,6 +22,7 @@ import {
   mdiEmail,
   mdiEqual,
   mdiFileDocumentOutline,
+  mdiFileExcelBoxOutline,
   mdiFlask,
   mdiHelpCircleOutline,
   mdiHome,
@@ -108,6 +109,7 @@ export default createVuetify({
       stimmzettelCommandRemoveAcceptList: mdiPlaylistRemove,
       experimentalFeature: mdiFlask,
       beschluss: mdiListStatus,
+      listenkreuz: mdiFileExcelBoxOutline,
     },
     sets: {
       mdi,

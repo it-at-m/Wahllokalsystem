@@ -1,13 +1,16 @@
 <template>
   <v-card style="min-width: 300px">
-    <v-card-title
-      >Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}
+    <v-card-title>
+      Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}
+      <div class="text-grey smallText">
+        Partei Abcde - {{ wahlvorschlag.ordnungszahl }}
+      </div>
       <div class="d-flex align-center justify-space-between">
         <v-checkbox
           v-model="wahlvorschlagSelected"
           density="compact"
           hide-details
-          disabled
+          true-icon="$listenkreuz"
         />
         <div class="d-flex flex-row ga-1">
           <v-chip
@@ -134,3 +137,9 @@ const wahlvorschlagSelected = computed({
   },
 });
 </script>
+
+<style scoped>
+.smallText {
+  font-size: 14px;
+}
+</style>

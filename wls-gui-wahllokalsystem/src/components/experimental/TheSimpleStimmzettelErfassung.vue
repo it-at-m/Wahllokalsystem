@@ -7,7 +7,7 @@
       >
         <v-card class="mb-1">
           <v-card-title>Eingabehistorie</v-card-title>
-          <v-card-text>
+          <v-card-text class="pb-0">
             <div v-if="firstHistoryItem">
               <div class="d-flex align-center ga-1 font-weight-bold">
                 <input-history-icon :input-type="firstHistoryItem.type" />
@@ -53,45 +53,6 @@
         <the-stimmzettel-summary-card />
       </v-col>
       <v-col cols="7">
-        <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-title>Kurzbefehle</v-expansion-panel-title>
-            <v-expansion-panel-text class="px-0">
-              <v-table density="compact">
-                <tbody>
-                  <tr>
-                    <td class="font-weight-bold px-0"><em>&lt;101&gt;</em></td>
-                    <td class="px-0">Setzt 1 Stimme</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-bold px-0">
-                      <em>&lt;101&gt;+&lt;x&gt;</em>
-                    </td>
-                    <td class="px-0">Ergänzt n Stimmen</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-bold px-0">
-                      <em>&lt;101&gt;-&lt;105&gt;</em>
-                    </td>
-                    <td class="px-0">Ergänzt je 1 Stimme im Bereich</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-bold px-0"><em>-&lt;101&gt;</em></td>
-                    <td class="px-0">Streicht den Kandidat</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-bold px-0"><em>u&lt;101&gt;</em></td>
-                    <td class="px-0">Setzt 1 ungültige Stimme</td>
-                  </tr>
-                  <tr>
-                    <td class="font-weight-bold px-0"><em>&lt;3&gt;</em></td>
-                    <td class="px-0">Setzt Listemkreuz</td>
-                  </tr>
-                </tbody>
-              </v-table>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
         <base-form-stimmzettel-quick-input @command="onQuickInputCommand" />
         <v-slide-group
           v-model="activeWahlvorschlagId"

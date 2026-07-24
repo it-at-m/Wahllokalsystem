@@ -23,8 +23,9 @@ class WahllokalZustandControllerTest {
     @Test
     void should_notThrowException_when_serviceIsCalled() {
       String wahlbezirkID = "wahlbezirkID01";
-      unitUnderTest.postLastSeen(wahlbezirkID);
-      Mockito.verify(wahllokalZustandService).postLastSeen(wahlbezirkID);
+      String teamID = "B";
+      unitUnderTest.postLastSeen(wahlbezirkID, teamID);
+      Mockito.verify(wahllokalZustandService).postLastSeen(wahlbezirkID, teamID);
     }
   }
 
@@ -34,8 +35,9 @@ class WahllokalZustandControllerTest {
     @Test
     void should_notThrowException_when_serviceIsCalled() {
       String wahlbezirkID = "wahlbezirkID01";
-      unitUnderTest.postLetzteAbmeldung(wahlbezirkID);
-      Mockito.verify(wahllokalZustandService).postLetzteAbmeldung(wahlbezirkID);
+      String teamID = "B";
+      unitUnderTest.postLetzteAbmeldung(wahlbezirkID, teamID);
+      Mockito.verify(wahllokalZustandService).postLetzteAbmeldung(wahlbezirkID, teamID);
     }
   }
 

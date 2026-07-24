@@ -138,7 +138,11 @@ function onLogoutClicked() {
 
 async function onSyncSuccess() {
   isOfflineSyncDialogVisible.value = false;
-  await logout(currentUserWahlbezirkID.value, createLogoutRoute());
+  await logout(
+    currentUserWahlbezirkID.value,
+    currentUserTeamName.value,
+    createLogoutRoute()
+  );
 }
 
 function onSyncError() {

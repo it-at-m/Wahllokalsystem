@@ -3,33 +3,33 @@ GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST lastSeen | user wls_all_uwb
-POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen/9899cae4-df9a-4ffc-a940-f20cf2280171
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen?wahlbezirkID=9899cae4-df9a-4ffc-a940-f20cf2280171&teamID=A
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST lastSeen | user wls_all_bwb
-POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen/9081145c-dc16-4a9b-8255-5c49ddb98c14
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen?wahlbezirkID=9081145c-dc16-4a9b-8255-5c49ddb98c14&teamID=A
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST lastSeen - parameter invalid, expected "Parameter unvollstaendig"
 < {%
     request.variables.set("wahlbezirkID", "   ");
 %}
-POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen/{{wahlbezirkID}}
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen?wahlbezirkID={{wahlbezirkID}}&teamID=A
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST letzteAbmeldung | user wls_all_uwb
-POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung/9899cae4-df9a-4ffc-a940-f20cf2280171
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung?wahlbezirkID=9899cae4-df9a-4ffc-a940-f20cf2280171&teamID=A
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST letzteAbmeldung | user wls_all_bwb
-POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung/9081145c-dc16-4a9b-8255-5c49ddb98c14
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung?wahlbezirkID=9081145c-dc16-4a9b-8255-5c49ddb98c14&teamID=A
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST letzteAbmeldung - parameter invalid, expected "Parameter unvollstaendig"
 < {%
     request.variables.set("wahlbezirkID", "   ");
 %}
-POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung/{{wahlbezirkID}}
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung?wahlbezirkID={{wahlbezirkID}}&teamID=A
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST schnellmeldungSendungsuhrzeit | user wls_all_uwb

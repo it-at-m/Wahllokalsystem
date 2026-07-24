@@ -25,20 +25,25 @@ public class DummyClientImpl implements WaehleranzahlClient, WahllokalZustandCli
   }
 
   @Override
-  public void postLastSeen(String wahlbezirkID, LocalDateTime zuletztGesehen) throws WlsException {
+  public void postLastSeen(String wahlbezirkID, final String teamID, LocalDateTime zuletztGesehen)
+      throws WlsException {
     log.info(
         "Dummy client postLastSeen() called instead of EAI with: "
             + wahlbezirkID
+            + ", "
+            + teamID
             + " zuletztGesehen:"
             + zuletztGesehen);
   }
 
   @Override
-  public void postLetzteAbmeldung(String wahlbezirkID, LocalDateTime letzteAbmeldung)
-      throws WlsException {
+  public void postLetzteAbmeldung(
+      String wahlbezirkID, final String teamID, LocalDateTime letzteAbmeldung) throws WlsException {
     log.info(
         "Dummy client postLetzteAbmeldung() called instead of EAI with: "
             + wahlbezirkID
+            + ", "
+            + teamID
             + " letzteAbmeldung:"
             + letzteAbmeldung);
   }

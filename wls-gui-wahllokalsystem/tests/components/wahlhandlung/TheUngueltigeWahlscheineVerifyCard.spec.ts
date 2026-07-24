@@ -1,5 +1,6 @@
 import type { TestingPinia } from "@pinia/testing";
 import type { VueWrapper } from "@vue/test-utils";
+import type { VTextField } from "vuetify/components";
 
 import { createTestingPinia } from "@pinia/testing";
 import {
@@ -11,7 +12,7 @@ import {
 import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/WahlbezirkTestDataFactory.ts";
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { VNumberInput, VTextarea } from "vuetify/components";
+import { VTextarea } from "vuetify/components";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
@@ -49,8 +50,6 @@ vi.mock(
 const { createUngueltigerWahlschein, prepareUngueltigerWahlschein } =
   useWahlbezirkTestDataFactory();
 
-const WAHLSCHEIN_MIN_VALUE = 1;
-const WAHLSCHEIN_MAX_VALUE = 9999999;
 const ABSTIMMUNGSERGEBNIS = "einstimmig zurückgewiesen";
 
 describe("TheUngueltigeWahlscheineVerifyCard.vue", () => {
@@ -200,46 +199,6 @@ describe("TheUngueltigeWahlscheineVerifyCard.vue", () => {
         getSnapshotFilename(context)
       );
     });
-
-    it("should_renderNoErrorMessage_when_wahlscheinnummerIsMinValue", async (context) => {
-      const wahlscheinnummerInput = getInputWahlscheinnummer();
-      await wahlscheinnummerInput.setValue(WAHLSCHEIN_MIN_VALUE);
-      await wahlscheinnummerInput.vm.validate();
-
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
-
-    it("should_renderNoErrorMessage_when_wahlscheinnummerIsMaxValue", async (context) => {
-      const wahlscheinnummerInput = getInputWahlscheinnummer();
-      await wahlscheinnummerInput.setValue(WAHLSCHEIN_MAX_VALUE);
-      await wahlscheinnummerInput.vm.validate();
-
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
-
-    it("should_renderErrorMessage_when_wahlscheinnummerIsBelowMinValue", async (context) => {
-      const wahlscheinnummerInput = getInputWahlscheinnummer();
-      await wahlscheinnummerInput.setValue(WAHLSCHEIN_MIN_VALUE - 1);
-      await wahlscheinnummerInput.vm.validate();
-
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
-
-    it("should_renderErrorMessage_when_wahlscheinnummerIsAboveMaxValue", async (context) => {
-      const wahlscheinnummerInput = getInputWahlscheinnummer();
-      await wahlscheinnummerInput.setValue(WAHLSCHEIN_MAX_VALUE + 1);
-      await wahlscheinnummerInput.vm.validate();
-
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
@@ -282,7 +241,8 @@ describe("TheUngueltigeWahlscheineVerifyCard.vue", () => {
       const wahlbezirkStore = useWahlbezirkStore();
 
       const wahlscheinnummerInput = getInputWahlscheinnummer();
-      await wahlscheinnummerInput.setValue(123);
+      console.debug(wahlscheinnummerInput);
+      await wahlscheinnummerInput.setValue("123");
 
       wahlbezirkStore.ungueltigeWahlscheineActions.getUngueltigerWahlscheinByWahlscheinnummer =
         vi.fn(() => {
@@ -372,10 +332,9 @@ describe("TheUngueltigeWahlscheineVerifyCard.vue", () => {
   }
 
   function getInputWahlscheinnummer() {
-    const baseNumberInput = wrapper.findComponent(
-      '[data-test="number-input-wahlscheinnummer"]'
+    return wrapper.findComponent<typeof VTextField>(
+      '[data-test="input-wahlscheinnummer"]'
     );
-    return baseNumberInput.findComponent(VNumberInput);
   }
 
   function getSearchButton() {

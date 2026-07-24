@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahllokalZustand;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahllokalzustand.WahllokalZustandRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahllokalzustand.dto.WahllokalZustandDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.service.IDConverter;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class WahllokalZustandService {
 
   private final WahllokalZustandValidator wahllokalZustandValidator;
   private final WahllokalZustandMapper wahllokalZustandMapper;
+  private final IDConverter idConverter;
   private final WahllokalZustandRepository wahllokalZustandRepository;
   private final ExceptionFactory exceptionFactory;
 
@@ -44,7 +46,8 @@ public class WahllokalZustandService {
     }
 
     wahllokalZustandRepository.save(
-        wahllokalZustandMapper.toEntityWithLastSeen(wahlbezirkID, teamID, timestamp));
+        wahllokalZustandMapper.toEntityWithLastSeen(
+            idConverter.convertIDToUUIDOrThrow(wahlbezirkID), teamID, timestamp));
   }
 
   @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveWahllokalZustand')")
@@ -66,6 +69,7 @@ public class WahllokalZustandService {
     }
 
     wahllokalZustandRepository.save(
-        wahllokalZustandMapper.toEntityWithLetzteAbmeldung(wahlbezirkID, teamID, timestamp));
+        wahllokalZustandMapper.toEntityWithLetzteAbmeldung(
+            idConverter.convertIDToUUIDOrThrow(wahlbezirkID), teamID, timestamp));
   }
 }

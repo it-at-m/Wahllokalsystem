@@ -117,5 +117,139 @@ class WahllokalZustandMapperTest {
             LocalDateTime.parse("2026-06-20T09:15:01.123"));
       }
     }
+
+    @Nested
+    class OfEntityWithLastSeen {
+
+      @Test
+      void should_map_wahlbezirkID_teamID_and_timestamp_when_dataIsGiven() {
+        val timestamp = LocalDateTime.parse("2026-01-01T10:00:00.000");
+        val result =
+            unitUnderTest.toEntityWithLastSeen(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"), "teamID", timestamp);
+
+        val expected =
+            new WahllokalZustand(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"),
+                "teamID",
+                timestamp,
+                null,
+                null);
+
+        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+      }
+
+      @Test
+      void should_map_null_wahlbezirkID_when_wahlbezirkIDIsNull() {
+        val timestamp = LocalDateTime.parse("2026-01-01T10:00:00.000");
+        val result = unitUnderTest.toEntityWithLastSeen(null, "teamID", timestamp);
+
+        val expected = new WahllokalZustand(null, "teamID", timestamp, null, null);
+
+        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+      }
+
+      @Test
+      void should_map_null_teamID_when_teamIDIsNull() {
+        val timestamp = LocalDateTime.parse("2026-01-01T10:00:00.000");
+        val result =
+            unitUnderTest.toEntityWithLastSeen(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"), null, timestamp);
+
+        val expected =
+            new WahllokalZustand(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"),
+                null,
+                timestamp,
+                null,
+                null);
+
+        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+      }
+
+      @Test
+      void should_map_null_lastSeen_when_timestampIsNull() {
+        val result =
+            unitUnderTest.toEntityWithLastSeen(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"), "teamID", null);
+
+        val expected =
+            new WahllokalZustand(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"),
+                "teamID",
+                null,
+                null,
+                null);
+
+        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+      }
+    }
+
+    @Nested
+    class OfEntityWithLetzteAbmeldung {
+
+      @Test
+      void should_map_wahlbezirkID_teamID_and_letzteAbmeldung_when_dataIsGiven() {
+        val timestamp = LocalDateTime.parse("2026-02-02T11:11:11.111");
+        val result =
+            unitUnderTest.toEntityWithLetzteAbmeldung(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"), "teamID", timestamp);
+
+        val expected =
+            new WahllokalZustand(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"),
+                "teamID",
+                null,
+                timestamp,
+                null);
+
+        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+      }
+
+      @Test
+      void should_map_null_wahlbezirkID_when_wahlbezirkIDIsNull() {
+        val timestamp = LocalDateTime.parse("2026-02-02T11:11:11.111");
+        val result = unitUnderTest.toEntityWithLetzteAbmeldung(null, "teamID", timestamp);
+
+        val expected = new WahllokalZustand(null, "teamID", null, timestamp, null);
+
+        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+      }
+
+      @Test
+      void should_map_null_teamID_when_teamIDIsNull() {
+        val timestamp = LocalDateTime.parse("2026-02-02T11:11:11.111");
+        val result =
+            unitUnderTest.toEntityWithLetzteAbmeldung(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"), null, timestamp);
+
+        val expected =
+            new WahllokalZustand(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"),
+                null,
+                null,
+                timestamp,
+                null);
+
+        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+      }
+
+      @Test
+      void should_map_null_letzteAbmeldung_when_timestampIsNull() {
+        val result =
+            unitUnderTest.toEntityWithLetzteAbmeldung(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"), "teamID", null);
+
+        val expected =
+            new WahllokalZustand(
+                UUID.fromString("2853ba2d-baaa-49ee-93f7-a653d17d6a72"),
+                "teamID",
+                null,
+                null,
+                null);
+
+        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+      }
+    }
   }
 }

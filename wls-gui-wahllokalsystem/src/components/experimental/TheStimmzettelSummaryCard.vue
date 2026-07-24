@@ -86,7 +86,7 @@
       <!--      <h3>
         <v-icon
           icon="$beschluss"
-          color="warning"
+          color="info"
         />
         Stimmzettel ist für Beschluss vorgemerkt
       </h3>-->
@@ -94,7 +94,7 @@
       <h3>
         <v-icon
           :icon="
-            isStimmzettelValid ? '$kandidatNonRemoved' : '$kandidatRemoved'
+            isStimmzettelValid ? '$stimmzettelValid' : '$stimmzettelInvalid'
           "
           :color="isStimmzettelValid ? 'success' : 'error'"
         />

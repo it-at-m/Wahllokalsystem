@@ -68,9 +68,7 @@ function valideStateToIcon(state: number) {
   if (state === 0) {
     return "$stimmzettelValid ";
   } else if (state === 1) {
-    return "$stimmzettelPartialValid  ";
-  } else if (state === 2) {
-    return "$stimmzettelInvalid";
+    return "$stimmzettelInvalid  ";
   } else {
     return "$beschluss";
   }
@@ -80,8 +78,6 @@ function valideStateToColor(state: number) {
   if (state === 0) {
     return "success";
   } else if (state === 1) {
-    return "warning";
-  } else if (state === 2) {
     return "error";
   } else {
     return "info";

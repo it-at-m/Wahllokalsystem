@@ -46,12 +46,12 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
   function _createStimmzettelSummaryItems(count = 20): StimmzettelSummary[] {
     const result: StimmzettelSummary[] = [];
     for (let i = 1; i <= count; i++) {
-      const valid = Math.floor(Math.random() * 4);
+      const valid = Math.floor(Math.random() * 3); // gültig, ungültig, beschluss
       result.push({
         index: i,
         isValid: valid,
         beschlussgrund:
-          valid === 3
+          valid === 2
             ? "Wählerwille nicht zweifelsfrei erkennbar, Kennzeichnung nicht eindeutig zuzuordnen"
             : "",
       });

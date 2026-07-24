@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Zusammenfassung</v-card-title>
-    <v-card-text>
+    <v-card-text class="pb-0">
       <h3>Listenstimmen</h3>
       <div
         v-for="wahlvorschlag in selectedWahlvorschlaege"
@@ -27,15 +27,24 @@
 
       <h3 class="mb-2">Einzelstimmen</h3>
       <v-row align="center">
-        <v-col class="py-1">
+        <v-col
+          class="py-1"
+          cols="10"
+        >
           <div>Stimmen gesamt:</div>
         </v-col>
-        <v-col class="py-1">
+        <v-col
+          class="py-1"
+          cols="2"
+        >
           <div class="text-right">{{ totalKandidatenScores }}</div>
         </v-col>
       </v-row>
       <v-row align="center">
-        <v-col class="py-1">
+        <v-col
+          class="py-1"
+          cols="10"
+        >
           <div>ungültige Stimmen:</div>
         </v-col>
         <v-col class="py-1">
@@ -43,7 +52,10 @@
         </v-col>
       </v-row>
       <v-row align="center">
-        <v-col class="py-1">
+        <v-col
+          class="py-1"
+          cols="10"
+        >
           <div>direkt vergebene Stimmen:</div>
         </v-col>
         <v-col class="py-1">
@@ -51,7 +63,10 @@
         </v-col>
       </v-row>
       <v-row align="center">
-        <v-col class="py-1">
+        <v-col
+          class="py-1"
+          cols="10"
+        >
           <div>Reststimmen:</div>
         </v-col>
         <v-col class="py-1">
@@ -59,7 +74,10 @@
         </v-col>
       </v-row>
       <v-row align="center">
-        <v-col class="py-1">
+        <v-col
+          class="py-1"
+          cols="10"
+        >
           <div>Streichungen:</div>
         </v-col>
         <v-col class="py-1">

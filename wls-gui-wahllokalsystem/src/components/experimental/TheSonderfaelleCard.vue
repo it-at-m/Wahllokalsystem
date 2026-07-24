@@ -33,12 +33,9 @@
     <v-card-title>Beschlussfassung</v-card-title>
     <v-card-text>
       <v-checkbox
-        :model-value="true"
+        :model-value="false"
         label="für Beschlussfassung vormerken"
-        hint="Wählerwille nicht zweifelsfrei erkennbar, Kennzeichnung nicht eindeutig zuzuordnen, Stimmzettel vollständig durchgestrichen, handschriftlich ergänzte Person"
         class="mb-4"
-        readonly
-        persistent-hint
         density="compact"
       />
       Begründung auswählen oder eingeben

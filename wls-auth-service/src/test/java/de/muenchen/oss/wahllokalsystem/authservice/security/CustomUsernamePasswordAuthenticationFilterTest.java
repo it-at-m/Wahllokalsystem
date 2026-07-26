@@ -89,7 +89,8 @@ class CustomUsernamePasswordAuthenticationFilterTest {
         final String clientId) {
       val username = "username";
       val password = "password";
-      val httpServletRequest = createAuthenticationRequest(username, password, clientId);
+      val httpServletRequest =
+          createAuthenticationRequest(username, password, createRequestUrlWithClientID(clientId));
 
       val authoritySchriftfuehrung = "WAHLVORSTAND";
       val authorityErfassungsteam = "ERFASSUNGSTEAM";
@@ -126,7 +127,8 @@ class CustomUsernamePasswordAuthenticationFilterTest {
       val username = "username";
       val password = "password";
       val httpServletRequest =
-          createAuthenticationRequest(username, password, WAHLLOKAL_GUI_CLIENT_ID);
+          createAuthenticationRequest(
+              username, password, createRequestUrlWithClientID(WAHLLOKAL_GUI_CLIENT_ID));
 
       val authoritySchriftfuehrung = "WAHLVORSTAND";
       val authorityErfassungsteam = "ERFASSUNGSTEAM";
@@ -164,7 +166,8 @@ class CustomUsernamePasswordAuthenticationFilterTest {
       val username = "username";
       val password = "password";
       val httpServletRequest =
-          createAuthenticationRequest(username, password, WAHLLOKAL_GUI_CLIENT_ID);
+          createAuthenticationRequest(
+              username, password, createRequestUrlWithClientID(WAHLLOKAL_GUI_CLIENT_ID));
 
       val mockedLoginAttempts =
           new LoginAttemptModel(UUID.randomUUID(), username, 1, LocalDateTime.now());
@@ -238,7 +241,8 @@ class CustomUsernamePasswordAuthenticationFilterTest {
       val username = "username";
       val password = "password";
       val httpServletRequest =
-          createAuthenticationRequest(username, password, stringContainedInRedirectURL);
+          createAuthenticationRequest(
+              username, password, createRequestUrlWithClientID(stringContainedInRedirectURL));
 
       val mockedUserDetails =
           new User(username, password, true, true, true, false, Collections.emptyList());
@@ -262,7 +266,10 @@ class CustomUsernamePasswordAuthenticationFilterTest {
     }
 
     public static Stream<Arguments> createIllegalRedirectUrls() {
-      return Stream.of(Arguments.of((String) null), Arguments.of(""));
+      return Stream.of(
+          Arguments.of((String) null),
+          Arguments.of(""),
+          Arguments.of("http://url.with.clientid?but.not=asQueryParameterWithCorrectName"));
     }
   }
 
@@ -498,5 +505,11 @@ class CustomUsernamePasswordAuthenticationFilterTest {
         .setAttribute(SESSION_ATTRIBUTE_SPRING_SECURITY_SAVED_REQUEST, savedRequest);
 
     return httpServletRequest;
+  }
+
+  private String createRequestUrlWithClientID(final String clientID) {
+    return "https://auth.wls.host.docker.internal:58100/oauth2/authorize?response_type=code&client_id="
+        + clientID
+        + "&scope=openid&state=VoeAQZyMiUbYenY10MQ3Q1b6lkU_cgl9UT7PWGOiG58%3D&redirect_uri=http://localhost:8084/login/oauth2/code/sso&nonce=gDRl7b5lnqthEDRwbEgBf3tfofe8hitP3d1nntvjda4&continue";
   }
 }

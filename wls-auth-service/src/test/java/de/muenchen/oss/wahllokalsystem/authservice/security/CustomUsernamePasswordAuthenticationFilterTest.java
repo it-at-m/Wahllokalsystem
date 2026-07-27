@@ -269,7 +269,14 @@ class CustomUsernamePasswordAuthenticationFilterTest {
       return Stream.of(
           Arguments.of((String) null),
           Arguments.of(""),
-          Arguments.of("http://url.with.clientid?but.not=asQueryParameterWithCorrectName"));
+          Arguments.of(
+              "http://url.with.clientid"
+                  + WAHLLOKAL_GUI_CLIENT_ID
+                  + "?but.not=asQueryParameterWithCorrectName"),
+          Arguments.of(
+              "http://url.with.clientid"
+                  + ADMIN_GUI_CLIENT_ID
+                  + "?but.not=asQueryParameterWithCorrectName"));
     }
   }
 

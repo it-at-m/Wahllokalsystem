@@ -67,7 +67,9 @@ describe("onlineOfflineStore.ts", () => {
       "should_setIsOnlineTrue_when_callOfLastSeenSucceededAndInitialStateWas'%s'",
       async (initialStateOfIsOnline) => {
         const wahlbezirkID = "wahlbezirkID";
+        const teamID = "teamID";
         useUserStore().user.wahlbezirkID = wahlbezirkID;
+        useUserStore().user.teamName = teamID;
         unitUnderTest.isOnline = initialStateOfIsOnline;
 
         mockDefinitions.postLastSeen.mockReturnValue(null);
@@ -76,7 +78,7 @@ describe("onlineOfflineStore.ts", () => {
 
         expect(unitUnderTest.isOnline).toStrictEqual(true);
         expect(mockDefinitions.postLastSeen.mock.calls).toStrictEqual([
-          [wahlbezirkID],
+          [wahlbezirkID, teamID],
         ]);
       }
     );
@@ -85,7 +87,9 @@ describe("onlineOfflineStore.ts", () => {
       "should_setIsOnlineFalse_when_callOfLastSeenFailedAndInitialStateWas'%s'",
       async (initialStateOfIsOnline) => {
         const wahlbezirkID = "wahlbezirkID";
+        const teamID = "teamID";
         useUserStore().user.wahlbezirkID = wahlbezirkID;
+        useUserStore().user.teamName = teamID;
         unitUnderTest.isOnline = initialStateOfIsOnline;
 
         mockDefinitions.postLastSeen.mockRejectedValue(
@@ -96,13 +100,14 @@ describe("onlineOfflineStore.ts", () => {
 
         expect(unitUnderTest.isOnline).toStrictEqual(false);
         expect(mockDefinitions.postLastSeen.mock.calls).toStrictEqual([
-          [wahlbezirkID],
+          [wahlbezirkID, teamID],
         ]);
       }
     );
 
     it("should_updateIsCheckingStatus_when_processingRequest", async () => {
       useUserStore().user.wahlbezirkID = "wahlbezirkID";
+      useUserStore().user.teamName = "teamID";
 
       expect(unitUnderTest.isCheckingStatus).toStrictEqual(false);
 
@@ -128,6 +133,7 @@ describe("onlineOfflineStore.ts", () => {
       "should_endWithIsCheckingStatusFalse_when_anErrorOccurredDuringProcessingWithInitialState'%s'",
       async (initialStateOfIsOnline) => {
         useUserStore().user.wahlbezirkID = "wahlbezirkID";
+        useUserStore().user.teamName = "teamID";
         unitUnderTest.isCheckingStatus = initialStateOfIsOnline;
 
         mockDefinitions.postLastSeen.mockRejectedValue(

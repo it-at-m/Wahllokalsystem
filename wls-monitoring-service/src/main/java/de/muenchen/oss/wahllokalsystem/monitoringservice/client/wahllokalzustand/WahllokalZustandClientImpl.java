@@ -36,21 +36,31 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
   }
 
   @Override
-  public void postLastSeen(final String wahlbezirkID, LocalDateTime zuletztGesehen)
+  public void postLastSeen(
+      final String wahlbezirkID, final String teamID, final LocalDateTime zuletztGesehen)
       throws WlsException {
-    WahllokalZustandDTO wahllokalZustandDTO = new WahllokalZustandDTO();
-    wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-    wahllokalZustandDTO.setZuletztGesehen(zuletztGesehen);
-    postWahllokalZustand(wahllokalZustandDTO);
+    try {
+      wahllokalzustandControllerApi.saveWahllokalZustandLastSeen(
+          wahlbezirkID, teamID, zuletztGesehen);
+    } catch (final Exception exception) {
+      log.info("Last Seen nicht gesendet. Exception: {}", exception.getMessage());
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
+    }
   }
 
   @Override
-  public void postLetzteAbmeldung(String wahlbezirkID, LocalDateTime letzteAbmeldung)
+  public void postLetzteAbmeldung(
+      String wahlbezirkID, final String teamID, final LocalDateTime letzteAbmeldung)
       throws WlsException {
-    WahllokalZustandDTO wahllokalZustandDTO = new WahllokalZustandDTO();
-    wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-    wahllokalZustandDTO.setLetzteAbmeldung(letzteAbmeldung);
-    postWahllokalZustand(wahllokalZustandDTO);
+    try {
+      wahllokalzustandControllerApi.saveWahllokalZustandLetzteAbmeldung(
+          wahlbezirkID, teamID, letzteAbmeldung);
+    } catch (final Exception exception) {
+      log.info("Letzte Abmeldung nicht gesendet. Exception: {}", exception.getMessage());
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
+    }
   }
 
   @Override

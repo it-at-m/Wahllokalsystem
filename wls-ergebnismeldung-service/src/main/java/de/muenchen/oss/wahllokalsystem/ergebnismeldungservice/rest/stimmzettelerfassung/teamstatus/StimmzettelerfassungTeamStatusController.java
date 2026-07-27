@@ -35,11 +35,11 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("teamID") final String teamID,
-      @RequestBody final ErfassungTeamStatusDTO erfassungTeamStatusDTO) {
+      @RequestBody final StimmzettelerfassungTeamStatusDTO erfassungTeamStatusDTO) {
 
     teamStatusService.saveTeamStatus(
         new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
-        erfassungTeamStatusDTOMapper.toModel(erfassungTeamStatusDTO));
+        erfassungTeamStatusDTOMapper.toModel(erfassungTeamStatusDTO.status()));
   }
 
   @Operation(description = "Lesen des Team-Status für die digitale Stimmzettelerfassung")
@@ -54,7 +54,7 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
             content = {@Content()})
       })
   @GetMapping("/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/status")
-  public ResponseEntity<ErfassungTeamStatusDTO> getStimmzettelerfassungTeamStatus(
+  public ResponseEntity<StimmzettelerfassungTeamStatusDTO> getStimmzettelerfassungTeamStatus(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("teamID") final String teamID) {
@@ -62,6 +62,7 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
     return okWithBodyOrNoContent(
         teamStatusService
             .getTeamStatus(new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID))
-            .map(erfassungTeamStatusDTOMapper::toDTO));
+            .map(erfassungTeamStatusDTOMapper::toDTO)
+            .map(StimmzettelerfassungTeamStatusDTO::new));
   }
 }

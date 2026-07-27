@@ -61,7 +61,7 @@
     "jsdom": "29.1.1",
     "msw": "2.14.6",
     "msw-storybook-addon": "2.0.7",
-    "prettier": "3.9.5",
+    "prettier": "3.9.6",
     "sass": "1.101.7",
     "storybook": "10.4.6",
     "typescript": "5.9.3",

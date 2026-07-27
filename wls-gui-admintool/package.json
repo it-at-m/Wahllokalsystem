@@ -15,7 +15,7 @@
     "gen:admin-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.admin.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-admin-api",
     "gen:auth-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.auth.0.6.2.json -g typescript-axios -o src/api/wls-clients/generated-auth-api",
     "gen:basisdaten-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.basisdaten.0.6.1.json -g typescript-axios -o src/api/wls-clients/generated-basisdaten-api",
-    "gen:broadcast-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.3.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api",
+    "gen:broadcast-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.4.16.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api",
     "gen:ergebnismeldung-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.ergebnismeldung.0.3.0.json -g typescript-axios -o src/api/wls-clients/generated-ergebnismeldung-api",
     "gen:infomanagement-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.infomanagement.0.3.0.json -g typescript-axios -o src/api/wls-clients/generated-infomanagement-api",
     "storybook": "storybook dev -p 6007",

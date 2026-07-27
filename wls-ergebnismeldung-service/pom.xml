@@ -447,7 +447,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.monitoring.0.1.0.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.monitoring.0.3.18.json</inputSpec>
 
                             <apiPackage>${groupId}.ergebnismeldungservice.eai.monitoring.client</apiPackage>
                             <modelPackage>${groupId}.ergebnismeldungservice.eai.monitoring.model</modelPackage>

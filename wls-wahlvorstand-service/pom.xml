@@ -440,7 +440,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json
+                                ${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.5.4.json
                             </inputSpec>
 
                             <generatorName>java</generatorName>

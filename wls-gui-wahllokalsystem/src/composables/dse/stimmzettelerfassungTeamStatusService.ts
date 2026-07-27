@@ -22,9 +22,9 @@ export function useStimmzettelerfassungStatusTeamService() {
     );
 
   async function loadErfassungTeamStatus(
-    teamID: string | null,
     wahlID: string | null,
     wahlbezirkID: string | null,
+    teamID: string | null,
     sendNotification = true
   ): Promise<StimmzettelerfassungTeamStatus | null> {
     if (!teamID) {

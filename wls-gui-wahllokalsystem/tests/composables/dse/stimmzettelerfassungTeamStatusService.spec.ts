@@ -100,9 +100,9 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
       const result = await loadErfassungTeamStatus(
-        teamID,
         wahlID,
         wahlbezirkID,
+        teamID,
         true
       );
 
@@ -138,9 +138,9 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
       const result = await loadErfassungTeamStatus(
-        teamID,
         wahlID,
         wahlbezirkID,
+        teamID,
         false
       );
 
@@ -159,7 +159,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
       await expect(
-        loadErfassungTeamStatus(teamID, wahlID, wahlbezirkID, true)
+        loadErfassungTeamStatus(wahlID, wahlbezirkID, teamID, true)
       ).rejects.toThrow();
 
       expect(mockDefinitions.addNotification.mock.calls[0][1]).toBe(
@@ -178,7 +178,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
       await expect(
-        loadErfassungTeamStatus(teamID, wahlID, wahlbezirkID, false)
+        loadErfassungTeamStatus(wahlID, wahlbezirkID, teamID, false)
       ).rejects.toThrow();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toBe(0);
@@ -205,7 +205,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
       await expect(
-        loadErfassungTeamStatus(teamID, wahlID, wahlbezirkID, true)
+        loadErfassungTeamStatus(wahlID, wahlbezirkID, teamID, true)
       ).rejects.toThrow("Get Team-Status für MBW failed.");
       expect(mockDefinitions.addNotification.mock.calls[0][1]).toBe(
         UserNotificationCategoryEnum.ERROR
@@ -218,9 +218,9 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const wahlbezirkID = generateRandomString(8);
 
       const result = await loadErfassungTeamStatus(
-        teamID,
         wahlID,
         wahlbezirkID,
+        teamID,
         true
       );
 
@@ -240,9 +240,9 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const wahlbezirkID = generateRandomString(8);
 
       const result = await loadErfassungTeamStatus(
-        teamID,
         wahlID,
         wahlbezirkID,
+        teamID,
         true
       );
 
@@ -262,9 +262,9 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const wahlbezirkID: string | null = null;
 
       const result = await loadErfassungTeamStatus(
-        teamID,
         wahlID,
         wahlbezirkID,
+        teamID,
         true
       );
 

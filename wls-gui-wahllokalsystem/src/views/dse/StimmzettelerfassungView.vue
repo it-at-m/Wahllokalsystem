@@ -82,9 +82,9 @@ const beendenBtnActive = computed(
 
 async function loadTeamStatus() {
   const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
-    teamID,
     wahlID,
     wahlbezirkID,
+    teamID,
     false
   );
   if (loaded) {

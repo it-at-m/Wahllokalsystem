@@ -1,45 +1,48 @@
+import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
+
 import {
   Configuration,
-  StimmzettelerfassungTeamStatusControllerApi
+  StimmzettelerfassungTeamStatusControllerApi,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import {useCommonApiUtils} from "@/composables/api/commonApiUtils.ts";
-import {useStimmzettelerfassungTeamStatusMapper} from "@/composables/dse/stimmzettelerfassungTeamStatusMapper.ts";
-import {useUserNotificationService} from "@/composables/userNotification/userNotificationService.ts";
-import {ERGEBNISMELDUNG_SERVICE_API_URL} from "@/constants.ts";
-import {useWahlenStore} from "@/stores/wahlenStore.ts";
-import {UserNotificationCategoryEnum} from "@/types/userNotification/UserNotificationCategoryEnum.ts";
-import type {StimmzettelerfassungTeamStatus} from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
+import { useStimmzettelerfassungTeamStatusMapper } from "@/composables/dse/stimmzettelerfassungTeamStatusMapper.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useStimmzettelerfassungStatusTeamService() {
   const { getNullOn204OrElseResponseData } = useCommonApiUtils();
   const { addNotification } = useUserNotificationService();
   const { dtoToModel, modelToDto } = useStimmzettelerfassungTeamStatusMapper();
 
-  const stimmzettelerfassungTeamStatusControllerApi = new StimmzettelerfassungTeamStatusControllerApi(
-    new Configuration({ basePath: ERGEBNISMELDUNG_SERVICE_API_URL })
-  );
+  const stimmzettelerfassungTeamStatusControllerApi =
+    new StimmzettelerfassungTeamStatusControllerApi(
+      new Configuration({ basePath: ERGEBNISMELDUNG_SERVICE_API_URL })
+    );
 
   async function loadErfassungTeamStatus(
     teamID: string,
     wahlID: string,
     wahlbezirkID: string,
-    sendNotification = true
+    sendNotification = false
   ): Promise<StimmzettelerfassungTeamStatus | null> {
     const { wahlenActions } = useWahlenStore();
     try {
-      const response = await stimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatus(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
+      const response =
+        await stimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatus(
+          wahlID,
+          wahlbezirkID,
+          teamID
+        );
       const responseData = getNullOn204OrElseResponseData(response);
       const result = dtoToModel(responseData);
       if (sendNotification) {
         const wahlname =
-            wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
+          wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
         addNotification(
-            `Status für ${wahlname} erfolgreich geladen.`,
-            UserNotificationCategoryEnum.SUCCESS
+          `Team-Status für ${wahlname} erfolgreich geladen.`,
+          UserNotificationCategoryEnum.SUCCESS
         );
       }
       return result;
@@ -47,11 +50,11 @@ export function useStimmzettelerfassungStatusTeamService() {
       const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
       if (sendNotification) {
         addNotification(
-          `Fehler beim Laden des Status für ${wahlname}.`,
+          `Fehler beim Laden des Team-Status für ${wahlname}.`,
           UserNotificationCategoryEnum.ERROR
         );
       }
-      throw new Error(`Get Status für ${wahlname} failed.`);
+      throw new Error(`Get Team-Status für ${wahlname} failed.`);
     }
   }
 
@@ -60,26 +63,31 @@ export function useStimmzettelerfassungStatusTeamService() {
     wahlbezirkID: string,
     teamID: string,
     status: StimmzettelerfassungTeamStatus,
-    sendNotification = true
+    sendNotification = false
   ) {
     const { wahlenActions } = useWahlenStore();
     const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
     try {
-      await stimmzettelerfassungTeamStatusControllerApi.saveStimmzettelerfassungTeamStatus(wahlID, wahlbezirkID, teamID, modelToDto(status));
+      await stimmzettelerfassungTeamStatusControllerApi.saveStimmzettelerfassungTeamStatus(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        modelToDto(status)
+      );
       if (sendNotification) {
         addNotification(
-          `ErfassungTeamStatus für ${wahlname} erfolgreich gespeichert.`,
+          `Team-Status für ${wahlname} erfolgreich gespeichert.`,
           UserNotificationCategoryEnum.SUCCESS
         );
       }
     } catch {
       if (sendNotification) {
         addNotification(
-          `Fehler beim Speichern des ErfassungTeamStatus für ${wahlname}.`,
+          `Fehler beim Speichern des Team-Status für ${wahlname}.`,
           UserNotificationCategoryEnum.ERROR
         );
       }
-      throw new Error(`Post ErfassungTeamStatus für ${wahlname} failed.`);
+      throw new Error(`Post Team-Status für ${wahlname} failed.`);
     }
   }
 

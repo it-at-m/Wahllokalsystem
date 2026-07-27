@@ -24,7 +24,7 @@
     "gen:monitoring-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.monitoring.0.3.18-SNAPSHOT.json -g typescript-axios -o src/api/wls-clients/generated-monitoring-api --type-mappings=set=Array",
     "gen:vorfaelleundvorkommnisse-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.vorfaelleundvorkommnisse.0.5.11.json -g typescript-axios -o src/api/wls-clients/generated-vorfaelleundvorkommnisse-api",
     "gen:wahlvorbereitung-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.wahlvorbereitung.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-wahlvorbereitung-api --type-mappings=set=Array",
-    "gen:wahlvorstand-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.wahlvorstand.0.3.0.json -g typescript-axios -o src/api/wls-clients/generated-wahlvorstand-api --type-mappings=set=Array",
+    "gen:wahlvorstand-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.wahlvorstand.0.5.18.json -g typescript-axios -o src/api/wls-clients/generated-wahlvorstand-api --type-mappings=set=Array",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

@@ -2,7 +2,9 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { StimmzettelerfassungTeamStatusDTOStatusEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -110,7 +112,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       ).toStrictEqual([[wahlID, wahlbezirkID, teamID]]);
       expect(mockDefinitions.dtoToModel.mock.calls.length).toBe(1);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
-        "Team-Status für MBW erfolgreich geladen.",
+        "Status 'REGISTRIERT' für MBW erfolgreich geladen.",
         UserNotificationCategoryEnum.SUCCESS,
       ]);
     });
@@ -208,6 +210,72 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       expect(mockDefinitions.addNotification.mock.calls[0][1]).toBe(
         UserNotificationCategoryEnum.ERROR
       );
+    });
+
+    it("should_showErrorAndNotCallApi_when_teamIdIsNull", async () => {
+      const teamID: string | null = null;
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID = generateRandomString(8);
+
+      const result = await loadErfassungTeamStatus(
+        teamID,
+        wahlID,
+        wahlbezirkID,
+        true
+      );
+
+      expect(result).toBeNull();
+      expect(
+        mockDefinitions.getStimmzettelerfassungTeamStatus.mock.calls.length
+      ).toBe(0);
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        "Fehler beim Laden des Team-Status: Fehlender Parameter teamID",
+        UserNotificationCategoryEnum.ERROR,
+      ]);
+    });
+
+    it("should_showErrorAndNotCallApi_when_wahlIdIsNull", async () => {
+      const teamID = generateRandomString(8);
+      const wahlID: string | null = null;
+      const wahlbezirkID = generateRandomString(8);
+
+      const result = await loadErfassungTeamStatus(
+        teamID,
+        wahlID,
+        wahlbezirkID,
+        true
+      );
+
+      expect(result).toBeNull();
+      expect(
+        mockDefinitions.getStimmzettelerfassungTeamStatus.mock.calls.length
+      ).toBe(0);
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        "Fehler beim Laden des Team-Status: Fehlender Parameter wahlID",
+        UserNotificationCategoryEnum.ERROR,
+      ]);
+    });
+
+    it("should_showErrorAndNotCallApi_when_wahlbezirkIdIsNull", async () => {
+      const teamID = generateRandomString(8);
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID: string | null = null;
+
+      const result = await loadErfassungTeamStatus(
+        teamID,
+        wahlID,
+        wahlbezirkID,
+        true
+      );
+
+      expect(result).toBeNull();
+      expect(
+        mockDefinitions.getStimmzettelerfassungTeamStatus.mock.calls.length
+      ).toBe(0);
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        "Fehler beim Laden des Team-Status: Fehlender Parameter wahlBezirkID",
+        UserNotificationCategoryEnum.ERROR,
+      ]);
     });
   });
 
@@ -315,6 +383,99 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       expect(mockDefinitions.addNotification.mock.calls[0][0]).toContain(
         "Team-Status für"
       );
+    });
+
+    it("should_showErrorAndNotCallSaveApi_when_teamIdIsNull", async () => {
+      const teamID: string | null = null;
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID = generateRandomString(8);
+
+      const model = { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT };
+      mockDefinitions.modelToDto.mockReturnValue({
+        status: StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert,
+      });
+
+      await expect(
+        postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, true)
+      ).rejects.toThrow();
+
+      expect(
+        mockDefinitions.saveStimmzettelerfassungTeamStatus.mock.calls.length
+      ).toBe(0);
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        "Fehler beim Speichern des Team-Status: Fehlender Parameter teamID",
+        UserNotificationCategoryEnum.ERROR,
+      ]);
+    });
+
+    it("should_showErrorAndNotCallSaveApi_when_wahlIdIsNull", async () => {
+      const teamID = generateRandomString(8);
+      const wahlID: string | null = null;
+      const wahlbezirkID = generateRandomString(8);
+
+      const model = { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT };
+      mockDefinitions.modelToDto.mockReturnValue({
+        status: StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert,
+      });
+
+      await expect(
+        postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, true)
+      ).rejects.toThrow();
+
+      expect(
+        mockDefinitions.saveStimmzettelerfassungTeamStatus.mock.calls.length
+      ).toBe(0);
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        "Fehler beim Speichern des Team-Status: Fehlender Parameter wahlID",
+        UserNotificationCategoryEnum.ERROR,
+      ]);
+    });
+
+    it("should_showErrorAndNotCallSaveApi_when_wahlbezirkIdIsNull", async () => {
+      const teamID = generateRandomString(8);
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID: string | null = null;
+
+      const model = { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT };
+      mockDefinitions.modelToDto.mockReturnValue({
+        status: StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert,
+      });
+
+      await expect(
+        postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, true)
+      ).rejects.toThrow();
+
+      expect(
+        mockDefinitions.saveStimmzettelerfassungTeamStatus.mock.calls.length
+      ).toBe(0);
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        "Fehler beim Speichern des Team-Status: Fehlender Parameter wahlBezirkID",
+        UserNotificationCategoryEnum.ERROR,
+      ]);
+    });
+
+    it("should_showErrorAndNotCallSaveApi_when_statusIsNull", async () => {
+      const teamID = generateRandomString(8);
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID = generateRandomString(8);
+
+      const status: StimmzettelerfassungTeamStatusEnum | null = null;
+      const dto = {
+        status: StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert,
+      };
+      mockDefinitions.modelToDto.mockReturnValue(dto);
+
+      await expect(
+        postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, status, true)
+      ).rejects.toThrow();
+
+      expect(
+        mockDefinitions.saveStimmzettelerfassungTeamStatus.mock.calls.length
+      ).toBe(0);
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        "Fehler beim Speichern des Team-Status: Fehlender Parameter status",
+        UserNotificationCategoryEnum.ERROR,
+      ]);
     });
   });
 });

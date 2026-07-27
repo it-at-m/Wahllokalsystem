@@ -3,6 +3,7 @@
     <v-card>
       <v-card-title>Stimmzettelerfassung</v-card-title>
       <v-card-text>
+        Status: {{ status ? status.status : "-" }}
         <v-skeleton-loader
           boilerplate
           type="card-avatar"
@@ -80,22 +81,14 @@ const beendenBtnActive = computed(
 );
 
 async function loadTeamStatus() {
-  if (!teamID || !wahlID || !wahlbezirkID) {
-    logError("Fehler beim Laden des Team-Status: Unvollständige Parameter");
-    return;
-  }
-  try {
-    const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
-      teamID,
-      wahlID,
-      wahlbezirkID
-    );
-    if (loaded) {
-      status.value = loaded;
-    }
-  } catch (error) {
-    logError("Fehler beim Laden des StimmzettelerfassungTeamStatus: ", error);
-    throw error;
+  const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
+    teamID,
+    wahlID,
+    wahlbezirkID,
+    false
+  );
+  if (loaded) {
+    status.value = loaded;
   }
 }
 
@@ -103,34 +96,41 @@ onMounted(async () => {
   await loadTeamStatus();
 });
 
-async function postTeamStatus(sendNotification = false) {
-  if (!teamID || !wahlID || !wahlbezirkID || !status.value) {
-    logError("Fehler beim Speichern des Team-Status: Unvollständige Parameter");
-    return;
+async function postTeamStatus(
+  statusToChange: StimmzettelerfassungTeamStatus,
+  sendNotification = false
+) {
+  try {
+    await erfassungTeamStatusService.postErfassungTeamStatus(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      statusToChange,
+      sendNotification
+    );
+    status.value = statusToChange;
+  } catch (error) {
+    logError("Fehler beim Speichern des Team-Status", error);
   }
-  await erfassungTeamStatusService.postErfassungTeamStatus(
-    wahlID,
-    wahlbezirkID,
-    teamID,
-    status.value,
-    sendNotification
-  );
 }
 
 async function startErfassung() {
-  status.value = { status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG };
+  await postTeamStatus({
+    status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+  });
   erfassungDialog.value = true;
-  await postTeamStatus();
 }
 
 async function unterbrechen() {
-  status.value = { status: StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN };
-  await postTeamStatus();
+  await postTeamStatus({
+    status: StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
+  });
 }
 
 async function beenden() {
-  status.value = { status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN };
   beendenDialog.value = true;
-  await postTeamStatus();
+  await postTeamStatus({
+    status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN,
+  });
 }
 </script>

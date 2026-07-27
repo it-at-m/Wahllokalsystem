@@ -471,7 +471,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.4.0.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.6.1.json</inputSpec>
 
                             <apiPackage>${project.groupId}.ergebnismeldungservice.eai.basisdaten.client</apiPackage>
                             <modelPackage>${project.groupId}.ergebnismeldungservice.eai.basisdaten.model</modelPackage>

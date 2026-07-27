@@ -35,9 +35,9 @@ export function useStimmzettelService() {
         wahlbezirkID,
         teamID
       );
-      const responseDate = getNullOn204OrElseResponseData(response);
+      const responseData = getNullOn204OrElseResponseData(response);
       return (
-        responseDate?.map((stimmzettelDTO) => toModel(stimmzettelDTO)) ?? []
+        responseData?.map((stimmzettelDTO) => toModel(stimmzettelDTO)) ?? []
       );
     } catch (error) {
       if (sendNotification) {

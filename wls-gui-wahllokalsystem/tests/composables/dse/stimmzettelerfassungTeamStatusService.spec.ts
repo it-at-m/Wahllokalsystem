@@ -1,9 +1,8 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { StimmzettelerfassungTeamStatusDTOStatusEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -61,6 +60,12 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
 }));
 
 const { generateRandomString } = useCommonTestDataFactory();
+const {
+  createStimmzettelerfassungTeamStatusDTOData,
+  createStimmzettelerfassungTeamStatusDtoEnumValue,
+  createStimmzettelerfassungTeamStatusModel,
+  prepareStimmzettelerfassungTeamStatusResponse,
+} = useStimmzettelerfassungTeamStatusTestDataFactory();
 
 describe("stimmzettelerfassungTeamStatusService.ts", () => {
   const { loadErfassungTeamStatus, postErfassungTeamStatus } =
@@ -77,7 +82,10 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
-      const mockedResponse = { status: 200, data: { status: "REGISTRIERT" } };
+      const mockedResponse = prepareStimmzettelerfassungTeamStatusResponse(
+        createStimmzettelerfassungTeamStatusDtoEnumValue(),
+        200
+      );
       mockDefinitions.getStimmzettelerfassungTeamStatus.mockResolvedValue(
         mockedResponse
       );
@@ -85,7 +93,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
         mockedResponse.data
       );
 
-      const mappedModel = { status: "REGISTRIERT" };
+      const mappedModel = createStimmzettelerfassungTeamStatusModel();
       mockDefinitions.dtoToModel.mockReturnValue(mappedModel);
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
@@ -112,14 +120,19 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
-      const mockedResponse = { status: 200, data: { status: "REGISTRIERT" } };
+      const mockedResponse = prepareStimmzettelerfassungTeamStatusResponse(
+        createStimmzettelerfassungTeamStatusDtoEnumValue(),
+        200
+      );
       mockDefinitions.getStimmzettelerfassungTeamStatus.mockResolvedValue(
         mockedResponse
       );
       mockDefinitions.getNullOn204OrElseResponseData.mockReturnValue(
         mockedResponse.data
       );
-      mockDefinitions.dtoToModel.mockReturnValue({ status: "REGISTRIERT" });
+      mockDefinitions.dtoToModel.mockReturnValue(
+        createStimmzettelerfassungTeamStatusModel()
+      );
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
       const result = await loadErfassungTeamStatus(
@@ -130,7 +143,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       );
 
       expect(mockDefinitions.addNotification.mock.calls.length).toBe(0);
-      expect(result).toEqual({ status: "REGISTRIERT" });
+      expect(result).toEqual(createStimmzettelerfassungTeamStatusModel());
     });
 
     it("should_showErrorNotificationAndThrow_when_apiFails", async () => {
@@ -174,7 +187,10 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
-      const mockedResponse = { status: 200, data: { status: "REGISTRIERT" } };
+      const mockedResponse = prepareStimmzettelerfassungTeamStatusResponse(
+        createStimmzettelerfassungTeamStatusDtoEnumValue(),
+        200
+      );
       mockDefinitions.getStimmzettelerfassungTeamStatus.mockResolvedValue(
         mockedResponse
       );
@@ -201,10 +217,8 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
-      const model = { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT };
-      const dto = {
-        status: StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert,
-      };
+      const model = createStimmzettelerfassungTeamStatusModel();
+      const dto = createStimmzettelerfassungTeamStatusDTOData();
       mockDefinitions.modelToDto.mockReturnValue(dto);
       mockDefinitions.saveStimmzettelerfassungTeamStatus.mockResolvedValue({
         status: 201,
@@ -228,10 +242,8 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
-      const model = { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT };
-      const dto = {
-        status: StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert,
-      };
+      const model = createStimmzettelerfassungTeamStatusModel();
+      const dto = createStimmzettelerfassungTeamStatusDTOData();
       mockDefinitions.modelToDto.mockReturnValue(dto);
       mockDefinitions.saveStimmzettelerfassungTeamStatus.mockResolvedValue({
         status: 201,
@@ -248,10 +260,8 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
-      const model = { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT };
-      const dto = {
-        status: StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert,
-      };
+      const model = createStimmzettelerfassungTeamStatusModel();
+      const dto = createStimmzettelerfassungTeamStatusDTOData();
       mockDefinitions.modelToDto.mockReturnValue(dto);
       mockDefinitions.saveStimmzettelerfassungTeamStatus.mockRejectedValue(
         new Error("api failed")
@@ -272,10 +282,8 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
-      const model = { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT };
-      const dto = {
-        status: StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert,
-      };
+      const model = createStimmzettelerfassungTeamStatusModel();
+      const dto = createStimmzettelerfassungTeamStatusDTOData();
       mockDefinitions.modelToDto.mockReturnValue(dto);
       mockDefinitions.saveStimmzettelerfassungTeamStatus.mockRejectedValue(
         new Error("api failed")
@@ -294,10 +302,8 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
-      const model = { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT };
-      const dto = {
-        status: StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert,
-      };
+      const model = createStimmzettelerfassungTeamStatusModel();
+      const dto = createStimmzettelerfassungTeamStatusDTOData();
       mockDefinitions.modelToDto.mockReturnValue(dto);
       mockDefinitions.saveStimmzettelerfassungTeamStatus.mockResolvedValue({
         status: 201,
@@ -306,7 +312,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
 
       await postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, true);
 
-      // Erwartung: Notification-Text enthält kein 'undefined' und ist konsistent
       expect(mockDefinitions.addNotification.mock.calls[0][0]).toContain(
         "Team-Status für"
       );

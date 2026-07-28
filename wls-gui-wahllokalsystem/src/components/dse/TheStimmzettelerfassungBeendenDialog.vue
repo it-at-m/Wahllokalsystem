@@ -18,12 +18,15 @@
 import { storeToRefs } from "pinia";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { ROUTE_FINISHED } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 
 const { isUWB } = storeToRefs(useUserStore());
+const { postErfassungTeamStatus } = useStimmzettelerfassungStatusTeamService();
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,
@@ -33,6 +36,7 @@ const isDialogVisible = defineModel("modelValue", {
 const props = defineProps<{
   wahlId: string;
   wahlbezirkId: string;
+  teamId: string;
 }>();
 
 function onCancelClicked(): void {
@@ -40,6 +44,14 @@ function onCancelClicked(): void {
 }
 
 async function onConfirmClicked() {
+  await postErfassungTeamStatus(
+    props.wahlId,
+    props.wahlbezirkId,
+    props.teamId,
+    { status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN },
+    true
+  );
+
   if (isUWB.value) {
     await router.push({
       name: DseStepsEnum.DSE_MONITORING,

@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { delay, http, HttpResponse } from "msw";
-import { fn } from "storybook/test";
 
 import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
 
@@ -10,23 +9,6 @@ const { generateRandomString } = useCommonTestDataFactory();
 
 const meta = {
   component: TheStimmzettelerfassungBeendenDialog,
-  argTypes: {
-    onCancel: {
-      // todo TS2353: Object literal may only specify known properties, and onCancel does not exist in type
-      table: {
-        category: "events",
-      },
-    },
-    onConfirm: {
-      table: {
-        category: "events",
-      },
-    },
-  },
-  args: {
-    onCancel: fn(),
-    onConfirm: fn(),
-  },
   parameters: {
     msw: {
       handlers: [

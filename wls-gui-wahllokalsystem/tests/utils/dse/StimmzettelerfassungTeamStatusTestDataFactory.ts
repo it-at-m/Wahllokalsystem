@@ -1,41 +1,46 @@
 import type { StimmzettelerfassungTeamStatusDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
+import type { Builder } from "@tests/utils/Builder.ts";
+
+import { proxyBuilder } from "@tests/utils/Builder.ts";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { StimmzettelerfassungTeamStatusDTOStatusEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
+const { getRandomItem } = useCommonTestDataFactory();
+
 export function useStimmzettelerfassungTeamStatusTestDataFactory() {
-  function createStimmzettelerfassungTeamStatusDTOData(
-    status: StimmzettelerfassungTeamStatusDTOStatusEnum = StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert
-  ): StimmzettelerfassungTeamStatusDTO {
-    return { status } as StimmzettelerfassungTeamStatusDTO;
+  function createStimmzettelerfassungTeamStatusDTOData(): StimmzettelerfassungTeamStatusDTO {
+    return {
+      status: getRandomItem(
+        Object.values(StimmzettelerfassungTeamStatusDTOStatusEnum)
+      ),
+    };
   }
 
   function createStimmzettelerfassungTeamStatusDtoEnumValue(): StimmzettelerfassungTeamStatusDTOStatusEnum {
-    return StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert;
+    return getRandomItem(
+      Object.values(StimmzettelerfassungTeamStatusDTOStatusEnum)
+    );
   }
 
   function createStimmzettelerfassungTeamStatusModel(
     status: StimmzettelerfassungTeamStatusEnum = StimmzettelerfassungTeamStatusEnum.REGISTRIERT
   ): StimmzettelerfassungTeamStatus {
-    // return a proper model object (typed)
-    return { status } as StimmzettelerfassungTeamStatus;
+    return { status };
   }
 
-  function prepareStimmzettelerfassungTeamStatusResponse(
-    status: StimmzettelerfassungTeamStatusDTOStatusEnum = StimmzettelerfassungTeamStatusDTOStatusEnum.Registriert,
-    httpStatus = 200
-  ) {
-    const data: StimmzettelerfassungTeamStatusDTO = {
-      status,
-    } as StimmzettelerfassungTeamStatusDTO;
-    return { status: httpStatus, data };
+  function prepareStimmzettelerfassungTeamStatusDTO(): Builder<StimmzettelerfassungTeamStatusDTO> {
+    return proxyBuilder<StimmzettelerfassungTeamStatusDTO>(
+      createStimmzettelerfassungTeamStatusDTOData()
+    );
   }
 
   return {
     createStimmzettelerfassungTeamStatusDTOData,
     createStimmzettelerfassungTeamStatusDtoEnumValue,
     createStimmzettelerfassungTeamStatusModel,
-    prepareStimmzettelerfassungTeamStatusResponse,
+    prepareStimmzettelerfassungTeamStatusDTO,
   };
 }

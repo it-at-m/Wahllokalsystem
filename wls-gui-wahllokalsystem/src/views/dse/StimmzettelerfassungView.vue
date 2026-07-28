@@ -13,42 +13,44 @@
       <v-card-actions>
         <base-text-button
           :active="startenBtnActive"
-          @click="startErfassung"
+          @click="onErfassungStartenClicked"
           >Starten</base-text-button
         >
-        <base-text-button @click="unterbrechen">Unterbrechen</base-text-button>
+        <base-text-button @click="onErfassungUnterbrechenClicked"
+          >Unterbrechen</base-text-button
+        >
         <base-text-button
           class="ms-auto"
           :active="beendenBtnActive"
-          @click="beenden"
+          @click="onErfassungBeendenClicked"
           >Beenden</base-text-button
         >
       </v-card-actions>
     </v-card>
     <base-dialog
-      :visible="erfassungDialog"
+      :visible="erfassungDialogVisible"
       icon="$information"
-      dialogtext="🚧 TBD 🚧"
       dialogtitle="Stimmzettel erfassen"
       cancel-disabled
       confirmtext="Ok"
-      @confirm="erfassungDialog = !erfassungDialog"
-    />
+      @confirm="erfassungDialogVisible = !erfassungDialogVisible"
+      >🚧 TBD 🚧</base-dialog
+    >
     <base-dialog
-      :visible="beendenDialog"
+      :visible="beendenDialogVisible"
       icon="$information"
-      dialogtext="🚧 TBD 🚧"
       dialogtitle="Stimmzettelerfassung beenden"
       cancel-disabled
       confirmtext="Ok"
-      @confirm="beendenDialog = !beendenDialog"
-    />
+      @confirm="beendenDialogVisible = !beendenDialogVisible"
+      >🚧 TBD 🚧</base-dialog
+    >
   </div>
 </template>
 <script setup lang="ts">
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
 
-import { computed, onMounted, ref } from "vue";
+import { computed, onActivated, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -59,8 +61,8 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 const status = ref<StimmzettelerfassungTeamStatus | null>(null);
-const erfassungDialog = ref(false);
-const beendenDialog = ref(false);
+const erfassungDialogVisible = ref(false);
+const beendenDialogVisible = ref(false);
 const erfassungTeamStatusService = useStimmzettelerfassungStatusTeamService();
 
 const route = useRoute();
@@ -92,7 +94,7 @@ async function loadTeamStatus() {
   }
 }
 
-onMounted(async () => {
+onActivated(async () => {
   await loadTeamStatus();
 });
 
@@ -114,21 +116,21 @@ async function postTeamStatus(
   }
 }
 
-async function startErfassung() {
+async function onErfassungStartenClicked() {
   await postTeamStatus({
     status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
   });
-  erfassungDialog.value = true;
+  erfassungDialogVisible.value = true;
 }
 
-async function unterbrechen() {
+async function onErfassungUnterbrechenClicked() {
   await postTeamStatus({
     status: StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
   });
 }
 
-async function beenden() {
-  beendenDialog.value = true;
+async function onErfassungBeendenClicked() {
+  beendenDialogVisible.value = true;
   await postTeamStatus({
     status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN,
   });

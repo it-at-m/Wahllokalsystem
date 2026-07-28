@@ -22,9 +22,9 @@ export function useStimmzettelerfassungStatusTeamService() {
     );
 
   async function loadErfassungTeamStatus(
-    wahlID: string | null,
-    wahlbezirkID: string | null,
-    teamID: string | null,
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string,
     sendNotification = true
   ): Promise<StimmzettelerfassungTeamStatus | null> {
     if (!teamID) {
@@ -55,7 +55,10 @@ export function useStimmzettelerfassungStatusTeamService() {
           teamID
         );
       const responseData = getNullOn204OrElseResponseData(response);
-      const result = dtoToModel(responseData);
+      let result = null;
+      if (responseData) {
+        result = dtoToModel(responseData);
+      }
       if (sendNotification) {
         const wahlname =
           wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
@@ -78,45 +81,12 @@ export function useStimmzettelerfassungStatusTeamService() {
   }
 
   async function postErfassungTeamStatus(
-    wahlID: string | null,
-    wahlbezirkID: string | null,
-    teamID: string | null,
-    status: StimmzettelerfassungTeamStatus | null,
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string,
+    status: StimmzettelerfassungTeamStatus,
     sendNotification = true
   ) {
-    if (!teamID) {
-      addNotification(
-        `Fehler beim Speichern des Team-Status: Fehlender Parameter teamID`,
-        UserNotificationCategoryEnum.ERROR
-      );
-      throw new Error(
-        `Fehler beim Speichern des Team-Status: Fehlender Parameter teamID`
-      );
-    } else if (!wahlID) {
-      addNotification(
-        `Fehler beim Speichern des Team-Status: Fehlender Parameter wahlID`,
-        UserNotificationCategoryEnum.ERROR
-      );
-      throw new Error(
-        `Fehler beim Speichern des Team-Status: Fehlender Parameter wahlID`
-      );
-    } else if (!wahlbezirkID) {
-      addNotification(
-        `Fehler beim Speichern des Team-Status: Fehlender Parameter wahlBezirkID`,
-        UserNotificationCategoryEnum.ERROR
-      );
-      throw new Error(
-        `Fehler beim Speichern des Team-Status: Fehlender Parameter wahlBezirkID`
-      );
-    } else if (!status) {
-      addNotification(
-        `Fehler beim Speichern des Team-Status: Fehlender Parameter status`,
-        UserNotificationCategoryEnum.ERROR
-      );
-      throw new Error(
-        `Fehler beim Speichern des Team-Status: Fehlender Parameter status`
-      );
-    }
     const { wahlenActions } = useWahlenStore();
     const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
     try {

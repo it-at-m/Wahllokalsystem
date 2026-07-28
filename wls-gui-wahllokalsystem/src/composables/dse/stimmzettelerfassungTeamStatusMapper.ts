@@ -26,17 +26,15 @@ const STATUS_MODEL_ENUM_TO_DTO_ENUM: Record<
 
 export function useStimmzettelerfassungTeamStatusMapper() {
   function dtoToModel(
-    dto: StimmzettelerfassungTeamStatusDTO | null
-  ): StimmzettelerfassungTeamStatus | null {
-    return dto
-      ? {
+    dto: StimmzettelerfassungTeamStatusDTO
+  ): StimmzettelerfassungTeamStatus {
+    return {
           status: STATUS_DTO_ENUM_TO_MODEL_ENUM[dto.status],
-        }
-      : null;
+        };
   }
 
   function modelToDto(
-    model: StimmzettelerfassungTeamStatus | null
+    model: StimmzettelerfassungTeamStatus
   ): StimmzettelerfassungTeamStatusDTO {
     if (!model) {
       throw new Error("Status nicht gesetzt");

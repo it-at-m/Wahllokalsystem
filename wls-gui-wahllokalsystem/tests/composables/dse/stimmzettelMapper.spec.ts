@@ -1,3 +1,4 @@
+import type { StimmzettelOfTeamDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Kandidat } from "@/types/dse/Kandidat.ts";
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 
@@ -11,10 +12,14 @@ const {
   prepareStimmzettelOfTeamDTO,
   createStimmzettelKandidatDTO,
   prepareStimmzettelKandidat,
+  createStimmzettel,
+  prepareStimmzettel,
+  createStimmzettelKandidat,
+  prepareStimmzettelKandidatDTO,
 } = useStimmzettelTestDataFactory();
 
 describe("stimmzettelMapper.ts", () => {
-  const { toModel } = useStimmzettelMapper();
+  const { toModel, toDTO } = useStimmzettelMapper();
 
   describe("toModel", () => {
     it("should_mapAllFields_when_dtoIsGiven", () => {
@@ -109,6 +114,74 @@ describe("stimmzettelMapper.ts", () => {
         .votesByVoter(singleKandidat.votesByVoter)
         .build();
       const mapped = result.kandidaten[0];
+      expect(mapped).toStrictEqual(expectedKandidat);
+    });
+  });
+
+  describe("toDTO", () => {
+    it("should_mapAllFields_when_modelIsGiven", () => {
+      const modelToMap = createStimmzettel();
+
+      const result: StimmzettelOfTeamDTO = toDTO(modelToMap);
+
+      expect(result.stimmzettelkennung).toBe(modelToMap.stimmzettelkennung);
+      expect(result.selectedWahlvorschlaegeOrdnungszahlen).toStrictEqual(
+        modelToMap.selectedWahlvorschlaegeOrdnungszahlen
+      );
+
+      expect(result.kandidaten?.length).toBe(
+        modelToMap.kandidaten?.length ?? 0
+      );
+
+      result.kandidaten?.forEach((mappedKandidat: Kandidat, index: number) => {
+        // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+        const modelKandidat = modelToMap.kandidaten![index];
+        const expectedKandidat = prepareStimmzettelKandidatDTO()
+          .kandidatId(modelKandidat.kandidatId)
+          .votesByVoter(modelKandidat.votesByVoter)
+          .isDiscarded(modelKandidat.isDiscarded)
+          .build();
+        expect(mappedKandidat).toStrictEqual(expectedKandidat);
+      });
+    });
+
+    it("should_handleEmptyKandidatenArray_when_modelKandidatenIsEmpty", () => {
+      const modelWithEmptyKandidaten = prepareStimmzettel()
+        .kandidaten([])
+        .build();
+
+      const result = toDTO(modelWithEmptyKandidaten);
+
+      expect(result.kandidaten).toStrictEqual([]);
+    });
+
+    it("should_handleEmptySelectedWahlvorschlaegeOrdnungszahlen_when_modelArrayIsEmpty", () => {
+      const modelWithEmptySelection = prepareStimmzettel()
+        .selectedWahlvorschlaegeOrdnungszahlen([])
+        .build();
+
+      const result = toDTO(modelWithEmptySelection);
+
+      expect(result.selectedWahlvorschlaegeOrdnungszahlen).toStrictEqual([]);
+    });
+
+    it("should_mapSingleKandidatCorrectly_when_oneKandidatIsGiven", () => {
+      const singleKandidat = createStimmzettelKandidat();
+      const modelWithSingleKandidat = prepareStimmzettel()
+        .kandidaten([singleKandidat])
+        .build();
+
+      const result = toDTO(modelWithSingleKandidat);
+
+      expect(result.kandidaten?.length).toBe(1);
+
+      const expectedKandidat = prepareStimmzettelKandidat()
+        .kandidatId(singleKandidat.kandidatId)
+        .isDiscarded(singleKandidat.isDiscarded)
+        .votesByVoter(singleKandidat.votesByVoter)
+        .build();
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+      const mapped = result.kandidaten![0];
       expect(mapped).toStrictEqual(expectedKandidat);
     });
   });

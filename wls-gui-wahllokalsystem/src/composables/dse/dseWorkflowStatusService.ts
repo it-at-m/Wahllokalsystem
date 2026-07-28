@@ -1,4 +1,4 @@
-import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungStatus.ts";
+import type { StimmzettelerfassungStatus } from "@/types/dse/StimmzettelerfassungStatus.ts";
 
 import {
   Configuration,

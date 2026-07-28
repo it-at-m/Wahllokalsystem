@@ -1,5 +1,5 @@
 import type { StimmzettelerfassungStatusDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungStatus.ts";
+import type { StimmzettelerfassungStatus } from "@/types/dse/StimmzettelerfassungStatus.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";

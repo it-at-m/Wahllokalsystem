@@ -6,19 +6,21 @@
     confirmtext="Bestätigen"
     canceltext="Abbrechen"
     @confirm="onConfirmClicked"
-    @cancel="onCancelClicked"
+    @cancel="$emit('cancel')"
   >
     <div>
       Bitte übertragen Sie die Stimmzettelkennung auf den Papier-Stimmzettel.
     </div>
-    <div>{{ currentUserTeamName }}{{ stimmzettelkennung }}</div>
+    <div class="font-weight-bold text-center">
+      {{ currentUserTeamName }} {{ stimmzettelkennung }}
+    </div>
   </base-dialog>
 </template>
 
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 
-import { onMounted, ref } from "vue";
+import { ref, watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
@@ -34,15 +36,25 @@ const props = defineProps<{
   wahlID: string;
 }>();
 
+const emit = defineEmits<{
+  cancel: [];
+  confirm: [];
+}>();
+
 const stimmzettelkennung = ref<number | null>(null);
 
-onMounted(async () => {
-  stimmzettelkennung.value = await getNextStimmzettelNumber(
-    props.wahlID,
-    currentUserWahlbezirkID,
-    currentUserTeamName
-  );
-});
+watch(
+  () => props.visible,
+  async (newVal) => {
+    if (newVal) {
+      stimmzettelkennung.value = await getNextStimmzettelNumber(
+        props.wahlID,
+        currentUserWahlbezirkID,
+        currentUserTeamName
+      );
+    }
+  }
+);
 
 async function onConfirmClicked() {
   const newStimmzettel = {
@@ -50,15 +62,13 @@ async function onConfirmClicked() {
     selectedWahlvorschlaegeOrdnungszahlen: [],
     kandidaten: [],
   } as Stimmzettel;
+
   await saveStimmzettel(
     props.wahlID,
     currentUserWahlbezirkID,
     currentUserTeamName,
     [newStimmzettel]
   );
-}
-
-function onCancelClicked() {
-  //close dialog
+  emit("confirm");
 }
 </script>

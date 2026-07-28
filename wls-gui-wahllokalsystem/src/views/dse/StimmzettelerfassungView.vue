@@ -27,15 +27,12 @@
         >
       </v-card-actions>
     </v-card>
-    <base-dialog
+    <the-stimmzettelkennung-dialog
       :visible="erfassungDialogVisible"
-      icon="$information"
-      dialogtitle="Stimmzettel erfassen"
-      cancel-disabled
-      confirmtext="Ok"
-      @confirm="erfassungDialogVisible = !erfassungDialogVisible"
-      >🚧 TBD 🚧</base-dialog
-    >
+      wahl-i-d="wahlID"
+      @confirm="erfassungDialogVisible = false"
+      @cancel="erfassungDialogVisible = false"
+    />
     <base-dialog
       :visible="beendenDialogVisible"
       icon="$information"
@@ -55,6 +52,7 @@ import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import TheStimmzettelkennungDialog from "@/components/dse/TheStimmzettelkennungDialog.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useUserStore } from "@/stores/userStore.ts";

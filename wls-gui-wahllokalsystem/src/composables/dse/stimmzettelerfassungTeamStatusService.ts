@@ -55,10 +55,8 @@ export function useStimmzettelerfassungStatusTeamService() {
           teamID
         );
       const responseData = getNullOn204OrElseResponseData(response);
-      let result = null;
-      if (responseData) {
-        result = dtoToModel(responseData);
-      }
+
+      const result = responseData ? dtoToModel(responseData) : null;
       if (sendNotification) {
         const wahlname =
           wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";

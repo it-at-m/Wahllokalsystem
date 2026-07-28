@@ -36,9 +36,6 @@ export function useStimmzettelerfassungTeamStatusMapper() {
   function modelToDto(
     model: StimmzettelerfassungTeamStatus
   ): StimmzettelerfassungTeamStatusDTO {
-    if (!model) {
-      throw new Error("Status nicht gesetzt");
-    }
     return {
       status: STATUS_MODEL_ENUM_TO_DTO_ENUM[model.status],
     };

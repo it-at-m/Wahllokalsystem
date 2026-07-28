@@ -186,7 +186,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.10</version>
+            <version>0.2.11</version>
         </dependency>
 
         <!-- wls-common -->
@@ -543,7 +543,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>13.8.0</version>
+                        <version>13.9.0</version>
                     </dependency>
                 </dependencies>
             </plugin>

@@ -57,6 +57,10 @@ watch(
 );
 
 async function onConfirmClicked() {
+  if (stimmzettelkennung.value === null) {
+    return;
+  }
+
   const newStimmzettel = {
     stimmzettelkennung: stimmzettelkennung.value,
     selectedWahlvorschlaegeOrdnungszahlen: [],

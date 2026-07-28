@@ -29,7 +29,7 @@
     </v-card>
     <the-stimmzettelkennung-dialog
       :visible="erfassungDialogVisible"
-      wahl-i-d="wahlID"
+      :wahl-i-d="wahlID"
       @confirm="erfassungDialogVisible = false"
       @cancel="erfassungDialogVisible = false"
     />

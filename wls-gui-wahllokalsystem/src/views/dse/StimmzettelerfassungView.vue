@@ -37,7 +37,7 @@
       >🚧 TBD 🚧</base-dialog
     >
     <the-stimmzettelerfassung-beenden-dialog
-      :model-value="beendenDialogVisible"
+      v-model="beendenDialogVisible"
       :wahl-id="wahlID"
       :wahlbezirk-id="wahlbezirkID"
       :team-id="teamID"

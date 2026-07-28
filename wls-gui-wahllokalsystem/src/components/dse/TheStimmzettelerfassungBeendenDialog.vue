@@ -2,6 +2,7 @@
   <base-dialog
     :visible="isDialogVisible"
     dialogtitle="Beenden der Stimmzettelerfassung"
+    :is-confirm-loading="isSaving"
     confirmtext="Bestätigen"
     canceltext="Abbrechen"
     icon="$warning"
@@ -25,8 +26,9 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 
-const { isUWB } = storeToRefs(useUserStore());
-const { postErfassungTeamStatus } = useStimmzettelerfassungStatusTeamService();
+const { hasRoleErfassungsteam } = storeToRefs(useUserStore());
+const { isSaving, postErfassungTeamStatus } =
+  useStimmzettelerfassungStatusTeamService();
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,
@@ -52,13 +54,13 @@ async function onConfirmClicked() {
     true
   );
 
-  if (isUWB.value) {
+  if (hasRoleErfassungsteam.value) {
+    await router.push({ name: ROUTE_FINISHED });
+  } else {
     await router.push({
       name: DseStepsEnum.DSE_MONITORING,
       params: { wahlId: props.wahlId, wahlbezirkId: props.wahlbezirkId },
     });
-  } else {
-    await router.push({ name: ROUTE_FINISHED });
   }
   closeDialog();
 }

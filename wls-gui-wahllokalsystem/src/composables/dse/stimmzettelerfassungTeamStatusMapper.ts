@@ -29,8 +29,8 @@ export function useStimmzettelerfassungTeamStatusMapper() {
     dto: StimmzettelerfassungTeamStatusDTO
   ): StimmzettelerfassungTeamStatus {
     return {
-          status: STATUS_DTO_ENUM_TO_MODEL_ENUM[dto.status],
-        };
+      status: STATUS_DTO_ENUM_TO_MODEL_ENUM[dto.status],
+    };
   }
 
   function modelToDto(

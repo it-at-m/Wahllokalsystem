@@ -1,7 +1,7 @@
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
@@ -75,12 +75,52 @@ const {
 const { axiosConfigWrapper } = useCommonApiUtils();
 
 describe("stimmzettelerfassungTeamStatusService.ts", () => {
-  const { loadErfassungTeamStatus, postErfassungTeamStatus } =
+  const { isSaving, loadErfassungTeamStatus, postErfassungTeamStatus } =
     useStimmzettelerfassungStatusTeamService();
 
   beforeEach(() => {
+    vi.useFakeTimers({});
+  });
+
+  afterEach(() => {
     vi.resetAllMocks();
     vi.clearAllMocks();
+    vi.useRealTimers();
+  });
+
+  describe("isSaving", () => {
+    it("should_updateIsSaving_when_functionIsCalled", async () => {
+      const teamID = generateRandomString(8);
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID = generateRandomString(8);
+
+      const model = createStimmzettelerfassungTeamStatusModel();
+      const dto = createStimmzettelerfassungTeamStatusDTOData();
+      mockDefinitions.modelToDto.mockReturnValue(dto);
+
+      const timeout = 100;
+      mockDefinitions.saveStimmzettelerfassungTeamStatus.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(createAxiosResponse({ status: 201 }));
+          }, timeout);
+        })
+      );
+
+      expect(isSaving.value).toBe(false);
+      const servicePromise = postErfassungTeamStatus(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        model,
+        true
+      );
+      expect(isSaving.value).toBe(true);
+
+      vi.advanceTimersByTime(timeout);
+      await servicePromise;
+      expect(isSaving.value).toBe(false);
+    });
   });
 
   describe("loadErfassungTeamStatus", () => {

@@ -36,15 +36,12 @@
       @confirm="erfassungDialogVisible = !erfassungDialogVisible"
       >🚧 TBD 🚧</base-dialog
     >
-    <base-dialog
-      :visible="beendenDialogVisible"
-      icon="$information"
-      dialogtitle="Stimmzettelerfassung beenden"
-      cancel-disabled
-      confirmtext="Ok"
-      @confirm="beendenDialogVisible = !beendenDialogVisible"
-      >🚧 TBD 🚧</base-dialog
-    >
+    <the-stimmzettelerfassung-beenden-dialog
+      v-model="beendenDialogVisible"
+      :wahl-id="wahlID"
+      :wahlbezirk-id="wahlbezirkID"
+      :team-id="teamID"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -55,6 +52,7 @@ import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -131,8 +129,5 @@ async function onErfassungUnterbrechenClicked() {
 
 async function onErfassungBeendenClicked() {
   beendenDialogVisible.value = true;
-  await postTeamStatus({
-    status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN,
-  });
 }
 </script>

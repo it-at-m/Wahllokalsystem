@@ -14,12 +14,16 @@ const mockDefinitions = vi.hoisted(() => ({
 
 vi.mock(
   import("@/composables/dse/stimmzettelerfassungTeamStatusService.ts"),
-  () => ({
-    useStimmzettelerfassungTeamStatusService: () => ({
-      loadErfassungTeamStatus: mockDefinitions.loadErfassungTeamStatus,
-      postErfassungTeamStatus: mockDefinitions.postErfassungTeamStatus,
-    }),
-  })
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useStimmzettelerfassungTeamStatusService: () => ({
+        ...mod.useStimmzettelerfassungTeamStatusService(),
+        loadErfassungTeamStatus: mockDefinitions.loadErfassungTeamStatus,
+        postErfassungTeamStatus: mockDefinitions.postErfassungTeamStatus,
+      }),
+    };
+  }
 );
 
 describe("stimmzettelerfassungTeamStatusUtils.ts", () => {

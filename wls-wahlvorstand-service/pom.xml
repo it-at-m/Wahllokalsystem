@@ -406,7 +406,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.8.6.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.9.1.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
@@ -440,7 +440,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json
+                                ${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.5.4.json
                             </inputSpec>
 
                             <generatorName>java</generatorName>
@@ -475,7 +475,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.4.0.json
+                                ${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.6.1.json
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>

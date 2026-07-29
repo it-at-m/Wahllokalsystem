@@ -1,5 +1,7 @@
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
 
+import { ref } from "vue";
+
 import {
   Configuration,
   StimmzettelerfassungTeamStatusControllerApi,
@@ -21,6 +23,8 @@ export function useStimmzettelerfassungTeamStatusService() {
     new StimmzettelerfassungTeamStatusControllerApi(
       new Configuration({ basePath: ERGEBNISMELDUNG_SERVICE_API_URL })
     );
+
+  const isSaving = ref(false);
 
   async function loadErfassungTeamStatus(
     wahlID: string,
@@ -89,6 +93,7 @@ export function useStimmzettelerfassungTeamStatusService() {
     const { wahlenActions } = useWahlenStore();
     const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
     try {
+      isSaving.value = true;
       await stimmzettelerfassungTeamStatusControllerApi.saveStimmzettelerfassungTeamStatus(
         wahlID,
         wahlbezirkID,
@@ -110,10 +115,13 @@ export function useStimmzettelerfassungTeamStatusService() {
         );
       }
       throw new Error(`Post Team-Status für ${wahlname} failed.`);
+    } finally {
+      isSaving.value = false;
     }
   }
 
   return {
+    isSaving,
     loadErfassungTeamStatus,
     postErfassungTeamStatus,
   };

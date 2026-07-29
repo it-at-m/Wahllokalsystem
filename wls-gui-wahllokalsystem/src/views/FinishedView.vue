@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <h1 class="main-title">Auszählung abgeschlossen</h1>
+    <h1 class="main-title">
+      {{ hasRoleErfassungsteam ? "Stimmzettelerfassung" : "Auszählung" }}
+      abgeschlossen
+    </h1>
     <div class="icon-container">
       <svg
         class="checkmark self-center"
@@ -28,6 +31,14 @@
     </h2>
   </div>
 </template>
+
+<script setup lang="ts">
+import { storeToRefs } from "pinia";
+
+import { useUserStore } from "@/stores/userStore.ts";
+
+const { hasRoleErfassungsteam } = storeToRefs(useUserStore());
+</script>
 
 <style scoped>
 .container {

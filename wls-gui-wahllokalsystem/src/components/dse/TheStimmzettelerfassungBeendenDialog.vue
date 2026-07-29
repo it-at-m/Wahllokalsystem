@@ -51,7 +51,7 @@ const props = defineProps<{
 const {
   isSyncWidgetVisible,
   isSaving,
-  syncronizeDataAndPostTeamErfassungDone,
+  synchronizeDataAndPostTeamErfassungDone,
 } = useStimmzettelerfassungBeendenDialogUtils(
   props.wahlId,
   props.wahlbezirkId,
@@ -63,7 +63,7 @@ function onCancelClicked(): void {
 }
 
 async function onConfirmClicked() {
-  await syncronizeDataAndPostTeamErfassungDone();
+  await synchronizeDataAndPostTeamErfassungDone();
 }
 
 function closeDialog() {

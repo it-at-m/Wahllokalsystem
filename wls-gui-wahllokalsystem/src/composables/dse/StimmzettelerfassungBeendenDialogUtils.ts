@@ -25,7 +25,7 @@ export function useStimmzettelerfassungBeendenDialogUtils(
 
   const isSyncWidgetVisible = ref(false);
 
-  async function syncronizeDataAndPostTeamErfassungDone() {
+  async function synchronizeDataAndPostTeamErfassungDone() {
     isSyncWidgetVisible.value = true;
     const syncResult = await synchronizeOfflineData();
 
@@ -72,6 +72,6 @@ export function useStimmzettelerfassungBeendenDialogUtils(
     isSyncWidgetVisible,
     isSaving,
 
-    syncronizeDataAndPostTeamErfassungDone,
+    synchronizeDataAndPostTeamErfassungDone,
   };
 }

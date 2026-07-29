@@ -11,8 +11,9 @@ import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-export function useStimmzettelerfassungStatusTeamService() {
-  const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+export function useStimmzettelerfassungTeamStatusService() {
+  const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
+    useCommonApiUtils();
   const { addNotification } = useUserNotificationService();
   const { dtoToModel, modelToDto } = useStimmzettelerfassungTeamStatusMapper();
 
@@ -92,7 +93,8 @@ export function useStimmzettelerfassungStatusTeamService() {
         wahlID,
         wahlbezirkID,
         teamID,
-        modelToDto(status)
+        modelToDto(status),
+        axiosConfigWrapper().requestAsOnlineOnly()
       );
       if (sendNotification) {
         addNotification(

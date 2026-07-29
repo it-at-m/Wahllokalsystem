@@ -3,7 +3,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -11,6 +11,7 @@ const mockDefinitions = vi.hoisted(() => ({
   saveStimmzettelerfassungTeamStatus: vi.fn(),
   configurationConstructor: vi.fn(),
   getNullOn204OrElseResponseData: vi.fn(),
+  requestAsOnlineOnly: vi.fn(),
   addNotification: vi.fn(),
   dtoToModel: vi.fn(),
   modelToDto: vi.fn(),
@@ -35,6 +36,9 @@ vi.mock("@/composables/api/commonApiUtils.ts", () => ({
   useCommonApiUtils: () => ({
     getNullOn204OrElseResponseData:
       mockDefinitions.getNullOn204OrElseResponseData,
+    axiosConfigWrapper: () => ({
+      requestAsOnlineOnly: mockDefinitions.requestAsOnlineOnly,
+    }),
   }),
 }));
 
@@ -70,7 +74,7 @@ const {
 
 describe("stimmzettelerfassungTeamStatusService.ts", () => {
   const { loadErfassungTeamStatus, postErfassungTeamStatus } =
-    useStimmzettelerfassungStatusTeamService();
+    useStimmzettelerfassungTeamStatusService();
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -226,13 +230,19 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
         status: 201,
       });
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
+      const requestAsOnlineOnlyMockFunction = () => ({});
+      mockDefinitions.requestAsOnlineOnly.mockReturnValue(
+        requestAsOnlineOnlyMockFunction
+      );
 
       await postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, true);
 
       expect(mockDefinitions.modelToDto.mock.calls).toStrictEqual([[model]]);
       expect(
         mockDefinitions.saveStimmzettelerfassungTeamStatus.mock.calls
-      ).toStrictEqual([[wahlID, wahlbezirkID, teamID, dto]]);
+      ).toStrictEqual([
+        [wahlID, wahlbezirkID, teamID, dto, requestAsOnlineOnlyMockFunction],
+      ]);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         "Team-Status für MBW erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS,

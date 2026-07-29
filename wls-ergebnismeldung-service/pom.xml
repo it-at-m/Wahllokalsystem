@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-ergebnismeldung-service</artifactId>
-    <version>0.7.1-SNAPSHOT</version>
+    <version>0.8.1-SNAPSHOT</version>
     <name>wls_ergebnismeldung_service</name>
 
     <properties>
@@ -435,7 +435,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.8.6.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.9.1.json</inputSpec>
 
                             <apiPackage>${project.groupId}.ergebnismeldungservice.eai.aou.client</apiPackage>
                             <modelPackage>${project.groupId}.ergebnismeldungservice.eai.aou.model</modelPackage>
@@ -447,7 +447,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.monitoring.0.1.0.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.monitoring.0.3.18.json</inputSpec>
 
                             <apiPackage>${groupId}.ergebnismeldungservice.eai.monitoring.client</apiPackage>
                             <modelPackage>${groupId}.ergebnismeldungservice.eai.monitoring.model</modelPackage>
@@ -459,7 +459,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.5.4.json</inputSpec>
 
                             <apiPackage>${groupId}.ergebnismeldungservice.eai.infomanagement.client</apiPackage>
                             <modelPackage>${groupId}.ergebnismeldungservice.eai.infomanagement.model</modelPackage>
@@ -471,7 +471,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.4.0.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.6.1.json</inputSpec>
 
                             <apiPackage>${project.groupId}.ergebnismeldungservice.eai.basisdaten.client</apiPackage>
                             <modelPackage>${project.groupId}.ergebnismeldungservice.eai.basisdaten.model</modelPackage>

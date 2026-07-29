@@ -17,7 +17,7 @@
     <v-card v-if="isSyncWidgetVisible">
       <v-card-title>Offline-Synchronisierung</v-card-title>
       <v-card-text>
-        <the-offline-data-sync-widget v-if="isSyncWidgetVisible" />
+        <the-offline-data-sync-widget />
       </v-card-text>
     </v-card>
   </base-dialog>

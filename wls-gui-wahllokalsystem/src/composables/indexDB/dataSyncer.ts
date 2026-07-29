@@ -1,4 +1,5 @@
 import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
+import type { SyncronizeDataResult } from "@/types/indexDB/SyncronizeDataResult.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
 import axios from "axios";
@@ -41,8 +42,8 @@ export function useDataSyncer() {
     }));
   }
 
-  async function synchronizeOfflineData() {
-    if (isOfflineDataSyncing.value) return;
+  async function synchronizeOfflineData(): Promise<SyncronizeDataResult | null> {
+    if (isOfflineDataSyncing.value) return null;
 
     isOfflineDataSyncing.value = true;
     try {
@@ -55,6 +56,13 @@ export function useDataSyncer() {
       isOfflineDataSyncing.value = false;
       lastSyncUpdateTime.value = new Date();
     }
+
+    return {
+      numberOfTasksRan: taskManager.numberOfTasksToRun.value,
+      numberOfTasksFailed: taskManager.numberOfTasksFailed.value,
+      numberOfTasksSucceeded: taskManager.numberOfTasksSucceeded.value,
+      numberOfDirtyTasksRemaining: dirtyTasksAfterSync.value.length,
+    };
   }
 
   function _compareSyncItemByTimeStamp(

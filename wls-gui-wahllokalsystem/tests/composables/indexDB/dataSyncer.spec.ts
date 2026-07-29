@@ -1,3 +1,4 @@
+import type { SyncronizeDataResult } from "@/types/indexDB/SyncronizeDataResult.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useIndexDBValueTestDataFactory } from "@tests/utils/indexDB/IndexDBValueTestDataFactory.ts";
@@ -16,12 +17,25 @@ import {
 import { useDataSyncer } from "@/composables/indexDB/dataSyncer.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 
-const mockDefinitions = vi.hoisted(() => ({
-  getDirtyItems: vi.fn(),
-  basicPostConfig: vi.fn(),
-  setTasks: vi.fn(),
-  runAllTasks: vi.fn(),
-}));
+const mockDefinitions = await vi.hoisted(async () => {
+  const commonTestDataFactoryImport =
+    await import("@tests/utils/common/CommonTestDataFactory.ts");
+  const { generateRandomNumber } =
+    commonTestDataFactoryImport.useCommonTestDataFactory();
+
+  const { ref } = await import("vue");
+  return {
+    getDirtyItems: vi.fn(),
+    basicPostConfig: vi.fn(),
+    taskManager: {
+      setTasks: vi.fn(),
+      runAllTasks: vi.fn(),
+      numberOfTasksToRun: ref(generateRandomNumber(3)),
+      numberOfTasksSucceeded: ref(generateRandomNumber(3)),
+      numberOfTasksFailed: ref(generateRandomNumber(3)),
+    },
+  };
+});
 
 vi.mock(import("axios"));
 vi.mock(import("@/composables/indexDB/indexDB.ts"), () => ({
@@ -34,8 +48,11 @@ vi.mock("@/api/axios-utils.ts", () => ({
 }));
 vi.mock(import("@/composables/tasks/taskManager.ts"), () => ({
   useTaskManager: vi.fn().mockImplementation(() => ({
-    setTasks: mockDefinitions.setTasks,
-    runAllTasks: mockDefinitions.runAllTasks,
+    setTasks: mockDefinitions.taskManager.setTasks,
+    runAllTasks: mockDefinitions.taskManager.runAllTasks,
+    numberOfTasksToRun: mockDefinitions.taskManager.numberOfTasksToRun,
+    numberOfTasksSucceeded: mockDefinitions.taskManager.numberOfTasksSucceeded,
+    numberOfTasksFailed: mockDefinitions.taskManager.numberOfTasksFailed,
   })),
 }));
 
@@ -102,7 +119,7 @@ describe("dataSyncer.ts", () => {
         },
       ];
       mockDefinitions.getDirtyItems.mockResolvedValue(dirtyTasks);
-      mockDefinitions.runAllTasks.mockRejectedValue(
+      mockDefinitions.taskManager.runAllTasks.mockRejectedValue(
         new Error("mocked task manager error")
       );
 
@@ -120,8 +137,14 @@ describe("dataSyncer.ts", () => {
   });
 
   describe("numberOfDirtyTasksAfterSync", () => {
-    it("should_return0_when_dirtyTasksAfterSyncIsNull", () => {
+    it("should_returnUndefined_when_dirtyTasksAfterSyncIsNull", () => {
       unitUnderTest.dirtyTasksAfterSync.value = null;
+      expect(unitUnderTest.numberOfDirtyTasksAfterSync.value).toStrictEqual(
+        undefined
+      );
+    });
+    it("should_returnUndefined_when_dirtyTasksAfterSyncIsEmpty", () => {
+      unitUnderTest.dirtyTasksAfterSync.value = [];
       expect(unitUnderTest.numberOfDirtyTasksAfterSync.value).toStrictEqual(0);
     });
     it("should_returnLength_when_dirtyTasksAfterSyncIsNotNull", () => {
@@ -229,13 +252,37 @@ describe("dataSyncer.ts", () => {
       isOfflineDataSyncingSpy.mockRestore();
     });
 
+    it("should_returnNull_when_syncIsAlreadyInProgress", async () => {
+      const isOfflineDataSyncingSpy = spyOn(
+        unitUnderTest.isOfflineDataSyncing,
+        "value",
+        "get"
+      );
+      isOfflineDataSyncingSpy.mockReturnValue(true);
+
+      const result = await unitUnderTest.synchronizeOfflineData();
+      expect(result).toStrictEqual(null);
+
+      isOfflineDataSyncingSpy.mockRestore();
+    });
+
     it("should_syncingTasks_when_called", async () => {
       mockDefinitions.getDirtyItems.mockResolvedValue([]);
 
-      await unitUnderTest.synchronizeOfflineData();
+      const result = await unitUnderTest.synchronizeOfflineData();
 
-      expect(mockDefinitions.setTasks).toHaveBeenCalledOnce();
-      expect(mockDefinitions.runAllTasks).toHaveBeenCalledOnce();
+      expect(mockDefinitions.taskManager.setTasks).toHaveBeenCalledOnce();
+      expect(mockDefinitions.taskManager.runAllTasks).toHaveBeenCalledOnce();
+
+      const expectedResult: SyncronizeDataResult = {
+        numberOfDirtyTasksRemaining: 0,
+        numberOfTasksSucceeded:
+          mockDefinitions.taskManager.numberOfTasksSucceeded.value,
+        numberOfTasksFailed:
+          mockDefinitions.taskManager.numberOfTasksFailed.value,
+        numberOfTasksRan: mockDefinitions.taskManager.numberOfTasksToRun.value,
+      };
+      expect(result).toStrictEqual(expectedResult);
     });
 
     it("should_notDoAnything_when_syncIsInProgress", async () => {
@@ -244,8 +291,8 @@ describe("dataSyncer.ts", () => {
       unitUnderTest.isOfflineDataSyncing.value = false;
 
       expect(mockDefinitions.getDirtyItems).not.toHaveBeenCalled();
-      expect(mockDefinitions.setTasks).not.toHaveBeenCalled();
-      expect(mockDefinitions.runAllTasks).not.toHaveBeenCalled();
+      expect(mockDefinitions.taskManager.setTasks).not.toHaveBeenCalled();
+      expect(mockDefinitions.taskManager.runAllTasks).not.toHaveBeenCalled();
     });
 
     it("should_setIsSyncingFalse_when_anErrorOccurred", async () => {
@@ -255,13 +302,21 @@ describe("dataSyncer.ts", () => {
         "set"
       );
       mockDefinitions.getDirtyItems.mockResolvedValue([]);
-      mockDefinitions.runAllTasks.mockRejectedValueOnce(
+      mockDefinitions.taskManager.runAllTasks.mockRejectedValueOnce(
         new Error("mocked error while running tasks")
       );
 
+      const expectedResult: SyncronizeDataResult = {
+        numberOfDirtyTasksRemaining: 0,
+        numberOfTasksSucceeded:
+          mockDefinitions.taskManager.numberOfTasksSucceeded.value,
+        numberOfTasksFailed:
+          mockDefinitions.taskManager.numberOfTasksFailed.value,
+        numberOfTasksRan: mockDefinitions.taskManager.numberOfTasksToRun.value,
+      };
       await expect(
         unitUnderTest.synchronizeOfflineData()
-      ).resolves.toBeUndefined();
+      ).resolves.toStrictEqual(expectedResult);
 
       expect(isOfflineDataSyncingSpy.mock.calls).toStrictEqual([
         [true],

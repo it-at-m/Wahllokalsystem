@@ -47,8 +47,7 @@ const { addNotification } = useUserNotificationService();
 
 const dataSyncStore = useDataSyncStore();
 const { synchronizeOfflineData } = dataSyncStore;
-const { isOfflineDataSyncing, numberOfDirtyTasksAfterSync } =
-  storeToRefs(dataSyncStore);
+const { isOfflineDataSyncing } = storeToRefs(dataSyncStore);
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,
@@ -69,8 +68,17 @@ function onCancelClicked(): void {
 
 async function onConfirmClicked() {
   isSyncWidgetVisible.value = true;
-  await synchronizeOfflineData();
-  if (numberOfDirtyTasksAfterSync.value) {
+  const syncResult = await synchronizeOfflineData();
+
+  if (!syncResult) {
+    addNotification(
+      "Synchronising läuft bereits. Bitte versuchen Sie es erneut später.",
+      UserNotificationCategoryEnum.WARNING
+    );
+    return;
+  }
+
+  if (syncResult.numberOfDirtyTasksRemaining > 0) {
     addNotification(
       "Beenden kann nicht abgeschlossen werden, weil die Synchronisierung nicht erfolgreich war.",
       UserNotificationCategoryEnum.ERROR

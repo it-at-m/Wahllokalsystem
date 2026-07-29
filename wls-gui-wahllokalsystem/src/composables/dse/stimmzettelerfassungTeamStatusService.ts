@@ -32,25 +32,6 @@ export function useStimmzettelerfassungStatusTeamService() {
     teamID: string,
     sendNotification = true
   ): Promise<StimmzettelerfassungTeamStatus | null> {
-    if (!teamID) {
-      addNotification(
-        `Fehler beim Laden des Team-Status: Fehlender Parameter teamID`,
-        UserNotificationCategoryEnum.ERROR
-      );
-      return null;
-    } else if (!wahlID) {
-      addNotification(
-        `Fehler beim Laden des Team-Status: Fehlender Parameter wahlID`,
-        UserNotificationCategoryEnum.ERROR
-      );
-      return null;
-    } else if (!wahlbezirkID) {
-      addNotification(
-        `Fehler beim Laden des Team-Status: Fehlender Parameter wahlBezirkID`,
-        UserNotificationCategoryEnum.ERROR
-      );
-      return null;
-    }
     const { wahlenActions } = useWahlenStore();
     try {
       const response =

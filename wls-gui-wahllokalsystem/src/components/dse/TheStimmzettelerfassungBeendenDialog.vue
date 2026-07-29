@@ -17,10 +17,7 @@
     <v-card v-if="isSyncWidgetVisible">
       <v-card-title>Offline-Synchronisierung</v-card-title>
       <v-card-text>
-        <base-offline-data-sync-widget
-          v-if="isSyncWidgetVisible"
-          :dirty-tasks="dirtyTasks"
-        />
+        <the-offline-data-sync-widget v-if="isSyncWidgetVisible" />
       </v-card-text>
     </v-card>
   </base-dialog>
@@ -28,10 +25,10 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-import BaseOfflineDataSyncWidget from "@/components/common/widgets/BaseOfflineDataSyncWidget.vue";
+import TheOfflineDataSyncWidget from "@/components/common/widgets/TheOfflineDataSyncWidget.vue";
 import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_FINISHED } from "@/constants.ts";
@@ -49,8 +46,9 @@ const { isSaving, postErfassungTeamStatus } =
 const { addNotification } = useUserNotificationService();
 
 const dataSyncStore = useDataSyncStore();
-const { synchronizeOfflineData, getSyncTasks } = dataSyncStore;
-const { isOfflineDataSyncing } = storeToRefs(dataSyncStore);
+const { synchronizeOfflineData } = dataSyncStore;
+const { isOfflineDataSyncing, numberOfDirtyTasksAfterSync } =
+  storeToRefs(dataSyncStore);
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,
@@ -64,8 +62,6 @@ const props = defineProps<{
 }>();
 
 const isSyncWidgetVisible = ref(false);
-const dirtyTasks = ref(0);
-const hasDirtyTasks = computed(() => dirtyTasks.value > 0);
 
 function onCancelClicked(): void {
   closeDialog();
@@ -73,11 +69,8 @@ function onCancelClicked(): void {
 
 async function onConfirmClicked() {
   isSyncWidgetVisible.value = true;
-  await updateDirtyTasks();
-  if (hasDirtyTasks.value) {
-    await synchronizeData();
-  }
-  if (hasDirtyTasks.value) {
+  await synchronizeOfflineData();
+  if (numberOfDirtyTasksAfterSync.value) {
     addNotification(
       "Beenden kann nicht abgeschlossen werden, weil die Synchronisierung nicht erfolgreich war.",
       UserNotificationCategoryEnum.ERROR
@@ -106,17 +99,5 @@ async function onConfirmClicked() {
 function closeDialog() {
   isDialogVisible.value = false;
   isSyncWidgetVisible.value = false;
-}
-
-async function synchronizeData() {
-  if (isOfflineDataSyncing.value) return;
-
-  await synchronizeOfflineData();
-  await updateDirtyTasks();
-}
-
-async function updateDirtyTasks() {
-  const openTasks = await getSyncTasks();
-  dirtyTasks.value = openTasks.length;
 }
 </script>

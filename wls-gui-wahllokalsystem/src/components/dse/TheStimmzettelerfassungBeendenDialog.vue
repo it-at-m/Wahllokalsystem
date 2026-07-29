@@ -25,28 +25,13 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import TheOfflineDataSyncWidget from "@/components/common/widgets/TheOfflineDataSyncWidget.vue";
-import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
-import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
-import { ROUTE_FINISHED } from "@/constants.ts";
-import router from "@/plugins/router.ts";
+import { useStimmzettelerfassungBeendenDialogUtils } from "@/composables/dse/StimmzettelerfassungBeendenDialogUtils.ts";
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
-import { useUserStore } from "@/stores/userStore.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
-import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
-import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
-
-const { hasRoleErfassungsteam } = storeToRefs(useUserStore());
-const { isSaving, postErfassungTeamStatus } =
-  useStimmzettelerfassungStatusTeamService();
-
-const { addNotification } = useUserNotificationService();
 
 const dataSyncStore = useDataSyncStore();
-const { synchronizeOfflineData } = dataSyncStore;
 const { isOfflineDataSyncing } = storeToRefs(dataSyncStore);
 
 const isDialogVisible = defineModel("modelValue", {
@@ -60,48 +45,22 @@ const props = defineProps<{
   teamId: string;
 }>();
 
-const isSyncWidgetVisible = ref(false);
+const {
+  isSyncWidgetVisible,
+  isSaving,
+  syncronizeDataAndPostTeamErfassungDone,
+} = useStimmzettelerfassungBeendenDialogUtils(
+  props.wahlId,
+  props.wahlbezirkId,
+  closeDialog
+);
 
 function onCancelClicked(): void {
   closeDialog();
 }
 
 async function onConfirmClicked() {
-  isSyncWidgetVisible.value = true;
-  const syncResult = await synchronizeOfflineData();
-
-  if (!syncResult) {
-    addNotification(
-      "Synchronising läuft bereits. Bitte versuchen Sie es erneut später.",
-      UserNotificationCategoryEnum.WARNING
-    );
-    return;
-  }
-
-  if (syncResult.numberOfDirtyTasksRemaining > 0) {
-    addNotification(
-      "Beenden kann nicht abgeschlossen werden, weil die Synchronisierung nicht erfolgreich war.",
-      UserNotificationCategoryEnum.ERROR
-    );
-  } else {
-    await postErfassungTeamStatus(
-      props.wahlId,
-      props.wahlbezirkId,
-      props.teamId,
-      { status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN },
-      true
-    );
-
-    if (hasRoleErfassungsteam.value) {
-      await router.push({ name: ROUTE_FINISHED });
-    } else {
-      await router.push({
-        name: DseStepsEnum.DSE_MONITORING,
-        params: { wahlId: props.wahlId, wahlbezirkId: props.wahlbezirkId },
-      });
-    }
-    closeDialog();
-  }
+  await syncronizeDataAndPostTeamErfassungDone();
 }
 
 function closeDialog() {

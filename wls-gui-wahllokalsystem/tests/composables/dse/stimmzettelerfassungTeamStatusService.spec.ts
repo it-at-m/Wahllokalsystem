@@ -7,17 +7,22 @@ import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const mockDefinitions = vi.hoisted(() => ({
-  getStimmzettelerfassungTeamStatus: vi.fn(),
-  saveStimmzettelerfassungTeamStatus: vi.fn(),
-  configurationConstructor: vi.fn(),
-  getNullOn204OrElseResponseData: vi.fn(),
-  addNotification: vi.fn(),
-  dtoToModel: vi.fn(),
-  modelToDto: vi.fn(),
-  getWahlNameOrBlankStringById: vi.fn(),
-  requestAsOnlineOnly: vi.fn(),
-}));
+const mockDefinitions = vi.hoisted(() => {
+  const sentinelAxiosConfig = { sentinel: "config" };
+
+  return {
+    getStimmzettelerfassungTeamStatus: vi.fn(),
+    saveStimmzettelerfassungTeamStatus: vi.fn(),
+    configurationConstructor: vi.fn(),
+    getNullOn204OrElseResponseData: vi.fn(),
+    addNotification: vi.fn(),
+    dtoToModel: vi.fn(),
+    modelToDto: vi.fn(),
+    getWahlNameOrBlankStringById: vi.fn(),
+    requestAsOnlineOnly: vi.fn(() => sentinelAxiosConfig),
+    sentinelAxiosConfig,
+  };
+});
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
   StimmzettelerfassungTeamStatusControllerApi: class {
@@ -38,7 +43,7 @@ vi.mock("@/composables/api/commonApiUtils.ts", () => ({
     getNullOn204OrElseResponseData:
       mockDefinitions.getNullOn204OrElseResponseData,
     axiosConfigWrapper: () => ({
-      requestAsOnlineOnly: vi.fn(),
+      requestAsOnlineOnly: mockDefinitions.requestAsOnlineOnly,
     }),
   }),
 }));
@@ -72,7 +77,6 @@ const {
   createStimmzettelerfassungTeamStatusDtoEnumValue,
   createStimmzettelerfassungTeamStatusModel,
 } = useStimmzettelerfassungTeamStatusTestDataFactory();
-const { axiosConfigWrapper } = useCommonApiUtils();
 
 describe("stimmzettelerfassungTeamStatusService.ts", () => {
   const { isSaving, loadErfassungTeamStatus, postErfassungTeamStatus } =
@@ -275,6 +279,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
 
       await postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, true);
 
+      expect(mockDefinitions.requestAsOnlineOnly).toHaveBeenCalledTimes(1);
       expect(mockDefinitions.modelToDto.mock.calls).toStrictEqual([[model]]);
       expect(
         mockDefinitions.saveStimmzettelerfassungTeamStatus.mock.calls
@@ -284,7 +289,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
           wahlbezirkID,
           teamID,
           dto,
-          axiosConfigWrapper().requestAsOnlineOnly(),
+          mockDefinitions.sentinelAxiosConfig,
         ],
       ]);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([

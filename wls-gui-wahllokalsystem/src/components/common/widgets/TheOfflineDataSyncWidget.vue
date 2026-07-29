@@ -16,7 +16,7 @@
         class="my-5"
       />
     </div>
-    <div v-if="!hasTasksToRun || !hasDirtyTasksAfterSync">
+    <div v-if="!hasTasksToRun || numberOfDirtyTasksAfterSync === 0">
       <v-icon
         icon="$valid"
         color="success"
@@ -62,7 +62,6 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 
 const {
-  hasDirtyTasksAfterSync,
   hasTasksToRun,
   isOfflineDataSyncing,
   numberOfDirtyTasksAfterSync,

@@ -119,32 +119,6 @@ describe("dataSyncer.ts", () => {
     });
   });
 
-  describe("hasDirtyTasksAfterSync", () => {
-    it("should_returnFalse_when_dirtyTasksAfterSyncIsNull", () => {
-      unitUnderTest.dirtyTasksAfterSync.value = null;
-      expect(unitUnderTest.hasDirtyTasksAfterSync.value).toStrictEqual(false);
-    });
-    it("should_returnFalse_when_dirtyTasksAfterSyncIsEmptyArray", () => {
-      unitUnderTest.dirtyTasksAfterSync.value = [];
-      expect(unitUnderTest.hasDirtyTasksAfterSync.value).toStrictEqual(false);
-    });
-    it("should_returnTrue_when_dirtyTasksAfterSyncIsArrayWithOneItem", () => {
-      unitUnderTest.dirtyTasksAfterSync.value = [createTask("1")];
-      expect(unitUnderTest.hasDirtyTasksAfterSync.value).toStrictEqual(true);
-    });
-    it("should_returnTrue_when_dirtyTasksAfterSyncIsArrayWithMultipleItems", () => {
-      unitUnderTest.dirtyTasksAfterSync.value = [
-        createTask("1"),
-        createTask("2"),
-        createTask("3"),
-        createTask("4"),
-        createTask("5"),
-        createTask("6"),
-      ];
-      expect(unitUnderTest.hasDirtyTasksAfterSync.value).toStrictEqual(true);
-    });
-  });
-
   describe("numberOfDirtyTasksAfterSync", () => {
     it("should_return0_when_dirtyTasksAfterSyncIsNull", () => {
       unitUnderTest.dirtyTasksAfterSync.value = null;

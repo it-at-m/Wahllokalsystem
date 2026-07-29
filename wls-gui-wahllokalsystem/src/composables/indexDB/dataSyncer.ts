@@ -22,10 +22,7 @@ export function useDataSyncer() {
   const dirtyTasksAfterSync = ref<Task[] | null>(null);
 
   const numberOfDirtyTasksAfterSync = computed(
-    () => dirtyTasksAfterSync.value?.length ?? 0
-  );
-  const hasDirtyTasksAfterSync = computed(
-    () => numberOfDirtyTasksAfterSync.value > 0
+    (): number | undefined => dirtyTasksAfterSync.value?.length
   );
 
   async function getSyncTasks() {
@@ -87,6 +84,5 @@ export function useDataSyncer() {
     lastSyncUpdateTime,
     isOfflineDataSyncing,
     dirtyTasksAfterSync,
-    hasDirtyTasksAfterSync,
   };
 }

@@ -11,12 +11,11 @@ export function useStimmzettelerfassungTeamStatusUtils() {
     storeToRefs(useUserStore());
 
   async function initStimmzettelerfassungTeamStatus() {
-    currentUserWahlMetadata.value.map(async (metadata) => {
+    for (const metadata of currentUserWahlMetadata.value) {
       const teamStatus = await loadErfassungTeamStatus(
         metadata.wahlID,
         metadata.wahlbezirkID,
-        currentUserTeamName.value,
-        false
+        currentUserTeamName.value
       );
       if (!teamStatus) {
         await postErfassungTeamStatus(
@@ -26,7 +25,7 @@ export function useStimmzettelerfassungTeamStatusUtils() {
           { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT }
         );
       }
-    });
+    }
   }
 
   return {

@@ -16,7 +16,7 @@
         class="my-5"
       />
     </div>
-    <div v-if="!hasDirtyTasks">
+    <div v-if="!hasTasksToRun || !hasDirtyTasksAfterSync">
       <v-icon
         icon="$valid"
         color="success"
@@ -49,33 +49,26 @@
           class="mr-2"
           size="x-small"
         />
-        Fehlgeschlagene Datensätze: {{ dirtyTasks }}
+        Fehlgeschlagene Datensätze: {{ numberOfDirtyTasksAfterSync }}
       </v-row>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
 
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 
 const {
+  hasDirtyTasksAfterSync,
+  hasTasksToRun,
   isOfflineDataSyncing,
+  numberOfDirtyTasksAfterSync,
   numberOfTasksFinished,
   numberOfTasksToRun,
   lastSyncUpdateTime,
 } = storeToRefs(useDataSyncStore());
 const { toHhMm } = useDateTimeFormatter();
-
-const props = defineProps({
-  dirtyTasks: {
-    type: Number,
-    required: true,
-  },
-});
-
-const hasDirtyTasks = computed(() => props.dirtyTasks > 0);
 </script>

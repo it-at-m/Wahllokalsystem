@@ -1,7 +1,8 @@
 import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
+import type { Task } from "@/types/tasks/Task.ts";
 
 import axios from "axios";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import { basicPostConfig } from "@/api/axios-utils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
@@ -18,6 +19,14 @@ export function useDataSyncer() {
   const taskManager = useTaskManager();
   const isOfflineDataSyncing = ref(false);
   const lastSyncUpdateTime = ref<null | Date>(null);
+  const dirtyTasksAfterSync = ref<Task[] | null>(null);
+
+  const numberOfDirtyTasksAfterSync = computed(
+    () => dirtyTasksAfterSync.value?.length ?? 0
+  );
+  const hasDirtyTasksAfterSync = computed(
+    () => numberOfDirtyTasksAfterSync.value > 0
+  );
 
   async function getSyncTasks() {
     const itemsToSync = await indexDBSingleton.getDirtyItems();
@@ -36,10 +45,13 @@ export function useDataSyncer() {
   }
 
   async function synchronizeOfflineData() {
+    if (isOfflineDataSyncing.value) return;
+
     isOfflineDataSyncing.value = true;
     try {
       taskManager.setTasks(await getSyncTasks());
       await taskManager.runAllTasks();
+      dirtyTasksAfterSync.value = await getSyncTasks();
     } catch (e) {
       logDebug("Fehler beim Synchronisieren", e);
     } finally {
@@ -71,7 +83,10 @@ export function useDataSyncer() {
     ...taskManager,
     getSyncTasks,
     synchronizeOfflineData,
+    numberOfDirtyTasksAfterSync,
     lastSyncUpdateTime,
     isOfflineDataSyncing,
+    dirtyTasksAfterSync,
+    hasDirtyTasksAfterSync,
   };
 }

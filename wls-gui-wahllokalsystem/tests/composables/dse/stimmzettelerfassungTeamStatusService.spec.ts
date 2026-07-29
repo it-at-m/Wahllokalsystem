@@ -1,21 +1,27 @@
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const mockDefinitions = vi.hoisted(() => ({
-  getStimmzettelerfassungTeamStatus: vi.fn(),
-  saveStimmzettelerfassungTeamStatus: vi.fn(),
-  configurationConstructor: vi.fn(),
-  getNullOn204OrElseResponseData: vi.fn(),
-  addNotification: vi.fn(),
-  dtoToModel: vi.fn(),
-  modelToDto: vi.fn(),
-  getWahlNameOrBlankStringById: vi.fn(),
-}));
+const mockDefinitions = vi.hoisted(() => {
+  const sentinelAxiosConfig = { sentinel: "config" };
+
+  return {
+    getStimmzettelerfassungTeamStatus: vi.fn(),
+    saveStimmzettelerfassungTeamStatus: vi.fn(),
+    configurationConstructor: vi.fn(),
+    getNullOn204OrElseResponseData: vi.fn(),
+    addNotification: vi.fn(),
+    dtoToModel: vi.fn(),
+    modelToDto: vi.fn(),
+    getWahlNameOrBlankStringById: vi.fn(),
+    requestAsOnlineOnly: vi.fn(() => sentinelAxiosConfig),
+    sentinelAxiosConfig,
+  };
+});
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
   StimmzettelerfassungTeamStatusControllerApi: class {
@@ -35,6 +41,9 @@ vi.mock("@/composables/api/commonApiUtils.ts", () => ({
   useCommonApiUtils: () => ({
     getNullOn204OrElseResponseData:
       mockDefinitions.getNullOn204OrElseResponseData,
+    axiosConfigWrapper: () => ({
+      requestAsOnlineOnly: mockDefinitions.requestAsOnlineOnly,
+    }),
   }),
 }));
 
@@ -69,12 +78,52 @@ const {
 } = useStimmzettelerfassungTeamStatusTestDataFactory();
 
 describe("stimmzettelerfassungTeamStatusService.ts", () => {
-  const { loadErfassungTeamStatus, postErfassungTeamStatus } =
+  const { isSaving, loadErfassungTeamStatus, postErfassungTeamStatus } =
     useStimmzettelerfassungStatusTeamService();
 
   beforeEach(() => {
+    vi.useFakeTimers({});
+  });
+
+  afterEach(() => {
     vi.resetAllMocks();
     vi.clearAllMocks();
+    vi.useRealTimers();
+  });
+
+  describe("isSaving", () => {
+    it("should_updateIsSaving_when_functionIsCalled", async () => {
+      const teamID = generateRandomString(8);
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID = generateRandomString(8);
+
+      const model = createStimmzettelerfassungTeamStatusModel();
+      const dto = createStimmzettelerfassungTeamStatusDTOData();
+      mockDefinitions.modelToDto.mockReturnValue(dto);
+
+      const timeout = 100;
+      mockDefinitions.saveStimmzettelerfassungTeamStatus.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(createAxiosResponse({ status: 201 }));
+          }, timeout);
+        })
+      );
+
+      expect(isSaving.value).toBe(false);
+      const servicePromise = postErfassungTeamStatus(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        model,
+        true
+      );
+      expect(isSaving.value).toBe(true);
+
+      vi.advanceTimersByTime(timeout);
+      await servicePromise;
+      expect(isSaving.value).toBe(false);
+    });
   });
 
   describe("loadErfassungTeamStatus", () => {
@@ -229,10 +278,19 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
 
       await postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, true);
 
+      expect(mockDefinitions.requestAsOnlineOnly).toHaveBeenCalledTimes(1);
       expect(mockDefinitions.modelToDto.mock.calls).toStrictEqual([[model]]);
       expect(
         mockDefinitions.saveStimmzettelerfassungTeamStatus.mock.calls
-      ).toStrictEqual([[wahlID, wahlbezirkID, teamID, dto]]);
+      ).toStrictEqual([
+        [
+          wahlID,
+          wahlbezirkID,
+          teamID,
+          dto,
+          mockDefinitions.sentinelAxiosConfig,
+        ],
+      ]);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         "Team-Status für MBW erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS,

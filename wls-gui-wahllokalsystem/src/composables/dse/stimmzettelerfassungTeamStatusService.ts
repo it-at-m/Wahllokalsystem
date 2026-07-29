@@ -1,5 +1,7 @@
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
 
+import { ref } from "vue";
+
 import {
   Configuration,
   StimmzettelerfassungTeamStatusControllerApi,
@@ -15,11 +17,14 @@ export function useStimmzettelerfassungStatusTeamService() {
   const { getNullOn204OrElseResponseData } = useCommonApiUtils();
   const { addNotification } = useUserNotificationService();
   const { dtoToModel, modelToDto } = useStimmzettelerfassungTeamStatusMapper();
+  const { axiosConfigWrapper } = useCommonApiUtils();
 
   const stimmzettelerfassungTeamStatusControllerApi =
     new StimmzettelerfassungTeamStatusControllerApi(
       new Configuration({ basePath: ERGEBNISMELDUNG_SERVICE_API_URL })
     );
+
+  const isSaving = ref(false);
 
   async function loadErfassungTeamStatus(
     wahlID: string,
@@ -69,11 +74,13 @@ export function useStimmzettelerfassungStatusTeamService() {
     const { wahlenActions } = useWahlenStore();
     const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
     try {
+      isSaving.value = true;
       await stimmzettelerfassungTeamStatusControllerApi.saveStimmzettelerfassungTeamStatus(
         wahlID,
         wahlbezirkID,
         teamID,
-        modelToDto(status)
+        modelToDto(status),
+        axiosConfigWrapper().requestAsOnlineOnly()
       );
       if (sendNotification) {
         addNotification(
@@ -89,10 +96,13 @@ export function useStimmzettelerfassungStatusTeamService() {
         );
       }
       throw new Error(`Post Team-Status für ${wahlname} failed.`);
+    } finally {
+      isSaving.value = false;
     }
   }
 
   return {
+    isSaving,
     loadErfassungTeamStatus,
     postErfassungTeamStatus,
   };

@@ -17,6 +17,7 @@ export function useStimmzettelerfassungStatusTeamService() {
   const { getNullOn204OrElseResponseData } = useCommonApiUtils();
   const { addNotification } = useUserNotificationService();
   const { dtoToModel, modelToDto } = useStimmzettelerfassungTeamStatusMapper();
+  const { axiosConfigWrapper } = useCommonApiUtils();
 
   const stimmzettelerfassungTeamStatusControllerApi =
     new StimmzettelerfassungTeamStatusControllerApi(
@@ -97,7 +98,8 @@ export function useStimmzettelerfassungStatusTeamService() {
         wahlID,
         wahlbezirkID,
         teamID,
-        modelToDto(status)
+        modelToDto(status),
+        axiosConfigWrapper().requestAsOnlineOnly()
       );
       if (sendNotification) {
         addNotification(

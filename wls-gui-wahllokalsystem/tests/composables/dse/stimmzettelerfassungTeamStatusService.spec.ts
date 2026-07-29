@@ -3,6 +3,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -15,6 +16,7 @@ const mockDefinitions = vi.hoisted(() => ({
   dtoToModel: vi.fn(),
   modelToDto: vi.fn(),
   getWahlNameOrBlankStringById: vi.fn(),
+  requestAsOnlineOnly: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
@@ -35,6 +37,9 @@ vi.mock("@/composables/api/commonApiUtils.ts", () => ({
   useCommonApiUtils: () => ({
     getNullOn204OrElseResponseData:
       mockDefinitions.getNullOn204OrElseResponseData,
+    axiosConfigWrapper: () => ({
+      requestAsOnlineOnly: vi.fn(),
+    }),
   }),
 }));
 
@@ -67,6 +72,7 @@ const {
   createStimmzettelerfassungTeamStatusDtoEnumValue,
   createStimmzettelerfassungTeamStatusModel,
 } = useStimmzettelerfassungTeamStatusTestDataFactory();
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 describe("stimmzettelerfassungTeamStatusService.ts", () => {
   const { loadErfassungTeamStatus, postErfassungTeamStatus } =
@@ -232,7 +238,15 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       expect(mockDefinitions.modelToDto.mock.calls).toStrictEqual([[model]]);
       expect(
         mockDefinitions.saveStimmzettelerfassungTeamStatus.mock.calls
-      ).toStrictEqual([[wahlID, wahlbezirkID, teamID, dto]]);
+      ).toStrictEqual([
+        [
+          wahlID,
+          wahlbezirkID,
+          teamID,
+          dto,
+          axiosConfigWrapper().requestAsOnlineOnly(),
+        ],
+      ]);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         "Team-Status für MBW erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS,

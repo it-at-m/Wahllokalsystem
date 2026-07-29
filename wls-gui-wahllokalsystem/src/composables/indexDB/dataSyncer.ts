@@ -51,10 +51,10 @@ export function useDataSyncer() {
     try {
       taskManager.setTasks(await getSyncTasks());
       await taskManager.runAllTasks();
-      dirtyTasksAfterSync.value = await getSyncTasks();
     } catch (e) {
       logDebug("Fehler beim Synchronisieren", e);
     } finally {
+      dirtyTasksAfterSync.value = await getSyncTasks();
       isOfflineDataSyncing.value = false;
       lastSyncUpdateTime.value = new Date();
     }

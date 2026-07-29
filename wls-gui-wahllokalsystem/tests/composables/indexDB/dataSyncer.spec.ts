@@ -90,6 +90,33 @@ describe("dataSyncer.ts", () => {
       await unitUnderTest.synchronizeOfflineData();
       expect(unitUnderTest.dirtyTasksAfterSync.value).toStrictEqual([]);
     });
+    it("should_updateDirtyTasksAfterSync_when_runAllTasksThrowError", async () => {
+      const dirtyTasks = [
+        {
+          key: "key1",
+          item: prepareIndexDBValue().data("data1").timestamp(9).build(),
+        },
+        {
+          key: "key2",
+          item: prepareIndexDBValue().data("2").timestamp(10).build(),
+        },
+      ];
+      mockDefinitions.getDirtyItems.mockResolvedValue(dirtyTasks);
+      mockDefinitions.runAllTasks.mockRejectedValue(
+        new Error("mocked task manager error")
+      );
+
+      expect(unitUnderTest.dirtyTasksAfterSync.value).toStrictEqual(null);
+      await unitUnderTest.synchronizeOfflineData();
+
+      const expectedTasks = [
+        { name: "key1", callback: expect.anything() },
+        { name: "key2", callback: expect.anything() },
+      ];
+      expect(unitUnderTest.dirtyTasksAfterSync.value).toStrictEqual(
+        expectedTasks
+      );
+    });
   });
 
   describe("hasDirtyTasksAfterSync", () => {

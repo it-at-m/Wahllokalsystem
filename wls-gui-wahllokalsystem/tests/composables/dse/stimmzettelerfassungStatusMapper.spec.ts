@@ -1,4 +1,4 @@
-import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungStatus.ts";
+import type { StimmzettelerfassungStatus } from "@/types/dse/StimmzettelerfassungStatus.ts";
 
 import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { describe, expect, it } from "vitest";

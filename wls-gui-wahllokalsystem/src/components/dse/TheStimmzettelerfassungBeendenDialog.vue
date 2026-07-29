@@ -14,7 +14,10 @@
       abgeschlossen ist und keine weiteren Papier-Stimmzettel mehr erfasst oder
       korrigiert werden sollen.
     </div>
-    <v-card v-if="isSyncWidgetVisible">
+    <v-card
+      v-if="isSyncWidgetVisible"
+      class="mt-2"
+    >
       <v-card-title>Offline-Synchronisierung</v-card-title>
       <v-card-text>
         <the-offline-data-sync-widget />

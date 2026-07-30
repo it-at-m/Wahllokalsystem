@@ -30,7 +30,7 @@
     <the-stimmzettelkennung-dialog
       :visible="erfassungDialogVisible"
       :wahl-i-d="wahlID"
-      @confirm="erfassungDialogVisible = false"
+      @confirm="onStimmzettelkennungConfirmed"
       @cancel="erfassungDialogVisible = false"
     />
     <the-stimmzettelerfassung-beenden-dialog
@@ -111,11 +111,15 @@ async function postTeamStatus(
   }
 }
 
-async function onErfassungStartenClicked() {
+function onErfassungStartenClicked() {
+  erfassungDialogVisible.value = true;
+}
+
+async function onStimmzettelkennungConfirmed() {
   await postTeamStatus({
     status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
   });
-  erfassungDialogVisible.value = true;
+  erfassungDialogVisible.value = false;
 }
 
 async function onErfassungUnterbrechenClicked() {

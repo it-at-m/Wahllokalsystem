@@ -1,9 +1,11 @@
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
 
 const { prepareStimmzettel } = useStimmzettelTestDataFactory();
+const { generateRandomString } = useCommonTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   getStimmzettel: vi.fn(),
@@ -19,11 +21,11 @@ vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
 describe("stimmzettelUtils.ts", () => {
   const { getNextStimmzettelNumber } = useStimmzettelUtils();
 
-  const wahlID = "wahlID";
-  const wahlbezirkID = "wahlbezirkID";
-  const teamID = "A";
+  const wahlID = generateRandomString(10);
+  const wahlbezirkID = generateRandomString(10);
+  const teamID = generateRandomString(1);
 
-  beforeEach(() => {
+  afterEach(() => {
     vi.resetAllMocks();
     vi.clearAllMocks();
   });

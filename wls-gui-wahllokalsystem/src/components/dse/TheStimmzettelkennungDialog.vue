@@ -18,8 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
-
 import { ref, watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
@@ -28,8 +26,9 @@ import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { currentUserWahlbezirkID, currentUserTeamName } = useUserStore();
-const { getNextStimmzettelNumber } = useStimmzettelUtils();
-const { saveStimmzettel } = useStimmzettelService();
+const { getNextStimmzettelNumber, getEmptyStimmzettelWithStimmzettelkennung } =
+  useStimmzettelUtils();
+const { saveStimmzettel, getStimmzettel } = useStimmzettelService();
 
 const props = defineProps<{
   visible: boolean;
@@ -61,17 +60,21 @@ async function onConfirmClicked() {
     return;
   }
 
-  const newStimmzettel = {
-    stimmzettelkennung: stimmzettelkennung.value,
-    selectedWahlvorschlaegeOrdnungszahlen: [],
-    kandidaten: [],
-  } as Stimmzettel;
+  const stimmzettelList = await getStimmzettel(
+    props.wahlID,
+    currentUserWahlbezirkID,
+    currentUserTeamName,
+    false
+  );
 
   await saveStimmzettel(
     props.wahlID,
     currentUserWahlbezirkID,
     currentUserTeamName,
-    [newStimmzettel]
+    [
+      ...stimmzettelList,
+      getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung.value),
+    ]
   );
   emit("confirm");
 }

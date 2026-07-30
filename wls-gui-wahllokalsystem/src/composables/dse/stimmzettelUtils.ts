@@ -1,3 +1,5 @@
+import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 
 export function useStimmzettelUtils() {
@@ -18,7 +20,18 @@ export function useStimmzettelUtils() {
       : 1;
   }
 
+  function getEmptyStimmzettelWithStimmzettelkennung(
+    stimmzettelkennung: number
+  ): Stimmzettel {
+    return {
+      stimmzettelkennung: stimmzettelkennung,
+      selectedWahlvorschlaegeOrdnungszahlen: [],
+      kandidaten: [],
+    };
+  }
+
   return {
     getNextStimmzettelNumber,
+    getEmptyStimmzettelWithStimmzettelkennung,
   };
 }

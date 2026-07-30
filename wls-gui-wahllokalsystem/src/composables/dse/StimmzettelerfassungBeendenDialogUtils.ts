@@ -31,7 +31,7 @@ export function useStimmzettelerfassungBeendenDialogUtils(
 
     if (!syncResult) {
       addNotification(
-        "Synchronising läuft bereits. Bitte versuchen Sie es erneut später.",
+        "Synchronisierung läuft bereits. Bitte versuchen Sie es später erneut.",
         UserNotificationCategoryEnum.WARNING
       );
       return;

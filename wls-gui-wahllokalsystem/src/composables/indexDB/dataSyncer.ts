@@ -1,7 +1,9 @@
 import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
+import type { SyncronizeDataResult } from "@/types/indexDB/SyncronizeDataResult.ts";
+import type { Task } from "@/types/tasks/Task.ts";
 
 import axios from "axios";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import { basicPostConfig } from "@/api/axios-utils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
@@ -18,6 +20,11 @@ export function useDataSyncer() {
   const taskManager = useTaskManager();
   const isOfflineDataSyncing = ref(false);
   const lastSyncUpdateTime = ref<null | Date>(null);
+  const dirtyTasksAfterSync = ref<Task[] | null>(null);
+
+  const numberOfDirtyTasksAfterSync = computed(
+    (): number | undefined => dirtyTasksAfterSync.value?.length
+  );
 
   async function getSyncTasks() {
     const itemsToSync = await indexDBSingleton.getDirtyItems();
@@ -35,7 +42,9 @@ export function useDataSyncer() {
     }));
   }
 
-  async function synchronizeOfflineData() {
+  async function synchronizeOfflineData(): Promise<SyncronizeDataResult | null> {
+    if (isOfflineDataSyncing.value) return null;
+
     isOfflineDataSyncing.value = true;
     try {
       taskManager.setTasks(await getSyncTasks());
@@ -45,7 +54,15 @@ export function useDataSyncer() {
     } finally {
       isOfflineDataSyncing.value = false;
       lastSyncUpdateTime.value = new Date();
+      dirtyTasksAfterSync.value = await getSyncTasks();
     }
+
+    return {
+      numberOfTasksRan: taskManager.numberOfTasksToRun.value,
+      numberOfTasksFailed: taskManager.numberOfTasksFailed.value,
+      numberOfTasksSucceeded: taskManager.numberOfTasksSucceeded.value,
+      numberOfDirtyTasksRemaining: dirtyTasksAfterSync.value.length,
+    };
   }
 
   function _compareSyncItemByTimeStamp(
@@ -71,7 +88,9 @@ export function useDataSyncer() {
     ...taskManager,
     getSyncTasks,
     synchronizeOfflineData,
+    numberOfDirtyTasksAfterSync,
     lastSyncUpdateTime,
     isOfflineDataSyncing,
+    dirtyTasksAfterSync,
   };
 }

@@ -8,13 +8,19 @@ export const useDataSyncStore = defineStore(storeID, () => {
   const {
     synchronizeOfflineData,
     getSyncTasks,
+    dirtyTasksAfterSync,
+    hasTasksToRun,
     isOfflineDataSyncing,
+    numberOfDirtyTasksAfterSync,
     numberOfTasksFinished,
     numberOfTasksToRun,
     lastSyncUpdateTime,
   } = useDataSyncer();
 
   return {
+    dirtyTasksAfterSync,
+    hasTasksToRun,
+    numberOfDirtyTasksAfterSync,
     numberOfTasksFinished,
     numberOfTasksToRun,
     isOfflineDataSyncing,

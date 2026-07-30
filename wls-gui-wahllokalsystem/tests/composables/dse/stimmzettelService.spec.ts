@@ -9,9 +9,11 @@ const { createStimmzettelOfTeamDTO, createStimmzettel } =
 
 const mockDefinitions = vi.hoisted(() => ({
   mapDtoToModel: vi.fn(),
+  mapModelToDto: vi.fn(),
   addNotification: vi.fn(),
   configurationConstructor: vi.fn(),
   getStimmzettel: vi.fn(),
+  postStimmzettel: vi.fn(),
 }));
 
 vi.mock(
@@ -22,6 +24,7 @@ vi.mock(
       ...(mod as object),
       StimmzettelControllerApi: class {
         getStimmzettel = mockDefinitions.getStimmzettel;
+        postStimmzettel = mockDefinitions.postStimmzettel;
       },
       Configuration: vi.fn(),
     };
@@ -31,6 +34,7 @@ vi.mock(
 vi.mock(import("@/composables/dse/stimmzettelMapper.ts"), () => ({
   useStimmzettelMapper: () => ({
     toModel: mockDefinitions.mapDtoToModel,
+    toDTO: mockDefinitions.mapModelToDto,
   }),
 }));
 
@@ -44,7 +48,7 @@ vi.mock(
 );
 
 describe("stimmzettelService.ts", () => {
-  const { getStimmzettel } = useStimmzettelService();
+  const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -159,6 +163,73 @@ describe("stimmzettelService.ts", () => {
 
       await expect(async () =>
         getStimmzettel(wahlID, wahlbezirkID, teamID, false)
+      ).rejects.toThrowError();
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
+    });
+  });
+
+  describe("saveStimmzettel", () => {
+    it("should_sendDTO_when_modelIsGiven", async () => {
+      const wahlID = "wahlID";
+      const wahlbezirkID = "wahlbezirkID";
+      const teamID = "teamID";
+      const stimmzettel = [createStimmzettel()];
+
+      const mockedDto = createStimmzettelOfTeamDTO();
+
+      mockDefinitions.mapModelToDto.mockReturnValue(mockedDto);
+
+      await saveStimmzettel(wahlID, wahlbezirkID, teamID, stimmzettel);
+
+      expect(mockDefinitions.postStimmzettel.mock.calls).toStrictEqual([
+        [wahlID, wahlbezirkID, teamID, [mockedDto]],
+      ]);
+      expect(mockDefinitions.mapModelToDto.mock.calls).toStrictEqual([
+        stimmzettel,
+      ]);
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+      ]);
+    });
+
+    it("should_triggerErrorNotification_when_anExceptionOccurredDuringApiCall", async () => {
+      const wahlID = "wahlID";
+      const wahlbezirkID = "wahlbezirkID";
+      const teamID = "teamID";
+      const stimmzettel = [createStimmzettel()];
+
+      mockDefinitions.postStimmzettel.mockRejectedValue(
+        new Error("api call failed")
+      );
+
+      await expect(async () =>
+        saveStimmzettel(wahlID, wahlbezirkID, teamID, stimmzettel)
+      ).rejects.toThrowError();
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        1
+      );
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        "Speichern der Stimmzettel ist fehlgeschlagen",
+        UserNotificationCategoryEnum.ERROR,
+      ]);
+    });
+
+    it("should_notTriggerErrorNotification_when_anExceptionOccurredDuringApiCallButSendNotificationIsFalse", async () => {
+      const wahlID = "wahlID";
+      const wahlbezirkID = "wahlbezirkID";
+      const teamID = "teamID";
+      const stimmzettel = [createStimmzettel()];
+
+      mockDefinitions.postStimmzettel.mockRejectedValue(
+        new Error("api call failed")
+      );
+
+      await expect(async () =>
+        saveStimmzettel(wahlID, wahlbezirkID, teamID, stimmzettel, false)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(

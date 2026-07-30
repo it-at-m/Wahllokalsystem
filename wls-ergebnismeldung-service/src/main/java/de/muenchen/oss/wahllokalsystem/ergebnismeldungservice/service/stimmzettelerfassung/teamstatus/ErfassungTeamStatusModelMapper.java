@@ -15,4 +15,13 @@ public interface ErfassungTeamStatusModelMapper {
       TeamBezirkUndWahlIDModel id, ErfassungTeamStatusModel status);
 
   TeamBezirkUndWahlID toEntity(TeamBezirkUndWahlIDModel id);
+
+  /** Maps full entity to service entry model including teamID and mapped status. */
+  default ErfassungTeamStatusEntryModel toEntryModel(final StimmzettelerfassungTeamStatus entity) {
+    if (entity == null || entity.getId() == null) {
+      return null;
+    }
+    return new ErfassungTeamStatusEntryModel(
+        entity.getId().getTeamID(), toModel(entity.getStatus()));
+  }
 }

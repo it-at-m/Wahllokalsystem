@@ -11,6 +11,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzette
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.TeamIDPermissionEvaluator;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.stream.Stream;
 import lombok.val;
@@ -211,6 +212,41 @@ public class TeamStatusServiceSecurityTest {
 
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.getTeamStatus(id))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
+
+  @Nested
+  class GetTeamStatusList {
+
+    @Test
+    void should_getAccess_when_requiredAuthorityIsPresent() {
+      SecurityUtils.runWith(Authorities.SERVICE_GET_STIMMZETTELERFASSUNGTEAMSTATUS);
+
+      val wahlID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+      val id = new BezirkUndWahlID(wahlID, wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getTeamStatusList(id));
+    }
+
+    @Test
+    @WithMockUser
+    void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
+      val wahlID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+      val id = new BezirkUndWahlID(wahlID, wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getTeamStatusList(id))
           .isInstanceOf(AccessDeniedException.class);
     }
   }

@@ -79,7 +79,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
                   requestBody))
           .andExpect(status().isCreated());
 
-      val persistedTeamStatusEntity = teamstatusRepository.findById(id).get();
+      val persistedTeamStatusEntity = teamstatusRepository.findById(id).orElse(null);
 
       val expectedEntity =
           Instancio.of(StimmzettelerfassungTeamStatus.class)
@@ -117,7 +117,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
                   requestBody))
           .andExpect(status().isCreated());
 
-      val persistedTeamStatusEntity = teamstatusRepository.findById(id).get();
+      val persistedTeamStatusEntity = teamstatusRepository.findById(id).orElse(null);
 
       val expectedEntity =
           Instancio.of(StimmzettelerfassungTeamStatus.class)
@@ -131,7 +131,8 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
       val persistedStimmzettelErfassungStatusEntity =
           stimmzettelerfassungStatusRepository
               .findById(new BezirkUndWahlID(id.getWahlID(), id.getWahlbezirkID()))
-              .get();
+              .orElse(null);
+      Assertions.assertThat(persistedStimmzettelErfassungStatusEntity).isNotNull();
       Assertions.assertThat(persistedStimmzettelErfassungStatusEntity.getStatus())
           .isEqualTo(ErfassungStatus.STE_BEARBEITUNG);
     }
@@ -161,7 +162,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
                   requestBody))
           .andExpect(status().isCreated());
 
-      val persistedEntity = teamstatusRepository.findById(id).get();
+      val persistedEntity = teamstatusRepository.findById(id).orElse(null);
 
       val expectedEntity =
           new StimmzettelerfassungTeamStatus(id, ErfassungTeamStatus.IN_BEARBEITUNG);
@@ -191,7 +192,6 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
                   field(StimmzettelerfassungTeamStatusDTO::status),
                   ErfassungTeamStatusDTO.REGISTRIERT)
               .create();
-      ;
 
       // wrong wahlbezirk claim
       mockMvc
@@ -423,6 +423,87 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
                       jwt ->
                           jwt.claim("wahlbezirkID", claimWahlbezirkID)
                               .claim("teamID", claimTeamID)));
+    }
+  }
+
+  @Nested
+  class GetStimmzettelerfassungTeamStatusList {
+
+    @Test
+    void should_returnData_when_dataIsPresentInRepository() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      val entity1 =
+          new StimmzettelerfassungTeamStatus(
+              new TeamBezirkUndWahlID(wahlID, wahlbezirkID, "team1"),
+              ErfassungTeamStatus.REGISTRIERT);
+      val entity2 =
+          new StimmzettelerfassungTeamStatus(
+              new TeamBezirkUndWahlID(wahlID, wahlbezirkID, "team2"),
+              ErfassungTeamStatus.ABGESCHLOSSEN);
+      teamstatusRepository.save(entity1);
+      teamstatusRepository.save(entity2);
+
+      val response =
+          mockMvc
+              .perform(createGetListRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn()
+              .getResponse();
+
+      StimmzettelerfassungTeamStatusEntryDTO[] dtos =
+          objectMapper.readValue(
+              response.getContentAsString(), StimmzettelerfassungTeamStatusEntryDTO[].class);
+
+      Assertions.assertThat(dtos).hasSize(2);
+      Assertions.assertThat(
+              java.util.Arrays.stream(dtos)
+                  .map(StimmzettelerfassungTeamStatusEntryDTO::teamID)
+                  .toList())
+          .containsExactlyInAnyOrder("team1", "team2");
+      Assertions.assertThat(
+              java.util.Arrays.stream(dtos)
+                  .map(StimmzettelerfassungTeamStatusEntryDTO::status)
+                  .toList())
+          .containsExactlyInAnyOrder(
+              ErfassungTeamStatusDTO.REGISTRIERT, ErfassungTeamStatusDTO.ABGESCHLOSSEN);
+    }
+
+    @Test
+    void should_returnNoContent_when_dataIsNotPresentInRepository() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      mockMvc
+          .perform(createGetListRequest(wahlID, wahlbezirkID, wahlbezirkID))
+          .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongClaims() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      mockMvc
+          .perform(createGetListRequest(wahlID, wahlbezirkID, wahlbezirkID + "x"))
+          .andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder createGetListRequest(
+        final String wahlID, final String wahlbezirkID, final String claimWahlbezirkID) {
+      return MockMvcRequestBuilders.get(
+              "/stimmzettelerfassung/wahl/"
+                  + wahlID
+                  + "/wahlbezirk/"
+                  + wahlbezirkID
+                  + "/teamstatus")
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(
+                          Authorities.SERVICE_GET_STIMMZETTELERFASSUNGTEAMSTATUS))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
     }
   }
 }

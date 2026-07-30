@@ -22,6 +22,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
   @Mock TeamStatusService teamStatusService;
 
   @Mock ErfassungTeamStatusDTOMapper erfassungTeamStatusDTOMapper;
+  @Mock ErfassungTeamStatusEntryDTOMapper erfassungTeamStatusEntryDTOMapper;
 
   @InjectMocks private StimmzettelerfassungTeamStatusController underTest;
 
@@ -69,7 +70,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
       val result = underTest.getStimmzettelerfassungTeamStatus(wahlID, wahlbezirkID, teamID);
 
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-
+      Assertions.assertThat(result.getBody()).isNotNull();
       Assertions.assertThat(result.getBody().status()).isEqualTo(mockedMappeServiceResponse);
     }
 
@@ -85,6 +86,70 @@ class StimmzettelerfassungTeamStatusControllerTest {
           .thenReturn(Optional.empty());
 
       val result = underTest.getStimmzettelerfassungTeamStatus(wahlID, wahlbezirkID, teamID);
+
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+      Assertions.assertThat(result.getBody()).isNull();
+    }
+  }
+
+  @Nested
+  class GetStimmzettelerfassungTeamStatusList {
+
+    @Test
+    void should_return_ok_with_list_when_service_has_data() {
+      val wahlID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+
+      val model1 =
+          new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung
+              .teamstatus.ErfassungTeamStatusEntryModel(
+              Instancio.create(String.class), ErfassungTeamStatusModel.IN_BEARBEITUNG);
+      val model2 =
+          new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung
+              .teamstatus.ErfassungTeamStatusEntryModel(
+              Instancio.create(String.class), ErfassungTeamStatusModel.ABGESCHLOSSEN);
+
+      Mockito.when(teamStatusService.getTeamStatusList(Mockito.any()))
+          .thenReturn(java.util.List.of(model1, model2));
+
+      val dto1 =
+          new StimmzettelerfassungTeamStatusEntryDTO(
+              model1.teamID(), ErfassungTeamStatusDTO.IN_BEARBEITUNG);
+      val dto2 =
+          new StimmzettelerfassungTeamStatusEntryDTO(
+              model2.teamID(), ErfassungTeamStatusDTO.ABGESCHLOSSEN);
+      Mockito.when(erfassungTeamStatusEntryDTOMapper.toDTO(model1)).thenReturn(dto1);
+      Mockito.when(erfassungTeamStatusEntryDTOMapper.toDTO(model2)).thenReturn(dto2);
+
+      val result = underTest.getStimmzettelerfassungTeamStatusList(wahlID, wahlbezirkID);
+
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+      Assertions.assertThat(result.getBody()).hasSize(2);
+      Assertions.assertThat(result.getBody()).containsExactlyInAnyOrder(dto1, dto2);
+    }
+
+    @Test
+    void should_return_no_content_when_service_returns_empty_list() {
+      val wahlID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+
+      Mockito.when(teamStatusService.getTeamStatusList(Mockito.any()))
+          .thenReturn(java.util.Collections.emptyList());
+
+      val result = underTest.getStimmzettelerfassungTeamStatusList(wahlID, wahlbezirkID);
+
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+      Assertions.assertThat(result.getBody()).isNull();
+    }
+
+    @Test
+    void should_return_no_content_when_service_returns_null() {
+      val wahlID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+
+      Mockito.when(teamStatusService.getTeamStatusList(Mockito.any())).thenReturn(null);
+
+      val result = underTest.getStimmzettelerfassungTeamStatusList(wahlID, wahlbezirkID);
 
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
       Assertions.assertThat(result.getBody()).isNull();

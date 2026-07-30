@@ -174,4 +174,57 @@ class TeamStatusServiceTest {
       Mockito.verifyNoInteractions(stimmzettelerfassungTeamStatusRepository);
     }
   }
+
+  @Nested
+  class GetTeamStatusList {
+
+    @Test
+    void should_returnMappedTeamStatusList_when_entitiesFound() {
+      val id = Instancio.create(BezirkUndWahlID.class);
+      val entity1 = Instancio.create(StimmzettelerfassungTeamStatus.class);
+      val entity2 = Instancio.create(StimmzettelerfassungTeamStatus.class);
+
+      entity1.setStatus(ErfassungTeamStatus.IN_BEARBEITUNG);
+      entity2.setStatus(ErfassungTeamStatus.ABGESCHLOSSEN);
+      val mapped1 =
+          new ErfassungTeamStatusEntryModel(
+              entity1.getId().getTeamID(), ErfassungTeamStatusModel.IN_BEARBEITUNG);
+      val mapped2 =
+          new ErfassungTeamStatusEntryModel(
+              entity2.getId().getTeamID(), ErfassungTeamStatusModel.ABGESCHLOSSEN);
+
+      Mockito.when(
+              stimmzettelerfassungTeamStatusRepository.findByIdWahlIDAndIdWahlbezirkID(
+                  id.getWahlID(), id.getWahlbezirkID()))
+          .thenReturn(java.util.List.of(entity1, entity2));
+      Mockito.when(erfassungTeamStatusModelMapper.toEntryModel(entity1)).thenReturn(mapped1);
+      Mockito.when(erfassungTeamStatusModelMapper.toEntryModel(entity2)).thenReturn(mapped2);
+
+      val result = unitUnderTest.getTeamStatusList(id);
+
+      Assertions.assertThat(result).containsExactly(mapped1, mapped2);
+      Mockito.verify(stimmzettelerfassungTeamStatusRepository)
+          .findByIdWahlIDAndIdWahlbezirkID(id.getWahlID(), id.getWahlbezirkID());
+      Mockito.verify(erfassungTeamStatusModelMapper).toEntryModel(entity1);
+      Mockito.verify(erfassungTeamStatusModelMapper).toEntryModel(entity2);
+    }
+
+    @Test
+    void should_returnEmptyList_when_noEntitiesFound() {
+      val id = Instancio.create(BezirkUndWahlID.class);
+
+      Mockito.when(
+              stimmzettelerfassungTeamStatusRepository.findByIdWahlIDAndIdWahlbezirkID(
+                  id.getWahlID(), id.getWahlbezirkID()))
+          .thenReturn(java.util.List.of());
+
+      val result = unitUnderTest.getTeamStatusList(id);
+
+      Assertions.assertThat(result).isEmpty();
+      Mockito.verify(stimmzettelerfassungTeamStatusRepository)
+          .findByIdWahlIDAndIdWahlbezirkID(id.getWahlID(), id.getWahlbezirkID());
+      Mockito.verify(erfassungTeamStatusModelMapper, Mockito.never())
+          .toEntryModel(Mockito.any(StimmzettelerfassungTeamStatus.class));
+    }
+  }
 }

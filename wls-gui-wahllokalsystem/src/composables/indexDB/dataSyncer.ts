@@ -52,9 +52,9 @@ export function useDataSyncer() {
     } catch (e) {
       logDebug("Fehler beim Synchronisieren", e);
     } finally {
-      dirtyTasksAfterSync.value = await getSyncTasks();
       isOfflineDataSyncing.value = false;
       lastSyncUpdateTime.value = new Date();
+      dirtyTasksAfterSync.value = await getSyncTasks();
     }
 
     return {

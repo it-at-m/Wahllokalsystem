@@ -54,14 +54,14 @@ import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
 import { useLogging } from "@/composables/common/logging.ts";
-import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 const status = ref<StimmzettelerfassungTeamStatus | null>(null);
 const erfassungDialogVisible = ref(false);
 const beendenDialogVisible = ref(false);
-const erfassungTeamStatusService = useStimmzettelerfassungStatusTeamService();
+const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 
 const route = useRoute();
 const userStore = useUserStore();

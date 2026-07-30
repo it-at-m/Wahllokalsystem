@@ -19,7 +19,7 @@
 import { storeToRefs } from "pinia";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { ROUTE_FINISHED } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -28,7 +28,7 @@ import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 
 const { hasRoleErfassungsteam } = storeToRefs(useUserStore());
 const { isSaving, postErfassungTeamStatus } =
-  useStimmzettelerfassungStatusTeamService();
+  useStimmzettelerfassungTeamStatusService();
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,

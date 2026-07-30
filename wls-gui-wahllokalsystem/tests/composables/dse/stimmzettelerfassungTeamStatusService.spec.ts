@@ -3,7 +3,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => {
@@ -79,7 +79,7 @@ const {
 
 describe("stimmzettelerfassungTeamStatusService.ts", () => {
   const { isSaving, loadErfassungTeamStatus, postErfassungTeamStatus } =
-    useStimmzettelerfassungStatusTeamService();
+    useStimmzettelerfassungTeamStatusService();
 
   beforeEach(() => {
     vi.useFakeTimers({});
@@ -158,7 +158,9 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       expect(result).toEqual(mappedModel);
       expect(
         mockDefinitions.getStimmzettelerfassungTeamStatus.mock.calls
-      ).toStrictEqual([[wahlID, wahlbezirkID, teamID]]);
+      ).toStrictEqual([
+        [wahlID, wahlbezirkID, teamID, mockDefinitions.sentinelAxiosConfig],
+      ]);
       expect(mockDefinitions.dtoToModel.mock.calls.length).toBe(1);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         "Status 'REGISTRIERT' für MBW erfolgreich geladen.",

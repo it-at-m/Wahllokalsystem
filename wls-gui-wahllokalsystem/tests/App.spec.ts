@@ -32,6 +32,7 @@ const mockDefinitions = vi.hoisted(() => ({
   postBeanstandeteWahlbriefe: vi.fn(),
   getBeanstandeteWahlbriefe: vi.fn(),
   syncPin: vi.fn(),
+  initStimmzettelerfassungTeamStatus: vi.fn(),
 }));
 
 vi.mock(import("@/composables/wahl/wahlService.ts"), () => ({
@@ -63,6 +64,15 @@ vi.mock(
   () => ({
     useServiceWorkerPinSyncer: () => ({
       syncPin: mockDefinitions.syncPin,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassungTeamStatusUtils.ts"),
+  () => ({
+    useStimmzettelerfassungTeamStatusUtils: () => ({
+      initStimmzettelerfassungTeamStatus:
+        mockDefinitions.initStimmzettelerfassungTeamStatus,
     }),
   })
 );
@@ -243,6 +253,14 @@ describe("App", () => {
       await flushPromises();
 
       expect(initTasks).toHaveBeenCalled();
+    });
+
+    it("should_callInitStimmzettelerfassungTeamStatus_when_mounted", async () => {
+      await flushPromises();
+
+      expect(
+        mockDefinitions.initStimmzettelerfassungTeamStatus
+      ).toHaveBeenCalled();
     });
 
     it("should_callStopBroadcastMessageInterval_when_unmounted", async () => {

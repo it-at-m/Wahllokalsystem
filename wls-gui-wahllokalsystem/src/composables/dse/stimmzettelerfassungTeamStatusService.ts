@@ -57,7 +57,8 @@ export function useStimmzettelerfassungTeamStatusService() {
         await stimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatus(
           wahlID,
           wahlbezirkID,
-          teamID
+          teamID,
+          axiosConfigWrapper().requestAsOnlineOnly()
         );
       const responseData = getNullOn204OrElseResponseData(response);
 

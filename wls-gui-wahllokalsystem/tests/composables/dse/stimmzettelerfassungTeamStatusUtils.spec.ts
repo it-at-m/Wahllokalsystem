@@ -1,5 +1,6 @@
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -30,6 +31,8 @@ describe("stimmzettelerfassungTeamStatusUtils.ts", () => {
   let unitUnderTest: ReturnType<typeof useStimmzettelerfassungTeamStatusUtils>;
 
   const { generateRandomString } = useCommonTestDataFactory();
+  const { createStimmzettelerfassungTeamStatusDTOData } =
+    useStimmzettelerfassungTeamStatusTestDataFactory();
 
   const wahlMedata = {
     wahlbezirkID: generateRandomString(10),
@@ -75,6 +78,7 @@ describe("stimmzettelerfassungTeamStatusUtils.ts", () => {
         wahlMedata.wahlbezirkID,
         teamName,
         { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
+        false,
       ]);
     });
 
@@ -86,9 +90,9 @@ describe("stimmzettelerfassungTeamStatusUtils.ts", () => {
       // @ts-expect-error: cannot set readonly
       currentUserTeamName.value = teamName;
 
-      mockDefinitions.loadErfassungTeamStatus.mockReturnValue({
-        status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT,
-      });
+      mockDefinitions.loadErfassungTeamStatus.mockReturnValue(
+        createStimmzettelerfassungTeamStatusDTOData()
+      );
 
       await unitUnderTest.initStimmzettelerfassungTeamStatus();
 

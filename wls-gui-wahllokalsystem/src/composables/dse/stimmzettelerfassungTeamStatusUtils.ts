@@ -15,14 +15,16 @@ export function useStimmzettelerfassungTeamStatusUtils() {
       const teamStatus = await loadErfassungTeamStatus(
         metadata.wahlID,
         metadata.wahlbezirkID,
-        currentUserTeamName.value
+        currentUserTeamName.value,
+        false
       );
       if (!teamStatus) {
         await postErfassungTeamStatus(
           metadata.wahlID,
           metadata.wahlbezirkID,
           currentUserTeamName.value,
-          { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT }
+          { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
+          false
         );
       }
     }

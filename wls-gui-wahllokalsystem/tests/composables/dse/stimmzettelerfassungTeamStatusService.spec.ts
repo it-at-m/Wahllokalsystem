@@ -158,7 +158,9 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       expect(result).toEqual(mappedModel);
       expect(
         mockDefinitions.getStimmzettelerfassungTeamStatus.mock.calls
-      ).toStrictEqual([[wahlID, wahlbezirkID, teamID]]);
+      ).toStrictEqual([
+        [wahlID, wahlbezirkID, teamID, mockDefinitions.sentinelAxiosConfig],
+      ]);
       expect(mockDefinitions.dtoToModel.mock.calls.length).toBe(1);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         "Status 'REGISTRIERT' für MBW erfolgreich geladen.",

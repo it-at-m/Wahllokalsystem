@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import { useStimmzettelerfassungStatusTeamService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_FINISHED } from "@/constants.ts";
 import router from "@/plugins/router.ts";
@@ -21,7 +21,7 @@ export function useStimmzettelerfassungBeendenDialogUtils(
   const { hasRoleErfassungsteam, currentUserTeamName } =
     storeToRefs(useUserStore());
   const { isSaving, postErfassungTeamStatus } =
-    useStimmzettelerfassungStatusTeamService();
+    useStimmzettelerfassungTeamStatusService();
 
   const isSyncWidgetVisible = ref(false);
 

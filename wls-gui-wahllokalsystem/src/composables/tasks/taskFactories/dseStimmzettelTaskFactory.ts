@@ -24,7 +24,8 @@ export function useDSEStimmzettelTaskFactory(): TaskFactory {
         getStimmzettel(
           taskFactoryMetaData.wahlID,
           taskFactoryMetaData.wahlbezirkID,
-          currentUserTeamName.value
+          currentUserTeamName.value,
+          false
         ),
       name: `Stimmzettel für ${taskFactoryMetaData.wahlName}`,
     };

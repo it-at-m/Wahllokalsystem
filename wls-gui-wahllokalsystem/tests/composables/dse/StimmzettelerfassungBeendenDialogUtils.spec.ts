@@ -44,7 +44,7 @@ vi.mock("@/stores/userStore.ts", () => ({
 }));
 
 vi.mock("@/composables/dse/stimmzettelerfassungTeamStatusService.ts", () => ({
-  useStimmzettelerfassungStatusTeamService: () => ({
+  useStimmzettelerfassungTeamStatusService: () => ({
     isSaving: mockDefinitions.isSavingRef,
     postErfassungTeamStatus: mockDefinitions.postErfassungTeamStatus,
   }),

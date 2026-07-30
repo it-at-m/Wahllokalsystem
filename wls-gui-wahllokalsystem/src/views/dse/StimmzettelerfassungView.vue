@@ -27,15 +27,12 @@
         >
       </v-card-actions>
     </v-card>
-    <base-dialog
+    <the-stimmzettelkennung-dialog
       :visible="erfassungDialogVisible"
-      icon="$information"
-      dialogtitle="Stimmzettel erfassen"
-      cancel-disabled
-      confirmtext="Ok"
-      @confirm="erfassungDialogVisible = !erfassungDialogVisible"
-      >🚧 TBD 🚧</base-dialog
-    >
+      :wahl-i-d="wahlID"
+      @confirm="onStimmzettelkennungConfirmed"
+      @cancel="erfassungDialogVisible = false"
+    />
     <the-stimmzettelerfassung-beenden-dialog
       v-model="beendenDialogVisible"
       :wahl-id="wahlID"
@@ -51,8 +48,8 @@ import { computed, onActivated, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
+import TheStimmzettelkennungDialog from "@/components/dse/TheStimmzettelkennungDialog.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -114,11 +111,15 @@ async function postTeamStatus(
   }
 }
 
-async function onErfassungStartenClicked() {
+function onErfassungStartenClicked() {
+  erfassungDialogVisible.value = true;
+}
+
+async function onStimmzettelkennungConfirmed() {
   await postTeamStatus({
     status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
   });
-  erfassungDialogVisible.value = true;
+  erfassungDialogVisible.value = false;
 }
 
 async function onErfassungUnterbrechenClicked() {

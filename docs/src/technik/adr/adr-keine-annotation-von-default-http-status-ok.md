@@ -19,7 +19,7 @@ Wir wollen konsequent auf die Annotation verzichten, wenn sie nicht notwendig is
 stellen Integrationstests sicher, dass der erwartete `HttpStatus` geliefert wird.
 
 Methoden mit dem Rückgabetyp `ResponseEntity` dürfen keine `ResponseStatus`-Annotation besitzen, da bei Verwendung
-von `ResponseEntity` kein eindeutiger HTTP-Status festgelegt werden muss.
+von `ResponseEntity` die Statusinformationen durch die `ResponseEntity` überschrieben wird.
 
 Mittels ArchUnit-Rules soll die Umsetzung des ADRs sichergestellt werden.
 

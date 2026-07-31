@@ -16,7 +16,7 @@ Die Annotation ist nicht erforderlich, wenn der Controller als Return-Typ keine 
 ## Entscheidung
 
 Wir wollen konsequent auf die Annotation verzichten, wenn sie nicht notwendig ist. Sollte sich das Verhalten ändern,  
-stellen Tests sicher, dass der erwartete `HttpStatus` geliefert wird.
+stellen Integrationstests sicher, dass der erwartete `HttpStatus` geliefert wird.
 
 Methoden mit dem Rückgabetyp `ResponseEntity` dürfen keine `ResponseStatus`-Annotation besitzen, da bei Verwendung
 von `ResponseEntity` kein eindeutiger HTTP-Status festgelegt werden muss.

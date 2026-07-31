@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-vorfaelleundvorkommnisse-service</artifactId>
-    <version>0.5.16-SNAPSHOT</version>
+    <version>0.5.17-SNAPSHOT</version>
     <name>wls_vorfaelleundvorkommnisse_service</name>
 
     <properties>

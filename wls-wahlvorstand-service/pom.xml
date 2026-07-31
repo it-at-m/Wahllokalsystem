@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-wahlvorstand-service</artifactId>
-    <version>0.5.19-SNAPSHOT</version>
+    <version>0.5.20-SNAPSHOT</version>
     <name>wls_wahlvorstand_service</name>
 
     <properties>

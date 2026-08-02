@@ -90,5 +90,3 @@ const isWahlvorschlageVotesVisible = computed(
   () => props.showWahlvorschlagVotes && wahlvorschlagVotes.value > 0
 );
 </script>
-
-<style scoped></style>

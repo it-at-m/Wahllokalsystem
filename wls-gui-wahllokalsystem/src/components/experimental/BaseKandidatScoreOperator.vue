@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-const modelVotes = defineModel({
-  type: Number,
-});
+// const modelVotes = defineModel({
+//   type: Number,
+// });
 </script>

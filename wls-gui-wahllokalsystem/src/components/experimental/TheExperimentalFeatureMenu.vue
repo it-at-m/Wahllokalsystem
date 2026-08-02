@@ -42,17 +42,17 @@
             <v-autocomplete
               v-model="subViewStimmzettelerfassung"
               :items="itemsSubviewStimmzettelerfassung"
-            ></v-autocomplete>
+            />
           </v-list-item>
           <v-list-item title="Beschlussfortschritt">
             <v-number-input
               v-model="beschlussFortschrittMax"
               label="Max"
-            ></v-number-input>
+            />
             <v-number-input
               v-model="beschlussFortschrittCurrent"
               label="Current"
-            ></v-number-input>
+            />
           </v-list-item>
           <v-list-item title="Beschlussgültigkeit verfügbar">
             <v-checkbox

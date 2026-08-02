@@ -43,9 +43,7 @@ import type { PropType } from "vue";
 
 import { computed } from "vue";
 
-import BaseButtonKandidatDiscard from "@/components/experimental/BaseButtonKandidatDiscard.vue";
 import BaseKandidateVotes from "@/components/experimental/BaseKandidateVotes.vue";
-import BaseKandidatScoreOperator from "@/components/experimental/BaseKandidatScoreOperator.vue";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
 
 const props = defineProps({

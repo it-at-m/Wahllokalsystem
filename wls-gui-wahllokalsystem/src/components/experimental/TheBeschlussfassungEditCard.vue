@@ -80,17 +80,17 @@
                 <v-card-text>
                   <div class="d-flex justify-space-between align-center ga-1">
                     <div>Kandidatenstimmen insgesamt</div>
-                    <div class="dots flex-grow-1"></div>
+                    <div class="dots flex-grow-1" />
                     <div>45</div>
                   </div>
                   <div class="d-flex justify-space-between align-center ga-1">
                     <div>Kandidatenstimmen ungültig</div>
-                    <div class="dots flex-grow-1"></div>
+                    <div class="dots flex-grow-1" />
                     <div>12</div>
                   </div>
                   <div class="d-flex justify-space-between align-center ga-1">
                     <div>Listenkreuze insgesamt</div>
-                    <div class="dots flex-grow-1"></div>
+                    <div class="dots flex-grow-1" />
                     <div>3</div>
                   </div>
                 </v-card-text>

@@ -91,5 +91,3 @@ function resetInput(): void {
   errorMessage.value = null;
 }
 </script>
-
-<style scoped></style>

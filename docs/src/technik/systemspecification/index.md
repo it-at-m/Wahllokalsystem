@@ -63,6 +63,10 @@ Das WLS besteht aus 3 Arten von Komponenten. Die **Frontends** stellen das Useri
 Über die **Apigateways** wird der Zugriff auf die **Backendservices** ermöglicht, welche die Anwendungslogik
 umsetzen und sich um die Datenhaltung kümmern.
 
+> [!IMPORTANT]
+> Routen in den API-Gateways, die zu Microservices des Backends führen, haben als Basepath `api`.
+> Eine Anfrage an den Wahlvorstandsservice beginnt wie folgt: `/api/wahlvorstand-service`.
+
 ### Architektur der Laufzeitumgebung
 
 ![Architektur der Laufzeitumgebung](/RuntimeEnvironment.png)

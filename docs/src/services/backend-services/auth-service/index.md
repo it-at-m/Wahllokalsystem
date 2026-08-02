@@ -59,6 +59,7 @@ den Auth-Service folgende zusätzliche Claims gesetzt:
 | wahlbezirkID            | technische ID des Hauptwahlbezirkes des Benutzerkontos                   | UUIDv4           |
 | wahlbezirksArt          | Art des Wahlbezirks (Urnenwahl oder Briefwahl)                           | Enum: [BWB, UWB] |
 | wahlbezirkid_wahlnummer | Wahlbezirke und Wahlen, die dem Benutzerkonto zur Pflege zugewiesen sind | JSON-String      |
+| teamID                  | ID des Teams, für das der User zuständig ist                             | String           |
 
 > [!NOTE] Aufbau `wahlbezirkid_wahlnummer`
 >
@@ -128,6 +129,10 @@ Des Weiteren müssen folgende Regeln beachtet werden:
 > [!IMPORTANT]
 > Damit Benutzerkonten angelegt werden können, muss die definierte Authority vorhanden sein die den entsprechenden
 > Konten zugewiesen werden soll.
+
+> [!IMPORTANT]
+> Die Benutzernamen müssen nach dem Schema `{Prefix}-{Wahlbezirknummer}` aufgebaut sein, weil andere
+> Verfahren aktuell auf den Benutzernamen aufbauen.
 
 > [!NOTE]
 > Wird der Service mit dem Profil `db-dummydata` gestartet werden Testdaten erzeugt, welche die notwendige Authority umfasst.

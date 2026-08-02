@@ -5,7 +5,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
     <artifactId>parent</artifactId>
-    <version>1.8.0-SNAPSHOT</version>
+    <version>1.8.1-SNAPSHOT</version>
     <name>wls-common</name>
     <packaging>pom</packaging>
     <description>Serviceübergreifende Aspekte</description>
@@ -180,7 +180,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>13.6.0</version>
+                            <version>13.9.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -199,7 +199,7 @@
                 <plugin>
                     <groupId>org.sonatype.central</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>0.10.0</version>
+                    <version>0.11.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -103,8 +103,7 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
         await nextTick();
 
         const emitted = wrapper.emitted("commitEdit") as
-          | [InfomanagementConfigParameter][]
-          | undefined;
+          [InfomanagementConfigParameter][] | undefined;
         expect(emitted).toBeTruthy();
         expect(emitted?.[0]?.[0].wert).toBe("Mock Wert");
       });
@@ -134,8 +133,7 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
         await nextTick();
 
         const emitted = wrapper.emitted("commitEdit") as
-          | [InfomanagementConfigParameter][]
-          | undefined;
+          [InfomanagementConfigParameter][] | undefined;
         expect(emitted).toBeTruthy();
         expect(emitted?.[0]?.[0].wert).toBe(configParameter.defaultValue);
       });
@@ -146,11 +144,14 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
 function setupWrapper(
   overrides?: Partial<{ configParameter: InfomanagementConfigParameter }>
 ): VueWrapper<typeof BaseDialogConfigParameterDisplay> {
-  return mount(BaseDialogConfigParameterDisplay, {
+  const mounted = mount(BaseDialogConfigParameterDisplay, {
     props: { configParameter: overrides?.configParameter ?? configParameter },
     global: { plugins: [vuetify] },
     attachTo: document.body,
-  }) as unknown as VueWrapper<typeof BaseDialogConfigParameterDisplay>; // Type Assertion
+  });
+  return mounted as unknown as VueWrapper<
+    typeof BaseDialogConfigParameterDisplay
+  >;
 }
 
 function cleanUpWrapper(wrapper: VueWrapper) {

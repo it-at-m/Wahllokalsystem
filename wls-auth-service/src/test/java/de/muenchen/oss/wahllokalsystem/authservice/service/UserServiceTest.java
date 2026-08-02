@@ -501,7 +501,7 @@ class UserServiceTest {
       unitUnderTest.generateWahllokalBenutzer(usersOfWahltag);
 
       Mockito.verify(userModelMapper, Mockito.times(26))
-          .toUser(eq(wahltagID), eq(user1), any(), any(), any());
+          .toUser(eq(wahltagID), eq(user1), any(), any(), any(), any());
     }
 
     @Test
@@ -529,7 +529,7 @@ class UserServiceTest {
 
       val pinCaptor = ArgumentCaptor.forClass(String.class);
       Mockito.verify(userModelMapper, Mockito.times(5))
-          .toUser(eq(wahltagID), eq(user1), any(), pinCaptor.capture(), any());
+          .toUser(eq(wahltagID), eq(user1), any(), pinCaptor.capture(), any(), any());
 
       Assertions.assertThat(pinCaptor.getAllValues())
           .allMatch(pin -> pin.matches("\\d\\d\\d\\d-\\d\\d\\d\\d-\\d\\d\\d\\d"));
@@ -561,12 +561,11 @@ class UserServiceTest {
 
       val usernameCaptor = ArgumentCaptor.forClass(String.class);
       Mockito.verify(userModelMapper, Mockito.times(5))
-          .toUser(eq(wahltagID), eq(user1), any(), any(), usernameCaptor.capture());
+          .toUser(eq(wahltagID), eq(user1), any(), any(), usernameCaptor.capture(), any());
 
       Assertions.assertThat(usernameCaptor.getAllValues())
           .allMatch(
-              username ->
-                  username.matches("\\d\\d\\d\\d\\d\\d-" + user1.wahlbezirknummer() + "-[A-Z]"));
+              username -> username.matches("\\d\\d\\d\\d\\d\\d[A-Z]-" + user1.wahlbezirknummer()));
     }
   }
 
@@ -635,6 +634,7 @@ class UserServiceTest {
     val pin = "123";
     val authorities = Set.of("auth1", "auth2");
     val wbid_wahlnummer = "wbid_wahlnummer";
+    val teamID = "teamID";
     return new UserModel(
         username,
         email,
@@ -646,6 +646,7 @@ class UserServiceTest {
         wahlbezirksArt,
         pin,
         authorities,
-        wbid_wahlnummer);
+        wbid_wahlnummer,
+        teamID);
   }
 }

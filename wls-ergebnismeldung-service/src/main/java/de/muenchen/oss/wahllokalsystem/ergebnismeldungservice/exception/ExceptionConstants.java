@@ -135,6 +135,28 @@ public class ExceptionConstants {
       new ExceptionDataWrapper("642", "postBedenklicheStimmzettel: Parameter unvollstaendig");
   public static final ExceptionDataWrapper POST_BEDENKLICHE_STIMMZETTEL_SAVING_FAILED =
       new ExceptionDataWrapper("643", "speichern bedenklicher Stimmzettel fehlgeschlagen");
+  public static final ExceptionDataWrapper
+      GET_STIMMZETTELERFASSUNG_STATUS_PARAMETER_UNVOLLSTAENDIG =
+          new ExceptionDataWrapper(
+              "644", "getStimmzettelerfassungStatus: Parameter unvollstaendig");
+  public static final ExceptionDataWrapper
+      POST_STIMMZETTELERFASSUNG_STATUS_PARAMETER_UNVOLLSTAENDIG =
+          new ExceptionDataWrapper(
+              "645", "postStimmzettelerfassungStatus: Parameter unvollstaendig");
+
+  public static final ExceptionDataWrapper STIMMZETTELKENNUNG_NON_UNIQUE =
+      new ExceptionDataWrapper("701", "Stimmzettelkennung ist nicht eindeutig");
+  public static final ExceptionDataWrapper STIMMZETTEL_FEHLEN =
+      new ExceptionDataWrapper("702", "Liste mit Stimmzetteln ist null");
+  public static final ExceptionDataWrapper STIMMZETTEL_OWNER_IDS_ARE_MISSING =
+      new ExceptionDataWrapper("703", "IDs für den Zugriff auf die Stimmzettelliste fehlen");
+  public static final ExceptionDataWrapper STIMMZETTEL_ANZAHL_IDS_ARE_MISSING =
+      new ExceptionDataWrapper("704", "IDs zum Zählen der Stimmenzettel fehlen");
+
+  public static final ExceptionDataWrapper STIMMZETTELERFASSUNG_TEAM_STATUS_INVALID_IDs =
+      new ExceptionDataWrapper("705", "IDs des Teamstatus fehlen");
+  public static final ExceptionDataWrapper STIMMZETTELERFASSUNG_TEAM_STATUS_SAVE_MODEL_IS_MISSING =
+      new ExceptionDataWrapper("706", "Der Teamstatus fehlt");
 
   public static final ExceptionDataWrapper MAPPING_AOUEAI =
       new ExceptionDataWrapper(

@@ -1,36 +1,31 @@
 import type {
   StimmzettelKandidatDTO,
-  WaehlerStimmzettelDTO,
+  StimmzettelOfTeamDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { StimmzettelKandidatSnapshot } from "@/types/experimental/StimmzettelKandidatSnapshot.ts";
 import type { StimmzettelSnapshot } from "@/types/experimental/StimmzettelSnapshot.ts";
 
 export function useStimmzettelMapper() {
   function toStimmzettelSnapshot(
-    stimmzettel: WaehlerStimmzettelDTO
+    stimmzettel: StimmzettelOfTeamDTO
   ): StimmzettelSnapshot {
     return {
       selectedWahlvorschlaegeOrdnungszahlen:
-        stimmzettel.selectedWahlvorschlaegeOrdnungszahlen,
-      kandidatenSnapshot: stimmzettel.kandidaten.map(
-        _toStimmzettelKandidatSnapshot
-      ),
+        stimmzettel.selectedWahlvorschlaegeOrdnungszahlen ?? [],
+      kandidatenSnapshot:
+        stimmzettel?.kandidaten?.map(_toStimmzettelKandidatSnapshot) ?? [],
     };
   }
 
   function toWaehlerstimmzettelDTO(
-    wahlID: string,
-    wahlbezirkID: string,
     stimzettelNummer: number,
     stimmzettel: StimmzettelSnapshot
-  ): WaehlerStimmzettelDTO {
+  ): StimmzettelOfTeamDTO {
     return {
       selectedWahlvorschlaegeOrdnungszahlen:
         stimmzettel.selectedWahlvorschlaegeOrdnungszahlen,
       kandidaten: stimmzettel.kandidatenSnapshot.map(_toStimmzettelKandidatDTO),
-      wahlID: wahlID,
-      wahlbezirkID: wahlbezirkID,
-      stimmzettelNummer: stimzettelNummer,
+      stimmzettelkennung: stimzettelNummer,
     };
   }
 

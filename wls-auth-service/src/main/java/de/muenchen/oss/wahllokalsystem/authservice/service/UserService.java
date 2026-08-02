@@ -207,7 +207,8 @@ public class UserService {
                         user,
                         newSchriftfuehrungAuthorities,
                         generatePin(),
-                        generateName(user.wahlbezirknummer(), startSuffix)))
+                        generateName(user.wahlbezirknummer(), startSuffix),
+                        "" + startSuffix))
             .toList();
     val persistedSchriftfuehrer = userRepository.saveAll(newSchriftfuehrungUsers);
 
@@ -224,7 +225,8 @@ public class UserService {
                 user,
                 newErfassungUserAuthorities,
                 generatePin(),
-                generateName(user.wahlbezirknummer(), suffixChar)));
+                generateName(user.wahlbezirknummer(), suffixChar),
+                "" + suffixChar));
       }
     }
 
@@ -259,9 +261,9 @@ public class UserService {
     return pinBuilder.toString();
   }
 
-  private String generateName(final String wahlbezirkNummer, final char suffix) {
+  private String generateName(final String wahlbezirkNummer, final char teamChar) {
     val randomPrefix = RandomStringUtils.secure().next(countCharsPrefix, prefixChars).toLowerCase();
-    return randomPrefix + "-" + wahlbezirkNummer + "-" + suffix;
+    return randomPrefix + teamChar + "-" + wahlbezirkNummer;
   }
 
   private String usersToCSVString(Iterable<User> users) {

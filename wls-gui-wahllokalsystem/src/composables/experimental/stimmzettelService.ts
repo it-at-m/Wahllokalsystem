@@ -1,5 +1,7 @@
 import type { StimmzettelSnapshot } from "@/types/experimental/StimmzettelSnapshot.ts";
 
+import { storeToRefs } from "pinia";
+
 import {
   Configuration,
   StimmzettelControllerApi,
@@ -9,6 +11,7 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelMapper } from "@/composables/experimental/stimmzettelMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useStimmzettelService() {
@@ -17,6 +20,7 @@ export function useStimmzettelService() {
       basePath: ERGEBNISMELDUNG_SERVICE_API_URL,
     })
   );
+  const { currentUserTeamName } = storeToRefs(useUserStore());
   const { getNullOn204OrElseResponseData } = useCommonApiUtils();
   const { toStimmzettelSnapshot, toWaehlerstimmzettelDTO } =
     useStimmzettelMapper();
@@ -31,7 +35,8 @@ export function useStimmzettelService() {
     try {
       const response = await stimmzettelApi.getStimmzettel(
         wahlID,
-        wahlbezirkID
+        wahlbezirkID,
+        currentUserTeamName.value
       );
       const responseBody = getNullOn204OrElseResponseData(response);
 
@@ -66,9 +71,14 @@ export function useStimmzettelService() {
   ) {
     try {
       const dtoToSend = stimmzettel.map((stimmzettel, index) =>
-        toWaehlerstimmzettelDTO(wahlID, wahlbezirkID, index, stimmzettel)
+        toWaehlerstimmzettelDTO(index, stimmzettel)
       );
-      await stimmzettelApi.postStimmzettel(wahlID, wahlbezirkID, dtoToSend);
+      await stimmzettelApi.postStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        currentUserTeamName.value,
+        dtoToSend
+      );
       if (sendNotification) {
         addNotification(
           "Stimmzettel erfolgreich gespeichert",

@@ -25,29 +25,44 @@ describe("wahlbriefeTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    it("should_createTask_when_WahlbezirkArtIsBWB", () => {
-      const taskFactoryContext = prepareTaskFactoryContext()
-        .wahlbezirkArt(WahlbezirksArtEnum.BWB)
-        .build();
+    describe("userHasRoleSchriftfuehrung", () => {
+      it("should_createTask_when_WahlbezirkArtIsBWB", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(true)
+          .wahlbezirkArt(WahlbezirksArtEnum.BWB)
+          .build();
 
-      mockDefinitions.initWahlbriefdaten.mockReturnValue(Promise.resolve());
+        mockDefinitions.initWahlbriefdaten.mockReturnValue(Promise.resolve());
 
-      const result = createTasks(taskFactoryContext);
+        const result = createTasks(taskFactoryContext);
 
-      expect(result.length).toStrictEqual(1);
+        expect(result.length).toStrictEqual(1);
 
-      result[0]?.callback();
+        result[0]?.callback();
 
-      expect(mockDefinitions.initWahlbriefdaten).toHaveBeenCalledWith(false);
+        expect(mockDefinitions.initWahlbriefdaten).toHaveBeenCalledWith(false);
+      });
+
+      it("should_returnNoTasks_when_calledWithWrongWahlbezirkArt", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(true)
+          .wahlbezirkArt(WahlbezirksArtEnum.UWB)
+          .build();
+
+        const result = createTasks(taskFactoryContext);
+
+        expect(result.length).toStrictEqual(0);
+      });
     });
+  });
 
-    it("should_returnNoTasks_when_calledWithWrongWahlbezirkArt", () => {
+  describe("userHasNotRoleSchriftfuehrung", () => {
+    it("should_returnNoTasks_when_called", () => {
       const taskFactoryContext = prepareTaskFactoryContext()
-        .wahlbezirkArt(WahlbezirksArtEnum.UWB)
+        .isSchriftfuehrung(false)
         .build();
 
       const result = createTasks(taskFactoryContext);
-
       expect(result.length).toStrictEqual(0);
     });
   });

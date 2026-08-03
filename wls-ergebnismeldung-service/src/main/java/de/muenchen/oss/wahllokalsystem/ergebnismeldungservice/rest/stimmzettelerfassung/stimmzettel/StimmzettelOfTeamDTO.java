@@ -5,5 +5,9 @@ import java.util.List;
 
 public record StimmzettelOfTeamDTO(
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED) int stimmzettelkennung,
-    List<Integer> selectedWahlvorschlaegeOrdnungszahlen,
-    List<StimmzettelKandidatDTO> kandidaten) {}
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) boolean isValid,
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) int invalideVotes,
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) String gueltigkeit,
+    List<BeschlussvormerkungDTO> beschlussvormerkungen,
+    BeschlussfassungDTO beschlussfassung,
+    List<WahlvorschlagDTO> wahlvorschlaege) {}

@@ -4,5 +4,9 @@ import java.util.List;
 
 public record StimmzettelOfTeamModel(
     int stimmzettelkennung,
-    List<Integer> selectedWahlvorschlaegeOrdnungszahlen,
-    List<StimmzettelKandidatModel> kandidaten) {}
+    boolean isValid,
+    int invalideVotes,
+    StimmzettelGueltigkeitModel gueltigkeit,
+    List<BeschlussvormerkungModel> beschlussvormerkungen,
+    BeschlussfassungModel beschlussfassung,
+    List<WahlvorschlagModel> wahlvorschlaege) {}

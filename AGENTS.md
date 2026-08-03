@@ -152,7 +152,7 @@ subfolder (`common` for shared, `<domain>` for domain-specific) across: `api/` (
 
 ## Testing conventions
 
-- Test names follow `should_<expectedResult>_when_<stateUnderTest>` in English, CamelCase. Backend
+- Test names follow `should_<expectedResult>_when_<stateUnderTest>` in English, with camelCase inside the placeholder phrases. Backend
   groups methods with JUnit5 `@Nested`; frontend with `describe(...)`.
 - Backend test stages (all must pass before merge), each in a conventional location:
   - Unit tests — aim for 100% line/method coverage of own classes; mock collaborators.

@@ -2,12 +2,19 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzette
 
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.instancio.Select.field;
+import static org.instancio.Select.types;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels;
 import java.util.List;
+import java.util.UUID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
+import org.instancio.Select;
+import org.instancio.Selector;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -193,10 +200,7 @@ class StimmzettelRepositoryTest {
       final String wahlbezirkID,
        final String teamID,
        final int stimmzettelKennung) {
-     return Instancio.of(DSEStimmzettel.class)
-         .set(
-             field(DSEStimmzettel::getId),
-             new StimmzettelID(wahlbezirkID, wahlID, teamID, stimmzettelKennung))
-         .create();
+     return Instancio.of(
+             InstancioModels.createDSESTimmzettelModel(wahlID, wahlbezirkID, teamID, stimmzettelKennung)).create();
   }
 }

@@ -18,50 +18,85 @@ Content-Type: application/json
 [
   {
     "stimmzettelkennung": 1,
-    "selectedWahlvorschlaegeOrdnungszahlen": [
-      100,
-      101
-    ],
-    "kandidaten": [
+    "valid": true,
+    "invalideVotes": 2,
+    "gueltigkeit": "VALID",
+    "beschlussvormerkungen": [
       {
-        "kandidatId": "k1",
-        "isDiscarded": false,
-        "votesByVoter": 1
+        "text": "vormerkung 1"
       },
       {
-        "kandidatId": "k2",
-        "isDiscarded": false,
-        "votesByVoter": 2
+        "text": "vormerkung 2"
+      }
+    ],
+    "beschlussfassung": {
+      "pro": 3,
+      "contra": 4,
+      "text": "beschlussfassung text"
+    },
+    "wahlvorschlaege": [
+      {
+        "wahlvorschlagID": "wahlvorschlagID1",
+        "selected": true,
+        "kandidaten": [
+          {
+            "id": {
+              "kandidatID": "kandidat1.1",
+              "nennungsNummer": 1
+            },
+            "discarded": false,
+            "votesByVoter": 3,
+            "invalidVotes": 4,
+            "votesByWahlvorschlag": 5
+          },
+          {
+            "id": {
+              "kandidatID": "kandidat1.1",
+              "nennungsNummer": 2
+            },
+            "discarded": true,
+            "votesByVoter": 0,
+            "invalidVotes": 0,
+            "votesByWahlvorschlag": 0
+          }
+        ]
+      },
+      {
+        "wahlvorschlagID": "wahlvorschlagID2",
+        "selected": true,
+        "kandidaten": [
+          {
+            "id": {
+              "kandidatID": "kandidat2.1",
+              "nennungsNummer": 1
+            },
+            "discarded": false,
+            "votesByVoter": 3,
+            "invalidVotes": 4,
+            "votesByWahlvorschlag": 5
+          },
+          {
+            "id": {
+              "kandidatID": "kandidat2.1",
+              "nennungsNummer": 2
+            },
+            "discarded": true,
+            "votesByVoter": 0,
+            "invalidVotes": 0,
+            "votesByWahlvorschlag": 0
+          }
+        ]
       }
     ]
   },
   {
     "stimmzettelkennung": 2,
-    "selectedWahlvorschlaegeOrdnungszahlen": [
-      100,
-      200
+    "valid": false,
+    "invalideVotes": 0,
+    "gueltigkeit": "INVALID",
+    "beschlussvormerkungen": [
     ],
-    "kandidaten": [
-      {
-        "kandidatId": "k1",
-        "isDiscarded": false,
-        "votesByVoter": 1
-      },
-      {
-        "kandidatId": "k2",
-        "isDiscarded": false,
-        "votesByVoter": 2
-      },
-      {
-        "kandidatId": "k3",
-        "isDiscarded": false,
-        "votesByVoter": 6
-      },
-      {
-        "kandidatId": "k4",
-        "isDiscarded": true,
-        "votesByVoter": 0
-      }
-    ]
+    "beschlussfassung": null,
+    "wahlvorschlaege": []
   }
 ]

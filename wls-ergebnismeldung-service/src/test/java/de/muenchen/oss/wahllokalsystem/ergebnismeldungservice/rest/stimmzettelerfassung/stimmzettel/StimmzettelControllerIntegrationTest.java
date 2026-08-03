@@ -110,12 +110,7 @@ public class StimmzettelControllerIntegrationTest {
       val wahlbezirkID = Instancio.create(String.class);
       val teamID = Instancio.create(String.class);
 
-       val stimmzettelNotToFind =
-           Instancio.of(DSEStimmzettel.class)
-               .set(
-                   Select.field(DSEStimmzettel::getId),
-                   new StimmzettelID(wahlbezirkID + "sth", wahlID, teamID, 4))
-               .create();
+       val stimmzettelNotToFind = createStimmzettelEntity(wahlbezirkID + "sth", wahlID, teamID, 4);
 
       stimmzettelRepository.saveAll(List.of(stimmzettelNotToFind));
 

@@ -20,7 +20,7 @@ class StimmzettelDTOMapperTest {
 
     @Test
     void should_returnModel_when_dtoIsGiven() {
-       val dtoToMap = new StimmzettelOfTeamDTO(1, true, 0, "VALID", null, null, null);
+       val dtoToMap = new StimmzettelOfTeamDTO(1, true, 0, StimmzettelGueltigkeitDTO.VALID, null, null, null);
 
        val result = unitUnderTest.toModel(dtoToMap);
 

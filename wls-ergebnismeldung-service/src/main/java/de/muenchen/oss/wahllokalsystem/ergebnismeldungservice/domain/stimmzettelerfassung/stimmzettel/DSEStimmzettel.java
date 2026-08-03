@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzette
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EmbeddedId;
@@ -38,7 +39,7 @@ public class DSEStimmzettel {
   @Enumerated(EnumType.STRING)
   private StimmzettelGueltigkeit gueltigkeit;
 
-  @OneToMany(mappedBy = "stimmzettel")
+  @OneToMany(mappedBy = "stimmzettel", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<DSEBeschlussvormerkung> beschlussvormerkungen = new LinkedList<>();
 
   @Embedded
@@ -49,7 +50,7 @@ public class DSEStimmzettel {
   })
   private Beschlussfassung beschlussfassung;
 
-  @OneToMany(mappedBy = "stimmzettel")
+  @OneToMany(mappedBy = "stimmzettel", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<DSEWahlvorschlag> wahlvorschlaege = new LinkedList<>();
 
   public void addBeschlussvormerkung(final DSEBeschlussvormerkung beschlussvormerkung) {

@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzette
 
 import static java.sql.Types.VARCHAR;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,7 +39,7 @@ public class DSEWahlvorschlag {
 
   @ManyToOne private DSEStimmzettel stimmzettel;
 
-  @OneToMany(mappedBy = "wahlvorschlag")
+  @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<DSEKandidat> kandidaten = new LinkedList<>();
 
   public void addKandidat(final DSEKandidat kandidat) {

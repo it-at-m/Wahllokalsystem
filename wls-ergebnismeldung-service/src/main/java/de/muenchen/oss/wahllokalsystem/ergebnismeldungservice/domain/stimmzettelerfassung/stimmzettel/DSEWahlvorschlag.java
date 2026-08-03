@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,10 +27,15 @@ public class DSEWahlvorschlag {
 
   @NotNull private String wahlvorschlagID;
 
-  @NotNull private boolean isSelected;
+  @NotNull private boolean selected;
 
   @ManyToOne private DSEStimmzettel stimmzettel;
 
   @OneToMany(mappedBy = "wahlvorschlag")
-  private List<DSEKandidat> kandidaten;
+  private List<DSEKandidat> kandidaten = new LinkedList<>();
+
+  public void addKandidat(final DSEKandidat kandidat) {
+    kandidaten.add(kandidat);
+    kandidat.setWahlvorschlag(this);
+  }
 }

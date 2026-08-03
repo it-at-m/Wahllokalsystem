@@ -20,7 +20,7 @@ public class DSEKandidat {
 
   @ManyToOne private DSEWahlvorschlag wahlvorschlag;
 
-  @NotNull private boolean isDiscarded;
+  @NotNull private boolean discarded;
 
   private Integer votesByVoter;
 

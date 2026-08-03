@@ -3,4 +3,4 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettele
 import java.util.List;
 
 public record WahlvorschlagDTO(
-    String wahlvorschlagID, boolean isSelected, List<KandidatDTO> kandidaten) {}
+    String wahlvorschlagID, boolean selected, List<KandidatDTO> kandidaten) {}

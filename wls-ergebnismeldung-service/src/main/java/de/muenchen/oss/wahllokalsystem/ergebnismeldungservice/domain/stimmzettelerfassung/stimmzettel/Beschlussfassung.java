@@ -2,7 +2,9 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzette
 
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
+@Data
 @Embeddable
 public class Beschlussfassung {
 

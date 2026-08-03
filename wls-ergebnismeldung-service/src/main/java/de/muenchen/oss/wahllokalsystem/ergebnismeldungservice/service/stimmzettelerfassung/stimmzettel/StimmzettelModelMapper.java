@@ -8,10 +8,11 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
+import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface StimmzettelModelMapper {
 
   @Mapping(target = "stimmzettelkennung", source = "id.stimmzettelkennung")
@@ -24,6 +25,7 @@ public interface StimmzettelModelMapper {
 
   KandidatModel toModel(DSEKandidat kandidat);
 
+  @Mapping(target = "wahlvorschlag", ignore = true)
   DSEKandidat toEntity(KandidatModel kandidatModel);
 
   KandidatIDModel toModel(KandidatID kandidatID);
@@ -32,6 +34,8 @@ public interface StimmzettelModelMapper {
 
   WahlvorschlagModel toModel(DSEWahlvorschlag wahlvorschlag);
 
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "stimmzettel", ignore = true)
   DSEWahlvorschlag toEntity(WahlvorschlagModel wahlvorschlagModel);
 
   StimmzettelGueltigkeitModel toModel(StimmzettelGueltigkeit gueltigkeit);
@@ -43,6 +47,8 @@ public interface StimmzettelModelMapper {
   @Mapping(target = "id.wahlID", source = "owner.wahlID")
   @Mapping(target = "id.stimmzettelkennung", source = "stimmzettelModel.stimmzettelkennung")
   @Mapping(target = "gueltigkeit", source = "stimmzettelModel.gueltigkeit")
+  @Mapping(target = "beschlussvormerkungen.id", ignore = true)
+  @Mapping(target = "beschlussvormerkungen.stimmzettel", ignore = true)
   DSEStimmzettel toEntity(TeamBezirkUndWahlIDModel owner, StimmzettelOfTeamModel stimmzettelModel);
 
   default StimmzettelID toStimmzettelID(

@@ -3,4 +3,4 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 import java.util.List;
 
 public record WahlvorschlagModel(
-    String wahlvorschlagID, boolean isSelected, List<KandidatModel> kandidaten) {}
+    String wahlvorschlagID, boolean selected, List<KandidatModel> kandidaten) {}

@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettele
 
 public record KandidatDTO(
     KandidatIDDTO id,
-    boolean isDiscarded,
+    boolean discarded,
     Integer votesByVoter,
     Integer invalidVotes,
     Integer votesByWahlvorschlag) {}

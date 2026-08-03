@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 
 public record KandidatModel(
     KandidatIDModel id,
-    boolean isDiscarded,
+    boolean discarded,
     Integer votesByVoter,
     Integer invalidVotes,
     Integer votesByWahlvorschlag) {}

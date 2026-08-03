@@ -35,8 +35,7 @@ public class DSEStimmzettel {
 
   @NotNull private int invalideVotes;
 
-  @NotNull
-  @Enumerated(EnumType.STRING)
+  @NotNull @Enumerated(EnumType.STRING)
   private StimmzettelGueltigkeit gueltigkeit;
 
   @OneToMany(mappedBy = "stimmzettel", orphanRemoval = true, cascade = CascadeType.ALL)
@@ -44,9 +43,9 @@ public class DSEStimmzettel {
 
   @Embedded
   @AttributeOverrides({
-          @AttributeOverride(name="pro", column=@Column(name = "beschluss_pro")),
-          @AttributeOverride(name="contra", column=@Column(name = "beschluss_contra")),
-          @AttributeOverride(name="text", column=@Column(name = "beschluss_text"))
+    @AttributeOverride(name = "pro", column = @Column(name = "beschluss_pro")),
+    @AttributeOverride(name = "contra", column = @Column(name = "beschluss_contra")),
+    @AttributeOverride(name = "text", column = @Column(name = "beschluss_text"))
   })
   private Beschlussfassung beschlussfassung;
 

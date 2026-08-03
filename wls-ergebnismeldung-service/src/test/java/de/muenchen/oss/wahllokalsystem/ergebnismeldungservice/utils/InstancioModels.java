@@ -13,20 +13,20 @@ import org.instancio.settings.Settings;
 
 public class InstancioModels {
 
-    private final static Settings COMMON_ENTITY_SETTINGS = Settings.create()
-            .set(Keys.SET_BACK_REFERENCES, true);
+  private static final Settings COMMON_ENTITY_SETTINGS =
+      Settings.create().set(Keys.SET_BACK_REFERENCES, true);
 
-     public static Model<DSEStimmzettel> createDSESTimmzettelModel(
-            final String wahlID,
-            final String wahlbezirkID,
-            final String teamID,
-            final int stimmzettelKennung) {
-        return Instancio.of(DSEStimmzettel.class)
-                .withSettings(COMMON_ENTITY_SETTINGS)
-                .ignore(types().of(UUID.class))
-                .set(
-                        field(DSEStimmzettel::getId),
-                        new StimmzettelID(wahlbezirkID, wahlID, teamID, stimmzettelKennung))
-                .toModel();
-    }
+  public static Model<DSEStimmzettel> createDSESTimmzettelModel(
+      final String wahlID,
+      final String wahlbezirkID,
+      final String teamID,
+      final int stimmzettelKennung) {
+    return Instancio.of(DSEStimmzettel.class)
+        .withSettings(COMMON_ENTITY_SETTINGS)
+        .ignore(types().of(UUID.class))
+        .set(
+            field(DSEStimmzettel::getId),
+            new StimmzettelID(wahlbezirkID, wahlID, teamID, stimmzettelKennung))
+        .toModel();
+  }
 }

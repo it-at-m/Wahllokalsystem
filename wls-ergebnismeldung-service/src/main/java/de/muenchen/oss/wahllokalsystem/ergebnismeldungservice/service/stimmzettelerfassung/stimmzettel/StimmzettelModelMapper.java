@@ -5,7 +5,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEStimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEWahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.KandidatID;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import org.mapstruct.CollectionMappingStrategy;
@@ -50,10 +49,4 @@ public interface StimmzettelModelMapper {
   @Mapping(target = "beschlussvormerkungen.id", ignore = true)
   @Mapping(target = "beschlussvormerkungen.stimmzettel", ignore = true)
   DSEStimmzettel toEntity(TeamBezirkUndWahlIDModel owner, StimmzettelOfTeamModel stimmzettelModel);
-
-  default StimmzettelID toStimmzettelID(
-      final TeamBezirkUndWahlIDModel owner, final StimmzettelOfTeamModel stimmzettelModel) {
-    return new StimmzettelID(
-        owner.wahlbezirkID(), owner.wahlID(), owner.teamID(), stimmzettelModel.stimmzettelkennung());
-  }
 }

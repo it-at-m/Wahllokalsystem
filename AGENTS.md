@@ -15,6 +15,25 @@ frontends, a shared `wls-common` library, a local `stack/` (Podman/Docker Compos
 independently. The documentation under `docs/src/technik/` is the authoritative source for
 architecture and conventions and is far more detailed than this file.
 
+## How to use this as an AI agent
+
+- Work always inside a specific module. Backend commands run inside one `wls-*-service/` directory,
+  frontend commands inside `wls-gui-wahllokalsystem/` or `wls-gui-admintool/`, docs commands inside
+  `docs/`. There is no repo-wide Maven or Node build from the root.
+- Prefer fast, targeted searches (e.g. ripgrep/`rg` and glob patterns) instead of slow full-tree
+  scans. Use paths and package names from this file and from `docs/src/technik/` to narrow down
+  where to look.
+- Keep changes minimal and local. Follow existing patterns in the affected service or frontend
+  instead of inventing new abstractions. Run formatting/linting (`mvn spotless:apply`,
+  `mvn checkstyle:check`, `npm run fix`, `npm run lint`) and tests before considering a change
+  complete.
+- Do not change ArchUnit tests or the global architecture rules when implementing normal
+  features. Fix violations by adapting your code to the existing rules instead.
+- Do not bump the `wls-common` dependency version in any service `pom.xml` unless explicitly
+  requested or working on a coordinated `wls-common` release.
+- Treat `stack/` (Docker Compose, gateway config, LDAP, DB) as local-development infrastructure.
+  Do not introduce production behavior changes there; use it only to run the system locally.
+
 ## Layout
 
 - `wls-<domain>-service/` — backend microservices (Spring Boot 3.5, Java 21). E.g. `basisdaten`,
@@ -48,7 +67,8 @@ mvn checkstyle:check          # lint
 ```
 Code style is enforced by **Spotless** (Eclipse formatter via `itm-java-codeformat` + googleJavaFormat)
 and **Checkstyle** (`checkstyle.xml` per service). Run `mvn spotless:apply` before committing or the
-build breaks. See https://github.com/it-at-m/itm-java-codeformat for IDE setup.
+build breaks. See https://github.com/it-at-m/itm-java-codeformat for IDE setup. Always run these
+commands inside the concrete service directory; there is no Maven build from the repo root.
 
 ### Frontend (run inside `wls-gui-wahllokalsystem/` or `wls-gui-admintool/`)
 ```bash
@@ -62,7 +82,8 @@ npm run storybook    # component explorer on :6006
 Requires Node `>=24.11 <25`. API clients are **generated** from OpenAPI JSON in
 `src/resources/openapis/` via `npm run gen:<service>-api` (e.g. `gen:wahlvorstand-api`). Generated
 code lands in `src/api/wls-clients/generated-*-api/` — do not edit it by hand; regenerate after
-updating the OpenAPI spec.
+updating the OpenAPI spec. Frontend commands are run only inside a specific GUI project directory,
+not from the repo root.
 
 ### Running the full system locally
 See `docs/src/technik/get_started/index.md`. Order: Oracle DB → auth-service → api-gateway →
@@ -155,3 +176,5 @@ subfolder (`common` for shared, `<domain>` for domain-specific) across: `api/` (
   generating API clients, DB access, ArchUnit rules, mock server, SSL certs, LDIF data).
 - This is a public open-source project (MIT, it@M / opensource@muenchen.de). User-facing text and
   much documentation is in **German**; keep that language for domain terms and UI strings.
+- `stack/` is for local development and test setups. Do not change Docker Compose or gateway
+  configuration there to alter production behavior; keep changes limited to local usage.

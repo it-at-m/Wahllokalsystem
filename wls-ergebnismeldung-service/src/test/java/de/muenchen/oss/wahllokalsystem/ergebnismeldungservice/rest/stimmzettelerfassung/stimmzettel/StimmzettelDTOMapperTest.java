@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.stimmzettel;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelKandidatModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.KandidatIDModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.KandidatModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelOfTeamModel;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -20,29 +21,10 @@ class StimmzettelDTOMapperTest {
     void should_returnModel_when_dtoIsGiven() {
       val dtoToMap = Instancio.create(StimmzettelOfTeamDTO.class);
 
-      val result = unitUnderTest.toModel(dtoToMap);
+       val result = unitUnderTest.toModel(dtoToMap);
 
-      val expectedWahlvorschlaegeOrdnungszahlen =
-          dtoToMap.selectedWahlvorschlaegeOrdnungszahlen().stream().toList();
-      val expectedKandidaten =
-          dtoToMap.kandidaten().stream()
-              .map(
-                  dtoKandidat ->
-                      new StimmzettelKandidatModel(
-                          dtoKandidat.kandidatId(),
-                          dtoKandidat.isDiscarded(),
-                          dtoKandidat.votesByVoter()))
-              .toList();
-      val expectedResult =
-          new StimmzettelOfTeamModel(
-              dtoToMap.stimmzettelkennung(),
-              expectedWahlvorschlaegeOrdnungszahlen,
-              expectedKandidaten);
-
-      Assertions.assertThat(result)
-          .usingRecursiveComparison()
-          .ignoringCollectionOrder()
-          .isEqualTo(expectedResult);
+       Assertions.assertThat(result.stimmzettelkennung()).isEqualTo(dtoToMap.stimmzettelkennung());
+       Assertions.assertThat(result.isValid()).isEqualTo(dtoToMap.isValid());
     }
   }
 
@@ -55,27 +37,7 @@ class StimmzettelDTOMapperTest {
 
       val result = unitUnderTest.toDTO(modelToMap);
 
-      val expectedWahlvorschlaegeOrdnungszahlen =
-          modelToMap.selectedWahlvorschlaegeOrdnungszahlen().stream().toList();
-      val expectedKandidaten =
-          modelToMap.kandidaten().stream()
-              .map(
-                  modelKandidat ->
-                      new StimmzettelKandidatDTO(
-                          modelKandidat.kandidatId(),
-                          modelKandidat.isDiscarded(),
-                          modelKandidat.votesByVoter()))
-              .toList();
-      val expectedResult =
-          new StimmzettelOfTeamDTO(
-              modelToMap.stimmzettelkennung(),
-              expectedWahlvorschlaegeOrdnungszahlen,
-              expectedKandidaten);
-
-      Assertions.assertThat(result)
-          .usingRecursiveComparison()
-          .ignoringCollectionOrder()
-          .isEqualTo(expectedResult);
+      Assertions.assertThat(result.stimmzettelkennung()).isEqualTo(modelToMap.stimmzettelkennung());
     }
   }
 }

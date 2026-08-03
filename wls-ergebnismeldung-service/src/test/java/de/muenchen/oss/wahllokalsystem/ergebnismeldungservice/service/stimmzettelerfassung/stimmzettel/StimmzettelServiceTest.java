@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEStimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -30,7 +30,7 @@ class StimmzettelServiceTest {
 
   @InjectMocks StimmzettelService unitUnderTest;
 
-  @Captor ArgumentCaptor<Iterable<Stimmzettel>> saveStimmzettelArgumentCaptor;
+  @Captor ArgumentCaptor<Iterable<DSEStimmzettel>> saveStimmzettelArgumentCaptor;
 
   @Nested
   class GetStimmzettel {
@@ -39,7 +39,7 @@ class StimmzettelServiceTest {
     void should_returnMappedStimmzettel_when_repoFoundData() {
       val stimmzettelOwner = Instancio.create(TeamBezirkUndWahlIDModel.class);
 
-      val mockedRepoResponse = Instancio.ofList(Stimmzettel.class).size(5).create();
+       val mockedRepoResponse = Instancio.ofList(DSEStimmzettel.class).size(5).create();
       Mockito.when(
               stimmzettelRepository.findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
                   stimmzettelOwner.wahlbezirkID(),
@@ -47,7 +47,7 @@ class StimmzettelServiceTest {
                   stimmzettelOwner.teamID()))
           .thenReturn(mockedRepoResponse);
 
-      Mockito.when(stimmzettelModelMapper.toModel(Mockito.any(Stimmzettel.class)))
+       Mockito.when(stimmzettelModelMapper.toModel(Mockito.any(DSEStimmzettel.class)))
           .thenAnswer(invocation -> Instancio.create(StimmzettelOfTeamModel.class));
 
       val result = unitUnderTest.getStimmzettel(stimmzettelOwner);
@@ -92,8 +92,8 @@ class StimmzettelServiceTest {
       val stimmzettelOwner = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val stimmzettelToSave = Instancio.ofList(StimmzettelOfTeamModel.class).size(5).create();
 
-      Mockito.when(stimmzettelModelMapper.toEntity(Mockito.eq(stimmzettelOwner), Mockito.any()))
-          .thenAnswer(invocation -> Instancio.create(Stimmzettel.class));
+       Mockito.when(stimmzettelModelMapper.toEntity(Mockito.eq(stimmzettelOwner), Mockito.any()))
+           .thenAnswer(invocation -> Instancio.create(DSEStimmzettel.class));
 
       unitUnderTest.saveStimmzettel(stimmzettelOwner, stimmzettelToSave);
 

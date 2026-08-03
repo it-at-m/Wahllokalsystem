@@ -1,9 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Beschlussfassung;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEKandidat;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEStimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEWahlvorschlag;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.KandidatID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelKandidat;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
+import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
@@ -19,54 +23,47 @@ class StimmzettelModelMapperTest {
   class ToModel {
 
     @Nested
-    class OfStimmzettel {
+     class OfDSEStimmzettel {
 
       @Test
-      void should_mapToModel_when_entityIsGiven() {
-        val entityToMap = Instancio.create(Stimmzettel.class);
+       void should_mapToModel_when_entityIsGiven() {
+         val entityToMap = Instancio.create(DSEStimmzettel.class);
 
-        val result = unitUnderTest.toModel(entityToMap);
+         val result = unitUnderTest.toModel(entityToMap);
 
-        val expectedListOfWahlvorschlaegeOrdnungszahlen =
-            entityToMap.getSelectedWahlvorschlaegeOrdnungszahlen().stream().toList();
-        val expectedListOfKandidaten =
-            entityToMap.getKandidaten().stream()
-                .map(
-                    kandidatEntity ->
-                        new StimmzettelKandidatModel(
-                            kandidatEntity.getKandidatId(),
-                            kandidatEntity.isDiscarded(),
-                            kandidatEntity.getVotesByVoter()))
-                .toList();
-        val expectedResult =
-            new StimmzettelOfTeamModel(
-                entityToMap.getId().getStimmzettelkennung(),
-                expectedListOfWahlvorschlaegeOrdnungszahlen,
-                expectedListOfKandidaten);
-
-        Assertions.assertThat(result)
-            .usingRecursiveComparison()
-            .ignoringCollectionOrder()
-            .isEqualTo(expectedResult);
-      }
+         Assertions.assertThat(result.stimmzettelkennung())
+             .isEqualTo(entityToMap.getId().getStimmzettelkennung());
+         Assertions.assertThat(result.isValid()).isEqualTo(entityToMap.isValid());
+         Assertions.assertThat(result.invalideVotes()).isEqualTo(entityToMap.getInvalideVotes());
+       }
     }
 
     @Nested
-    class OfStimmzettelKandidat {
+     class OfDSEKandidat {
 
       @Test
-      void should_mapToModel_when_entityIsGiven() {
-        val entityToMap = Instancio.create(StimmzettelKandidat.class);
+       void should_mapToModel_when_entityIsGiven() {
+         val kandidatId = Instancio.create(KandidatID.class);
+         val entityToMap =
+             new DSEKandidat(
+                 kandidatId,
+                 Instancio.create(DSEWahlvorschlag.class),
+                 true,
+                 1,
+                 2,
+                 3);
 
-        val result = unitUnderTest.toModel(entityToMap);
+         val result = unitUnderTest.toModel(entityToMap);
 
-        val expectedResult =
-            new StimmzettelKandidatModel(
-                entityToMap.getKandidatId(),
-                entityToMap.isDiscarded(),
-                entityToMap.getVotesByVoter());
-        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-      }
+         val expectedResult =
+             new KandidatModel(
+                 new KandidatIDModel(kandidatId.getKandidatID(), kandidatId.getNennungsNummer()),
+                 entityToMap.isDiscarded(),
+                 entityToMap.getVotesByVoter(),
+                 entityToMap.getInvalidVotes(),
+                 entityToMap.getVotesByWahlvorschlag());
+         Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+       }
     }
   }
 
@@ -74,54 +71,48 @@ class StimmzettelModelMapperTest {
   class ToEntity {
 
     @Nested
-    class OfStimmzettelOwnerAndStimmzettelOfTeamModel {
+     class OfStimmzettelOwnerAndStimmzettelOfTeamModel {
 
       @Test
-      void should_returnEntity_when_modelsAreGiven() {
-        val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
-        val stimmzettelOfTeamModel = Instancio.create(StimmzettelOfTeamModel.class);
+       void should_returnEntity_when_modelsAreGiven() {
+         val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
+         val stimmzettelOfTeamModel =
+             new StimmzettelOfTeamModel(
+                 1,
+                 true,
+                 0,
+                 StimmzettelGueltigkeitModel.VALID,
+                 List.of(new BeschlussvormerkungModel("text")),
+                 new BeschlussfassungModel(1, 0, "text"),
+                 List.of());
 
-        val result = unitUnderTest.toEntity(ownerModel, stimmzettelOfTeamModel);
+         val result = unitUnderTest.toEntity(ownerModel, stimmzettelOfTeamModel);
 
-        val expectedListOfWahlvorschlaegeOrdnungszahlen =
-            stimmzettelOfTeamModel.selectedWahlvorschlaegeOrdnungszahlen().stream().toList();
-        val expectedListOfKandidaten =
-            stimmzettelOfTeamModel.kandidaten().stream()
-                .map(
-                    kandidatModel ->
-                        new StimmzettelKandidat(
-                            kandidatModel.kandidatId(),
-                            kandidatModel.isDiscarded(),
-                            kandidatModel.votesByVoter()))
-                .toList();
-        val expectedResult =
-            new Stimmzettel(
-                new StimmzettelID(
-                    ownerModel.wahlbezirkID(),
-                    ownerModel.wahlID(),
-                    ownerModel.teamID(),
-                    stimmzettelOfTeamModel.stimmzettelkennung()),
-                expectedListOfWahlvorschlaegeOrdnungszahlen,
-                expectedListOfKandidaten);
-
-        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-      }
+         val expectedId =
+             new StimmzettelID(
+                 ownerModel.wahlbezirkID(), ownerModel.wahlID(), ownerModel.teamID(), 1);
+         Assertions.assertThat(result.getId()).isEqualTo(expectedId);
+         Assertions.assertThat(result.isValid()).isEqualTo(stimmzettelOfTeamModel.isValid());
+         Assertions.assertThat(result.getInvalideVotes())
+             .isEqualTo(stimmzettelOfTeamModel.invalideVotes());
+       }
     }
 
     @Nested
-    class OfStimmzettelKandidatModel {
+     class OfKandidatModel {
 
       @Test
-      void should_returnEntity_when_modelIsGiven() {
-        val modelToMap = Instancio.create(StimmzettelKandidatModel.class);
+       void should_returnEntity_when_modelIsGiven() {
+         val kandidatIdModel = new KandidatIDModel("kid", 1);
+         val modelToMap = new KandidatModel(kandidatIdModel, true, 1, 2, 3);
 
-        val result = unitUnderTest.toEntity(modelToMap);
+         val result = unitUnderTest.toEntity(modelToMap);
 
-        val expectedResult =
-            new StimmzettelKandidat(
-                modelToMap.kandidatId(), modelToMap.isDiscarded(), modelToMap.votesByVoter());
-        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-      }
+         val expectedId = new KandidatID("kid", 1);
+         Assertions.assertThat(result.getId()).isEqualTo(expectedId);
+         Assertions.assertThat(result.isDiscarded()).isEqualTo(modelToMap.isDiscarded());
+         Assertions.assertThat(result.getVotesByVoter()).isEqualTo(modelToMap.votesByVoter());
+       }
     }
   }
 }

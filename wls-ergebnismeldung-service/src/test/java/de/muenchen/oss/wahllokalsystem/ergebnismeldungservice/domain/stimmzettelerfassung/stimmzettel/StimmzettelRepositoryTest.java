@@ -188,15 +188,15 @@ class StimmzettelRepositoryTest {
     }
   }
 
-  private Stimmzettel createStimmzettelEntity(
+   private DSEStimmzettel createStimmzettelEntity(
       final String wahlID,
       final String wahlbezirkID,
-      final String teamID,
-      final int stimmzettelKennung) {
-    return Instancio.of(Stimmzettel.class)
-        .set(
-            field(Stimmzettel::getId),
-            new StimmzettelID(wahlbezirkID, wahlID, teamID, stimmzettelKennung))
-        .create();
+       final String teamID,
+       final int stimmzettelKennung) {
+     return Instancio.of(DSEStimmzettel.class)
+         .set(
+             field(DSEStimmzettel::getId),
+             new StimmzettelID(wahlbezirkID, wahlID, teamID, stimmzettelKennung))
+         .create();
   }
 }

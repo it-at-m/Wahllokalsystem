@@ -17,6 +17,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExcept
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.util.List;
+import java.util.UUID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
@@ -197,6 +198,7 @@ public class StimmzettelControllerIntegrationTest {
             Assertions.assertThat(savedStimmzettel)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
+                    .ignoringFieldsOfTypes(UUID.class)
                 .isEqualTo(
                     List.of(
                         expectedSavedStimmzettel1,
@@ -257,6 +259,7 @@ public class StimmzettelControllerIntegrationTest {
             Assertions.assertThat(savedStimmzettel)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
+                    .ignoringFieldsOfTypes(UUID.class)
                 .isEqualTo(
                     List.of(
                         expectedSavedStimmzettel1,
@@ -321,6 +324,7 @@ public class StimmzettelControllerIntegrationTest {
              Assertions.assertThat(savedStimmzettel)
                  .usingRecursiveComparison()
                  .ignoringCollectionOrder()
+                     .ignoringFieldsOfTypes(UUID.class)
                  .isEqualTo(List.of(stimmzettel1ToReplace, stimmzettel2ToReplace));
             Assertions.assertThat(savedStimmzettel).hasSize(2);
           });

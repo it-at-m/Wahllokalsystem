@@ -457,17 +457,12 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
               response.getContentAsString(), StimmzettelerfassungTeamStatusEntryDTO[].class);
 
       Assertions.assertThat(dtos).hasSize(2);
-      Assertions.assertThat(
-              java.util.Arrays.stream(dtos)
-                  .map(StimmzettelerfassungTeamStatusEntryDTO::teamID)
-                  .toList())
-          .containsExactlyInAnyOrder("team1", "team2");
-      Assertions.assertThat(
-              java.util.Arrays.stream(dtos)
-                  .map(StimmzettelerfassungTeamStatusEntryDTO::status)
-                  .toList())
+      Assertions.assertThat(dtos)
           .containsExactlyInAnyOrder(
-              ErfassungTeamStatusDTO.REGISTRIERT, ErfassungTeamStatusDTO.ABGESCHLOSSEN);
+              new StimmzettelerfassungTeamStatusEntryDTO(
+                  "team1", ErfassungTeamStatusDTO.REGISTRIERT),
+              new StimmzettelerfassungTeamStatusEntryDTO(
+                  "team2", ErfassungTeamStatusDTO.ABGESCHLOSSEN));
     }
 
     @Test

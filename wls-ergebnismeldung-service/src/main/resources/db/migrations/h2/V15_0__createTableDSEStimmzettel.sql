@@ -11,18 +11,18 @@ CREATE TABLE Stimmzettel
     gueltigkeit        VARCHAR(255) NOT NULL,
     beschluss_pro      INT,
     beschluss_contra   INT,
-    beschluss_text     VARCHAR(4000),
+    beschluss_text     VARCHAR(10000),
     PRIMARY KEY (wahlbezirkID, wahlID, teamID, stimmzettelkennung)
 );
 
 CREATE TABLE Beschlussgrund
 (
-    id                             VARCHAR(255)  NOT NULL,
-    text                           VARCHAR(4000) NOT NULL,
-    stimmzettel_wahlbezirkID       VARCHAR(255)  NOT NULL,
-    stimmzettel_wahlID             VARCHAR(255)  NOT NULL,
-    stimmzettel_teamID             VARCHAR(255)  NOT NULL,
-    stimmzettel_stimmzettelkennung INT           NOT NULL,
+    id                             VARCHAR(255) NOT NULL,
+    text                           VARCHAR(100) NOT NULL,
+    stimmzettel_wahlbezirkID       VARCHAR(255) NOT NULL,
+    stimmzettel_wahlID             VARCHAR(255) NOT NULL,
+    stimmzettel_teamID             VARCHAR(255) NOT NULL,
+    stimmzettel_stimmzettelkennung INT          NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_beschlussgrund_stimmzettel FOREIGN KEY (stimmzettel_wahlbezirkID, stimmzettel_wahlID,
                                                           stimmzettel_teamID, stimmzettel_stimmzettelkennung)

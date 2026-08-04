@@ -2,7 +2,7 @@
   <div>
     <p
       v-if="!tasks?.length"
-      class="my-3"
+      :class="['my-3', titelClass]"
     >
       {{ titel }} ({{ current }} / {{ total }})
     </p>
@@ -30,6 +30,7 @@ import type { Task } from "@/types/tasks/Task.ts";
 
 defineProps<{
   titel: string;
+  titelClass?: string;
   isLoading: boolean;
   current: number;
   total: number;

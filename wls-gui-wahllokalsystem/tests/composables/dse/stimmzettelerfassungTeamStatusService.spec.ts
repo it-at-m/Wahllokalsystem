@@ -1,3 +1,6 @@
+import type { StimmzettelerfassungTeamStatusEntryDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
+
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
@@ -11,11 +14,13 @@ const mockDefinitions = vi.hoisted(() => {
 
   return {
     getStimmzettelerfassungTeamStatus: vi.fn(),
+    getStimmzettelerfassungTeamStatusList: vi.fn(),
     saveStimmzettelerfassungTeamStatus: vi.fn(),
     configurationConstructor: vi.fn(),
     getNullOn204OrElseResponseData: vi.fn(),
     addNotification: vi.fn(),
     dtoToModel: vi.fn(),
+    dtoEntryToModelEntry: vi.fn(),
     modelToDto: vi.fn(),
     getWahlNameOrBlankStringById: vi.fn(),
     requestAsOnlineOnly: vi.fn(() => sentinelAxiosConfig),
@@ -27,6 +32,8 @@ vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
   StimmzettelerfassungTeamStatusControllerApi: class {
     getStimmzettelerfassungTeamStatus =
       mockDefinitions.getStimmzettelerfassungTeamStatus;
+    getStimmzettelerfassungTeamStatusList =
+      mockDefinitions.getStimmzettelerfassungTeamStatusList;
     saveStimmzettelerfassungTeamStatus =
       mockDefinitions.saveStimmzettelerfassungTeamStatus;
   },
@@ -56,6 +63,7 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
 vi.mock("@/composables/dse/stimmzettelerfassungTeamStatusMapper.ts", () => ({
   useStimmzettelerfassungTeamStatusMapper: () => ({
     dtoToModel: mockDefinitions.dtoToModel,
+    dtoEntryToModelEntry: mockDefinitions.dtoEntryToModelEntry,
     modelToDto: mockDefinitions.modelToDto,
   }),
 }));
@@ -78,8 +86,12 @@ const {
 } = useStimmzettelerfassungTeamStatusTestDataFactory();
 
 describe("stimmzettelerfassungTeamStatusService.ts", () => {
-  const { isSaving, loadErfassungTeamStatus, postErfassungTeamStatus } =
-    useStimmzettelerfassungTeamStatusService();
+  const {
+    isSaving,
+    loadErfassungTeamStatus,
+    loadErfassungTeamStatusListe,
+    postErfassungTeamStatus,
+  } = useStimmzettelerfassungTeamStatusService();
 
   beforeEach(() => {
     vi.useFakeTimers({});
@@ -163,7 +175,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       ]);
       expect(mockDefinitions.dtoToModel.mock.calls.length).toBe(1);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
-        "Status 'REGISTRIERT' für MBW erfolgreich geladen.",
+        "Team-Status 'REGISTRIERT' für MBW erfolgreich geladen.",
         UserNotificationCategoryEnum.SUCCESS,
       ]);
     });
@@ -261,6 +273,217 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       expect(mockDefinitions.addNotification.mock.calls[0][1]).toBe(
         UserNotificationCategoryEnum.ERROR
       );
+    });
+  });
+
+  describe("loadErfassungTeamStatusListe", () => {
+    it("should_callApiAndReturnMappedList_and_showSuccessNotification", async () => {
+      // Arrange
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID = generateRandomString(8);
+
+      const dto1 =
+        createStimmzettelerfassungTeamStatusDTOData() as StimmzettelerfassungTeamStatusEntryDTO;
+      const dto2 =
+        createStimmzettelerfassungTeamStatusDTOData() as StimmzettelerfassungTeamStatusEntryDTO;
+      const mockedResponse = createAxiosResponse({
+        status: 200,
+        data: [dto1, dto2],
+      });
+
+      mockDefinitions.getStimmzettelerfassungTeamStatusList.mockResolvedValue(
+        mockedResponse
+      );
+      mockDefinitions.getNullOn204OrElseResponseData.mockReturnValue(
+        mockedResponse.data
+      );
+
+      const model1 =
+        createStimmzettelerfassungTeamStatusModel() as StimmzettelerfassungTeamStatusEntry;
+      const model2 =
+        createStimmzettelerfassungTeamStatusModel() as StimmzettelerfassungTeamStatusEntry;
+
+      // Map DTOs deterministically based on reference to avoid flakiness
+      mockDefinitions.dtoEntryToModelEntry.mockImplementation((dto) => {
+        if (dto === dto1) return model1;
+        if (dto === dto2) return model2;
+        // Fallback to a generic model to be safe
+        return createStimmzettelerfassungTeamStatusModel();
+      });
+
+      mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
+
+      // Act
+      const result = await loadErfassungTeamStatusListe(
+        wahlID,
+        wahlbezirkID,
+        true
+      );
+
+      // Assert
+      expect(result).toStrictEqual([model1, model2]);
+      expect(
+        mockDefinitions.getStimmzettelerfassungTeamStatusList.mock.calls
+      ).toStrictEqual([
+        [wahlID, wahlbezirkID, mockDefinitions.sentinelAxiosConfig],
+      ]);
+      // Ensure the mapper was called with the two DTOs in order
+      expect(mockDefinitions.dtoEntryToModelEntry.mock.calls).toEqual([
+        [dto1],
+        [dto2],
+      ]);
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [
+          "Status der Teams wurden aktualisiert",
+          UserNotificationCategoryEnum.SUCCESS,
+        ],
+      ]);
+    });
+
+    it("should_returnEmptyList_when_apiReturns204NoContent", async () => {
+      // Arrange
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID = generateRandomString(8);
+
+      const mockedResponse = createAxiosResponse({
+        status: 204,
+        data: null,
+      });
+
+      mockDefinitions.getStimmzettelerfassungTeamStatusList.mockResolvedValue(
+        mockedResponse
+      );
+      mockDefinitions.getNullOn204OrElseResponseData.mockReturnValue(null);
+      mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
+
+      // Act
+      const result = await loadErfassungTeamStatusListe(
+        wahlID,
+        wahlbezirkID,
+        true
+      );
+
+      // Assert
+      expect(result).toStrictEqual([]);
+      expect(mockDefinitions.dtoEntryToModelEntry.mock.calls.length).toBe(0);
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [
+          "Status der Teams wurden aktualisiert",
+          UserNotificationCategoryEnum.SUCCESS,
+        ],
+      ]);
+    });
+
+    it("should_notShowNotification_when_sendNotificationIsFalse", async () => {
+      // Arrange
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID = generateRandomString(8);
+
+      const dto =
+        createStimmzettelerfassungTeamStatusDTOData() as StimmzettelerfassungTeamStatusEntryDTO;
+      const mockedResponse = createAxiosResponse({
+        status: 200,
+        data: [dto],
+      });
+      mockDefinitions.getStimmzettelerfassungTeamStatusList.mockResolvedValue(
+        mockedResponse
+      );
+      mockDefinitions.getNullOn204OrElseResponseData.mockReturnValue(
+        mockedResponse.data
+      );
+
+      const model =
+        createStimmzettelerfassungTeamStatusModel() as StimmzettelerfassungTeamStatusEntry;
+      mockDefinitions.dtoEntryToModelEntry.mockImplementation(() => model);
+      mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
+
+      // Act
+      const result = await loadErfassungTeamStatusListe(
+        wahlID,
+        wahlbezirkID,
+        false
+      );
+
+      // Assert
+      expect(result).toStrictEqual([model]);
+      expect(mockDefinitions.addNotification.mock.calls.length).toBe(0);
+      // Ensure the mapper was invoked for the DTO
+      expect(mockDefinitions.dtoEntryToModelEntry.mock.calls.length).toBe(1);
+      expect(mockDefinitions.dtoEntryToModelEntry.mock.calls[0]).toEqual([dto]);
+    });
+
+    it("should_showErrorNotificationAndThrow_when_apiFails", async () => {
+      // Arrange
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID = generateRandomString(8);
+
+      mockDefinitions.getStimmzettelerfassungTeamStatusList.mockRejectedValue(
+        new Error("api failed")
+      );
+      mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
+
+      // Act & Assert
+      await expect(
+        loadErfassungTeamStatusListe(wahlID, wahlbezirkID, true)
+      ).rejects.toThrow("Get Team-Status für MBW failed.");
+
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [
+          "Aktualisierung der Team-Status ist fehlgeschlagen.",
+          UserNotificationCategoryEnum.ERROR,
+        ],
+      ]);
+    });
+
+    it("should_notShowErrorNotification_when_sendNotificationIsFalseAndApiFails", async () => {
+      // Arrange
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID = generateRandomString(8);
+
+      mockDefinitions.getStimmzettelerfassungTeamStatusList.mockRejectedValue(
+        new Error("api failed")
+      );
+      mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
+
+      // Act & Assert
+      await expect(
+        loadErfassungTeamStatusListe(wahlID, wahlbezirkID, false)
+      ).rejects.toThrow("Get Team-Status für MBW failed.");
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toBe(0);
+    });
+
+    it("should_throwAndShowError_when_mappingFails", async () => {
+      // Arrange
+      const wahlID = generateRandomString(8);
+      const wahlbezirkID = generateRandomString(8);
+
+      const mockedResponse = createAxiosResponse({
+        status: 200,
+        data: [createStimmzettelerfassungTeamStatusDTOData()],
+      });
+      mockDefinitions.getStimmzettelerfassungTeamStatusList.mockResolvedValue(
+        mockedResponse
+      );
+      mockDefinitions.getNullOn204OrElseResponseData.mockReturnValue(
+        mockedResponse.data
+      );
+      mockDefinitions.dtoEntryToModelEntry.mockImplementation(() => {
+        throw new Error("mapping failed");
+      });
+      mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
+
+      // Act & Assert
+      await expect(
+        loadErfassungTeamStatusListe(wahlID, wahlbezirkID, true)
+      ).rejects.toThrow("Get Team-Status für MBW failed.");
+
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [
+          "Aktualisierung der Team-Status ist fehlgeschlagen.",
+          UserNotificationCategoryEnum.ERROR,
+        ],
+      ]);
     });
   });
 

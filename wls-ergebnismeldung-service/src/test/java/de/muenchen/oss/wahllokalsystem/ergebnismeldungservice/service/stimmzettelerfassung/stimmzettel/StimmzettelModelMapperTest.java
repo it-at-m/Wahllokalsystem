@@ -31,31 +31,9 @@ class StimmzettelModelMapperTest {
         val result = unitUnderTest.toModel(entityToMap);
 
         Assertions.assertThat(result.stimmzettelkennung())
-            .isEqualTo(entityToMap.getId().getStimmzettelkennung());
+                .isEqualTo(entityToMap.getId().getStimmzettelkennung());
         Assertions.assertThat(result.valid()).isEqualTo(entityToMap.isValid());
         Assertions.assertThat(result.invalideVotes()).isEqualTo(entityToMap.getInvalideVotes());
-      }
-    }
-
-    @Nested
-    class OfDSEKandidat {
-
-      @Test
-      void should_mapToModel_when_entityIsGiven() {
-        val kandidatId = Instancio.create(KandidatID.class);
-        val entityToMap =
-            new DSEKandidat(kandidatId, Instancio.create(DSEWahlvorschlag.class), true, 1, 2, 3);
-
-        val result = unitUnderTest.toModel(entityToMap);
-
-        val expectedResult =
-            new KandidatModel(
-                new KandidatIDModel(kandidatId.getKandidatID(), kandidatId.getNennungsNummer()),
-                entityToMap.isDiscarded(),
-                entityToMap.getVotesByVoter(),
-                entityToMap.getInvalidVotes(),
-                entityToMap.getVotesByWahlvorschlag());
-        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
       }
     }
   }

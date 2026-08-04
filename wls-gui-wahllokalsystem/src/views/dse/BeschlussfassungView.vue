@@ -3,6 +3,7 @@
     <v-card-title>Beschlussfassung</v-card-title>
     <v-card-text>
       <base-progress-linear
+        class="text-center"
         titel="bereits gefasste Beschlüsse"
         :is-loading="false"
         :current="23"
@@ -10,15 +11,19 @@
         color="success"
       />
       <v-data-table
+        class="hideSortBadges"
         :headers="headers"
         :items="items"
+        no-data-text="Keine Stimmzettel für die Beschlussfassung vorgemerkt"
+        :sort-by="[
+          { key: 'team', order: 'asc' },
+          { key: 'kennung', order: 'asc' },
+        ]"
+        :multi-sort="true"
+        sort-asc-icon="$asc"
+        sort-desc-icon="$desc"
+        items-per-page-text="Stimmzettel pro Seite:"
       >
-        <template #item.bezirk="{ value }">
-          <v-icon
-            :icon="value == 'UWB' ? '$wahlbezirksartUWB' : '$wahlbezirksartBWB'"
-          />
-        </template>
-
         <template #item.zeitpunkt="{ value }"> {{ value }} Uhr </template>
 
         <template #item.beschluss="{ value }">
@@ -28,18 +33,38 @@
           />
         </template>
 
+        <template #item.beschlussergebnis="{ value }">
+          <v-icon
+            :icon="
+              value == 'VALID'
+                ? '$stimmzettelValid'
+                : value == 'INVALID'
+                  ? '$stimmzettelInvalid'
+                  : ''
+            "
+            :color="
+              value == 'VALID' ? 'success' : value == 'INVALID' ? 'error' : ''
+            "
+          />
+          {{
+            value == "VALID" ? "gültig" : value == "INVALID" ? "ungültig" : ""
+          }}
+        </template>
+
         <template #item.actions="{ item }">
           <div class="d-flex ga-2">
             <v-btn
               icon="$edit"
               size="x-small"
+              :color="item.beschluss ? '' : 'primary'"
+              @click="edit(item)"
+              @mouseenter="register($event)"
             />
           </div>
         </template>
       </v-data-table>
     </v-card-text>
     <v-card-actions>
-      <base-text-button active>Nächsten Beschluss fassen</base-text-button>
       <base-text-button>Beschlussfassung unterbrechen</base-text-button>
       <v-spacer />
       <base-text-button :disabled="true">
@@ -51,56 +76,48 @@
 
 <script setup lang="ts">
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { onActivated, onMounted, ref } from "vue";
+import { onActivated, ref } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
 
-const {
-  generateRandomNumber,
-  getRandomItem,
-  generateRandomBoolean,
-  generateRandomNumberInRange,
-} = useCommonTestDataFactory();
+const { generateRandomNumber, getRandomItem, generateRandomBoolean } =
+  useCommonTestDataFactory();
 
-onActivated(() => {
+onActivated(async () => {
   generateTableData(66);
 });
 
 const headers = [
-  { title: "Kennung", key: "kennung" },
-  { title: "Bezirk", key: "bezirk" },
   { title: "Team", key: "team" },
-  { title: "Erfassungszeitpunkt", key: "zeitpunkt" },
+  { title: "Kennung", key: "kennung" },
   { title: "Beschlussgrund", key: "grund" },
   { title: "Beschluss gefasst", key: "beschluss" },
-  { title: "Actions", key: "actions", sortable: false },
+  { title: "Beschlussergebnis", key: "beschlussergebnis" },
+  { title: "Beschluss fassen", key: "actions", sortable: false },
 ];
 
 class BeschlussTabelleItem {
   id: number;
   kennung;
-  bezirk;
   team;
-  zeitpunkt;
   grund: string;
   beschluss;
+  beschlussergebnis;
 
   constructor(
     kennung: number,
-    bezirk: string,
     team: string,
-    zeitpunkt: string,
     grund: string,
-    beschluss: boolean
+    beschluss: boolean,
+    beschlussergebnis: string
   ) {
     this.id = 0;
     this.kennung = kennung;
-    this.bezirk = bezirk;
     this.team = team;
-    this.zeitpunkt = zeitpunkt;
     this.grund = grund;
     this.beschluss = beschluss;
+    this.beschlussergebnis = beschlussergebnis;
   }
 }
 
@@ -108,15 +125,11 @@ const items = ref<BeschlussTabelleItem[]>([]);
 
 function generateTableData(amount: number) {
   for (let i = 0; i < amount; i++) {
+    const beschlussGefasst = generateRandomBoolean();
     items.value.push({
       id: generateRandomNumber(5),
-      kennung: generateRandomNumber(2),
-      bezirk: getRandomItem(["UWB", "BWB"]),
       team: getRandomItem(["A", "B", "C"]),
-      zeitpunkt:
-        generateRandomNumberInRange(0, 23) +
-        ":" +
-        generateRandomNumberInRange(10, 59),
+      kennung: generateRandomNumber(2),
       grund: getRandomItem([
         "unzulässiger Zusatz/Vorbehalt",
         "Stimmzettel vollständig durchgestrichen",
@@ -124,8 +137,33 @@ function generateTableData(amount: number) {
         "handschriftlich ergänzte Person",
         "Kennzeichnung nicht eindeutig zuzuordnen",
       ]),
-      beschluss: generateRandomBoolean(),
+      beschluss: beschlussGefasst,
+      beschlussergebnis: beschlussGefasst
+        ? getRandomItem(["VALID", "INVALID"])
+        : "",
     });
   }
 }
+
+const beschlussDialogVisible = ref(false);
+const activator = ref(null);
+const selected = ref();
+
+// Register current, hovered row to activator
+// Preferrably called before edit()
+function register(event) {
+  activator.value = event.currentTarget;
+}
+
+// Select & load data to be edited
+function edit(item) {
+  beschlussDialogVisible.value = true;
+  selected.value = item;
+}
 </script>
+
+<!--<style scoped>
+.hideSortBadges :deep(.v-data-table-header__sort-badge) {
+  display: none !important;
+}
+</style>-->

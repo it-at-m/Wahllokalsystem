@@ -44,6 +44,8 @@ import {
   mdiSend,
   mdiSignalCellular3,
   mdiSignalOff,
+  mdiSortAscending,
+  mdiSortDescending,
   mdiTextBoxCheck,
   mdiTextBoxOutline,
   mdiToaster,
@@ -110,6 +112,8 @@ export default createVuetify({
       experimentalFeature: mdiFlask,
       beschluss: mdiListStatus,
       listenkreuz: mdiFileExcelBoxOutline,
+      asc: mdiSortAscending,
+      desc: mdiSortDescending,
     },
     sets: {
       mdi,

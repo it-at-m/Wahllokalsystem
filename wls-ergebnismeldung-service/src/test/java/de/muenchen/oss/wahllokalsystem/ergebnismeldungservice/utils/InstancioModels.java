@@ -13,7 +13,7 @@ import org.instancio.settings.Settings;
 
 public class InstancioModels {
 
-  private static final Settings COMMON_ENTITY_SETTINGS =
+  public static final Settings COMMON_ENTITY_SETTINGS =
       Settings.create().set(Keys.SET_BACK_REFERENCES, true);
 
   public static Model<Stimmzettel> createDSESTimmzettelModel(

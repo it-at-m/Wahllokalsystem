@@ -92,13 +92,16 @@ import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressL
 import BaseTeamStatusListItem from "@/components/dse/BaseTeamStatusListItem.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);
 const beschlussfassungStartenDialogVisible = ref(false);
 const isAktualisiserenLoading = ref(false);
 
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
+const userNotificationService = useUserNotificationService();
 const lastLoading = ref<Date>();
 const { toHhMmSs } = useDateTimeFormatter();
 
@@ -123,14 +126,14 @@ const abgeschlossenNumberOfTeams = computed(() => {
   ).length;
 });
 
-async function loadTeamStatusListe() {
+async function loadTeamStatusListe(sendNotification = true) {
   try {
     isAktualisiserenLoading.value = true;
     const loaded =
       await erfassungTeamStatusService.loadErfassungTeamStatusListe(
         wahlID,
         wahlbezirkID,
-        true
+        sendNotification
       );
     if (loaded) {
       teamstatusList.value = loaded;
@@ -142,7 +145,14 @@ async function loadTeamStatusListe() {
 }
 
 onActivated(async () => {
-  await loadTeamStatusListe();
+  try {
+    await loadTeamStatusListe(false);
+  } catch {
+    userNotificationService.addNotification(
+      `Team-Status konnten nicht initialisiert werden.`,
+      UserNotificationCategoryEnum.ERROR
+    );
+  }
 });
 
 async function onMonitoringSynchronisierenClicked() {

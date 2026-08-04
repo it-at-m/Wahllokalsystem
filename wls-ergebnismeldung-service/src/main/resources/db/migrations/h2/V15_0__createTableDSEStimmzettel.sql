@@ -11,7 +11,7 @@ CREATE TABLE Stimmzettel
     gueltigkeit        VARCHAR(255) NOT NULL,
     beschluss_pro      INT,
     beschluss_contra   INT,
-    beschluss_text     VARCHAR(10000),
+    beschluss_text     CLOB,
     PRIMARY KEY (wahlbezirkID, wahlID, teamID, stimmzettelkennung)
 );
 

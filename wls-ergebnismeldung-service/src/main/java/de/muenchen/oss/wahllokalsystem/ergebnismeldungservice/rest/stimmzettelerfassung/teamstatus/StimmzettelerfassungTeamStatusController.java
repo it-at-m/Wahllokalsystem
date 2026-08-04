@@ -69,6 +69,17 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
             .map(StimmzettelerfassungTeamStatusDTO::new));
   }
 
+  @Operation(description = "Lesen des Team-Status-Liste für die digitale Stimmzettelerfassung")
+  @ApiResponses(
+          value = {
+                  @ApiResponse(
+                          responseCode = "200",
+                          description = "Es wurden Team-Status gefunden. Diese werden zurückgegeben."),
+                  @ApiResponse(
+                          responseCode = "204",
+                          description = "Es wurde kein Team-Status gefunden",
+                          content = {@Content()})
+          })
   @GetMapping("/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/teamstatus")
   public ResponseEntity<List<StimmzettelerfassungTeamStatusEntryDTO>>
       getStimmzettelerfassungTeamStatusList(

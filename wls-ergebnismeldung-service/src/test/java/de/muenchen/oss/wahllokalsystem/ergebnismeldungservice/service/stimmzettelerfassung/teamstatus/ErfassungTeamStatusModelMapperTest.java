@@ -46,6 +46,33 @@ class ErfassungTeamStatusModelMapperTest {
   }
 
   @Nested
+  class ToEntryModel {
+
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toEntryModel(null)).isNull();
+    }
+
+    @Test
+    void should_returnNull_when_entityIdIsNull() {
+      val entity = Instancio.create(StimmzettelerfassungTeamStatus.class);
+      entity.setId(null);
+
+      Assertions.assertThat(unitUnderTest.toEntryModel(entity)).isNull();
+    }
+
+    @Test
+    void should_returnEntryModel_when_givenEntityWithIdAndStatus() {
+      val entity = Instancio.create(StimmzettelerfassungTeamStatus.class);
+
+      val result = unitUnderTest.toEntryModel(entity);
+
+      Assertions.assertThat(result.teamID()).isEqualTo(entity.getId().getTeamID());
+      Assertions.assertThat(result.status().name()).isEqualTo(entity.getStatus().name());
+    }
+  }
+
+  @Nested
   class ToEntity {
 
     @Nested

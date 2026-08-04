@@ -9,20 +9,19 @@ import org.junit.jupiter.api.Test;
 class StimmzettelTest {
 
   @Nested
-  class AddBeschlussvormerkung {
+  class AddBeschlussvorschlag {
 
     @Test
     void should_addToListAndSetThisAsStimmzettel_when_parameterIsGiven() {
       val stimmzettel = Instancio.create(Stimmzettel.class);
-      val beschlussvormerkungToAdd = Instancio.create(Beschlussvormerkung.class);
+      val beschlussvormerkungToAdd = Instancio.create(Beschlussgrund.class);
 
-      Assertions.assertThat(beschlussvormerkungToAdd)
-          .isNotIn(stimmzettel.getBeschlussvormerkungen());
+      Assertions.assertThat(beschlussvormerkungToAdd).isNotIn(stimmzettel.getBeschlussvorschlag());
       Assertions.assertThat(beschlussvormerkungToAdd.getStimmzettel()).isNotEqualTo(stimmzettel);
 
-      stimmzettel.addBeschlussvormerkung(beschlussvormerkungToAdd);
+      stimmzettel.addBeschlussvorschlag(beschlussvormerkungToAdd);
 
-      Assertions.assertThat(beschlussvormerkungToAdd).isIn(stimmzettel.getBeschlussvormerkungen());
+      Assertions.assertThat(beschlussvormerkungToAdd).isIn(stimmzettel.getBeschlussvorschlag());
       Assertions.assertThat(beschlussvormerkungToAdd.getStimmzettel()).isEqualTo(stimmzettel);
     }
   }

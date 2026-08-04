@@ -6,6 +6,6 @@ public record StimmzettelOfTeamModel(
     int stimmzettelkennung,
     int invalideVotes,
     StimmzettelGueltigkeitModel gueltigkeit,
-    List<BeschlussvormerkungModel> beschlussvormerkungen,
+    List<BeschlussgrundModel> beschlussvorschlag,
     BeschlussfassungModel beschlussfassung,
     List<WahlvorschlagModel> wahlvorschlaege) {}

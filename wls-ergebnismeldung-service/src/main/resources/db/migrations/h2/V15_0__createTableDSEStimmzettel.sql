@@ -15,7 +15,7 @@ CREATE TABLE Stimmzettel
     PRIMARY KEY (wahlbezirkID, wahlID, teamID, stimmzettelkennung)
 );
 
-CREATE TABLE Beschlussvormerkung
+CREATE TABLE Beschlussgrund
 (
     id                             VARCHAR(255)  NOT NULL,
     text                           VARCHAR(4000) NOT NULL,
@@ -24,8 +24,8 @@ CREATE TABLE Beschlussvormerkung
     stimmzettel_teamID             VARCHAR(255)  NOT NULL,
     stimmzettel_stimmzettelkennung INT           NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT fk_beschlussvormerkung_stimmzettel FOREIGN KEY (stimmzettel_wahlbezirkID, stimmzettel_wahlID,
-                                                               stimmzettel_teamID, stimmzettel_stimmzettelkennung)
+    CONSTRAINT fk_beschlussgrund_stimmzettel FOREIGN KEY (stimmzettel_wahlbezirkID, stimmzettel_wahlID,
+                                                          stimmzettel_teamID, stimmzettel_stimmzettelkennung)
         REFERENCES Stimmzettel (wahlbezirkID, wahlID, teamID, stimmzettelkennung)
 );
 

@@ -49,7 +49,7 @@ class StimmzettelModelMapperTest {
                 1,
                 0,
                 StimmzettelGueltigkeitModel.VALID,
-                List.of(new BeschlussvormerkungModel("text")),
+                List.of(new BeschlussgrundModel("text")),
                 new BeschlussfassungModel(1, 0, "text"),
                 List.of());
 

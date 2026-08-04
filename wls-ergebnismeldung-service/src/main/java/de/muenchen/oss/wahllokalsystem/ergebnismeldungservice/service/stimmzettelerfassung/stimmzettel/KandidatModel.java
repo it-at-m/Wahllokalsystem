@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
 public record KandidatModel(
-    KandidatIDModel id,
+    KandidatIdModel id,
     boolean discarded,
     Integer votesByVoter,
     Integer invalidVotes,

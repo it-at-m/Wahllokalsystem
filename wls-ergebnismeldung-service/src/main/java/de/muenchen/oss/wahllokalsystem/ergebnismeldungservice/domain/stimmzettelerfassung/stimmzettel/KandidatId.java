@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class KandidatID implements Serializable {
+public class KandidatId implements Serializable {
 
   @NotNull private String kandidatID;
 

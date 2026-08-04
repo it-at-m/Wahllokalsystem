@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Kandidat {
 
-  @EmbeddedId private KandidatID id;
+  @EmbeddedId private KandidatId id;
 
   @ManyToOne private Wahlvorschlag wahlvorschlag;
 

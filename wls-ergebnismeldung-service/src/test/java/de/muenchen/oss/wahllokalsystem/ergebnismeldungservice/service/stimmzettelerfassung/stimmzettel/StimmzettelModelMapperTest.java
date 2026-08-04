@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.KandidatID;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.KandidatId;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
@@ -69,12 +69,12 @@ class StimmzettelModelMapperTest {
 
       @Test
       void should_returnEntity_when_modelIsGiven() {
-        val kandidatIdModel = new KandidatIDModel("kid", 1);
+        val kandidatIdModel = new KandidatIdModel("kid", 1);
         val modelToMap = new KandidatModel(kandidatIdModel, true, 1, 2, 3);
 
         val result = unitUnderTest.toEntity(modelToMap);
 
-        val expectedId = new KandidatID("kid", 1);
+        val expectedId = new KandidatId("kid", 1);
         Assertions.assertThat(result.getId()).isEqualTo(expectedId);
         Assertions.assertThat(result.getVotesByVoter()).isEqualTo(modelToMap.votesByVoter());
       }

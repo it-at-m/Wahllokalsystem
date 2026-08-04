@@ -6,15 +6,15 @@ import org.instancio.Instancio;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class DSEWahlvorschlagTest {
+class WahlvorschlagTest {
 
   @Nested
   class AddKandidat {
 
     @Test
     void should_addToListAndSetThisAsStimmzettel_when_parameterIsGiven() {
-      val wahlvorschlag = Instancio.create(DSEWahlvorschlag.class);
-      val kandidatToAdd = Instancio.create(DSEKandidat.class);
+      val wahlvorschlag = Instancio.create(Wahlvorschlag.class);
+      val kandidatToAdd = Instancio.create(Kandidat.class);
 
       Assertions.assertThat(kandidatToAdd).isNotIn(wahlvorschlag.getKandidaten());
       Assertions.assertThat(kandidatToAdd.getWahlvorschlag()).isNotEqualTo(wahlvorschlag);

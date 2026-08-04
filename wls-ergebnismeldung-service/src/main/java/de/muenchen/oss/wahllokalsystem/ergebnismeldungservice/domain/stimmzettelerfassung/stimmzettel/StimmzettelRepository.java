@@ -3,9 +3,9 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzette
 import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
-public interface StimmzettelRepository extends CrudRepository<DSEStimmzettel, StimmzettelID> {
+public interface StimmzettelRepository extends CrudRepository<Stimmzettel, StimmzettelID> {
 
-  List<DSEStimmzettel> findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
+  List<Stimmzettel> findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
       String wahlbezirkID, String wahlID, String teamID);
 
   void deleteByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(

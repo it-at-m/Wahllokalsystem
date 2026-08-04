@@ -20,7 +20,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class DSEBeschlussvormerkung {
+public class Beschlussvormerkung {
 
   @Id
   @GeneratedValue(generator = "uuid")
@@ -30,5 +30,5 @@ public class DSEBeschlussvormerkung {
 
   @NotNull private String text;
 
-  @ManyToOne private DSEStimmzettel stimmzettel;
+  @ManyToOne private Stimmzettel stimmzettel;
 }

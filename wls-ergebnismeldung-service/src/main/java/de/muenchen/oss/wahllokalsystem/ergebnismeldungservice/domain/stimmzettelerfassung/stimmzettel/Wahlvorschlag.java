@@ -24,7 +24,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class DSEWahlvorschlag {
+public class Wahlvorschlag {
 
   @Id
   @GeneratedValue(generator = "uuid")
@@ -36,12 +36,12 @@ public class DSEWahlvorschlag {
 
   @NotNull private boolean selected;
 
-  @ManyToOne private DSEStimmzettel stimmzettel;
+  @ManyToOne private Stimmzettel stimmzettel;
 
   @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true, cascade = CascadeType.ALL)
-  private List<DSEKandidat> kandidaten = new LinkedList<>();
+  private List<Kandidat> kandidaten = new LinkedList<>();
 
-  public void addKandidat(final DSEKandidat kandidat) {
+  public void addKandidat(final Kandidat kandidat) {
     kandidaten.add(kandidat);
     kandidat.setWahlvorschlag(this);
   }

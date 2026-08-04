@@ -188,7 +188,7 @@ class StimmzettelRepositoryTest {
     }
   }
 
-  private DSEStimmzettel createStimmzettelEntity(
+  private Stimmzettel createStimmzettelEntity(
       final String wahlID,
       final String wahlbezirkID,
       final String teamID,

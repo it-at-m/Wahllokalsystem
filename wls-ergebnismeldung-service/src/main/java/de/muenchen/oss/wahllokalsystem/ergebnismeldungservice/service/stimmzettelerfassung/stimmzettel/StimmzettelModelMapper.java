@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEKandidat;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEStimmzettel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEWahlvorschlag;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Kandidat;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Wahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
@@ -13,14 +13,14 @@ public interface StimmzettelModelMapper {
 
   @Mapping(target = "stimmzettelkennung", source = "id.stimmzettelkennung")
   @Mapping(target = "gueltigkeit", source = "gueltigkeit")
-  StimmzettelOfTeamModel toModel(DSEStimmzettel stimmzettel);
+  StimmzettelOfTeamModel toModel(Stimmzettel stimmzettel);
 
   @Mapping(target = "wahlvorschlag", ignore = true)
-  DSEKandidat toEntity(KandidatModel kandidatModel);
+  Kandidat toEntity(KandidatModel kandidatModel);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "stimmzettel", ignore = true)
-  DSEWahlvorschlag toEntity(WahlvorschlagModel wahlvorschlagModel);
+  Wahlvorschlag toEntity(WahlvorschlagModel wahlvorschlagModel);
 
   @Mapping(target = "id.teamID", source = "owner.teamID")
   @Mapping(target = "id.wahlbezirkID", source = "owner.wahlbezirkID")
@@ -29,5 +29,5 @@ public interface StimmzettelModelMapper {
   @Mapping(target = "gueltigkeit", source = "stimmzettelModel.gueltigkeit")
   @Mapping(target = "beschlussvormerkungen.id", ignore = true)
   @Mapping(target = "beschlussvormerkungen.stimmzettel", ignore = true)
-  DSEStimmzettel toEntity(TeamBezirkUndWahlIDModel owner, StimmzettelOfTeamModel stimmzettelModel);
+  Stimmzettel toEntity(TeamBezirkUndWahlIDModel owner, StimmzettelOfTeamModel stimmzettelModel);
 }

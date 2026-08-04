@@ -14,11 +14,11 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class DSEKandidat {
+public class Kandidat {
 
   @EmbeddedId private KandidatID id;
 
-  @ManyToOne private DSEWahlvorschlag wahlvorschlag;
+  @ManyToOne private Wahlvorschlag wahlvorschlag;
 
   @NotNull private boolean discarded;
 

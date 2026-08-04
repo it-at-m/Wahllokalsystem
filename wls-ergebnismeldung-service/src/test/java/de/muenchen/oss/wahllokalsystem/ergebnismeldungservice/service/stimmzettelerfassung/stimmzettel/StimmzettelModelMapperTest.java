@@ -1,9 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEKandidat;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEStimmzettel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.DSEWahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.KandidatID;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import java.util.List;
@@ -22,16 +20,16 @@ class StimmzettelModelMapperTest {
   class ToModel {
 
     @Nested
-    class OfDSEStimmzettel {
+    class OfStimmzettel {
 
       @Test
       void should_mapToModel_when_entityIsGiven() {
-        val entityToMap = Instancio.create(DSEStimmzettel.class);
+        val entityToMap = Instancio.create(Stimmzettel.class);
 
         val result = unitUnderTest.toModel(entityToMap);
 
         Assertions.assertThat(result.stimmzettelkennung())
-                .isEqualTo(entityToMap.getId().getStimmzettelkennung());
+            .isEqualTo(entityToMap.getId().getStimmzettelkennung());
         Assertions.assertThat(result.valid()).isEqualTo(entityToMap.isValid());
         Assertions.assertThat(result.invalideVotes()).isEqualTo(entityToMap.getInvalideVotes());
       }

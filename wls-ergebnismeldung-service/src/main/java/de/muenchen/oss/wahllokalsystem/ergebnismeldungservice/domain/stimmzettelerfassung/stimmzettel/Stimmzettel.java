@@ -27,7 +27,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class DSEStimmzettel {
+public class Stimmzettel {
 
   @EmbeddedId @ToString.Include @EqualsAndHashCode.Include private StimmzettelID id;
 
@@ -39,7 +39,7 @@ public class DSEStimmzettel {
   private StimmzettelGueltigkeit gueltigkeit;
 
   @OneToMany(mappedBy = "stimmzettel", orphanRemoval = true, cascade = CascadeType.ALL)
-  private List<DSEBeschlussvormerkung> beschlussvormerkungen = new LinkedList<>();
+  private List<Beschlussvormerkung> beschlussvormerkungen = new LinkedList<>();
 
   @Embedded
   @AttributeOverrides({
@@ -50,14 +50,14 @@ public class DSEStimmzettel {
   private Beschlussfassung beschlussfassung;
 
   @OneToMany(mappedBy = "stimmzettel", orphanRemoval = true, cascade = CascadeType.ALL)
-  private List<DSEWahlvorschlag> wahlvorschlaege = new LinkedList<>();
+  private List<Wahlvorschlag> wahlvorschlaege = new LinkedList<>();
 
-  public void addBeschlussvormerkung(final DSEBeschlussvormerkung beschlussvormerkung) {
+  public void addBeschlussvormerkung(final Beschlussvormerkung beschlussvormerkung) {
     beschlussvormerkungen.add(beschlussvormerkung);
     beschlussvormerkung.setStimmzettel(this);
   }
 
-  public void addWahlvorschlag(final DSEWahlvorschlag wahlvorschlag) {
+  public void addWahlvorschlag(final Wahlvorschlag wahlvorschlag) {
     wahlvorschlaege.add(wahlvorschlag);
     wahlvorschlag.setStimmzettel(this);
   }

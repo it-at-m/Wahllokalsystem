@@ -6,15 +6,15 @@ import org.instancio.Instancio;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class DSEStimmzettelTest {
+class StimmzettelTest {
 
   @Nested
   class AddBeschlussvormerkung {
 
     @Test
     void should_addToListAndSetThisAsStimmzettel_when_parameterIsGiven() {
-      val stimmzettel = Instancio.create(DSEStimmzettel.class);
-      val beschlussvormerkungToAdd = Instancio.create(DSEBeschlussvormerkung.class);
+      val stimmzettel = Instancio.create(Stimmzettel.class);
+      val beschlussvormerkungToAdd = Instancio.create(Beschlussvormerkung.class);
 
       Assertions.assertThat(beschlussvormerkungToAdd)
           .isNotIn(stimmzettel.getBeschlussvormerkungen());
@@ -32,8 +32,8 @@ class DSEStimmzettelTest {
 
     @Test
     void should_addToListAndSetThisAsStimmzettel_when_parameterIsGiven() {
-      val stimmzettel = Instancio.create(DSEStimmzettel.class);
-      val wahlvorschlagToAdd = Instancio.create(DSEWahlvorschlag.class);
+      val stimmzettel = Instancio.create(Stimmzettel.class);
+      val wahlvorschlagToAdd = Instancio.create(Wahlvorschlag.class);
 
       Assertions.assertThat(wahlvorschlagToAdd).isNotIn(stimmzettel.getWahlvorschlaege());
       Assertions.assertThat(wahlvorschlagToAdd.getStimmzettel()).isNotEqualTo(stimmzettel);

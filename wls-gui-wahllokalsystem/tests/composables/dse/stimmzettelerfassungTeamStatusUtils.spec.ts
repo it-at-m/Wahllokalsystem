@@ -7,10 +7,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useStimmzettelerfassungTeamStatusUtils } from "@/composables/dse/stimmzettelerfassungTeamStatusUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   loadErfassungTeamStatus: vi.fn(),
   postErfassungTeamStatus: vi.fn(),
+  addNotification: vi.fn(),
 }));
 
 vi.mock(
@@ -22,6 +24,19 @@ vi.mock(
         ...mod.useStimmzettelerfassungTeamStatusService(),
         loadErfassungTeamStatus: mockDefinitions.loadErfassungTeamStatus,
         postErfassungTeamStatus: mockDefinitions.postErfassungTeamStatus,
+      }),
+    };
+  }
+);
+
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useUserNotificationService: () => ({
+        ...mod.useUserNotificationService(),
+        addNotification: mockDefinitions.addNotification,
       }),
     };
   }
@@ -80,6 +95,7 @@ describe("stimmzettelerfassungTeamStatusUtils.ts", () => {
         { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
         false,
       ]);
+      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });
 
     it("should_notPostTeamStatus_when_loadedStatusIsPressent", async () => {
@@ -99,6 +115,7 @@ describe("stimmzettelerfassungTeamStatusUtils.ts", () => {
       expect(
         mockDefinitions.postErfassungTeamStatus.mock.calls.length
       ).toStrictEqual(0);
+      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });
 
     it("should_postTeamStatusForEveryWahl_when_loadedStatusIsEmptyforEveryWahl", async () => {
@@ -116,6 +133,53 @@ describe("stimmzettelerfassungTeamStatusUtils.ts", () => {
       expect(
         mockDefinitions.postErfassungTeamStatus.mock.calls.length
       ).toStrictEqual(2);
+      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
+    });
+
+    it("should_throwErrorAndSendUserNotification_when_loadingOfTeamStatusFailed", async () => {
+      const { currentUserWahlMetadata, currentUserTeamName } =
+        storeToRefs(useUserStore());
+      // @ts-expect-error: cannot set readonly
+      currentUserWahlMetadata.value = [wahlMedata];
+      // @ts-expect-error: cannot set readonly
+      currentUserTeamName.value = teamName;
+
+      const mockedLoadingError = new Error("mocked loading error");
+      mockDefinitions.loadErfassungTeamStatus.mockRejectedValue(
+        mockedLoadingError
+      );
+
+      await expect(
+        unitUnderTest.initStimmzettelerfassungTeamStatus()
+      ).rejects.toThrowError(mockedLoadingError);
+      expect(mockDefinitions.addNotification).toHaveBeenCalledExactlyOnceWith(
+        expect.any(String),
+        UserNotificationCategoryEnum.ERROR
+      );
+    });
+
+    it("should_throwErrorAndSendUserNotification_when_sendingOfTeamStatusFailed", async () => {
+      const { currentUserWahlMetadata, currentUserTeamName } =
+        storeToRefs(useUserStore());
+      // @ts-expect-error: cannot set readonly
+      currentUserWahlMetadata.value = [wahlMedata];
+      // @ts-expect-error: cannot set readonly
+      currentUserTeamName.value = teamName;
+
+      mockDefinitions.loadErfassungTeamStatus.mockReturnValue(null);
+
+      const mockedLoadingError = new Error("mocked loading error");
+      mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
+        mockedLoadingError
+      );
+
+      await expect(
+        unitUnderTest.initStimmzettelerfassungTeamStatus()
+      ).rejects.toThrowError(mockedLoadingError);
+      expect(mockDefinitions.addNotification).toHaveBeenCalledExactlyOnceWith(
+        expect.any(String),
+        UserNotificationCategoryEnum.ERROR
+      );
     });
   });
 });

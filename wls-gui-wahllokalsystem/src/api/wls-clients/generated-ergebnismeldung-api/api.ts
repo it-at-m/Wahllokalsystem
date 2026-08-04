@@ -237,19 +237,19 @@ export interface BeschlussfassungDTO {
      * @type {number}
      * @memberof BeschlussfassungDTO
      */
-    'pro'?: number;
+    'pro': number;
     /**
      * 
      * @type {number}
      * @memberof BeschlussfassungDTO
      */
-    'contra'?: number;
+    'contra': number;
     /**
      * 
      * @type {string}
      * @memberof BeschlussfassungDTO
      */
-    'text'?: string;
+    'text': string;
 }
 /**
  * 
@@ -262,7 +262,7 @@ export interface BeschlussgrundDTO {
      * @type {string}
      * @memberof BeschlussgrundDTO
      */
-    'text'?: string;
+    'text': string;
 }
 /**
  * 
@@ -822,7 +822,7 @@ export interface WahlvorschlagDTO {
      * @type {boolean}
      * @memberof WahlvorschlagDTO
      */
-    'selected'?: boolean;
+    'selected': boolean;
     /**
      * 
      * @type {Array<KandidatDTO>}

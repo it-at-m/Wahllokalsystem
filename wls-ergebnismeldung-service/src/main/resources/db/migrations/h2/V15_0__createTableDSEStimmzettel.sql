@@ -7,7 +7,6 @@ CREATE TABLE Stimmzettel
     wahlID             VARCHAR(255) NOT NULL,
     teamID             VARCHAR(255) NOT NULL,
     stimmzettelkennung INT          NOT NULL,
-    valid              BOOLEAN      NOT NULL,
     invalideVotes      INT          NOT NULL,
     gueltigkeit        VARCHAR(255) NOT NULL,
     beschluss_pro      INT,

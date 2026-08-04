@@ -18,7 +18,6 @@ Content-Type: application/json
 [
   {
     "stimmzettelkennung": 1,
-    "valid": true,
     "invalideVotes": 2,
     "gueltigkeit": "VALID",
     "beschlussvormerkungen": [
@@ -91,7 +90,6 @@ Content-Type: application/json
   },
   {
     "stimmzettelkennung": 2,
-    "valid": false,
     "invalideVotes": 0,
     "gueltigkeit": "INVALID",
     "beschlussvormerkungen": [

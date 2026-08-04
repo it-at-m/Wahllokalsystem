@@ -31,8 +31,6 @@ public class Stimmzettel {
 
   @EmbeddedId @ToString.Include @EqualsAndHashCode.Include private StimmzettelID id;
 
-  @NotNull private boolean valid;
-
   @NotNull private int invalideVotes;
 
   @NotNull @Enumerated(EnumType.STRING)

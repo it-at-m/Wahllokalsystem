@@ -30,7 +30,6 @@ class StimmzettelModelMapperTest {
 
         Assertions.assertThat(result.stimmzettelkennung())
             .isEqualTo(entityToMap.getId().getStimmzettelkennung());
-        Assertions.assertThat(result.valid()).isEqualTo(entityToMap.isValid());
         Assertions.assertThat(result.invalideVotes()).isEqualTo(entityToMap.getInvalideVotes());
       }
     }
@@ -48,7 +47,6 @@ class StimmzettelModelMapperTest {
         val stimmzettelOfTeamModel =
             new StimmzettelOfTeamModel(
                 1,
-                true,
                 0,
                 StimmzettelGueltigkeitModel.VALID,
                 List.of(new BeschlussvormerkungModel("text")),
@@ -61,7 +59,6 @@ class StimmzettelModelMapperTest {
             new StimmzettelID(
                 ownerModel.wahlbezirkID(), ownerModel.wahlID(), ownerModel.teamID(), 1);
         Assertions.assertThat(result.getId()).isEqualTo(expectedId);
-        Assertions.assertThat(result.isValid()).isEqualTo(stimmzettelOfTeamModel.valid());
         Assertions.assertThat(result.getInvalideVotes())
             .isEqualTo(stimmzettelOfTeamModel.invalideVotes());
       }

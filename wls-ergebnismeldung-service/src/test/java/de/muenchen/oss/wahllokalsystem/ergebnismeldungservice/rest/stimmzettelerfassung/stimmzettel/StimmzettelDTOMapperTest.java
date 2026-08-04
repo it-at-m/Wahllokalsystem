@@ -18,12 +18,11 @@ class StimmzettelDTOMapperTest {
     @Test
     void should_returnModel_when_dtoIsGiven() {
       val dtoToMap =
-          new StimmzettelOfTeamDTO(1, true, 0, StimmzettelGueltigkeitDTO.VALID, null, null, null);
+          new StimmzettelOfTeamDTO(1, 0, StimmzettelGueltigkeitDTO.VALID, null, null, null);
 
       val result = unitUnderTest.toModel(dtoToMap);
 
       Assertions.assertThat(result.stimmzettelkennung()).isEqualTo(dtoToMap.stimmzettelkennung());
-      Assertions.assertThat(result.valid()).isEqualTo(dtoToMap.valid());
     }
   }
 
@@ -33,8 +32,7 @@ class StimmzettelDTOMapperTest {
     @Test
     void should_returnDTO_when_modelIsGiven() {
       val modelToMap =
-          new StimmzettelOfTeamModel(
-              1, true, 0, StimmzettelGueltigkeitModel.VALID, null, null, null);
+          new StimmzettelOfTeamModel(1, 0, StimmzettelGueltigkeitModel.VALID, null, null, null);
 
       val result = unitUnderTest.toDTO(modelToMap);
 

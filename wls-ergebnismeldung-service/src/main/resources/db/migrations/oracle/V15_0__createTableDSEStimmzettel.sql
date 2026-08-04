@@ -6,7 +6,6 @@ CREATE TABLE Stimmzettel (
     wahlID VARCHAR2(255) NOT NULL,
     teamID VARCHAR2(255) NOT NULL,
     stimmzettelkennung NUMBER(10) NOT NULL,
-    valid NUMBER(1) NOT NULL,
     invalideVotes NUMBER(10) NOT NULL,
     gueltigkeit VARCHAR2(255) NOT NULL,
     beschluss_pro NUMBER(10),

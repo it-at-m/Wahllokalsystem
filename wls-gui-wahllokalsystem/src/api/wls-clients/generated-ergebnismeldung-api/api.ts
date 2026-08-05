@@ -685,7 +685,7 @@ export const StimmzettelOfTeamDTOGueltigkeitEnum = {
     Valid: 'VALID',
     Invalid: 'INVALID',
     BeschlussAusstehend: 'BESCHLUSS_AUSSTEHEND',
-    PseudStimmzettelWegenFehlend: 'PSEUD_STIMMZETTEL_WEGEN_FEHLEND',
+    BwbPseudoStimmzettelLeererUmschlag: 'BWB_PSEUDO_STIMMZETTEL_LEERER_UMSCHLAG',
     Leer: 'LEER'
 } as const;
 

@@ -20,9 +20,9 @@ Sollte sich das Verhalten ändern, stellen Integrationstests sicher, dass der er
 Dies betrifft sowohl die Methoden des Controllers als auch den Controller selbst.
 
 Methoden mit dem Rückgabetyp `ResponseEntity` dürfen keine `ResponseStatus`-Annotation besitzen, da bei Verwendung
-von `ResponseEntity` die Statusinformationen durch die `ResponseEntity` überschrieben wird.
+von `ResponseEntity` die Statusinformationen durch die `ResponseEntity` überschrieben werden.
 
-Mittels ArchUnit-Rules soll die Umsetzung des ADRs sichergestellt werden.
+Mittels ArchUnit-Rules soll die Umsetzung des ADR sichergestellt werden.
 
 ## Konsequenzen
 

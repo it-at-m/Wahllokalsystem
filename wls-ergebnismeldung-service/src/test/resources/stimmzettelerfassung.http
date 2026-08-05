@@ -20,7 +20,7 @@ Content-Type: application/json
     "stimmzettelkennung": 1,
     "invalideVotes": 2,
     "gueltigkeit": "VALID",
-    "beschlussvormerkungen": [
+    "beschlussvorschlag": [
       {
         "text": "vormerkung 1"
       },

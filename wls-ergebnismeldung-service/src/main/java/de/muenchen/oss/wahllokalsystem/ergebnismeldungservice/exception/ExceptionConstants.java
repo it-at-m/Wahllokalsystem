@@ -172,9 +172,9 @@ public class ExceptionConstants {
       new ExceptionDataWrapper("711", "Kandidat enthält keine Information bei discarded");
   public static final ExceptionDataWrapper STIMMZETTEL_INVALIDE_VOTES_IS_MISSING =
       new ExceptionDataWrapper(
-          "711", "Der Stimmzettel enthält keine Information zu ungültigen Stimmen");
+          "712", "Der Stimmzettel enthält keine Information zu ungültigen Stimmen");
   public static final ExceptionDataWrapper STIMMZETTEL_STIMMZETTELKENNUNG_IS_MISSING =
-      new ExceptionDataWrapper("711", "Der STimmzettel enthält keine Kennung");
+      new ExceptionDataWrapper("713", "Der STimmzettel enthält keine Kennung");
 
   public static final ExceptionDataWrapper MAPPING_AOUEAI =
       new ExceptionDataWrapper(

@@ -13,10 +13,13 @@
       <v-card-actions>
         <base-text-button
           :active="startenBtnActive"
+          :is-disabled="startenBtnIsDisbled"
           @click="onErfassungStartenClicked"
           >Starten</base-text-button
         >
-        <base-text-button @click="onErfassungUnterbrechenClicked"
+        <base-text-button
+          :is-disabled="unterbrechenBtnDisabled"
+          @click="onErfassungUnterbrechenClicked"
           >Unterbrechen</base-text-button
         >
         <base-text-button
@@ -72,9 +75,16 @@ const startenBtnActive = computed(
     status.value?.status == StimmzettelerfassungTeamStatusEnum.REGISTRIERT ||
     status.value?.status == StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
 );
+const startenBtnIsDisbled = computed(
+  () => status.value?.status == StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+);
 const beendenBtnActive = computed(
   () =>
     status.value?.status == StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+);
+const unterbrechenBtnDisabled = computed(
+  () =>
+    status.value?.status != StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
 );
 
 async function loadTeamStatus() {

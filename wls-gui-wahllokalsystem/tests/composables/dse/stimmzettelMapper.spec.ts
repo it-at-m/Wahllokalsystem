@@ -1,11 +1,9 @@
 import type {
   KandidatDTO,
   StimmzettelOfTeamDTO,
-  WahlvorschlagDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Kandidat } from "@/types/dse/Kandidat.ts";
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
-import type { Wahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
 
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
@@ -19,6 +17,10 @@ const {
   createStimmzettel,
   prepareStimmzettel,
   createStimmzettelKandidat,
+  prepareStimmzettelKandidat,
+  prepareStimmzettelKandidatDTO,
+  prepareStimmzettelWahlvorschlag,
+  prepareStimmzettelWahlvorschlagDTO,
 } = useStimmzettelTestDataFactory();
 
 describe("stimmzettelMapper.ts", () => {
@@ -42,25 +44,25 @@ describe("stimmzettelMapper.ts", () => {
           // @ts-expect-error source possible undefined
           text: dtoToMap.beschlussfassung?.text,
         },
-        beschlussvorschlag:
-          dtoToMap.beschlussvorschlag?.map((beschlussgrund) => ({
-            text: beschlussgrund.text,
-          })) ?? [],
         // @ts-expect-error source has possible undefined values
-        wahlvorschlaege:
-          dtoToMap.wahlvorschlaege?.map((wahlvorschlag) => ({
-            wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
-            selected: wahlvorschlag.selected,
-            kandidaten:
-              wahlvorschlag.kandidaten?.map((kandidat) => ({
-                kandidatId: kandidat.id.kandidatID,
-                nennung: kandidat.id.nennungsNummer,
-                isDiscarded: kandidat.discarded,
-                votesByVoter: kandidat.votesByVoter,
-                invalidVotes: kandidat.invalidVotes,
-                votesByWahlvorschlag: kandidat.votesByWahlvorschlag,
-              })) ?? [],
-          })) ?? [],
+        beschlussvorschlag: dtoToMap.beschlussvorschlag?.map(
+          (beschlussgrund) => ({
+            text: beschlussgrund.text,
+          })
+        ),
+        // @ts-expect-error source has possible undefined values
+        wahlvorschlaege: dtoToMap.wahlvorschlaege?.map((wahlvorschlag) => ({
+          wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
+          selected: wahlvorschlag.selected,
+          kandidaten: wahlvorschlag.kandidaten?.map((kandidat) => ({
+            kandidatId: kandidat.id.kandidatID,
+            nennung: kandidat.id.nennungsNummer,
+            isDiscarded: kandidat.discarded,
+            votesByVoter: kandidat.votesByVoter,
+            invalidVotes: kandidat.invalidVotes,
+            votesByWahlvorschlag: kandidat.votesByWahlvorschlag,
+          })),
+        })),
       };
 
       expect(result).toStrictEqual(expectedResult);
@@ -79,6 +81,16 @@ describe("stimmzettelMapper.ts", () => {
     it("should_returnEmptyBeschlussvorschlag_when_dtoBeschlussvorschlagIsUndefined", () => {
       const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
         .beschlussvorschlag(undefined)
+        .build();
+
+      const result = toModel(dtoWithoutBeschlussvorschlag);
+
+      expect(result.beschlussvorschlag).toStrictEqual([]);
+    });
+
+    it("should_returnEmptyBeschlussvorschlag_when_dtoBeschlussvorschlagIsEmpty", () => {
+      const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
+        .beschlussvorschlag([])
         .build();
 
       const result = toModel(dtoWithoutBeschlussvorschlag);
@@ -109,10 +121,7 @@ describe("stimmzettelMapper.ts", () => {
     it("should_handleEmptyKandidatenArray_when_dtoKandidatenIsEmpty", () => {
       const dtoWithEmptyKandidaten = prepareStimmzettelOfTeamDTO()
         .wahlvorschlaege([
-          {
-            ...createStimmzettelOfTeamDTO().wahlvorschlaege?.[0],
-            kandidaten: [],
-          } as WahlvorschlagDTO,
+          prepareStimmzettelWahlvorschlagDTO().kandidaten([]).build(),
         ])
         .build();
 
@@ -124,10 +133,7 @@ describe("stimmzettelMapper.ts", () => {
     it("should_returnEmptyKandidaten_when_dtoKandidatenIsUndefined", () => {
       const dtoWithUndefinedKandidaten = prepareStimmzettelOfTeamDTO()
         .wahlvorschlaege([
-          {
-            ...createStimmzettelOfTeamDTO().wahlvorschlaege?.[0],
-            kandidaten: undefined,
-          } as WahlvorschlagDTO,
+          prepareStimmzettelWahlvorschlagDTO().kandidaten(undefined).build(),
         ])
         .build();
 
@@ -140,10 +146,9 @@ describe("stimmzettelMapper.ts", () => {
       const singleKandidat = createStimmzettelKandidatDTO();
       const dtoWithSingleKandidat = prepareStimmzettelOfTeamDTO()
         .wahlvorschlaege([
-          {
-            ...createStimmzettelOfTeamDTO().wahlvorschlaege?.[0],
-            kandidaten: [singleKandidat],
-          } as WahlvorschlagDTO,
+          prepareStimmzettelWahlvorschlagDTO()
+            .kandidaten([singleKandidat])
+            .build(),
         ])
         .build();
 
@@ -161,18 +166,16 @@ describe("stimmzettelMapper.ts", () => {
     });
 
     it("should_mapUndefinedVoteFieldsToNull_when_kandidatVotesAreUndefined", () => {
-      const kandidatWithoutVotes: KandidatDTO = {
-        ...createStimmzettelKandidatDTO(),
-        votesByVoter: undefined,
-        invalidVotes: undefined,
-        votesByWahlvorschlag: undefined,
-      };
+      const kandidatWithoutVotes: KandidatDTO = prepareStimmzettelKandidatDTO()
+        .votesByVoter(undefined)
+        .invalidVotes(undefined)
+        .votesByWahlvorschlag(undefined)
+        .build();
       const dtoWithKandidatWithoutVotes = prepareStimmzettelOfTeamDTO()
         .wahlvorschlaege([
-          {
-            ...createStimmzettelOfTeamDTO().wahlvorschlaege?.[0],
-            kandidaten: [kandidatWithoutVotes],
-          } as WahlvorschlagDTO,
+          prepareStimmzettelWahlvorschlagDTO()
+            .kandidaten([kandidatWithoutVotes])
+            .build(),
         ])
         .build();
 
@@ -261,10 +264,7 @@ describe("stimmzettelMapper.ts", () => {
     it("should_handleEmptyKandidatenArray_when_modelKandidatenIsEmpty", () => {
       const modelWithEmptyKandidaten = prepareStimmzettel()
         .wahlvorschlaege([
-          {
-            ...createStimmzettel().wahlvorschlaege[0],
-            kandidaten: [],
-          } as Wahlvorschlag,
+          prepareStimmzettelWahlvorschlag().kandidaten([]).build(),
         ])
         .build();
 
@@ -277,10 +277,9 @@ describe("stimmzettelMapper.ts", () => {
       const singleKandidat = createStimmzettelKandidat();
       const modelWithSingleKandidat = prepareStimmzettel()
         .wahlvorschlaege([
-          {
-            ...createStimmzettel().wahlvorschlaege[0],
-            kandidaten: [singleKandidat],
-          } as Wahlvorschlag,
+          prepareStimmzettelWahlvorschlag()
+            .kandidaten([singleKandidat])
+            .build(),
         ])
         .build();
 
@@ -299,18 +298,16 @@ describe("stimmzettelMapper.ts", () => {
     });
 
     it("should_mapNullVoteFieldsToUndefined_when_kandidatVotesAreNull", () => {
-      const kandidatWithoutVotes: Kandidat = {
-        ...createStimmzettelKandidat(),
-        votesByVoter: null,
-        invalidVotes: null,
-        votesByWahlvorschlag: null,
-      };
+      const kandidatWithoutVotes: Kandidat = prepareStimmzettelKandidat()
+        .votesByVoter(null)
+        .invalidVotes(null)
+        .votesByWahlvorschlag(null)
+        .build();
       const modelWithKandidatWithoutVotes = prepareStimmzettel()
         .wahlvorschlaege([
-          {
-            ...createStimmzettel().wahlvorschlaege[0],
-            kandidaten: [kandidatWithoutVotes],
-          } as Wahlvorschlag,
+          prepareStimmzettelWahlvorschlag()
+            .kandidaten([kandidatWithoutVotes])
+            .build(),
         ])
         .build();
 
@@ -322,9 +319,9 @@ describe("stimmzettelMapper.ts", () => {
       expect(
         result.wahlvorschlaege?.[0].kandidaten?.[0].votesByWahlvorschlag
       ).toBeUndefined();
-      expect(result.wahlvorschlaege?.[0].kandidaten?.[0]).not.toHaveProperty(
-        "invalidVotes"
-      );
+      expect(
+        result.wahlvorschlaege?.[0].kandidaten?.[0].invalidVotes
+      ).toBeUndefined();
     });
   });
 });

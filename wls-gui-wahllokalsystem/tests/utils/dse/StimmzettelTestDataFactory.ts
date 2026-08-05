@@ -163,6 +163,14 @@ export function useStimmzettelTestDataFactory() {
     return proxyBuilder<KandidatDTO>(createStimmzettelKandidatDTO());
   }
 
+  function prepareStimmzettelWahlvorschlagDTO(): Builder<WahlvorschlagDTO> {
+    return proxyBuilder<WahlvorschlagDTO>(createStimmzettelWahlvorschlagDTO());
+  }
+
+  function prepareStimmzettelWahlvorschlag(): Builder<Wahlvorschlag> {
+    return proxyBuilder<Wahlvorschlag>(createStimmzettelWahlvorschlag());
+  }
+
   return {
     createStimmzettelOfTeamDTO,
     createStimmzettel,
@@ -172,5 +180,7 @@ export function useStimmzettelTestDataFactory() {
     prepareStimmzettel,
     prepareStimmzettelKandidat,
     prepareStimmzettelKandidatDTO,
+    prepareStimmzettelWahlvorschlagDTO,
+    prepareStimmzettelWahlvorschlag,
   };
 }

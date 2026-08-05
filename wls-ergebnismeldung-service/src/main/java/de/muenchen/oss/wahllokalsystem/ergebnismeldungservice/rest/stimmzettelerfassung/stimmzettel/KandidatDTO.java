@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record KandidatDTO(
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED) KandidatIdDTO id,
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) boolean discarded,
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) Boolean discarded,
     Integer votesByVoter,
     Integer invalidVotes,
     Integer votesByWahlvorschlag) {}

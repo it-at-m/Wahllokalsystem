@@ -158,6 +158,19 @@ public class ExceptionConstants {
   public static final ExceptionDataWrapper STIMMZETTELERFASSUNG_TEAM_STATUS_SAVE_MODEL_IS_MISSING =
       new ExceptionDataWrapper("706", "Der Teamstatus fehlt");
 
+  public static final ExceptionDataWrapper STIMMZETTEL_GUELTIGKEIT_IS_MISSING =
+      new ExceptionDataWrapper("707", "Gültigkeit fehlt bei einem Stimmzettel");
+  public static final ExceptionDataWrapper STIMMZETTEL_WAHLVORSCHLAG_ID_IS_MISSING =
+      new ExceptionDataWrapper("708", "ID eines Wahlvorschlages fehlt");
+  public static final ExceptionDataWrapper STIMMZETTEL_WAHLVORSCHLAG_SELECTED_IS_MISSING =
+      new ExceptionDataWrapper("708", "Wahlvorschlag enthält keine Information bei selected");
+  public static final ExceptionDataWrapper STIMMZETTEL_KANDIDAT_ID_IS_MISSING =
+      new ExceptionDataWrapper("709", "Kandidat enthält keine ID");
+  public static final ExceptionDataWrapper STIMMZETTEL_KANDIDAT_KANDIDATID_IS_MISSING =
+      new ExceptionDataWrapper("710", "Kandidat enthält keine kandidatID");
+  public static final ExceptionDataWrapper STIMMZETTEL_KANDIDAT_DISCARDED_IS_MISSING =
+      new ExceptionDataWrapper("711", "Kandidat enthält keine Information bei discarded");
+
   public static final ExceptionDataWrapper MAPPING_AOUEAI =
       new ExceptionDataWrapper(
           "900",

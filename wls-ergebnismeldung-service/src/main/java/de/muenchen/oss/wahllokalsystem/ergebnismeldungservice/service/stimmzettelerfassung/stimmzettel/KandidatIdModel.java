@@ -1,3 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
-public record KandidatIdModel(String kandidatID, int nennungsNummer) {}
+import jakarta.validation.constraints.NotNull;
+
+public record KandidatIdModel(@NotNull String kandidatID, int nennungsNummer) {}

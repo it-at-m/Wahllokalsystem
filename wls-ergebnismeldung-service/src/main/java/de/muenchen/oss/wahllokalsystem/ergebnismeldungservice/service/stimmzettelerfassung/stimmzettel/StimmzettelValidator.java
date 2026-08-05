@@ -23,6 +23,22 @@ public class StimmzettelValidator {
       throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.STIMMZETTEL_FEHLEN);
     }
 
+    listOfStimmzettel.forEach(
+        stimmzettel -> {
+          verifyThatGueltigkeitIsGiven(stimmzettel);
+          if (stimmzettel.wahlvorschlaege() != null) {
+            stimmzettel
+                .wahlvorschlaege()
+                .forEach(
+                    wahlvorschlag -> {
+                      verifyWahlvorschlag(wahlvorschlag);
+                      if (wahlvorschlag.kandidaten() != null) {
+                        wahlvorschlag.kandidaten().forEach(this::verifyKandidat);
+                      }
+                    });
+          }
+        });
+
     verifyThatStimmzettelKennungIsUnique(listOfStimmzettel);
   }
 
@@ -51,6 +67,42 @@ public class StimmzettelValidator {
             .distinct()
             .count()) {
       throw new DataConflictException(ExceptionConstants.STIMMZETTELKENNUNG_NON_UNIQUE);
+    }
+  }
+
+  private void verifyThatGueltigkeitIsGiven(final StimmzettelOfTeamModel stimmzettel) {
+    if (stimmzettel.gueltigkeit() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_GUELTIGKEIT_IS_MISSING);
+    }
+  }
+
+  private void verifyWahlvorschlag(final WahlvorschlagModel wahlvorschlag) {
+    if (StringUtils.isBlank(wahlvorschlag.wahlvorschlagID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_WAHLVORSCHLAG_ID_IS_MISSING);
+    }
+
+    if (wahlvorschlag.selected() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_WAHLVORSCHLAG_SELECTED_IS_MISSING);
+    }
+  }
+
+  private void verifyKandidat(final KandidatModel kandidat) {
+    if (kandidat.id() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_KANDIDAT_ID_IS_MISSING);
+    }
+
+    if (StringUtils.isBlank(kandidat.id().kandidatID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_KANDIDAT_KANDIDATID_IS_MISSING);
+    }
+
+    if (kandidat.discarded() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_KANDIDAT_DISCARDED_IS_MISSING);
     }
   }
 }

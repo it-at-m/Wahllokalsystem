@@ -5,5 +5,5 @@ import java.util.List;
 
 public record WahlvorschlagDTO(
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED) String wahlvorschlagID,
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) boolean selected,
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) Boolean selected,
     List<KandidatDTO> kandidaten) {}

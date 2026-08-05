@@ -36,7 +36,6 @@ Content-Type: application/json
     "wahlvorschlaege": [
       {
         "wahlvorschlagID": "wahlvorschlagID1",
-        "selected": true,
         "kandidaten": [
           {
             "id": {

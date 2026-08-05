@@ -1,9 +1,11 @@
 <template>
-  <base-beanstandete-wahlbriefe-tabs
-    title-tab-data-input="Wahlbriefe zulassen oder zurückweisen"
-    :has-nachlieferungen="false"
-    @save="onSaveClicked"
-  />
+  <v-card>
+    <base-beanstandete-wahlbriefe-tabs
+      title-tab-data-input="Wahlbriefe zulassen oder zurückweisen"
+      :has-nachlieferungen="false"
+      @save="onSaveClicked"
+    />
+  </v-card>
 </template>
 
 <script setup lang="ts">

@@ -2,65 +2,49 @@
   <base-dialog
     :visible="isDialogVisible"
     dialogtitle="Offline-Synchronisierung"
-    :confirmtext="hasDirtyTasks ? 'Synchronisieren' : 'Schließen'"
+    :confirmtext="hasTasksToRun ? 'Synchronisieren' : 'Schließen'"
     :is-confirm-loading="isOfflineDataSyncing"
-    :canceltext="hasDirtyTasks ? 'Schließen' : ''"
+    :canceltext="hasTasksToRun ? 'Schließen' : ''"
     icon="$offlineSync"
     @cancel="onCancelClicked"
     @confirm="onConfirmClicked"
   >
-    <base-offline-data-sync-widget :dirty-tasks="dirtyTasks" />
+    <the-offline-data-sync-widget />
   </base-dialog>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-import BaseOfflineDataSyncWidget from "@/components/common/widgets/BaseOfflineDataSyncWidget.vue";
+import TheOfflineDataSyncWidget from "@/components/common/widgets/TheOfflineDataSyncWidget.vue";
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 
 const dataSyncStore = useDataSyncStore();
-const { synchronizeOfflineData, getSyncTasks } = dataSyncStore;
-const { isOfflineDataSyncing } = storeToRefs(dataSyncStore);
+const { synchronizeOfflineData } = dataSyncStore;
+const { isOfflineDataSyncing, hasTasksToRun } = storeToRefs(dataSyncStore);
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,
   required: true,
 });
 
-const dirtyTasks = ref(0);
-const hasDirtyTasks = computed(() => dirtyTasks.value > 0);
-
 watch(
   () => isDialogVisible.value,
   async () => {
     if (!isDialogVisible.value) return;
 
-    await updateDirtyTasks();
-    await synchronizeData();
+    await synchronizeOfflineData();
   }
 );
-
-async function updateDirtyTasks() {
-  const openTasks = await getSyncTasks();
-  dirtyTasks.value = openTasks.length;
-}
-
-async function synchronizeData() {
-  if (isOfflineDataSyncing.value) return;
-
-  await synchronizeOfflineData();
-  await updateDirtyTasks();
-}
 
 function onCancelClicked(): void {
   isDialogVisible.value = false;
 }
 
 async function onConfirmClicked() {
-  if (hasDirtyTasks.value) {
-    await synchronizeData();
+  if (hasTasksToRun.value) {
+    await synchronizeOfflineData();
   } else {
     isDialogVisible.value = false;
   }

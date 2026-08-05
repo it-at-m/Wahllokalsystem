@@ -17,6 +17,17 @@ export function useStimmzettelMapper() {
     };
   }
 
+  function toDTO(model: Stimmzettel): StimmzettelOfTeamDTO {
+    const mappedKandidaten =
+      model.kandidaten?.map((kandidat) => _kandidatModelToDTO(kandidat)) ?? [];
+    return {
+      stimmzettelkennung: model.stimmzettelkennung,
+      kandidaten: mappedKandidaten,
+      selectedWahlvorschlaegeOrdnungszahlen:
+        model.selectedWahlvorschlaegeOrdnungszahlen ?? [],
+    };
+  }
+
   function _kandidatDtoToModel(dto: StimmzettelKandidatDTO): Kandidat {
     return {
       kandidatId: dto.kandidatId,
@@ -25,7 +36,16 @@ export function useStimmzettelMapper() {
     };
   }
 
+  function _kandidatModelToDTO(model: Kandidat): StimmzettelKandidatDTO {
+    return {
+      kandidatId: model.kandidatId,
+      isDiscarded: model.isDiscarded,
+      votesByVoter: model.votesByVoter,
+    };
+  }
+
   return {
     toModel,
+    toDTO,
   };
 }

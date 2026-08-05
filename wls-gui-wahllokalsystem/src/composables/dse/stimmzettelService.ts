@@ -13,7 +13,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 export function useStimmzettelService() {
   const { addNotification } = useUserNotificationService();
   const { getNullOn204OrElseResponseData } = useCommonApiUtils();
-  const { toModel } = useStimmzettelMapper();
+  const { toModel, toDTO } = useStimmzettelMapper();
 
   const ergebnismeldungConfiguration = new Configuration({
     basePath: ERGEBNISMELDUNG_SERVICE_API_URL,
@@ -50,7 +50,42 @@ export function useStimmzettelService() {
     }
   }
 
+  async function saveStimmzettel(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string,
+    stimmzettelList: Stimmzettel[],
+    sendNotification = true
+  ) {
+    try {
+      const dtosToSend = stimmzettelList.map((stimmzettel) =>
+        toDTO(stimmzettel)
+      );
+      await stimmzettelControllerApi.postStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        dtosToSend
+      );
+      if (sendNotification) {
+        addNotification(
+          "Speichern der Stimmzettel erfolgreich",
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+    } catch (error) {
+      if (sendNotification) {
+        addNotification(
+          "Speichern der Stimmzettel ist fehlgeschlagen",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw error;
+    }
+  }
+
   return {
     getStimmzettel,
+    saveStimmzettel,
   };
 }

@@ -75,7 +75,8 @@ describe("dseStimmzettelTaskFactory.ts", () => {
       expect(mockDefinitions.getStimmzettel).toHaveBeenCalledWith(
         taskFactoryContext.extendedWahlMetaData[0].wahlID,
         taskFactoryContext.extendedWahlMetaData[0].wahlbezirkID,
-        teamID
+        teamID,
+        false
       );
       expect(result[0]?.name).toContain("Stimmzettel");
     });

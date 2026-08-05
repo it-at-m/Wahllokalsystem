@@ -13,11 +13,11 @@ import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-export function useStimmzettelerfassungStatusTeamService() {
-  const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+export function useStimmzettelerfassungTeamStatusService() {
+  const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
+    useCommonApiUtils();
   const { addNotification } = useUserNotificationService();
   const { dtoToModel, modelToDto } = useStimmzettelerfassungTeamStatusMapper();
-  const { axiosConfigWrapper } = useCommonApiUtils();
 
   const stimmzettelerfassungTeamStatusControllerApi =
     new StimmzettelerfassungTeamStatusControllerApi(
@@ -32,32 +32,14 @@ export function useStimmzettelerfassungStatusTeamService() {
     teamID: string,
     sendNotification = true
   ): Promise<StimmzettelerfassungTeamStatus | null> {
-    if (!teamID) {
-      addNotification(
-        `Fehler beim Laden des Team-Status: Fehlender Parameter teamID`,
-        UserNotificationCategoryEnum.ERROR
-      );
-      return null;
-    } else if (!wahlID) {
-      addNotification(
-        `Fehler beim Laden des Team-Status: Fehlender Parameter wahlID`,
-        UserNotificationCategoryEnum.ERROR
-      );
-      return null;
-    } else if (!wahlbezirkID) {
-      addNotification(
-        `Fehler beim Laden des Team-Status: Fehlender Parameter wahlBezirkID`,
-        UserNotificationCategoryEnum.ERROR
-      );
-      return null;
-    }
     const { wahlenActions } = useWahlenStore();
     try {
       const response =
         await stimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatus(
           wahlID,
           wahlbezirkID,
-          teamID
+          teamID,
+          axiosConfigWrapper().requestAsOnlineOnly()
         );
       const responseData = getNullOn204OrElseResponseData(response);
 

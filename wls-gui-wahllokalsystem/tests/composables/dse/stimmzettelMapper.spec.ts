@@ -219,7 +219,7 @@ describe("stimmzettelMapper.ts", () => {
           kandidaten: wahlvorschlag.kandidaten?.map((kandidat) => ({
             id: {
               kandidatID: kandidat.kandidatId,
-              nennungsNummer: 0,
+              nennungsNummer: kandidat.nennung,
             },
             discarded: kandidat.isDiscarded,
             votesByVoter: kandidat.votesByVoter,
@@ -289,7 +289,7 @@ describe("stimmzettelMapper.ts", () => {
       expect(result.wahlvorschlaege?.[0].kandidaten?.[0]).toStrictEqual({
         id: {
           kandidatID: singleKandidat.kandidatId,
-          nennungsNummer: 0,
+          nennungsNummer: singleKandidat.nennung,
         },
         discarded: singleKandidat.isDiscarded,
         votesByVoter: singleKandidat.votesByVoter,

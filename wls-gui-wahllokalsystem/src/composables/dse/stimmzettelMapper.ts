@@ -70,7 +70,7 @@ export function useStimmzettelMapper() {
     return {
       id: {
         kandidatID: model.kandidatId,
-        nennungsNummer: 0,
+        nennungsNummer: model.nennung,
       },
       discarded: model.isDiscarded,
       votesByVoter: _getNumberOrUndefinedWhenNull(model.votesByVoter),

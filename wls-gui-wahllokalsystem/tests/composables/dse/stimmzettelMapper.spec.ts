@@ -1,3 +1,5 @@
+/* eslint-disable  @typescript-eslint/no-non-null-assertion */
+/* when we access a null field the test will fail */
 import type {
   KandidatDTO,
   StimmzettelOfTeamDTO,
@@ -17,8 +19,13 @@ const {
   createStimmzettel,
   prepareStimmzettel,
   createStimmzettelKandidat,
+  prepareStimmzettelBeschlussfassung,
+  prepareStimmzettelBeschlussfassungDTO,
+  prepareStimmzettelBeschlussgrund,
+  prepareStimmzettelBeschlussgrundDTO,
   prepareStimmzettelKandidat,
   prepareStimmzettelKandidatDTO,
+  prepareStimmzettelKandidatIdDTO,
   prepareStimmzettelWahlvorschlag,
   prepareStimmzettelWahlvorschlagDTO,
 } = useStimmzettelTestDataFactory();
@@ -32,39 +39,45 @@ describe("stimmzettelMapper.ts", () => {
 
       const result: Stimmzettel = toModel(dtoToMap);
 
-      const expectedResult: Stimmzettel = {
-        stimmzettelkennung: dtoToMap.stimmzettelkennung,
-        invalideVotes: dtoToMap.invalideVotes,
-        gueltigkeit: dtoToMap.gueltigkeit,
-        beschlussfassung: {
-          // @ts-expect-error source possible undefined
-          contra: dtoToMap.beschlussfassung?.contra,
-          // @ts-expect-error source possible undefined
-          pro: dtoToMap.beschlussfassung?.pro,
-          // @ts-expect-error source possible undefined
-          text: dtoToMap.beschlussfassung?.text,
-        },
-        // @ts-expect-error source has possible undefined values
-        beschlussvorschlag: dtoToMap.beschlussvorschlag?.map(
-          (beschlussgrund) => ({
-            text: beschlussgrund.text,
-          })
-        ),
-        // @ts-expect-error source has possible undefined values
-        wahlvorschlaege: dtoToMap.wahlvorschlaege?.map((wahlvorschlag) => ({
-          wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
-          selected: wahlvorschlag.selected,
-          kandidaten: wahlvorschlag.kandidaten?.map((kandidat) => ({
-            kandidatId: kandidat.id.kandidatID,
-            nennung: kandidat.id.nennungsNummer,
-            isDiscarded: kandidat.discarded,
-            votesByVoter: kandidat.votesByVoter,
-            invalidVotes: kandidat.invalidVotes,
-            votesByWahlvorschlag: kandidat.votesByWahlvorschlag,
-          })),
-        })),
-      };
-
+      const expectedResult: Stimmzettel = prepareStimmzettel()
+        .stimmzettelkennung(dtoToMap.stimmzettelkennung)
+        .invalideVotes(dtoToMap.invalideVotes)
+        .gueltigkeit(dtoToMap.gueltigkeit)
+        .beschlussfassung(
+          prepareStimmzettelBeschlussfassung()
+            .contra(dtoToMap.beschlussfassung!.contra!)
+            .pro(dtoToMap.beschlussfassung!.pro!)
+            .text(dtoToMap.beschlussfassung!.text!)
+            .build()
+        )
+        .beschlussvorschlag(
+          dtoToMap.beschlussvorschlag!.map((dtoBeschlussgrund) =>
+            prepareStimmzettelBeschlussgrund()
+              .text(dtoBeschlussgrund.text)
+              .build()
+          )
+        )
+        .wahlvorschlaege(
+          dtoToMap.wahlvorschlaege!.map((dtoWahlvorschlag) =>
+            prepareStimmzettelWahlvorschlag()
+              .wahlvorschlagID(dtoWahlvorschlag.wahlvorschlagID)
+              .selected(dtoWahlvorschlag.selected)
+              .kandidaten(
+                dtoWahlvorschlag.kandidaten!.map((dtoKandidat) =>
+                  prepareStimmzettelKandidat()
+                    .isDiscarded(dtoKandidat.discarded)
+                    .invalidVotes(dtoKandidat.invalidVotes!)
+                    .votesByVoter(dtoKandidat.votesByVoter!)
+                    .kandidatId(dtoKandidat.id.kandidatID)
+                    .votesByWahlvorschlag(dtoKandidat.votesByWahlvorschlag!)
+                    .nennung(dtoKandidat.id.nennungsNummer)
+                    .build()
+                )
+              )
+              .build()
+          )
+        )
+        .build();
       expect(result).toStrictEqual(expectedResult);
     });
 
@@ -154,15 +167,17 @@ describe("stimmzettelMapper.ts", () => {
 
       const result = toModel(dtoWithSingleKandidat);
 
-      expect(result.wahlvorschlaege[0].kandidaten).toHaveLength(1);
-      expect(result.wahlvorschlaege[0].kandidaten[0]).toStrictEqual({
-        kandidatId: singleKandidat.id.kandidatID,
-        nennung: singleKandidat.id.nennungsNummer,
-        isDiscarded: singleKandidat.discarded,
-        votesByVoter: singleKandidat.votesByVoter,
-        invalidVotes: singleKandidat.invalidVotes,
-        votesByWahlvorschlag: singleKandidat.votesByWahlvorschlag,
-      });
+      const expectedKandidat = prepareStimmzettelKandidat()
+        .kandidatId(singleKandidat.id.kandidatID)
+        .nennung(singleKandidat.id.nennungsNummer)
+        .isDiscarded(singleKandidat.discarded)
+        .invalidVotes(singleKandidat.invalidVotes!)
+        .votesByVoter(singleKandidat.votesByVoter!)
+        .votesByWahlvorschlag(singleKandidat.votesByWahlvorschlag!)
+        .build();
+      expect(result.wahlvorschlaege[0].kandidaten).toStrictEqual([
+        expectedKandidat,
+      ]);
     });
 
     it("should_mapUndefinedVoteFieldsToNull_when_kandidatVotesAreUndefined", () => {
@@ -195,39 +210,49 @@ describe("stimmzettelMapper.ts", () => {
 
       const result: StimmzettelOfTeamDTO = toDTO(modelToMap);
 
-      const expectedResult: StimmzettelOfTeamDTO = {
-        stimmzettelkennung: modelToMap.stimmzettelkennung,
-        invalideVotes: modelToMap.invalideVotes,
-        gueltigkeit: modelToMap.gueltigkeit,
-        beschlussfassung: {
-          // @ts-expect-error source possible undefined
-          contra: modelToMap.beschlussfassung?.contra,
-          // @ts-expect-error source possible undefined
-          pro: modelToMap.beschlussfassung?.pro,
-          // @ts-expect-error source possible undefined
-          text: modelToMap.beschlussfassung?.text,
-        },
-        beschlussvorschlag: modelToMap.beschlussvorschlag?.map(
-          (beschlussgrund) => ({
-            text: beschlussgrund.text,
-          })
-        ),
-        // @ts-expect-error source has possible undefined values
-        wahlvorschlaege: modelToMap.wahlvorschlaege.map((wahlvorschlag) => ({
-          wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
-          selected: wahlvorschlag.selected,
-          kandidaten: wahlvorschlag.kandidaten?.map((kandidat) => ({
-            id: {
-              kandidatID: kandidat.kandidatId,
-              nennungsNummer: kandidat.nennung,
-            },
-            discarded: kandidat.isDiscarded,
-            votesByVoter: kandidat.votesByVoter,
-            votesByWahlvorschlag: kandidat.votesByWahlvorschlag,
-          })),
-        })),
-      };
-
+      const expectedResult: StimmzettelOfTeamDTO = prepareStimmzettelOfTeamDTO()
+        .stimmzettelkennung(modelToMap.stimmzettelkennung)
+        .invalideVotes(modelToMap.invalideVotes)
+        .gueltigkeit(modelToMap.gueltigkeit)
+        .beschlussfassung(
+          prepareStimmzettelBeschlussfassungDTO()
+            .pro(modelToMap.beschlussfassung!.pro!)
+            .contra(modelToMap.beschlussfassung!.contra!)
+            .text(modelToMap.beschlussfassung!.text!)
+            .build()
+        )
+        .beschlussvorschlag(
+          modelToMap.beschlussvorschlag.map((modelBeschlussgrund) =>
+            prepareStimmzettelBeschlussgrundDTO()
+              .text(modelBeschlussgrund.text)
+              .build()
+          )
+        )
+        .wahlvorschlaege(
+          modelToMap.wahlvorschlaege.map((modelWahlvorschlag) =>
+            prepareStimmzettelWahlvorschlagDTO()
+              .selected(modelWahlvorschlag.selected)
+              .wahlvorschlagID(modelWahlvorschlag.wahlvorschlagID)
+              .kandidaten(
+                modelWahlvorschlag.kandidaten.map((modelKandidat) =>
+                  prepareStimmzettelKandidatDTO()
+                    .id(
+                      prepareStimmzettelKandidatIdDTO()
+                        .kandidatID(modelKandidat.kandidatId)
+                        .nennungsNummer(modelKandidat.nennung)
+                        .build()
+                    )
+                    .discarded(modelKandidat.isDiscarded)
+                    .invalidVotes(modelKandidat.invalidVotes!)
+                    .votesByVoter(modelKandidat.votesByVoter!)
+                    .votesByWahlvorschlag(modelKandidat.votesByWahlvorschlag!)
+                    .build()
+                )
+              )
+              .build()
+          )
+        )
+        .build();
       expect(result).toStrictEqual(expectedResult);
     });
 
@@ -285,16 +310,21 @@ describe("stimmzettelMapper.ts", () => {
 
       const result = toDTO(modelWithSingleKandidat);
 
-      expect(result.wahlvorschlaege?.[0].kandidaten).toHaveLength(1);
-      expect(result.wahlvorschlaege?.[0].kandidaten?.[0]).toStrictEqual({
-        id: {
-          kandidatID: singleKandidat.kandidatId,
-          nennungsNummer: singleKandidat.nennung,
-        },
-        discarded: singleKandidat.isDiscarded,
-        votesByVoter: singleKandidat.votesByVoter,
-        votesByWahlvorschlag: singleKandidat.votesByWahlvorschlag,
-      });
+      const expectedKandidatDTO = prepareStimmzettelKandidatDTO()
+        .id(
+          prepareStimmzettelKandidatIdDTO()
+            .kandidatID(singleKandidat.kandidatId)
+            .nennungsNummer(singleKandidat.nennung)
+            .build()
+        )
+        .discarded(singleKandidat.isDiscarded)
+        .invalidVotes(singleKandidat.invalidVotes!)
+        .votesByVoter(singleKandidat.votesByVoter!)
+        .votesByWahlvorschlag(singleKandidat.votesByWahlvorschlag!)
+        .build();
+      expect(result.wahlvorschlaege?.[0].kandidaten).toStrictEqual([
+        expectedKandidatDTO,
+      ]);
     });
 
     it("should_mapNullVoteFieldsToUndefined_when_kandidatVotesAreNull", () => {

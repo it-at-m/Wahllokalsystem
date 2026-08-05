@@ -155,12 +155,36 @@ export function useStimmzettelTestDataFactory() {
     return proxyBuilder<Stimmzettel>(createStimmzettel());
   }
 
+  function prepareStimmzettelBeschlussfassung(): Builder<Beschlussfassung> {
+    return proxyBuilder<Beschlussfassung>(createStimmzettelBeschlussfassung());
+  }
+
+  function prepareStimmzettelBeschlussfassungDTO(): Builder<BeschlussfassungDTO> {
+    return proxyBuilder<BeschlussfassungDTO>(
+      createStimmzettelBeschlussfassungDTO()
+    );
+  }
+
+  function prepareStimmzettelBeschlussgrund(): Builder<Beschlussgrund> {
+    return proxyBuilder<Beschlussgrund>(createStimmzettelBeschlussgrund());
+  }
+
+  function prepareStimmzettelBeschlussgrundDTO(): Builder<BeschlussgrundDTO> {
+    return proxyBuilder<BeschlussgrundDTO>(
+      createStimmzettelBeschlussgrundDTO()
+    );
+  }
+
   function prepareStimmzettelKandidat(): Builder<Kandidat> {
     return proxyBuilder<Kandidat>(createStimmzettelKandidat());
   }
 
   function prepareStimmzettelKandidatDTO(): Builder<KandidatDTO> {
     return proxyBuilder<KandidatDTO>(createStimmzettelKandidatDTO());
+  }
+
+  function prepareStimmzettelKandidatIdDTO(): Builder<KandidatIdDTO> {
+    return proxyBuilder<KandidatIdDTO>(createStimmzettelKandidatIdDTO());
   }
 
   function prepareStimmzettelWahlvorschlagDTO(): Builder<WahlvorschlagDTO> {
@@ -178,8 +202,13 @@ export function useStimmzettelTestDataFactory() {
     createStimmzettelKandidat,
     prepareStimmzettelOfTeamDTO,
     prepareStimmzettel,
+    prepareStimmzettelBeschlussfassung,
+    prepareStimmzettelBeschlussfassungDTO,
+    prepareStimmzettelBeschlussgrund,
+    prepareStimmzettelBeschlussgrundDTO,
     prepareStimmzettelKandidat,
     prepareStimmzettelKandidatDTO,
+    prepareStimmzettelKandidatIdDTO,
     prepareStimmzettelWahlvorschlagDTO,
     prepareStimmzettelWahlvorschlag,
   };

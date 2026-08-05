@@ -118,6 +118,42 @@ class StimmzettelValidatorTest {
             .isEqualTo(mockedWlsException);
       }
 
+      @Test
+      void should_throwException_when_stimmzettelkennungIsNull() {
+        val invalidStimmzettel =
+            Instancio.of(StimmzettelOfTeamModel.class)
+                .set(field(StimmzettelOfTeamModel::stimmzettelkennung), null)
+                .create();
+
+        Mockito.when(
+                exceptionFactory.createFachlicheWlsException(
+                    ExceptionConstants.STIMMZETTEL_STIMMZETTELKENNUNG_IS_MISSING))
+            .thenReturn(mockedWlsException);
+
+        Assertions.assertThatException()
+            .isThrownBy(() -> unitUnderTest.validOrThrow(List.of(invalidStimmzettel)))
+            .usingRecursiveComparison()
+            .isEqualTo(mockedWlsException);
+      }
+
+      @Test
+      void should_throwException_when_invalideVotesIsNull() {
+        val invalidStimmzettel =
+            Instancio.of(StimmzettelOfTeamModel.class)
+                .set(field(StimmzettelOfTeamModel::invalideVotes), null)
+                .create();
+
+        Mockito.when(
+                exceptionFactory.createFachlicheWlsException(
+                    ExceptionConstants.STIMMZETTEL_INVALIDE_VOTES_IS_MISSING))
+            .thenReturn(mockedWlsException);
+
+        Assertions.assertThatException()
+            .isThrownBy(() -> unitUnderTest.validOrThrow(List.of(invalidStimmzettel)))
+            .usingRecursiveComparison()
+            .isEqualTo(mockedWlsException);
+      }
+
       @ParameterizedTest(name = "throw exception for wahlvorschlagID when {1}")
       @MethodSource("invalidID")
       void should_throwException_when_wahlvorschlagIDIsInvalid(final ArgumentsAccessor arguments) {

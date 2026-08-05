@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record StimmzettelOfTeamModel(
-    int stimmzettelkennung,
-    int invalideVotes,
+    @NotNull Integer stimmzettelkennung,
+    @NotNull Integer invalideVotes,
     @NotNull StimmzettelGueltigkeitModel gueltigkeit,
     List<BeschlussgrundModel> beschlussvorschlag,
     BeschlussfassungModel beschlussfassung,

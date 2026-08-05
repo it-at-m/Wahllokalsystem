@@ -26,6 +26,8 @@ public class StimmzettelValidator {
     listOfStimmzettel.forEach(
         stimmzettel -> {
           verifyThatGueltigkeitIsGiven(stimmzettel);
+          verifyThatStimmzettelKennungIsGiven(stimmzettel);
+          verifyThatInvalideVotesIsGiven(stimmzettel);
           if (stimmzettel.wahlvorschlaege() != null) {
             stimmzettel
                 .wahlvorschlaege()
@@ -74,6 +76,20 @@ public class StimmzettelValidator {
     if (stimmzettel.gueltigkeit() == null) {
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.STIMMZETTEL_GUELTIGKEIT_IS_MISSING);
+    }
+  }
+
+  private void verifyThatStimmzettelKennungIsGiven(final StimmzettelOfTeamModel stimmzettel) {
+    if (stimmzettel.stimmzettelkennung() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_STIMMZETTELKENNUNG_IS_MISSING);
+    }
+  }
+
+  private void verifyThatInvalideVotesIsGiven(final StimmzettelOfTeamModel stimmzettel) {
+    if (stimmzettel.invalideVotes() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_INVALIDE_VOTES_IS_MISSING);
     }
   }
 

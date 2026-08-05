@@ -33,9 +33,17 @@ public class StimmzettelValidator {
                 .wahlvorschlaege()
                 .forEach(
                     wahlvorschlag -> {
-                      verifyWahlvorschlag(wahlvorschlag);
+                      verifyThatWahlvorschlagIdIsGiven(wahlvorschlag);
+                      verifyThatSelectedIsGiven(wahlvorschlag);
                       if (wahlvorschlag.kandidaten() != null) {
-                        wahlvorschlag.kandidaten().forEach(this::verifyKandidat);
+                        wahlvorschlag
+                            .kandidaten()
+                            .forEach(
+                                kandidat -> {
+                                  verifyThatIdIsGiven(kandidat);
+                                  verifyThatKandidatIdIsGiven(kandidat);
+                                  verifyThatDiscardedIsGiven(kandidat);
+                                });
                       }
                     });
           }
@@ -93,29 +101,35 @@ public class StimmzettelValidator {
     }
   }
 
-  private void verifyWahlvorschlag(final WahlvorschlagModel wahlvorschlag) {
+  private void verifyThatWahlvorschlagIdIsGiven(final WahlvorschlagModel wahlvorschlag) {
     if (StringUtils.isBlank(wahlvorschlag.wahlvorschlagID())) {
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.STIMMZETTEL_WAHLVORSCHLAG_ID_IS_MISSING);
     }
+  }
 
+  private void verifyThatSelectedIsGiven(final WahlvorschlagModel wahlvorschlag) {
     if (wahlvorschlag.selected() == null) {
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.STIMMZETTEL_WAHLVORSCHLAG_SELECTED_IS_MISSING);
     }
   }
 
-  private void verifyKandidat(final KandidatModel kandidat) {
+  private void verifyThatIdIsGiven(final KandidatModel kandidat) {
     if (kandidat.id() == null) {
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.STIMMZETTEL_KANDIDAT_ID_IS_MISSING);
     }
+  }
 
+  private void verifyThatKandidatIdIsGiven(final KandidatModel kandidat) {
     if (StringUtils.isBlank(kandidat.id().kandidatID())) {
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.STIMMZETTEL_KANDIDAT_KANDIDATID_IS_MISSING);
     }
+  }
 
+  private void verifyThatDiscardedIsGiven(final KandidatModel kandidat) {
     if (kandidat.discarded() == null) {
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.STIMMZETTEL_KANDIDAT_DISCARDED_IS_MISSING);

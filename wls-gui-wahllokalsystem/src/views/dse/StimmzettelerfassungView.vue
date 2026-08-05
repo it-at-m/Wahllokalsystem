@@ -18,7 +18,7 @@
           >Starten</base-text-button
         >
         <base-text-button
-          :is-disabled="unterbrechenBtnDisabled"
+          :is-disabled="unterbrechenBtnIsDisabled"
           @click="onErfassungUnterbrechenClicked"
           >Unterbrechen</base-text-button
         >
@@ -82,7 +82,7 @@ const beendenBtnActive = computed(
   () =>
     status.value?.status == StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
 );
-const unterbrechenBtnDisabled = computed(
+const unterbrechenBtnIsDisabled = computed(
   () =>
     status.value?.status != StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
 );

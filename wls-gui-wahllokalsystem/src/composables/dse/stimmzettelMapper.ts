@@ -44,11 +44,12 @@ export function useStimmzettelMapper() {
       beschlussfassung: model.beschlussfassung
         ? _beschlussfassungModelToDto(model.beschlussfassung)
         : undefined,
-      beschlussvorschlag: model.beschlussvorschlag
-        ? model.beschlussvorschlag.map((beschlussgrund) =>
-            _beschlussgrundModelToDto(beschlussgrund)
-          )
-        : undefined,
+      beschlussvorschlag:
+        model.beschlussvorschlag.length > 0
+          ? model.beschlussvorschlag.map((beschlussgrund) =>
+              _beschlussgrundModelToDto(beschlussgrund)
+            )
+          : undefined,
     };
   }
 
@@ -72,8 +73,8 @@ export function useStimmzettelMapper() {
         nennungsNummer: 0,
       },
       discarded: model.isDiscarded,
-      votesByVoter: _getNumberOfUndefinedWhenNull(model.votesByVoter),
-      votesByWahlvorschlag: _getNumberOfUndefinedWhenNull(
+      votesByVoter: _getNumberOrUndefinedWhenNull(model.votesByVoter),
+      votesByWahlvorschlag: _getNumberOrUndefinedWhenNull(
         model.votesByWahlvorschlag
       ),
     };
@@ -133,7 +134,7 @@ export function useStimmzettelMapper() {
     return number === undefined ? null : number;
   }
 
-  function _getNumberOfUndefinedWhenNull(
+  function _getNumberOrUndefinedWhenNull(
     number: number | null
   ): number | undefined {
     return number === null ? undefined : number;

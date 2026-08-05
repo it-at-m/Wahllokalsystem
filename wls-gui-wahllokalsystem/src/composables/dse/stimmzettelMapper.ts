@@ -73,6 +73,7 @@ export function useStimmzettelMapper() {
         nennungsNummer: model.nennung,
       },
       discarded: model.isDiscarded,
+      invalidVotes: _getNumberOrUndefinedWhenNull(model.invalidVotes),
       votesByVoter: _getNumberOrUndefinedWhenNull(model.votesByVoter),
       votesByWahlvorschlag: _getNumberOrUndefinedWhenNull(
         model.votesByWahlvorschlag

@@ -3,8 +3,10 @@ import "vuetify/styles";
 import {
   mdiAlert,
   mdiArrowRightBold,
+  mdiCheckboxMarkedCircleOutline,
   mdiCheckCircle,
   mdiCircleOffOutline,
+  mdiCircleOutline,
   mdiCloudUpload,
   mdiContentSave,
   mdiContentSaveCheck,
@@ -16,6 +18,7 @@ import {
   mdiHelpCircleOutline,
   mdiHome,
   mdiInformationOutline,
+  mdiListStatus,
   mdiLockOutline,
   mdiLogout,
   mdiMapSearch,
@@ -82,6 +85,9 @@ export default createVuetify({
       disabled: mdiCircleOffOutline,
       offlineSync: mdiWebSync,
       equal: mdiEqual,
+      listStatus: mdiListStatus,
+      circleOutline: mdiCircleOutline,
+      checkboxCircleMarked: mdiCheckboxMarkedCircleOutline,
     },
     sets: {
       mdi,

@@ -40,7 +40,7 @@ gestrichen wurde, führt die Eingabe des Befehls zur Vergabe einer Streichung be
 
 ### positiv
 
-Intuitiverer Bedienung der Anwendung bei Erfassungen von Stimmen mit der Tastatur.
+Eine intuitivere Bedienung der Anwendung bei Erfassungen von Stimmen mit der Tastatur.
 
 ### negativ
 

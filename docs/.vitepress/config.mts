@@ -1,4 +1,4 @@
-import {withMermaid} from "vitepress-plugin-mermaid";
+import { withMermaid } from "vitepress-plugin-mermaid";
 
 const PATH_SERVICES = "/services/";
 const PATH_SERVICES_BACKEND = PATH_SERVICES + "backend-services/";

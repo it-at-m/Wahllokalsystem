@@ -53,7 +53,7 @@ auf `(e) STE in Bearbeitung` gesetzt. Stimmzettel, über die der gesamte Wahlvor
 einen Beschluss fassen muss, werden entsprechend markiert.
 
 Um eine möglichst intuitive Erfassung der Stimmen des Stimmzettels zu ermöglichen, haben wir
-[Regeln](/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen) definiert. 
+[Regeln](/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen) definiert.
 
 #### (3) Stimmzettel ablegen
 

@@ -2,26 +2,26 @@
 
 ## Status
 
-<adr-status status='proposed'></adr-status>
+<adr-status status='accepted'></adr-status>
 
 ## Kontext
 
-Der Wählen vergibt seine Stimmen auf dem Stimmzettel. Dies wird in der Anwendung durch eine Tastatureingabe ermöglicht.
-Damit das möglichst nachvollziehbar für die User ist werden folgende Regeln definiert.
+Der Wähler vergibt seine Stimmen auf dem Stimmzettel. Dies wird in der Anwendung durch eine Tastatureingabe ermöglicht.  
+Damit das möglichst nachvollziehbar für die User ist, werden folgende Regeln definiert.
 
 ## Entscheidung
 
 ### Einzelstimmenvergabe
 
 Bekommt ein Kandidat, der bereits eine Einzelstimme hat, erneut eine Einzelstimme vergeben, so wird diese zur bestehenden
-Stimme dazu addiert.
+Stimme dazuaddiert.
 
-Hat ein Kandidat mehrere Nennungen, und die zweite Nennung hat zum Beispiel bereits eine Stimme, so führt die Eingabe
-einer Vergabe einer Einzelstimme bei diesem Kandidaten zu einer weiteren Stimmung bei der zweiten Nennung.
+Hat ein Kandidat mehrere Nennungen und die zweite Nennung hat zum Beispiel bereits eine Stimme, so führt die Eingabe
+einer Einzelstimme bei diesem Kandidaten zu einer weiteren Stimme bei der zweiten Nennung.
 
-Hat ein Kandidat noch keine Einzelstimmen erhalten, wird eine Stimme auf die erste freie Nennung vergeben. Gibt es keine freie Nennung,
+Hat ein Kandidat noch keine Einzelstimmen erhalten, wird eine Stimme auf die erste freie Nennung vergeben. Gibt es keine freie Nennung
 mehr, bekommt der User einen Hinweis, dass keine Stimme vergeben werden kann.
-Hat ein Kandidat zum Beispiel drei Nennungen, und die erste wurde zuvor gestrichen, wird auf die zweite Nennung eine Stimme vergeben.
+Hat ein Kandidat zum Beispiel drei Nennungen und die erste wurde zuvor gestrichen, wird auf die zweite Nennung eine Stimme vergeben.
 
 ### Vergabe von Listenkreuzen
 
@@ -33,7 +33,7 @@ bleibt dieses erhalten. Ist kein Listenkreuz gesetzt, wird ein Listenkreuz geset
 Soll ein Kandidat über die Tastatur gestrichen werden, wird die erste freie Nennung ohne Einzelstimme oder Streichung gestrichen.
 Gibt es keine freie Nennung, bekommt der User einen Hinweis, dass keine Streichung durchgeführt werden kann.
 
-Bei einem Kandidaten mit drei Nennungen, wo die erste Nennung bereits eine Einzelstimme hat und die zweite Nennung
+Bei einem Kandidaten mit drei Nennungen, bei dem die erste Nennung bereits eine Einzelstimme hat und die zweite Nennung
 gestrichen wurde, führt die Eingabe des Befehls zur Vergabe einer Streichung bei der dritten Nennung.
 
 ## Konsequenzen
@@ -42,4 +42,4 @@ gestrichen wurde, führt die Eingabe des Befehls zur Vergabe einer Streichung be
 
 ### negativ
 
-Eine Verteilung von Einzelstimmen, auf verschiedenen Nennungen einen Kandidaten, erfordert mehr Aufwand.
+Eine Verteilung von Einzelstimmen auf verschiedene Nennungen eines Kandidaten erfordert mehr Aufwand.

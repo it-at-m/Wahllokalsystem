@@ -55,6 +55,14 @@ export function useRules() {
 
   const dateNotInFuture = (value: string) => {
     const date = new Date(value);
+    /*
+    new Date with dateString creates a date with time 00:00:00 in UTC
+    new Date without dateString creates a date with local time
+    if today ist 2025-10-01 at 00:45 in local timezone (UTC+02:00)
+    new Date() returns 2025-10-01T00:45:00.000+02:00
+    new Date(2025-10-01) returns 2025-10-01T02:00:00.000+02.00
+    */
+    date.setHours(0, 0, 0, 0);
     if (isValidDate(date)) {
       return date <= new Date() || `Datum darf nicht in der Zukunft liegen.`;
     } else {

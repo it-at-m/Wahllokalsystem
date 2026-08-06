@@ -18,7 +18,7 @@
       />
       <div class="font-weight-bold mb-2">Einzelstimmen</div>
       <v-row
-        v-for="item in stimmen"
+        v-for="item in einzelstimmen"
         :key="item.label"
         dense
       >
@@ -43,6 +43,8 @@
 <script setup lang="ts">
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
+import { computed } from "vue";
+
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/StimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
@@ -55,13 +57,13 @@ const props = defineProps<{
   gueltigkeit: StimmzettelGueltigkeitEnum;
 }>();
 
-const stimmen = [
+const einzelstimmen = computed(() => [
   { label: "Stimmen gesamt", value: props.gesamtstimmen },
   { label: "ungültige Stimmen", value: props.ungueltigestimmen },
   { label: "direkt vergebene Stimmen", value: props.direktstimmen },
   { label: "Reststimmen", value: props.reststimmen },
   { label: "Streichungen", value: props.streichungen },
-];
+]);
 
 const gueltigkeitIconMap = {
   [StimmzettelGueltigkeitEnum.Valid]: "$checkboxCircleMarked",

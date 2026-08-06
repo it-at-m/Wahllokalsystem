@@ -1,4 +1,4 @@
-import { withMermaid } from "vitepress-plugin-mermaid";
+import {withMermaid} from "vitepress-plugin-mermaid";
 
 const PATH_SERVICES = "/services/";
 const PATH_SERVICES_BACKEND = PATH_SERVICES + "backend-services/";
@@ -176,6 +176,10 @@ export default withMermaid({
                 {
                   text: "Anzeige der Buttons bei unvollständigen Formularen",
                   link: `${PATH_ADR_UI}adr009-button-status.md`,
+                },
+                {
+                  text: "Vergabe von Stimmen auf dem Stimmzettel",
+                  link: `${PATH_ADR_UI}adr010-dse-stimmvergabe-stimmen-ergaenzen.md`,
                 },
               ],
             },

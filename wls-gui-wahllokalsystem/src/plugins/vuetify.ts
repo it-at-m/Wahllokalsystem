@@ -85,9 +85,9 @@ export default createVuetify({
       disabled: mdiCircleOffOutline,
       offlineSync: mdiWebSync,
       equal: mdiEqual,
-      listStatus: mdiListStatus,
-      circleOutline: mdiCircleOutline,
-      checkboxCircleMarked: mdiCheckboxMarkedCircleOutline,
+      stimmzettelBeschluss: mdiListStatus,
+      stimmzettelUngueltig: mdiCircleOutline,
+      stimmzettelGueltig: mdiCheckboxMarkedCircleOutline,
     },
     sets: {
       mdi,

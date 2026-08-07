@@ -66,19 +66,20 @@ const einzelstimmen = computed(() => [
 ]);
 
 const gueltigkeitIconMap = {
-  [StimmzettelGueltigkeitEnum.Valid]: "$checkboxCircleMarked",
-  [StimmzettelGueltigkeitEnum.Invalid]: "$circleOutline",
-  [StimmzettelGueltigkeitEnum.BeschlussAusstehend]: "$listStatus",
-  [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]: "",
-  [StimmzettelGueltigkeitEnum.Leer]: "",
+  [StimmzettelGueltigkeitEnum.Valid]: "$stimmzettelGueltig",
+  [StimmzettelGueltigkeitEnum.Invalid]: "$stimmzettelUngueltig",
+  [StimmzettelGueltigkeitEnum.BeschlussAusstehend]: "$stimmzettelBeschluss",
+  [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]:
+    "$stimmzettelUngueltig",
+  [StimmzettelGueltigkeitEnum.Leer]: "$stimmzettelUngueltig",
 };
 
 const gueltigkeitColorMap = {
-  [StimmzettelGueltigkeitEnum.Valid]: "green",
-  [StimmzettelGueltigkeitEnum.Invalid]: "red",
-  [StimmzettelGueltigkeitEnum.BeschlussAusstehend]: "blue",
-  [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]: "",
-  [StimmzettelGueltigkeitEnum.Leer]: "",
+  [StimmzettelGueltigkeitEnum.Valid]: "success",
+  [StimmzettelGueltigkeitEnum.Invalid]: "error",
+  [StimmzettelGueltigkeitEnum.BeschlussAusstehend]: "info",
+  [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]: "error",
+  [StimmzettelGueltigkeitEnum.Leer]: "error",
 };
 
 const gueltigkeitTextMap = {
@@ -86,7 +87,8 @@ const gueltigkeitTextMap = {
   [StimmzettelGueltigkeitEnum.Invalid]: "Stimmzettel ist ungültig",
   [StimmzettelGueltigkeitEnum.BeschlussAusstehend]:
     "Stimmzettel ist für Beschluss vorgemerkt",
-  [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]: "",
-  [StimmzettelGueltigkeitEnum.Leer]: "",
+  [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]:
+    "Stimmzettel ist ungültig",
+  [StimmzettelGueltigkeitEnum.Leer]: "Stimmzettel ist ungültig",
 };
 </script>

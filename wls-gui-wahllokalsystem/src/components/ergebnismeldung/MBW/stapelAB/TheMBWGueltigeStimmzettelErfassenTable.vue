@@ -3,7 +3,7 @@
     <v-table>
       <thead>
         <tr>
-          <th />
+          <th class="ordnungszahlCell" />
           <th class="font-weight-bold text-center">Wahlvorschlag</th>
           <th class="font-weight-bold text-center">
             Stapel a: Wahlvorschlag unverändert gekennzeichnet
@@ -84,3 +84,9 @@ const totalSum = computed(() => {
   return total;
 });
 </script>
+
+<style scoped>
+.ordnungszahlCell {
+  min-width: 4rem;
+}
+</style>

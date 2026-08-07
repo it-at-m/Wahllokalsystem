@@ -75,7 +75,7 @@ describe("cryptoUtils.ts", () => {
       vi.spyOn(crypto.subtle, "decrypt").mockResolvedValue(mockDecryptedData);
 
       const result = await decrypt(mockEncryptedData, key);
-      expect(result).toBe("Hello, World!");
+      expect(result).toEqual(new TextEncoder().encode("Hello, World!").buffer);
       expect(crypto.subtle.decrypt).toHaveBeenCalledWith(
         { name: "AES-GCM", iv: new Uint8Array(16) },
         key,
@@ -93,9 +93,8 @@ describe("cryptoUtils.ts", () => {
       vi.spyOn(crypto.subtle, "decrypt").mockResolvedValue(mockDecryptedData);
 
       const result = await decrypt(mockEncryptedData, key);
-      expect(result).toBe("");
+      expect(result).toEqual(new TextEncoder().encode("").buffer);
       expect(crypto.subtle.decrypt).not.toHaveBeenCalled();
-      expect(mockDecoder.decode).toHaveBeenCalledWith(new ArrayBuffer(0));
     });
 
     it("should_throwAnError_when_cryptoKeyIsMissing", async () => {

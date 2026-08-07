@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,7 +86,7 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
       getStimmzettelerfassungTeamStatusList(
           @PathVariable("wahlID") final String wahlID,
           @PathVariable("wahlbezirkID") final String wahlbezirkID) {
-    final var teamStatusList =
+    val teamStatusList =
         teamStatusService.getTeamStatusList(new BezirkUndWahlID(wahlID, wahlbezirkID));
 
     if (teamStatusList == null || teamStatusList.isEmpty()) {
@@ -93,9 +94,7 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
     }
 
     final List<StimmzettelerfassungTeamStatusEntryDTO> dtos =
-        teamStatusList.stream()
-            .map(erfassungTeamStatusEntryDTOMapper::toDTO)
-            .collect(java.util.stream.Collectors.toList());
+        teamStatusList.stream().map(erfassungTeamStatusEntryDTOMapper::toDTO).toList();
     return ResponseEntity.ok(dtos);
   }
 }

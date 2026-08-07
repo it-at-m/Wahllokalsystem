@@ -356,14 +356,12 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       mockDefinitions.getNullOn204OrElseResponseData.mockReturnValue(null);
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
-      // Act
       const result = await loadErfassungTeamStatusListe(
         wahlID,
         wahlbezirkID,
         true
       );
 
-      // Assert
       expect(result).toStrictEqual([]);
       expect(mockDefinitions.dtoEntryToModelEntry.mock.calls.length).toBe(0);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
@@ -375,7 +373,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
     });
 
     it("should_notShowNotification_when_sendNotificationIsFalse", async () => {
-      // Arrange
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
@@ -397,14 +394,12 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       mockDefinitions.dtoEntryToModelEntry.mockImplementation(() => model);
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
-      // Act
       const result = await loadErfassungTeamStatusListe(
         wahlID,
         wahlbezirkID,
         false
       );
 
-      // Assert
       expect(result).toStrictEqual([model]);
       expect(mockDefinitions.addNotification.mock.calls.length).toBe(0);
       // Ensure the mapper was invoked for the DTO
@@ -413,7 +408,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
     });
 
     it("should_showErrorNotificationAndThrow_when_apiFails", async () => {
-      // Arrange
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
@@ -422,7 +416,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       );
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
-      // Act & Assert
       await expect(
         loadErfassungTeamStatusListe(wahlID, wahlbezirkID, true)
       ).rejects.toThrow("Get Team-Status für MBW failed.");
@@ -436,7 +429,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
     });
 
     it("should_notShowErrorNotification_when_sendNotificationIsFalseAndApiFails", async () => {
-      // Arrange
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
@@ -445,7 +437,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       );
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
-      // Act & Assert
       await expect(
         loadErfassungTeamStatusListe(wahlID, wahlbezirkID, false)
       ).rejects.toThrow("Get Team-Status für MBW failed.");
@@ -454,7 +445,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
     });
 
     it("should_throwAndShowError_when_mappingFails", async () => {
-      // Arrange
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
@@ -473,7 +463,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       });
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
-      // Act & Assert
       await expect(
         loadErfassungTeamStatusListe(wahlID, wahlbezirkID, true)
       ).rejects.toThrow("Get Team-Status für MBW failed.");

@@ -12,7 +12,7 @@
         class="d-flex align-center justify-end"
         style="min-width: 220px"
       >
-        <div class="flex-grow-1 flex-grow-1 text-center me-3">
+        <div class="flex-grow-1 text-center me-3">
           <v-icon
             :icon="statusConfig[teamEntry.status]?.icon"
             :color="statusConfig[teamEntry.status]?.color"

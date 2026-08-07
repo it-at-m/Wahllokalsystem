@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.TeamBezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper
 public interface ErfassungTeamStatusModelMapper {
@@ -16,12 +17,6 @@ public interface ErfassungTeamStatusModelMapper {
 
   TeamBezirkUndWahlID toEntity(TeamBezirkUndWahlIDModel id);
 
-  /** Maps full entity to service entry model including teamID and mapped status. */
-  default ErfassungTeamStatusEntryModel toEntryModel(final StimmzettelerfassungTeamStatus entity) {
-    if (entity == null || entity.getId() == null) {
-      return null;
-    }
-    return new ErfassungTeamStatusEntryModel(
-        entity.getId().getTeamID(), toModel(entity.getStatus()));
-  }
+  @Mapping(target = "teamID", source = "id.teamID")
+  ErfassungTeamStatusEntryModel toEntryModel(StimmzettelerfassungTeamStatus entity);
 }

@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettele
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.ErfassungTeamStatusEntryModel;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface ErfassungTeamStatusEntryDTOMapper {
 
   StimmzettelerfassungTeamStatusEntryDTO toDTO(ErfassungTeamStatusEntryModel model);

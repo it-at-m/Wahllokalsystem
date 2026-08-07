@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+import type { WahlvorschlagAnzeige } from "@/types/dse/WahlvorschlagAnzeige.ts";
 
 import { computed } from "vue";
 
@@ -33,7 +33,7 @@ const props = defineProps<{
   maximalErlaubteStimmenProWahlvorschlag: number;
   activeWahlvorschlagId: string | null;
   activeKandidatId?: string | null;
-  wahlvorschlaege: Wahlvorschlag[];
+  wahlvorschlaege: WahlvorschlagAnzeige[];
 }>();
 
 const wahlvorschlaegeSortiert = computed(() => {

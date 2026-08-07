@@ -20,19 +20,21 @@
     <div class="d-flex flex-column">
       <div class="d-flex">
         <v-chip
-          v-if="ungueltigeStimmen"
           size="small"
           color="error"
           variant="tonal"
           class="mr-1"
+          :style="!ungueltigeStimmen ? 'visibility: hidden' : ''"
+          :aria-hidden="!ungueltigeStimmen"
         >
           {{ ungueltigeStimmen }}
         </v-chip>
         <v-chip
-          v-if="gueltigeStimmen"
           size="small"
           color="success"
           variant="tonal"
+          :style="!gueltigeStimmen ? 'visibility: hidden' : ''"
+          :aria-hidden="!gueltigeStimmen"
           class="mr-1"
         >
           {{ gueltigeStimmen }}

@@ -26,20 +26,31 @@
           <div class="d-flex flex-column ml-auto align-end">
             <div class="d-flex">
               <v-chip
-                v-if="anzahlgueltigeStimmenGesamt"
+                v-if="wahlvorschlag.ungueltigeStimmen"
                 size="small"
                 color="error"
                 variant="tonal"
+                class="mr-1"
               >
-                {{ anzahlgueltigeStimmenGesamt }}
+                {{ wahlvorschlag.ungueltigeStimmen }}
               </v-chip>
               <v-chip
-                v-if="anzahlungueltigeStimmenGesamt"
+                v-if="wahlvorschlag.gueltigeStimmen"
                 size="small"
                 color="success"
                 variant="tonal"
               >
-                {{ anzahlungueltigeStimmenGesamt }}
+                {{ wahlvorschlag.gueltigeStimmen }}
+              </v-chip>
+              <v-chip
+                v-else
+                size="small"
+                color="success"
+                variant="tonal"
+                style="visibility: hidden"
+                aria-hidden="true"
+              >
+                &nbsp;
               </v-chip>
             </div>
           </div>
@@ -51,21 +62,26 @@
       <v-list>
         <v-list-item
           v-for="(slot, index) in slots"
-          :key="slot.slotIndex"
+          :key="index"
           ref="listItems"
           tabindex="-1"
-          :data-kandidat-id="slot.kandidat.identifikator"
+          :data-kandidat-id="slot.slotIndex"
         >
-          <base-kandidat-list-item-content
-            :id="slot.kandidat.identifikator"
-            :name="slot.kandidat.name"
-            :anzahl-stimmen="getRawStimmen()"
-            :ungueltige-stimmen="getUngueltig()"
-            :gueltige-stimmen="getGueltig()"
-            :rest-stimmen-wahlvorschlag="getRest()"
-            :durchgestrichen="false"
+          <v-divider
+            v-if="index !== 0"
+            :variant="
+              isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
+            "
           />
-          <v-divider v-if="index !== slots.length - 1" />
+          <base-kandidat-list-item-content
+            :id="slot.anzeigeKandidat.kandidat.identifikator"
+            :name="slot.anzeigeKandidat.kandidat.name"
+            :anzahl-stimmen="slot.anzeigeKandidat.gesamtStimmen"
+            :ungueltige-stimmen="slot.anzeigeKandidat.ungueltigeStimmen"
+            :gueltige-stimmen="slot.anzeigeKandidat.gueltigeStimmen"
+            :rest-stimmen-wahlvorschlag="slot.anzeigeKandidat.restStimmen"
+            :durchgestrichen="slot.anzeigeKandidat.durchgestrichen"
+          />
         </v-list-item>
       </v-list>
     </div>
@@ -73,8 +89,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+import type { KandidatAnzeige } from "@/types/dse/KandidatAnzeige.ts";
+import type { WahlvorschlagAnzeige } from "@/types/dse/WahlvorschlagAnzeige.ts";
 import type { ComponentPublicInstance } from "vue";
 
 import { mdiCloseBoxOutline } from "@mdi/js";
@@ -83,46 +99,47 @@ import { computed, nextTick, onActivated, ref, watch } from "vue";
 import BaseKandidatListItemContent from "@/components/dse/BaseKandidatListItemContent.vue";
 
 const props = defineProps<{
-  wahlvorschlag: Wahlvorschlag;
+  wahlvorschlag: WahlvorschlagAnzeige;
   maximalErlaubteStimmenProWaehler: number;
   activeKandidatId?: string | null;
 }>();
 
 interface Slot {
-  kandidat: Kandidat;
+  anzeigeKandidat: KandidatAnzeige;
   slotIndex: number;
 }
 
 const slots = computed<Slot[]>(() => {
-  const result: Slot[] = [];
-  const sortedKandidaten = (props.wahlvorschlag.kandidaten ?? [])
-    .slice()
-    .sort((a, b) => a.listenposition - b.listenposition);
+  const kandidaten = props.wahlvorschlag?.kandidaten ?? [];
+  if (kandidaten.length === 0) return [];
 
-  for (const kandidat of sortedKandidaten) {
-    const nennungen = Math.max(kandidat.anzahlNennungen, 1);
-    for (let i = 0; i < nennungen; i++) {
-      result.push({
-        kandidat: kandidat,
-        slotIndex: result.length + 1,
-      });
-    }
-  }
-  return result;
+  const sortedKandidaten = [...kandidaten].sort((a, b) => {
+    const diffListenposition =
+      a.kandidat.listenposition - b.kandidat.listenposition;
+    return diffListenposition === 0
+      ? a.nennungsposition - b.nennungsposition
+      : diffListenposition;
+  });
+
+  return sortedKandidaten.map((kandidat, idx) => ({
+    anzeigeKandidat: kandidat,
+    slotIndex: idx + 1,
+    uniqueId: `${kandidat.kandidat.identifikator}_${kandidat.nennungsposition}`,
+  }));
 });
 
-//Stimmen pro Wahlvorschlag
-const anzahlgueltigeStimmenGesamt = ref(Math.random() * 5);
-const anzahlungueltigeStimmenGesamt = ref(Math.random() * 2);
-
-//Stimmen pro Kandidat TBD
-const getRawStimmen = () => Math.floor(Math.random() * 3);
-const getGueltig = () => Math.floor(Math.random() * 3);
-const getUngueltig = () => Math.floor(Math.random() * 3);
-
-const getRest = () => Math.floor(Math.random() * 3);
-
 const listItems = ref<(ComponentPublicInstance | null)[]>([]);
+
+const isDividerZwischenGleichemKandidat = (index: number) => {
+  if (index <= 0) return false;
+  const prev = slots.value[index - 1];
+  const curr = slots.value[index];
+  if (!prev || !curr) return false;
+  return (
+    prev.anzeigeKandidat.kandidat.identifikator ===
+    curr.anzeigeKandidat.kandidat.identifikator
+  );
+};
 
 const focusActive = async () => {
   const id = props.activeKandidatId;
@@ -131,10 +148,9 @@ const focusActive = async () => {
   const s = slots.value;
   if (!s || s.length === 0) return;
 
-  // Focus auf die letzte Nennung des Kandidaten
   let lastIndex = -1;
   for (let i = 0; i < s.length; i++) {
-    if (s[i].kandidat.identifikator === id) lastIndex = i;
+    if (s[i].anzeigeKandidat.kandidat.identifikator === id) lastIndex = i;
   }
   if (lastIndex === -1) return;
 
@@ -159,3 +175,4 @@ onActivated(() => {
   focusActive();
 });
 </script>
+

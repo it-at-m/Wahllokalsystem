@@ -5,7 +5,7 @@ spring:
         webflux:
           routes:
             - id: sso
-              uri: http://host.docker.internal:8100/
+              uri: http://host.docker.internal:48100/
               predicates:
                 - Path=/api/sso/userinfo
               filters:
@@ -13,7 +13,7 @@ spring:
                 - RemoveRequestHeader=Cookie
                 - RemoveResponseHeader=Set-Cookie
             - id: auth-service
-              uri: http://host.docker.internal:8100/
+              uri: http://host.docker.internal:48100/
               predicates:
                 - Path=/api/auth-service/**
               filters:

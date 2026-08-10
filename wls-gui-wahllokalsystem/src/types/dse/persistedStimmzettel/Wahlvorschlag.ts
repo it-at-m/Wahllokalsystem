@@ -1,4 +1,4 @@
-import type { Kandidat } from "@/types/dse/Kandidat.ts";
+import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 
 export interface Wahlvorschlag {
   wahlvorschlagID: string;

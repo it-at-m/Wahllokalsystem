@@ -1,4 +1,4 @@
-import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/StimmzettelGueltigkeitEnum.ts";

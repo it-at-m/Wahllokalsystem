@@ -1,12 +1,17 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Convert;
-import jakarta.persistence.ElementCollection;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -26,17 +31,32 @@ public class Stimmzettel {
 
   @EmbeddedId @ToString.Include @EqualsAndHashCode.Include private StimmzettelID id;
 
-  @Convert(converter = IntArrayToStringConverter.class)
-  @NotNull private List<Integer> selectedWahlvorschlaegeOrdnungszahlen;
+  @NotNull private int invalideVotes;
 
-  @ElementCollection
-  @CollectionTable(
-      name = "Stimmzettel_Kandidat",
-      joinColumns = {
-        @JoinColumn(name = "fk_wahlbezirkID", referencedColumnName = "wahlbezirkID"),
-        @JoinColumn(name = "fk_wahlID", referencedColumnName = "wahlID"),
-        @JoinColumn(name = "fk_teamID", referencedColumnName = "teamID"),
-        @JoinColumn(name = "fk_stimmzettelkennung", referencedColumnName = "stimmzettelkennung")
-      })
-  private List<StimmzettelKandidat> kandidaten;
+  @NotNull @Enumerated(EnumType.STRING)
+  private StimmzettelGueltigkeit gueltigkeit;
+
+  @OneToMany(mappedBy = "stimmzettel", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<Beschlussgrund> beschlussvorschlag = new LinkedList<>();
+
+  @Embedded
+  @AttributeOverrides({
+    @AttributeOverride(name = "pro", column = @Column(name = "beschluss_pro")),
+    @AttributeOverride(name = "contra", column = @Column(name = "beschluss_contra")),
+    @AttributeOverride(name = "text", column = @Column(name = "beschluss_text"))
+  })
+  private Beschlussfassung beschlussfassung;
+
+  @OneToMany(mappedBy = "stimmzettel", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<Wahlvorschlag> wahlvorschlaege = new LinkedList<>();
+
+  public void addBeschlussvorschlag(final Beschlussgrund beschlussgrund) {
+    beschlussvorschlag.add(beschlussgrund);
+    beschlussgrund.setStimmzettel(this);
+  }
+
+  public void addWahlvorschlag(final Wahlvorschlag wahlvorschlag) {
+    wahlvorschlaege.add(wahlvorschlag);
+    wahlvorschlag.setStimmzettel(this);
+  }
 }

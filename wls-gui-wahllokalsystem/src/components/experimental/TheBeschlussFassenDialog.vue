@@ -2,9 +2,11 @@
   <v-dialog
     v-if="selectedStimmzettel"
     v-model="modelValue"
+    width="1500"
+    height="750"
   >
     <v-card>
-      <v-card-title class="d-flex align-center py-0 pl-0">
+      <v-card-title class="d-flex align-center py-0 pl-0 text-center">
         <v-tabs
           v-model="tab"
           bg-color="grey-lighten-3"
@@ -15,16 +17,15 @@
             value="one"
             prepend-icon="$beschluss"
           >
-            Beschluss fassen
+            <span class="font-weight-bold"> Beschluss fassen </span>
           </v-tab>
-          <v-tab value="two"> anzeigen und bearbeiten</v-tab>
+          <v-tab value="two"> Stimmzettel anzeigen und bearbeiten</v-tab>
         </v-tabs>
         <v-spacer />
-        Stimmzettel
-        <span class="font-weight-bold">
+        <h2 class="mx-2">
           {{ currentUserTeamName }}
           {{ selectedStimmzettel.kennung }}
-        </span>
+        </h2>
         <!--        <v-icon
           icon="$beschluss"
           size="small"
@@ -37,47 +38,59 @@
           </span>
         </span>-->
       </v-card-title>
-      <v-card-text>
+      <v-card-text class="pa-1">
         <v-tabs-window v-model="tab">
           <v-tabs-window-item
             value="one"
-            class="ma-5"
+            class="ma-5 fill-height"
           >
-            <v-row align="center">
-              Beschlussvorschläge vom System:
-              <v-autocomplete
-                v-model="selectedSuggestion"
-                :items="suggestions"
-                item-title="gueltigkeit"
-                return-object
-                hide-details
-                class="ml-5"
-              />
-            </v-row>
             <v-row>
-              <v-col cols="3">
+              <v-col cols="4">
                 <v-radio-group
                   v-model="selectedOption"
                   class="mt-2"
                 >
                   <v-radio
-                    label="Die Stimmabgabe ist gültig"
                     value="gueltig"
-                    class="my-2"
-                  />
+                    class="my-2 full-width-radio"
+                  >
+                    <template #label>
+                      <v-row>
+                        <v-col cols="8">
+                          <div>Die Stimmabgabe ist gültig</div>
+                        </v-col>
+                        <v-col>
+                          <v-icon
+                            class="mx-2"
+                            icon="$stimmzettelValid"
+                            color="success"
+                          />
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </v-radio>
                   <v-radio
-                    label="Die Stimmabgabe ist teilweise gültig"
-                    value="twGueltig"
-                    class="my-2"
-                  />
-                  <v-radio
-                    label="Die Stimmabgabe ist ungültig"
                     value="ungueltig"
-                    class="my-2"
-                  />
+                    class="my-2 full-width-radio"
+                  >
+                    <template #label>
+                      <v-row>
+                        <v-col cols="8">
+                          <div>Die Stimmabgabe ist ungültig</div>
+                        </v-col>
+                        <v-col>
+                          <v-icon
+                            class="mx-2"
+                            icon="$stimmzettelInvalid"
+                            color="error"
+                          />
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </v-radio>
                 </v-radio-group>
               </v-col>
-              <v-col cols="9">
+              <v-col cols="8">
                 <div
                   v-if="selectedOption === 'gueltig'"
                   class="ml-8 mt-2"
@@ -94,22 +107,7 @@
                   <v-text-field />
                 </div>
                 <div
-                  v-else-if="selectedOption === 'twGueltig'"
-                  class="ml-8 mt-2"
-                >
-                  <v-checkbox
-                    v-for="item in checkboxItems.twGueltig"
-                    :key="`opt2-${item.value}`"
-                    v-model="selections.twGueltig"
-                    :value="item.value"
-                    :label="item.label"
-                    density="compact"
-                    hide-details
-                  />
-                  <v-text-field />
-                </div>
-                <div
-                  v-else
+                  v-else-if="selectedOption === 'ungueltig'"
                   class="ml-8 mt-2"
                 >
                   <v-checkbox
@@ -123,39 +121,55 @@
                   />
                   <v-text-field />
                 </div>
+                <div
+                  v-else
+                  class="ml-8 mt-2"
+                >
+                  Bitte wählen Sie zuerst die Gültigkeit des Stimmzettels aus.
+                </div>
               </v-col>
             </v-row>
-            <v-row
-              class="text-center"
-              align="center"
-            >
-              Abstimmungsergebnis:
-              <v-combobox
-                v-model="abstimmungsergebnis"
-                :items="[
-                  'einstimmig angenommen',
-                  'einstimmig abgelehnt',
-                  'Abstimmungsverhältnis x:y Stimmen',
-                ]"
-                hide-details
-                class="ml-5"
-              />
-              <!--              <v-text-field
-                v-model="abstimmungsergebnis"
-                hide-details
-
-              />-->
-            </v-row>
-            <v-row
-              class="text-center mt-5"
-              align="center"
-            >
-              Begründung:
-              <v-text-field
-                v-model="begruendung"
-                hide-details
-                class="ml-5"
-              />
+            <v-row class="mt-4">
+              <v-col cols="12">
+                <v-switch
+                  v-model="votesUnanimous"
+                  color="primary"
+                  :label="
+                    votesUnanimous
+                      ? 'Einstimmig angenommen'
+                      : 'Mehrheitsentscheid'
+                  "
+                  hide-details
+                />
+              </v-col>
+              <v-col
+                cols="4"
+                md="4"
+              >
+                <base-number-input
+                  label="Stimmen dafür"
+                  :model-value="votes.dafuer"
+                />
+              </v-col>
+              <v-col
+                cols="4"
+                md="4"
+              >
+                <base-number-input
+                  label="Stimmen dagegen"
+                  :model-value="votes.dagegen"
+                  @update:model-value="onVotesAgainstAdded"
+                />
+              </v-col>
+              <v-col
+                cols="4"
+                md="4"
+              >
+                <base-number-input
+                  label="Enthaltungen"
+                  :model-value="votes.enthaltungen"
+                />
+              </v-col>
             </v-row>
           </v-tabs-window-item>
           <v-tabs-window-item value="two">
@@ -170,14 +184,12 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
+        <base-text-button @click="modelValue = false">
+          Abbrechen
+        </base-text-button>
         <base-text-button
           active
-          :is-disabled="
-            !(
-              (hasAnySelection || begruendung.trim().length > 0) &&
-              abstimmungsergebnis.trim().length > 0
-            )
-          "
+          disabled
           @click="modelValue = false"
         >
           Beschluss speichern
@@ -190,11 +202,13 @@
 import type { BeschlussTabelleItem } from "@/types/dse/BeschlussTabelleItem.ts";
 import type { PropType } from "vue";
 
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { storeToRefs } from "pinia";
 import { computed, reactive, ref, watch } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import TheSimpleStimmzettelErfassung from "@/components/experimental/TheSimpleStimmzettelErfassung.vue";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -202,8 +216,31 @@ import { useUserStore } from "@/stores/userStore.ts";
 const { currentUserTeamName } = storeToRefs(useUserStore());
 const { prepareWahlvorschlaege, createWahlvorschlag } =
   useWahlvorschlaegeTestDataFactory();
+const { getRandomItem } = useCommonTestDataFactory();
 
 const modelValue = defineModel<boolean>();
+
+watch(modelValue, (visible) => {
+  if (visible) {
+    const gueltigkeit = getRandomItem(["gueltig", "ungueltig"]) as OptionKey;
+    selectedOption.value = gueltigkeit;
+
+    selections[gueltigkeit] = getRandomCheckboxSelections(
+      checkboxItems[gueltigkeit]
+    );
+  }
+});
+
+function getRandomCheckboxSelections(
+  options,
+  min = 1,
+  max = options.length - 2
+) {
+  const count = Math.floor(Math.random() * (max - min + 1)) + min; // Zufällige Anzahl zwischen min und max
+  const shuffled = options.slice().sort(() => 0.5 - Math.random()); // Array zufällig mischen
+  const selectedOptions = shuffled.slice(0, count); // Erste 'count' Elemente nehmen
+  return selectedOptions.map((option) => option.value); // Nur die 'value'-Eigenschaften zurückgeben
+}
 
 const tab = ref("one");
 const props = defineProps({
@@ -213,31 +250,7 @@ const props = defineProps({
   },
 });
 
-type OptionKey = "gueltig" | "twGueltig" | "ungueltig";
-interface Suggestion {
-  gueltigkeit: OptionKey;
-  gruende: Record<OptionKey, string[]>;
-}
-
-// Vorschläge (Beispieldaten an deine Realität anpassen)
-const suggestions: Suggestion[] = [
-  {
-    gueltigkeit: "gueltig",
-    gruende: { gueltig: ["opt1_b"], twGueltig: [], ungueltig: [] },
-  },
-  {
-    gueltigkeit: "twGueltig",
-    gruende: { gueltig: [], twGueltig: ["opt2_b", "opt2_c"], ungueltig: [] },
-  },
-  {
-    gueltigkeit: "ungueltig",
-    gruende: {
-      gueltig: [],
-      twGueltig: [],
-      ungueltig: ["opt3_a", "opt3_c", "opt3_d"],
-    },
-  },
-];
+type OptionKey = "gueltig" | "ungueltig";
 
 const selectedOption = ref<OptionKey | null>(null);
 
@@ -253,16 +266,13 @@ const checkboxItems: Record<OptionKey, { label: string; value: string }[]> = {
       label: "Briefwahl: Mehrere Stimmzettel im Umschlag, einer gekennzeichnet",
       value: "opt1_c",
     },
+    { label: "Mehr als 3 Stimmen bei mind. 1 Person", value: "opt2_a" },
+    { label: "keine Reststimmenvergabe möglich", value: "opt2_b" },
+    { label: "einzelne Stimmen ungültig", value: "opt2_c" },
     {
       label: "Anderer Grund:",
       value: "opt1_d",
     },
-  ],
-  twGueltig: [
-    { label: "Mehr als 3 Stimmen bei mind. 1 Person", value: "opt2_a" },
-    { label: "keine Reststimmenvergabe möglich", value: "opt2_b" },
-    { label: "einzelne Stimmen ungültig", value: "opt2_c" },
-    { label: "Anderer Grund:", value: "opt2_d" },
   ],
   ungueltig: [
     { label: "Wählerwille nicht zweifelsfrei erkennbar", value: "opt3_a" },
@@ -286,25 +296,11 @@ const checkboxItems: Record<OptionKey, { label: string; value: string }[]> = {
 
 const selections = reactive<Record<OptionKey, string[]>>({
   gueltig: [],
-  twGueltig: [],
   ungueltig: [],
 });
 
 watch(selectedOption, (now, prev) => {
   if (prev && prev !== now) selections[prev] = []; // entfernen der checkboxes bei wechsel der radiogroup
-  selectedSuggestion.value = null; // element aus autocomplete entfernen
-});
-
-const selectedSuggestion = ref<Suggestion | null>(null);
-
-// update selected values je nach gewähltem vorschlag
-watch(selectedSuggestion, (val) => {
-  if (!val) return;
-  selectedOption.value = val.gueltigkeit;
-
-  (["gueltig", "twGueltig", "ungueltig"] as OptionKey[]).forEach((k) => {
-    selections[k] = [...val.gruende[k]];
-  });
 });
 
 const wahlvorschlaege = prepareWahlvorschlaege()
@@ -338,8 +334,42 @@ function onQuickInputCommand() {
 const begruendung = ref("");
 const abstimmungsergebnis = ref("");
 const hasAnySelection = computed(() =>
-  (["gueltig", "twGueltig", "ungueltig"] as OptionKey[]).some(
+  (["gueltig", "ungueltig"] as OptionKey[]).some(
     (k) => selections[k]?.length > 0
   )
 );
+
+const votes = reactive({ dafuer: 5, dagegen: 0, enthaltungen: 0 });
+const voteMode = ref<"unanimous" | "majority">("majority");
+
+watch(voteMode, (mode) => {
+  if (mode === "unanimous") {
+    votes.dagegen = 0;
+    votes.enthaltungen = 0;
+  }
+});
+
+const votesUnanimous = ref(true);
+
+// Wenn einstimmig: “dagegen” und “Enthaltungen” zurücksetzen
+watch(votesUnanimous, (on) => {
+  if (on) {
+    votes.dagegen = 0;
+    votes.enthaltungen = 0;
+    votes.dafuer = 5;
+  }
+});
+
+function onVotesAgainstAdded(votes: number | undefined | null) {
+  if (!votes) return;
+
+  if (votes > 0) {
+    voteMode.value = "majority";
+  }
+}
 </script>
+<style scoped>
+.full-width-radio :deep(.v-selection-control__wrapper + .v-label) {
+  flex: 1;
+}
+</style>

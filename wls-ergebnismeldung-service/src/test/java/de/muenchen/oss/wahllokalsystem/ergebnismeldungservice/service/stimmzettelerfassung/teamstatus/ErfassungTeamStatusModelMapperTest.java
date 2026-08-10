@@ -69,7 +69,8 @@ class ErfassungTeamStatusModelMapperTest {
 
       val expectedResult =
           new ErfassungTeamStatusEntryModel(
-              entity.getId().getTeamID(), ErfassungTeamStatusModel.valueOf(entity.getStatus().name()));
+              entity.getId().getTeamID(),
+              ErfassungTeamStatusModel.valueOf(entity.getStatus().name()));
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
   }

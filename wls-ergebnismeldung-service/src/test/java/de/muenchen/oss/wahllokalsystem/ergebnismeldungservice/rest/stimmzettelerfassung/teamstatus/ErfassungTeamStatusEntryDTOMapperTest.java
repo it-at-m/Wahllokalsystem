@@ -32,16 +32,16 @@ class ErfassungTeamStatusEntryDTOMapperTest {
 
       val dto = unitUnderTest.toDTO(model);
 
-      val expected = new StimmzettelerfassungTeamStatusEntryDTO(
-          teamId, ErfassungTeamStatusDTO.valueOf(status.name()));
+      val expected =
+          new StimmzettelerfassungTeamStatusEntryDTO(
+              teamId, ErfassungTeamStatusDTO.valueOf(status.name()));
 
       Assertions.assertThat(dto).isEqualTo(expected);
     }
 
     @ParameterizedTest
     @EnumSource(ErfassungTeamStatusModel.class)
-    void should_mapEnumConsistently_when_givenEachStatus(
-        final ErfassungTeamStatusModel status) {
+    void should_mapEnumConsistently_when_givenEachStatus(final ErfassungTeamStatusModel status) {
       val model = new ErfassungTeamStatusEntryModel("team", status);
       val dto = unitUnderTest.toDTO(model);
       Assertions.assertThat(dto.status().name()).isEqualTo(status.name());

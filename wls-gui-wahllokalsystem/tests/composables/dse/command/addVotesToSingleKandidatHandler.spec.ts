@@ -1,0 +1,117 @@
+import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
+
+import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { useAddVotesToSingleKandidatHandler } from "@/composables/dse/command/addVotesToSingleKandidatHandler.ts";
+import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
+import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  kandidatAddVotesOrThrow: vi.fn(),
+}));
+
+describe("addVotesToSingleKandidatHandler.ts", () => {
+  const { canHandle, handleOrThrow } = useAddVotesToSingleKandidatHandler();
+  const { prepareManagedStimmzettelStimmzettel } =
+    useManagedStimmzettelTestDataFactory();
+
+  describe("canHandle", () => {
+    it("should_returnTrue_when_commandContainsValidOrdnungszahlWithoutPlus", () => {
+      expect(canHandle("101")).toBe(true);
+    });
+
+    it("should_returnTrue_when_commandContainsValidOrdnungszahlWithPlusAndVotes", () => {
+      expect(canHandle("101+3")).toBe(true);
+    });
+
+    it("should_returnTrue_when_commandContainsValidOrdnungszahlWithPlusWithoutVotes", () => {
+      expect(canHandle("101+")).toBe(true);
+    });
+
+    it("should_returnFalse_when_commandDoesNotMatchPattern", () => {
+      expect(canHandle("10")).toBe(false);
+      expect(canHandle("abc")).toBe(false);
+      expect(canHandle("0101")).toBe(false);
+    });
+  });
+
+  describe("handleOrThrow", () => {
+    let mockManagedStimmzettel: ManagedStimmzettel;
+
+    beforeEach(() => {
+      mockManagedStimmzettel = {
+        kandidatAddVotesOrThrow:
+          mockDefinitions.kandidatAddVotesOrThrow as unknown as (
+            ordnungszahl: number,
+            votesToAdd: number
+          ) => void,
+        stimmzettel: prepareManagedStimmzettelStimmzettel().build(),
+      };
+    });
+
+    afterEach(() => {
+      vi.resetAllMocks();
+      vi.clearAllMocks();
+    });
+
+    it("should_callKandidatAddVotesOrThrow_once_when_commandIsValidWithoutPlus", () => {
+      handleOrThrow("101", mockManagedStimmzettel);
+
+      expect(mockDefinitions.kandidatAddVotesOrThrow).toHaveBeenCalledTimes(1);
+      expect(
+        mockDefinitions.kandidatAddVotesOrThrow.mock.calls[0]
+      ).toStrictEqual([101, 1]);
+    });
+
+    it("should_callKandidatAddVotesOrThrow_withParsedVotes_when_commandContainsPlusAndVotes", () => {
+      handleOrThrow("101+3", mockManagedStimmzettel);
+
+      expect(mockDefinitions.kandidatAddVotesOrThrow).toHaveBeenCalledTimes(1);
+      expect(
+        mockDefinitions.kandidatAddVotesOrThrow.mock.calls[0]
+      ).toStrictEqual([101, 3]);
+    });
+
+    it("should_defaultCountVotesToOne_when_commandContainsPlusWithoutVotes", () => {
+      handleOrThrow("101+", mockManagedStimmzettel);
+
+      expect(mockDefinitions.kandidatAddVotesOrThrow).toHaveBeenCalledTimes(1);
+      expect(
+        mockDefinitions.kandidatAddVotesOrThrow.mock.calls[0]
+      ).toStrictEqual([101, 1]);
+    });
+
+    it("should_throwCommandExecutionError_when_commandArgumentsAreInvalid", () => {
+      expect(() => handleOrThrow("10", mockManagedStimmzettel)).toThrow(
+        CommandExecutionError
+      );
+      expect(() => handleOrThrow("abc", mockManagedStimmzettel)).toThrow(
+        CommandExecutionError
+      );
+    });
+
+    it("should_wrapManagedStimmzettelErrorInCommandExecutionError_when_kandidatAddVotesOrThrowThrowsManagedStimmzettelError", () => {
+      const managedStimmzettelError = new ManagedStimmzettelError(
+        "Kandidat existiert nicht."
+      );
+      mockDefinitions.kandidatAddVotesOrThrow.mockImplementation(() => {
+        throw managedStimmzettelError;
+      });
+
+      expect(() => handleOrThrow("101", mockManagedStimmzettel)).toThrow(
+        CommandExecutionError
+      );
+    });
+
+    it("should_wrapGenericErrorInCommandExecutionError_when_kandidatAddVotesOrThrowThrowsUnexpectedError", () => {
+      mockDefinitions.kandidatAddVotesOrThrow.mockImplementation(() => {
+        throw new Error("unexpected error");
+      });
+
+      expect(() => handleOrThrow("101", mockManagedStimmzettel)).toThrow(
+        CommandExecutionError
+      );
+    });
+  });
+});

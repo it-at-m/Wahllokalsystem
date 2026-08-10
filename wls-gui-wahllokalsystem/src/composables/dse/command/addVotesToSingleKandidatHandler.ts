@@ -50,9 +50,11 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
     const match = REGEX_ADD_VOTES_TO_KANDIDAT.exec(command);
 
     if (match?.[1] !== undefined) {
+      const votesText = match[3];
       const commandArgs = {
         kandidatOrdnungszahl: Number.parseInt(match[1]),
-        countVotes: match[4] ? Number.parseInt(match[4]) : 1,
+        countVotes:
+          votesText && votesText.length > 0 ? Number.parseInt(votesText) : 1,
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {

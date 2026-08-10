@@ -14,7 +14,22 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
   const userNotificationService = useUserNotificationService();
 
-  async function loadTeamStatusListe(sendNotification = true) {
+  async function onMonitoringSynchronisierenClicked() {
+    await _loadTeamStatusListe();
+  }
+
+  onActivated(async () => {
+    try {
+      await _loadTeamStatusListe(false);
+    } catch {
+      userNotificationService.addNotification(
+        `Team-Status konnten nicht initialisiert werden.`,
+        UserNotificationCategoryEnum.ERROR
+      );
+    }
+  });
+
+  async function _loadTeamStatusListe(sendNotification = true) {
     try {
       isAktualisiserenLoading.value = true;
       const loaded =
@@ -27,27 +42,10 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
         teamstatusList.value = loaded;
         lastLoading.value = new Date();
       }
-      return loaded;
     } finally {
       isAktualisiserenLoading.value = false;
     }
   }
-
-  async function onMonitoringSynchronisierenClicked() {
-    await loadTeamStatusListe();
-  }
-
-  // Load once when the view is activated so components can remain mostly declarative
-  onActivated(async () => {
-    try {
-      await loadTeamStatusListe(false);
-    } catch {
-      userNotificationService.addNotification(
-        `Team-Status konnten nicht initialisiert werden.`,
-        UserNotificationCategoryEnum.ERROR
-      );
-    }
-  });
 
   return {
     teamstatusList,

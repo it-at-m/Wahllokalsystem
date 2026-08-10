@@ -59,13 +59,13 @@ describe("monitoringViewUtils.ts", () => {
     vi.resetAllMocks();
   });
 
-  it("initial state should be empty and not loading", () => {
+  it("should_BeEmptyAndNotLoading_when_initialState", () => {
     expect(unit.teamstatusList.value).toEqual([]);
     expect(unit.lastLoading.value).toBeUndefined();
     expect(unit.isAktualisiserenLoading.value).toBe(false);
   });
 
-  it("onMonitoringSynchronisierenClicked should load list and update state", async () => {
+  it("should_loadListAndUpdateState_when_onMonitoringSynchronisierenClicked", async () => {
     const sample = [{ team: "T1" }];
     mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(sample);
 
@@ -85,7 +85,7 @@ describe("monitoringViewUtils.ts", () => {
     );
   });
 
-  it("should not update list or lastLoading when service returns falsy value", async () => {
+  it("should_updateListAndLastLoading_when_falsyValueWasReturned", async () => {
     mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(null);
 
     await unit.onMonitoringSynchronisierenClicked();
@@ -94,7 +94,7 @@ describe("monitoringViewUtils.ts", () => {
     expect(unit.lastLoading.value).toBeUndefined();
   });
 
-  it("onActivated should load list and update state on success without notification", async () => {
+  it("should_loadListAndUpdateStateWithoutNotification_when_onActivatedSuccess", async () => {
     const sample = [{ team: "T2" }];
     mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(sample);
 
@@ -111,7 +111,7 @@ describe("monitoringViewUtils.ts", () => {
     );
   });
 
-  it("onActivated should call loadTeamStatusListe with sendNotification=false and show error on failure", async () => {
+  it("should_loadTeamStatusListeAndShowError_when_onActivatedCalledWithFailure", async () => {
     mockDefinitions.loadErfassungTeamStatusListe.mockRejectedValue(
       new Error("fail")
     );

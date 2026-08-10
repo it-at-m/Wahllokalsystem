@@ -18,12 +18,14 @@
           no-data-text="Keine Stimmzettel für die Beschlussfassung vorgemerkt"
           :sort-by="[
             { key: 'team', order: 'asc' },
+            { key: 'beschluss', order: 'asc' },
             { key: 'kennung', order: 'asc' },
           ]"
           :multi-sort="true"
           sort-asc-icon="$asc"
           sort-desc-icon="$desc"
           items-per-page-text="Stimmzettel pro Seite:"
+          sticky
         >
           <template #item.zeitpunkt="{ value }"> {{ value }} Uhr </template>
 
@@ -66,11 +68,8 @@
         </v-data-table>
       </v-card-text>
       <v-card-actions>
-        <base-text-button>Beschlussfassung unterbrechen</base-text-button>
         <v-spacer />
-        <base-text-button :disabled="true">
-          Beschlussfassung Beenden
-        </base-text-button>
+        <base-text-button active> Beschlussfassung Beenden </base-text-button>
       </v-card-actions>
     </v-card>
     <the-beschluss-fassen-dialog
@@ -103,7 +102,7 @@ const headers = [
   { title: "Beschlussgrund", key: "grund" },
   { title: "Beschluss gefasst", key: "beschluss" },
   { title: "Beschlussergebnis", key: "beschlussergebnis" },
-  { title: "Beschluss fassen", key: "actions", sortable: false },
+  { title: "", key: "actions", sortable: false },
 ];
 
 const items = ref<BeschlussTabelleItem[]>([]);

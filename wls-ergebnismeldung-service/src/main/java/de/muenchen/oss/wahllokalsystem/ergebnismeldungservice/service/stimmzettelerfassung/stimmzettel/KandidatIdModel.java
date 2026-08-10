@@ -2,5 +2,4 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 
 import jakarta.validation.constraints.NotNull;
 
-public record StimmzettelKandidatModel(
-    @NotNull String kandidatId, boolean isDiscarded, int votesByVoter) {}
+public record KandidatIdModel(@NotNull String kandidatID, int nennungsNummer) {}

@@ -1,6 +1,7 @@
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/StimmzettelGueltigkeitEnum.ts";
 
 export function useStimmzettelUtils() {
   const { getStimmzettel } = useStimmzettelService();
@@ -25,8 +26,11 @@ export function useStimmzettelUtils() {
   ): Stimmzettel {
     return {
       stimmzettelkennung: stimmzettelkennung,
-      selectedWahlvorschlaegeOrdnungszahlen: [],
-      kandidaten: [],
+      gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
+      invalideVotes: 0,
+      beschlussfassung: null,
+      beschlussvorschlag: [],
+      wahlvorschlaege: [],
     };
   }
 

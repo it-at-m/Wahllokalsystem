@@ -115,6 +115,9 @@ export default createVuetify({
       listenkreuz: mdiFileExcelBoxOutline,
       asc: mdiSortAscending,
       desc: mdiSortDescending,
+      stimmzettelBeschluss: mdiListStatus,
+      stimmzettelUngueltig: mdiCircleOutline,
+      stimmzettelGueltig: mdiCheckboxMarkedCircleOutline,
     },
     sets: {
       mdi,

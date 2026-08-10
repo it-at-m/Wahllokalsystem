@@ -21,13 +21,13 @@
 import { ref, watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import { useStimmzettelkennungDialogUtils } from "@/composables/dse/stimmzettelkennungDialogUtils.ts";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { currentUserWahlbezirkID, currentUserTeamName } = useUserStore();
 const { getNextStimmzettelNumber, getEmptyStimmzettelWithStimmzettelkennung } =
-  useStimmzettelUtils();
+  useStimmzettelkennungDialogUtils();
 const { saveStimmzettel, getStimmzettel } = useStimmzettelService();
 
 const props = defineProps<{

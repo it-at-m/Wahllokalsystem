@@ -2,7 +2,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
+import { useStimmzettelkennungDialogUtils } from "@/composables/dse/stimmzettelkennungDialogUtils.ts";
 
 const { prepareStimmzettel } = useStimmzettelTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
@@ -18,8 +18,8 @@ vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
   }),
 }));
 
-describe("stimmzettelUtils.ts", () => {
-  const { getNextStimmzettelNumber } = useStimmzettelUtils();
+describe("stimmzettelkennungDialogUtils.ts", () => {
+  const { getNextStimmzettelNumber } = useStimmzettelkennungDialogUtils();
 
   const wahlID = generateRandomString(10);
   const wahlbezirkID = generateRandomString(10);

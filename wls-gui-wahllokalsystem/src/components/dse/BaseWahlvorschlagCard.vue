@@ -74,8 +74,8 @@
             "
           />
           <base-kandidat-list-item-content
-            :id="slot.anzeigeKandidat.kandidat.identifikator"
-            :name="slot.anzeigeKandidat.kandidat.name"
+            :id="slot.anzeigeKandidat.identifikator"
+            :name="slot.anzeigeKandidat.name"
             :anzahl-stimmen="slot.anzeigeKandidat.gesamtStimmen"
             :ungueltige-stimmen="slot.anzeigeKandidat.ungueltigeStimmen"
             :gueltige-stimmen="slot.anzeigeKandidat.gueltigeStimmen"
@@ -114,8 +114,7 @@ const slots = computed<Slot[]>(() => {
   if (kandidaten.length === 0) return [];
 
   const sortedKandidaten = [...kandidaten].sort((a, b) => {
-    const diffListenposition =
-      a.kandidat.listenposition - b.kandidat.listenposition;
+    const diffListenposition = a.listenposition - b.listenposition;
     return diffListenposition === 0
       ? a.nennungsposition - b.nennungsposition
       : diffListenposition;
@@ -124,7 +123,7 @@ const slots = computed<Slot[]>(() => {
   return sortedKandidaten.map((kandidat, idx) => ({
     anzeigeKandidat: kandidat,
     slotIndex: idx + 1,
-    uniqueId: `${kandidat.kandidat.identifikator}_${kandidat.nennungsposition}`,
+    uniqueId: `${kandidat.identifikator}_${kandidat.nennungsposition}`,
   }));
 });
 
@@ -136,8 +135,7 @@ const isDividerZwischenGleichemKandidat = (index: number) => {
   const curr = slots.value[index];
   if (!prev || !curr) return false;
   return (
-    prev.anzeigeKandidat.kandidat.identifikator ===
-    curr.anzeigeKandidat.kandidat.identifikator
+    prev.anzeigeKandidat.identifikator === curr.anzeigeKandidat.identifikator
   );
 };
 
@@ -150,7 +148,7 @@ const focusActive = async () => {
 
   let lastIndex = -1;
   for (let i = 0; i < s.length; i++) {
-    if (s[i].anzeigeKandidat.kandidat.identifikator === id) lastIndex = i;
+    if (s[i].anzeigeKandidat.identifikator === id) lastIndex = i;
   }
   if (lastIndex === -1) return;
 
@@ -175,4 +173,3 @@ onActivated(() => {
   focusActive();
 });
 </script>
-

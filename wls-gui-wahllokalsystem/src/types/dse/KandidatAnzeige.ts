@@ -1,7 +1,7 @@
-import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
-
 export interface KandidatAnzeige {
-  kandidat: Kandidat;
+  identifikator: string;
+  name: string;
+  listenposition: number;
   nennungsposition: number;
   durchgestrichen: boolean;
   gesamtStimmen: number;

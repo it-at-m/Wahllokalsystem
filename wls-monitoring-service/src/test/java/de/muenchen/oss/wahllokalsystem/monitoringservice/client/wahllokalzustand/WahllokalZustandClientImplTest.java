@@ -50,7 +50,7 @@ class WahllokalZustandClientImplTest {
     }
 
     @Test
-    void should_throwTechnischeWlsException_when_eaiApiThrowsAnyException() {
+    void should_completeNormallyAndLogWarning_when_eaiApiThrowsAnyException() {
       val wahlbezirkID = "wahlbezirkID01";
       val teamID = "B";
       val zeitpunkt = LocalDateTime.now();

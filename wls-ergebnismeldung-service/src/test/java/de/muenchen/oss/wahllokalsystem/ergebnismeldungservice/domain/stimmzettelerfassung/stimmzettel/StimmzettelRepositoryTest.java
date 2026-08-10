@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel;
 
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
-import static org.instancio.Select.field;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -193,10 +193,9 @@ class StimmzettelRepositoryTest {
       final String wahlbezirkID,
       final String teamID,
       final int stimmzettelKennung) {
-    return Instancio.of(Stimmzettel.class)
-        .set(
-            field(Stimmzettel::getId),
-            new StimmzettelID(wahlbezirkID, wahlID, teamID, stimmzettelKennung))
+    return Instancio.of(
+            InstancioModels.createDSESTimmzettelModel(
+                wahlID, wahlbezirkID, teamID, stimmzettelKennung))
         .create();
   }
 }

@@ -96,7 +96,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
   class GetStimmzettelerfassungTeamStatusList {
 
     @Test
-    void should_return_ok_with_list_when_service_has_data() {
+    void shouldReturnOkWithList_when_serviceHasData() {
       val wahlID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
 
@@ -129,7 +129,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
     }
 
     @Test
-    void should_return_no_content_when_service_returns_empty_list() {
+    void should_returnNoContent_when_serviceReturnsEmptyList() {
       val wahlID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
 
@@ -143,7 +143,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
     }
 
     @Test
-    void should_return_no_content_when_service_returns_null() {
+    void should_returnNoContent_when_serviceReturnsNull() {
       val wahlID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
 

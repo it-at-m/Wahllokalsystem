@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettele
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.ErfassungTeamStatusEntryModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.ErfassungTeamStatusModel;
+import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Nested;
@@ -24,23 +25,25 @@ class ErfassungTeamStatusEntryDTOMapperTest {
     }
 
     @Test
-    void should_map_fields_when_given_model() {
-      final String teamId = Instancio.create(String.class);
-      final ErfassungTeamStatusModel status = Instancio.create(ErfassungTeamStatusModel.class);
-      final var model = new ErfassungTeamStatusEntryModel(teamId, status);
+    void should_mapFields_when_givenModel() {
+      val teamId = Instancio.create(String.class);
+      val status = Instancio.create(ErfassungTeamStatusModel.class);
+      val model = new ErfassungTeamStatusEntryModel(teamId, status);
 
-      final var dto = unitUnderTest.toDTO(model);
+      val dto = unitUnderTest.toDTO(model);
 
-      Assertions.assertThat(dto.teamID()).isEqualTo(teamId);
-      Assertions.assertThat(dto.status().name()).isEqualTo(status.name());
+      val expected = new StimmzettelerfassungTeamStatusEntryDTO(
+          teamId, ErfassungTeamStatusDTO.valueOf(status.name()));
+
+      Assertions.assertThat(dto).isEqualTo(expected);
     }
 
     @ParameterizedTest
     @EnumSource(ErfassungTeamStatusModel.class)
-    void should_map_enum_consistently_when_given_each_status(
+    void should_mapEnumConsistently_when_givenEachStatus(
         final ErfassungTeamStatusModel status) {
-      final var model = new ErfassungTeamStatusEntryModel("team", status);
-      final var dto = unitUnderTest.toDTO(model);
+      val model = new ErfassungTeamStatusEntryModel("team", status);
+      val dto = unitUnderTest.toDTO(model);
       Assertions.assertThat(dto.status().name()).isEqualTo(status.name());
     }
   }

@@ -67,8 +67,10 @@ class ErfassungTeamStatusModelMapperTest {
 
       val result = unitUnderTest.toEntryModel(entity);
 
-      Assertions.assertThat(result.teamID()).isEqualTo(entity.getId().getTeamID());
-      Assertions.assertThat(result.status().name()).isEqualTo(entity.getStatus().name());
+      val expectedResult =
+          new ErfassungTeamStatusEntryModel(
+              entity.getId().getTeamID(), ErfassungTeamStatusModel.valueOf(entity.getStatus().name()));
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
   }
 

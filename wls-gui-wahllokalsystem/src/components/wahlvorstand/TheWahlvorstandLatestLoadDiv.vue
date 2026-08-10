@@ -1,17 +1,10 @@
 <template>
-  <div>
-    <v-icon
-      icon="$updateTime"
-      class="mr-2"
-    />
-    Letzte Aktualisierungszeit: {{ toHhMmSs(wahlvorstandStore.lastLoading) }}
-  </div>
+  <base-latest-load-div :last-loading-date="wahlvorstandStore.lastLoading" />
 </template>
 
 <script setup lang="ts">
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
+import BaseLatestLoadDiv from "@/components/common/div/BaseLatestLoadDiv.vue";
 
-const { toHhMmSs } = useDateTimeFormatter();
 const wahlvorstandStore = useWahlvorstandStore();
 </script>

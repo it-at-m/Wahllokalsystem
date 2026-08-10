@@ -10,7 +10,7 @@
     <template #append>
       <div
         class="d-flex align-center justify-end"
-        style="min-width: 220px"
+        :style="'min-width: ' + minWidth"
       >
         <div class="flex-grow-1 text-center me-3">
           <v-icon
@@ -33,18 +33,11 @@
 <script setup lang="ts">
 import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
 
-import {
-  mdiAccountCheck,
-  mdiCheckCircle,
-  mdiCircleEditOutline,
-  mdiPauseCircleOutline,
-} from "@mdi/js";
 import { type PropType } from "vue";
 
 import { useStimmzettelerfassungTeamStatusMapper } from "@/composables/dse/stimmzettelerfassungTeamStatusMapper.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
-const { statusModelEnumToDisplayString } =
+const { statusModelEnumToDisplayString, statusConfig } =
   useStimmzettelerfassungTeamStatusMapper();
 
 defineProps({
@@ -52,24 +45,9 @@ defineProps({
     type: Object as PropType<StimmzettelerfassungTeamStatusEntry>,
     required: true,
   },
+  minWidth: {
+    type: String,
+    required: true,
+  },
 });
-
-const statusConfig = {
-  [StimmzettelerfassungTeamStatusEnum.REGISTRIERT]: {
-    icon: mdiAccountCheck,
-    color: "info",
-  },
-  [StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN]: {
-    icon: mdiPauseCircleOutline,
-    color: "error",
-  },
-  [StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG]: {
-    icon: mdiCircleEditOutline,
-    color: "warning",
-  },
-  [StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN]: {
-    icon: mdiCheckCircle,
-    color: "success",
-  },
-};
 </script>

@@ -249,5 +249,23 @@ public class TeamStatusServiceSecurityTest {
           .isThrownBy(() -> unitUnderTest.getTeamStatusList(id))
           .isInstanceOf(AccessDeniedException.class);
     }
+
+    @Test
+    void
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButWahlbezirkIDEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.SERVICE_GET_STIMMZETTELERFASSUNGTEAMSTATUS);
+
+      val wahlID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+      val id = new BezirkUndWahlID(wahlID, wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(false);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getTeamStatusList(id))
+          .isInstanceOf(AccessDeniedException.class);
+    }
   }
 }

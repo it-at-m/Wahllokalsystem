@@ -203,10 +203,6 @@ class TeamStatusServiceTest {
       val result = unitUnderTest.getTeamStatusList(id);
 
       Assertions.assertThat(result).containsExactly(mapped1, mapped2);
-      Mockito.verify(stimmzettelerfassungTeamStatusRepository)
-          .findByIdWahlIDAndIdWahlbezirkID(id.getWahlID(), id.getWahlbezirkID());
-      Mockito.verify(erfassungTeamStatusModelMapper).toEntryModel(entity1);
-      Mockito.verify(erfassungTeamStatusModelMapper).toEntryModel(entity2);
     }
 
     @Test
@@ -221,8 +217,6 @@ class TeamStatusServiceTest {
       val result = unitUnderTest.getTeamStatusList(id);
 
       Assertions.assertThat(result).isEmpty();
-      Mockito.verify(stimmzettelerfassungTeamStatusRepository)
-          .findByIdWahlIDAndIdWahlbezirkID(id.getWahlID(), id.getWahlbezirkID());
       Mockito.verify(erfassungTeamStatusModelMapper, Mockito.never())
           .toEntryModel(Mockito.any(StimmzettelerfassungTeamStatus.class));
     }

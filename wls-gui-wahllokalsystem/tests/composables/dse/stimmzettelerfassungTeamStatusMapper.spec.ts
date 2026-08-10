@@ -19,7 +19,23 @@ describe("stimmzettelerfassungTeamStatusMapper.ts", () => {
     modelToDto,
     dtoEntryToModelEntry,
     statusModelEnumToDisplayString,
+    statusConfig,
   } = useStimmzettelerfassungTeamStatusMapper();
+
+  describe("statusConfig", () => {
+    it.each(Object.values(StimmzettelerfassungTeamStatusEnum))(
+      "should_returnIconAndColor_when_enumIs%s",
+      (enumValue) => {
+        const entry =
+          statusConfig[enumValue as unknown as keyof typeof statusConfig];
+        expect(entry).toBeDefined();
+        expect(typeof entry.icon).toBe("string");
+        expect(entry.icon.length).toBeGreaterThan(0);
+        expect(typeof entry.color).toBe("string");
+        expect(entry.color.length).toBeGreaterThan(0);
+      }
+    );
+  });
 
   describe("dtoToModel", () => {
     it.each([

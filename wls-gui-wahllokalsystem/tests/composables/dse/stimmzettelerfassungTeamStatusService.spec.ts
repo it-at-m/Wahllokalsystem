@@ -278,7 +278,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
 
   describe("loadErfassungTeamStatusListe", () => {
     it("should_callApiAndReturnMappedList_and_showSuccessNotification", async () => {
-      // Arrange
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
@@ -303,31 +302,27 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       const model2 =
         createStimmzettelerfassungTeamStatusModel() as StimmzettelerfassungTeamStatusEntry;
 
-      // Map DTOs deterministically based on reference to avoid flakiness
       mockDefinitions.dtoEntryToModelEntry.mockImplementation((dto) => {
         if (dto === dto1) return model1;
         if (dto === dto2) return model2;
-        // Fallback to a generic model to be safe
+
         return createStimmzettelerfassungTeamStatusModel();
       });
 
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
-      // Act
       const result = await loadErfassungTeamStatusListe(
         wahlID,
         wahlbezirkID,
         true
       );
 
-      // Assert
       expect(result).toStrictEqual([model1, model2]);
       expect(
         mockDefinitions.getStimmzettelerfassungTeamStatusList.mock.calls
       ).toStrictEqual([
         [wahlID, wahlbezirkID, mockDefinitions.sentinelAxiosConfig],
       ]);
-      // Ensure the mapper was called with the two DTOs in order
       expect(mockDefinitions.dtoEntryToModelEntry.mock.calls).toEqual([
         [dto1],
         [dto2],
@@ -341,7 +336,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
     });
 
     it("should_returnEmptyList_when_apiReturns204NoContent", async () => {
-      // Arrange
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 

@@ -739,6 +739,35 @@ export type StimmzettelerfassungTeamStatusDTOStatusEnum = typeof Stimmzettelerfa
 /**
  * 
  * @export
+ * @interface StimmzettelerfassungTeamStatusEntryDTO
+ */
+export interface StimmzettelerfassungTeamStatusEntryDTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof StimmzettelerfassungTeamStatusEntryDTO
+     */
+    'teamID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StimmzettelerfassungTeamStatusEntryDTO
+     */
+    'status': StimmzettelerfassungTeamStatusEntryDTOStatusEnum;
+}
+
+export const StimmzettelerfassungTeamStatusEntryDTOStatusEnum = {
+    Registriert: 'REGISTRIERT',
+    InBearbeitung: 'IN_BEARBEITUNG',
+    Unterbrochen: 'UNTERBROCHEN',
+    Abgeschlossen: 'ABGESCHLOSSEN'
+} as const;
+
+export type StimmzettelerfassungTeamStatusEntryDTOStatusEnum = typeof StimmzettelerfassungTeamStatusEntryDTOStatusEnum[keyof typeof StimmzettelerfassungTeamStatusEntryDTOStatusEnum];
+
+/**
+ * 
+ * @export
  * @interface StimmzettelumschlaegeDTO
  */
 export interface StimmzettelumschlaegeDTO {
@@ -3501,6 +3530,47 @@ export const StimmzettelerfassungTeamStatusControllerApiAxiosParamCreator = func
             };
         },
         /**
+         * Lesen des Team-Status-Liste für die digitale Stimmzettelerfassung
+         * @param {string} wahlID 
+         * @param {string} wahlbezirkID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getStimmzettelerfassungTeamStatusList: async (wahlID: string, wahlbezirkID: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'wahlID' is not null or undefined
+            assertParamExists('getStimmzettelerfassungTeamStatusList', 'wahlID', wahlID)
+            // verify required parameter 'wahlbezirkID' is not null or undefined
+            assertParamExists('getStimmzettelerfassungTeamStatusList', 'wahlbezirkID', wahlbezirkID)
+            const localVarPath = `/stimmzettelerfassung/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/teamstatus`
+                .replace(`{${"wahlID"}}`, encodeURIComponent(String(wahlID)))
+                .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Erfassen des Team-Status für die digitale Stimmzettelerfassung
          * @param {string} wahlID 
          * @param {string} wahlbezirkID 
@@ -3576,6 +3646,19 @@ export const StimmzettelerfassungTeamStatusControllerApiFp = function(configurat
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * Lesen des Team-Status-Liste für die digitale Stimmzettelerfassung
+         * @param {string} wahlID 
+         * @param {string} wahlbezirkID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getStimmzettelerfassungTeamStatusList(wahlID: string, wahlbezirkID: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StimmzettelerfassungTeamStatusEntryDTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getStimmzettelerfassungTeamStatusList(wahlID, wahlbezirkID, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatusList']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Erfassen des Team-Status für die digitale Stimmzettelerfassung
          * @param {string} wahlID 
          * @param {string} wahlbezirkID 
@@ -3612,6 +3695,16 @@ export const StimmzettelerfassungTeamStatusControllerApiFactory = function (conf
             return localVarFp.getStimmzettelerfassungTeamStatus(wahlID, wahlbezirkID, teamID, options).then((request) => request(axios, basePath));
         },
         /**
+         * Lesen des Team-Status-Liste für die digitale Stimmzettelerfassung
+         * @param {string} wahlID 
+         * @param {string} wahlbezirkID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getStimmzettelerfassungTeamStatusList(wahlID: string, wahlbezirkID: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<StimmzettelerfassungTeamStatusEntryDTO>> {
+            return localVarFp.getStimmzettelerfassungTeamStatusList(wahlID, wahlbezirkID, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Erfassen des Team-Status für die digitale Stimmzettelerfassung
          * @param {string} wahlID 
          * @param {string} wahlbezirkID 
@@ -3644,6 +3737,18 @@ export class StimmzettelerfassungTeamStatusControllerApi extends BaseAPI {
      */
     public getStimmzettelerfassungTeamStatus(wahlID: string, wahlbezirkID: string, teamID: string, options?: RawAxiosRequestConfig) {
         return StimmzettelerfassungTeamStatusControllerApiFp(this.configuration).getStimmzettelerfassungTeamStatus(wahlID, wahlbezirkID, teamID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Lesen des Team-Status-Liste für die digitale Stimmzettelerfassung
+     * @param {string} wahlID 
+     * @param {string} wahlbezirkID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StimmzettelerfassungTeamStatusControllerApi
+     */
+    public getStimmzettelerfassungTeamStatusList(wahlID: string, wahlbezirkID: string, options?: RawAxiosRequestConfig) {
+        return StimmzettelerfassungTeamStatusControllerApiFp(this.configuration).getStimmzettelerfassungTeamStatusList(wahlID, wahlbezirkID, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

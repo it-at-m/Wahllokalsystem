@@ -2,10 +2,12 @@ package de.muenchen.oss.wahllokalsystem.monitoringservice.client.wahllokalzustan
 
 import static org.mockito.ArgumentMatchers.any;
 
+import ch.qos.logback.classic.Level;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.client.WahllokalzustandControllerApi;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.DruckzustandDTO;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.WahllokalZustandDTO;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.monitoringservice.utils.LoggerExtension;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -16,6 +18,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,6 +32,8 @@ class WahllokalZustandClientImplTest {
   @Mock WahllokalzustandControllerApi wahllokalzustandControllerApi;
 
   @InjectMocks WahllokalZustandClientImpl unitUnderTest;
+
+  @RegisterExtension public LoggerExtension loggerExtension = new LoggerExtension();
 
   @Nested
   class PostLastSeen {
@@ -50,20 +55,19 @@ class WahllokalZustandClientImplTest {
       val teamID = "B";
       val zeitpunkt = LocalDateTime.now();
 
-      val mockedWlsException = TechnischeWlsException.withCode("007").buildWithMessage("Dummy-Msg");
-      Mockito.when(
-              exceptionFactory.createTechnischeWlsException(
-                  ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI))
-          .thenReturn(mockedWlsException);
-
       val mockedApiException = new IllegalArgumentException("Nix-Connect");
       Mockito.doThrow(mockedApiException)
           .when(wahllokalzustandControllerApi)
           .saveWahllokalZustandLastSeen(any(), any(), any());
 
-      Assertions.assertThatThrownBy(
-              () -> unitUnderTest.postLastSeen(wahlbezirkID, teamID, zeitpunkt))
-          .isSameAs(mockedWlsException);
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.postLastSeen(wahlbezirkID, teamID, zeitpunkt));
+      Assertions.assertThat(
+              loggerExtension
+                  .getLoggedEventsStream()
+                  .filter(event -> event.getLevel() == Level.WARN)
+                  .count())
+          .isEqualTo(1L);
     }
   }
 

@@ -43,9 +43,7 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
       wahllokalzustandControllerApi.saveWahllokalZustandLastSeen(
           wahlbezirkID, teamID, zuletztGesehen);
     } catch (final Exception exception) {
-      log.info("Last Seen nicht gesendet. Exception: {}", exception.getMessage());
-      throw exceptionFactory.createTechnischeWlsException(
-          ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
+      log.warn("Last Seen nicht gesendet. Exception: {}", exception.getMessage());
     }
   }
 

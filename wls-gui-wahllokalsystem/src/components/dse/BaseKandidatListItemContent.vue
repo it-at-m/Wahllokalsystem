@@ -1,8 +1,7 @@
 <template>
   <div class="d-flex align-center gap-2 candidate-row">
     <span
-      class="border pa-1 pr-4 pl-4 d-inline-flex align-center justify-center rounded me-3 font-weight-medium"
-      :title="String(anzahlStimmen)"
+      :class="`border pa-1 px-4 d-inline-flex align-center justify-center rounded me-3 font-weight-medium ${Number(anzahlStimmen) === 0 ? 'text-transparent' : ''}`"
     >
       {{ anzahlStimmen }}
     </span>

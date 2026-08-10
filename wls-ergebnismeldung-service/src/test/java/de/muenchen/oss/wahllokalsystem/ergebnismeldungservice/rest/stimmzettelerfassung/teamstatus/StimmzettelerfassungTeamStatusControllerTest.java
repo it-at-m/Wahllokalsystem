@@ -96,7 +96,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
   class GetStimmzettelerfassungTeamStatusList {
 
     @Test
-    void shouldReturnOkWithList_when_serviceHasData() {
+    void should_returnOkWithList_when_serviceHasData() {
       val wahlID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
 

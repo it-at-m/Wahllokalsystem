@@ -3,9 +3,7 @@
     <v-card-title class="d-flex align-center justify-space-between">
       <span>Anwesenheit prüfen</span>
       <div class="d-flex flex-column align-start">
-        <the-wahlvorstand-latest-load-div
-          :datetime="lastLoading"
-        />
+        <the-wahlvorstand-latest-load-div :datetime="lastLoading" />
         <the-wahlvorstand-last-send-div
           :datetime="lastSending"
           class="text-subtitle-2"

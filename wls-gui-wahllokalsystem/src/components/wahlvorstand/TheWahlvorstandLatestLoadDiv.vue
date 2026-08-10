@@ -3,8 +3,8 @@
 </template>
 
 <script setup lang="ts">
-import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import BaseLatestLoadDiv from "@/components/common/div/BaseLatestLoadDiv.vue";
+import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
 const wahlvorstandStore = useWahlvorstandStore();
 </script>

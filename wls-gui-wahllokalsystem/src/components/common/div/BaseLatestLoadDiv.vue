@@ -1,9 +1,8 @@
 <template>
-  <div
-      class="text-subtitle-2 mb-1">
+  <div class="text-subtitle-2 mb-1">
     <v-icon
       icon="$updateTime"
-      class="mr-2 "
+      class="mr-2"
     />
     Letzte Aktualisierungszeit: {{ toHhMmSs(lastLoadingDate) }}
   </div>

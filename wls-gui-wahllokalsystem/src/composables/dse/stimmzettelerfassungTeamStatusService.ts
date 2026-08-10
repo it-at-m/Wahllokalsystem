@@ -1,4 +1,5 @@
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
+import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
 
 import { ref } from "vue";
 
@@ -17,7 +18,8 @@ export function useStimmzettelerfassungTeamStatusService() {
   const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
     useCommonApiUtils();
   const { addNotification } = useUserNotificationService();
-  const { dtoToModel, modelToDto } = useStimmzettelerfassungTeamStatusMapper();
+  const { dtoEntryToModelEntry, dtoToModel, modelToDto } =
+    useStimmzettelerfassungTeamStatusMapper();
 
   const stimmzettelerfassungTeamStatusControllerApi =
     new StimmzettelerfassungTeamStatusControllerApi(
@@ -48,7 +50,7 @@ export function useStimmzettelerfassungTeamStatusService() {
         const wahlname =
           wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
         addNotification(
-          `Status '${result?.status}' für ${wahlname} erfolgreich geladen.`,
+          `Team-Status '${result?.status}' für ${wahlname} erfolgreich geladen.`,
           UserNotificationCategoryEnum.SUCCESS
         );
       }
@@ -58,6 +60,44 @@ export function useStimmzettelerfassungTeamStatusService() {
       if (sendNotification) {
         addNotification(
           `Fehler beim Laden des Team-Status für ${wahlname}.`,
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw new Error(`Get Team-Status für ${wahlname} failed.`);
+    }
+  }
+
+  async function loadErfassungTeamStatusListe(
+    wahlID: string,
+    wahlbezirkID: string,
+    sendNotification = true
+  ): Promise<StimmzettelerfassungTeamStatusEntry[]> {
+    const { wahlenActions } = useWahlenStore();
+    try {
+      const response =
+        await stimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatusList(
+          wahlID,
+          wahlbezirkID,
+          axiosConfigWrapper().requestAsOnlineOnly()
+        );
+      const responseData = getNullOn204OrElseResponseData(response);
+
+      const result =
+        responseData?.map((teamStatusDTO) =>
+          dtoEntryToModelEntry(teamStatusDTO)
+        ) ?? [];
+      if (sendNotification) {
+        addNotification(
+          `Status der Teams wurden aktualisiert`,
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+      return result;
+    } catch {
+      const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
+      if (sendNotification) {
+        addNotification(
+          `Aktualisierung der Team-Status ist fehlgeschlagen.`,
           UserNotificationCategoryEnum.ERROR
         );
       }
@@ -105,6 +145,7 @@ export function useStimmzettelerfassungTeamStatusService() {
   return {
     isSaving,
     loadErfassungTeamStatus,
+    loadErfassungTeamStatusListe,
     postErfassungTeamStatus,
   };
 }

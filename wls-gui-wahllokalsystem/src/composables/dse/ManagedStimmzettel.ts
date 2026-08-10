@@ -30,11 +30,6 @@ export function useManagedStimmzettel(stimmzettel: Stimmzettel) {
     _internalAddVotesToKandidat(kandidat, votesToAdd);
   }
 
-  function existsKandidatByOrdnungszahl(ordnungszahl: number) {
-    const kandidat = _getKandidatByOrdungszahl(ordnungszahl);
-    return !!kandidat;
-  }
-
   function _getKandidatByOrdungszahl(ordnungszahl: number) {
     const wahlvorschlagOrdnungszahl = Math.floor(
       ordnungszahl / WAHLVORSCHLAG_NUMBER_MULTIPLER_FOR_ORDNUNGSZAHL
@@ -98,7 +93,6 @@ export function useManagedStimmzettel(stimmzettel: Stimmzettel) {
 
   return {
     kandidatAddVotesOrThrow,
-    existsKandidatByOrdnungszahl,
     stimmzettel, //TODO for debugging only
   };
 }

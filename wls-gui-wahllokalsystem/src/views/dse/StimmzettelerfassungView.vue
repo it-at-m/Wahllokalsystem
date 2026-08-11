@@ -37,6 +37,13 @@
       @confirm="onStimmzettelkennungConfirmed"
       @cancel="isKennungsDialogVisible = false"
     />
+    <the-stimmzettel-erfassung-dialog
+      v-if="lastConfirmedStimmzettelKennung !== null"
+      v-model="isErfassungsDialogVisible"
+      :stimmzettel-nummer="lastConfirmedStimmzettelKennung"
+      @cancel="onStimmzettelErfassungCanceled"
+      @confirm="onStimmzettelErfassungConfirmed"
+    />
     <the-stimmzettelerfassung-beenden-dialog
       v-model="isBeendenDialogVisible"
       :wahl-id="wahlID"
@@ -51,6 +58,7 @@ import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
+import TheStimmzettelErfassungDialog from "@/components/dse/TheStimmzettelErfassungDialog.vue";
 import TheStimmzettelkennungDialog from "@/components/dse/TheStimmzettelkennungDialog.vue";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";

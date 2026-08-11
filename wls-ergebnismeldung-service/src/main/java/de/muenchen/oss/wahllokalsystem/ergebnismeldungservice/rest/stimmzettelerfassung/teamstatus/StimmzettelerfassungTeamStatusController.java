@@ -3,11 +3,14 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettele
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamStatusService;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +28,7 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
 
   private final TeamStatusService teamStatusService;
   private final ErfassungTeamStatusDTOMapper erfassungTeamStatusDTOMapper;
+  private final ErfassungTeamStatusEntryDTOMapper erfassungTeamStatusEntryDTOMapper;
 
   @Operation(description = "Erfassen des Team-Status für die digitale Stimmzettelerfassung")
   @ApiResponses(
@@ -64,5 +68,33 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
             .getTeamStatus(new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID))
             .map(erfassungTeamStatusDTOMapper::toDTO)
             .map(StimmzettelerfassungTeamStatusDTO::new));
+  }
+
+  @Operation(description = "Lesen des Team-Status-Liste für die digitale Stimmzettelerfassung")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Es wurden Team-Status gefunden. Diese werden zurückgegeben."),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Es wurde kein Team-Status gefunden",
+            content = {@Content()})
+      })
+  @GetMapping("/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/teamstatus")
+  public ResponseEntity<List<StimmzettelerfassungTeamStatusEntryDTO>>
+      getStimmzettelerfassungTeamStatusList(
+          @PathVariable("wahlID") final String wahlID,
+          @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+    val teamStatusList =
+        teamStatusService.getTeamStatusList(new BezirkUndWahlID(wahlID, wahlbezirkID));
+
+    if (teamStatusList == null || teamStatusList.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+
+    final List<StimmzettelerfassungTeamStatusEntryDTO> dtos =
+        teamStatusList.stream().map(erfassungTeamStatusEntryDTOMapper::toDTO).toList();
+    return ResponseEntity.ok(dtos);
   }
 }

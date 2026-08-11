@@ -23,6 +23,32 @@ public class StimmzettelValidator {
       throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.STIMMZETTEL_FEHLEN);
     }
 
+    listOfStimmzettel.forEach(
+        stimmzettel -> {
+          verifyThatGueltigkeitIsGiven(stimmzettel);
+          verifyThatStimmzettelKennungIsGiven(stimmzettel);
+          verifyThatInvalideVotesIsGiven(stimmzettel);
+          if (stimmzettel.wahlvorschlaege() != null) {
+            stimmzettel
+                .wahlvorschlaege()
+                .forEach(
+                    wahlvorschlag -> {
+                      verifyThatWahlvorschlagIdIsGiven(wahlvorschlag);
+                      verifyThatSelectedIsGiven(wahlvorschlag);
+                      if (wahlvorschlag.kandidaten() != null) {
+                        wahlvorschlag
+                            .kandidaten()
+                            .forEach(
+                                kandidat -> {
+                                  verifyThatIdIsGiven(kandidat);
+                                  verifyThatKandidatIdIsGiven(kandidat);
+                                  verifyThatDiscardedIsGiven(kandidat);
+                                });
+                      }
+                    });
+          }
+        });
+
     verifyThatStimmzettelKennungIsUnique(listOfStimmzettel);
   }
 
@@ -51,6 +77,62 @@ public class StimmzettelValidator {
             .distinct()
             .count()) {
       throw new DataConflictException(ExceptionConstants.STIMMZETTELKENNUNG_NON_UNIQUE);
+    }
+  }
+
+  private void verifyThatGueltigkeitIsGiven(final StimmzettelOfTeamModel stimmzettel) {
+    if (stimmzettel.gueltigkeit() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_GUELTIGKEIT_IS_MISSING);
+    }
+  }
+
+  private void verifyThatStimmzettelKennungIsGiven(final StimmzettelOfTeamModel stimmzettel) {
+    if (stimmzettel.stimmzettelkennung() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_STIMMZETTELKENNUNG_IS_MISSING);
+    }
+  }
+
+  private void verifyThatInvalideVotesIsGiven(final StimmzettelOfTeamModel stimmzettel) {
+    if (stimmzettel.invalideVotes() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_INVALIDE_VOTES_IS_MISSING);
+    }
+  }
+
+  private void verifyThatWahlvorschlagIdIsGiven(final WahlvorschlagModel wahlvorschlag) {
+    if (StringUtils.isBlank(wahlvorschlag.wahlvorschlagID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_WAHLVORSCHLAG_ID_IS_MISSING);
+    }
+  }
+
+  private void verifyThatSelectedIsGiven(final WahlvorschlagModel wahlvorschlag) {
+    if (wahlvorschlag.selected() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_WAHLVORSCHLAG_SELECTED_IS_MISSING);
+    }
+  }
+
+  private void verifyThatIdIsGiven(final KandidatModel kandidat) {
+    if (kandidat.id() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_KANDIDAT_ID_IS_MISSING);
+    }
+  }
+
+  private void verifyThatKandidatIdIsGiven(final KandidatModel kandidat) {
+    if (StringUtils.isBlank(kandidat.id().kandidatID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_KANDIDAT_KANDIDATID_IS_MISSING);
+    }
+  }
+
+  private void verifyThatDiscardedIsGiven(final KandidatModel kandidat) {
+    if (kandidat.discarded() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.STIMMZETTEL_KANDIDAT_DISCARDED_IS_MISSING);
     }
   }
 }

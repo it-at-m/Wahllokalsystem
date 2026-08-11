@@ -52,6 +52,9 @@ In diesem Schritt erfolgt die Erfassung der Stimmzettel im System. Der Stimmzett
 auf `(e) STE in Bearbeitung` gesetzt. Stimmzettel, über die der gesamte Wahlvorstand
 einen Beschluss fassen muss, werden entsprechend markiert.
 
+Um eine möglichst intuitive Erfassung der Stimmen des Stimmzettels zu ermöglichen, haben wir
+[Regeln](/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen) definiert.
+
 #### (3) Stimmzettel ablegen
 
 Die erfassten Stimmzettel werden entsprechend der Regeln der Wahl für die Ablage vorbereitet. Stimmzettel, über die noch
@@ -101,6 +104,7 @@ stateDiagram-v2
         Registriert --> Abgeschlossen
         InBearbeitung --> Unterbrochen
         Unterbrochen --> InBearbeitung
+        Unterbrochen --> Abgeschlossen
     }
       
     classDef steWfStatus fill:#faca7d

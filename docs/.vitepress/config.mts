@@ -133,6 +133,10 @@ export default withMermaid({
               link: `${PATH_ADR}adr-time-format.md`,
             },
             {
+              text: "Verzicht auf Annotation von HttpStatus OK bei Controllern",
+              link: `${PATH_ADR}adr-keine-annotation-von-default-http-status-ok.md`,
+            },
+            {
               text: "UI/UX",
               link: `${PATH_ADR_UI}`,
               collapsed: true,
@@ -172,6 +176,10 @@ export default withMermaid({
                 {
                   text: "Anzeige der Buttons bei unvollständigen Formularen",
                   link: `${PATH_ADR_UI}adr009-button-status.md`,
+                },
+                {
+                  text: "Vergabe von Stimmen auf dem Stimmzettel",
+                  link: `${PATH_ADR_UI}adr010-dse-stimmvergabe-stimmen-ergaenzen.md`,
                 },
               ],
             },

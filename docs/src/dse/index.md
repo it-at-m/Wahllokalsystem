@@ -55,6 +55,8 @@ einen Beschluss fassen muss, werden entsprechend markiert.
 Um eine möglichst intuitive Erfassung der Stimmen des Stimmzettels zu ermöglichen, haben wir
 [Regeln](/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen) definiert.
 
+Zur schnelleren Erfassung können spezielle [Kurzbefehle](#kurzbefehle-für-die-erfassung) verwendet werden.
+
 #### (3) Stimmzettel ablegen
 
 Die erfassten Stimmzettel werden entsprechend der Regeln der Wahl für die Ablage vorbereitet. Stimmzettel, über die noch
@@ -132,3 +134,14 @@ stateDiagram-v2
 | `(f) STE abgeschlossen`  | Der Stimmzettelerfassungs-Workflow-Status `(f) STE abgeschlossen` wird von Teams mit der Rolle **Schriftführung** gesetzt, wenn alle Teams eines Wahlbezirks die Erfassung `(d) abgeschlossen` haben und bestätigt wurde, dass es keine übrigen Stimmzettel mehr im Erfassungsvorrat gibt.                                                                                                                                                    |
 | `(g) BF abgeschlossen`   | Nach der Dokumentation aller Beschlussergebnisse [(4)](#beschluesse-erfassen) bestätigen die Teams mit der Rolle **Schriftführung**, dass die `(g) BF abgeschlossen` ist.                                                                                                                                                                                                                                                                     |
 | `(h) NS gedruckt`        | Sobald die Teams mit der Rolle **Schriftführung** die Niederschrift gedruckt haben, wird der Stimmzettelerfassungs-Workflow-Status `(h) NS gedruckt` gesetzt.                                                                                                                                                                                                                                                                                 |
+
+## Kurzbefehle für die Erfassung
+
+Um eine schnelle Erfassung der Daten des Stimmzettels zu ermöglichen, können Befehle eingegeben werden. Die Anwendung
+gibt Feedback, wenn der Befehl nicht ausführbar oder falsch war.
+
+| Befehl                           | Funktion                                                               | Beispiel |
+|----------------------------------|------------------------------------------------------------------------|----------|
+| &lt;Kandidatordnungszahl>        | Fügt eine Stimme bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101      |
+| &lt;Kandidatordnungszahl>+       | Fügt eine Stimme bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101+     |
+| &lt;Kandidatordnungszahl>+&lt;n> | Fügt `n` Stimmen bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101+3    |

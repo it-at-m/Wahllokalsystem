@@ -37,7 +37,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   cancel: [];
-  confirm: [];
+  confirm: [confirmedStimmzettelKennung: number];
 }>();
 
 const stimmzettelkennung = ref<number | null>(null);
@@ -60,22 +60,22 @@ async function onConfirmClicked() {
     return;
   }
 
-  const stimmzettelList = await getStimmzettel(
-    props.wahlID,
-    currentUserWahlbezirkID,
-    currentUserTeamName,
-    false
-  );
+  // const stimmzettelList = await getStimmzettel(
+  //   props.wahlID,
+  //   currentUserWahlbezirkID,
+  //   currentUserTeamName,
+  //   false
+  // );
 
-  await saveStimmzettel(
-    props.wahlID,
-    currentUserWahlbezirkID,
-    currentUserTeamName,
-    [
-      ...stimmzettelList,
-      getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung.value),
-    ]
-  );
-  emit("confirm");
+  // await saveStimmzettel(
+  //   props.wahlID,
+  //   currentUserWahlbezirkID,
+  //   currentUserTeamName,
+  //   [
+  //     ...stimmzettelList,
+  //     getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung.value),
+  //   ]
+  // );
+  emit("confirm", stimmzettelkennung.value);
 }
 </script>

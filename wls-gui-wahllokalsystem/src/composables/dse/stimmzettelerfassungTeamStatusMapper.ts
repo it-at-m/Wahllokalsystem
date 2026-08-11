@@ -1,5 +1,16 @@
-import type { StimmzettelerfassungTeamStatusDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type {
+  StimmzettelerfassungTeamStatusDTO,
+  StimmzettelerfassungTeamStatusEntryDTO,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
+import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
+
+import {
+  mdiAccountCheck,
+  mdiCheckCircle,
+  mdiCircleEditOutline,
+  mdiPauseCircleOutline,
+} from "@mdi/js";
 
 import { StimmzettelerfassungTeamStatusDTOStatusEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
@@ -24,6 +35,38 @@ const STATUS_MODEL_ENUM_TO_DTO_ENUM: Record<
   UNTERBROCHEN: StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
 };
 
+const STATUS_MODEL_ENUM_TO_DISPLAY_STRING: Record<
+  StimmzettelerfassungTeamStatusEnum,
+  string
+> = {
+  ABGESCHLOSSEN: "abgeschlossen",
+  IN_BEARBEITUNG: "in Bearbeitung",
+  REGISTRIERT: "registriert",
+  UNTERBROCHEN: "unterbrochen",
+};
+
+const STATUS_MODEL_ENUM_TO_ICON_COLOR: Record<
+  StimmzettelerfassungTeamStatusEnum,
+  { icon: string; color: string }
+> = {
+  [StimmzettelerfassungTeamStatusEnum.REGISTRIERT]: {
+    icon: mdiAccountCheck,
+    color: "info",
+  },
+  [StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN]: {
+    icon: mdiPauseCircleOutline,
+    color: "error",
+  },
+  [StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG]: {
+    icon: mdiCircleEditOutline,
+    color: "warning",
+  },
+  [StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN]: {
+    icon: mdiCheckCircle,
+    color: "success",
+  },
+};
+
 export function useStimmzettelerfassungTeamStatusMapper() {
   function dtoToModel(
     dto: StimmzettelerfassungTeamStatusDTO
@@ -41,8 +84,27 @@ export function useStimmzettelerfassungTeamStatusMapper() {
     };
   }
 
+  function dtoEntryToModelEntry(
+    dto: StimmzettelerfassungTeamStatusEntryDTO
+  ): StimmzettelerfassungTeamStatusEntry {
+    return {
+      teamID: dto.teamID,
+      status: STATUS_DTO_ENUM_TO_MODEL_ENUM[dto.status],
+    };
+  }
+
+  function statusModelEnumToDisplayString(
+    status: StimmzettelerfassungTeamStatusEnum | null
+  ): string {
+    if (!status) return "";
+    return STATUS_MODEL_ENUM_TO_DISPLAY_STRING[status];
+  }
+
   return {
     dtoToModel,
     modelToDto,
+    dtoEntryToModelEntry,
+    statusModelEnumToDisplayString,
+    statusConfig: STATUS_MODEL_ENUM_TO_ICON_COLOR,
   };
 }

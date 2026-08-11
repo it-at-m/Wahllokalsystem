@@ -5,12 +5,12 @@
       <v-card-text>
         Status: {{ status ? status.status : "-" }}
         <v-skeleton-loader
-          boilerplate
+          :boilerplate="!isStatusLoading"
           type="card-avatar"
           class="mt-3"
         />
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="!isStatusLoading">
         <base-text-button
           :active="startenBtnActive"
           :is-disabled="startenBtnIsDisbled"
@@ -61,6 +61,7 @@ import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/Stimmzettelerfas
 const status = ref<StimmzettelerfassungTeamStatus | null>(null);
 const erfassungDialogVisible = ref(false);
 const beendenDialogVisible = ref(false);
+const isStatusLoading = ref(false);
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 
 const route = useRoute();
@@ -88,6 +89,7 @@ const unterbrechenBtnIsDisabled = computed(
 );
 
 async function loadTeamStatus() {
+  isStatusLoading.value = true;
   const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
     wahlID,
     wahlbezirkID,
@@ -97,6 +99,7 @@ async function loadTeamStatus() {
   if (loaded) {
     status.value = loaded;
   }
+  isStatusLoading.value = false;
 }
 
 onActivated(async () => {

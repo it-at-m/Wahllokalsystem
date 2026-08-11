@@ -35,22 +35,15 @@
                 {{ wahlvorschlag.ungueltigeStimmen }}
               </v-chip>
               <v-chip
-                v-if="wahlvorschlag.gueltigeStimmen"
                 size="small"
                 color="success"
                 variant="tonal"
+                :style="
+                  !wahlvorschlag.gueltigeStimmen ? 'visibility: hidden' : ''
+                "
+                :aria-hidden="!wahlvorschlag.gueltigeStimmen"
               >
                 {{ wahlvorschlag.gueltigeStimmen }}
-              </v-chip>
-              <v-chip
-                v-else
-                size="small"
-                color="success"
-                variant="tonal"
-                style="visibility: hidden"
-                aria-hidden="true"
-              >
-                &nbsp;
               </v-chip>
             </div>
           </div>

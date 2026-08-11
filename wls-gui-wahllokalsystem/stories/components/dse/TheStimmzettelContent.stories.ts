@@ -104,7 +104,7 @@ const sampleWahlvorschlaege = [
     kurzname: "C",
     erhaeltStimmen: false,
     gueltigeStimmen: 12,
-    ungueltigeStimmen: 0,
+    ungueltigeStimmen: 3,
     kandidaten: [
       {
         identifikator: "301",
@@ -220,7 +220,7 @@ const sampleWahlvorschlaege = [
     kurzname: "E",
     erhaeltStimmen: false,
     gueltigeStimmen: 9,
-    ungueltigeStimmen: 7,
+    ungueltigeStimmen: 10,
     kandidaten: [
       {
         identifikator: "501",

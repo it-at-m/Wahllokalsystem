@@ -8,13 +8,14 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelErfassungViewButtonStateUtils.ts";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
+import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/StimmzettelGueltigkeitEnum.ts";
 
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 
 const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
 const { logError } = useLogging("stimmzettelErfassungViewUtils");
+const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelUtils();
 
 export function useStimmzettelErfassungViewUtils(
   wahlID: string,
@@ -43,14 +44,8 @@ export function useStimmzettelErfassungViewUtils(
   function startNewEmptyStimmzettelWithStimmzettelkennung(
     stimmzettelkennung: number
   ) {
-    activeStimmzettel.value = {
-      stimmzettelkennung: stimmzettelkennung,
-      gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      invalideVotes: 0,
-      beschlussfassung: null,
-      beschlussvorschlag: [],
-      wahlvorschlaege: [],
-    };
+    activeStimmzettel.value =
+      getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung);
   }
 
   async function sendStatusInBearbeitung() {

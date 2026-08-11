@@ -111,6 +111,54 @@ describe("ManagedStimmzettel.ts", () => {
       );
     });
 
+    it("should_throwManagedStimmzettelError_when_votesToAddIsNaN", () => {
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([])
+        .build();
+
+      const managed = useManagedStimmzettel(stimmzettel);
+
+      expect(() => managed.kandidatAddVotesOrThrow(101, Number.NaN)).toThrow(
+        ManagedStimmzettelError
+      );
+    });
+
+    it("should_throwManagedStimmzettelError_when_votesToAddIsNegativeInfinity", () => {
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([])
+        .build();
+
+      const managed = useManagedStimmzettel(stimmzettel);
+
+      expect(() =>
+        managed.kandidatAddVotesOrThrow(101, Number.NEGATIVE_INFINITY)
+      ).toThrow(ManagedStimmzettelError);
+    });
+
+    it("should_throwManagedStimmzettelError_when_votesToAddIsPositiveInfinity", () => {
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([])
+        .build();
+
+      const managed = useManagedStimmzettel(stimmzettel);
+
+      expect(() =>
+        managed.kandidatAddVotesOrThrow(101, Number.POSITIVE_INFINITY)
+      ).toThrow(ManagedStimmzettelError);
+    });
+
+    it("should_throwManagedStimmzettelError_when_votesToAddIsFractionalValue", () => {
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([])
+        .build();
+
+      const managed = useManagedStimmzettel(stimmzettel);
+
+      expect(() => managed.kandidatAddVotesOrThrow(101, 0.1)).toThrow(
+        ManagedStimmzettelError
+      );
+    });
+
     it("should_addAbsoluteNumberOfVotes_when_votesToAddIsNegative", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .listenposition(1)

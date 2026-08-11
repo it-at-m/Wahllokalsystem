@@ -20,6 +20,11 @@ export function useManagedStimmzettel(stimmzettel: Stimmzettel) {
    * @throws ManagedStimmzettelError when ordnungszahl does not describe a valid kandidat or rules deny action
    */
   function kandidatAddVotesOrThrow(ordnungszahl: number, votesToAdd: number) {
+    if (!Number.isSafeInteger) {
+      throw new ManagedStimmzettelError(
+        "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
+      );
+    }
     const kandidat = _getKandidatByOrdungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(

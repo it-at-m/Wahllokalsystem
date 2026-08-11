@@ -4,12 +4,12 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 
-import BaseCommandInput from "@/components/dse/BaseCommandInput.vue";
+import TheStimmzettelCommandProcessingTextField from "@/components/dse/TheStimmzettelCommandProcessingTextField.vue";
 import { useStimmzettelManager } from "@/composables/dse/stimmzettelManager.ts";
 
 const meta = {
-  component: BaseCommandInput,
-} satisfies Meta<typeof BaseCommandInput>;
+  component: TheStimmzettelCommandProcessingTextField,
+} satisfies Meta<typeof TheStimmzettelCommandProcessingTextField>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -33,6 +33,7 @@ function onEnterPressed() {
   try {
     props.stimmzettelManger.parseCommandOrThrowError(commandString.value);
     commandString.value = "";
+    clearErrorMessage();
   } catch (parseError) {
     if (parseError instanceof UnsupportedCommandError) {
       errorMessage.value = "Der Befehl wird nicht unterstützt.";
@@ -47,7 +48,11 @@ function onEnterPressed() {
 function onModelValueChanged(newValue: string) {
   commandString.value = newValue;
   if (errorMessage.value) {
-    errorMessage.value = null;
+    clearErrorMessage();
   }
+}
+
+function clearErrorMessage() {
+  errorMessage.value = "";
 }
 </script>

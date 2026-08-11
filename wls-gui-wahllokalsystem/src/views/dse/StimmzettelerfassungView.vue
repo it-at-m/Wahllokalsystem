@@ -3,12 +3,7 @@
     <v-card>
       <v-card-title>Stimmzettelerfassung</v-card-title>
       <v-card-text>
-        Status: {{ status ? status.status : "-" }}
-        <v-skeleton-loader
-          boilerplate
-          type="card-avatar"
-          class="mt-3"
-        />
+        <the-stimmzettel-uebersicht-table :team-id="teamID" />
       </v-card-text>
       <v-card-actions>
         <base-text-button
@@ -50,6 +45,7 @@ import { useRoute } from "vue-router";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
 import TheStimmzettelkennungDialog from "@/components/dse/TheStimmzettelkennungDialog.vue";
+import TheStimmzettelUebersichtTable from "@/components/dse/TheStimmzettelUebersichtTable.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useUserStore } from "@/stores/userStore.ts";

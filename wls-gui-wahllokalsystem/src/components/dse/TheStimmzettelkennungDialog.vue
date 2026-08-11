@@ -12,27 +12,25 @@
       Bitte übertragen Sie die Stimmzettelkennung auf den Papier-Stimmzettel.
     </div>
     <div class="font-weight-bold text-center">
-      {{ currentUserTeamName }} {{ stimmzettelkennung }}
+      {{ teamName }} {{ nextStimmzettelkennung }}
     </div>
   </base-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+
+import { computed } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 
-const { currentUserWahlbezirkID, currentUserTeamName } = useUserStore();
-const { getNextStimmzettelNumber, getEmptyStimmzettelWithStimmzettelkennung } =
-  useStimmzettelUtils();
-const { saveStimmzettel, getStimmzettel } = useStimmzettelService();
+const { getNextStimmzettelNumber } = useStimmzettelUtils();
 
 const props = defineProps<{
   visible: boolean;
-  wahlID: string;
+  teamName: string;
+  existingStimmzettel: Stimmzettel[];
 }>();
 
 const emit = defineEmits<{
@@ -40,42 +38,11 @@ const emit = defineEmits<{
   confirm: [confirmedStimmzettelKennung: number];
 }>();
 
-const stimmzettelkennung = ref<number | null>(null);
-
-watch(
-  () => props.visible,
-  async (newVal) => {
-    if (newVal) {
-      stimmzettelkennung.value = await getNextStimmzettelNumber(
-        props.wahlID,
-        currentUserWahlbezirkID,
-        currentUserTeamName
-      );
-    }
-  }
+const nextStimmzettelkennung = computed(() =>
+  getNextStimmzettelNumber(props.existingStimmzettel)
 );
 
 async function onConfirmClicked() {
-  if (stimmzettelkennung.value === null) {
-    return;
-  }
-
-  // const stimmzettelList = await getStimmzettel(
-  //   props.wahlID,
-  //   currentUserWahlbezirkID,
-  //   currentUserTeamName,
-  //   false
-  // );
-
-  // await saveStimmzettel(
-  //   props.wahlID,
-  //   currentUserWahlbezirkID,
-  //   currentUserTeamName,
-  //   [
-  //     ...stimmzettelList,
-  //     getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung.value),
-  //   ]
-  // );
-  emit("confirm", stimmzettelkennung.value);
+  emit("confirm", nextStimmzettelkennung.value);
 }
 </script>

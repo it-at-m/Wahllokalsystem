@@ -7,7 +7,7 @@
     <v-card>
       <v-card-title>
         Erfassung Stimmzettel Nummer {{ currentUserTeamName }}
-        {{ stimmzettelNummer }}
+        {{ stimmzettel.stimmzettelkennung }}
       </v-card-title>
       <v-card-text> In progress </v-card-text>
       <v-card-actions>
@@ -19,6 +19,9 @@
 </template>
 
 <script setup lang="ts">
+import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+import type { PropType } from "vue";
+
 import { storeToRefs } from "pinia";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -31,15 +34,15 @@ const isDialogVisibleModel = defineModel("modelValue", {
 });
 
 const props = defineProps({
-  stimmzettelNummer: {
-    type: Number,
+  stimmzettel: {
+    type: Object as PropType<Stimmzettel>,
     required: true,
   },
 });
 
 const emit = defineEmits<{
   cancel: [];
-  confirm: [];
+  confirm: [stimmzettel: Stimmzettel];
 }>();
 
 const { currentUserTeamName } = storeToRefs(useUserStore());
@@ -49,7 +52,7 @@ function onCancelClicked() {
 }
 
 function onSavedClicked() {
-  emit("confirm");
+  emit("confirm", props.stimmzettel);
 }
 </script>
 

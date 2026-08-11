@@ -33,14 +33,15 @@
     </v-card>
     <the-stimmzettelkennung-dialog
       :visible="isKennungsDialogVisible"
-      :wahl-i-d="wahlID"
+      :team-name="teamID"
+      :existing-stimmzettel="savedStimmzettel"
       @confirm="onStimmzettelkennungConfirmed"
       @cancel="isKennungsDialogVisible = false"
     />
     <the-stimmzettel-erfassung-dialog
-      v-if="lastConfirmedStimmzettelKennung !== null"
+      v-if="activeStimmzettel"
       v-model="isErfassungsDialogVisible"
-      :stimmzettel-nummer="lastConfirmedStimmzettelKennung"
+      :stimmzettel="activeStimmzettel"
       @cancel="onStimmzettelErfassungCanceled"
       @confirm="onStimmzettelErfassungConfirmed"
     />
@@ -53,7 +54,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -69,21 +71,23 @@ const teamID = userStore.currentUserTeamName || "";
 const wahlID = (route.params.wahlId as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 
-const lastConfirmedStimmzettelKennung = ref<number | null>(null);
-
 const {
+  activeStimmzettel,
   beendenBtnActive,
   beendenBtnIsDisabled,
   isBeendenDialogVisible,
   isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
+  savedStimmzettel,
   startenBtnIsDisabled,
   startenBtnActive,
   teamStatus,
   unterbrechenBtnIsDisabled,
+  saveNewStimmzettel,
   sendStatusInBearbeitung,
   sendStatusUnterbrochen,
+  startNewEmptyStimmzettelWithStimmzettelkennung,
 } = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
 
 function onErfassungStartenClicked() {
@@ -93,7 +97,7 @@ function onErfassungStartenClicked() {
 async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
   await sendStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
-  lastConfirmedStimmzettelKennung.value = stimmzettelKennung;
+  startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
   isErfassungsDialogVisible.value = true;
 }
 
@@ -108,7 +112,10 @@ async function onErfassungBeendenClicked() {
 async function onStimmzettelErfassungCanceled() {
   isErfassungsDialogVisible.value = false;
 }
-async function onStimmzettelErfassungConfirmed() {
+async function onStimmzettelErfassungConfirmed(
+  confirmedStimmzettel: Stimmzettel
+) {
+  await saveNewStimmzettel(confirmedStimmzettel);
   isErfassungsDialogVisible.value = false;
 }
 </script>

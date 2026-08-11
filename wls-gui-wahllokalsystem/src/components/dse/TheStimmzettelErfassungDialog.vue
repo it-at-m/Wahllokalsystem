@@ -55,5 +55,3 @@ function onSavedClicked() {
   emit("confirm", props.stimmzettel);
 }
 </script>
-
-<style scoped></style>

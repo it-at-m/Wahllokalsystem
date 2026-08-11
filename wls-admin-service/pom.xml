@@ -16,12 +16,12 @@
         <spring.boot.version>3.5.16</spring.boot.version>
         <spring.cloud.version>2025.0.3</spring.cloud.version>
         <logstash.encoder>9.0</logstash.encoder>
-        <apache.commons.collections4>4.5.0</apache.commons.collections4>
+        <apache.commons.collections4>4.6.0</apache.commons.collections4>
         <apache.commons.csv>1.14.1</apache.commons.csv>
         <apache.commons.io>2.22.0</apache.commons.io>
         <apache.commons.lang3>3.20.0</apache.commons.lang3>
         <apache.commons.text>1.15.0</apache.commons.text>
-        <apache.commons.validator>1.10.1</apache.commons.validator>
+        <apache.commons.validator>1.11.0</apache.commons.validator>
         <!-- SonarQube -->
         <sonar.scanner.version>5.7.0.6970</sonar.scanner.version>
         <!-- TestCoverage -->

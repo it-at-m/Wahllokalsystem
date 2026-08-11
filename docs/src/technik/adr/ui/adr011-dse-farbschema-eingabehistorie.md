@@ -11,7 +11,7 @@ Um in der Eingabehistorie die Unterscheidung der verschiedenen Aktionen mit pass
 ## Entscheidung
 
 Die Erfassung aller Werte, die vom Wähler bestimmt werden, ist mit grünen Icons markiert. Darunter fallen das Hinzufügen von Stimmen sowie die Streichung von Kandidaten.
-Alle Aktionen zur Korrektur von vorherigen Eingaben werden mit roten Icons dargestellt. 
+Alle Aktionen zur Korrektur von vorherigen Eingaben werden mit roten Icons dargestellt.
 
 ## Konsequenzen
 

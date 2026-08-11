@@ -5,23 +5,27 @@
       <v-card-text>
         Status: {{ status ? status.status : "-" }}
         <v-skeleton-loader
-          boilerplate
+          :boilerplate="!isStatusLoading"
           type="card-avatar"
           class="mt-3"
         />
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="!isStatusLoading">
         <base-text-button
           :active="startenBtnActive"
+          :is-disabled="startenBtnIsDisbled"
           @click="onErfassungStartenClicked"
           >Starten</base-text-button
         >
-        <base-text-button @click="onErfassungUnterbrechenClicked"
+        <base-text-button
+          :is-disabled="unterbrechenBtnIsDisabled"
+          @click="onErfassungUnterbrechenClicked"
           >Unterbrechen</base-text-button
         >
         <base-text-button
           class="ms-auto"
           :active="beendenBtnActive"
+          :is-disabled="beendenBtnIsDisabled"
           @click="onErfassungBeendenClicked"
           >Beenden</base-text-button
         >
@@ -58,6 +62,7 @@ import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/Stimmzettelerfas
 const status = ref<StimmzettelerfassungTeamStatus | null>(null);
 const erfassungDialogVisible = ref(false);
 const beendenDialogVisible = ref(false);
+const isStatusLoading = ref(false);
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 
 const route = useRoute();
@@ -72,12 +77,23 @@ const startenBtnActive = computed(
     status.value?.status == StimmzettelerfassungTeamStatusEnum.REGISTRIERT ||
     status.value?.status == StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
 );
+const startenBtnIsDisbled = computed(
+  () => status.value?.status == StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+);
 const beendenBtnActive = computed(
   () =>
     status.value?.status == StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
 );
+const beendenBtnIsDisabled = computed(
+  () => status.value?.status == StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+);
+const unterbrechenBtnIsDisabled = computed(
+  () =>
+    status.value?.status != StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+);
 
 async function loadTeamStatus() {
+  isStatusLoading.value = true;
   const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
     wahlID,
     wahlbezirkID,
@@ -87,6 +103,7 @@ async function loadTeamStatus() {
   if (loaded) {
     status.value = loaded;
   }
+  isStatusLoading.value = false;
 }
 
 onActivated(async () => {

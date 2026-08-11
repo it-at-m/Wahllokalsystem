@@ -25,6 +25,7 @@
         <base-text-button
           class="ms-auto"
           :active="beendenBtnActive"
+          :is-disabled="beendenBtnIsDisabled"
           @click="onErfassungBeendenClicked"
           >Beenden</base-text-button
         >
@@ -82,6 +83,9 @@ const startenBtnIsDisbled = computed(
 const beendenBtnActive = computed(
   () =>
     status.value?.status == StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+);
+const beendenBtnIsDisabled = computed(
+  () => status.value?.status == StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
 );
 const unterbrechenBtnIsDisabled = computed(
   () =>

@@ -6,7 +6,7 @@
 
 ## Kontext
 
-Um in der Eingabehistorie die Unterscheidung der verschiedenen Aktionen mit passende Icons zu unterstützen, werden die Icons farbig dargestellt.
+Um in der Eingabehistorie die Unterscheidung der verschiedenen Aktionen mit passenden Icons zu unterstützen, werden die Icons farbig dargestellt.
 
 ## Entscheidung
 

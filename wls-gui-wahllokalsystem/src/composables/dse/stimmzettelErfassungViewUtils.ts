@@ -1,9 +1,10 @@
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
 
-import { computed, onActivated, readonly, ref } from "vue";
+import { onActivated, readonly, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelErfassungViewButtonStateUtils.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
@@ -17,41 +18,12 @@ export function useStimmzettelErfassungViewUtils(
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
   const isStatusLoading = ref(false);
 
-  //ButtonActiveStates
-  const startenBtnActive = computed(
-    () =>
-      teamStatus.value?.status ==
-        StimmzettelerfassungTeamStatusEnum.REGISTRIERT ||
-      teamStatus.value?.status ==
-        StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
-  );
-  const beendenBtnActive = computed(
-    () =>
-      teamStatus.value?.status ==
-      StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
-  );
-
-  //ButtonDisabledStates
-  const startenBtnIsDisabled = computed(
-    () =>
-      teamStatus.value?.status ==
-      StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
-  );
-  const beendenBtnIsDisabled = computed(
-    () =>
-      teamStatus.value?.status ==
-      StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
-  );
-  const unterbrechenBtnIsDisabled = computed(
-    () =>
-      teamStatus.value?.status !=
-      StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
-  );
-
   //DialogVisibilityState
   const isKennungsDialogVisible = ref(false);
   const isBeendenDialogVisible = ref(false);
   const isErfassungsDialogVisible = ref(false);
+
+  const buttonUtils = useStimmzettelErfassungViewButtonStateUtils(teamStatus);
 
   onActivated(async () => {
     await _loadTeamStatus();
@@ -107,15 +79,11 @@ export function useStimmzettelErfassungViewUtils(
     isKennungsDialogVisible,
     isStatusLoading: readonly(isStatusLoading),
 
-    //computed props
-    beendenBtnActive,
-    beendenBtnIsDisabled,
-    startenBtnActive,
-    startenBtnIsDisabled,
-    unterbrechenBtnIsDisabled,
-
     //actions
     sendStatusInBearbeitung,
     sendStatusUnterbrochen,
+
+    //imported functions
+    ...buttonUtils,
   };
 }

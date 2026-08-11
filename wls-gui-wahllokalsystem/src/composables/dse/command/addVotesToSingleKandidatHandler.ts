@@ -66,8 +66,8 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
     commandArguments: CommandArguments
   ): boolean {
     return (
-      Number.isInteger(commandArguments.kandidatOrdnungszahl) &&
-      Number.isInteger(commandArguments.countVotes)
+      Number.isSafeInteger(commandArguments.kandidatOrdnungszahl) &&
+      Number.isSafeInteger(commandArguments.countVotes)
     );
   }
 

@@ -29,7 +29,6 @@ export function useStimmzettelErfassungViewUtils(
 
   //DialogVisibilityState
   const isKennungsDialogVisible = ref(false);
-  const isBeendenDialogVisible = ref(false);
   const isErfassungsDialogVisible = ref(false);
 
   const buttonUtils = useStimmzettelErfassungViewButtonStateUtils(teamStatus);
@@ -113,7 +112,6 @@ export function useStimmzettelErfassungViewUtils(
     //Props
     activeStimmzettel,
     teamStatus: readonly(teamStatus),
-    isBeendenDialogVisible,
     isErfassungsDialogVisible,
     isKennungsDialogVisible,
     isStatusLoading: readonly(isStatusLoading),

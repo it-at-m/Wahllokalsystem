@@ -46,7 +46,7 @@
       @confirm="onStimmzettelErfassungConfirmed"
     />
     <the-stimmzettelerfassung-beenden-dialog
-      v-model="isBeendenDialogVisible"
+      :ref="STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME"
       :wahl-id="wahlID"
       :wahlbezirk-id="wahlbezirkID"
       :team-id="teamID"
@@ -56,6 +56,7 @@
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 
+import { useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -65,17 +66,22 @@ import TheStimmzettelkennungDialog from "@/components/dse/TheStimmzettelkennungD
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
+const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
+
 const route = useRoute();
 const userStore = useUserStore();
 const teamID = userStore.currentUserTeamName || "";
 const wahlID = (route.params.wahlId as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 
+const templateRefStimmzettelBeendenDialog = useTemplateRef<
+  InstanceType<typeof TheStimmzettelerfassungBeendenDialog>
+>(STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME);
+
 const {
   activeStimmzettel,
   beendenBtnActive,
   beendenBtnIsDisabled,
-  isBeendenDialogVisible,
   isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
@@ -105,8 +111,8 @@ async function onErfassungUnterbrechenClicked() {
   await sendStatusUnterbrochen();
 }
 
-async function onErfassungBeendenClicked() {
-  isBeendenDialogVisible.value = true;
+function onErfassungBeendenClicked() {
+  templateRefStimmzettelBeendenDialog.value?.showDialog();
 }
 
 async function onStimmzettelErfassungCanceled() {

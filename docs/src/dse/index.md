@@ -104,6 +104,7 @@ stateDiagram-v2
         Registriert --> Abgeschlossen
         InBearbeitung --> Unterbrochen
         Unterbrochen --> InBearbeitung
+        Unterbrochen --> Abgeschlossen
     }
       
     classDef steWfStatus fill:#faca7d

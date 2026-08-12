@@ -1,6 +1,5 @@
 <template>
   <v-data-table
-    v-model:page="page"
     v-model:sort-by="sortBy"
     :headers="headers"
     :items="props.stimmzettelListe"
@@ -79,7 +78,6 @@ const headers = [
 ];
 
 const itemsPerPage = ref(10);
-const page = ref(1);
 const sortBy = ref([{ key: "stimmzettelkennung", order: "desc" }] as const);
 
 const { isVorgemerktFuerBeschluss, getVormerkungsgrund } =

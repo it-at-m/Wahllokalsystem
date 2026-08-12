@@ -197,11 +197,63 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       spyOnIsStatusLoadingSetter.mockRestore();
     });
 
-    it("should_loadStimmzettel_when_activated", async () => {
+    it("should_loadStimmzettel_when_activatedAndLoadingIsSuccessful", async () => {
+      const spyOnIsStimmzettelLoadingSetter = vi.spyOn(
+        unitUnderTest.isStimmzettelLoading,
+        "value",
+        "set"
+      );
+
+      const mockedLoadedStimmzettel = [
+        prepareStimmzettel().build(),
+        prepareStimmzettel().build(),
+      ];
+      mockDefinitions.getStimmzettel.mockReturnValue(mockedLoadedStimmzettel);
+
+      expect(unitUnderTest.savedStimmzettel.value).not.toStrictEqual(
+        mockedLoadedStimmzettel
+      );
+
       await mockDefinitions.runActivatedCallbacks();
+
+      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual(
+        mockedLoadedStimmzettel
+      );
       expect(mockDefinitions.getStimmzettel.mock.calls).toStrictEqual([
         [mockedWahlId, mockedWahlbezirkId, mockedTeamId],
       ]);
+      expect(spyOnIsStimmzettelLoadingSetter.mock.calls).toStrictEqual([
+        [true],
+        [false],
+      ]);
+
+      spyOnIsStimmzettelLoadingSetter.mockRestore();
+    });
+
+    it("should_loadStimmzettel_when_activatedAndLoadingFailed", async () => {
+      const spyOnIsStimmzettelLoadingSetter = vi.spyOn(
+        unitUnderTest.isStimmzettelLoading,
+        "value",
+        "set"
+      );
+
+      mockDefinitions.getStimmzettel.mockRejectedValue(
+        new Error("mocked service error")
+      );
+      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([]);
+
+      await mockDefinitions.runActivatedCallbacks();
+
+      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([]);
+      expect(mockDefinitions.getStimmzettel.mock.calls).toStrictEqual([
+        [mockedWahlId, mockedWahlbezirkId, mockedTeamId],
+      ]);
+      expect(spyOnIsStimmzettelLoadingSetter.mock.calls).toStrictEqual([
+        [true],
+        [false],
+      ]);
+
+      spyOnIsStimmzettelLoadingSetter.mockRestore();
     });
   });
 

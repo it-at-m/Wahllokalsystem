@@ -22,6 +22,7 @@ export function useStimmzettelErfassungViewUtils(
 ) {
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
   const isStatusLoading = ref(false);
+  const isStimmzettelLoading = ref(false);
   const savedStimmzettel: Ref<Stimmzettel[]> = ref([]);
   const activeStimmzettel: Ref<Stimmzettel | null> = ref(null);
 
@@ -85,7 +86,16 @@ export function useStimmzettelErfassungViewUtils(
   }
 
   async function _loadStimmzettel() {
-    savedStimmzettel.value = await getStimmzettel(wahlID, wahlbezirkID, teamID);
+    isStimmzettelLoading.value = true;
+    try {
+      savedStimmzettel.value = await getStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        teamID
+      );
+    } finally {
+      isStimmzettelLoading.value = false;
+    }
   }
 
   async function _postTeamStatus(
@@ -111,6 +121,7 @@ export function useStimmzettelErfassungViewUtils(
     isErfassungsDialogVisible,
     isKennungsDialogVisible,
     isStatusLoading: readonly(isStatusLoading),
+    isStimmzettelLoading: readonly(isStimmzettelLoading),
     savedStimmzettel: computed(() => savedStimmzettel.value),
 
     //actions

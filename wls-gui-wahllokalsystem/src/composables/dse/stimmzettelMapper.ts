@@ -21,8 +21,8 @@ export function useStimmzettelMapper() {
       invalideVotes: dto.invalideVotes,
       gueltigkeit: dto.gueltigkeit,
       beschlussvorschlag: (dto.beschlussvorschlag ?? []).map(
-        (beschllussgrundDTO: BeschlussgrundDTO) =>
-          _beschlussgrundDtoToModel(beschllussgrundDTO)
+        (beschlussgrundDTO: BeschlussgrundDTO) =>
+          _beschlussgrundDtoToModel(beschlussgrundDTO)
       ),
       beschlussfassung: dto.beschlussfassung
         ? _beschlussfassungDtoToModel(dto.beschlussfassung)

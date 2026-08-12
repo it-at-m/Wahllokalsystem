@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title>Stimmzettelerfassung</v-card-title>
       <v-card-text>
-        <the-stimmzettel-uebersicht-table
+        <base-stimmzettel-uebersicht-table
           :team-id="teamID"
           :stimmzettel-liste="stimmzettelListe"
           :stimmzettel-loading="stimmzettelLoading"
@@ -50,7 +50,7 @@ import { useRoute } from "vue-router";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
 import TheStimmzettelkennungDialog from "@/components/dse/TheStimmzettelkennungDialog.vue";
-import TheStimmzettelUebersichtTable from "@/components/dse/TheStimmzettelUebersichtTable.vue";
+import BaseStimmzettelUebersichtTable from "@/components/dse/BaseStimmzettelUebersichtTable.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";

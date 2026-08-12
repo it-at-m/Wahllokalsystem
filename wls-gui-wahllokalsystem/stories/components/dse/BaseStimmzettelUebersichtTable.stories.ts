@@ -2,7 +2,7 @@ import type { Beschlussgrund } from "@/types/dse/Beschlussgrund.ts";
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 import type { Meta, StoryFn } from "@storybook/vue3";
 
-import TheStimmzettelUebersichtTable from "@/components/dse/TheStimmzettelUebersichtTable.vue";
+import BaseStimmzettelUebersichtTable from "@/components/dse/BaseStimmzettelUebersichtTable.vue";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/StimmzettelGueltigkeitEnum.ts";
 
 function createDummyStimmzettelListe(): Stimmzettel[] {
@@ -128,18 +128,18 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
 }
 
 const meta: Meta = {
-  title: "components/dse/TheStimmzettelUebersichtTable",
-  component: TheStimmzettelUebersichtTable,
+  title: "components/dse/BaseStimmzettelUebersichtTable",
+  component: BaseStimmzettelUebersichtTable,
 };
 
 export default meta;
 
 const Template: StoryFn = (args) => ({
-  components: { TheStimmzettelUebersichtTable },
+  components: { BaseStimmzettelUebersichtTable: BaseStimmzettelUebersichtTable },
   setup() {
     return { args };
   },
-  template: '<TheStimmzettelUebersichtTable v-bind="args" />',
+  template: '<BaseStimmzettelUebersichtTable v-bind="args" />',
 });
 
 export const Default = Template.bind({});

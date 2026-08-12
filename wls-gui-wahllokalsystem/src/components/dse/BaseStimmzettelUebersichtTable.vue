@@ -42,6 +42,7 @@
 
     <template #[`item.actions`]="{ item }">
       <v-btn
+        aria-label="Stimmzettel bearbeiten"
         icon="$edit"
         size="small"
         variant="text"

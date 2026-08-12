@@ -37,8 +37,7 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
 
   @Override
   public void postLastSeen(
-      final String wahlbezirkID, final String teamID, final LocalDateTime zuletztGesehen)
-      throws WlsException {
+      final String wahlbezirkID, final String teamID, final LocalDateTime zuletztGesehen) {
     try {
       wahllokalzustandControllerApi.saveWahllokalZustandLastSeen(
           wahlbezirkID, teamID, zuletztGesehen);

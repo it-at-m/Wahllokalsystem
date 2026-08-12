@@ -50,7 +50,6 @@ import {
 } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
-import { de } from "vuetify/locale";
 
 import { PRIMARY_COLOR } from "@/constants.ts";
 
@@ -124,10 +123,6 @@ export default createVuetify({
         },
       },
     },
-  },
-  locale: {
-    locale: "de",
-    messages: { de },
   },
   defaults: {
     VCardTitle: {

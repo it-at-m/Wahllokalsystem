@@ -1,6 +1,5 @@
 <template>
   <base-dialog
-    v-if="hasRoleSchriftfuehrung"
     :visible="isDialogVisible"
     dialogtitle="Bitte die Vollständigkeit der Stimmzettelerfassung prüfen"
     confirmtext="Weiter zur Beschlussfassung"

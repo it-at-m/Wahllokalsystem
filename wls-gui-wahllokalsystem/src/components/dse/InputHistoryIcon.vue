@@ -24,7 +24,7 @@ const typeMapping: Record<InputHistoryTypeEnum, string> = {
   REVOKE_WAHLVORSCHLAG: "$stimmzettelCommandRemoveAcceptList",
   SET_WAHLVORSCHLAG: "$stimmzettelCommandAcceptList",
   VOTE_RANGE: "$stimmzettelCommandVoteRange",
-  DISCARD_RANGE: "$stimmzetttelCommandDiscardRange",
+  DISCARD_RANGE: "$stimmzettelCommandDiscardRange",
 };
 const colorMapping: Record<InputHistoryTypeEnum, string> = {
   ADD_USER_VOTE: "success",

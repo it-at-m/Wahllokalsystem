@@ -102,7 +102,7 @@ export default createVuetify({
       stimmzettelCommandRevokeDiscardKandidat: mdiAccountOutline,
       stimmzettelCommandRemoveAcceptList: mdiPlaylistMinus,
       stimmzettelCommandAcceptList: mdiPlaylistCheck,
-      stimmzetttelCommandDiscardRange: mdiAccountMultipleMinusOutline,
+      stimmzettelCommandDiscardRange: mdiAccountMultipleMinusOutline,
       stimmzettelCommandVoteRange: mdiAccountMultiplePlusOutline,
     },
     sets: {

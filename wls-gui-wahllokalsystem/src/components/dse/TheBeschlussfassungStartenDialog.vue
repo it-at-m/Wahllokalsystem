@@ -59,10 +59,8 @@ watch(
   async (newVal) => {
     if (newVal) {
       isAnzahlStimmzettelLoading.value = true;
-      stimmzettelCount.value = await getAnzahlStimmzettel(
-        props.wahlId,
-        props.wahlbezirkId
-      );
+      stimmzettelCount.value =
+        (await getAnzahlStimmzettel(props.wahlId, props.wahlbezirkId)) ?? 0;
       isAnzahlStimmzettelLoading.value = false;
     }
   }

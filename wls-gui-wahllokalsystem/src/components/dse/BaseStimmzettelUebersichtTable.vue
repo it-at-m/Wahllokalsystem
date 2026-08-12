@@ -2,7 +2,6 @@
   <v-data-table
     v-model:page="page"
     v-model:sort-by="sortBy"
-    class="mt-3"
     :headers="headers"
     :items="props.stimmzettelListe"
     :items-per-page="itemsPerPage"
@@ -19,24 +18,24 @@
     <template #[`item.gueltigkeit`]="{ item }">
       <v-icon
         v-if="isVorgemerktFuerBeschluss(item)"
-        :icon="mdiListStatus"
+        icon="$stimmzettelBeschluss"
         color="info"
       />
       <v-icon
         v-else-if="item.gueltigkeit === StimmzettelGueltigkeitEnum.Valid"
-        :icon="mdiCheckboxMarkedCircleOutline"
+        icon="$stimmzettelGueltig"
         color="success"
       />
       <v-icon
         v-else
-        :icon="mdiMinusCircleOutline"
+        icon="$stimmzettelUngueltig"
         color="error"
       />
     </template>
 
-    <template #[`item.vormerkungsGrund`]="{ item }">
+    <template #[`item.vormerkungsgrund`]="{ item }">
       <span v-if="isVorgemerktFuerBeschluss(item)">
-        {{ getVormerkungsGrund(item) }}
+        {{ getVormerkungsgrund(item) }}
       </span>
     </template>
 
@@ -55,13 +54,9 @@
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 
-import {
-  mdiCheckboxMarkedCircleOutline,
-  mdiListStatus,
-  mdiMinusCircleOutline,
-} from "@mdi/js";
 import { ref } from "vue";
 
+import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
 import {
   ITEMS_PER_PAGE_TITLE,
   TABLE_LOADING_DATA_STIMMZETTEL,
@@ -74,11 +69,12 @@ const props = defineProps<{
   stimmzettelListe: Stimmzettel[];
   stimmzettelLoading: boolean;
 }>();
+const stimmzettelkennungKey = "stimmzettelkennung";
 
 const headers = [
-  { title: "#", key: "stimmzettelkennung", sortable: true },
+  { title: "#", key: stimmzettelkennungKey, sortable: true },
   { title: "Gültigkeit", key: "gueltigkeit", sortable: true },
-  { title: "Beschlussbegründung", key: "vormerkungsGrund", sortable: false },
+  { title: "Beschlussbegründung", key: "vormerkungsgrund", sortable: false },
   { title: "", key: "actions", sortable: false },
 ];
 
@@ -86,16 +82,8 @@ const itemsPerPage = ref(10);
 const page = ref(1);
 const sortBy = ref([{ key: "stimmzettelkennung", order: "desc" }] as const);
 
-function isVorgemerktFuerBeschluss(stimmzettel: Stimmzettel): boolean {
-  return stimmzettel.beschlussvorschlag.length > 0;
-}
-
-function getVormerkungsGrund(stimmzettel: Stimmzettel): string {
-  if (!isVorgemerktFuerBeschluss(stimmzettel)) {
-    return "";
-  }
-  return stimmzettel.beschlussvorschlag.map((grund) => grund.text).join(", ");
-}
+const { isVorgemerktFuerBeschluss, getVormerkungsgrund } =
+  useStimmzettelUtils();
 
 function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
   // Bearbeiten-Funktionalität Platzhalter.

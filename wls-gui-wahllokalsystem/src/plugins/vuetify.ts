@@ -6,7 +6,6 @@ import {
   mdiCheckboxMarkedCircleOutline,
   mdiCheckCircle,
   mdiCircleOffOutline,
-  mdiCircleOutline,
   mdiCloudUpload,
   mdiContentSave,
   mdiContentSaveCheck,
@@ -22,6 +21,7 @@ import {
   mdiLockOutline,
   mdiLogout,
   mdiMapSearch,
+  mdiMinusCircleOutline,
   mdiNotebookEditOutline,
   mdiPencil,
   mdiPhone,
@@ -42,6 +42,7 @@ import {
 } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
+import { de } from "vuetify/locale";
 
 import { PRIMARY_COLOR } from "@/constants.ts";
 
@@ -86,7 +87,7 @@ export default createVuetify({
       offlineSync: mdiWebSync,
       equal: mdiEqual,
       stimmzettelBeschluss: mdiListStatus,
-      stimmzettelUngueltig: mdiCircleOutline,
+      stimmzettelUngueltig: mdiMinusCircleOutline,
       stimmzettelGueltig: mdiCheckboxMarkedCircleOutline,
     },
     sets: {
@@ -107,6 +108,10 @@ export default createVuetify({
         },
       },
     },
+  },
+  locale: {
+    locale: "de",
+    messages: { de },
   },
   defaults: {
     VCardTitle: {

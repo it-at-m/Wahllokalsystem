@@ -7,6 +7,7 @@
           :team-id="teamID"
           :stimmzettel-liste="stimmzettelListe"
           :stimmzettel-loading="stimmzettelLoading"
+          class="mt-3"
         />
       </v-card-text>
       <v-card-actions v-if="!isStatusLoading">

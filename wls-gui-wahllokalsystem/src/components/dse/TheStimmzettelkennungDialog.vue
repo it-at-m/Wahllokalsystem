@@ -11,7 +11,7 @@
     <div>
       Bitte übertragen Sie die Stimmzettelkennung auf den Papier-Stimmzettel.
     </div>
-    <div class="font-weight-bold text-center">
+    <div class="mt-3 text-h1 font-weight-bold text-center">
       {{ currentUserTeamName }} {{ stimmzettelkennung }}
     </div>
   </base-dialog>

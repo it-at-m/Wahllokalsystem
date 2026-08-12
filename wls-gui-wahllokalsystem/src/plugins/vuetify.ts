@@ -1,6 +1,12 @@
 import "vuetify/styles";
 
 import {
+  mdiAccountMinusOutline,
+  mdiAccountMultipleMinusOutline,
+  mdiAccountMultiplePlusOutline,
+  mdiAccountOffOutline,
+  mdiAccountOutline,
+  mdiAccountPlusOutline,
   mdiAlert,
   mdiArrowRightBold,
   mdiCheckboxMarkedCircleOutline,
@@ -25,6 +31,8 @@ import {
   mdiNotebookEditOutline,
   mdiPencil,
   mdiPhone,
+  mdiPlaylistCheck,
+  mdiPlaylistMinus,
   mdiPlus,
   mdiPlusCircle,
   mdiPrinter,
@@ -89,6 +97,14 @@ export default createVuetify({
       stimmzettelBeschluss: mdiListStatus,
       stimmzettelUngueltig: mdiMinusCircleOutline,
       stimmzettelGueltig: mdiCheckboxMarkedCircleOutline,
+      stimmzettelCommandAddVote: mdiAccountPlusOutline,
+      stimmzettelCommandDiscardKandidat: mdiAccountOffOutline,
+      stimmzettelCommandRemoveVote: mdiAccountMinusOutline,
+      stimmzettelCommandRevokeDiscardKandidat: mdiAccountOutline,
+      stimmzettelCommandRemoveAcceptList: mdiPlaylistMinus,
+      stimmzettelCommandAcceptList: mdiPlaylistCheck,
+      stimmzettelCommandDiscardRange: mdiAccountMultipleMinusOutline,
+      stimmzettelCommandVoteRange: mdiAccountMultiplePlusOutline,
     },
     sets: {
       mdi,

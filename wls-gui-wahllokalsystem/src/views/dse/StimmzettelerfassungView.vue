@@ -3,7 +3,11 @@
     <v-card>
       <v-card-title>Stimmzettelerfassung</v-card-title>
       <v-card-text>
-        <the-stimmzettel-uebersicht-table :team-id="teamID" />
+        <the-stimmzettel-uebersicht-table
+          :team-id="teamID"
+          :stimmzettel-liste="stimmzettelListe"
+          :stimmzettel-loading="stimmzettelLoading"
+        />
       </v-card-text>
       <v-card-actions>
         <base-text-button
@@ -37,6 +41,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
 
 import { computed, onActivated, ref } from "vue";
@@ -48,6 +53,7 @@ import TheStimmzettelkennungDialog from "@/components/dse/TheStimmzettelkennungD
 import TheStimmzettelUebersichtTable from "@/components/dse/TheStimmzettelUebersichtTable.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
@@ -55,6 +61,10 @@ const status = ref<StimmzettelerfassungTeamStatus | null>(null);
 const erfassungDialogVisible = ref(false);
 const beendenDialogVisible = ref(false);
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
+
+const stimmzettelListe = ref<Stimmzettel[]>([]);
+const stimmzettelLoading = ref(false);
+const { getStimmzettel } = useStimmzettelService();
 
 const route = useRoute();
 const userStore = useUserStore();
@@ -87,7 +97,20 @@ async function loadTeamStatus() {
 
 onActivated(async () => {
   await loadTeamStatus();
+  await loadStimmzettel();
 });
+
+async function loadStimmzettel() {
+  stimmzettelLoading.value = true;
+  try {
+    const liste = await getStimmzettel(wahlID, wahlbezirkID, teamID, true);
+    stimmzettelListe.value = liste ?? [];
+  } catch (error) {
+    logError("Fehler beim Laden der Stimmzettel", error);
+  } finally {
+    stimmzettelLoading.value = false;
+  }
+}
 
 async function postTeamStatus(
   statusToChange: StimmzettelerfassungTeamStatus,
@@ -115,6 +138,7 @@ async function onStimmzettelkennungConfirmed() {
   await postTeamStatus({
     status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
   });
+  await loadStimmzettel();
   erfassungDialogVisible.value = false;
 }
 

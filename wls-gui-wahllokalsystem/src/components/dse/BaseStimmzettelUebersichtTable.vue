@@ -78,7 +78,7 @@ const headers = [
 ];
 
 const itemsPerPage = ref(10);
-const sortBy = ref([{ key: "stimmzettelkennung", order: "desc" }] as const);
+const sortBy = ref([{ key: stimmzettelkennungKey, order: "desc" }] as const);
 
 const { isVorgemerktFuerBeschluss, getVormerkungsgrund } =
   useStimmzettelUtils();

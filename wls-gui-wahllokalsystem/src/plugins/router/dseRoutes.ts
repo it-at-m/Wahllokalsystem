@@ -5,6 +5,11 @@ import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 import BeschlussfassungView from "@/views/dse/BeschlussfassungView.vue";
 import MonitoringView from "@/views/dse/MonitoringView.vue";
 import StimmzettelerfassungView from "@/views/dse/StimmzettelerfassungView.vue";
+import {useNavigationGuards} from "@/composables/navigation/navigationGuards.ts";
+
+const {
+  requireRoleSchriftfuehrung,
+} = useNavigationGuards();
 
 const BASE_PATH_DSE = "/DSE/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
 
@@ -20,6 +25,7 @@ const dseRoutesRecord: Record<DseStepsEnum, RouteRecordRawWithoutName> = {
   [DseStepsEnum.DSE_BESCHLUSSFASSUNG]: {
     path: BASE_PATH_DSE + "/beschlussfassung",
     component: BeschlussfassungView,
+    beforeEnter: [requireRoleSchriftfuehrung],
   },
 };
 

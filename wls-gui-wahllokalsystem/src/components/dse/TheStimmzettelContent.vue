@@ -12,9 +12,6 @@
       >
         <base-wahlvorschlag-card
           :wahlvorschlag="wv"
-          :maximal-erlaubte-stimmen-pro-kandidat="
-            maximalErlaubteStimmenProWahlvorschlag
-          "
           :active-kandidat-id="activeKandidatId"
         />
       </v-slide-group-item>

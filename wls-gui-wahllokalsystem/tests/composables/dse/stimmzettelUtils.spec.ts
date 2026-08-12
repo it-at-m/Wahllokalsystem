@@ -7,6 +7,18 @@ import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
 const { prepareStimmzettel } = useStimmzettelTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 
+const mockDefinitions = vi.hoisted(() => ({
+  getStimmzettel: vi.fn(),
+}));
+
+vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
+  useStimmzettelService: () => ({
+    getStimmzettel: mockDefinitions.getStimmzettel,
+    saveStimmzettel: vi.fn(),
+    getAnzahlStimmzettel: vi.fn(),
+  }),
+}));
+
 describe("stimmzettelUtils.ts", () => {
   const {
     getNextStimmzettelNumber,

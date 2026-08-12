@@ -181,6 +181,10 @@ export default withMermaid({
                   text: "Vergabe von Stimmen auf dem Stimmzettel",
                   link: `${PATH_ADR_UI}adr010-dse-stimmvergabe-stimmen-ergaenzen.md`,
                 },
+                {
+                  text: "Farbschema der Eingabehistorie",
+                  link: `${PATH_ADR_UI}adr011-dse-farbschema-eingabehistorie.md`,
+                },
               ],
             },
           ],

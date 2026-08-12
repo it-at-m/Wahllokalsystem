@@ -4,7 +4,6 @@ import type { Ref } from "vue";
 
 import { computed, onActivated, readonly, ref } from "vue";
 
-import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelErfassungViewButtonStateUtils.ts";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
@@ -14,7 +13,6 @@ import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/Stimmzettelerfas
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 
 const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
-const { logError } = useLogging("stimmzettelErfassungViewUtils");
 const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelUtils();
 
 export function useStimmzettelErfassungViewUtils(
@@ -87,15 +85,7 @@ export function useStimmzettelErfassungViewUtils(
   }
 
   async function _loadStimmzettel() {
-    try {
-      savedStimmzettel.value = await getStimmzettel(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
-    } catch (error) {
-      logError("Fehler beim Laden der Stimmzettel");
-    }
+    savedStimmzettel.value = await getStimmzettel(wahlID, wahlbezirkID, teamID);
   }
 
   async function _postTeamStatus(

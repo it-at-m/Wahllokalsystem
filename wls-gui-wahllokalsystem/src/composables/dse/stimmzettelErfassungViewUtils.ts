@@ -72,16 +72,21 @@ export function useStimmzettelErfassungViewUtils(
   //private functions
   async function _loadTeamStatus() {
     isStatusLoading.value = true;
-    const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
-      wahlID,
-      wahlbezirkID,
-      teamID,
-      false
-    );
-    if (loaded) {
-      teamStatus.value = loaded;
+    try {
+      const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        false
+      );
+      if (loaded) {
+        teamStatus.value = loaded;
+      }
+    } catch (error) {
+      logError("Fehler beim Laden des Team-Status", error);
+    } finally {
+      isStatusLoading.value = false;
     }
-    isStatusLoading.value = false;
   }
 
   async function _loadStimmzettel() {

@@ -252,13 +252,15 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       );
     });
 
-    it("should_logErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
+    it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
       const mockedPostApiError = new Error("mocked post error");
       mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
         mockedPostApiError
       );
 
-      await unitUnderTest.sendStatusInBearbeitung();
+      await expect(
+        unitUnderTest.sendStatusInBearbeitung()
+      ).rejects.toThrowError(mockedPostApiError);
 
       const expectedStatusToSend =
         StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG;
@@ -268,10 +270,6 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         mockedTeamId,
         { status: expectedStatusToSend },
         false
-      );
-      expect(mockDefinitions.logError).toHaveBeenCalledWith(
-        "Fehler beim Speichern des Team-Status",
-        mockedPostApiError
       );
       expect(unitUnderTest.teamStatus.value).toBeNull();
     });
@@ -300,13 +298,15 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       );
     });
 
-    it("should_logErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
+    it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
       const mockedPostApiError = new Error("mocked post error");
       mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
         mockedPostApiError
       );
 
-      await unitUnderTest.sendStatusUnterbrochen();
+      await expect(unitUnderTest.sendStatusUnterbrochen()).rejects.toThrowError(
+        mockedPostApiError
+      );
 
       const expectedStatusToSend =
         StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN;
@@ -316,10 +316,6 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         mockedTeamId,
         { status: expectedStatusToSend },
         false
-      );
-      expect(mockDefinitions.logError).toHaveBeenCalledWith(
-        "Fehler beim Speichern des Team-Status",
-        mockedPostApiError
       );
       expect(unitUnderTest.teamStatus.value).toBeNull();
     });

@@ -35,8 +35,7 @@ export function useStimmzettelErfassungViewUtils(
 
   //Hooks
   onActivated(async () => {
-    await _loadTeamStatus();
-    await _loadStimmzettel();
+    await Promise.allSettled([_loadTeamStatus(), _loadStimmzettel()]);
   });
 
   //Public functions
@@ -82,15 +81,21 @@ export function useStimmzettelErfassungViewUtils(
       if (loaded) {
         teamStatus.value = loaded;
       }
-    } catch (error) {
-      logError("Fehler beim Laden des Team-Status", error);
     } finally {
       isStatusLoading.value = false;
     }
   }
 
   async function _loadStimmzettel() {
-    savedStimmzettel.value = await getStimmzettel(wahlID, wahlbezirkID, teamID);
+    try {
+      savedStimmzettel.value = await getStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        teamID
+      );
+    } catch (error) {
+      logError("Fehler beim Laden der Stimmzettel");
+    }
   }
 
   async function _postTeamStatus(
@@ -99,18 +104,14 @@ export function useStimmzettelErfassungViewUtils(
     const newStatus: StimmzettelerfassungTeamStatus = {
       status: statusToChange,
     };
-    try {
-      await erfassungTeamStatusService.postErfassungTeamStatus(
-        wahlID,
-        wahlbezirkID,
-        teamID,
-        newStatus,
-        false
-      );
-      teamStatus.value = newStatus;
-    } catch (error) {
-      logError("Fehler beim Speichern des Team-Status", error);
-    }
+    await erfassungTeamStatusService.postErfassungTeamStatus(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      newStatus,
+      false
+    );
+    teamStatus.value = newStatus;
   }
 
   return {

@@ -32,7 +32,6 @@ import { ref, watch } from "vue";
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassungStartenDialogUtils.ts";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,

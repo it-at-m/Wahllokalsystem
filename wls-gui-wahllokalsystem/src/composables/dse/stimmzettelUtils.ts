@@ -34,8 +34,21 @@ export function useStimmzettelUtils() {
     };
   }
 
+  function isVorgemerktFuerBeschluss(stimmzettel: Stimmzettel): boolean {
+    return stimmzettel.beschlussvorschlag.length > 0;
+  }
+
+  function getVormerkungsgrund(stimmzettel: Stimmzettel): string {
+    if (!isVorgemerktFuerBeschluss(stimmzettel)) {
+      return "";
+    }
+    return stimmzettel.beschlussvorschlag.map((grund) => grund.text).join(", ");
+  }
+
   return {
     getNextStimmzettelNumber,
     getEmptyStimmzettelWithStimmzettelkennung,
+    isVorgemerktFuerBeschluss,
+    getVormerkungsgrund,
   };
 }

@@ -12,7 +12,8 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 export function useStimmzettelService() {
   const { addNotification } = useUserNotificationService();
-  const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+  const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
+    useCommonApiUtils();
   const { toModel, toDTO } = useStimmzettelMapper();
 
   const ergebnismeldungConfiguration = new Configuration({
@@ -84,8 +85,32 @@ export function useStimmzettelService() {
     }
   }
 
+  async function getAnzahlStimmzettel(
+    wahlID: string,
+    wahlbezirkID: string,
+    sendNotification = true
+  ): Promise<number | null> {
+    try {
+      const result = await stimmzettelControllerApi.getAnzahlStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        axiosConfigWrapper().requestAsOnlineOnly()
+      );
+      return getNullOn204OrElseResponseData(result);
+    } catch (error) {
+      if (sendNotification) {
+        addNotification(
+          "Abrufen der Anzahl der Stimmzettel ist fehlgeschlagen",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw error;
+    }
+  }
+
   return {
     getStimmzettel,
     saveStimmzettel,
+    getAnzahlStimmzettel,
   };
 }

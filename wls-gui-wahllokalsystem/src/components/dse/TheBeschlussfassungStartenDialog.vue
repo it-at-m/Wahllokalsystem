@@ -6,10 +6,16 @@
     confirmtext="Weiter zur Beschlussfassung"
     canceltext="Beschlussfassung nicht starten"
     icon="$information"
+    :is-confirm-loading="isAnzahlStimmzettelLoading"
+    :cancel-disabled="isAnzahlStimmzettelLoading"
     @cancel="closeDialog"
     @confirm="onConfirmClicked"
   >
-    <div>
+    <v-skeleton-loader
+      v-if="isAnzahlStimmzettelLoading"
+      type="text"
+    />
+    <div v-else>
       Bitte bestätigen Sie, dass alle Papier-Stimmzettel aus dem gemeinsamen
       Erfassungsvorrat korrekt erfasst wurden. Es wurden insgesamt
       {{ stimmzettelCount }} Stimmzettel von {{ teamstatusList.length }}
@@ -26,6 +32,7 @@ import { ref, watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassungStartenDialogUtils.ts";
+import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const isDialogVisible = defineModel("modelValue", {
@@ -39,21 +46,24 @@ const props = defineProps<{
   teamstatusList: StimmzettelerfassungTeamStatusEntry[];
 }>();
 
-const stimmzettelCount = ref(0);
+const isAnzahlStimmzettelLoading = ref(false);
+const stimmzettelCount = ref<number | null>(0);
 
-const { loadStimmzettelCount, updateWorkflowStatusAndNavigate } =
+const { updateWorkflowStatusAndNavigate } =
   useBeschlussfassungStartenDialogUtils();
+const { getAnzahlStimmzettel } = useStimmzettelService();
 const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 
 watch(
   () => isDialogVisible.value,
   async (newVal) => {
     if (newVal) {
-      stimmzettelCount.value = await loadStimmzettelCount(
+      isAnzahlStimmzettelLoading.value = true;
+      stimmzettelCount.value = await getAnzahlStimmzettel(
         props.wahlId,
-        props.wahlbezirkId,
-        props.teamstatusList
+        props.wahlbezirkId
       );
+      isAnzahlStimmzettelLoading.value = false;
     }
   }
 );

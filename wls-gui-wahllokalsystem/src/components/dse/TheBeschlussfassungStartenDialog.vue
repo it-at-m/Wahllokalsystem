@@ -27,7 +27,6 @@
 <script setup lang="ts">
 import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
 
-import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";

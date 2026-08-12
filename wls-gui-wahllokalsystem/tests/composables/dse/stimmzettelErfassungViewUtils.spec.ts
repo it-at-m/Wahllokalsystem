@@ -122,17 +122,17 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
   });
 
   describe("initial state", () => {
-    it("should_haveInitialDialogVisibilityFalse_whenInitialized", () => {
+    it("should_haveInitialDialogVisibilityFalse_when_initialized", () => {
       expect(unitUnderTest.isKennungsDialogVisible.value).toBe(false);
       expect(unitUnderTest.isErfassungsDialogVisible.value).toBe(false);
     });
 
-    it("should_haveInitialTeamStatusAndStatusLoading_whenInitialized", () => {
+    it("should_haveInitialTeamStatusAndStatusLoading_when_initialized", () => {
       expect(unitUnderTest.teamStatus.value).toBeNull();
       expect(unitUnderTest.isStatusLoading.value).toBe(false);
     });
 
-    it("should_haveInitialSavedStimmzettelEmpty_whenInitialized", () => {
+    it("should_haveInitialSavedStimmzettelEmpty_when_initialized", () => {
       expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([]);
     });
   });

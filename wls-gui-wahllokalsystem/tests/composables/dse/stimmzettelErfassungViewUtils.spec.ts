@@ -176,9 +176,8 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         "set"
       );
 
-      const mockedRepsonse = createStimmzettelerfassungTeamStatusModel();
-      mockDefinitions.loadErfassungTeamStatus.mockResolvedValueOnce(
-        mockedRepsonse
+      mockDefinitions.loadErfassungTeamStatus.mockRejectedValue(
+        new Error("mocked service error")
       );
 
       expect(unitUnderTest.isStatusLoading.value).toStrictEqual(false);
@@ -193,7 +192,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         [true],
         [false],
       ]);
-      expect(unitUnderTest.teamStatus.value).toStrictEqual(mockedRepsonse);
+      expect(unitUnderTest.teamStatus.value).toStrictEqual(null);
 
       spyOnIsStatusLoadingSetter.mockRestore();
     });

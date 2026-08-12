@@ -20,7 +20,11 @@ vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
 }));
 
 describe("stimmzettelUtils.ts", () => {
-  const { getNextStimmzettelNumber } = useStimmzettelUtils();
+  const {
+    getNextStimmzettelNumber,
+    isVorgemerktFuerBeschluss,
+    getVormerkungsgrund,
+  } = useStimmzettelUtils();
 
   const wahlID = generateRandomString(10);
   const wahlbezirkID = generateRandomString(10);
@@ -102,6 +106,52 @@ describe("stimmzettelUtils.ts", () => {
       await expect(async () =>
         getNextStimmzettelNumber(wahlID, wahlbezirkID, teamID)
       ).rejects.toThrowError();
+    });
+  });
+
+  describe("isVorgemerktFuerBeschluss", () => {
+    it("should_returnFalse_when_noBeschlussvorschlagPresent", () => {
+      const stimmzettel = prepareStimmzettel().beschlussvorschlag([]).build();
+
+      const vorgemerkt = isVorgemerktFuerBeschluss(stimmzettel);
+
+      expect(vorgemerkt).toBe(false);
+    });
+
+    it("should_returnTrue_when_beschlussvorschlagPresent", () => {
+      const text1 = generateRandomString(8);
+      const text2 = generateRandomString(10);
+
+      const stimmzettel = prepareStimmzettel()
+        .beschlussvorschlag([{ text: text1 }, { text: text2 }])
+        .build();
+
+      const vorgemerkt = isVorgemerktFuerBeschluss(stimmzettel);
+
+      expect(vorgemerkt).toBe(true);
+    });
+  });
+
+  describe("getVormerkungsgrund", () => {
+    it("should_returnEmptyString_when_noBeschlussvorschlagPresent", () => {
+      const stimmzettel = prepareStimmzettel().beschlussvorschlag([]).build();
+
+      const grund = getVormerkungsgrund(stimmzettel);
+
+      expect(grund).toBe("");
+    });
+
+    it("should_returnConcatenatedVormerkungsgrund_when_beschlussvorschlagPresent", () => {
+      const text1 = generateRandomString(8);
+      const text2 = generateRandomString(10);
+
+      const stimmzettel = prepareStimmzettel()
+        .beschlussvorschlag([{ text: text1 }, { text: text2 }])
+        .build();
+
+      const grund = getVormerkungsgrund(stimmzettel);
+
+      expect(grund).toBe(`${text1}, ${text2}`);
     });
   });
 });

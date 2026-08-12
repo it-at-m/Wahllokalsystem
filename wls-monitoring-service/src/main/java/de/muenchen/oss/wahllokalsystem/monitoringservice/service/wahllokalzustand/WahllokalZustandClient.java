@@ -12,11 +12,9 @@ public interface WahllokalZustandClient {
    * @param teamID id of the team;
    * @param zuletztGesehen containing the information about the last time the election room was
    *     online;
-   * @throws WlsException {@link TechnischeWlsException} if there were trouble during communication
    */
   void postLastSeen(
-      final String wahlbezirkID, final String teamID, final LocalDateTime zuletztGesehen)
-      throws WlsException;
+      final String wahlbezirkID, final String teamID, final LocalDateTime zuletztGesehen);
 
   /**
    * @param wahlbezirkID the id of the election room;

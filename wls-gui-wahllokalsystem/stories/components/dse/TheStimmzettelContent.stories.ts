@@ -338,7 +338,6 @@ const sampleWahlvorschlaege = [
 export const Default = {
   args: {
     wahlvorschlaege: sampleWahlvorschlaege,
-    maximalErlaubteStimmenProWahlvorschlag: 3,
     activeWahlvorschlagId: sampleWahlvorschlaege[4].identifikator,
     activeKandidatId: "503",
   },

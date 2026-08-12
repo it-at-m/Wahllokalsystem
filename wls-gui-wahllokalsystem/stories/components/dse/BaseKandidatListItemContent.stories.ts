@@ -6,33 +6,51 @@ export default {
 };
 
 const sampleDefault = {
-  id: "101",
-  name: "Max Mustermann",
-  anzahlStimmen: 6,
-  ungueltigeStimmen: 3,
-  gueltigeStimmen: 3,
-  restStimmenWahlvorschlag: 0,
-  durchgestrichen: false,
+  kandidat: {
+    identifikator: "101",
+    name: "Max Mustermann",
+    gesamtStimmen: 6,
+    ungueltigeStimmen: 3,
+    gueltigeStimmen: 3,
+    restStimmen: 0,
+    durchgestrichen: false,
+  },
 };
 
 const sampleRest = {
-  id: "102",
-  name: "Erika Beispiel",
-  anzahlStimmen: 0,
-  ungueltigeStimmen: 0,
-  gueltigeStimmen: 0,
-  restStimmenWahlvorschlag: 1,
-  durchgestrichen: false,
+  kandidat: {
+    identifikator: "102",
+    name: "Erika Beispiel",
+    gesamtStimmen: 0,
+    ungueltigeStimmen: 0,
+    gueltigeStimmen: 0,
+    restStimmen: 1,
+    durchgestrichen: false,
+  },
+};
+
+const sampleUngueltig = {
+  kandidat: {
+    identifikator: "102",
+    name: "Merlin Mustermann",
+    gesamtStimmen: 0,
+    ungueltigeStimmen: 3,
+    gueltigeStimmen: 0,
+    restStimmen: 0,
+    durchgestrichen: false,
+  },
 };
 
 const sampleStrikethrough = {
-  id: "102",
-  name: "Merlin Mustermann",
-  anzahlStimmen: 0,
-  ungueltigeStimmen: 0,
-  gueltigeStimmen: 0,
-  restStimmenWahlvorschlag: 0,
-  durchgestrichen: true,
+  kandidat: {
+    identifikator: "102",
+    name: "Merlin Mustermann",
+    gesamtStimmen: 0,
+    ungueltigeStimmen: 0,
+    gueltigeStimmen: 0,
+    restStimmen: 0,
+    durchgestrichen: true,
+  },
 };
 
 export const Default = {
@@ -41,6 +59,10 @@ export const Default = {
 
 export const Reststimmen = {
   args: sampleRest,
+};
+
+export const Ungueltig = {
+  args: sampleUngueltig,
 };
 
 export const Durchgestrichen = {

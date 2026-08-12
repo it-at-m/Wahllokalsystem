@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-3 ma-1">
+  <v-card class="ma-1">
     <v-card-title>
       <div
         class="d-flex flex-column"
@@ -25,59 +25,43 @@
           />
           <div class="d-flex flex-column ml-auto align-end">
             <div class="d-flex">
-              <v-chip
-                v-if="wahlvorschlag.ungueltigeStimmen"
-                size="small"
+              <base-chip-anzahl-stimmen
+                :stimmen="wahlvorschlag.ungueltigeStimmen"
                 color="error"
-                variant="tonal"
+                :visible="!!wahlvorschlag.ungueltigeStimmen"
                 class="mr-1"
-              >
-                {{ wahlvorschlag.ungueltigeStimmen }}
-              </v-chip>
-              <v-chip
-                size="small"
+              />
+              <base-chip-anzahl-stimmen
+                :stimmen="wahlvorschlag.gueltigeStimmen"
                 color="success"
-                variant="tonal"
-                :style="
-                  !wahlvorschlag.gueltigeStimmen ? 'visibility: hidden' : ''
-                "
-                :aria-hidden="!wahlvorschlag.gueltigeStimmen"
-              >
-                {{ wahlvorschlag.gueltigeStimmen }}
-              </v-chip>
+                :hidden="!wahlvorschlag.gueltigeStimmen"
+              />
             </div>
           </div>
         </div>
       </div>
     </v-card-title>
 
-    <div class="d-flex flex-column gap-2">
-      <v-list>
-        <v-list-item
-          v-for="(slot, index) in slots"
-          :key="index"
-          ref="listItems"
-          tabindex="-1"
-          :data-kandidat-id="slot.slotIndex"
-        >
-          <v-divider
-            v-if="index !== 0"
-            :variant="
-              isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
-            "
-          />
-          <base-kandidat-list-item-content
-            :id="slot.anzeigeKandidat.identifikator"
-            :name="slot.anzeigeKandidat.name"
-            :anzahl-stimmen="slot.anzeigeKandidat.gesamtStimmen"
-            :ungueltige-stimmen="slot.anzeigeKandidat.ungueltigeStimmen"
-            :gueltige-stimmen="slot.anzeigeKandidat.gueltigeStimmen"
-            :rest-stimmen-wahlvorschlag="slot.anzeigeKandidat.restStimmen"
-            :durchgestrichen="slot.anzeigeKandidat.durchgestrichen"
-          />
-        </v-list-item>
-      </v-list>
-    </div>
+    <v-card-text class="pa-0">
+      <div style="max-height: 600px; overflow-y: auto">
+        <v-list>
+          <v-list-item
+            v-for="(slot, index) in kandidatenListe"
+            :key="index"
+            ref="listItems"
+            tabindex="-1"
+          >
+            <v-divider
+              v-if="index !== 0"
+              :variant="
+                isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
+              "
+            />
+            <base-kandidat-list-item-content :kandidat="slot.anzeigeKandidat" />
+          </v-list-item>
+        </v-list>
+      </div>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -89,11 +73,11 @@ import type { ComponentPublicInstance } from "vue";
 import { mdiCloseBoxOutline } from "@mdi/js";
 import { computed, nextTick, onActivated, ref, watch } from "vue";
 
+import BaseChipAnzahlStimmen from "@/components/dse/BaseChipAnzahlStimmen.vue";
 import BaseKandidatListItemContent from "@/components/dse/BaseKandidatListItemContent.vue";
 
 const props = defineProps<{
   wahlvorschlag: WahlvorschlagAnzeige;
-  maximalErlaubteStimmenProWaehler: number;
   activeKandidatId?: string | null;
 }>();
 
@@ -102,7 +86,7 @@ interface Slot {
   slotIndex: number;
 }
 
-const slots = computed<Slot[]>(() => {
+const kandidatenListe = computed<Slot[]>(() => {
   const kandidaten = props.wahlvorschlag?.kandidaten ?? [];
   if (kandidaten.length === 0) return [];
 
@@ -124,8 +108,8 @@ const listItems = ref<(ComponentPublicInstance | null)[]>([]);
 
 const isDividerZwischenGleichemKandidat = (index: number) => {
   if (index <= 0) return false;
-  const prev = slots.value[index - 1];
-  const curr = slots.value[index];
+  const prev = kandidatenListe.value[index - 1];
+  const curr = kandidatenListe.value[index];
   if (!prev || !curr) return false;
   return (
     prev.anzeigeKandidat.identifikator === curr.anzeigeKandidat.identifikator
@@ -136,12 +120,12 @@ const focusActive = async () => {
   const id = props.activeKandidatId;
   if (!id) return;
 
-  const s = slots.value;
-  if (!s || s.length === 0) return;
+  const kandidaten = kandidatenListe.value;
+  if (!kandidaten || kandidaten.length === 0) return;
 
   let lastIndex = -1;
-  for (let i = 0; i < s.length; i++) {
-    if (s[i].anzeigeKandidat.identifikator === id) lastIndex = i;
+  for (let i = 0; i < kandidaten.length; i++) {
+    if (kandidaten[i].anzeigeKandidat.identifikator === id) lastIndex = i;
   }
   if (lastIndex === -1) return;
 
@@ -149,13 +133,23 @@ const focusActive = async () => {
 
   const item = listItems.value[lastIndex];
 
-  if (item?.$el && typeof item.$el.focus === "function") {
-    item.$el.focus();
+  if (item?.$el) {
+    // scroll into view inside the scrollable container if available
+    if (typeof item.$el.scrollIntoView === "function") {
+      try {
+        item.$el.scrollIntoView({ block: "nearest", inline: "nearest" });
+      } finally {
+        //ignore
+      }
+    }
+    if (typeof item.$el.focus === "function") {
+      item.$el.focus();
+    }
   }
 };
 
 watch(
-  [() => props.activeKandidatId, slots],
+  [() => props.activeKandidatId, kandidatenListe],
   () => {
     focusActive();
   },

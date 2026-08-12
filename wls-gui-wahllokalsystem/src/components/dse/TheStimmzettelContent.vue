@@ -12,7 +12,7 @@
       >
         <base-wahlvorschlag-card
           :wahlvorschlag="wv"
-          :maximal-erlaubte-stimmen-pro-waehler="
+          :maximal-erlaubte-stimmen-pro-kandidat="
             maximalErlaubteStimmenProWahlvorschlag
           "
           :active-kandidat-id="activeKandidatId"
@@ -30,7 +30,6 @@ import { computed } from "vue";
 import BaseWahlvorschlagCard from "./BaseWahlvorschlagCard.vue";
 
 const props = defineProps<{
-  maximalErlaubteStimmenProWahlvorschlag: number;
   activeWahlvorschlagId: string | null;
   activeKandidatId?: string | null;
   wahlvorschlaege: WahlvorschlagAnzeige[];

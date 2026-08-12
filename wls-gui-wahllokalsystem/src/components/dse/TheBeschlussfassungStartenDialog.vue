@@ -50,7 +50,6 @@ const stimmzettelCount = ref<number | null>(0);
 const { updateWorkflowStatusAndNavigate } =
   useBeschlussfassungStartenDialogUtils();
 const { getAnzahlStimmzettel } = useStimmzettelService();
-const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 
 watch(
   () => isDialogVisible.value,

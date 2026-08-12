@@ -13,6 +13,15 @@ const STATUS_DTO_ENUM_TO_MODEL_ENUM: Record<
   BE_ABGESCHLOSSEN: StimmzettelerfassungStatusEnum.BeAbgeschlossen,
 };
 
+const STATUS_MODEL_ENUM_TO_DTO_ENUM: Record<
+  StimmzettelerfassungStatusEnum,
+  StimmzettelerfassungStatusDTOStatusEnum
+> = {
+  STE_BEARBEITUNG: StimmzettelerfassungStatusDTOStatusEnum.SteBearbeitung,
+  STE_ABGESCHLOSSEN: StimmzettelerfassungStatusDTOStatusEnum.SteAbgeschlossen,
+  BE_ABGESCHLOSSEN: StimmzettelerfassungStatusDTOStatusEnum.BeAbgeschlossen,
+};
+
 export function useStimmzettelerfassungStatusMapper() {
   function dtoToModel(
     dto: StimmzettelerfassungStatusDTO
@@ -22,7 +31,16 @@ export function useStimmzettelerfassungStatusMapper() {
     };
   }
 
+  function modelToDto(
+    model: StimmzettelerfassungStatus
+  ): StimmzettelerfassungStatusDTO {
+    return {
+      status: STATUS_MODEL_ENUM_TO_DTO_ENUM[model.status],
+    };
+  }
+
   return {
     dtoToModel,
+    modelToDto,
   };
 }

@@ -60,18 +60,12 @@
         >
       </v-card-actions>
     </v-card>
-    <base-dialog
-      :visible="beschlussfassungStartenDialogVisible"
-      dialogtitle="Beschlussfassung starten"
-      icon="$information"
-      confirmtext="Bestätigen"
-      canceltext="Abbrechen"
-      @cancel="beschlussfassungStartenDialogVisible = false"
-    >
-      <div>
-        <h1>🚧 TBD 🚧</h1>
-      </div>
-    </base-dialog>
+    <the-beschlussfassung-starten-dialog
+      v-model="beschlussfassungStartenDialogVisible"
+      :wahl-id="wahlID"
+      :wahlbezirk-id="wahlbezirkID"
+      :teamstatus-list="teamstatusList"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -80,10 +74,10 @@ import { useRoute } from "vue-router";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseLatestLoadDiv from "@/components/common/div/BaseLatestLoadDiv.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
 import BaseTeamStatusListItem from "@/components/dse/BaseTeamStatusListItem.vue";
+import TheBeschlussfassungStartenDialog from "@/components/dse/TheBeschlussfassungStartenDialog.vue";
 import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 

@@ -200,7 +200,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
     it("should_loadStimmzettel_when_activated", async () => {
       await mockDefinitions.runActivatedCallbacks();
       expect(mockDefinitions.getStimmzettel.mock.calls).toStrictEqual([
-        [mockedWahlId, mockedWahlbezirkId, mockedTeamId, NO_NOTIFICATION],
+        [mockedWahlId, mockedWahlbezirkId, mockedTeamId],
       ]);
     });
   });

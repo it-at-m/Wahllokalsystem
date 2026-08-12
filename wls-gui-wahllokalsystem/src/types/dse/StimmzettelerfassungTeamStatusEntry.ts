@@ -1,4 +1,4 @@
-import { StimmzettelerfassungTeamStatusEnum } from "./StimmzettelerfassungTeamStatusEnum.ts";
+import type { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 export interface StimmzettelerfassungTeamStatusEntry {
   teamID: string;

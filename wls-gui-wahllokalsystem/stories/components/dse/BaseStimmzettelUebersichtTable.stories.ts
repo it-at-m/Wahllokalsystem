@@ -135,7 +135,9 @@ const meta: Meta = {
 export default meta;
 
 const Template: StoryFn = (args) => ({
-  components: { BaseStimmzettelUebersichtTable: BaseStimmzettelUebersichtTable },
+  components: {
+    BaseStimmzettelUebersichtTable: BaseStimmzettelUebersichtTable,
+  },
   setup() {
     return { args };
   },
@@ -144,21 +146,21 @@ const Template: StoryFn = (args) => ({
 
 export const Default = Template.bind({});
 Default.args = {
-  teamId: "Team A",
+  teamId: "A",
   stimmzettelListe: createDummyStimmzettelListe(),
   stimmzettelLoading: false,
 };
 
 export const Loading = Template.bind({});
 Loading.args = {
-  teamId: "Team A",
+  teamId: "A",
   stimmzettelListe: [],
   stimmzettelLoading: true,
 };
 
 export const Empty = Template.bind({});
 Empty.args = {
-  teamId: "Team A",
+  teamId: "A",
   stimmzettelListe: [],
   stimmzettelLoading: false,
 };

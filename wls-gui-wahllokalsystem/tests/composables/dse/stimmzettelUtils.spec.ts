@@ -15,6 +15,7 @@ vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
   useStimmzettelService: () => ({
     getStimmzettel: mockDefinitions.getStimmzettel,
     saveStimmzettel: vi.fn(),
+    getAnzahlStimmzettel: vi.fn(),
   }),
 }));
 

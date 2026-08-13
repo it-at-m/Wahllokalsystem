@@ -1,6 +1,7 @@
 import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
 import type { CommandHandler } from "@/types/dse/command/CommandHandler.ts";
 
+import { WAHLVORSCHLAG_NUMBER_MULTIPLER_FOR_ORDNUNGSZAHL } from "@/composables/dse/ManagedStimmzettel.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
@@ -9,8 +10,10 @@ interface CommandArguments {
   countVotes: number;
 }
 
+//
+
 export function useAddVotesToSingleKandidatHandler(): CommandHandler {
-  const REGEX_ADD_VOTES_TO_KANDIDAT = /^([1-9]\d+[1-9])(\+(\d*))?$/;
+  const REGEX_ADD_VOTES_TO_KANDIDAT = /^([1-9]\d{2,})(\+(\d*))?$/;
 
   function canHandle(command: string): boolean {
     try {
@@ -67,6 +70,9 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
   ): boolean {
     return (
       Number.isSafeInteger(commandArguments.kandidatOrdnungszahl) &&
+      commandArguments.kandidatOrdnungszahl %
+        WAHLVORSCHLAG_NUMBER_MULTIPLER_FOR_ORDNUNGSZAHL !=
+        0 &&
       Number.isSafeInteger(commandArguments.countVotes)
     );
   }

@@ -17,9 +17,24 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
     useManagedStimmzettelTestDataFactory();
 
   describe("canHandle", () => {
-    it("should_returnTrue_when_commandContainsValidOrdnungszahlWithoutPlus", () => {
-      expect(canHandle("101")).toBe(true);
-    });
+    it.each([
+      "101",
+      "110",
+      "199",
+      "201",
+      "210",
+      "299",
+      "999",
+      "1001",
+      "1010",
+      "1099",
+      "9999",
+    ])(
+      "should_returnTrue_when_commandContainsValidOrdnungszahl'%s'WithoutPlus",
+      (validOrdnungszahl) => {
+        expect(canHandle(validOrdnungszahl)).toBe(true);
+      }
+    );
 
     it("should_returnTrue_when_commandContainsValidOrdnungszahlWithPlusAndVotes", () => {
       expect(canHandle("101+3")).toBe(true);
@@ -29,11 +44,12 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
       expect(canHandle("101+")).toBe(true);
     });
 
-    it("should_returnFalse_when_commandDoesNotMatchPattern", () => {
-      expect(canHandle("10")).toBe(false);
-      expect(canHandle("abc")).toBe(false);
-      expect(canHandle("0101")).toBe(false);
-    });
+    it.each(["10", "abc", "0101", "100", "1000", "900", "9900"])(
+      "should_returnFalse_when_command'%s'DoesNotMatchPattern",
+      (command) => {
+        expect(canHandle(command)).toBe(false);
+      }
+    );
   });
 
   describe("handleOrThrow", () => {

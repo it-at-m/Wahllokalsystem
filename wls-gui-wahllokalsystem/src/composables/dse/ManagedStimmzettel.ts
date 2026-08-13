@@ -9,9 +9,10 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
  *
  * @param stimmzettel
  */
-export function useManagedStimmzettel(stimmzettel: Stimmzettel) {
-  const WAHLVORSCHLAG_NUMBER_MULTIPLER_FOR_ORDNUNGSZAHL = 100;
 
+export const WAHLVORSCHLAG_NUMBER_MULTIPLER_FOR_ORDNUNGSZAHL = 100;
+
+export function useManagedStimmzettel(stimmzettel: Stimmzettel) {
   /**
    *
    * @param ordnungszahl

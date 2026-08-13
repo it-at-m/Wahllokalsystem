@@ -21,7 +21,7 @@ describe("wahlvorschlagUtils.ts", () => {
     it("should_returnEqual_when_bothObjectsAreSame", () => {
       const kandidat = createKandidat();
 
-      const result = unitUnderTest.compareKandidatenByListenPositionAndNennung(
+      const result = unitUnderTest.compareKandidatenByListenPosition(
         kandidat,
         kandidat
       );
@@ -38,7 +38,7 @@ describe("wahlvorschlagUtils.ts", () => {
         .listenposition(listenposition)
         .build();
 
-      const result = unitUnderTest.compareKandidatenByListenPositionAndNennung(
+      const result = unitUnderTest.compareKandidatenByListenPosition(
         kandidat1,
         kandidat2
       );
@@ -55,7 +55,7 @@ describe("wahlvorschlagUtils.ts", () => {
         .listenposition(listenposition + 1)
         .build();
 
-      const result = unitUnderTest.compareKandidatenByListenPositionAndNennung(
+      const result = unitUnderTest.compareKandidatenByListenPosition(
         kandidat1,
         kandidat2
       );
@@ -71,7 +71,7 @@ describe("wahlvorschlagUtils.ts", () => {
         .listenposition(listenposition - 1)
         .build();
 
-      const result = unitUnderTest.compareKandidatenByListenPositionAndNennung(
+      const result = unitUnderTest.compareKandidatenByListenPosition(
         kandidat1,
         kandidat2
       );

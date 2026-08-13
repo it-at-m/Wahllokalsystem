@@ -8,18 +8,10 @@ export function useWahlvorschlagUtils() {
     return `${wahlvorschlag.ordnungszahl} - ${wahlvorschlag.kurzname}, ${getFirstKandidatNameOrEmptyString(wahlvorschlag)}`;
   }
 
-  const compareKandidatenByListenPositionAndNennung = (
+  const compareKandidatenByListenPosition = (
     kandidat1: Kandidat,
     kandidat2: Kandidat
-  ) => {
-    const compareResultByListenPosition =
-      kandidat1.listenposition - kandidat2.listenposition;
-    if (compareResultByListenPosition !== 0) {
-      return compareResultByListenPosition;
-    } else {
-      return kandidat1.anzahlNennungen - kandidat2.anzahlNennungen;
-    }
-  };
+  ) => kandidat1.listenposition - kandidat2.listenposition;
 
   function getFirstKandidatNameOrEmptyString(wahlvorschlag: Wahlvorschlag) {
     if (wahlvorschlag.kandidaten && wahlvorschlag.kandidaten.length > 0) {
@@ -62,13 +54,13 @@ export function useWahlvorschlagUtils() {
   function sortKandidatenByListenPositionInplace(wahlvorschlag: Wahlvorschlag) {
     if (wahlvorschlag.kandidaten) {
       wahlvorschlag.kandidaten = [...wahlvorschlag.kandidaten].sort(
-        compareKandidatenByListenPositionAndNennung
+        compareKandidatenByListenPosition
       );
     }
   }
 
   return {
-    compareKandidatenByListenPositionAndNennung,
+    compareKandidatenByListenPosition,
     getWahlvorschlagTitle,
     getFirstKandidatNameOrEmptyString,
     getKandidatLaufendeNummer,

@@ -1,5 +1,8 @@
 import type { Kandidat } from "@/types/dse/Kandidat.ts";
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+import type { Ref } from "vue";
+
+import { computed } from "vue";
 
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
@@ -12,7 +15,7 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
 
 export const WAHLVORSCHLAG_NUMBER_MULTIPLER_FOR_ORDNUNGSZAHL = 100;
 
-export function useManagedStimmzettel(stimmzettel: Stimmzettel) {
+export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
   /**
    *
    * @param ordnungszahl
@@ -41,7 +44,7 @@ export function useManagedStimmzettel(stimmzettel: Stimmzettel) {
       ordnungszahl / WAHLVORSCHLAG_NUMBER_MULTIPLER_FOR_ORDNUNGSZAHL
     );
 
-    const wahlvorschlag = stimmzettel.wahlvorschlaege.find(
+    const wahlvorschlag = stimmzettel.value.wahlvorschlaege.find(
       (wahlvorschlag) =>
         wahlvorschlagOrdnungszahl === wahlvorschlag.ordnungszahl
     );
@@ -99,7 +102,7 @@ export function useManagedStimmzettel(stimmzettel: Stimmzettel) {
 
   return {
     kandidatAddVotesOrThrow,
-    stimmzettel, //TODO for debugging only
+    stimmzettel: computed(() => stimmzettel.value),
   };
 }
 export type ManagedStimmzettel = ReturnType<typeof useManagedStimmzettel>;

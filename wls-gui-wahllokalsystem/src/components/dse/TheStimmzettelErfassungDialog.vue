@@ -16,7 +16,8 @@
         <the-stimmzettel-content
           :active-wahlvorschlag-id="null"
           :wahlvorschlaege="
-            stimmzettelManager.managedStimmzettel.stimmzettel.wahlvorschlaege
+            stimmzettelManager.managedStimmzettel.stimmzettel.value
+              .wahlvorschlaege
           "
         />
       </v-card-text>

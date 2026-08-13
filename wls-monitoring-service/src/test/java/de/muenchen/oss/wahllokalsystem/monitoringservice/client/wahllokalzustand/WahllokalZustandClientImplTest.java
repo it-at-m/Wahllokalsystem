@@ -101,7 +101,8 @@ class WahllokalZustandClientImplTest {
               loggerExtension
                   .getLoggedEventsStream()
                   .filter(event -> event.getLevel() == Level.WARN)
-                  .count()).isEqualTo(1L);
+                  .count())
+          .isEqualTo(1L);
     }
   }
 

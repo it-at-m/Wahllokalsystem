@@ -1,8 +1,11 @@
 import type { Kandidat as DSEKandidat } from "@/types/dse/Kandidat.ts";
+import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/StimmzettelGueltigkeitEnum.ts";
 
 export function useStimmzettelUtils() {
   function createStimmzettelWithWahlvorschlaege(
@@ -16,6 +19,19 @@ export function useStimmzettelUtils() {
       gueltigkeit: null,
       invalideVotes: 0,
       wahlvorschlaege: initWahlvorschlaege,
+    };
+  }
+
+  function getEmptyStimmzettelWithStimmzettelkennung(
+    stimmzettelkennung: number
+  ): PersistedStimmzettel {
+    return {
+      stimmzettelkennung: stimmzettelkennung,
+      gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
+      invalideVotes: 0,
+      beschlussfassung: null,
+      beschlussvorschlag: [],
+      wahlvorschlaege: [],
     };
   }
 
@@ -47,11 +63,13 @@ export function useStimmzettelUtils() {
     return result;
   }
 
-  function isVorgemerktFuerBeschluss(stimmzettel: Stimmzettel): boolean {
+  function isVorgemerktFuerBeschluss(
+    stimmzettel: PersistedStimmzettel
+  ): boolean {
     return stimmzettel.beschlussvorschlag.length > 0;
   }
 
-  function getVormerkungsgrund(stimmzettel: Stimmzettel): string {
+  function getVormerkungsgrund(stimmzettel: PersistedStimmzettel): string {
     if (!isVorgemerktFuerBeschluss(stimmzettel)) {
       return "";
     }
@@ -60,6 +78,7 @@ export function useStimmzettelUtils() {
 
   return {
     createStimmzettelWithWahlvorschlaege,
+    getEmptyStimmzettelWithStimmzettelkennung,
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
   };

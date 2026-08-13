@@ -1,30 +1,12 @@
-import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelkennungDialogUtils } from "@/composables/dse/stimmzettelkennungDialogUtils.ts";
 
 const { prepareStimmzettel } = useStimmzettelTestDataFactory();
-const { generateRandomString } = useCommonTestDataFactory();
-
-const mockDefinitions = vi.hoisted(() => ({
-  getStimmzettel: vi.fn(),
-}));
-
-vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
-  useStimmzettelService: () => ({
-    getStimmzettel: mockDefinitions.getStimmzettel,
-    saveStimmzettel: vi.fn(),
-    getAnzahlStimmzettel: vi.fn(),
-  }),
-}));
 
 describe("stimmzettelkennungDialogUtils.ts", () => {
   const { getNextStimmzettelNumber } = useStimmzettelkennungDialogUtils();
-
-  const wahlID = generateRandomString(10);
-  const wahlbezirkID = generateRandomString(10);
-  const teamID = generateRandomString(1);
 
   afterEach(() => {
     vi.resetAllMocks();
@@ -32,76 +14,31 @@ describe("stimmzettelkennungDialogUtils.ts", () => {
   });
 
   describe("getNextStimmzettelNumber", () => {
-    it("should_returnNextNumber_when_oneStimmzettelExists", async () => {
+    it("should_returnNextNumber_when_oneStimmzettelExists", () => {
       const stimmzettel = prepareStimmzettel().stimmzettelkennung(3).build();
-      mockDefinitions.getStimmzettel.mockReturnValue([stimmzettel]);
 
-      const result = await getNextStimmzettelNumber(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
+      const result = getNextStimmzettelNumber([stimmzettel]);
 
-      expect(mockDefinitions.getStimmzettel.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.getStimmzettel.mock.calls[0]).toStrictEqual([
-        wahlID,
-        wahlbezirkID,
-        teamID,
-      ]);
       expect(result).toStrictEqual(4);
     });
 
-    it("should_returnNextNumber_when_multipleStimmzettelExists", async () => {
+    it("should_returnNextNumber_when_multipleStimmzettelExists", () => {
       const stimmzettel1 = prepareStimmzettel().stimmzettelkennung(5).build();
       const stimmzettel2 = prepareStimmzettel().stimmzettelkennung(3).build();
       const stimmzettel3 = prepareStimmzettel().stimmzettelkennung(24).build();
-      mockDefinitions.getStimmzettel.mockReturnValue([
+
+      const result = getNextStimmzettelNumber([
         stimmzettel1,
         stimmzettel2,
         stimmzettel3,
       ]);
 
-      const result = await getNextStimmzettelNumber(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
-
-      expect(mockDefinitions.getStimmzettel.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.getStimmzettel.mock.calls[0]).toStrictEqual([
-        wahlID,
-        wahlbezirkID,
-        teamID,
-      ]);
       expect(result).toStrictEqual(25);
     });
 
-    it("should_returnNextNumber_when_noStimmzettelExists", async () => {
-      mockDefinitions.getStimmzettel.mockReturnValue([]);
-
-      const result = await getNextStimmzettelNumber(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
-
-      expect(mockDefinitions.getStimmzettel.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.getStimmzettel.mock.calls[0]).toStrictEqual([
-        wahlID,
-        wahlbezirkID,
-        teamID,
-      ]);
+    it("should_returnNextNumber_when_noStimmzettelExists", () => {
+      const result = getNextStimmzettelNumber([]);
       expect(result).toStrictEqual(1);
-    });
-
-    it("should_throwError_when_getStimmzettelFailes", async () => {
-      mockDefinitions.getStimmzettel.mockRejectedValue(
-        new Error("api call failed")
-      );
-
-      await expect(async () =>
-        getNextStimmzettelNumber(wahlID, wahlbezirkID, teamID)
-      ).rejects.toThrowError();
     });
   });
 });

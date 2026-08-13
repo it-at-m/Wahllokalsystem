@@ -26,86 +26,37 @@ describe("stimmzettelUtils.ts", () => {
     getVormerkungsgrund,
   } = useStimmzettelUtils();
 
-  const wahlID = generateRandomString(10);
-  const wahlbezirkID = generateRandomString(10);
-  const teamID = generateRandomString(1);
-
   afterEach(() => {
     vi.resetAllMocks();
     vi.clearAllMocks();
   });
 
   describe("getNextStimmzettelNumber", () => {
-    it("should_returnNextNumber_when_oneStimmzettelExists", async () => {
+    it("should_returnNextNumber_when_oneStimmzettelExists", () => {
       const stimmzettel = prepareStimmzettel().stimmzettelkennung(3).build();
-      mockDefinitions.getStimmzettel.mockReturnValue([stimmzettel]);
 
-      const result = await getNextStimmzettelNumber(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
+      const result = getNextStimmzettelNumber([stimmzettel]);
 
-      expect(mockDefinitions.getStimmzettel.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.getStimmzettel.mock.calls[0]).toStrictEqual([
-        wahlID,
-        wahlbezirkID,
-        teamID,
-      ]);
       expect(result).toStrictEqual(4);
     });
 
-    it("should_returnNextNumber_when_multipleStimmzettelExists", async () => {
+    it("should_returnNextNumber_when_multipleStimmzettelExists", () => {
       const stimmzettel1 = prepareStimmzettel().stimmzettelkennung(5).build();
       const stimmzettel2 = prepareStimmzettel().stimmzettelkennung(3).build();
       const stimmzettel3 = prepareStimmzettel().stimmzettelkennung(24).build();
-      mockDefinitions.getStimmzettel.mockReturnValue([
+
+      const result = getNextStimmzettelNumber([
         stimmzettel1,
         stimmzettel2,
         stimmzettel3,
       ]);
 
-      const result = await getNextStimmzettelNumber(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
-
-      expect(mockDefinitions.getStimmzettel.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.getStimmzettel.mock.calls[0]).toStrictEqual([
-        wahlID,
-        wahlbezirkID,
-        teamID,
-      ]);
       expect(result).toStrictEqual(25);
     });
 
-    it("should_returnNextNumber_when_noStimmzettelExists", async () => {
-      mockDefinitions.getStimmzettel.mockReturnValue([]);
-
-      const result = await getNextStimmzettelNumber(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
-
-      expect(mockDefinitions.getStimmzettel.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.getStimmzettel.mock.calls[0]).toStrictEqual([
-        wahlID,
-        wahlbezirkID,
-        teamID,
-      ]);
+    it("should_returnNextNumber_when_noStimmzettelExists", () => {
+      const result = getNextStimmzettelNumber([]);
       expect(result).toStrictEqual(1);
-    });
-
-    it("should_throwError_when_getStimmzettelFailes", async () => {
-      mockDefinitions.getStimmzettel.mockRejectedValue(
-        new Error("api call failed")
-      );
-
-      await expect(async () =>
-        getNextStimmzettelNumber(wahlID, wahlbezirkID, teamID)
-      ).rejects.toThrowError();
     });
   });
 

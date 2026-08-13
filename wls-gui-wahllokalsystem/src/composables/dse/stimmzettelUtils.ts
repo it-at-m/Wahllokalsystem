@@ -1,17 +1,9 @@
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 
-import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/StimmzettelGueltigkeitEnum.ts";
 
 export function useStimmzettelUtils() {
-  const { getStimmzettel } = useStimmzettelService();
-
-  async function getNextStimmzettelNumber(
-    wahlID: string,
-    wahlbezirkID: string,
-    teamID: string
-  ) {
-    const stimmzettelList = await getStimmzettel(wahlID, wahlbezirkID, teamID);
+  function getNextStimmzettelNumber(stimmzettelList: Stimmzettel[]) {
     return stimmzettelList.length > 0
       ? Math.max(
           ...stimmzettelList.map(

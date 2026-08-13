@@ -54,6 +54,17 @@ describe("stimmzettelUtils.ts", () => {
         gueltigkeit: null,
         invalideVotes: 0,
         wahlvorschlaege: uiWahlvorschlaege.wahlvorschlaege.map((ui) => {
+          const dseWahlvorschlag: DseWahlvorschlag = {
+            wahlvorschlagID: ui.identifikator,
+            ordnungszahl: ui.ordnungszahl,
+            selected: false,
+            kandidaten: [],
+            kurzname: ui.kurzname,
+            erhaeltStimmen: ui.erhaeltStimmen,
+            gueltigeStimmen: 0,
+            ungueltigeStimmen: 0,
+          };
+
           const dseKandidaten: DseKandidat[] =
             ui.kandidaten?.flatMap((uiKandidat) => {
               const kandidaten: DseKandidat[] = [];
@@ -66,21 +77,17 @@ describe("stimmzettelUtils.ts", () => {
                   kandidatId: uiKandidat.identifikator,
                   nennung,
                   listenposition: uiKandidat.listenposition,
-                  votesByVoter: null,
-                  isDiscarded: false,
-                  votesByWahlvorschlag: null,
-                  invalidVotes: null,
+                  einzelstimmen: null,
+                  durchgestrichen: false,
+                  reststimmen: null,
+                  ungueltigeStimmen: null,
+                  name: uiKandidat.name,
+                  owningWahlvorschlag: dseWahlvorschlag,
                 });
               }
               return kandidaten;
             }) ?? [];
-
-          const dseWahlvorschlag: DseWahlvorschlag = {
-            wahlvorschlagID: ui.identifikator,
-            ordnungszahl: ui.ordnungszahl,
-            selected: false,
-            kandidaten: dseKandidaten,
-          };
+          dseWahlvorschlag.kandidaten = dseKandidaten;
           return dseWahlvorschlag;
         }),
       };
@@ -113,19 +120,23 @@ describe("stimmzettelUtils.ts", () => {
           kandidatId: "k-id",
           nennung: 1,
           listenposition: 5,
-          votesByVoter: null,
-          isDiscarded: false,
-          votesByWahlvorschlag: null,
-          invalidVotes: null,
+          einzelstimmen: null,
+          durchgestrichen: false,
+          reststimmen: null,
+          ungueltigeStimmen: null,
+          name: kandidatWithTwoNennungen.name,
+          owningWahlvorschlag: result.wahlvorschlaege[0],
         },
         {
           kandidatId: "k-id",
           nennung: 2,
           listenposition: 5,
-          votesByVoter: null,
-          isDiscarded: false,
-          votesByWahlvorschlag: null,
-          invalidVotes: null,
+          einzelstimmen: null,
+          durchgestrichen: false,
+          reststimmen: null,
+          ungueltigeStimmen: null,
+          name: kandidatWithTwoNennungen.name,
+          owningWahlvorschlag: result.wahlvorschlaege[0],
         },
       ];
 
@@ -145,6 +156,10 @@ describe("stimmzettelUtils.ts", () => {
         ordnungszahl: uiWahlvorschlagWithoutKandidaten.ordnungszahl,
         selected: false,
         kandidaten: [],
+        kurzname: uiWahlvorschlagWithoutKandidaten.kurzname,
+        erhaeltStimmen: uiWahlvorschlagWithoutKandidaten.erhaeltStimmen,
+        gueltigeStimmen: 0,
+        ungueltigeStimmen: 0,
       };
 
       expect(result.wahlvorschlaege[0]).toStrictEqual(expectedDseWahlvorschlag);
@@ -163,6 +178,17 @@ describe("stimmzettelUtils.ts", () => {
       ]);
 
       const expectedWahlvorschlaege: DseWahlvorschlag[] = [w1, w2].map((ui) => {
+        const dseWahlvorschlag: DseWahlvorschlag = {
+          wahlvorschlagID: ui.identifikator,
+          ordnungszahl: ui.ordnungszahl,
+          selected: false,
+          kandidaten: [],
+          kurzname: ui.kurzname,
+          erhaeltStimmen: ui.erhaeltStimmen,
+          gueltigeStimmen: 0,
+          ungueltigeStimmen: 0,
+        };
+
         const dseKandidaten: DseKandidat[] =
           ui.kandidaten?.flatMap((uiKandidat) => {
             const kandidaten: DseKandidat[] = [];
@@ -175,21 +201,18 @@ describe("stimmzettelUtils.ts", () => {
                 kandidatId: uiKandidat.identifikator,
                 nennung,
                 listenposition: uiKandidat.listenposition,
-                votesByVoter: null,
-                isDiscarded: false,
-                votesByWahlvorschlag: null,
-                invalidVotes: null,
+                einzelstimmen: null,
+                durchgestrichen: false,
+                reststimmen: null,
+                ungueltigeStimmen: null,
+                name: uiKandidat.name,
+                owningWahlvorschlag: dseWahlvorschlag,
               });
             }
             return kandidaten;
           }) ?? [];
 
-        const dseWahlvorschlag: DseWahlvorschlag = {
-          wahlvorschlagID: ui.identifikator,
-          ordnungszahl: ui.ordnungszahl,
-          selected: false,
-          kandidaten: dseKandidaten,
-        };
+        dseWahlvorschlag.kandidaten = dseKandidaten;
         return dseWahlvorschlag;
       });
 

@@ -71,7 +71,7 @@ export function useManagedStimmzettel(stimmzettel: Stimmzettel) {
 
     //has any kandidat already uservotes?
     const kandidatWithUserVotes = kandidatenForListenPosition.find(
-      (kandidat) => kandidat.votesByVoter !== null
+      (kandidat) => kandidat.einzelstimmen !== null
     );
     if (kandidatWithUserVotes) {
       return kandidatWithUserVotes;
@@ -79,7 +79,7 @@ export function useManagedStimmzettel(stimmzettel: Stimmzettel) {
 
     //get first unused nennung
     const firstNennungWithoutDiscard = kandidatenForListenPosition.find(
-      (kandidat) => !kandidat.isDiscarded
+      (kandidat) => !kandidat.durchgestrichen
     );
     if (firstNennungWithoutDiscard) {
       return firstNennungWithoutDiscard;
@@ -92,8 +92,8 @@ export function useManagedStimmzettel(stimmzettel: Stimmzettel) {
     kandidat: Kandidat,
     numberOfVotesToAdd: number
   ) {
-    const currentVotesByVoter = kandidat.votesByVoter ?? 0;
-    kandidat.votesByVoter = currentVotesByVoter + Math.abs(numberOfVotesToAdd);
+    const currentVotesByVoter = kandidat.einzelstimmen ?? 0;
+    kandidat.einzelstimmen = currentVotesByVoter + Math.abs(numberOfVotesToAdd);
     //TODO hier kann man jetzt die Historie triggern
   }
 

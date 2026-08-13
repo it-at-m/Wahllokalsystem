@@ -15,7 +15,9 @@
         />
         <the-stimmzettel-content
           :active-wahlvorschlag-id="null"
-          :wahlvorschlaege="wahlvorschlaegeToDisplay"
+          :wahlvorschlaege="
+            stimmzettelManager.managedStimmzettel.stimmzettel.wahlvorschlaege
+          "
         />
       </v-card-text>
       <v-card-actions>
@@ -61,8 +63,9 @@ const emit = defineEmits<{
   confirm: [stimmzettel: Stimmzettel];
 }>();
 
-const { wahlvorschlaegeToDisplay, stimmzettelManager } =
-  useStimmzettelerfassungDialogUtils(props.wahlvorschlaege);
+const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
+  props.wahlvorschlaege
+);
 
 const { currentUserTeamName } = storeToRefs(useUserStore());
 

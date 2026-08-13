@@ -11,28 +11,26 @@ export function useManagedStimmzettelTestDataFactory() {
     useCommonTestDataFactory();
 
   function createManagedStimmzettelKandidat(): Kandidat {
-    return {
-      kandidatId: generateRandomString(10),
-      listenposition: generateRandomNumber(2),
-      nennung: generateRandomNumber(2),
-      isDiscarded: generateRandomBoolean(),
-      votesByVoter: generateRandomNumber(2),
-      invalidVotes: generateRandomNumber(2),
-      votesByWahlvorschlag: generateRandomNumber(2),
-    };
+    return createManagedStimmzettelWahlvorschlag().kandidaten[0];
   }
 
   function createManagedStimmzettelWahlvorschlag(): Wahlvorschlag {
-    return {
+    const result: Wahlvorschlag = {
       wahlvorschlagID: generateRandomString(10),
       ordnungszahl: generateRandomNumber(2),
       selected: generateRandomBoolean(),
-      kandidaten: [
-        createManagedStimmzettelKandidat(),
-        createManagedStimmzettelKandidat(),
-        createManagedStimmzettelKandidat(),
-      ],
+      kandidaten: [],
+      kurzname: generateRandomString(10),
+      erhaeltStimmen: generateRandomBoolean(),
+      gueltigeStimmen: generateRandomNumber(2),
+      ungueltigeStimmen: generateRandomNumber(2),
     };
+    result.kandidaten = [
+      _createManagedStimmzettelKandidatForWahlvorschlag(result),
+      _createManagedStimmzettelKandidatForWahlvorschlag(result),
+      _createManagedStimmzettelKandidatForWahlvorschlag(result),
+    ];
+    return result;
   }
 
   function createManagedStimmzettelStimmzettel(): Stimmzettel {
@@ -60,6 +58,22 @@ export function useManagedStimmzettelTestDataFactory() {
 
   function prepareManagedStimmzettelStimmzettel(): Builder<Stimmzettel> {
     return proxyBuilder<Stimmzettel>(createManagedStimmzettelStimmzettel());
+  }
+
+  function _createManagedStimmzettelKandidatForWahlvorschlag(
+    wahlvorschlag: Wahlvorschlag
+  ): Kandidat {
+    return {
+      kandidatId: generateRandomString(10),
+      listenposition: generateRandomNumber(2),
+      nennung: generateRandomNumber(2),
+      durchgestrichen: generateRandomBoolean(),
+      einzelstimmen: generateRandomNumber(2),
+      ungueltigeStimmen: generateRandomNumber(2),
+      reststimmen: generateRandomNumber(2),
+      name: generateRandomString(10),
+      owningWahlvorschlag: wahlvorschlag,
+    };
   }
 
   return {

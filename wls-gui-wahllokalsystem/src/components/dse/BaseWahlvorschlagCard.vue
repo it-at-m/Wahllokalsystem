@@ -18,7 +18,7 @@
             class="mb-1"
             density="compact"
             hide-details
-            :model-value="wahlvorschlag.erhaeltStimmen"
+            :model-value="wahlvorschlag.selected"
             :true-icon="mdiCloseBoxOutline"
             :ripple="false"
             readonly
@@ -70,8 +70,8 @@
 </template>
 
 <script setup lang="ts">
-import type { KandidatAnzeige } from "@/types/dse/KandidatAnzeige.ts";
-import type { WahlvorschlagAnzeige } from "@/types/dse/WahlvorschlagAnzeige.ts";
+import type { Kandidat } from "@/types/dse/Kandidat.ts";
+import type { Wahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
 import type { ComponentPublicInstance } from "vue";
 
 import { mdiCloseBoxOutline } from "@mdi/js";
@@ -82,18 +82,18 @@ import BaseKandidatListItemContent from "@/components/dse/BaseKandidatListItemCo
 import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
 
 const props = defineProps<{
-  wahlvorschlag: WahlvorschlagAnzeige;
+  wahlvorschlag: Wahlvorschlag;
   activeKandidatId?: string | null;
 }>();
 
-const kandidatenListe = computed<KandidatAnzeige[]>(() => {
-  const kandidaten = props.wahlvorschlag?.kandidaten ?? [];
-  if (kandidaten.length === 0) return [];
+const kandidatenListe = computed<Kandidat[]>(() => {
+  const kandidaten = props.wahlvorschlag.kandidaten;
 
   return [...kandidaten].sort((a, b) => {
+    //TODO können wir an die Erstellung auslagern
     const diffListenposition = a.listenposition - b.listenposition;
     return diffListenposition === 0
-      ? a.nennungsposition - b.nennungsposition
+      ? a.nennung - b.nennung
       : diffListenposition;
   });
 });
@@ -106,7 +106,7 @@ const isDividerZwischenGleichemKandidat = (index: number) => {
   const prev = kandidatenListe.value[index - 1];
   const curr = kandidatenListe.value[index];
   if (!prev || !curr) return false;
-  return prev.identifikator === curr.identifikator;
+  return prev.kandidatId === curr.kandidatId;
 };
 
 const focusActive = async () => {
@@ -118,7 +118,7 @@ const focusActive = async () => {
 
   let lastIndex = -1;
   for (let i = 0; i < kandidaten.length; i++) {
-    if (kandidaten[i].identifikator === id) lastIndex = i;
+    if (kandidaten[i].kandidatId === id) lastIndex = i;
   }
   if (lastIndex === -1) return;
 

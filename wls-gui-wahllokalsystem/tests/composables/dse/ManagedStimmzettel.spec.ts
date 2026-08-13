@@ -15,13 +15,13 @@ describe("ManagedStimmzettel.ts", () => {
     it("should_useKandidatWithUserVotes_when_multipleCandidatesShareListenposition", () => {
       const kandidatWithoutVotes = prepareManagedStimmzettelKandidat()
         .listenposition(1)
-        .votesByVoter(null)
-        .isDiscarded(false)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
         .build();
       const kandidatWithVotes = prepareManagedStimmzettelKandidat()
         .listenposition(1)
-        .votesByVoter(2)
-        .isDiscarded(false)
+        .einzelstimmen(2)
+        .durchgestrichen(false)
         .build();
 
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -37,20 +37,20 @@ describe("ManagedStimmzettel.ts", () => {
 
       managed.kandidatAddVotesOrThrow(101, 1);
 
-      expect(kandidatWithVotes.votesByVoter).toBe(3);
-      expect(kandidatWithoutVotes.votesByVoter).toBeNull();
+      expect(kandidatWithVotes.einzelstimmen).toBe(3);
+      expect(kandidatWithoutVotes.einzelstimmen).toBeNull();
     });
 
     it("should_useFirstNotDiscardedCandidate_when_noUserVotesPresent", () => {
       const discardedKandidat = prepareManagedStimmzettelKandidat()
         .listenposition(1)
-        .votesByVoter(null)
-        .isDiscarded(true)
+        .einzelstimmen(null)
+        .durchgestrichen(true)
         .build();
       const kandidatToUse = prepareManagedStimmzettelKandidat()
         .listenposition(1)
-        .votesByVoter(null)
-        .isDiscarded(false)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
         .build();
 
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -66,20 +66,20 @@ describe("ManagedStimmzettel.ts", () => {
 
       managed.kandidatAddVotesOrThrow(101, 1);
 
-      expect(kandidatToUse.votesByVoter).toBe(1);
-      expect(discardedKandidat.votesByVoter).toBeNull();
+      expect(kandidatToUse.einzelstimmen).toBe(1);
+      expect(discardedKandidat.einzelstimmen).toBeNull();
     });
 
     it("should_useFirstCandidate_when_allCandidatesAreDiscarded", () => {
       const firstDiscarded = prepareManagedStimmzettelKandidat()
         .listenposition(1)
-        .votesByVoter(null)
-        .isDiscarded(true)
+        .einzelstimmen(null)
+        .durchgestrichen(true)
         .build();
       const secondDiscarded = prepareManagedStimmzettelKandidat()
         .listenposition(1)
-        .votesByVoter(null)
-        .isDiscarded(true)
+        .einzelstimmen(null)
+        .durchgestrichen(true)
         .build();
 
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -95,8 +95,8 @@ describe("ManagedStimmzettel.ts", () => {
 
       managed.kandidatAddVotesOrThrow(101, 1);
 
-      expect(firstDiscarded.votesByVoter).toBe(1);
-      expect(secondDiscarded.votesByVoter).toBeNull();
+      expect(firstDiscarded.einzelstimmen).toBe(1);
+      expect(secondDiscarded.einzelstimmen).toBeNull();
     });
 
     it("should_throwManagedStimmzettelError_when_noKandidatForGivenOrdnungszahl", () => {
@@ -162,8 +162,8 @@ describe("ManagedStimmzettel.ts", () => {
     it("should_addAbsoluteNumberOfVotes_when_votesToAddIsNegative", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .listenposition(1)
-        .votesByVoter(null)
-        .isDiscarded(false)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
         .build();
 
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -179,14 +179,14 @@ describe("ManagedStimmzettel.ts", () => {
 
       managed.kandidatAddVotesOrThrow(101, -3);
 
-      expect(kandidat.votesByVoter).toBe(3);
+      expect(kandidat.einzelstimmen).toBe(3);
     });
 
     it("should_incrementVotes_when_addVotesMultipleTimes", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .listenposition(1)
-        .votesByVoter(1)
-        .isDiscarded(false)
+        .einzelstimmen(1)
+        .durchgestrichen(false)
         .build();
 
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -203,19 +203,19 @@ describe("ManagedStimmzettel.ts", () => {
       managed.kandidatAddVotesOrThrow(101, 2);
       managed.kandidatAddVotesOrThrow(101, 3);
 
-      expect(kandidat.votesByVoter).toBe(6);
+      expect(kandidat.einzelstimmen).toBe(6);
     });
 
     it("should_useKandidatFromSecondWahlvorschlag_when_ordnungszahlPointsToIt", () => {
       const kandidatInFirst = prepareManagedStimmzettelKandidat()
         .listenposition(1)
-        .votesByVoter(null)
-        .isDiscarded(false)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
         .build();
       const kandidatInSecond = prepareManagedStimmzettelKandidat()
         .listenposition(1)
-        .votesByVoter(null)
-        .isDiscarded(false)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
         .build();
 
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -235,15 +235,15 @@ describe("ManagedStimmzettel.ts", () => {
 
       managed.kandidatAddVotesOrThrow(201, 1);
 
-      expect(kandidatInSecond.votesByVoter).toBe(1);
-      expect(kandidatInFirst.votesByVoter).toBeNull();
+      expect(kandidatInSecond.einzelstimmen).toBe(1);
+      expect(kandidatInFirst.einzelstimmen).toBeNull();
     });
 
     it("should_throwManagedStimmzettelError_when_listenpositionHasNoCandidate", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .listenposition(1)
-        .votesByVoter(null)
-        .isDiscarded(false)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
         .build();
 
       const stimmzettel = prepareManagedStimmzettelStimmzettel()

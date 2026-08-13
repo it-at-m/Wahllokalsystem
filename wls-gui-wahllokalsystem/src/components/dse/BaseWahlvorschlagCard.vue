@@ -47,8 +47,8 @@
         <v-list>
           <v-list-item
             v-for="(kandidat, index) in kandidatenListe"
-            :key="index"
             :id="`kandidat-${index}`"
+            :key="index"
             ref="listItems"
             tabindex="-1"
           >
@@ -67,22 +67,21 @@
 </template>
 
 <script setup lang="ts">
-import type {KandidatAnzeige} from "@/types/dse/KandidatAnzeige.ts";
-import type {WahlvorschlagAnzeige} from "@/types/dse/WahlvorschlagAnzeige.ts";
-import type {ComponentPublicInstance} from "vue";
-import {computed, nextTick, onActivated, ref, watch} from "vue";
+import type { KandidatAnzeige } from "@/types/dse/KandidatAnzeige.ts";
+import type { WahlvorschlagAnzeige } from "@/types/dse/WahlvorschlagAnzeige.ts";
+import type { ComponentPublicInstance } from "vue";
 
-import {mdiCloseBoxOutline} from "@mdi/js";
+import { mdiCloseBoxOutline } from "@mdi/js";
+import { computed, nextTick, onActivated, ref, watch } from "vue";
 
 import BaseChipAnzahlStimmen from "@/components/dse/BaseChipAnzahlStimmen.vue";
 import BaseKandidatListItemContent from "@/components/dse/BaseKandidatListItemContent.vue";
-import {useViewportUtils} from "@/composables/common/viewportUtils.ts";
+import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
 
 const props = defineProps<{
   wahlvorschlag: WahlvorschlagAnzeige;
   activeKandidatId?: string | null;
 }>();
-
 
 const kandidatenListe = computed<KandidatAnzeige[]>(() => {
   const kandidaten = props.wahlvorschlag?.kandidaten ?? [];
@@ -91,8 +90,8 @@ const kandidatenListe = computed<KandidatAnzeige[]>(() => {
   return [...kandidaten].sort((a, b) => {
     const diffListenposition = a.listenposition - b.listenposition;
     return diffListenposition === 0
-        ? a.nennungsposition - b.nennungsposition
-        : diffListenposition;
+      ? a.nennungsposition - b.nennungsposition
+      : diffListenposition;
   });
 });
 
@@ -104,9 +103,7 @@ const isDividerZwischenGleichemKandidat = (index: number) => {
   const prev = kandidatenListe.value[index - 1];
   const curr = kandidatenListe.value[index];
   if (!prev || !curr) return false;
-  return (
-    prev.identifikator === curr.identifikator
-  );
+  return prev.identifikator === curr.identifikator;
 };
 
 const focusActive = async () => {

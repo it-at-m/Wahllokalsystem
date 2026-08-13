@@ -20,7 +20,7 @@ import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.t
 import { UnsupportedCommandError } from "@/types/dse/error/UnsupportedCommandError.ts";
 
 const props = defineProps({
-  stimmzettelManger: {
+  stimmzettelManager: {
     type: Object as PropType<StimmzettelManager>,
     required: true,
   },
@@ -31,7 +31,7 @@ const errorMessage = ref<string | null>(null);
 
 function onEnterPressed() {
   try {
-    props.stimmzettelManger.parseCommandOrThrowError(commandString.value);
+    props.stimmzettelManager.parseCommandOrThrowError(commandString.value);
     commandString.value = "";
     clearErrorMessage();
   } catch (parseError) {

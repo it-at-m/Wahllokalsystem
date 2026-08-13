@@ -53,7 +53,7 @@ function create5WahlvorschlaegeWith10KandidatenEach() {
  */
 export const Default: Story = {
   args: {
-    stimmzettelManger: useStimmzettelManager(
+    stimmzettelManager: useStimmzettelManager(
       create5WahlvorschlaegeWith10KandidatenEach()
     ),
   },

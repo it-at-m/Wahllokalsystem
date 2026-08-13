@@ -1,3 +1,5 @@
+import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
+
 import {
   Configuration,
   WahlvorschlaegeControllerApi,
@@ -23,27 +25,20 @@ export function useWahlvorschlaegeService() {
         wahlID,
         wahlbezirkID
       );
-      return toModel(response.data);
+      const wahlvorschlaege = toModel(response.data);
+      await _sortWahlvorschlaege(wahlvorschlaege);
+      return wahlvorschlaege;
     } catch {
       throw new Error("GetWahlvorschlaege failed");
     }
   }
 
-  async function loadAndSortWahlvorschlaege(
-    wahlID: string,
-    wahlbezirkID: string
-  ) {
-    return getWahlvorschlaege(wahlID, wahlbezirkID)
-      .then((wahlvorschlaege) =>
-        sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege)
-      )
-      .then((wahlvorschlaege) => {
-        wahlvorschlaege.wahlvorschlaege.forEach((wahlvorschlag) => {
-          sortKandidatenByListenPositionInplace(wahlvorschlag);
-        });
-        return wahlvorschlaege;
-      });
+  async function _sortWahlvorschlaege(wahlvorschlaege: Wahlvorschlaege) {
+    sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege);
+    wahlvorschlaege.wahlvorschlaege.forEach((wahlvorschlag) => {
+      sortKandidatenByListenPositionInplace(wahlvorschlag);
+    });
   }
 
-  return { getWahlvorschlaege, loadAndSortWahlvorschlaege };
+  return { getWahlvorschlaege };
 }

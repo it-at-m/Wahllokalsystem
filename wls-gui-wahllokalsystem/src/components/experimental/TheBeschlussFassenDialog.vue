@@ -3,7 +3,7 @@
     v-if="selectedStimmzettel"
     v-model="modelValue"
     width="1500"
-    height="750"
+    height="800"
   >
     <v-card>
       <v-card-title class="d-flex align-center py-0 pl-0 text-center">
@@ -26,23 +26,12 @@
           {{ currentUserTeamName }}
           {{ selectedStimmzettel.kennung }}
         </h2>
-        <!--        <v-icon
-          icon="$beschluss"
-          size="small"
-        />
-        <span class="ml-2">
-          Beschluss fassen zu Stimmzettel
-          <span class="font-weight-bold"
-            >{{ currentUserTeamName }}
-            {{ selectedStimmzettel.kennung }}
-          </span>
-        </span>-->
       </v-card-title>
-      <v-card-text class="pa-1">
+      <v-card-text class="pa-0">
         <v-tabs-window v-model="tab">
           <v-tabs-window-item
             value="one"
-            class="ma-5 fill-height"
+            class="fill-height"
           >
             <v-row>
               <v-col cols="4">
@@ -95,31 +84,45 @@
                   v-if="selectedOption === 'gueltig'"
                   class="ml-8 mt-2"
                 >
-                  <v-checkbox
+                  <div
                     v-for="item in checkboxItems.gueltig"
                     :key="`opt1-${item.value}`"
-                    v-model="selections.gueltig"
-                    :value="item.value"
-                    :label="item.label"
-                    density="compact"
-                    hide-details
-                  />
-                  <v-text-field />
+                    class="d-flex align-center"
+                  >
+                    <v-checkbox-btn
+                      v-model="selections.gueltig"
+                      :value="item.value"
+                      :label="item.label"
+                    />
+                    <v-text-field
+                      v-if="item.value === 'opt1_d'"
+                      class="mr-5"
+                      hide-details
+                      :disabled="!selections.gueltig.includes('opt1_d')"
+                    />
+                  </div>
                 </div>
                 <div
                   v-else-if="selectedOption === 'ungueltig'"
                   class="ml-8 mt-2"
                 >
-                  <v-checkbox
+                  <div
                     v-for="item in checkboxItems.ungueltig"
                     :key="`opt3-${item.value}`"
-                    v-model="selections.ungueltig"
-                    :value="item.value"
-                    :label="item.label"
-                    density="compact"
-                    hide-details
-                  />
-                  <v-text-field />
+                    class="d-flex align-center"
+                  >
+                    <v-checkbox-btn
+                      v-model="selections.ungueltig"
+                      :value="item.value"
+                      :label="item.label"
+                    />
+                    <v-text-field
+                      v-if="item.value === 'opt3_f'"
+                      class="mr-5"
+                      hide-details
+                      :disabled="!selections.ungueltig.includes('opt3_f')"
+                    />
+                  </div>
                 </div>
                 <div
                   v-else
@@ -129,48 +132,83 @@
                 </div>
               </v-col>
             </v-row>
-            <v-row class="mt-4">
-              <v-col cols="12">
-                <v-switch
-                  v-model="votesUnanimous"
-                  color="primary"
-                  :label="
-                    votesUnanimous
-                      ? 'Einstimmig angenommen'
-                      : 'Mehrheitsentscheid'
-                  "
-                  hide-details
-                />
-              </v-col>
-              <v-col
-                cols="4"
-                md="4"
-              >
-                <base-number-input
-                  label="Stimmen dafür"
-                  :model-value="votes.dafuer"
-                />
-              </v-col>
-              <v-col
-                cols="4"
-                md="4"
-              >
-                <base-number-input
-                  label="Stimmen dagegen"
-                  :model-value="votes.dagegen"
-                  @update:model-value="onVotesAgainstAdded"
-                />
-              </v-col>
-              <v-col
-                cols="4"
-                md="4"
-              >
-                <base-number-input
-                  label="Enthaltungen"
-                  :model-value="votes.enthaltungen"
-                />
-              </v-col>
-            </v-row>
+            <v-card class="mt-5">
+              <v-card-title> Abstimmungsergebnis </v-card-title>
+              <v-card-text>
+                <v-row
+                  align="center"
+                  class="mt-5"
+                >
+                  <v-col>
+                    <base-number-input
+                      class="mt-2"
+                      label="Stimmen dafür"
+                      :model-value="votes.dafuer"
+                    />
+                  </v-col>
+                  <v-col
+                    class="text-center"
+                    cols="1"
+                  >
+                    <v-icon
+                      size="x-large"
+                      :icon="mdiPoll"
+                    />
+                  </v-col>
+                  <v-col>
+                    <base-number-input
+                      class="mt-2"
+                      label="Stimmen dagegen"
+                      :model-value="votes.dagegen"
+                    />
+                  </v-col>
+                </v-row>
+
+                <!-- feedback ungültige stimmen -->
+                <!--                <base-feedback-card
+                  title="Ungültige Zusammensetzung an Stimmen"
+                  type="error"
+                >
+                  <ul>
+                    <li>
+                      Es müssen sich mindestens
+                      <span class="font-weight-bold"> drei </span> Personen an
+                      der Abstimmung beteiligen.
+                    </li>
+                    <li>
+                      Es können nicht mehr als
+                      <span class="font-weight-bold"> fünf </span> Personen an
+                      der Abstimmung teilnehmen.
+                    </li>
+                    <li>
+                      Die Anzahl der Stimmen "dagegen" darf nicht größer sein,
+                      als die Azahl der Stimmen "dafür". Über einen abgelehnten
+                      Beschlussvorschlag muss neu abgestimmt werden.
+                    </li>
+                  </ul>
+                </base-feedback-card>-->
+
+                <!-- feedback gleichstand -->
+                <base-feedback-card
+                  title="Die Abstimung ist unentschieden"
+                  type="warning"
+                >
+                  <div>
+                    Bei einem Gleichstand ist die Stimme des Wahlvorstehers /
+                    der Wahlvorsteherin ausschlaggebend. <br />
+                    Bitte bestätigen Sie, dass der/die Wahlvorsteher/in
+                    <span class="font-weight-bold"> dafür </span> gestimmt hat,
+                    und das Abstimmungsergebnis somit
+                    <span class="font-weight-bold"> 5 zu 4 dafür </span>
+                    ist.
+                    <v-checkbox
+                      label="Der/Die Wahlvorsteher/in hat dafür gestimmt"
+                      hide-details
+                    />
+                  </div>
+                </base-feedback-card>
+              </v-card-text>
+            </v-card>
           </v-tabs-window-item>
           <v-tabs-window-item value="two">
             <the-simple-stimmzettel-erfassung
@@ -202,15 +240,21 @@
 import type { BeschlussTabelleItem } from "@/types/dse/BeschlussTabelleItem.ts";
 import type { PropType } from "vue";
 
+import { mdiPoll } from "@mdi/js";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { storeToRefs } from "pinia";
 import { computed, reactive, ref, watch } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import TheSimpleStimmzettelErfassung from "@/components/experimental/TheSimpleStimmzettelErfassung.vue";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
+import {
+  MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+  MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { currentUserTeamName } = storeToRefs(useUserStore());
@@ -339,34 +383,10 @@ const hasAnySelection = computed(() =>
   )
 );
 
-const votes = reactive({ dafuer: 5, dagegen: 0, enthaltungen: 0 });
-const voteMode = ref<"unanimous" | "majority">("majority");
-
-watch(voteMode, (mode) => {
-  if (mode === "unanimous") {
-    votes.dagegen = 0;
-    votes.enthaltungen = 0;
-  }
+const votes = reactive<{ dafuer: number | null; dagegen: number | null }>({
+  dafuer: null,
+  dagegen: null,
 });
-
-const votesUnanimous = ref(true);
-
-// Wenn einstimmig: “dagegen” und “Enthaltungen” zurücksetzen
-watch(votesUnanimous, (on) => {
-  if (on) {
-    votes.dagegen = 0;
-    votes.enthaltungen = 0;
-    votes.dafuer = 5;
-  }
-});
-
-function onVotesAgainstAdded(votes: number | undefined | null) {
-  if (!votes) return;
-
-  if (votes > 0) {
-    voteMode.value = "majority";
-  }
-}
 </script>
 <style scoped>
 .full-width-radio :deep(.v-selection-control__wrapper + .v-label) {

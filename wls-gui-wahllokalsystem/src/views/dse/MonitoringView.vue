@@ -33,6 +33,9 @@
               >
                 Status
               </div>
+              <div class="font-weight-bold align-center justify-center">
+                Stimmzettelerfassung
+              </div>
             </template>
           </v-list-item>
           <v-divider
@@ -44,6 +47,9 @@
             :key="item.teamID"
             :min-width="minWidth"
             :team-entry="item"
+            :wahl-i-d="wahlID"
+            :wahlbezirk-i-d="wahlbezirkID"
+            @open-stimmzettelerfassung="onMonitoringSynchronisierenClicked"
           />
         </v-list>
       </v-card-text>

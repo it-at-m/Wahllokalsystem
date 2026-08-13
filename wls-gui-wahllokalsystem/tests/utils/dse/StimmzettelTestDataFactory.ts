@@ -6,18 +6,18 @@ import type {
   StimmzettelOfTeamDTO,
   WahlvorschlagDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { Beschlussfassung } from "@/types/dse/Beschlussfassung.ts";
-import type { Beschlussgrund } from "@/types/dse/Beschlussgrund.ts";
-import type { Kandidat } from "@/types/dse/Kandidat.ts";
-import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
-import type { Wahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
+import type { Beschlussfassung } from "@/types/dse/persistedStimmzettel/Beschlussfassung.ts";
+import type { Beschlussgrund } from "@/types/dse/persistedStimmzettel/Beschlussgrund.ts";
+import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
+import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { StimmzettelOfTeamDTOGueltigkeitEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/StimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const {
   generateRandomNumber,

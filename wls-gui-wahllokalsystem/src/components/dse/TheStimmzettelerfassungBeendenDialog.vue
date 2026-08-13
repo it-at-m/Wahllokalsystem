@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import TheOfflineDataSyncWidget from "@/components/common/widgets/TheOfflineDataSyncWidget.vue";
@@ -37,10 +38,7 @@ import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 const dataSyncStore = useDataSyncStore();
 const { isOfflineDataSyncing } = storeToRefs(dataSyncStore);
 
-const isDialogVisible = defineModel("modelValue", {
-  type: Boolean,
-  required: true,
-});
+defineExpose({ showDialog });
 
 const props = defineProps<{
   wahlId: string;
@@ -58,6 +56,8 @@ const {
   closeDialog
 );
 
+const isDialogVisible = ref(false);
+
 function onCancelClicked(): void {
   closeDialog();
 }
@@ -69,5 +69,9 @@ async function onConfirmClicked() {
 function closeDialog() {
   isDialogVisible.value = false;
   isSyncWidgetVisible.value = false;
+}
+
+function showDialog() {
+  isDialogVisible.value = true;
 }
 </script>

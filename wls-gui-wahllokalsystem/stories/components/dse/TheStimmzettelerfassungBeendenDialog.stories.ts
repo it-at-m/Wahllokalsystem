@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { delay, http, HttpResponse } from "msw";
+import { ref } from "vue";
+import { VBtn } from "vuetify/components";
 
 import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
 
@@ -26,8 +28,32 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
+  render(args) {
+    const dialogRef = ref();
+    const showDialog = () => {
+      dialogRef.value.showDialog();
+    };
+    return {
+      components: {
+        VBtn,
+        TheStimmzettelerfassungBeendenDialog,
+      },
+      setup() {
+        return { args, dialogRef, showDialog };
+      },
+      template: `
+        <div>
+          <v-btn @click="showDialog">
+            OPEN DIALOG
+          </v-btn>
+          <TheStimmzettelerfassungBeendenDialog
+          ref="dialogRef"
+          v-bind="args"
+          />
+        </div>`,
+    };
+  },
   args: {
-    modelValue: false,
     wahlId: generateRandomString(10),
     wahlbezirkId: generateRandomString(10),
     teamId: generateRandomString(10),

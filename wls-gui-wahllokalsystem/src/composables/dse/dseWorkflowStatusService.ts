@@ -11,7 +11,7 @@ import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { addNotification } = useUserNotificationService();
-const { dtoToModel } = useStimmzettelerfassungStatusMapper();
+const { dtoToModel, modelToDto } = useStimmzettelerfassungStatusMapper();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 
 export function useDseWorkflowStatusService() {
@@ -45,7 +45,38 @@ export function useDseWorkflowStatusService() {
     }
   }
 
+  async function saveDseWorkflowStatus(
+    wahlID: string,
+    wahlbezirkID: string,
+    status: StimmzettelerfassungStatus,
+    sendNotification = true
+  ) {
+    try {
+      const dtoToSend = modelToDto(status);
+      await stimmzettelerfassungControllerApi.saveStimmzettelerfassungStatus(
+        wahlID,
+        wahlbezirkID,
+        dtoToSend
+      );
+      if (sendNotification) {
+        addNotification(
+          "Speichern des Workflow-Status erfolgreich",
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+    } catch (error) {
+      if (sendNotification) {
+        addNotification(
+          "Speichern des Workflow-Status ist fehlgeschlagen",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw error;
+    }
+  }
+
   return {
     loadDseWorkflowStatus,
+    saveDseWorkflowStatus,
   };
 }

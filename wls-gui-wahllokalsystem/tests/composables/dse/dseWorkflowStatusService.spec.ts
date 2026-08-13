@@ -6,9 +6,11 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const mockDefinitions = vi.hoisted(() => ({
   mapDtoToModel: vi.fn(),
+  mapModelToDto: vi.fn(),
   addNotification: vi.fn(),
   configurationConstructor: vi.fn(),
   getStimmzettelerfassungStatus: vi.fn(),
+  saveStimmzettelerfassungStatus: vi.fn(),
 }));
 
 vi.mock(
@@ -20,6 +22,8 @@ vi.mock(
       StimmzettelerfassungControllerApi: class {
         getStimmzettelerfassungStatus =
           mockDefinitions.getStimmzettelerfassungStatus;
+        saveStimmzettelerfassungStatus =
+          mockDefinitions.saveStimmzettelerfassungStatus;
       },
       Configuration: vi.fn(),
     };
@@ -30,6 +34,7 @@ vi.mock(
   () => ({
     useStimmzettelerfassungStatusMapper: () => ({
       dtoToModel: mockDefinitions.mapDtoToModel,
+      modelToDto: mockDefinitions.mapModelToDto,
     }),
   })
 );
@@ -48,7 +53,8 @@ const {
 } = useStimmzettelerfassungStatusTestDataFactory();
 
 describe("DseWorkflowStatusService.ts", () => {
-  const { loadDseWorkflowStatus } = useDseWorkflowStatusService();
+  const { loadDseWorkflowStatus, saveDseWorkflowStatus } =
+    useDseWorkflowStatusService();
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -126,6 +132,70 @@ describe("DseWorkflowStatusService.ts", () => {
 
       await expect(async () =>
         loadDseWorkflowStatus(wahlID, wahlbezirkID, false)
+      ).rejects.toThrowError();
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
+    });
+  });
+
+  describe("saveDseWorkflowStatus", () => {
+    it("should_sendDTO_when_modelIsGiven", async () => {
+      const wahlID = "wahlID";
+      const wahlbezirkID = "wahlbezirkID";
+      const status = createStimmzettelerfassungStatus();
+
+      const mockedDto = createStimmzettelerfassungStatusDTO();
+
+      mockDefinitions.mapModelToDto.mockReturnValue(mockedDto);
+
+      await saveDseWorkflowStatus(wahlID, wahlbezirkID, status);
+
+      expect(
+        mockDefinitions.saveStimmzettelerfassungStatus.mock.calls
+      ).toStrictEqual([[wahlID, wahlbezirkID, mockedDto]]);
+      expect(mockDefinitions.mapModelToDto.mock.calls[0]).toStrictEqual([
+        status,
+      ]);
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+      ]);
+    });
+
+    it("should_triggerErrorNotification_when_anExceptionOccurredDuringApiCall", async () => {
+      const wahlID = "wahlID";
+      const wahlbezirkID = "wahlbezirkID";
+      const status = createStimmzettelerfassungStatus();
+
+      mockDefinitions.saveStimmzettelerfassungStatus.mockRejectedValue(
+        new Error("api call failed")
+      );
+
+      await expect(async () =>
+        saveDseWorkflowStatus(wahlID, wahlbezirkID, status)
+      ).rejects.toThrowError();
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        1
+      );
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        "Speichern des Workflow-Status ist fehlgeschlagen",
+        UserNotificationCategoryEnum.ERROR,
+      ]);
+    });
+
+    it("should_notTriggerErrorNotification_when_anExceptionOccurredDuringApiCallButSendNotificationIsFalse", async () => {
+      const wahlID = "wahlID";
+      const wahlbezirkID = "wahlbezirkID";
+      const status = createStimmzettelerfassungStatus();
+
+      mockDefinitions.saveStimmzettelerfassungStatus.mockRejectedValue(
+        new Error("api call failed")
+      );
+
+      await expect(async () =>
+        saveDseWorkflowStatus(wahlID, wahlbezirkID, status, false)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(

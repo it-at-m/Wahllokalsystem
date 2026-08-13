@@ -55,7 +55,7 @@ einen Beschluss fassen muss, werden entsprechend markiert.
 Um eine möglichst intuitive Erfassung der Stimmen des Stimmzettels zu ermöglichen, haben wir
 [Regeln](/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen) definiert.
 
-Zur schnelleren Erfassung können spezielle [Kurzbefehle](#kurzbefehle-für-die-erfassung) verwendet werden.
+Zur schnelleren Erfassung können spezielle [Kurzbefehle](#kurzbefehle-fur-die-erfassung) verwendet werden.
 
 #### (3) Stimmzettel ablegen
 

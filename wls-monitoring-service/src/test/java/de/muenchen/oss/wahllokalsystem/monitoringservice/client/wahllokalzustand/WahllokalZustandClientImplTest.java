@@ -86,25 +86,22 @@ class WahllokalZustandClientImplTest {
     }
 
     @Test
-    void should_throwTechnischeWlsException_when_eaiApiThrowsAnyException() {
+    void should_completeNormallyAndLogWarning_when_eaiApiThrowsAnyException() {
       val wahlbezirkID = "wahlbezirkID01";
       val teamID = "B";
       val zeitpunkt = LocalDateTime.now();
-
-      val mockedWlsException = TechnischeWlsException.withCode("007").buildWithMessage("Dummy-Msg");
-      Mockito.when(
-              exceptionFactory.createTechnischeWlsException(
-                  ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI))
-          .thenReturn(mockedWlsException);
 
       val mockedApiException = new IllegalArgumentException("Nix-Connect");
       Mockito.doThrow(mockedApiException)
           .when(wahllokalzustandControllerApi)
           .saveWahllokalZustandLetzteAbmeldung(any(), any(), any());
-
-      Assertions.assertThatThrownBy(
-              () -> unitUnderTest.postLetzteAbmeldung(wahlbezirkID, teamID, zeitpunkt))
-          .isSameAs(mockedWlsException);
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.postLetzteAbmeldung(wahlbezirkID, teamID, zeitpunkt));
+      Assertions.assertThat(
+              loggerExtension
+                  .getLoggedEventsStream()
+                  .filter(event -> event.getLevel() == Level.WARN)
+                  .count()).isEqualTo(1L);
     }
   }
 

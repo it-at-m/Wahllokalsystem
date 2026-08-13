@@ -136,7 +136,7 @@ stateDiagram-v2
 | `(g) BF abgeschlossen`   | Nach der Dokumentation aller Beschlussergebnisse [(4)](#beschluesse-erfassen) bestätigen die Teams mit der Rolle **Schriftführung**, dass die `(g) BF abgeschlossen` ist.                                                                                                                                                                                                                                                                     |
 | `(h) NS gedruckt`        | Sobald die Teams mit der Rolle **Schriftführung** die Niederschrift gedruckt haben, wird der Stimmzettelerfassungs-Workflow-Status `(h) NS gedruckt` gesetzt.                                                                                                                                                                                                                                                                                 |
 
-## Kurzbefehle für die Erfassung
+## Kurzbefehle für die Erfassung {#kurzbefehle-fur-die-erfassung}
 
 Um eine schnelle Erfassung der Daten des Stimmzettels zu ermöglichen, können Befehle eingegeben werden. Die Anwendung
 gibt Feedback, wenn der Befehl nicht ausführbar oder falsch war.

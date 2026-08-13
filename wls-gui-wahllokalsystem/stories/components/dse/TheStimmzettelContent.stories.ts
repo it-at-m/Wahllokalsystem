@@ -202,7 +202,7 @@ const sampleWahlvorschlaege = [
       },
       {
         identifikator: "402",
-        name: "Bianca Bohnert",
+        name: "Franz Maria Joseph Albrecht Herrmann Fritz Fürst von Fallersleben",
         listenposition: 2,
         anzahlNennungen: 1,
         nennungsposition: 1,

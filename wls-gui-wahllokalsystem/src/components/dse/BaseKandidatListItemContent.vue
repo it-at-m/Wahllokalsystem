@@ -13,7 +13,9 @@
       <div
         :style="{
           textDecoration: kandidat.durchgestrichen ? 'line-through' : 'none',
+          maxWidth: '350px'
         }"
+        class="text-truncate"
       >
         {{ kandidat.name }}
       </div>

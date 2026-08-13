@@ -46,8 +46,9 @@
       <div style="max-height: 600px; overflow-y: auto">
         <v-list>
           <v-list-item
-            v-for="(slot, index) in kandidatenListe"
+            v-for="(kandidat, index) in kandidatenListe"
             :key="index"
+            :id="`kandidat-${index}`"
             ref="listItems"
             tabindex="-1"
           >
@@ -57,7 +58,7 @@
                 isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
               "
             />
-            <base-kandidat-list-item-content :kandidat="slot.anzeigeKandidat" />
+            <base-kandidat-list-item-content :kandidat="kandidat" />
           </v-list-item>
         </v-list>
       </div>
@@ -66,45 +67,37 @@
 </template>
 
 <script setup lang="ts">
-import type { KandidatAnzeige } from "@/types/dse/KandidatAnzeige.ts";
-import type { WahlvorschlagAnzeige } from "@/types/dse/WahlvorschlagAnzeige.ts";
-import type { ComponentPublicInstance } from "vue";
+import type {KandidatAnzeige} from "@/types/dse/KandidatAnzeige.ts";
+import type {WahlvorschlagAnzeige} from "@/types/dse/WahlvorschlagAnzeige.ts";
+import type {ComponentPublicInstance} from "vue";
+import {computed, nextTick, onActivated, ref, watch} from "vue";
 
-import { mdiCloseBoxOutline } from "@mdi/js";
-import { computed, nextTick, onActivated, ref, watch } from "vue";
+import {mdiCloseBoxOutline} from "@mdi/js";
 
 import BaseChipAnzahlStimmen from "@/components/dse/BaseChipAnzahlStimmen.vue";
 import BaseKandidatListItemContent from "@/components/dse/BaseKandidatListItemContent.vue";
+import {useViewportUtils} from "@/composables/common/viewportUtils.ts";
 
 const props = defineProps<{
   wahlvorschlag: WahlvorschlagAnzeige;
   activeKandidatId?: string | null;
 }>();
 
-interface Slot {
-  anzeigeKandidat: KandidatAnzeige;
-  slotIndex: number;
-}
 
-const kandidatenListe = computed<Slot[]>(() => {
+const kandidatenListe = computed<KandidatAnzeige[]>(() => {
   const kandidaten = props.wahlvorschlag?.kandidaten ?? [];
   if (kandidaten.length === 0) return [];
 
-  const sortedKandidaten = [...kandidaten].sort((a, b) => {
+  return [...kandidaten].sort((a, b) => {
     const diffListenposition = a.listenposition - b.listenposition;
     return diffListenposition === 0
-      ? a.nennungsposition - b.nennungsposition
-      : diffListenposition;
+        ? a.nennungsposition - b.nennungsposition
+        : diffListenposition;
   });
-
-  return sortedKandidaten.map((kandidat, idx) => ({
-    anzeigeKandidat: kandidat,
-    slotIndex: idx + 1,
-    uniqueId: `${kandidat.identifikator}_${kandidat.nennungsposition}`,
-  }));
 });
 
 const listItems = ref<(ComponentPublicInstance | null)[]>([]);
+const { scrollIntoView } = useViewportUtils();
 
 const isDividerZwischenGleichemKandidat = (index: number) => {
   if (index <= 0) return false;
@@ -112,7 +105,7 @@ const isDividerZwischenGleichemKandidat = (index: number) => {
   const curr = kandidatenListe.value[index];
   if (!prev || !curr) return false;
   return (
-    prev.anzeigeKandidat.identifikator === curr.anzeigeKandidat.identifikator
+    prev.identifikator === curr.identifikator
   );
 };
 
@@ -125,7 +118,7 @@ const focusActive = async () => {
 
   let lastIndex = -1;
   for (let i = 0; i < kandidaten.length; i++) {
-    if (kandidaten[i].anzeigeKandidat.identifikator === id) lastIndex = i;
+    if (kandidaten[i].identifikator === id) lastIndex = i;
   }
   if (lastIndex === -1) return;
 
@@ -134,14 +127,9 @@ const focusActive = async () => {
   const item = listItems.value[lastIndex];
 
   if (item?.$el) {
-    // scroll into view inside the scrollable container if available
-    if (typeof item.$el.scrollIntoView === "function") {
-      try {
-        item.$el.scrollIntoView({ block: "nearest", inline: "nearest" });
-      } finally {
-        //ignore
-      }
-    }
+    const selector = `#kandidat-${lastIndex}`;
+    scrollIntoView(selector);
+
     if (typeof item.$el.focus === "function") {
       item.$el.focus();
     }

@@ -14,7 +14,7 @@ public interface WaehleranzahlClientMapper {
 
   ZoneId DEFAULT_ZONE_ID = ZoneId.systemDefault();
 
-  @Mapping(target = "wahlID", ignore = true)
+  @Mapping(target = "wahlID", source = "bezirkUndWahlID.wahlID")
   @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlID.wahlbezirkID")
   @Mapping(target = "meldeZeitpunkt", source = "uhrzeit")
   WahlbeteiligungsMeldungDTO fromModelToRemoteClientDTO(WaehleranzahlModel waehleranzahlModel);

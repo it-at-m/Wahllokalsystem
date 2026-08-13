@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";

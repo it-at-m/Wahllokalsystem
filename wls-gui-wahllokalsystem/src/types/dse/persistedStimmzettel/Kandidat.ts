@@ -1,6 +1,5 @@
 export interface Kandidat {
   kandidatId: string;
-  listenposition: number;
   nennung: number;
   isDiscarded: boolean;
   votesByVoter: number | null;

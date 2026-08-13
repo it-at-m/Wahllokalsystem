@@ -10,14 +10,12 @@ import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/s
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
-import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 
 const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
-const { loadAndSortWahlvorschlaege } = useWahlvorschlaegeService();
-const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
+const { getWahlvorschlaege } = useWahlvorschlaegeService();
 const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelUtils();
 
 export function useStimmzettelErfassungViewUtils(
@@ -112,12 +110,7 @@ export function useStimmzettelErfassungViewUtils(
   async function _loadWahlvorschlaege() {
     isWahlvorschlaegeLoading.value = true;
     try {
-      const loadedWahlvorschlaege = await loadAndSortWahlvorschlaege(
-        wahlID,
-        wahlbezirkID
-      );
-      sortWahlvorschlaegeByOrdnungszahl(loadedWahlvorschlaege);
-      wahlvorschlaege.value = loadedWahlvorschlaege.wahlvorschlaege;
+      return await getWahlvorschlaege(wahlID, wahlbezirkID);
     } finally {
       isWahlvorschlaegeLoading.value = false;
     }

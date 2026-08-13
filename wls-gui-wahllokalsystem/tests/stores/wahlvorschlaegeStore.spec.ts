@@ -14,6 +14,7 @@ vi.mock(
   () => ({
     useWahlvorschlaegeService: () => ({
       getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
+      loadAndSortWahlvorschlaege: vi.fn(),
     }),
   })
 );

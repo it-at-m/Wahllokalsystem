@@ -13,7 +13,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
   const StapelArt_BC = StapelArtEnum.MbwBC;
 
   const { getErgebnisse, postErgebnisse } = useErgebnisService();
-  const { loadAndSortWahlvorschlaege } = useWahlvorschlaegeService();
+  const { getWahlvorschlaege } = useWahlvorschlaegeService();
   const { toErgebnisse, toWahlvorschlagWithKandidatenErgebnissen } =
     useWahlvorschlagWithKandidatenErgebnissenMapper();
   const { logError } = useLogging("useMwbStapelBCUtils");
@@ -27,10 +27,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
   async function loadWahlvorschlaegeAndErgebnisse() {
     isLoading.value = true;
     try {
-      const wahlvorschlaege = await loadAndSortWahlvorschlaege(
-        wahlID,
-        wahlbezirkID
-      );
+      const wahlvorschlaege = await getWahlvorschlaege(wahlID, wahlbezirkID);
       const ergebnisse = await getErgebnisse(
         wahlbezirkID,
         wahlID,

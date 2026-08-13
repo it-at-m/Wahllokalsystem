@@ -37,7 +37,6 @@ const mockDefinitions = vi.hoisted(() => ({
   getWahlOrUndefinedById: vi.fn(),
   getWahlvorschlaege: vi.fn(),
   mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse: vi.fn(),
-  sortWahlvorschlaegeByOrdnungszahl: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
   getStimmabgabevermerke: vi.fn(),
   getStimmzettelumschlaege: vi.fn(),
@@ -108,19 +107,6 @@ vi.mock(
     }),
   })
 );
-vi.mock(
-  import("@/composables/wahlvorschlaege/wahlvorschlagUtils.ts"),
-  async (importOriginal) => {
-    const mod = await importOriginal();
-    return {
-      useWahlvorschlagUtils: () => ({
-        ...mod.useWahlvorschlagUtils(),
-        sortWahlvorschlaegeByOrdnungszahl:
-          mockDefinitions.sortWahlvorschlaegeByOrdnungszahl,
-      }),
-    };
-  }
-);
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
     wahlenActions: {
@@ -155,12 +141,8 @@ crypto.randomUUID = mockDefinitions.generateUuidv4;
 const { generateRandomString } = useCommonTestDataFactory();
 const { createErgebnis, prepareErgebnisse, prepareErgebnis } =
   useErgebnisseTestDataFactory();
-const {
-  createWahlvorschlag,
-  createWahlvorschlaege,
-  prepareWahlvorschlag,
-  prepareWahlvorschlaege,
-} = useWahlvorschlaegeTestDataFactory();
+const { createWahlvorschlag, prepareWahlvorschlag, prepareWahlvorschlaege } =
+  useWahlvorschlaegeTestDataFactory();
 const { createWahl, prepareWahl } = useWahlTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 const { prepareStimmabgabevermerke, prepareVermerk, prepareStimmzettel } =
@@ -421,9 +403,6 @@ describe("mbwUtils", () => {
         .build();
 
       mockDefinitions.getWahlvorschlaege.mockResolvedValue(
-        createWahlvorschlaege()
-      );
-      mockDefinitions.sortWahlvorschlaegeByOrdnungszahl.mockReturnValue(
         sortedWahlvorschlaege
       );
       mockDefinitions.getErgebnisse.mockResolvedValueOnce(
@@ -500,9 +479,6 @@ describe("mbwUtils", () => {
         .build();
 
       mockDefinitions.getWahlvorschlaege.mockResolvedValue(
-        createWahlvorschlaege()
-      );
-      mockDefinitions.sortWahlvorschlaegeByOrdnungszahl.mockReturnValue(
         sortedWahlvorschlaege
       );
       mockDefinitions.getErgebnisse.mockResolvedValueOnce(null);
@@ -1114,9 +1090,6 @@ describe("mbwUtils", () => {
         .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2])
         .build();
       mockDefinitions.getWahlvorschlaege.mockResolvedValue(
-        createWahlvorschlaege()
-      );
-      mockDefinitions.sortWahlvorschlaegeByOrdnungszahl.mockReturnValue(
         sortedWahlvorschlaege
       );
 

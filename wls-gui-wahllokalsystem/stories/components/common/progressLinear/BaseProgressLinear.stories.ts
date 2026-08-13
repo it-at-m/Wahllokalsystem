@@ -14,6 +14,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     titel: "Fortschritt",
+    titelClass: "",
     isLoading: true,
     current: 3,
     total: 10,
@@ -28,6 +29,7 @@ export const Default: Story = {
 export const NotLoading: Story = {
   args: {
     titel: "Fortschritt",
+    titelClass: "",
     isLoading: false,
     current: 10,
     total: 10,
@@ -49,6 +51,7 @@ export const NotLoading: Story = {
 export const Color: Story = {
   args: {
     titel: "Fortschritt",
+    titelClass: "",
     isLoading: true,
     current: 2,
     total: 10,

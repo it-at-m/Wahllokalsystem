@@ -9,7 +9,12 @@
         Erfassung Stimmzettel Nummer {{ currentUserTeamName }}
         {{ stimmzettel.stimmzettelkennung }}
       </v-card-title>
-      <v-card-text> In progress </v-card-text>
+      <v-card-text>
+        <the-stimmzettel-content
+          :active-wahlvorschlag-id="null"
+          :wahlvorschlaege="wahlvorschlaegeToDisplay"
+        />
+      </v-card-text>
       <v-card-actions>
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
         <base-wls-button-save @click="onSavedClicked" />
@@ -20,12 +25,15 @@
 
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
+import TheStimmzettelContent from "@/components/dse/TheStimmzettelContent.vue";
+import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassungDialogUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
@@ -38,12 +46,20 @@ const props = defineProps({
     type: Object as PropType<Stimmzettel>,
     required: true,
   },
+  wahlvorschlaege: {
+    type: Array as PropType<Wahlvorschlag[]>,
+    required: true,
+  },
 });
 
 const emit = defineEmits<{
   cancel: [];
   confirm: [stimmzettel: Stimmzettel];
 }>();
+
+const { wahlvorschlaegeToDisplay } = useStimmzettelerfassungDialogUtils(
+  props.wahlvorschlaege
+);
 
 const { currentUserTeamName } = storeToRefs(useUserStore());
 

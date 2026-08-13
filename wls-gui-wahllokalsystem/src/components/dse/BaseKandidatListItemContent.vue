@@ -8,7 +8,7 @@
 
     <div class="flex-grow-1 mr-4">
       <div>
-        {{ kandidat.identifikator }}
+        {{ kandidatOrdnungszahl }}
       </div>
       <div
         :style="{
@@ -45,9 +45,16 @@
 <script setup lang="ts">
 import type { KandidatAnzeige } from "@/types/dse/KandidatAnzeige.ts";
 
+import { computed } from "vue";
+
 import BaseChipAnzahlStimmen from "@/components/dse/BaseChipAnzahlStimmen.vue";
 
-defineProps<{
+const props = defineProps<{
   kandidat: KandidatAnzeige;
+  wahlvorschlagNummer: number;
 }>();
+
+const kandidatOrdnungszahl = computed(
+  () => props.wahlvorschlagNummer * 100 + props.kandidat.listenposition
+);
 </script>

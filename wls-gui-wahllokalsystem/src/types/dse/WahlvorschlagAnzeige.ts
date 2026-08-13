@@ -7,5 +7,5 @@ export interface WahlvorschlagAnzeige {
   erhaeltStimmen: boolean;
   gueltigeStimmen: number;
   ungueltigeStimmen: number;
-  kandidaten?: KandidatAnzeige[];
+  kandidaten?: KandidatAnzeige[]; //TODO nicht optional machen
 }

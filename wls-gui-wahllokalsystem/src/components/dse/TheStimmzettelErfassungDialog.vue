@@ -10,6 +10,9 @@
         {{ stimmzettel.stimmzettelkennung }}
       </v-card-title>
       <v-card-text>
+        <the-stimmzettel-command-processing-text-field
+          :stimmzettel-manager="stimmzettelManager"
+        />
         <the-stimmzettel-content
           :active-wahlvorschlag-id="null"
           :wahlvorschlaege="wahlvorschlaegeToDisplay"
@@ -32,6 +35,7 @@ import { storeToRefs } from "pinia";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
+import TheStimmzettelCommandProcessingTextField from "@/components/dse/TheStimmzettelCommandProcessingTextField.vue";
 import TheStimmzettelContent from "@/components/dse/TheStimmzettelContent.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassungDialogUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -57,9 +61,8 @@ const emit = defineEmits<{
   confirm: [stimmzettel: Stimmzettel];
 }>();
 
-const { wahlvorschlaegeToDisplay } = useStimmzettelerfassungDialogUtils(
-  props.wahlvorschlaege
-);
+const { wahlvorschlaegeToDisplay, stimmzettelManager } =
+  useStimmzettelerfassungDialogUtils(props.wahlvorschlaege);
 
 const { currentUserTeamName } = storeToRefs(useUserStore());
 

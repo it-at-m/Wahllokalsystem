@@ -70,7 +70,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Kandidat } from "@/types/dse/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
 import type { ComponentPublicInstance } from "vue";
 
@@ -86,17 +85,7 @@ const props = defineProps<{
   activeKandidatId?: string | null;
 }>();
 
-const kandidatenListe = computed<Kandidat[]>(() => {
-  const kandidaten = props.wahlvorschlag.kandidaten;
-
-  return [...kandidaten].sort((a, b) => {
-    //TODO können wir an die Erstellung auslagern
-    const diffListenposition = a.listenposition - b.listenposition;
-    return diffListenposition === 0
-      ? a.nennung - b.nennung
-      : diffListenposition;
-  });
-});
+const kandidatenListe = computed(() => props.wahlvorschlag.kandidaten);
 
 const listItems = ref<(ComponentPublicInstance | null)[]>([]);
 const { scrollIntoView } = useViewportUtils();

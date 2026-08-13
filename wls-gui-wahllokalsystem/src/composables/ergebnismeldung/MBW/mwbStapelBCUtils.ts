@@ -1,5 +1,4 @@
 import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnismeldung/common/WahlvorschlagWithKandidatenErgebnissen.ts";
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
 import { ref } from "vue";
@@ -8,18 +7,13 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useWahlvorschlagWithKandidatenErgebnissenMapper } from "@/composables/ergebnismeldung/common/wahlvorschlagWithKandidatenErgebnissenMapper.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
-import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
   const StapelArt_BC = StapelArtEnum.MbwBC;
 
   const { getErgebnisse, postErgebnisse } = useErgebnisService();
-  const { getWahlvorschlaege } = useWahlvorschlaegeService();
-  const {
-    compareKandidatenByListenPosition,
-    sortWahlvorschlaegeByOrdnungszahl,
-  } = useWahlvorschlagUtils();
+  const { loadAndSortWahlvorschlaege } = useWahlvorschlaegeService();
   const { toErgebnisse, toWahlvorschlagWithKandidatenErgebnissen } =
     useWahlvorschlagWithKandidatenErgebnissenMapper();
   const { logError } = useLogging("useMwbStapelBCUtils");
@@ -33,7 +27,10 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
   async function loadWahlvorschlaegeAndErgebnisse() {
     isLoading.value = true;
     try {
-      const wahlvorschlaege = await _loadAndSortWahlvorschlaege();
+      const wahlvorschlaege = await loadAndSortWahlvorschlaege(
+        wahlID,
+        wahlbezirkID
+      );
       const ergebnisse = await getErgebnisse(
         wahlbezirkID,
         wahlID,
@@ -78,27 +75,6 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
       logError("saving ergebnisse failed", error);
     } finally {
       isSaving.value = false;
-    }
-  }
-
-  function _loadAndSortWahlvorschlaege() {
-    return getWahlvorschlaege(wahlID, wahlbezirkID)
-      .then((wahlvorschlaege) =>
-        sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege)
-      )
-      .then((wahlvorschlaege) => {
-        wahlvorschlaege.wahlvorschlaege.forEach((wahlvorschlag) => {
-          _sortKandidatenByListenPosition(wahlvorschlag);
-        });
-        return wahlvorschlaege;
-      });
-  }
-
-  function _sortKandidatenByListenPosition(wahlvorschlag: Wahlvorschlag) {
-    if (wahlvorschlag.kandidaten) {
-      wahlvorschlag.kandidaten = [...wahlvorschlag.kandidaten].sort(
-        compareKandidatenByListenPosition
-      );
     }
   }
 

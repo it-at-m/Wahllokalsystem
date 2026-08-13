@@ -6,7 +6,7 @@
       :model-value="activeWahlvorschlagId"
     >
       <v-slide-group-item
-        v-for="wv in wahlvorschlaegeSortiert"
+        v-for="wv in wahlvorschlaege"
         :key="wv.wahlvorschlagID"
         :value="wv.wahlvorschlagID"
       >
@@ -22,19 +22,11 @@
 <script setup lang="ts">
 import type { Wahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
 
-import { computed } from "vue";
-
 import BaseWahlvorschlagCard from "./BaseWahlvorschlagCard.vue";
 
-const props = defineProps<{
+defineProps<{
   activeWahlvorschlagId: string | null;
   activeKandidatId?: string | null;
   wahlvorschlaege: Wahlvorschlag[];
 }>();
-
-const wahlvorschlaegeSortiert = computed(() => {
-  return props.wahlvorschlaege
-    .slice()
-    .sort((a, b) => a.ordnungszahl - b.ordnungszahl);
-});
 </script>

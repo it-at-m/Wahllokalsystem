@@ -2,6 +2,7 @@ import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts
 
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { computed } from "vue";
 
 import { useAddVotesToSingleKandidatHandler } from "@/composables/dse/command/addVotesToSingleKandidatHandler.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
@@ -54,7 +55,9 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
             ordnungszahl: number,
             votesToAdd: number
           ) => void,
-        stimmzettel: prepareManagedStimmzettelStimmzettel().build(),
+        stimmzettel: computed(() =>
+          prepareManagedStimmzettelStimmzettel().build()
+        ),
       };
     });
 

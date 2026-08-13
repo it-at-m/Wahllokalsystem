@@ -1,5 +1,6 @@
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
+import { ref } from "vue";
 
 import { useManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
@@ -33,7 +34,7 @@ describe("ManagedStimmzettel.ts", () => {
         ])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       managed.kandidatAddVotesOrThrow(101, 1);
 
@@ -62,7 +63,7 @@ describe("ManagedStimmzettel.ts", () => {
         ])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       managed.kandidatAddVotesOrThrow(101, 1);
 
@@ -91,7 +92,7 @@ describe("ManagedStimmzettel.ts", () => {
         ])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       managed.kandidatAddVotesOrThrow(101, 1);
 
@@ -104,7 +105,7 @@ describe("ManagedStimmzettel.ts", () => {
         .wahlvorschlaege([])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       expect(() => managed.kandidatAddVotesOrThrow(101, 1)).toThrow(
         ManagedStimmzettelError
@@ -116,7 +117,7 @@ describe("ManagedStimmzettel.ts", () => {
         .wahlvorschlaege([])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       expect(() => managed.kandidatAddVotesOrThrow(101, Number.NaN)).toThrow(
         ManagedStimmzettelError
@@ -128,7 +129,7 @@ describe("ManagedStimmzettel.ts", () => {
         .wahlvorschlaege([])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       expect(() =>
         managed.kandidatAddVotesOrThrow(101, Number.NEGATIVE_INFINITY)
@@ -140,7 +141,7 @@ describe("ManagedStimmzettel.ts", () => {
         .wahlvorschlaege([])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       expect(() =>
         managed.kandidatAddVotesOrThrow(101, Number.POSITIVE_INFINITY)
@@ -152,7 +153,7 @@ describe("ManagedStimmzettel.ts", () => {
         .wahlvorschlaege([])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       expect(() => managed.kandidatAddVotesOrThrow(101, 0.1)).toThrow(
         ManagedStimmzettelError
@@ -175,7 +176,7 @@ describe("ManagedStimmzettel.ts", () => {
         ])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       managed.kandidatAddVotesOrThrow(101, -3);
 
@@ -198,7 +199,7 @@ describe("ManagedStimmzettel.ts", () => {
         ])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       managed.kandidatAddVotesOrThrow(101, 2);
       managed.kandidatAddVotesOrThrow(101, 3);
@@ -231,7 +232,7 @@ describe("ManagedStimmzettel.ts", () => {
         ])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       managed.kandidatAddVotesOrThrow(201, 1);
 
@@ -255,22 +256,11 @@ describe("ManagedStimmzettel.ts", () => {
         ])
         .build();
 
-      const managed = useManagedStimmzettel(stimmzettel);
+      const managed = useManagedStimmzettel(ref(stimmzettel));
 
       expect(() => managed.kandidatAddVotesOrThrow(199, 1)).toThrow(
         ManagedStimmzettelError
       );
-    });
-  });
-
-  describe("publicApi", () => {
-    it("should_exposePublicApiAndStimmzettel_when_useManagedStimmzettelIsCalled", () => {
-      const stimmzettel = prepareManagedStimmzettelStimmzettel().build();
-
-      const managed = useManagedStimmzettel(stimmzettel);
-
-      expect(typeof managed.kandidatAddVotesOrThrow).toBe("function");
-      expect(managed.stimmzettel).toBe(stimmzettel);
     });
   });
 });

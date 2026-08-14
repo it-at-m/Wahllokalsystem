@@ -51,7 +51,6 @@ import BaseChipAnzahlStimmen from "@/components/dse/BaseChipAnzahlStimmen.vue";
 
 const props = defineProps<{
   kandidat: Kandidat;
-  wahlvorschlagNummer: number;
 }>();
 
 const gesamtStimmen = computed(

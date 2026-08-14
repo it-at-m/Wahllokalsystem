@@ -12,7 +12,7 @@ describe("ManagedStimmzettel.ts", () => {
     prepareManagedStimmzettelKandidat,
   } = useManagedStimmzettelTestDataFactory();
 
-  describe("kandidatAddVotesOrThrow", () => {
+  describe("kandidatAddEinzelstimmenOrThrow", () => {
     it("should_useKandidatWithUserVotes_when_multipleCandidatesShareListenposition", () => {
       const kandidatWithoutVotes = prepareManagedStimmzettelKandidat()
         .listenposition(1)
@@ -36,7 +36,7 @@ describe("ManagedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
-      managed.kandidatAddVotesOrThrow(101, 1);
+      managed.kandidatAddEinzelstimmenOrThrow(101, 1);
 
       expect(kandidatWithVotes.einzelstimmen).toBe(3);
       expect(kandidatWithoutVotes.einzelstimmen).toBeNull();
@@ -65,7 +65,7 @@ describe("ManagedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
-      managed.kandidatAddVotesOrThrow(101, 1);
+      managed.kandidatAddEinzelstimmenOrThrow(101, 1);
 
       expect(kandidatToUse.einzelstimmen).toBe(1);
       expect(discardedKandidat.einzelstimmen).toBeNull();
@@ -94,7 +94,7 @@ describe("ManagedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
-      managed.kandidatAddVotesOrThrow(101, 1);
+      managed.kandidatAddEinzelstimmenOrThrow(101, 1);
 
       expect(firstDiscarded.einzelstimmen).toBe(1);
       expect(secondDiscarded.einzelstimmen).toBeNull();
@@ -107,7 +107,7 @@ describe("ManagedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
-      expect(() => managed.kandidatAddVotesOrThrow(101, 1)).toThrow(
+      expect(() => managed.kandidatAddEinzelstimmenOrThrow(101, 1)).toThrow(
         ManagedStimmzettelError
       );
     });
@@ -119,9 +119,9 @@ describe("ManagedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
-      expect(() => managed.kandidatAddVotesOrThrow(101, Number.NaN)).toThrow(
-        ManagedStimmzettelError
-      );
+      expect(() =>
+        managed.kandidatAddEinzelstimmenOrThrow(101, Number.NaN)
+      ).toThrow(ManagedStimmzettelError);
     });
 
     it("should_throwManagedStimmzettelError_when_votesToAddIsNegativeInfinity", () => {
@@ -132,7 +132,7 @@ describe("ManagedStimmzettel.ts", () => {
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
       expect(() =>
-        managed.kandidatAddVotesOrThrow(101, Number.NEGATIVE_INFINITY)
+        managed.kandidatAddEinzelstimmenOrThrow(101, Number.NEGATIVE_INFINITY)
       ).toThrow(ManagedStimmzettelError);
     });
 
@@ -144,7 +144,7 @@ describe("ManagedStimmzettel.ts", () => {
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
       expect(() =>
-        managed.kandidatAddVotesOrThrow(101, Number.POSITIVE_INFINITY)
+        managed.kandidatAddEinzelstimmenOrThrow(101, Number.POSITIVE_INFINITY)
       ).toThrow(ManagedStimmzettelError);
     });
 
@@ -155,7 +155,7 @@ describe("ManagedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
-      expect(() => managed.kandidatAddVotesOrThrow(101, 0.1)).toThrow(
+      expect(() => managed.kandidatAddEinzelstimmenOrThrow(101, 0.1)).toThrow(
         ManagedStimmzettelError
       );
     });
@@ -178,7 +178,7 @@ describe("ManagedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
-      managed.kandidatAddVotesOrThrow(101, -3);
+      managed.kandidatAddEinzelstimmenOrThrow(101, -3);
 
       expect(kandidat.einzelstimmen).toBe(3);
     });
@@ -201,8 +201,8 @@ describe("ManagedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
-      managed.kandidatAddVotesOrThrow(101, 2);
-      managed.kandidatAddVotesOrThrow(101, 3);
+      managed.kandidatAddEinzelstimmenOrThrow(101, 2);
+      managed.kandidatAddEinzelstimmenOrThrow(101, 3);
 
       expect(kandidat.einzelstimmen).toBe(6);
     });
@@ -234,7 +234,7 @@ describe("ManagedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
-      managed.kandidatAddVotesOrThrow(201, 1);
+      managed.kandidatAddEinzelstimmenOrThrow(201, 1);
 
       expect(kandidatInSecond.einzelstimmen).toBe(1);
       expect(kandidatInFirst.einzelstimmen).toBeNull();
@@ -258,7 +258,7 @@ describe("ManagedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel));
 
-      expect(() => managed.kandidatAddVotesOrThrow(199, 1)).toThrow(
+      expect(() => managed.kandidatAddEinzelstimmenOrThrow(199, 1)).toThrow(
         ManagedStimmzettelError
       );
     });

@@ -50,7 +50,7 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
 
     beforeEach(() => {
       mockManagedStimmzettel = {
-        kandidatAddVotesOrThrow:
+        kandidatAddEinzelstimmenOrThrow:
           mockDefinitions.kandidatAddVotesOrThrow as unknown as (
             ordnungszahl: number,
             votesToAdd: number

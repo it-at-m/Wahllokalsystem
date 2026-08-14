@@ -23,7 +23,10 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
    *
    * @throws ManagedStimmzettelError when ordnungszahl does not describe a valid kandidat or rules deny action
    */
-  function kandidatAddVotesOrThrow(ordnungszahl: number, votesToAdd: number) {
+  function kandidatAddEinzelstimmenOrThrow(
+    ordnungszahl: number,
+    votesToAdd: number
+  ) {
     if (!Number.isSafeInteger) {
       throw new ManagedStimmzettelError(
         "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
@@ -73,19 +76,19 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     }
 
     //has any kandidat already uservotes?
-    const kandidatWithUserVotes = kandidatenForListenPosition.find(
+    const kandidatWithEinzelstimmen = kandidatenForListenPosition.find(
       (kandidat) => kandidat.einzelstimmen !== null
     );
-    if (kandidatWithUserVotes) {
-      return kandidatWithUserVotes;
+    if (kandidatWithEinzelstimmen) {
+      return kandidatWithEinzelstimmen;
     }
 
     //get first unused nennung
-    const firstNennungWithoutDiscard = kandidatenForListenPosition.find(
+    const firstNennungWithoutDurchstreichung = kandidatenForListenPosition.find(
       (kandidat) => !kandidat.durchgestrichen
     );
-    if (firstNennungWithoutDiscard) {
-      return firstNennungWithoutDiscard;
+    if (firstNennungWithoutDurchstreichung) {
+      return firstNennungWithoutDurchstreichung;
     }
 
     return kandidatenForListenPosition[0];
@@ -95,13 +98,14 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     kandidat: Kandidat,
     numberOfVotesToAdd: number
   ) {
-    const currentVotesByVoter = kandidat.einzelstimmen ?? 0;
-    kandidat.einzelstimmen = currentVotesByVoter + Math.abs(numberOfVotesToAdd);
+    const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
+    kandidat.einzelstimmen =
+      currentEinzelstimmen + Math.abs(numberOfVotesToAdd);
     //TODO hier kann man jetzt die Historie triggern
   }
 
   return {
-    kandidatAddVotesOrThrow,
+    kandidatAddEinzelstimmenOrThrow,
     stimmzettel: computed(() => stimmzettel.value),
   };
 }

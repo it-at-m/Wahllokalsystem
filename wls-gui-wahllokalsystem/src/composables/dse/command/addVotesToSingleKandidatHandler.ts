@@ -36,7 +36,7 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
     }
 
     try {
-      stimmzettel.kandidatAddVotesOrThrow(
+      stimmzettel.kandidatAddEinzelstimmenOrThrow(
         commandArguments.kandidatOrdnungszahl,
         commandArguments.countVotes
       );

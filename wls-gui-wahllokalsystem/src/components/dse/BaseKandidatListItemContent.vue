@@ -54,7 +54,10 @@ const props = defineProps<{
 }>();
 
 const gesamtStimmen = computed(
-  () => (props.kandidat.reststimmen ?? 0) + (props.kandidat.einzelstimmen ?? 0)
+  () =>
+    (props.kandidat.reststimmen ?? 0) +
+    (props.kandidat.einzelstimmen ?? 0) +
+    (props.kandidat.ungueltigeStimmen ?? 0)
 );
 
 const kandidatOrdnungszahl = computed(

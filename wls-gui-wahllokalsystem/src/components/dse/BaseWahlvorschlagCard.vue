@@ -58,10 +58,7 @@
                 isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
               "
             />
-            <base-kandidat-list-item-content
-              :kandidat="kandidat"
-              :wahlvorschlag-nummer="wahlvorschlag.ordnungszahl"
-            />
+            <base-kandidat-list-item-content :kandidat="kandidat" />
           </v-list-item>
         </v-list>
       </div>

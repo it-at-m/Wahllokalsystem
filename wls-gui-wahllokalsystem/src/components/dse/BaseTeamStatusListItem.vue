@@ -33,7 +33,7 @@
             active
             :disabled="
               teamEntry.status !==
-                StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+              StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
             "
             @click="onSTEWiederOeffnenClicked"
           >
@@ -51,7 +51,6 @@ import type { PropType } from "vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import { useStimmzettelerfassungTeamStatusMapper } from "@/composables/dse/stimmzettelerfassungTeamStatusMapper.ts";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 const { statusModelEnumToDisplayString, statusConfig } =
@@ -87,7 +86,7 @@ const { sendStatusInBearbeitung } = useStimmzettelErfassungViewUtils(
 );
 
 async function onSTEWiederOeffnenClicked() {
-  await sendStatusInBearbeitung();
+  await sendStatusInBearbeitung(true);
   emit("openStimmzettelerfassung");
 }
 </script>

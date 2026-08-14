@@ -57,7 +57,7 @@
         <base-button-refresh
           :active="isRefreshBtnActive"
           :loading="isAktualisiserenLoading"
-          @click="onMonitoringSynchronisierenClicked"
+          @click="onMonitoringSynchronisierenClicked(true)"
         />
         <base-text-button
           :active="beschlussfassungStartenBtnActive"

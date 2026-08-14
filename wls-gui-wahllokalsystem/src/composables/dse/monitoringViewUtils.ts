@@ -14,8 +14,8 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
   const userNotificationService = useUserNotificationService();
 
-  async function onMonitoringSynchronisierenClicked() {
-    await _loadTeamStatusListe();
+  async function onMonitoringSynchronisierenClicked(sendNotification = false) {
+    await _loadTeamStatusListe(sendNotification);
   }
 
   onActivated(async () => {
@@ -29,7 +29,7 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     }
   });
 
-  async function _loadTeamStatusListe(sendNotification = true) {
+  async function _loadTeamStatusListe(sendNotification: boolean) {
     try {
       isAktualisiserenLoading.value = true;
       const loaded =

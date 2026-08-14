@@ -37,7 +37,7 @@ public class DummyClientImpl implements WaehleranzahlClient, WahllokalZustandCli
 
   @Override
   public void postLetzteAbmeldung(
-      String wahlbezirkID, final String teamID, LocalDateTime letzteAbmeldung) throws WlsException {
+      String wahlbezirkID, final String teamID, LocalDateTime letzteAbmeldung) {
     log.info(
         "Dummy client postLetzteAbmeldung() called instead of EAI with: "
             + wahlbezirkID

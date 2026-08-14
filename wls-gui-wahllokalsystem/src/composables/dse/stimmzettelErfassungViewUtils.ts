@@ -142,6 +142,7 @@ export function useStimmzettelErfassungViewUtils(
     isKennungsDialogVisible,
     isStatusLoading: readonly(isStatusLoading),
     isStimmzettelLoading: readonly(isStimmzettelLoading),
+    isWahlvorschlaegeLoading: readonly(isWahlvorschlaegeLoading),
     savedStimmzettel: computed(() => savedStimmzettel.value),
     wahlvorschlaege: computed(() => wahlvorschlaege.value),
 

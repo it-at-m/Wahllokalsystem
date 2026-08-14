@@ -13,7 +13,7 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
  * @param stimmzettel
  */
 
-export const WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL = 100;
+export const WAHLVORSCHLAG_NUMBER_MULTIPLER_FOR_ORDNUNGSZAHL = 100;
 
 export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
   /**
@@ -44,7 +44,7 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
 
   function _getKandidatByOrdungszahl(ordnungszahl: number) {
     const wahlvorschlagOrdnungszahl = Math.floor(
-      ordnungszahl / WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL 
+      ordnungszahl / WAHLVORSCHLAG_NUMBER_MULTIPLER_FOR_ORDNUNGSZAHL
     );
 
     const wahlvorschlag = stimmzettel.value.wahlvorschlaege.find(
@@ -56,7 +56,7 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     }
 
     const kandidatenListenposition =
-      ordnungszahl % WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL ;
+      ordnungszahl % WAHLVORSCHLAG_NUMBER_MULTIPLER_FOR_ORDNUNGSZAHL;
     return _getKandidatToAddVotesByUser(
       wahlvorschlag.kandidaten,
       kandidatenListenposition

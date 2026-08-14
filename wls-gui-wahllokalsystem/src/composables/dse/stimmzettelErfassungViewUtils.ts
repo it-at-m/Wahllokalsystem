@@ -110,7 +110,9 @@ export function useStimmzettelErfassungViewUtils(
   async function _loadWahlvorschlaege() {
     isWahlvorschlaegeLoading.value = true;
     try {
-      return await getWahlvorschlaege(wahlID, wahlbezirkID);
+      wahlvorschlaege.value = (
+        await getWahlvorschlaege(wahlID, wahlbezirkID)
+      ).wahlvorschlaege;
     } finally {
       isWahlvorschlaegeLoading.value = false;
     }

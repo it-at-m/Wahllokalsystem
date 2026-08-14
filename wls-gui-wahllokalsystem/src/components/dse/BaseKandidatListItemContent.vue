@@ -61,6 +61,6 @@ const gesamtStimmen = computed(
 const kandidatOrdnungszahl = computed(
   () =>
     props.kandidat.owningWahlvorschlag.ordnungszahl * 100 +
-    props.kandidat.listenposition //TODO die 100 mit dem Multiplikator zusammenlegen
+    props.kandidat.listenposition //TODO die 100 mit dem Multiplikator zusammenlegen. Teil von AZs von 3141
 );
 </script>

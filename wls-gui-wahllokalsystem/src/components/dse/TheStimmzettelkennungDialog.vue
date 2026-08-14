@@ -18,14 +18,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
 import { computed } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
+import { useStimmzettelkennungDialogUtils } from "@/composables/dse/stimmzettelkennungDialogUtils.ts";
 
-const { getNextStimmzettelNumber } = useStimmzettelUtils();
+const { getNextStimmzettelNumber } = useStimmzettelkennungDialogUtils();
 
 const props = defineProps<{
   visible: boolean;

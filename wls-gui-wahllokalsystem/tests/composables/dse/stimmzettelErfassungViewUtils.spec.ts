@@ -1,9 +1,10 @@
-import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
@@ -20,6 +21,7 @@ const mockDefinitions = await vi.hoisted(async () => {
     getEmptyStimmzettelWithStimmzettelkennung: vi.fn(),
     logError: vi.fn(),
     onActivated: vi.fn(),
+    loadWahlvorschlaege: vi.fn(),
 
     registerActivated: (cb: () => Promise<void> | void) => {
       activatedCallbacks.length = 0;
@@ -95,12 +97,23 @@ vi.mock(import("@/composables/common/logging.ts"), async (importOriginal) => {
   };
 });
 
+vi.mock(
+  import("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts"),
+  () => ({
+    useWahlvorschlaegeService: () => ({
+      getWahlvorschlaege: mockDefinitions.loadWahlvorschlaege,
+    }),
+  })
+);
+
 describe("stimmzettelErfassungViewUtils.ts", () => {
   const { generateRandomString, generateRandomNumber } =
     useCommonTestDataFactory();
   const { prepareStimmzettel } = useStimmzettelTestDataFactory();
   const { createStimmzettelerfassungTeamStatusModel } =
     useStimmzettelerfassungTeamStatusTestDataFactory();
+  const { prepareWahlvorschlaege, createWahlvorschlag } =
+    useWahlvorschlaegeTestDataFactory();
 
   const mockedWahlId = generateRandomString(10);
   const mockedWahlbezirkId = generateRandomString(10);
@@ -254,6 +267,63 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       ]);
 
       spyOnIsStimmzettelLoadingSetter.mockRestore();
+    });
+
+    it("should_loadWahlvorschlaege_when_activatedAndLoadingIsSuccessful", async () => {
+      const spyOnIsWahlvorschlaegeLoading = vi.spyOn(
+        unitUnderTest.isWahlvorschlaegeLoading,
+        "value",
+        "set"
+      );
+
+      const mockedLoadedWahlvorschlaege = prepareWahlvorschlaege()
+        .wahlvorschlaege([createWahlvorschlag(), createWahlvorschlag()])
+        .build();
+      mockDefinitions.loadWahlvorschlaege.mockReturnValue(
+        mockedLoadedWahlvorschlaege
+      );
+      expect(unitUnderTest.wahlvorschlaege.value).toStrictEqual([]);
+
+      await mockDefinitions.runActivatedCallbacks();
+
+      expect(unitUnderTest.wahlvorschlaege.value).toStrictEqual(
+        mockedLoadedWahlvorschlaege.wahlvorschlaege
+      );
+      expect(mockDefinitions.loadWahlvorschlaege.mock.calls).toStrictEqual([
+        [mockedWahlId, mockedWahlbezirkId],
+      ]);
+      expect(spyOnIsWahlvorschlaegeLoading.mock.calls).toStrictEqual([
+        [true],
+        [false],
+      ]);
+
+      spyOnIsWahlvorschlaegeLoading.mockRestore();
+    });
+
+    it("should_loadWahlvorschlaege_when_activatedAndLoadingFailed", async () => {
+      const spyOnIsWahlvorschlaegeLoading = vi.spyOn(
+        unitUnderTest.isWahlvorschlaegeLoading,
+        "value",
+        "set"
+      );
+
+      mockDefinitions.loadWahlvorschlaege.mockRejectedValue(
+        new Error("mocked service error")
+      );
+      expect(unitUnderTest.wahlvorschlaege.value).toStrictEqual([]);
+
+      await mockDefinitions.runActivatedCallbacks();
+
+      expect(unitUnderTest.wahlvorschlaege.value).toStrictEqual([]);
+      expect(mockDefinitions.loadWahlvorschlaege.mock.calls).toStrictEqual([
+        [mockedWahlId, mockedWahlbezirkId],
+      ]);
+      expect(spyOnIsWahlvorschlaegeLoading.mock.calls).toStrictEqual([
+        [true],
+        [false],
+      ]);
+
+      spyOnIsWahlvorschlaegeLoading.mockRestore();
     });
   });
 

@@ -9,7 +9,7 @@ export interface Stimmzettel {
   wahlvorschlaege: Wahlvorschlag[];
 
   invalideVotes: number;
-  gueltigkeit: StimmzettelGueltigkeitEnum;
+  gueltigkeit: StimmzettelGueltigkeitEnum | null;
   beschlussvorschlag: Beschlussgrund[];
   beschlussfassung: Beschlussfassung | null;
 }

@@ -4,8 +4,8 @@ import type {
   KandidatDTO,
   StimmzettelOfTeamDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { Kandidat } from "@/types/dse/Kandidat.ts";
-import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
+import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";

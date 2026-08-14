@@ -42,6 +42,7 @@
       v-if="activeStimmzettel"
       v-model="isErfassungsDialogVisible"
       :stimmzettel="activeStimmzettel"
+      :wahlvorschlaege="wahlvorschlaege"
       @cancel="onStimmzettelErfassungCanceled"
       @confirm="onStimmzettelErfassungConfirmed"
     />
@@ -54,7 +55,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
 import { useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
@@ -91,6 +92,7 @@ const {
   startenBtnIsDisabled,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
+  wahlvorschlaege,
   saveNewStimmzettel,
   sendStatusInBearbeitung,
   sendStatusUnterbrochen,

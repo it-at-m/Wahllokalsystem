@@ -20,11 +20,9 @@ public interface WahllokalZustandClient {
    * @param wahlbezirkID the id of the election room;
    * @param teamID id of the team;
    * @param letzteAbmeldung containing the information about the last time the room has logged out.
-   * @throws WlsException {@link TechnischeWlsException} if there were trouble during communication
    */
   void postLetzteAbmeldung(
-      final String wahlbezirkID, final String teamID, final LocalDateTime letzteAbmeldung)
-      throws WlsException;
+      final String wahlbezirkID, final String teamID, final LocalDateTime letzteAbmeldung);
 
   /**
    * @param bezirkUndWahlID composed identification of election ID and election room

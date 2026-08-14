@@ -24,7 +24,6 @@ import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeld
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
-import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
@@ -42,7 +41,6 @@ const {
   postNiederschrift,
 } = useErgebnisService();
 const { getWahlvorschlaege } = useWahlvorschlaegeService();
-const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
 const { getAWerte } = useAWerteService();
 const { getStimmabgabevermerke } = useStimmabgabevermerkeService();
 const { logError } = useLogging("mbwUtils");
@@ -389,11 +387,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
 
   async function _loadWahlvorschlaege() {
     try {
-      const loadedWahlvorschlaege = await getWahlvorschlaege(
-        wahlID,
-        wahlbezirkID
-      );
-      return sortWahlvorschlaegeByOrdnungszahl(loadedWahlvorschlaege);
+      return await getWahlvorschlaege(wahlID, wahlbezirkID);
     } catch {
       throw new Error("Fehler beim Laden der Wahlvorschläge");
     }

@@ -3,38 +3,51 @@
     <v-card>
       <v-card-title>Stimmzettelerfassung</v-card-title>
       <v-card-text>
-        Status: {{ status ? status.status : "-" }}
-        <v-skeleton-loader
-          boilerplate
-          type="card-avatar"
+        <base-stimmzettel-uebersicht-table
+          :team-id="teamID"
+          :stimmzettel-liste="savedStimmzettel"
+          :stimmzettel-loading="isStimmzettelLoading"
           class="mt-3"
         />
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="!isStatusLoading">
         <base-text-button
           :active="startenBtnActive"
+          :is-disabled="startenBtnIsDisabled"
           @click="onErfassungStartenClicked"
           >Starten</base-text-button
         >
-        <base-text-button @click="onErfassungUnterbrechenClicked"
+        <base-text-button
+          :is-disabled="unterbrechenBtnIsDisabled"
+          @click="onErfassungUnterbrechenClicked"
           >Unterbrechen</base-text-button
         >
         <base-text-button
           class="ms-auto"
           :active="beendenBtnActive"
+          :is-disabled="beendenBtnIsDisabled"
           @click="onErfassungBeendenClicked"
           >Beenden</base-text-button
         >
       </v-card-actions>
     </v-card>
     <the-stimmzettelkennung-dialog
-      :visible="erfassungDialogVisible"
-      :wahl-i-d="wahlID"
+      :visible="isKennungsDialogVisible"
+      :team-name="teamID"
+      :existing-stimmzettel="savedStimmzettel"
       @confirm="onStimmzettelkennungConfirmed"
-      @cancel="erfassungDialogVisible = false"
+      @cancel="isKennungsDialogVisible = false"
+    />
+    <the-stimmzettel-erfassung-dialog
+      v-if="activeStimmzettel"
+      v-model="isErfassungsDialogVisible"
+      :stimmzettel="activeStimmzettel"
+      :wahlvorschlaege="wahlvorschlaege"
+      @cancel="onStimmzettelErfassungCanceled"
+      @confirm="onStimmzettelErfassungConfirmed"
     />
     <the-stimmzettelerfassung-beenden-dialog
-      v-model="beendenDialogVisible"
+      :ref="STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME"
       :wahl-id="wahlID"
       :wahlbezirk-id="wahlbezirkID"
       :team-id="teamID"
@@ -42,93 +55,76 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
+import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
-import { computed, onActivated, ref } from "vue";
+import { useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseStimmzettelUebersichtTable from "@/components/dse/BaseStimmzettelUebersichtTable.vue";
 import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
+import TheStimmzettelErfassungDialog from "@/components/dse/TheStimmzettelErfassungDialog.vue";
 import TheStimmzettelkennungDialog from "@/components/dse/TheStimmzettelkennungDialog.vue";
-import { useLogging } from "@/composables/common/logging.ts";
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
-const status = ref<StimmzettelerfassungTeamStatus | null>(null);
-const erfassungDialogVisible = ref(false);
-const beendenDialogVisible = ref(false);
-const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
+const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
 
 const route = useRoute();
 const userStore = useUserStore();
-const { logError } = useLogging("stimmzettelerfassungView");
 const teamID = userStore.currentUserTeamName || "";
 const wahlID = (route.params.wahlId as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 
-const startenBtnActive = computed(
-  () =>
-    status.value?.status == StimmzettelerfassungTeamStatusEnum.REGISTRIERT ||
-    status.value?.status == StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
-);
-const beendenBtnActive = computed(
-  () =>
-    status.value?.status == StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
-);
+const templateRefStimmzettelBeendenDialog = useTemplateRef<
+  InstanceType<typeof TheStimmzettelerfassungBeendenDialog>
+>(STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME);
 
-async function loadTeamStatus() {
-  const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
-    wahlID,
-    wahlbezirkID,
-    teamID,
-    false
-  );
-  if (loaded) {
-    status.value = loaded;
-  }
-}
-
-onActivated(async () => {
-  await loadTeamStatus();
-});
-
-async function postTeamStatus(
-  statusToChange: StimmzettelerfassungTeamStatus,
-  sendNotification = false
-) {
-  try {
-    await erfassungTeamStatusService.postErfassungTeamStatus(
-      wahlID,
-      wahlbezirkID,
-      teamID,
-      statusToChange,
-      sendNotification
-    );
-    status.value = statusToChange;
-  } catch (error) {
-    logError("Fehler beim Speichern des Team-Status", error);
-  }
-}
+const {
+  activeStimmzettel,
+  beendenBtnActive,
+  beendenBtnIsDisabled,
+  isErfassungsDialogVisible,
+  isKennungsDialogVisible,
+  isStatusLoading,
+  isStimmzettelLoading,
+  savedStimmzettel,
+  startenBtnIsDisabled,
+  startenBtnActive,
+  unterbrechenBtnIsDisabled,
+  wahlvorschlaege,
+  saveNewStimmzettel,
+  sendStatusInBearbeitung,
+  sendStatusUnterbrochen,
+  startNewEmptyStimmzettelWithStimmzettelkennung,
+} = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
 
 function onErfassungStartenClicked() {
-  erfassungDialogVisible.value = true;
+  isKennungsDialogVisible.value = true;
 }
 
-async function onStimmzettelkennungConfirmed() {
-  await postTeamStatus({
-    status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
-  });
-  erfassungDialogVisible.value = false;
+async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
+  await sendStatusInBearbeitung();
+  isKennungsDialogVisible.value = false;
+  startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
+  isErfassungsDialogVisible.value = true;
 }
 
 async function onErfassungUnterbrechenClicked() {
-  await postTeamStatus({
-    status: StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
-  });
+  await sendStatusUnterbrochen();
 }
 
-async function onErfassungBeendenClicked() {
-  beendenDialogVisible.value = true;
+function onErfassungBeendenClicked() {
+  templateRefStimmzettelBeendenDialog.value?.showDialog();
+}
+
+async function onStimmzettelErfassungCanceled() {
+  isErfassungsDialogVisible.value = false;
+}
+async function onStimmzettelErfassungConfirmed(
+  confirmedStimmzettel: Stimmzettel
+) {
+  await saveNewStimmzettel(confirmedStimmzettel);
+  isErfassungsDialogVisible.value = false;
 }
 </script>

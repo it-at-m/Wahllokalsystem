@@ -4,7 +4,9 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,5 +54,18 @@ public class TeamStatusService {
     val optionalEntityFromRepo = stimmzettelerfassungTeamStatusRepository.findById(entityID);
     return optionalEntityFromRepo.map(
         entity -> erfassungTeamStatusModelMapper.toModel(entity.getStatus()));
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelerfassungTeamstatus')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
+  public List<ErfassungTeamStatusEntryModel> getTeamStatusList(
+      @P("param") final BezirkUndWahlID id) {
+    val entities =
+        stimmzettelerfassungTeamStatusRepository.findByIdWahlIDAndIdWahlbezirkID(
+            id.getWahlID(), id.getWahlbezirkID());
+    return entities.stream()
+        .map(erfassungTeamStatusModelMapper::toEntryModel)
+        .collect(Collectors.toList());
   }
 }

@@ -1,7 +1,6 @@
+import type { NiederschriftBeanstandeteWahlbriefe } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftBeanstandeteWahlbriefe.ts";
 import type { NiederschriftDruckInputBase } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBase.ts";
-
-import type { NiederschriftBeanstandeteWahlbriefe } from "./NiederschriftBeanstandeteWahlbriefe";
-import type { NiederschriftWahlbriefdaten } from "./NiederschriftWahlbriefdaten";
+import type { NiederschriftWahlbriefdaten } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftWahlbriefdaten.ts";
 
 export interface NiederschriftUhrzeit {
   stunde: string;

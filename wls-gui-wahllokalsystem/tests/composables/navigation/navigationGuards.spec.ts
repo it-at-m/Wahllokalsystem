@@ -6,6 +6,7 @@ import type {
 
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
 import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
@@ -14,12 +15,25 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  loadErfassungTeamStatus: vi.fn(),
+}));
+
+vi.mock("@/composables/dse/stimmzettelerfassungTeamStatusService.ts", () => ({
+  useStimmzettelerfassungTeamStatusService: () => ({
+    loadErfassungTeamStatus: mockDefinitions.loadErfassungTeamStatus,
+  }),
+}));
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
+const { prepareStimmzettelerfassungTeamStatus } =
+  useStimmzettelerfassungTeamStatusTestDataFactory();
 
 describe("navigationGuards.ts", () => {
   const DUMMY_TO = {} as unknown as RouteLocationNormalized;
@@ -54,6 +68,7 @@ describe("navigationGuards.ts", () => {
     requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
     requireRoleErfassungteam,
     requireRoleSchriftfuehrung,
+    requiresStimmzettelErfassungTeamStatusAbgeschlossen,
   } = useNavigationGuards();
 
   describe("isStepDoneInElectionState", () => {
@@ -750,6 +765,71 @@ describe("navigationGuards.ts", () => {
       expect(
         requireRoleSchriftfuehrung(DUMMY_TO, DUMMY_FROM, DUMMY_NEXT_GUARD)
       ).toStrictEqual(false);
+    });
+  });
+
+  describe("requiresStimmzettelErfassungTeamStatusAbgeschlossen", () => {
+    it("should_returnTrue_when_stimmzettelErfassungTeamStatusIsAbgeschlossen", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const teamId = "A";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      // @ts-expect-error: cannot set readonly
+      useUserStore().currentUserTeamName = teamId;
+
+      mockDefinitions.loadErfassungTeamStatus.mockReturnValue(
+        prepareStimmzettelerfassungTeamStatus()
+          .status(StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN)
+          .build()
+      );
+
+      const result = await requiresStimmzettelErfassungTeamStatusAbgeschlossen(
+        to,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+
+      expect(
+        mockDefinitions.loadErfassungTeamStatus.mock.calls[0]
+      ).toStrictEqual([wahlId, wahlbezirkId, teamId, false]);
+      expect(result).toStrictEqual(true);
+    });
+    it("should_returnFalse_when_stimmzettelErfassungTeamStatusIsNotAbgeschlossen", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const teamId = "A";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      // @ts-expect-error: cannot set readonly
+      useUserStore().currentUserTeamName = teamId;
+
+      mockDefinitions.loadErfassungTeamStatus.mockReturnValue(
+        prepareStimmzettelerfassungTeamStatus()
+          .status(StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG)
+          .build()
+      );
+
+      const result = await requiresStimmzettelErfassungTeamStatusAbgeschlossen(
+        to,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+
+      expect(
+        mockDefinitions.loadErfassungTeamStatus.mock.calls[0]
+      ).toStrictEqual([wahlId, wahlbezirkId, teamId, false]);
+      expect(result).toStrictEqual(false);
     });
   });
 });

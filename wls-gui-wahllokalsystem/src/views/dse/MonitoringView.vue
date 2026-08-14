@@ -55,6 +55,7 @@
         />
         <base-text-button
           :active="beschlussfassungStartenBtnActive"
+          :is-disabled="isBeschlussfassungStartenBtnDisabled"
           @click="onBeschlussfassungStartenClicked"
           >Beschlussfassung starten</base-text-button
         >
@@ -99,6 +100,9 @@ const beschlussfassungStartenBtnActive = computed(() =>
   teamstatusList.value.every(
     (team) => team.status === StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
   )
+);
+const isBeschlussfassungStartenBtnDisabled = computed(
+  () => !beschlussfassungStartenBtnActive.value
 );
 const isRefreshBtnActive = computed(
   () => !beschlussfassungStartenBtnActive.value

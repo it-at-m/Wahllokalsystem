@@ -10,7 +10,15 @@
           class="mt-3"
         />
       </v-card-text>
-      <v-card-actions v-if="!isStatusLoading">
+      <v-card-actions
+        v-if="
+          !isStatusLoading &&
+          !(
+            teamStatus?.status ==
+            StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+          )
+        "
+      >
         <base-text-button
           :active="startenBtnActive"
           :is-disabled="startenBtnIsDisabled"
@@ -29,6 +37,21 @@
           @click="onErfassungBeendenClicked"
           >Beenden</base-text-button
         >
+      </v-card-actions>
+      <v-card-actions v-else>
+        <base-feedback-card
+          title="Sie haben die Erfassung bereits abgeschlossen"
+          type="information"
+        >
+          Um weitere Stimmzettel zu erfassen oder zu korrigieren, lassen Sie
+          sich bitte von der Schriftführung wieder freischalten und
+          aktualisieren Sie dann mit dem Button die Seite.
+          <base-button-refresh
+            active
+            class="ml-5"
+            @click="onErfassungAktualisierenClicked"
+          />
+        </base-feedback-card>
       </v-card-actions>
     </v-card>
     <the-stimmzettelkennung-dialog
@@ -59,13 +82,16 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import { useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 
+import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseStimmzettelUebersichtTable from "@/components/dse/BaseStimmzettelUebersichtTable.vue";
 import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
 import TheStimmzettelErfassungDialog from "@/components/dse/TheStimmzettelErfassungDialog.vue";
 import TheStimmzettelkennungDialog from "@/components/dse/TheStimmzettelkennungDialog.vue";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
 
@@ -80,6 +106,7 @@ const templateRefStimmzettelBeendenDialog = useTemplateRef<
 >(STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME);
 
 const {
+  teamStatus,
   activeStimmzettel,
   beendenBtnActive,
   beendenBtnIsDisabled,
@@ -95,6 +122,7 @@ const {
   sendStatusInBearbeitung,
   sendStatusUnterbrochen,
   startNewEmptyStimmzettelWithStimmzettelkennung,
+  reloadTeamStatus,
 } = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
 
 function onErfassungStartenClicked() {
@@ -114,6 +142,11 @@ async function onErfassungUnterbrechenClicked() {
 
 function onErfassungBeendenClicked() {
   templateRefStimmzettelBeendenDialog.value?.showDialog();
+}
+
+async function onErfassungAktualisierenClicked() {
+  // reload will update button disabled states
+  await reloadTeamStatus();
 }
 
 async function onStimmzettelErfassungCanceled() {

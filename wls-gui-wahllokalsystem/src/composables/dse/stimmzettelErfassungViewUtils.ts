@@ -73,6 +73,10 @@ export function useStimmzettelErfassungViewUtils(
     savedStimmzettel.value = newStimmzettelCollectionToSave;
   }
 
+  async function reloadTeamStatus() {
+    await _loadTeamStatus();
+  }
+
   //private functions
   async function _loadTeamStatus() {
     isStatusLoading.value = true;
@@ -136,6 +140,7 @@ export function useStimmzettelErfassungViewUtils(
     sendStatusUnterbrochen,
     saveNewStimmzettel,
     startNewEmptyStimmzettelWithStimmzettelkennung,
+    reloadTeamStatus,
 
     //imported functions
     ...buttonUtils,

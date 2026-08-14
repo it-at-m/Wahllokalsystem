@@ -1,5 +1,6 @@
-import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+
+import { ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { COMMAND_HANDLERS } from "@/composables/dse/command/commandHandlers.ts";
@@ -12,8 +13,8 @@ const { logDebug } = useLogging("stimmzettelManager");
 export function useStimmzettelManager(wahlvorschlaege: Wahlvorschlag[]) {
   const { createStimmzettelWithWahlvorschlaege } = useStimmzettelUtils();
 
-  const managedStimmzettel: ManagedStimmzettel = useManagedStimmzettel(
-    createStimmzettelWithWahlvorschlaege(wahlvorschlaege)
+  const managedStimmzettel = useManagedStimmzettel(
+    ref(createStimmzettelWithWahlvorschlaege(wahlvorschlaege))
   );
 
   /**

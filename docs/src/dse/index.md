@@ -62,10 +62,9 @@ ein Beschluss zu fassen ist, landen so auf einem separaten Stapel.
 Sind alle Teams mit der Erfassung fertig und der Stimmzettelerfassungs-Workflow-Status `(f) STE abgeschlossen` wurde
 erfolgreich übermittelt, startet die Beschlussdokumentation. Der Wahlvorstand fasst die Beschlüsse zu den zuvor
 markierten Stimmzetteln und überträgt die Ergebnisse ins System. Eine Zusammenfassung mehrerer
-`Vormerkungsgründe` stellt einen `Beschlussvorschlag` dar, über welchen im Gremium abgestimmt wird.
-Es kann verschiedene Zusammensetzungen an Beschlussvorschlägen geben. Der Vorschlag, der am Ende die Abstimmung
-gewinnt, wird als `Entscheidungsgrund` gespeichert. Sind alle Beschlüsse vollständig dokumentiert, wird der
-Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschlossen` gespeichert.
+`Vormerkungsgründe` stellt einen `Beschlussvorschlag` dar, über welchen im Gremium abgestimmt wird. Der Vorschlag,
+der am Ende die Abstimmung gewinnt, wird als `Entscheidungsgrund` gespeichert. Sind alle Beschlüsse vollständig
+dokumentiert, wird der Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschlossen` gespeichert.
 
 ### Neue Statuswerte
 

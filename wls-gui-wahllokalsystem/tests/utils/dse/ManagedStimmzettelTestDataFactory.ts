@@ -63,9 +63,11 @@ export function useManagedStimmzettelTestDataFactory() {
   function _createManagedStimmzettelKandidatForWahlvorschlag(
     wahlvorschlag: Wahlvorschlag
   ): Kandidat {
+    const listenposition = generateRandomNumber(2);
     return {
       kandidatId: generateRandomString(10),
-      listenposition: generateRandomNumber(2),
+      listenposition: listenposition,
+      ordnungszahl: wahlvorschlag.ordnungszahl * 100 + listenposition,
       nennung: generateRandomNumber(2),
       durchgestrichen: generateRandomBoolean(),
       einzelstimmen: generateRandomNumber(2),

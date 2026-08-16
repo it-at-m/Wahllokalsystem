@@ -77,6 +77,9 @@ describe("stimmzettelUtils.ts", () => {
                   kandidatId: uiKandidat.identifikator,
                   nennung,
                   listenposition: uiKandidat.listenposition,
+                  ordnungszahl:
+                    dseWahlvorschlag.ordnungszahl * 100 +
+                    uiKandidat.listenposition,
                   einzelstimmen: null,
                   durchgestrichen: false,
                   reststimmen: null,
@@ -120,6 +123,7 @@ describe("stimmzettelUtils.ts", () => {
           kandidatId: "k-id",
           nennung: 1,
           listenposition: 5,
+          ordnungszahl: 1005,
           einzelstimmen: null,
           durchgestrichen: false,
           reststimmen: null,
@@ -131,6 +135,7 @@ describe("stimmzettelUtils.ts", () => {
           kandidatId: "k-id",
           nennung: 2,
           listenposition: 5,
+          ordnungszahl: 1005,
           einzelstimmen: null,
           durchgestrichen: false,
           reststimmen: null,
@@ -201,6 +206,9 @@ describe("stimmzettelUtils.ts", () => {
                 kandidatId: uiKandidat.identifikator,
                 nennung,
                 listenposition: uiKandidat.listenposition,
+                ordnungszahl:
+                  dseWahlvorschlag.ordnungszahl * 100 +
+                  uiKandidat.listenposition,
                 einzelstimmen: null,
                 durchgestrichen: false,
                 reststimmen: null,

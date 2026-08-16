@@ -20,6 +20,12 @@ export const WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL = 100;
 export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
   const changeHistory = ref<InputHistoryItem[]>([]);
 
+  const kandidatenOfStimmzettel = computed(() =>
+    stimmzettel.value.wahlvorschlaege
+      .map((wahlvorschlag) => wahlvorschlag.kandidaten)
+      .flat()
+  );
+
   /**
    *
    * @param ordnungszahl
@@ -36,7 +42,7 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
         "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
       );
     }
-    const kandidat = _getKandidatByOrdungszahl(ordnungszahl);
+    const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(
         `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
@@ -46,39 +52,21 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     _internalAddVotesToKandidat(kandidat, votesToAdd);
   }
 
-  function _getKandidatByOrdungszahl(ordnungszahl: number) {
-    const wahlvorschlagOrdnungszahl = Math.floor(
-      ordnungszahl / WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL
+  function _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl: number) {
+    const kandidatenWithOrdnungszahl = kandidatenOfStimmzettel.value.filter(
+      (kandidat) => kandidat.ordnungszahl === ordnungszahl
     );
 
-    const wahlvorschlag = stimmzettel.value.wahlvorschlaege.find(
-      (wahlvorschlag) =>
-        wahlvorschlagOrdnungszahl === wahlvorschlag.ordnungszahl
-    );
-    if (!wahlvorschlag) {
+    if (kandidatenWithOrdnungszahl.length === 0) {
       return undefined;
+    } else {
+      return _findKandidatToAddEinzelstimme(kandidatenWithOrdnungszahl);
     }
-
-    const kandidatenListenposition =
-      ordnungszahl % WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL;
-    return _getKandidatToAddVotesByUser(
-      wahlvorschlag.kandidaten,
-      kandidatenListenposition
-    );
   }
 
-  function _getKandidatToAddVotesByUser(
-    wahlvorschlagKandidaten: Kandidat[],
-    listenposition: number
+  function _findKandidatToAddEinzelstimme(
+    kandidatenForListenPosition: Kandidat[]
   ) {
-    //filter by listenposition
-    const kandidatenForListenPosition = wahlvorschlagKandidaten.filter(
-      (kandidat) => kandidat.listenposition === listenposition
-    );
-    if (kandidatenForListenPosition.length === 0) {
-      return undefined;
-    }
-
     //has any kandidat already uservotes?
     const kandidatWithEinzelstimmen = kandidatenForListenPosition.find(
       (kandidat) => kandidat.einzelstimmen !== null
@@ -107,8 +95,8 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
       currentEinzelstimmen + Math.abs(numberOfVotesToAdd);
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
-      text: [`${kandidat.listenposition}`, kandidat.name],
-    }); //TODO Ordnungszahl
+      text: [`${kandidat.ordnungszahl}`, kandidat.name],
+    });
   }
 
   return {

@@ -12,7 +12,12 @@
       <v-card-text>
         <v-row>
           <v-col cols="2">
-            <the-eingabehistorie-card :change-history="[]" />
+            <the-eingabehistorie-card
+              :change-history="
+                stimmzettelManager.managedStimmzettel.changeHistoryInReverOrder
+                  .value
+              "
+            />
             <base-stimmzettel-zusammenfassung-card
               class="mt-2"
               :listenstimmen="[]"

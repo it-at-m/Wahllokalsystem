@@ -10,16 +10,33 @@
         {{ stimmzettel.stimmzettelkennung }}
       </v-card-title>
       <v-card-text>
-        <the-stimmzettel-command-processing-text-field
-          :stimmzettel-manager="stimmzettelManager"
-        />
-        <the-stimmzettel-content
-          :active-wahlvorschlag-id="null"
-          :wahlvorschlaege="
-            stimmzettelManager.managedStimmzettel.stimmzettel.value
-              .wahlvorschlaege
-          "
-        />
+        <v-row>
+          <v-col cols="2">
+            <the-eingabehistorie-card :change-history="[]" />
+            <base-stimmzettel-zusammenfassung-card
+              class="mt-2"
+              :listenstimmen="[]"
+              :gesamtstimmen="0"
+              :ungueltigestimmen="0"
+              :direktstimmen="0"
+              :reststimmen="0"
+              :streichungen="0"
+              :gueltigkeit="'VALID'"
+            />
+          </v-col>
+          <v-col cols="10">
+            <the-stimmzettel-command-processing-text-field
+              :stimmzettel-manager="stimmzettelManager"
+            />
+            <the-stimmzettel-content
+              :active-wahlvorschlag-id="null"
+              :wahlvorschlaege="
+                stimmzettelManager.managedStimmzettel.stimmzettel.value
+                  .wahlvorschlaege
+              "
+            />
+          </v-col>
+        </v-row>
       </v-card-text>
       <v-card-actions>
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
@@ -38,6 +55,8 @@ import { storeToRefs } from "pinia";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
+import BaseStimmzettelZusammenfassungCard from "@/components/dse/BaseStimmzettelZusammenfassungCard.vue";
+import TheEingabehistorieCard from "@/components/dse/TheEingabehistorieCard.vue";
 import TheStimmzettelCommandProcessingTextField from "@/components/dse/TheStimmzettelCommandProcessingTextField.vue";
 import TheStimmzettelContent from "@/components/dse/TheStimmzettelContent.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassungDialogUtils.ts";

@@ -1,10 +1,12 @@
+import type { InputHistoryItem } from "@/types/dse/InputHistoryItem.ts";
 import type { Kandidat } from "@/types/dse/Kandidat.ts";
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 import type { Ref } from "vue";
 
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
+import { InputHistoryTypeEnum } from "@/types/dse/InputHistoryTypeEnum.ts";
 
 /**
  * Check UI/UX Adr to see the rules:
@@ -16,6 +18,8 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
 export const WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL = 100;
 
 export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
+  const changeHistory = ref<InputHistoryItem[]>([]);
+
   /**
    *
    * @param ordnungszahl
@@ -101,10 +105,14 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
     kandidat.einzelstimmen =
       currentEinzelstimmen + Math.abs(numberOfVotesToAdd);
-    //TODO hier kann man jetzt die Historie triggern
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.ADD_USER_VOTE,
+      text: [`${kandidat.listenposition}`, kandidat.name],
+    }); //TODO Ordnungszahl
   }
 
   return {
+    changeHistoryInReverOrder: computed(() => changeHistory.value.reverse()),
     kandidatAddEinzelstimmenOrThrow,
     stimmzettel: computed(() => stimmzettel.value),
   };

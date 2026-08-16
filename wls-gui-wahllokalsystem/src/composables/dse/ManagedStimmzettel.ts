@@ -1,5 +1,6 @@
 import type { InputHistoryItem } from "@/types/dse/InputHistoryItem.ts";
 import type { Kandidat } from "@/types/dse/Kandidat.ts";
+import type { StimmenSummary } from "@/types/dse/StimmenSummary.ts";
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 import type { Ref } from "vue";
 
@@ -8,15 +9,14 @@ import { computed, ref } from "vue";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 import { InputHistoryTypeEnum } from "@/types/dse/InputHistoryTypeEnum.ts";
 
+export const WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL = 100;
+
 /**
  * Check UI/UX Adr to see the rules:
  * https://it-at-m.github.io/Wahllokalsystem/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen.html
  *
  * @param stimmzettel
  */
-
-export const WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL = 100;
-
 export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
   const changeHistory = ref<InputHistoryItem[]>([]);
 
@@ -24,6 +24,29 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     stimmzettel.value.wahlvorschlaege
       .map((wahlvorschlag) => wahlvorschlag.kandidaten)
       .flat()
+  );
+
+  const kandidatenWithValues = computed(() =>
+    kandidatenOfStimmzettel.value.filter(_hasKandidatAnyStimmeOrStreichung)
+  );
+
+  const stimmenSummary = computed(() => {
+    const summary: StimmenSummary = {
+      einzelstimmen: 0,
+      ungueltigeStimmen: 0,
+      reststimmen: 0,
+      streichungen: 0,
+    };
+    return kandidatenWithValues.value.reduce(
+      (summary, kandidat) => _updateSummaryByKandidat(summary, kandidat),
+      summary
+    );
+  });
+
+  const wahlvorschlaegeWithListenkreuz = computed(() =>
+    stimmzettel.value.wahlvorschlaege.filter(
+      (wahlvorschlag) => wahlvorschlag.selected
+    )
   );
 
   /**
@@ -99,10 +122,40 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     });
   }
 
+  function _hasKandidatAnyStimmeOrStreichung(kandidat: Kandidat) {
+    return (
+      kandidat.einzelstimmen !== null ||
+      kandidat.ungueltigeStimmen ||
+      kandidat.reststimmen ||
+      kandidat.durchgestrichen
+    );
+  }
+
+  function _updateSummaryByKandidat(
+    stimmenSummary: StimmenSummary,
+    kandidat: Kandidat
+  ) {
+    if (kandidat.ungueltigeStimmen) {
+      stimmenSummary.ungueltigeStimmen += kandidat.ungueltigeStimmen;
+    }
+    if (kandidat.reststimmen) {
+      stimmenSummary.reststimmen += kandidat.reststimmen;
+    }
+    if (kandidat.durchgestrichen) {
+      stimmenSummary.streichungen += 1;
+    }
+    if (kandidat.einzelstimmen) {
+      stimmenSummary.einzelstimmen += kandidat.einzelstimmen;
+    }
+    return stimmenSummary;
+  }
+
   return {
     changeHistoryInReverOrder: computed(() => changeHistory.value.reverse()),
     kandidatAddEinzelstimmenOrThrow,
     stimmzettel: computed(() => stimmzettel.value),
+    stimmenSummary,
+    wahlvorschlaegeWithListenkreuz,
   };
 }
 export type ManagedStimmzettel = ReturnType<typeof useManagedStimmzettel>;

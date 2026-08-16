@@ -23,7 +23,7 @@ vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
   }),
 }));
 
-const { prepareStimmzettel } = useStimmzettelTestDataFactory();
+const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 const {
   createWahlvorschlaege,
@@ -245,7 +245,9 @@ describe("stimmzettelUtils.ts", () => {
 
   describe("isVorgemerktFuerBeschluss", () => {
     it("should_returnFalse_when_noBeschlussvorschlagPresent", () => {
-      const stimmzettel = prepareStimmzettel().beschlussvorschlag([]).build();
+      const stimmzettel = preparePersistedStimmzettel()
+        .beschlussvorschlag([])
+        .build();
 
       const vorgemerkt = isVorgemerktFuerBeschluss(stimmzettel);
 
@@ -256,7 +258,7 @@ describe("stimmzettelUtils.ts", () => {
       const text1 = generateRandomString(8);
       const text2 = generateRandomString(10);
 
-      const stimmzettel = prepareStimmzettel()
+      const stimmzettel = preparePersistedStimmzettel()
         .beschlussvorschlag([{ text: text1 }, { text: text2 }])
         .build();
 
@@ -268,7 +270,9 @@ describe("stimmzettelUtils.ts", () => {
 
   describe("getVormerkungsgrund", () => {
     it("should_returnEmptyString_when_noBeschlussvorschlagPresent", () => {
-      const stimmzettel = prepareStimmzettel().beschlussvorschlag([]).build();
+      const stimmzettel = preparePersistedStimmzettel()
+        .beschlussvorschlag([])
+        .build();
 
       const grund = getVormerkungsgrund(stimmzettel);
 
@@ -279,7 +283,7 @@ describe("stimmzettelUtils.ts", () => {
       const text1 = generateRandomString(8);
       const text2 = generateRandomString(10);
 
-      const stimmzettel = prepareStimmzettel()
+      const stimmzettel = preparePersistedStimmzettel()
         .beschlussvorschlag([{ text: text1 }, { text: text2 }])
         .build();
 

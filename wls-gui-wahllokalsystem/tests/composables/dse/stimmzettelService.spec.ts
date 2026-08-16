@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { createStimmzettelOfTeamDTO, createStimmzettel } =
+const { createStimmzettelOfTeamDTO, createPersistedStimmzettel } =
   useStimmzettelTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -74,8 +74,8 @@ describe("stimmzettelService.ts", () => {
         })
       );
 
-      const model1 = createStimmzettel();
-      const model2 = createStimmzettel();
+      const model1 = createPersistedStimmzettel();
+      const model2 = createPersistedStimmzettel();
 
       mockDefinitions.mapDtoToModel
         .mockReturnValueOnce(model1)
@@ -179,7 +179,7 @@ describe("stimmzettelService.ts", () => {
       const wahlID = "wahlID";
       const wahlbezirkID = "wahlbezirkID";
       const teamID = "teamID";
-      const stimmzettel = [createStimmzettel()];
+      const stimmzettel = [createPersistedStimmzettel()];
 
       const mockedDto = createStimmzettelOfTeamDTO();
 
@@ -202,7 +202,7 @@ describe("stimmzettelService.ts", () => {
       const wahlID = "wahlID";
       const wahlbezirkID = "wahlbezirkID";
       const teamID = "teamID";
-      const stimmzettel = [createStimmzettel()];
+      const stimmzettel = [createPersistedStimmzettel()];
 
       mockDefinitions.postStimmzettel.mockRejectedValue(
         new Error("api call failed")
@@ -225,7 +225,7 @@ describe("stimmzettelService.ts", () => {
       const wahlID = "wahlID";
       const wahlbezirkID = "wahlbezirkID";
       const teamID = "teamID";
-      const stimmzettel = [createStimmzettel()];
+      const stimmzettel = [createPersistedStimmzettel()];
 
       mockDefinitions.postStimmzettel.mockRejectedValue(
         new Error("api call failed")

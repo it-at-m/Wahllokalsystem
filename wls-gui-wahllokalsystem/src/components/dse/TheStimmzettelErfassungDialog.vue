@@ -20,12 +20,26 @@
             />
             <base-stimmzettel-zusammenfassung-card
               class="mt-2"
-              :listenstimmen="[]"
-              :gesamtstimmen="0"
-              :ungueltigestimmen="0"
-              :direktstimmen="0"
-              :reststimmen="0"
-              :streichungen="0"
+              :listenstimmen="
+                stimmzettelManager.managedStimmzettel
+                  .wahlvorschlaegeWithListenkreuz.value
+              "
+              :ungueltigestimmen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .ungueltigeStimmen
+              "
+              :direktstimmen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .einzelstimmen
+              "
+              :reststimmen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .reststimmen
+              "
+              :streichungen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .streichungen
+              "
               :gueltigkeit="'VALID'"
             />
           </v-col>

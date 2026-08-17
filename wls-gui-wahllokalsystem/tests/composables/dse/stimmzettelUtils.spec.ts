@@ -1,11 +1,15 @@
+import type { Kandidat as DseKandidat } from "@/types/dse/Kandidat.ts";
+import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+import type { Wahlvorschlag as DseWahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
+import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
+import type { Wahlvorschlag as UiWahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
-
-const { prepareStimmzettel } = useStimmzettelTestDataFactory();
-const { generateRandomString } = useCommonTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   getStimmzettel: vi.fn(),
@@ -15,96 +19,219 @@ vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
   useStimmzettelService: () => ({
     getStimmzettel: mockDefinitions.getStimmzettel,
     saveStimmzettel: vi.fn(),
+    getAnzahlStimmzettel: vi.fn(),
   }),
 }));
 
+const { prepareStimmzettel } = useStimmzettelTestDataFactory();
+const { generateRandomString } = useCommonTestDataFactory();
+const {
+  createWahlvorschlaege,
+  createWahlvorschlag,
+  prepareWahlvorschlag,
+  prepareKandidat,
+} = useWahlvorschlaegeTestDataFactory();
+
 describe("stimmzettelUtils.ts", () => {
   const {
-    getNextStimmzettelNumber,
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
+    createStimmzettelWithWahlvorschlaege,
   } = useStimmzettelUtils();
 
-  const wahlID = generateRandomString(10);
-  const wahlbezirkID = generateRandomString(10);
-  const teamID = generateRandomString(1);
+  describe("createStimmzettelWithWahlvorschlaege", () => {
+    it("should_createStimmzettelWithInitialValues_when_wahlvorschlaegeAreGiven", () => {
+      const uiWahlvorschlaege: Wahlvorschlaege = createWahlvorschlaege();
 
-  afterEach(() => {
-    vi.resetAllMocks();
-    vi.clearAllMocks();
-  });
-
-  describe("getNextStimmzettelNumber", () => {
-    it("should_returnNextNumber_when_oneStimmzettelExists", async () => {
-      const stimmzettel = prepareStimmzettel().stimmzettelkennung(3).build();
-      mockDefinitions.getStimmzettel.mockReturnValue([stimmzettel]);
-
-      const result = await getNextStimmzettelNumber(
-        wahlID,
-        wahlbezirkID,
-        teamID
+      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege(
+        uiWahlvorschlaege.wahlvorschlaege
       );
 
-      expect(mockDefinitions.getStimmzettel.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.getStimmzettel.mock.calls[0]).toStrictEqual([
-        wahlID,
-        wahlbezirkID,
-        teamID,
-      ]);
-      expect(result).toStrictEqual(4);
+      const expected: Stimmzettel = {
+        stimmzettelkennung: 0,
+        beschlussvorschlag: [],
+        beschlussfassung: null,
+        gueltigkeit: null,
+        invalideVotes: 0,
+        wahlvorschlaege: uiWahlvorschlaege.wahlvorschlaege.map((ui) => {
+          const dseWahlvorschlag: DseWahlvorschlag = {
+            wahlvorschlagID: ui.identifikator,
+            ordnungszahl: ui.ordnungszahl,
+            selected: false,
+            kandidaten: [],
+            kurzname: ui.kurzname,
+            erhaeltStimmen: ui.erhaeltStimmen,
+            gueltigeStimmen: 0,
+            ungueltigeStimmen: 0,
+          };
+
+          const dseKandidaten: DseKandidat[] =
+            ui.kandidaten?.flatMap((uiKandidat) => {
+              const kandidaten: DseKandidat[] = [];
+              for (
+                let nennung = 1;
+                nennung <= uiKandidat.anzahlNennungen;
+                nennung++
+              ) {
+                kandidaten.push({
+                  kandidatId: uiKandidat.identifikator,
+                  nennung,
+                  listenposition: uiKandidat.listenposition,
+                  einzelstimmen: null,
+                  durchgestrichen: false,
+                  reststimmen: null,
+                  ungueltigeStimmen: null,
+                  name: uiKandidat.name,
+                  owningWahlvorschlag: dseWahlvorschlag,
+                });
+              }
+              return kandidaten;
+            }) ?? [];
+          dseWahlvorschlag.kandidaten = dseKandidaten;
+          return dseWahlvorschlag;
+        }),
+      };
+
+      expect(result).toStrictEqual(expected);
     });
 
-    it("should_returnNextNumber_when_multipleStimmzettelExists", async () => {
-      const stimmzettel1 = prepareStimmzettel().stimmzettelkennung(5).build();
-      const stimmzettel2 = prepareStimmzettel().stimmzettelkennung(3).build();
-      const stimmzettel3 = prepareStimmzettel().stimmzettelkennung(24).build();
-      mockDefinitions.getStimmzettel.mockReturnValue([
-        stimmzettel1,
-        stimmzettel2,
-        stimmzettel3,
+    it("should_createDseKandidatenForEachNennung_when_kandidatHasMultipleNennungen", () => {
+      const kandidatWithTwoNennungen = prepareKandidat()
+        .anzahlNennungen(2)
+        .listenposition(5)
+        .identifikator("k-id")
+        .build();
+
+      const uiWahlvorschlag: UiWahlvorschlag = prepareWahlvorschlag()
+        .identifikator("w-id")
+        .ordnungszahl(10)
+        .kandidaten([kandidatWithTwoNennungen])
+        .build();
+
+      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([
+        uiWahlvorschlag,
       ]);
 
-      const result = await getNextStimmzettelNumber(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
+      const dseKandidaten = result.wahlvorschlaege[0]
+        .kandidaten as DseKandidat[];
 
-      expect(mockDefinitions.getStimmzettel.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.getStimmzettel.mock.calls[0]).toStrictEqual([
-        wahlID,
-        wahlbezirkID,
-        teamID,
-      ]);
-      expect(result).toStrictEqual(25);
+      const expectedDseKandidaten: DseKandidat[] = [
+        {
+          kandidatId: "k-id",
+          nennung: 1,
+          listenposition: 5,
+          einzelstimmen: null,
+          durchgestrichen: false,
+          reststimmen: null,
+          ungueltigeStimmen: null,
+          name: kandidatWithTwoNennungen.name,
+          owningWahlvorschlag: result.wahlvorschlaege[0],
+        },
+        {
+          kandidatId: "k-id",
+          nennung: 2,
+          listenposition: 5,
+          einzelstimmen: null,
+          durchgestrichen: false,
+          reststimmen: null,
+          ungueltigeStimmen: null,
+          name: kandidatWithTwoNennungen.name,
+          owningWahlvorschlag: result.wahlvorschlaege[0],
+        },
+      ];
+
+      expect(dseKandidaten).toStrictEqual(expectedDseKandidaten);
     });
 
-    it("should_returnNextNumber_when_noStimmzettelExists", async () => {
-      mockDefinitions.getStimmzettel.mockReturnValue([]);
+    it("should_createDseWahlvorschlagWithEmptyKandidaten_when_uiWahlvorschlagHasNoKandidaten", () => {
+      const uiWahlvorschlagWithoutKandidaten: UiWahlvorschlag =
+        prepareWahlvorschlag().kandidaten(undefined).build();
 
-      const result = await getNextStimmzettelNumber(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
-
-      expect(mockDefinitions.getStimmzettel.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.getStimmzettel.mock.calls[0]).toStrictEqual([
-        wahlID,
-        wahlbezirkID,
-        teamID,
+      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([
+        uiWahlvorschlagWithoutKandidaten,
       ]);
-      expect(result).toStrictEqual(1);
+
+      const expectedDseWahlvorschlag: DseWahlvorschlag = {
+        wahlvorschlagID: uiWahlvorschlagWithoutKandidaten.identifikator,
+        ordnungszahl: uiWahlvorschlagWithoutKandidaten.ordnungszahl,
+        selected: false,
+        kandidaten: [],
+        kurzname: uiWahlvorschlagWithoutKandidaten.kurzname,
+        erhaeltStimmen: uiWahlvorschlagWithoutKandidaten.erhaeltStimmen,
+        gueltigeStimmen: 0,
+        ungueltigeStimmen: 0,
+      };
+
+      expect(result.wahlvorschlaege[0]).toStrictEqual(expectedDseWahlvorschlag);
     });
 
-    it("should_throwError_when_getStimmzettelFailes", async () => {
-      mockDefinitions.getStimmzettel.mockRejectedValue(
-        new Error("api call failed")
-      );
+    it("should_createDseStimmzettelWithAllWahlvorschlaege_when_multipleUiWahlvorschlaegeAreGiven", () => {
+      const w1: UiWahlvorschlag = createWahlvorschlag();
+      const w2: UiWahlvorschlag = prepareWahlvorschlag()
+        .identifikator("w2")
+        .ordnungszahl(20)
+        .build();
 
-      await expect(async () =>
-        getNextStimmzettelNumber(wahlID, wahlbezirkID, teamID)
-      ).rejects.toThrowError();
+      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([
+        w1,
+        w2,
+      ]);
+
+      const expectedWahlvorschlaege: DseWahlvorschlag[] = [w1, w2].map((ui) => {
+        const dseWahlvorschlag: DseWahlvorschlag = {
+          wahlvorschlagID: ui.identifikator,
+          ordnungszahl: ui.ordnungszahl,
+          selected: false,
+          kandidaten: [],
+          kurzname: ui.kurzname,
+          erhaeltStimmen: ui.erhaeltStimmen,
+          gueltigeStimmen: 0,
+          ungueltigeStimmen: 0,
+        };
+
+        const dseKandidaten: DseKandidat[] =
+          ui.kandidaten?.flatMap((uiKandidat) => {
+            const kandidaten: DseKandidat[] = [];
+            for (
+              let nennung = 1;
+              nennung <= uiKandidat.anzahlNennungen;
+              nennung++
+            ) {
+              kandidaten.push({
+                kandidatId: uiKandidat.identifikator,
+                nennung,
+                listenposition: uiKandidat.listenposition,
+                einzelstimmen: null,
+                durchgestrichen: false,
+                reststimmen: null,
+                ungueltigeStimmen: null,
+                name: uiKandidat.name,
+                owningWahlvorschlag: dseWahlvorschlag,
+              });
+            }
+            return kandidaten;
+          }) ?? [];
+
+        dseWahlvorschlag.kandidaten = dseKandidaten;
+        return dseWahlvorschlag;
+      });
+
+      expect(result.wahlvorschlaege).toStrictEqual(expectedWahlvorschlaege);
+    });
+
+    it("should_createStimmzettelWithEmptyWahlvorschlaege_when_inputIsEmpty", () => {
+      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([]);
+
+      const expected: Stimmzettel = {
+        stimmzettelkennung: 0,
+        beschlussvorschlag: [],
+        beschlussfassung: null,
+        gueltigkeit: null,
+        invalideVotes: 0,
+        wahlvorschlaege: [],
+      };
+
+      expect(result).toStrictEqual(expected);
     });
   });
 

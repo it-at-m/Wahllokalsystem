@@ -768,7 +768,7 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("requiresWorkflowStatusStimmzettelerfassungAbgeschlossen", () => {
-    it("should_returnTrue_when_stimmzettelErfassungTeamStatusIsAbgeschlossen", async () => {
+    it("should_returnTrue_when_stimmzettelErfassungTeamStatusIsSteAbgeschlossen", async () => {
       const wahlId = "wahlId";
       const wahlbezirkId = "wahlbezirkId";
       const to = {
@@ -796,7 +796,35 @@ describe("navigationGuards.ts", () => {
       );
       expect(result).toStrictEqual(true);
     });
-    it("should_returnFalse_when_stimmzettelErfassungTeamStatusIsNotAbgeschlossen", async () => {
+    it("should_returnTrue_when_stimmzettelErfassungTeamStatusIsBeAbgeschlossen", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      mockDefinitions.loadDseWorkflowStatus.mockReturnValue(
+        prepareStimmzettelerfassungStatus()
+          .status(StimmzettelerfassungStatusEnum.BeAbgeschlossen)
+          .build()
+      );
+
+      const result =
+        await requiresWorkflowStatusStimmzettelerfassungAbgeschlossen(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+      expect(mockDefinitions.loadDseWorkflowStatus.mock.calls[0]).toStrictEqual(
+        [wahlId, wahlbezirkId, false]
+      );
+      expect(result).toStrictEqual(true);
+    });
+    it("should_returnFalse_when_stimmzettelErfassungTeamStatusIsInBearbeitung", async () => {
       const wahlId = "wahlId";
       const wahlbezirkId = "wahlbezirkId";
       const to = {

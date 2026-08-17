@@ -107,8 +107,8 @@ export function useNavigationGuards() {
 
       try {
         const status = await loadDseWorkflowStatus(wahlId, wahlbezirkId, false);
-        return (
-          status?.status === StimmzettelerfassungStatusEnum.SteAbgeschlossen
+        return !(
+          status?.status === StimmzettelerfassungStatusEnum.SteBearbeitung
         );
       } catch {
         return false;

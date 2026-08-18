@@ -40,7 +40,7 @@ export function useStimmzettelTestDataFactory() {
   }
 
   function createStimmzettelKandidat(): Kandidat {
-    const wahlvorschlag = createStimmzettelWahlvorschlag();
+    const wahlvorschlag = _createStimmzettelWahlvorschlagWithoutKandidaten();
     const result = {
       reststimmen: generateRandomNumber(2),
       ungueltigeStimmen: generateRandomNumber(2),
@@ -122,20 +122,13 @@ export function useStimmzettelTestDataFactory() {
   }
 
   function createStimmzettelWahlvorschlag(): Wahlvorschlag {
-    return {
-      ordnungszahl: generateRandomNumber(2),
-      kandidaten: [
-        createStimmzettelKandidat(),
-        createStimmzettelKandidat(),
-        createStimmzettelKandidat(),
-      ],
-      selected: generateRandomBoolean(),
-      ungueltigeStimmen: generateRandomNumber(2),
-      gueltigeStimmen: generateRandomNumber(2),
-      erhaeltStimmen: generateRandomBoolean(),
-      kurzname: generateRandomString(2),
-      wahlvorschlagID: generateRandomString(10),
-    };
+    const result = _createStimmzettelWahlvorschlagWithoutKandidaten();
+    result.kandidaten = [
+      createStimmzettelKandidat(),
+      createStimmzettelKandidat(),
+      createStimmzettelKandidat(),
+    ];
+    return result;
   }
 
   function createStimmzettelKandidatIdDTO(): KandidatIdDTO {
@@ -239,6 +232,19 @@ export function useStimmzettelTestDataFactory() {
     return proxyBuilder<PersistedWahlvorschlag>(
       createPersistedStimmzettelWahlvorschlag()
     );
+  }
+
+  function _createStimmzettelWahlvorschlagWithoutKandidaten(): Wahlvorschlag {
+    return {
+      ordnungszahl: generateRandomNumber(2),
+      kandidaten: [],
+      selected: generateRandomBoolean(),
+      ungueltigeStimmen: generateRandomNumber(2),
+      gueltigeStimmen: generateRandomNumber(2),
+      erhaeltStimmen: generateRandomBoolean(),
+      kurzname: generateRandomString(2),
+      wahlvorschlagID: generateRandomString(10),
+    };
   }
 
   return {

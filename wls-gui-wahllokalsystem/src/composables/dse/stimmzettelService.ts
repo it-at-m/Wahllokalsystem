@@ -89,14 +89,14 @@ export function useStimmzettelService() {
     wahlID: string,
     wahlbezirkID: string,
     sendNotification = true
-  ): Promise<number | null> {
+  ): Promise<number> {
     try {
       const result = await stimmzettelControllerApi.getAnzahlStimmzettel(
         wahlID,
         wahlbezirkID,
         axiosConfigWrapper().requestAsOnlineOnly()
       );
-      return getNullOn204OrElseResponseData(result);
+      return result.data;
     } catch (error) {
       if (sendNotification) {
         addNotification(

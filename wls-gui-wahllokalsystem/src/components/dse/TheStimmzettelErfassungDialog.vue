@@ -10,16 +10,52 @@
         {{ stimmzettel.stimmzettelkennung }}
       </v-card-title>
       <v-card-text>
-        <the-stimmzettel-command-processing-text-field
-          :stimmzettel-manager="stimmzettelManager"
-        />
-        <the-stimmzettel-content
-          :active-wahlvorschlag-id="null"
-          :wahlvorschlaege="
-            stimmzettelManager.managedStimmzettel.stimmzettel.value
-              .wahlvorschlaege
-          "
-        />
+        <v-row>
+          <v-col cols="2">
+            <the-eingabehistorie-card
+              :change-history="
+                stimmzettelManager.managedStimmzettel.changeHistoryInReverOrder
+                  .value
+              "
+            />
+            <base-stimmzettel-zusammenfassung-card
+              class="mt-2"
+              :listenstimmen="
+                stimmzettelManager.managedStimmzettel
+                  .wahlvorschlaegeWithListenkreuz.value
+              "
+              :ungueltigestimmen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .ungueltigeStimmen
+              "
+              :direktstimmen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .einzelstimmen
+              "
+              :reststimmen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .reststimmen
+              "
+              :streichungen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .streichungen
+              "
+              :gueltigkeit="'VALID'"
+            />
+          </v-col>
+          <v-col cols="10">
+            <the-stimmzettel-command-processing-text-field
+              :stimmzettel-manager="stimmzettelManager"
+            />
+            <the-stimmzettel-content
+              :active-wahlvorschlag-id="null"
+              :wahlvorschlaege="
+                stimmzettelManager.managedStimmzettel.stimmzettel.value
+                  .wahlvorschlaege
+              "
+            />
+          </v-col>
+        </v-row>
       </v-card-text>
       <v-card-actions>
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
@@ -38,6 +74,8 @@ import { storeToRefs } from "pinia";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
+import BaseStimmzettelZusammenfassungCard from "@/components/dse/BaseStimmzettelZusammenfassungCard.vue";
+import TheEingabehistorieCard from "@/components/dse/TheEingabehistorieCard.vue";
 import TheStimmzettelCommandProcessingTextField from "@/components/dse/TheStimmzettelCommandProcessingTextField.vue";
 import TheStimmzettelContent from "@/components/dse/TheStimmzettelContent.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassungDialogUtils.ts";

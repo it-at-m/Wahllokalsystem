@@ -16,11 +16,13 @@ describe("ManagedStimmzettel.ts", () => {
     it("should_useKandidatWithUserVotes_when_multipleCandidatesShareListenposition", () => {
       const kandidatWithoutVotes = prepareManagedStimmzettelKandidat()
         .listenposition(1)
+        .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(false)
         .build();
       const kandidatWithVotes = prepareManagedStimmzettelKandidat()
         .listenposition(1)
+        .ordnungszahl(101)
         .einzelstimmen(2)
         .durchgestrichen(false)
         .build();
@@ -45,11 +47,13 @@ describe("ManagedStimmzettel.ts", () => {
     it("should_useFirstNotDiscardedCandidate_when_noUserVotesPresent", () => {
       const discardedKandidat = prepareManagedStimmzettelKandidat()
         .listenposition(1)
+        .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(true)
         .build();
       const kandidatToUse = prepareManagedStimmzettelKandidat()
         .listenposition(1)
+        .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(false)
         .build();
@@ -74,11 +78,13 @@ describe("ManagedStimmzettel.ts", () => {
     it("should_useFirstCandidate_when_allCandidatesAreDiscarded", () => {
       const firstDiscarded = prepareManagedStimmzettelKandidat()
         .listenposition(1)
+        .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(true)
         .build();
       const secondDiscarded = prepareManagedStimmzettelKandidat()
         .listenposition(1)
+        .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(true)
         .build();
@@ -163,6 +169,7 @@ describe("ManagedStimmzettel.ts", () => {
     it("should_addAbsoluteNumberOfVotes_when_votesToAddIsNegative", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .listenposition(1)
+        .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(false)
         .build();
@@ -186,6 +193,7 @@ describe("ManagedStimmzettel.ts", () => {
     it("should_incrementVotes_when_addVotesMultipleTimes", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .listenposition(1)
+        .ordnungszahl(101)
         .einzelstimmen(1)
         .durchgestrichen(false)
         .build();
@@ -208,13 +216,15 @@ describe("ManagedStimmzettel.ts", () => {
     });
 
     it("should_useKandidatFromSecondWahlvorschlag_when_ordnungszahlPointsToIt", () => {
-      const kandidatInFirst = prepareManagedStimmzettelKandidat()
+      const kandidatInFirstWahlvorschlag = prepareManagedStimmzettelKandidat()
         .listenposition(1)
+        .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(false)
         .build();
-      const kandidatInSecond = prepareManagedStimmzettelKandidat()
+      const kandidatInSecondWahlvorschlag = prepareManagedStimmzettelKandidat()
         .listenposition(1)
+        .ordnungszahl(201)
         .einzelstimmen(null)
         .durchgestrichen(false)
         .build();
@@ -223,11 +233,11 @@ describe("ManagedStimmzettel.ts", () => {
         .wahlvorschlaege([
           prepareManagedStimmzettelWahlvorschlag()
             .ordnungszahl(1)
-            .kandidaten([kandidatInFirst])
+            .kandidaten([kandidatInFirstWahlvorschlag])
             .build(),
           prepareManagedStimmzettelWahlvorschlag()
             .ordnungszahl(2)
-            .kandidaten([kandidatInSecond])
+            .kandidaten([kandidatInSecondWahlvorschlag])
             .build(),
         ])
         .build();
@@ -236,13 +246,14 @@ describe("ManagedStimmzettel.ts", () => {
 
       managed.kandidatAddEinzelstimmenOrThrow(201, 1);
 
-      expect(kandidatInSecond.einzelstimmen).toBe(1);
-      expect(kandidatInFirst.einzelstimmen).toBeNull();
+      expect(kandidatInSecondWahlvorschlag.einzelstimmen).toBe(1);
+      expect(kandidatInFirstWahlvorschlag.einzelstimmen).toBeNull();
     });
 
     it("should_throwManagedStimmzettelError_when_listenpositionHasNoCandidate", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .listenposition(1)
+        .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(false)
         .build();

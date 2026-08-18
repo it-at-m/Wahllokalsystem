@@ -10,48 +10,48 @@
           class="mt-3"
         />
       </v-card-text>
-      <v-card-actions
-        v-if="
-          !isStatusLoading &&
-          !(
-            teamStatus?.status ==
-            StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
-          )
-        "
-      >
-        <base-text-button
-          :active="startenBtnActive"
-          :is-disabled="startenBtnIsDisabled"
-          @click="onErfassungStartenClicked"
-          >Starten</base-text-button
+      <v-card-actions v-if="!isStatusLoading">
+        <div
+          v-if="!teamFinishedErfassung"
+          class="d-flex w-100"
         >
-        <base-text-button
-          :is-disabled="unterbrechenBtnIsDisabled"
-          @click="onErfassungUnterbrechenClicked"
-          >Unterbrechen</base-text-button
-        >
-        <base-text-button
-          class="ms-auto"
-          :active="beendenBtnActive"
-          :is-disabled="beendenBtnIsDisabled"
-          @click="onErfassungBeendenClicked"
-          >Beenden</base-text-button
-        >
-      </v-card-actions>
-      <v-card-actions v-else>
-        <base-feedback-card
-          title="Sie haben die Erfassung bereits abgeschlossen"
-          type="information"
-        >
-          Um weitere Stimmzettel zu erfassen oder zu korrigieren, lassen Sie
-          sich bitte von der Schriftführung wieder freischalten und
-          aktualisieren Sie dann mit dem Button die Seite.
-          <base-button-refresh
-            active
-            class="ml-5"
-            @click="onErfassungAktualisierenClicked"
-          />
-        </base-feedback-card>
+          <base-text-button
+            :active="startenBtnActive"
+            :is-disabled="startenBtnIsDisabled"
+            @click="onErfassungStartenClicked"
+          >
+            Starten
+          </base-text-button>
+          <base-text-button
+            :is-disabled="unterbrechenBtnIsDisabled"
+            @click="onErfassungUnterbrechenClicked"
+          >
+            Unterbrechen
+          </base-text-button>
+          <base-text-button
+            class="ms-auto"
+            :active="beendenBtnActive"
+            :is-disabled="beendenBtnIsDisabled"
+            @click="onErfassungBeendenClicked"
+          >
+            Beenden
+          </base-text-button>
+        </div>
+        <div v-else>
+          <base-feedback-card
+            title="Sie haben die Erfassung bereits abgeschlossen"
+            type="information"
+          >
+            Um weitere Stimmzettel zu erfassen oder zu korrigieren, lassen Sie
+            sich bitte von der Schriftführung wieder freischalten und
+            aktualisieren Sie dann mit dem Button die Seite.
+            <base-button-refresh
+              active
+              class="ml-5"
+              @click="onErfassungAktualisierenClicked"
+            />
+          </base-feedback-card>
+        </div>
       </v-card-actions>
     </v-card>
     <the-stimmzettelkennung-dialog
@@ -79,7 +79,7 @@
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
-import { useTemplateRef } from "vue";
+import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
@@ -158,4 +158,9 @@ async function onStimmzettelErfassungConfirmed(
   await saveNewStimmzettel(confirmedStimmzettel);
   isErfassungsDialogVisible.value = false;
 }
+
+const teamFinishedErfassung = computed(
+  () =>
+    teamStatus.value?.status == StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+);
 </script>

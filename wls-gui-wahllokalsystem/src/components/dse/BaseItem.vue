@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import BaseChipAnzahlStimmen from "@/components/dse/BaseChipAnzahlStimmen.vue";
 
-const props = defineProps<{
+defineProps<{
   ordnungszahl: number;
   name: string;
   isGestrichen: boolean;

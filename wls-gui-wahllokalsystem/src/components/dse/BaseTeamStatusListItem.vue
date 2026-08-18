@@ -31,10 +31,7 @@
           <base-text-button
             class="ml-10"
             active
-            :disabled="
-              teamEntry.status !==
-              StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
-            "
+            :disabled="wiederOeffnenButtonIsDisabled"
             @click="onSTEWiederOeffnenClicked"
           >
             wieder öffnen
@@ -49,9 +46,10 @@ import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/Stimmzette
 import type { PropType } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import { useDseWorkflowStatusUtils } from "@/composables/dse/dseWorkflowStatusUtils.ts";
+import { useMonitoringViewButtonStateUtils } from "@/composables/dse/monitoringViewButtonStateUtils.ts";
 import { useStimmzettelerfassungTeamStatusMapper } from "@/composables/dse/stimmzettelerfassungTeamStatusMapper.ts";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 const { statusModelEnumToDisplayString, statusConfig } =
   useStimmzettelerfassungTeamStatusMapper();
@@ -83,6 +81,14 @@ const { sendStatusInBearbeitung } = useStimmzettelErfassungViewUtils(
   props.wahlID,
   props.wahlbezirkID,
   props.teamEntry.teamID
+);
+const { workflowStatus } = useDseWorkflowStatusUtils(
+  props.wahlID,
+  props.wahlbezirkID
+);
+const { wiederOeffnenButtonIsDisabled } = useMonitoringViewButtonStateUtils(
+  props.teamEntry?.status,
+  workflowStatus
 );
 
 async function onSTEWiederOeffnenClicked() {

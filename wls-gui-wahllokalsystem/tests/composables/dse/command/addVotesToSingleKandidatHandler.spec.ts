@@ -58,6 +58,14 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
         stimmzettel: computed(() =>
           prepareManagedStimmzettelStimmzettel().build()
         ),
+        changeHistoryInReverOrder: computed(() => []),
+        wahlvorschlaegeWithListenkreuz: computed(() => []),
+        stimmenSummary: computed(() => ({
+          einzelstimmen: 0,
+          reststimmen: 0,
+          streichungen: 0,
+          ungueltigeStimmen: 0,
+        })),
       };
     });
 

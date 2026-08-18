@@ -3,7 +3,7 @@
     <v-card-title>Eingabehistorie</v-card-title>
     <v-card-text>
       <div v-if="firstHistoryItem">
-        <div class="font-weight-bold">
+        <div class="font-weight-bold d-flex align-center ga-1">
           <input-history-icon :input-type="firstHistoryItem.type" />
           <div>
             <div

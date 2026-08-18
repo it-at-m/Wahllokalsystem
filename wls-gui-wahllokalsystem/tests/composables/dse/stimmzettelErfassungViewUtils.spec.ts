@@ -109,7 +109,7 @@ vi.mock(
 describe("stimmzettelErfassungViewUtils.ts", () => {
   const { generateRandomString, generateRandomNumber } =
     useCommonTestDataFactory();
-  const { prepareStimmzettel } = useStimmzettelTestDataFactory();
+  const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
   const { createStimmzettelerfassungTeamStatusModel } =
     useStimmzettelerfassungTeamStatusTestDataFactory();
   const { prepareWahlvorschlaege, createWahlvorschlag } =
@@ -218,8 +218,8 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       );
 
       const mockedLoadedStimmzettel = [
-        prepareStimmzettel().build(),
-        prepareStimmzettel().build(),
+        preparePersistedStimmzettel().build(),
+        preparePersistedStimmzettel().build(),
       ];
       mockDefinitions.getStimmzettel.mockReturnValue(mockedLoadedStimmzettel);
 
@@ -330,7 +330,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
   describe("startNewEmptyStimmzettelWithStimmzettelkennung", () => {
     it("should_setActiveStimmzettel_when_calledWithKennung", () => {
       const mockedKennung = generateRandomNumber(3);
-      const mockedEmptyStimmzettel: Stimmzettel = prepareStimmzettel()
+      const mockedEmptyStimmzettel: Stimmzettel = preparePersistedStimmzettel()
         .stimmzettelkennung(mockedKennung)
         .build();
 
@@ -445,7 +445,8 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
   describe("saveNewStimmzettel", () => {
     it("should_appendStimmzettelAndPersist_when_initialCollectionIsEmpty", async () => {
-      const mockedNewStimmzettel: Stimmzettel = prepareStimmzettel().build();
+      const mockedNewStimmzettel: Stimmzettel =
+        preparePersistedStimmzettel().build();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 
@@ -464,8 +465,9 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
     it("should_appendStimmzettelToExistingCollectionAndPersist_when_collectionAlreadyContainsItems", async () => {
       const mockedExistingStimmzettel: Stimmzettel =
-        prepareStimmzettel().build();
-      const mockedNewStimmzettel: Stimmzettel = prepareStimmzettel().build();
+        preparePersistedStimmzettel().build();
+      const mockedNewStimmzettel: Stimmzettel =
+        preparePersistedStimmzettel().build();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 

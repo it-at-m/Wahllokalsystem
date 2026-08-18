@@ -1,10 +1,15 @@
+import type { InputHistoryItem } from "@/types/dse/InputHistoryItem.ts";
 import type { Kandidat } from "@/types/dse/Kandidat.ts";
+import type { StimmenSummary } from "@/types/dse/StimmenSummary.ts";
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 import type { Ref } from "vue";
 
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
+import { InputHistoryTypeEnum } from "@/types/dse/InputHistoryTypeEnum.ts";
+
+export const WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL = 100;
 
 /**
  * Check UI/UX Adr to see the rules:
@@ -12,10 +17,38 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
  *
  * @param stimmzettel
  */
-
-export const WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL = 100;
-
 export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
+  const changeHistory = ref<InputHistoryItem[]>([]);
+
+  const kandidatenOfStimmzettel = computed(() =>
+    stimmzettel.value.wahlvorschlaege
+      .map((wahlvorschlag) => wahlvorschlag.kandidaten)
+      .flat()
+  );
+
+  const kandidatenWithValues = computed(() =>
+    kandidatenOfStimmzettel.value.filter(_hasKandidatAnyStimmeOrStreichung)
+  );
+
+  const stimmenSummary = computed(() => {
+    const summary: StimmenSummary = {
+      einzelstimmen: 0,
+      ungueltigeStimmen: 0,
+      reststimmen: 0,
+      streichungen: 0,
+    };
+    return kandidatenWithValues.value.reduce(
+      (summary, kandidat) => _updateSummaryByKandidat(summary, kandidat),
+      summary
+    );
+  });
+
+  const wahlvorschlaegeWithListenkreuz = computed(() =>
+    stimmzettel.value.wahlvorschlaege.filter(
+      (wahlvorschlag) => wahlvorschlag.selected
+    )
+  );
+
   /**
    *
    * @param ordnungszahl
@@ -32,7 +65,7 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
         "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
       );
     }
-    const kandidat = _getKandidatByOrdungszahl(ordnungszahl);
+    const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(
         `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
@@ -42,39 +75,21 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     _internalAddVotesToKandidat(kandidat, votesToAdd);
   }
 
-  function _getKandidatByOrdungszahl(ordnungszahl: number) {
-    const wahlvorschlagOrdnungszahl = Math.floor(
-      ordnungszahl / WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL
+  function _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl: number) {
+    const kandidatenWithOrdnungszahl = kandidatenOfStimmzettel.value.filter(
+      (kandidat) => kandidat.ordnungszahl === ordnungszahl
     );
 
-    const wahlvorschlag = stimmzettel.value.wahlvorschlaege.find(
-      (wahlvorschlag) =>
-        wahlvorschlagOrdnungszahl === wahlvorschlag.ordnungszahl
-    );
-    if (!wahlvorschlag) {
+    if (kandidatenWithOrdnungszahl.length === 0) {
       return undefined;
+    } else {
+      return _findKandidatToAddEinzelstimme(kandidatenWithOrdnungszahl);
     }
-
-    const kandidatenListenposition =
-      ordnungszahl % WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL;
-    return _getKandidatToAddVotesByUser(
-      wahlvorschlag.kandidaten,
-      kandidatenListenposition
-    );
   }
 
-  function _getKandidatToAddVotesByUser(
-    wahlvorschlagKandidaten: Kandidat[],
-    listenposition: number
+  function _findKandidatToAddEinzelstimme(
+    kandidatenForListenPosition: Kandidat[]
   ) {
-    //filter by listenposition
-    const kandidatenForListenPosition = wahlvorschlagKandidaten.filter(
-      (kandidat) => kandidat.listenposition === listenposition
-    );
-    if (kandidatenForListenPosition.length === 0) {
-      return undefined;
-    }
-
     //has any kandidat already uservotes?
     const kandidatWithEinzelstimmen = kandidatenForListenPosition.find(
       (kandidat) => kandidat.einzelstimmen !== null
@@ -101,12 +116,48 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
     kandidat.einzelstimmen =
       currentEinzelstimmen + Math.abs(numberOfVotesToAdd);
-    //TODO hier kann man jetzt die Historie triggern
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.ADD_USER_VOTE,
+      text: [`${kandidat.ordnungszahl}`, kandidat.name],
+    });
+  }
+
+  function _hasKandidatAnyStimmeOrStreichung(kandidat: Kandidat) {
+    return (
+      kandidat.einzelstimmen !== null ||
+      kandidat.ungueltigeStimmen ||
+      kandidat.reststimmen ||
+      kandidat.durchgestrichen
+    );
+  }
+
+  function _updateSummaryByKandidat(
+    stimmenSummary: StimmenSummary,
+    kandidat: Kandidat
+  ) {
+    if (kandidat.ungueltigeStimmen) {
+      stimmenSummary.ungueltigeStimmen += kandidat.ungueltigeStimmen;
+    }
+    if (kandidat.reststimmen) {
+      stimmenSummary.reststimmen += kandidat.reststimmen;
+    }
+    if (kandidat.durchgestrichen) {
+      stimmenSummary.streichungen += 1;
+    }
+    if (kandidat.einzelstimmen) {
+      stimmenSummary.einzelstimmen += kandidat.einzelstimmen;
+    }
+    return stimmenSummary;
   }
 
   return {
+    changeHistoryInReverOrder: computed(() =>
+      [...changeHistory.value].reverse()
+    ),
     kandidatAddEinzelstimmenOrThrow,
     stimmzettel: computed(() => stimmzettel.value),
+    stimmenSummary,
+    wahlvorschlaegeWithListenkreuz,
   };
 }
 export type ManagedStimmzettel = ReturnType<typeof useManagedStimmzettel>;

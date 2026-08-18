@@ -35,7 +35,7 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     const kandidat = _getKandidatByOrdungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(
-        `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+        `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
       );
     }
 

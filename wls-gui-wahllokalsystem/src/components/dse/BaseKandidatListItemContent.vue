@@ -1,5 +1,5 @@
 <template>
-  <base-item
+  <base-div-item-with-scores
     :is-gestrichen="kandidat.durchgestrichen"
     :name="kandidat.name"
     :ordnungszahl="kandidat.ordnungszahl"
@@ -12,14 +12,14 @@
     >
       {{ gesamtStimmen }}
     </span>
-  </base-item>
+  </base-div-item-with-scores>
 </template>
 <script setup lang="ts">
 import type { Kandidat } from "@/types/dse/Kandidat.ts";
 
 import { computed } from "vue";
 
-import BaseItem from "@/components/dse/BaseItem.vue";
+import BaseDivItemWithScores from "@/components/dse/BaseDivItemWithScores.vue";
 
 const props = defineProps<{
   kandidat: Kandidat;

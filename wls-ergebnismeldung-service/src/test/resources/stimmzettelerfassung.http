@@ -20,12 +20,20 @@ Content-Type: application/json
     "stimmzettelkennung": 1,
     "invalideVotes": 2,
     "gueltigkeit": "VALID",
-    "beschlussvorschlag": [
+    "wahlvorstandBeschlussvorschlag": [
       {
         "text": "vormerkung 1"
       },
       {
         "text": "vormerkung 2"
+      }
+    ],
+    "systemBeschlussvorschlag": [
+      {
+        "reason": "BEISPIEL_SYSTEMGRUND"
+      },
+      {
+        "reason": "BEISPIEL_SYSTEMGRUND"
       }
     ],
     "beschlussfassung": {

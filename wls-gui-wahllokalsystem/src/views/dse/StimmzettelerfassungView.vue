@@ -17,7 +17,6 @@
         >
           <base-text-button
             :active="startenBtnActive"
-            :is-disabled="startenBtnIsDisabled"
             @click="onErfassungStartenClicked"
           >
             Starten
@@ -31,7 +30,6 @@
           <base-text-button
             class="ms-auto"
             :active="beendenBtnActive"
-            :is-disabled="beendenBtnIsDisabled"
             @click="onErfassungBeendenClicked"
           >
             Beenden
@@ -109,13 +107,11 @@ const {
   teamStatus,
   activeStimmzettel,
   beendenBtnActive,
-  beendenBtnIsDisabled,
   isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
   isStimmzettelLoading,
   savedStimmzettel,
-  startenBtnIsDisabled,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
   saveNewStimmzettel,

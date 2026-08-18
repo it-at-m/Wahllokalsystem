@@ -23,16 +23,6 @@ export function useStimmzettelErfassungViewButtonStateUtils(
   );
 
   //ButtonDisabledStates
-  const startenBtnIsDisabled = computed(
-    () =>
-      teamStatus.value?.status ==
-      StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
-  );
-  const beendenBtnIsDisabled = computed(
-    () =>
-      teamStatus.value?.status ==
-      StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
-  );
   const unterbrechenBtnIsDisabled = computed(
     () =>
       teamStatus.value?.status !=
@@ -41,9 +31,7 @@ export function useStimmzettelErfassungViewButtonStateUtils(
 
   return {
     beendenBtnActive,
-    beendenBtnIsDisabled,
     startenBtnActive,
-    startenBtnIsDisabled,
     unterbrechenBtnIsDisabled,
   };
 }

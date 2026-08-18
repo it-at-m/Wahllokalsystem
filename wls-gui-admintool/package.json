@@ -47,7 +47,7 @@
     "@vue/tsconfig": "0.9.1",
     "@eslint/js": "10.0.1",
     "axios": "1.18.1",
-    "eslint": "10.8.0",
+    "eslint": "10.8.1",
     "eslint-plugin-storybook": "10.5.7",
     "eslint-plugin-vue": "10.10.0",
     "jsdom": "29.1.1",

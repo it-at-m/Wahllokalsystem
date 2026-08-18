@@ -64,7 +64,6 @@ import type { ComponentPublicInstance } from "vue";
 import { mdiCloseBoxOutline } from "@mdi/js";
 import { computed, nextTick, onActivated, ref, watch } from "vue";
 
-import BaseChipAnzahlStimmen from "@/components/dse/BaseChipAnzahlStimmen.vue";
 import BaseItem from "@/components/dse/BaseItem.vue";
 import BaseKandidatListItemContent from "@/components/dse/BaseKandidatListItemContent.vue";
 import { useViewportUtils } from "@/composables/common/viewportUtils.ts";

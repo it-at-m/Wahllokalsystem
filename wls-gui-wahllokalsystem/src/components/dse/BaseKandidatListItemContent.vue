@@ -19,7 +19,6 @@ import type { Kandidat } from "@/types/dse/Kandidat.ts";
 
 import { computed } from "vue";
 
-import BaseChipAnzahlStimmen from "@/components/dse/BaseChipAnzahlStimmen.vue";
 import BaseItem from "@/components/dse/BaseItem.vue";
 
 const props = defineProps<{

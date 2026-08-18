@@ -51,10 +51,11 @@ describe("stimmzettelMapper.ts", () => {
             .build()
         )
         .beschlussvorschlag(
-          dtoToMap.beschlussvorschlag!.map((dtoBeschlussgrund) =>
-            preparePersistedStimmzettelBeschlussgrund()
-              .text(dtoBeschlussgrund.text)
-              .build()
+          dtoToMap.wahlvorstandBeschlussvorschlag!.map(
+            (dtoWahlvorstandBeschlussgrund) =>
+              preparePersistedStimmzettelBeschlussgrund()
+                .text(dtoWahlvorstandBeschlussgrund.text)
+                .build()
           )
         )
         .wahlvorschlaege(
@@ -93,7 +94,7 @@ describe("stimmzettelMapper.ts", () => {
 
     it("should_returnEmptyBeschlussvorschlag_when_dtoBeschlussvorschlagIsUndefined", () => {
       const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
-        .beschlussvorschlag(undefined)
+        .wahlvorstandBeschlussvorschlag(undefined)
         .build();
 
       const result = toModel(dtoWithoutBeschlussvorschlag);
@@ -103,7 +104,7 @@ describe("stimmzettelMapper.ts", () => {
 
     it("should_returnEmptyBeschlussvorschlag_when_dtoBeschlussvorschlagIsEmpty", () => {
       const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
-        .beschlussvorschlag([])
+        .wahlvorstandBeschlussvorschlag([])
         .build();
 
       const result = toModel(dtoWithoutBeschlussvorschlag);
@@ -221,7 +222,7 @@ describe("stimmzettelMapper.ts", () => {
             .text(modelToMap.beschlussfassung!.text!)
             .build()
         )
-        .beschlussvorschlag(
+        .wahlvorstandBeschlussvorschlag(
           modelToMap.beschlussvorschlag.map((modelBeschlussgrund) =>
             prepareStimmzettelBeschlussgrundDTO()
               .text(modelBeschlussgrund.text)
@@ -273,7 +274,7 @@ describe("stimmzettelMapper.ts", () => {
 
       const result = toDTO(modelWithoutBeschlussvorschlag);
 
-      expect(result.beschlussvorschlag).toBeUndefined();
+      expect(result.wahlvorstandBeschlussvorschlag).toBeUndefined();
     });
 
     it("should_returnUndefinedBeschlussfassung_when_modelBeschlussfassungIsNull", () => {

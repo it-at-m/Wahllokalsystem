@@ -1,7 +1,7 @@
 CREATE TABLE SystemBeschlussgrund
 (
     id                             VARCHAR2(255) NOT NULL,
-    reason                         VARCHAR2(30)  NOT NULL,
+    reason                         VARCHAR2(100) NOT NULL,
     stimmzettel_wahlbezirkID       VARCHAR2(255) NOT NULL,
     stimmzettel_wahlID             VARCHAR2(255) NOT NULL,
     stimmzettel_teamID             VARCHAR2(255) NOT NULL,

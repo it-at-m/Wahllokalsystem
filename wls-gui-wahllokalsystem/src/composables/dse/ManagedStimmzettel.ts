@@ -151,7 +151,7 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
   }
 
   return {
-    changeHistoryInReverOrder: computed(() => changeHistory.value.reverse()),
+    changeHistoryInReverOrder: computed(() => changeHistory.value.toReversed()),
     kandidatAddEinzelstimmenOrThrow,
     stimmzettel: computed(() => stimmzettel.value),
     stimmenSummary,

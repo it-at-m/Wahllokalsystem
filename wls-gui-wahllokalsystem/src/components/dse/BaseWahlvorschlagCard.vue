@@ -9,7 +9,10 @@
           <div>Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}</div>
           <div class="text-subtitle-2">
             Partei {{ wahlvorschlag.kurzname }} -
-            {{ wahlvorschlag.ordnungszahl }}
+            {{
+              wahlvorschlag.ordnungszahl *
+              WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL
+            }}
           </div>
         </div>
 
@@ -76,6 +79,7 @@ import { computed, nextTick, onActivated, ref, watch } from "vue";
 import BaseChipAnzahlStimmen from "@/components/dse/BaseChipAnzahlStimmen.vue";
 import BaseKandidatListItemContent from "@/components/dse/BaseKandidatListItemContent.vue";
 import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
+import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/composables/dse/ManagedStimmzettel.ts";
 
 const props = defineProps<{
   wahlvorschlag: Wahlvorschlag;

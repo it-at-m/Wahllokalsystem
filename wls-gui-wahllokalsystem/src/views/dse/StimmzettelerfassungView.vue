@@ -15,7 +15,7 @@
           :active="startenBtnActive"
           :is-disabled="startenBtnIsDisabled"
           @click="onErfassungStartenClicked"
-          >Starten</base-text-button
+          >{{ startNewStimmzettelButtonText }}</base-text-button
         >
         <base-text-button
           :is-disabled="unterbrechenBtnIsDisabled"
@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
-import { useTemplateRef } from "vue";
+import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -84,6 +84,7 @@ const {
   activeStimmzettel,
   beendenBtnActive,
   beendenBtnIsDisabled,
+  hasStimmzettel,
   isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
@@ -98,6 +99,10 @@ const {
   sendStatusUnterbrochen,
   startNewEmptyStimmzettelWithStimmzettelkennung,
 } = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
+
+const startNewStimmzettelButtonText = computed(() =>
+  hasStimmzettel.value ? "Fortsetzen" : "Starten"
+);
 
 function onErfassungStartenClicked() {
   isKennungsDialogVisible.value = true;

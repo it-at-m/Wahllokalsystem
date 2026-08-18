@@ -226,6 +226,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       expect(unitUnderTest.savedStimmzettel.value).not.toStrictEqual(
         mockedLoadedStimmzettel
       );
+      expect(unitUnderTest.hasStimmzettel.value).toStrictEqual(false);
 
       await mockDefinitions.runActivatedCallbacks();
 
@@ -239,6 +240,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         [true],
         [false],
       ]);
+      expect(unitUnderTest.hasStimmzettel.value).toStrictEqual(true);
 
       spyOnIsStimmzettelLoadingSetter.mockRestore();
     });

@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-basisdaten-service</artifactId>
-    <version>0.6.3-SNAPSHOT</version>
+    <version>0.6.4-SNAPSHOT</version>
     <name>wls_basisdaten_service</name>
 
     <properties>
@@ -565,7 +565,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>13.10.0</version>
+                        <version>13.11.0</version>
                     </dependency>
                 </dependencies>
             </plugin>

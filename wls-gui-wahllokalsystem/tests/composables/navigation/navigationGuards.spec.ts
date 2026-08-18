@@ -6,6 +6,7 @@ import type {
 
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
 import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTestDataFactory.ts";
@@ -15,13 +16,20 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
+  loadDseWorkflowStatus: vi.fn(),
   loadErfassungTeamStatus: vi.fn(),
 }));
 
+vi.mock("@/composables/dse/dseWorkflowStatusService.ts", () => ({
+  useDseWorkflowStatusService: () => ({
+    loadDseWorkflowStatus: mockDefinitions.loadDseWorkflowStatus,
+  }),
+}));
 vi.mock("@/composables/dse/stimmzettelerfassungTeamStatusService.ts", () => ({
   useStimmzettelerfassungTeamStatusService: () => ({
     loadErfassungTeamStatus: mockDefinitions.loadErfassungTeamStatus,
@@ -32,6 +40,8 @@ const { generateRandomString } = useCommonTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
+const { prepareStimmzettelerfassungStatus } =
+  useStimmzettelerfassungStatusTestDataFactory();
 const { prepareStimmzettelerfassungTeamStatus } =
   useStimmzettelerfassungTeamStatusTestDataFactory();
 
@@ -68,6 +78,7 @@ describe("navigationGuards.ts", () => {
     requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
     requireRoleErfassungteam,
     requireRoleSchriftfuehrung,
+    requiresWorkflowStatusStimmzettelerfassungAbgeschlossen,
     requiresStimmzettelErfassungTeamStatusAbgeschlossen,
   } = useNavigationGuards();
 
@@ -765,6 +776,93 @@ describe("navigationGuards.ts", () => {
       expect(
         requireRoleSchriftfuehrung(DUMMY_TO, DUMMY_FROM, DUMMY_NEXT_GUARD)
       ).toStrictEqual(false);
+    });
+  });
+
+  describe("requiresWorkflowStatusStimmzettelerfassungAbgeschlossen", () => {
+    it("should_returnTrue_when_stimmzettelErfassungTeamStatusIsSteAbgeschlossen", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      mockDefinitions.loadDseWorkflowStatus.mockReturnValue(
+        prepareStimmzettelerfassungStatus()
+          .status(StimmzettelerfassungStatusEnum.SteAbgeschlossen)
+          .build()
+      );
+
+      const result =
+        await requiresWorkflowStatusStimmzettelerfassungAbgeschlossen(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+      expect(mockDefinitions.loadDseWorkflowStatus.mock.calls[0]).toStrictEqual(
+        [wahlId, wahlbezirkId, false]
+      );
+      expect(result).toStrictEqual(true);
+    });
+    it("should_returnTrue_when_stimmzettelErfassungTeamStatusIsBeAbgeschlossen", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      mockDefinitions.loadDseWorkflowStatus.mockReturnValue(
+        prepareStimmzettelerfassungStatus()
+          .status(StimmzettelerfassungStatusEnum.BeAbgeschlossen)
+          .build()
+      );
+
+      const result =
+        await requiresWorkflowStatusStimmzettelerfassungAbgeschlossen(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+      expect(mockDefinitions.loadDseWorkflowStatus.mock.calls[0]).toStrictEqual(
+        [wahlId, wahlbezirkId, false]
+      );
+      expect(result).toStrictEqual(true);
+    });
+    it("should_returnFalse_when_stimmzettelErfassungTeamStatusIsInBearbeitung", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      mockDefinitions.loadDseWorkflowStatus.mockReturnValue(
+        prepareStimmzettelerfassungStatus()
+          .status(StimmzettelerfassungStatusEnum.SteBearbeitung)
+          .build()
+      );
+
+      const result =
+        await requiresWorkflowStatusStimmzettelerfassungAbgeschlossen(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+      expect(mockDefinitions.loadDseWorkflowStatus.mock.calls[0]).toStrictEqual(
+        [wahlId, wahlbezirkId, false]
+      );
+      expect(result).toStrictEqual(false);
     });
   });
 

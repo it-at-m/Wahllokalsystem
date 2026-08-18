@@ -64,7 +64,7 @@ describe("stimmzettelManager.ts", () => {
       const callArgs = mockDefinitions.handlerOneHandleOrThrow.mock.calls[0];
       expect(callArgs[0]).toBe(command);
       expect(
-        (callArgs[1] as ManagedStimmzettel).kandidatAddVotesOrThrow
+        (callArgs[1] as ManagedStimmzettel).kandidatAddEinzelstimmenOrThrow
       ).toBeDefined();
 
       expect(mockDefinitions.handlerTwoCanHandle).not.toHaveBeenCalled();

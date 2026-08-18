@@ -5,13 +5,13 @@
     confirmtext="Weiter zur Beschlussfassung"
     canceltext="Beschlussfassung nicht starten"
     icon="$information"
-    :is-confirm-loading="isAnzahlStimmzettelLoading"
+    :is-confirm-loading="isConfirmButtonInLoadingState"
     :cancel-disabled="isAnzahlStimmzettelLoading"
     @cancel="closeDialog"
     @confirm="onConfirmClicked"
   >
     <v-skeleton-loader
-      v-if="isAnzahlStimmzettelLoading"
+      v-if="isAnzahlStimmzettelLoading || stimmzettelCount === null"
       type="text"
     />
     <div v-else>
@@ -26,11 +26,10 @@
 <script setup lang="ts">
 import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
 
-import { ref, watch } from "vue";
+import { watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassungStartenDialogUtils.ts";
-import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,
@@ -43,21 +42,19 @@ const props = defineProps<{
   teamstatusList: StimmzettelerfassungTeamStatusEntry[];
 }>();
 
-const isAnzahlStimmzettelLoading = ref(false);
-const stimmzettelCount = ref<number | null>(0);
-
-const { updateWorkflowStatusAndNavigate } =
-  useBeschlussfassungStartenDialogUtils();
-const { getAnzahlStimmzettel } = useStimmzettelService();
+const {
+  isAnzahlStimmzettelLoading,
+  isConfirmButtonInLoadingState,
+  stimmzettelCount,
+  loadAnzahlStimmzettel,
+  updateWorkflowStatusAndNavigate,
+} = useBeschlussfassungStartenDialogUtils();
 
 watch(
   () => isDialogVisible.value,
   async (newVal) => {
     if (newVal) {
-      isAnzahlStimmzettelLoading.value = true;
-      stimmzettelCount.value =
-        (await getAnzahlStimmzettel(props.wahlId, props.wahlbezirkId)) ?? 0;
-      isAnzahlStimmzettelLoading.value = false;
+      await loadAnzahlStimmzettel(props.wahlId, props.wahlbezirkId);
     }
   }
 );

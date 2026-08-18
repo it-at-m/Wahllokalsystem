@@ -49,8 +49,8 @@ entfaltet, und es werden Markierungen vorgenommen, die zeigen, wo man Stimmen fi
 #### (2) Stimmzettel erfassen {#stimmzettel-erfassen}
 
 In diesem Schritt erfolgt die Erfassung der Stimmzettel im System. Der Stimmzettelerfassungs-Workflow-Status wird
-auf `(e) STE in Bearbeitung` gesetzt. Stimmzettel, über die der gesamte Wahlvorstand
-einen Beschluss fassen muss, werden entsprechend markiert.
+auf `(e) STE in Bearbeitung` gesetzt. Stimmzettel, über die der gesamte Wahlvorstand einen Beschluss fassen muss,
+werden entsprechend markiert und mit einem oder mehreren `Vormerkungsgründen` versehen.
 
 Um eine möglichst intuitive Erfassung der Stimmen des Stimmzettels zu ermöglichen, haben wir
 [Regeln](/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen) definiert.
@@ -66,8 +66,10 @@ ein Beschluss zu fassen ist, landen so auf einem separaten Stapel.
 
 Sind alle Teams mit der Erfassung fertig und der Stimmzettelerfassungs-Workflow-Status `(f) STE abgeschlossen` wurde
 erfolgreich übermittelt, startet die Beschlussdokumentation. Der Wahlvorstand fasst die Beschlüsse zu den zuvor
-markierten Stimmzetteln und überträgt die Ergebnisse ins System. Sind alle Beschlüsse vollständig dokumentiert, wird
-der Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschlossen` gespeichert.
+markierten Stimmzetteln und überträgt die Ergebnisse ins System. Eine Zusammenfassung mehrerer
+`Vormerkungsgründe` stellt einen `Beschlussvorschlag` dar, über welchen im Gremium abgestimmt wird. Der Vorschlag,
+der am Ende die Abstimmung gewinnt, wird als `Entscheidungsgrund` gespeichert. Sind alle Beschlüsse vollständig
+dokumentiert, wird der Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschlossen` gespeichert.
 
 ### Neue Statuswerte
 

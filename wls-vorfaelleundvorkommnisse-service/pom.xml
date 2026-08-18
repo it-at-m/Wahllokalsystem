@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-vorfaelleundvorkommnisse-service</artifactId>
-    <version>0.5.17-SNAPSHOT</version>
+    <version>0.5.18-SNAPSHOT</version>
     <name>wls_vorfaelleundvorkommnisse_service</name>
 
     <properties>
@@ -477,7 +477,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>13.10.0</version>
+                        <version>13.11.0</version>
                     </dependency>
                 </dependencies>
             </plugin>

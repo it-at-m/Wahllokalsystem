@@ -10,6 +10,7 @@ import StimmzettelerfassungView from "@/views/dse/StimmzettelerfassungView.vue";
 const {
   requireRoleSchriftfuehrung,
   requiresStimmzettelErfassungTeamStatusAbgeschlossen,
+  requiresWorkflowStatusStimmzettelerfassungAbgeschlossen,
 } = useNavigationGuards();
 
 const BASE_PATH_DSE = "/DSE/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
@@ -30,6 +31,10 @@ const dseRoutesRecord: Record<DseStepsEnum, RouteRecordRawWithoutName> = {
   [DseStepsEnum.DSE_BESCHLUSSFASSUNG]: {
     path: BASE_PATH_DSE + "/beschlussfassung",
     component: BeschlussfassungView,
+    beforeEnter: [
+      requireRoleSchriftfuehrung,
+      requiresWorkflowStatusStimmzettelerfassungAbgeschlossen,
+    ],
   },
 };
 

@@ -74,6 +74,7 @@ describe("monitoringViewUtils.ts", () => {
     expect(unit.teamstatusList.value).toEqual([]);
     expect(unit.lastLoading.value).toBeUndefined();
     expect(unit.isAktualisierenLoading.value).toBe(false);
+    expect(unit.isWorkflowStatusLoading.value).toBe(false);
     expect(unit.workflowStatus.value).toBe(null);
   });
 
@@ -111,7 +112,13 @@ describe("monitoringViewUtils.ts", () => {
     const workflowStatus = createStimmzettelerfassungStatus();
     mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(sample);
     mockDefinitions.loadDseWorkflowStatus.mockResolvedValue(workflowStatus);
+    const spyOnIsWorkflowStatusLoading = vi.spyOn(
+      unit.isWorkflowStatusLoading,
+      "value",
+      "set"
+    );
 
+    expect(unit.isWorkflowStatusLoading.value).toStrictEqual(false);
     await mockDefinitions.runActivatedCallbacks();
 
     expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
@@ -124,6 +131,11 @@ describe("monitoringViewUtils.ts", () => {
       wahlbezirkID,
       false
     );
+    expect(spyOnIsWorkflowStatusLoading.mock.calls).toStrictEqual([
+      [true],
+      [false],
+    ]);
+    spyOnIsWorkflowStatusLoading.mockRestore();
   });
 
   it("should_loadTeamStatusListeAndShowError_when_onActivatedCalledWithFailure", async () => {

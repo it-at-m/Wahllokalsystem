@@ -12,6 +12,7 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);
   const lastLoading = ref<Date>();
   const isAktualisierenLoading = ref(false);
+  const isWorkflowStatusLoading = ref(false);
   const workflowStatus = ref<StimmzettelerfassungStatus | null>(null);
 
   const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
@@ -31,11 +32,7 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
         UserNotificationCategoryEnum.ERROR
       );
     }
-    workflowStatus.value = await loadDseWorkflowStatus(
-      wahlID,
-      wahlbezirkID,
-      false
-    );
+    await _loadWorkflowStatus();
   });
 
   async function _loadTeamStatusListe(sendNotification = true) {
@@ -56,10 +53,24 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
+  async function _loadWorkflowStatus() {
+    isWorkflowStatusLoading.value = true;
+    try {
+      workflowStatus.value = await loadDseWorkflowStatus(
+        wahlID,
+        wahlbezirkID,
+        false
+      );
+    } finally {
+      isWorkflowStatusLoading.value = false;
+    }
+  }
+
   return {
     teamstatusList,
     lastLoading,
     isAktualisierenLoading,
+    isWorkflowStatusLoading,
     workflowStatus,
     onMonitoringSynchronisierenClicked,
   };

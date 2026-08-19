@@ -5,8 +5,6 @@ import { onActivated, ref } from "vue";
 
 import { useDseWorkflowStatusService } from "@/composables/dse/dseWorkflowStatusService.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
-import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
-import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);

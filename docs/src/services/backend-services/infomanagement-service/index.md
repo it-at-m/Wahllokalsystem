@@ -37,7 +37,7 @@ Eine Vielzahl an Konfigurationen wird am Wahltag über das Admin-Tool für die W
 | MELDUNGSZEIT_WAHL_SCHLIESSEN   | Automatische Meldung (UW + BW): Wahlhandlung schließen                            | 18:00:00                                                                                                                                                                                         |
 | MELDUNGSZEIT_ANWESENHEIT_CHECK | Automatische Meldung (UW): Anwesenheiten aktualisieren                            | 13:00:00                                                                                                                                                                                         |
 | KENNBUCHSTABEN                 |                                                                                   | K1, K2, K3 (K1 + K2), K4, K (K3 + K4); L1,L2, L3 (L1 + L2), L4, L (L3 + L4); M1, M2, M3 (M1 + M2), M4, M (M3 + M4); N1, N2, N3 (N1 + N2), N4, N (N3 + N4); O1, O2, O3 (O1 + O2), O4, O OK3 + O4) |
-| DSE_AKTIV                      | Soll die digitalen Stimmzettelerfassung verwendet werden                          | true                                                                                                                                                                                             | 
+| DSE_AKTIV                      | Soll die digitalen Stimmzettelerfassung verwendet werden                          | true                                                                                                                                                                                             |  
 
 ::: info Hinweise zu den Öffnungs- und Schliessungsuhrzeiten
 

@@ -63,6 +63,7 @@
       v-if="activeStimmzettel"
       v-model="isErfassungsDialogVisible"
       :stimmzettel="activeStimmzettel"
+      :wahlvorschlaege="wahlvorschlaege"
       @cancel="onStimmzettelErfassungCanceled"
       @confirm="onStimmzettelErfassungConfirmed"
     />
@@ -114,6 +115,7 @@ const {
   savedStimmzettel,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
+  wahlvorschlaege,
   saveNewStimmzettel,
   sendStatusInBearbeitung,
   sendStatusUnterbrochen,

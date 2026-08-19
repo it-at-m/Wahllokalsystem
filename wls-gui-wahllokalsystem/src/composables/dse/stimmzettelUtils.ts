@@ -5,6 +5,7 @@ import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/Wahlvorschla
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
+import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/composables/dse/ManagedStimmzettel.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/StimmzettelGueltigkeitEnum.ts";
 
 export function useStimmzettelUtils() {
@@ -36,27 +37,44 @@ export function useStimmzettelUtils() {
   }
 
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DSEWahlvorschlag {
-    const dseKandidaten: DSEKandidat[] =
-      wahlvorschlag.kandidaten?.map(_toDSEKandidat).flat() ?? [];
-    return {
+    const dseWahlvorschlag: DSEWahlvorschlag = {
       wahlvorschlagID: wahlvorschlag.identifikator,
       ordnungszahl: wahlvorschlag.ordnungszahl,
-      kandidaten: dseKandidaten,
+      kandidaten: [],
       selected: false,
+      ungueltigeStimmen: 0,
+      gueltigeStimmen: 0,
+      erhaeltStimmen: wahlvorschlag.erhaeltStimmen,
+      kurzname: wahlvorschlag.kurzname,
     };
+
+    dseWahlvorschlag.kandidaten =
+      wahlvorschlag.kandidaten
+        ?.map((kandidat) => _toDSEKandidat(kandidat, dseWahlvorschlag))
+        .flat() ?? [];
+    return dseWahlvorschlag;
   }
 
-  function _toDSEKandidat(kandidat: Kandidat): DSEKandidat[] {
+  function _toDSEKandidat(
+    kandidat: Kandidat,
+    wahlvorschlagOfKandiat: DSEWahlvorschlag
+  ): DSEKandidat[] {
     const result: DSEKandidat[] = [];
     for (let nennung = 1; nennung <= kandidat.anzahlNennungen; nennung++) {
       result.push({
         kandidatId: kandidat.identifikator,
         nennung: nennung,
         listenposition: kandidat.listenposition,
-        votesByVoter: null,
-        isDiscarded: false,
-        votesByWahlvorschlag: null,
-        invalidVotes: null,
+        ordnungszahl:
+          WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL *
+            wahlvorschlagOfKandiat.ordnungszahl +
+          kandidat.listenposition,
+        einzelstimmen: null,
+        durchgestrichen: false,
+        reststimmen: null,
+        ungueltigeStimmen: null,
+        name: kandidat.name,
+        owningWahlvorschlag: wahlvorschlagOfKandiat,
       });
     }
 

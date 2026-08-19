@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelkennungDialogUtils } from "@/composables/dse/stimmzettelkennungDialogUtils.ts";
 
-const { prepareStimmzettel } = useStimmzettelTestDataFactory();
+const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
 
 describe("stimmzettelkennungDialogUtils.ts", () => {
   const { getNextStimmzettelNumber } = useStimmzettelkennungDialogUtils();
@@ -15,7 +15,9 @@ describe("stimmzettelkennungDialogUtils.ts", () => {
 
   describe("getNextStimmzettelNumber", () => {
     it("should_returnNextNumber_when_oneStimmzettelExists", () => {
-      const stimmzettel = prepareStimmzettel().stimmzettelkennung(3).build();
+      const stimmzettel = preparePersistedStimmzettel()
+        .stimmzettelkennung(3)
+        .build();
 
       const result = getNextStimmzettelNumber([stimmzettel]);
 
@@ -23,9 +25,15 @@ describe("stimmzettelkennungDialogUtils.ts", () => {
     });
 
     it("should_returnNextNumber_when_multipleStimmzettelExists", () => {
-      const stimmzettel1 = prepareStimmzettel().stimmzettelkennung(5).build();
-      const stimmzettel2 = prepareStimmzettel().stimmzettelkennung(3).build();
-      const stimmzettel3 = prepareStimmzettel().stimmzettelkennung(24).build();
+      const stimmzettel1 = preparePersistedStimmzettel()
+        .stimmzettelkennung(5)
+        .build();
+      const stimmzettel2 = preparePersistedStimmzettel()
+        .stimmzettelkennung(3)
+        .build();
+      const stimmzettel3 = preparePersistedStimmzettel()
+        .stimmzettelkennung(24)
+        .build();
 
       const result = getNextStimmzettelNumber([
         stimmzettel1,

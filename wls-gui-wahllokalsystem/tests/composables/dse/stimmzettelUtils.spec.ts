@@ -23,7 +23,7 @@ vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
   }),
 }));
 
-const { prepareStimmzettel } = useStimmzettelTestDataFactory();
+const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 const {
   createWahlvorschlaege,
@@ -54,6 +54,17 @@ describe("stimmzettelUtils.ts", () => {
         gueltigkeit: null,
         invalideVotes: 0,
         wahlvorschlaege: uiWahlvorschlaege.wahlvorschlaege.map((ui) => {
+          const dseWahlvorschlag: DseWahlvorschlag = {
+            wahlvorschlagID: ui.identifikator,
+            ordnungszahl: ui.ordnungszahl,
+            selected: false,
+            kandidaten: [],
+            kurzname: ui.kurzname,
+            erhaeltStimmen: ui.erhaeltStimmen,
+            gueltigeStimmen: 0,
+            ungueltigeStimmen: 0,
+          };
+
           const dseKandidaten: DseKandidat[] =
             ui.kandidaten?.flatMap((uiKandidat) => {
               const kandidaten: DseKandidat[] = [];
@@ -66,21 +77,20 @@ describe("stimmzettelUtils.ts", () => {
                   kandidatId: uiKandidat.identifikator,
                   nennung,
                   listenposition: uiKandidat.listenposition,
-                  votesByVoter: null,
-                  isDiscarded: false,
-                  votesByWahlvorschlag: null,
-                  invalidVotes: null,
+                  ordnungszahl:
+                    dseWahlvorschlag.ordnungszahl * 100 +
+                    uiKandidat.listenposition,
+                  einzelstimmen: null,
+                  durchgestrichen: false,
+                  reststimmen: null,
+                  ungueltigeStimmen: null,
+                  name: uiKandidat.name,
+                  owningWahlvorschlag: dseWahlvorschlag,
                 });
               }
               return kandidaten;
             }) ?? [];
-
-          const dseWahlvorschlag: DseWahlvorschlag = {
-            wahlvorschlagID: ui.identifikator,
-            ordnungszahl: ui.ordnungszahl,
-            selected: false,
-            kandidaten: dseKandidaten,
-          };
+          dseWahlvorschlag.kandidaten = dseKandidaten;
           return dseWahlvorschlag;
         }),
       };
@@ -113,19 +123,25 @@ describe("stimmzettelUtils.ts", () => {
           kandidatId: "k-id",
           nennung: 1,
           listenposition: 5,
-          votesByVoter: null,
-          isDiscarded: false,
-          votesByWahlvorschlag: null,
-          invalidVotes: null,
+          ordnungszahl: 1005,
+          einzelstimmen: null,
+          durchgestrichen: false,
+          reststimmen: null,
+          ungueltigeStimmen: null,
+          name: kandidatWithTwoNennungen.name,
+          owningWahlvorschlag: result.wahlvorschlaege[0],
         },
         {
           kandidatId: "k-id",
           nennung: 2,
           listenposition: 5,
-          votesByVoter: null,
-          isDiscarded: false,
-          votesByWahlvorschlag: null,
-          invalidVotes: null,
+          ordnungszahl: 1005,
+          einzelstimmen: null,
+          durchgestrichen: false,
+          reststimmen: null,
+          ungueltigeStimmen: null,
+          name: kandidatWithTwoNennungen.name,
+          owningWahlvorschlag: result.wahlvorschlaege[0],
         },
       ];
 
@@ -145,6 +161,10 @@ describe("stimmzettelUtils.ts", () => {
         ordnungszahl: uiWahlvorschlagWithoutKandidaten.ordnungszahl,
         selected: false,
         kandidaten: [],
+        kurzname: uiWahlvorschlagWithoutKandidaten.kurzname,
+        erhaeltStimmen: uiWahlvorschlagWithoutKandidaten.erhaeltStimmen,
+        gueltigeStimmen: 0,
+        ungueltigeStimmen: 0,
       };
 
       expect(result.wahlvorschlaege[0]).toStrictEqual(expectedDseWahlvorschlag);
@@ -163,6 +183,17 @@ describe("stimmzettelUtils.ts", () => {
       ]);
 
       const expectedWahlvorschlaege: DseWahlvorschlag[] = [w1, w2].map((ui) => {
+        const dseWahlvorschlag: DseWahlvorschlag = {
+          wahlvorschlagID: ui.identifikator,
+          ordnungszahl: ui.ordnungszahl,
+          selected: false,
+          kandidaten: [],
+          kurzname: ui.kurzname,
+          erhaeltStimmen: ui.erhaeltStimmen,
+          gueltigeStimmen: 0,
+          ungueltigeStimmen: 0,
+        };
+
         const dseKandidaten: DseKandidat[] =
           ui.kandidaten?.flatMap((uiKandidat) => {
             const kandidaten: DseKandidat[] = [];
@@ -175,21 +206,21 @@ describe("stimmzettelUtils.ts", () => {
                 kandidatId: uiKandidat.identifikator,
                 nennung,
                 listenposition: uiKandidat.listenposition,
-                votesByVoter: null,
-                isDiscarded: false,
-                votesByWahlvorschlag: null,
-                invalidVotes: null,
+                ordnungszahl:
+                  dseWahlvorschlag.ordnungszahl * 100 +
+                  uiKandidat.listenposition,
+                einzelstimmen: null,
+                durchgestrichen: false,
+                reststimmen: null,
+                ungueltigeStimmen: null,
+                name: uiKandidat.name,
+                owningWahlvorschlag: dseWahlvorschlag,
               });
             }
             return kandidaten;
           }) ?? [];
 
-        const dseWahlvorschlag: DseWahlvorschlag = {
-          wahlvorschlagID: ui.identifikator,
-          ordnungszahl: ui.ordnungszahl,
-          selected: false,
-          kandidaten: dseKandidaten,
-        };
+        dseWahlvorschlag.kandidaten = dseKandidaten;
         return dseWahlvorschlag;
       });
 
@@ -214,7 +245,9 @@ describe("stimmzettelUtils.ts", () => {
 
   describe("isVorgemerktFuerBeschluss", () => {
     it("should_returnFalse_when_noBeschlussvorschlagPresent", () => {
-      const stimmzettel = prepareStimmzettel().beschlussvorschlag([]).build();
+      const stimmzettel = preparePersistedStimmzettel()
+        .beschlussvorschlag([])
+        .build();
 
       const vorgemerkt = isVorgemerktFuerBeschluss(stimmzettel);
 
@@ -225,7 +258,7 @@ describe("stimmzettelUtils.ts", () => {
       const text1 = generateRandomString(8);
       const text2 = generateRandomString(10);
 
-      const stimmzettel = prepareStimmzettel()
+      const stimmzettel = preparePersistedStimmzettel()
         .beschlussvorschlag([{ text: text1 }, { text: text2 }])
         .build();
 
@@ -237,7 +270,9 @@ describe("stimmzettelUtils.ts", () => {
 
   describe("getVormerkungsgrund", () => {
     it("should_returnEmptyString_when_noBeschlussvorschlagPresent", () => {
-      const stimmzettel = prepareStimmzettel().beschlussvorschlag([]).build();
+      const stimmzettel = preparePersistedStimmzettel()
+        .beschlussvorschlag([])
+        .build();
 
       const grund = getVormerkungsgrund(stimmzettel);
 
@@ -248,7 +283,7 @@ describe("stimmzettelUtils.ts", () => {
       const text1 = generateRandomString(8);
       const text2 = generateRandomString(10);
 
-      const stimmzettel = prepareStimmzettel()
+      const stimmzettel = preparePersistedStimmzettel()
         .beschlussvorschlag([{ text: text1 }, { text: text2 }])
         .build();
 

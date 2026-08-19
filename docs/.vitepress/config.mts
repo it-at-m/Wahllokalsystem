@@ -246,10 +246,6 @@ export default withMermaid({
             },
             { text: "Mock-Server", link: `${PATH_GUIDES}mock-server.md` },
             {
-              text: "ArchUnit Rules Testen",
-              link: `${PATH_GUIDES}archunit-rule-tests.md`,
-            },
-            {
               text: "Aktualisierung von Images",
               link: `${PATH_GUIDES}update-images.md`,
             },

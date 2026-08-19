@@ -16,17 +16,17 @@ const {
   createStimmzettelOfTeamDTO,
   prepareStimmzettelOfTeamDTO,
   createStimmzettelKandidatDTO,
-  createStimmzettel,
-  prepareStimmzettel,
-  createStimmzettelKandidat,
-  prepareStimmzettelBeschlussfassung,
+  createPersistedStimmzettel,
+  preparePersistedStimmzettel,
+  createPersistedStimmzettelKandidat,
+  preparePersistedStimmzettelBeschlussfassung,
   prepareStimmzettelBeschlussfassungDTO,
-  prepareStimmzettelBeschlussgrund,
+  preparePersistedStimmzettelBeschlussgrund,
   prepareStimmzettelBeschlussgrundDTO,
-  prepareStimmzettelKandidat,
+  preparePersistedStimmzettelKandidat,
   prepareStimmzettelKandidatDTO,
   prepareStimmzettelKandidatIdDTO,
-  prepareStimmzettelWahlvorschlag,
+  preparePersistedStimmzettelWahlvorschlag,
   prepareStimmzettelWahlvorschlagDTO,
 } = useStimmzettelTestDataFactory();
 
@@ -39,12 +39,12 @@ describe("stimmzettelMapper.ts", () => {
 
       const result: Stimmzettel = toModel(dtoToMap);
 
-      const expectedResult: Stimmzettel = prepareStimmzettel()
+      const expectedResult: Stimmzettel = preparePersistedStimmzettel()
         .stimmzettelkennung(dtoToMap.stimmzettelkennung)
         .invalideVotes(dtoToMap.invalideVotes)
         .gueltigkeit(dtoToMap.gueltigkeit)
         .beschlussfassung(
-          prepareStimmzettelBeschlussfassung()
+          preparePersistedStimmzettelBeschlussfassung()
             .contra(dtoToMap.beschlussfassung!.contra!)
             .pro(dtoToMap.beschlussfassung!.pro!)
             .text(dtoToMap.beschlussfassung!.text!)
@@ -52,19 +52,19 @@ describe("stimmzettelMapper.ts", () => {
         )
         .beschlussvorschlag(
           dtoToMap.beschlussvorschlag!.map((dtoBeschlussgrund) =>
-            prepareStimmzettelBeschlussgrund()
+            preparePersistedStimmzettelBeschlussgrund()
               .text(dtoBeschlussgrund.text)
               .build()
           )
         )
         .wahlvorschlaege(
           dtoToMap.wahlvorschlaege!.map((dtoWahlvorschlag) =>
-            prepareStimmzettelWahlvorschlag()
+            preparePersistedStimmzettelWahlvorschlag()
               .wahlvorschlagID(dtoWahlvorschlag.wahlvorschlagID)
               .selected(dtoWahlvorschlag.selected)
               .kandidaten(
                 dtoWahlvorschlag.kandidaten!.map((dtoKandidat) =>
-                  prepareStimmzettelKandidat()
+                  preparePersistedStimmzettelKandidat()
                     .isDiscarded(dtoKandidat.discarded)
                     .invalidVotes(dtoKandidat.invalidVotes!)
                     .votesByVoter(dtoKandidat.votesByVoter!)
@@ -167,7 +167,7 @@ describe("stimmzettelMapper.ts", () => {
 
       const result = toModel(dtoWithSingleKandidat);
 
-      const expectedKandidat = prepareStimmzettelKandidat()
+      const expectedKandidat = preparePersistedStimmzettelKandidat()
         .kandidatId(singleKandidat.id.kandidatID)
         .nennung(singleKandidat.id.nennungsNummer)
         .isDiscarded(singleKandidat.discarded)
@@ -206,7 +206,7 @@ describe("stimmzettelMapper.ts", () => {
 
   describe("toDTO", () => {
     it("should_mapAllFields_when_modelIsGiven", () => {
-      const modelToMap = createStimmzettel();
+      const modelToMap = createPersistedStimmzettel();
 
       const result: StimmzettelOfTeamDTO = toDTO(modelToMap);
 
@@ -257,7 +257,7 @@ describe("stimmzettelMapper.ts", () => {
     });
 
     it("should_returnUndefinedWahlvorschlaege_when_modelWahlvorschlaegeIsEmpty", () => {
-      const modelWithEmptyWahlvorschlaege = prepareStimmzettel()
+      const modelWithEmptyWahlvorschlaege = preparePersistedStimmzettel()
         .wahlvorschlaege([])
         .build();
 
@@ -267,7 +267,7 @@ describe("stimmzettelMapper.ts", () => {
     });
 
     it("should_returnUndefinedBeschlussvorschlag_when_modelBeschlussvorschlagIsEmpty", () => {
-      const modelWithoutBeschlussvorschlag = prepareStimmzettel()
+      const modelWithoutBeschlussvorschlag = preparePersistedStimmzettel()
         .beschlussvorschlag([])
         .build();
 
@@ -277,7 +277,7 @@ describe("stimmzettelMapper.ts", () => {
     });
 
     it("should_returnUndefinedBeschlussfassung_when_modelBeschlussfassungIsNull", () => {
-      const modelWithoutBeschlussfassung = prepareStimmzettel()
+      const modelWithoutBeschlussfassung = preparePersistedStimmzettel()
         .beschlussfassung(null)
         .build();
 
@@ -287,9 +287,9 @@ describe("stimmzettelMapper.ts", () => {
     });
 
     it("should_handleEmptyKandidatenArray_when_modelKandidatenIsEmpty", () => {
-      const modelWithEmptyKandidaten = prepareStimmzettel()
+      const modelWithEmptyKandidaten = preparePersistedStimmzettel()
         .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag().kandidaten([]).build(),
+          preparePersistedStimmzettelWahlvorschlag().kandidaten([]).build(),
         ])
         .build();
 
@@ -299,10 +299,10 @@ describe("stimmzettelMapper.ts", () => {
     });
 
     it("should_mapSingleKandidatCorrectly_when_oneKandidatIsGiven", () => {
-      const singleKandidat = createStimmzettelKandidat();
-      const modelWithSingleKandidat = prepareStimmzettel()
+      const singleKandidat = createPersistedStimmzettelKandidat();
+      const modelWithSingleKandidat = preparePersistedStimmzettel()
         .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag()
+          preparePersistedStimmzettelWahlvorschlag()
             .kandidaten([singleKandidat])
             .build(),
         ])
@@ -328,14 +328,15 @@ describe("stimmzettelMapper.ts", () => {
     });
 
     it("should_mapNullVoteFieldsToUndefined_when_kandidatVotesAreNull", () => {
-      const kandidatWithoutVotes: Kandidat = prepareStimmzettelKandidat()
-        .votesByVoter(null)
-        .invalidVotes(null)
-        .votesByWahlvorschlag(null)
-        .build();
-      const modelWithKandidatWithoutVotes = prepareStimmzettel()
+      const kandidatWithoutVotes: Kandidat =
+        preparePersistedStimmzettelKandidat()
+          .votesByVoter(null)
+          .invalidVotes(null)
+          .votesByWahlvorschlag(null)
+          .build();
+      const modelWithKandidatWithoutVotes = preparePersistedStimmzettel()
         .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag()
+          preparePersistedStimmzettelWahlvorschlag()
             .kandidaten([kandidatWithoutVotes])
             .build(),
         ])

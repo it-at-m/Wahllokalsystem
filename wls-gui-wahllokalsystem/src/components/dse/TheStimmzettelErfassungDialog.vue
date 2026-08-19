@@ -9,7 +9,54 @@
         Erfassung Stimmzettel Nummer {{ currentUserTeamName }}
         {{ stimmzettel.stimmzettelkennung }}
       </v-card-title>
-      <v-card-text> In progress </v-card-text>
+      <v-card-text>
+        <v-row>
+          <v-col cols="2">
+            <the-eingabehistorie-card
+              :change-history="
+                stimmzettelManager.managedStimmzettel.changeHistoryInReverOrder
+                  .value
+              "
+            />
+            <base-stimmzettel-zusammenfassung-card
+              class="mt-2"
+              :listenstimmen="
+                stimmzettelManager.managedStimmzettel
+                  .wahlvorschlaegeWithListenkreuz.value
+              "
+              :ungueltigestimmen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .ungueltigeStimmen
+              "
+              :direktstimmen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .einzelstimmen
+              "
+              :reststimmen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .reststimmen
+              "
+              :streichungen="
+                stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                  .streichungen
+              "
+              :gueltigkeit="'VALID'"
+            />
+          </v-col>
+          <v-col cols="10">
+            <the-stimmzettel-command-processing-text-field
+              :stimmzettel-manager="stimmzettelManager"
+            />
+            <the-stimmzettel-content
+              :active-wahlvorschlag-id="null"
+              :wahlvorschlaege="
+                stimmzettelManager.managedStimmzettel.stimmzettel.value
+                  .wahlvorschlaege
+              "
+            />
+          </v-col>
+        </v-row>
+      </v-card-text>
       <v-card-actions>
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
         <base-wls-button-save @click="onSavedClicked" />
@@ -20,12 +67,18 @@
 
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
+import BaseStimmzettelZusammenfassungCard from "@/components/dse/BaseStimmzettelZusammenfassungCard.vue";
+import TheEingabehistorieCard from "@/components/dse/TheEingabehistorieCard.vue";
+import TheStimmzettelCommandProcessingTextField from "@/components/dse/TheStimmzettelCommandProcessingTextField.vue";
+import TheStimmzettelContent from "@/components/dse/TheStimmzettelContent.vue";
+import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassungDialogUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
@@ -38,12 +91,20 @@ const props = defineProps({
     type: Object as PropType<Stimmzettel>,
     required: true,
   },
+  wahlvorschlaege: {
+    type: Array as PropType<Wahlvorschlag[]>,
+    required: true,
+  },
 });
 
 const emit = defineEmits<{
   cancel: [];
   confirm: [stimmzettel: Stimmzettel];
 }>();
+
+const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
+  props.wahlvorschlaege
+);
 
 const { currentUserTeamName } = storeToRefs(useUserStore());
 

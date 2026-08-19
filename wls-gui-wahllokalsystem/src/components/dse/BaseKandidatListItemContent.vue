@@ -8,7 +8,7 @@
 
     <div class="flex-grow-1 mr-4">
       <div>
-        {{ kandidatOrdnungszahl }}
+        {{ kandidat.ordnungszahl }}
       </div>
       <div
         :style="{
@@ -58,11 +58,5 @@ const gesamtStimmen = computed(
     (props.kandidat.reststimmen ?? 0) +
     (props.kandidat.einzelstimmen ?? 0) +
     (props.kandidat.ungueltigeStimmen ?? 0)
-);
-
-const kandidatOrdnungszahl = computed(
-  () =>
-    props.kandidat.owningWahlvorschlag.ordnungszahl * 100 +
-    props.kandidat.listenposition //TODO die 100 mit dem Multiplikator zusammenlegen. Teil von AZs von 3141
 );
 </script>

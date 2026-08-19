@@ -1,4 +1,4 @@
 INSERT INTO Konfiguration (schluessel, wert, beschreibung, standardwert)
-SELECT 'DSE_AKTIV', 'true', 'Soll die digitalen Stimmzettelerfassung verwendet werden', 'true'
+SELECT 'DSE_AKTIV', 'true', 'Soll die digitale Stimmzettelerfassung verwendet werden', 'true'
 FROM dual
 WHERE NOT EXISTS (SELECT * FROM Konfiguration WHERE schluessel = 'DSE_AKTIV');

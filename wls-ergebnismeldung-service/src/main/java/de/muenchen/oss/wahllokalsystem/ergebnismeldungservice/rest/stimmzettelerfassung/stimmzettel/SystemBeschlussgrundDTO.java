@@ -1,3 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.stimmzettel;
 
-public record SystemBeschlussgrundDTO(SystemBeschlussgrundEnumDTO reason) {}
+import jakarta.validation.constraints.NotNull;
+
+public record SystemBeschlussgrundDTO(@NotNull SystemBeschlussgrundEnumDTO reason) {}

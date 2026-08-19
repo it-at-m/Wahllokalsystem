@@ -800,7 +800,7 @@ export interface SystemBeschlussgrundDTO {
      * @type {string}
      * @memberof SystemBeschlussgrundDTO
      */
-    'reason'?: SystemBeschlussgrundDTOReasonEnum;
+    'reason': SystemBeschlussgrundDTOReasonEnum;
 }
 
 export const SystemBeschlussgrundDTOReasonEnum = {

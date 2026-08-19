@@ -42,7 +42,7 @@ Wahlbezirksart, ist kein Prefix zu vergeben.
 > [!NOTE]
 > Die Bezeichnung stammt aus einem älteren [StyleGuide](https://v2.vuejs.org/v2/style-guide/#Single-instance-component-names-strongly-recommended)
 
-**Beispiel:**e
+**Beispiele:**
 
 `TheWahlvorstandLastSendDiv.vue` ... Wahlvorstandskomponente welche die Uhrzeit der letzten Übermittlung darstellt
 
@@ -74,7 +74,7 @@ Formatter gehören zu einem Datentyp oder einer Domain.
 
 `textFormatter.ts` ... Formartierungsfunktionen für Text
 
-`dateTimeFormatter.ts` ... Formartierungsfunktionen für Date
+`dateTimeFormatter.ts` ... Formatierungsfunktionen für Date
 
 ### Utils
 
@@ -106,15 +106,15 @@ Formatter gehören zu einem Datentyp oder einer Domain.
 
 **Beispiel:**
 
-`wahlvorstandFetchService.ts` ... stellt Funktionen bereit um Daten des Wahlvorstandes aus dem Backend abzurufen
+`wahlvorstandFetchService.ts` ... stellt Funktionen bereit, um Daten des Wahlvorstandes aus dem Backend abzurufen
 
-### Tool
+### Tools
 
 `<typ>Tools.ts`
 
 **Beispiel:**
 
-`wahlvorstandsMitgliedTools.ts` ... stellt Funktionen bereit rund um den Datentyp bereit, wie z.B. die Erstellung eines fachlich leeren Objektes
+`wahlvorstandsMitgliedTools.ts` ... stellt Funktionen rund um den Datentyp bereit, wie z.B. die Erstellung eines fachlich leeren Objektes
 
 ### Manager
 

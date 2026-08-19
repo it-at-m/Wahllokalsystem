@@ -160,15 +160,15 @@ Komponenten können Composables verwenden. `Basis`-Komponenten können nur `Rule
 |----------------|------------------------------------------------------------------------------------------------------------------------|
 | Rules          | Enthält Validierungsregeln für Felder                                                                                  |
 | Formatter      | Funktionen zur Anpassung der Darstellung eines Wertes. Dazu gehört auch die Umwandlung von Werten in Icons oder Farben |
-| StoreModule    | Kapselt eine Teilfunktionalität eines Store um den Store klarer strukturiert zu halten                                 |
-| Utils          | Hilfsklassen für Komponenten die komplexe Logik für die Komponenten kapseln                                            |
+| StoreModule    | Kapselt Teilfunktionalität eines Stores, um den Store klarer zu strukturieren                                          |
+| Utils          | Stellt Hilfsfunktionen für Komponenten mit komplexer Logik bereit                                                      |
 | FetchService   | Stellt Funktionen bereit um Daten aus dem Backend abzurufen. Hierzu zählt auch der Service Worker                      |
 | Tools          | Stellt Funktionen für einen bestimmten Datentyp zur Verfügung                                                          |
 | Mapper         | Stellt Funktionen bereit um von einem Datentyp in einen Anderen zu Mappen                                              |
-| Manger         | Kapselt diverse andere Funktionen und entscheidet ihm Rahmen der Verarbeitung an wen die Anfrage deligiert wird        |
-| Service        | Stellt allgemein Funktionen zur Verfügung die sonst ist keine Kategorie passen                                         |
+| Manager        | Kapselt weitere Funktionen und entscheidet im Rahmen der Verarbeitung, an wen die Anfrage delegiert wird               |
+| Service        | Stellt allgemeine Funktionen zur Verfügung, die in keine andere Kategorie passen                                       |
 
-`Mapper`-Composables können nur durch `Utlils`- oder `FetchService`-Composables verwendet werden. `Manager`-Composables werden
+`Mapper`-Composables können nur durch `Utils`- oder `FetchService`-Composables verwendet werden. `Manager`-Composables werden
 nur durch `FetchService`-Composables verwendet. `StoreModule`-Composables werden nur durch `Stores` verwendet.
 
 > [!NOTE] Namenskonventionen

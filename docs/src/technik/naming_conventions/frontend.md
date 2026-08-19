@@ -130,7 +130,7 @@ Formatter gehören zu einem Datentyp oder einer Domain.
 
 **Beispiel:**
 
-`loggingService.ts` ... stellt Funktionen bereit zu einem Thema bereit, dass zu sonst keinem Typ Composable passt
+`loggingService.ts` ... stellt Funktionen zu einem Thema bereit, dass sonst zu keinem Typ Composable passt
 
 ## Types
 

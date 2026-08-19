@@ -2,6 +2,7 @@ import type { InputHistoryItem } from "@/types/dse/InputHistoryItem.ts";
 import type { Kandidat } from "@/types/dse/Kandidat.ts";
 import type { StimmenSummary } from "@/types/dse/StimmenSummary.ts";
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
+import type { Wahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
 import { computed, ref } from "vue";
@@ -75,6 +76,99 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     _internalAddVotesToKandidat(kandidat, votesToAdd);
   }
 
+  function kandidatAddUngueltigeStimmenOrThrow(
+    ordnungszahl: number,
+    invalidVotesToAdd: number
+  ) {
+    if (!Number.isSafeInteger) {
+      throw new ManagedStimmzettelError(
+        "Die Anzahl der hinzuzufügenden ungültigen Stimmen muss eine ganze Zahl sein."
+      );
+    }
+    const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
+    if (!kandidat) {
+      throw new ManagedStimmzettelError(
+        `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+      );
+    }
+
+    _internalAddInvalidVotesToKandidat(kandidat, invalidVotesToAdd);
+  }
+
+  function kandidatenAddStimmenInRangeOrThrow(
+    lowerOrdnungszahl: number,
+    upperOrdnungszahl: number,
+    votesToAdd: number
+  ) {
+    if (!Number.isSafeInteger) {
+      throw new ManagedStimmzettelError(
+        "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
+      );
+    }
+    const kandidaten = [];
+    for (
+      let ordnungszahl = lowerOrdnungszahl;
+      ordnungszahl <= upperOrdnungszahl;
+      ordnungszahl++
+    ) {
+      const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
+      if (!kandidat) {
+        throw new ManagedStimmzettelError(
+          `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+        );
+      }
+      kandidaten.push(kandidat);
+    }
+
+    _internalAddVotesToKandidatenRange(kandidaten, votesToAdd);
+  }
+
+  function kandidatAddStreichungOrThrow(ordnungszahl: number) {
+    const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
+    if (!kandidat) {
+      throw new ManagedStimmzettelError(
+        `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+      );
+    }
+
+    _internalAddStreichungToKandidat(kandidat);
+  }
+
+  function kandidatenStreichungenInRangeOrThrow(
+    lowerOrdnungszahl: number,
+    upperOrdnungszahl: number
+  ) {
+    const kandidaten = [];
+    for (
+      let ordnungszahl = lowerOrdnungszahl;
+      ordnungszahl <= upperOrdnungszahl;
+      ordnungszahl++
+    ) {
+      const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
+      if (!kandidat) {
+        throw new ManagedStimmzettelError(
+          `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+        );
+      }
+      kandidaten.push(kandidat);
+    }
+
+    _internalAddStreichungenToKandidatenRange(kandidaten);
+  }
+
+  function wahlvorschlagAddVotesOrThrow(wahlvorschlagOrdnungszahl: number) {
+    const wahlvorschlag = _getWahlvorschlagToAddVotesByOrdnungszahl(
+      wahlvorschlagOrdnungszahl
+    );
+    if (!wahlvorschlag) {
+      throw new ManagedStimmzettelError(
+        `Wahlvorschlag mit Ordnungszahl ${wahlvorschlagOrdnungszahl} existiert nicht.`
+      );
+    }
+
+    _internalAddVotesToWahlvorschlag(wahlvorschlag);
+  }
+
   function _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl: number) {
     const kandidatenWithOrdnungszahl = kandidatenOfStimmzettel.value.filter(
       (kandidat) => kandidat.ordnungszahl === ordnungszahl
@@ -85,6 +179,12 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     } else {
       return _findKandidatToAddEinzelstimme(kandidatenWithOrdnungszahl);
     }
+  }
+
+  function _getWahlvorschlagToAddVotesByOrdnungszahl(ordnungszahl: number) {
+    return stimmzettel.value.wahlvorschlaege.find(
+      (wahlvorschlag) => wahlvorschlag.ordnungszahl === ordnungszahl
+    );
   }
 
   function _findKandidatToAddEinzelstimme(
@@ -118,7 +218,73 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
       currentEinzelstimmen + Math.abs(numberOfVotesToAdd);
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
+      text: [
+        `${kandidat.ordnungszahl}${numberOfVotesToAdd > 1 ? " + " + numberOfVotesToAdd + " Stimmen" : ""}`,
+        kandidat.name,
+      ],
+    });
+  }
+
+  function _internalAddInvalidVotesToKandidat(
+    kandidat: Kandidat,
+    numberOfInvalidVotesToAdd: number
+  ) {
+    const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
+    kandidat.ungueltigeStimmen =
+      currentUngueltigeStimmen + Math.abs(numberOfInvalidVotesToAdd);
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.ADD_USER_VOTE,
+      text: [
+        `${kandidat.ordnungszahl}${numberOfInvalidVotesToAdd > 1 ? " + " + numberOfInvalidVotesToAdd + " ungültige Stimmen" : ""}`,
+        kandidat.name,
+      ],
+    });
+  }
+
+  function _internalAddVotesToKandidatenRange(
+    kandidaten: Kandidat[],
+    numberOfVotesToAdd: number
+  ) {
+    kandidaten.map((kandidat) => {
+      const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
+      kandidat.einzelstimmen =
+        currentEinzelstimmen + Math.abs(numberOfVotesToAdd);
+    });
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.VOTE_RANGE,
+      text: [
+        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}${numberOfVotesToAdd > 1 ? " + " + numberOfVotesToAdd + " Stimmen" : ""}`,
+      ],
+    });
+  }
+
+  function _internalAddStreichungToKandidat(kandidat: Kandidat) {
+    kandidat.durchgestrichen = true;
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.DISCARD_KANDIDAT,
       text: [`${kandidat.ordnungszahl}`, kandidat.name],
+    });
+  }
+
+  function _internalAddStreichungenToKandidatenRange(kandidaten: Kandidat[]) {
+    kandidaten.map((kandidat) => (kandidat.durchgestrichen = true));
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.DISCARD_RANGE,
+      text: [
+        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}`,
+      ],
+    });
+  }
+
+  function _internalAddVotesToWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
+    wahlvorschlag.kandidaten.map((kandidat) => {
+      const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
+      kandidat.einzelstimmen = currentEinzelstimmen + 1;
+    });
+    wahlvorschlag.selected = true;
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
+      text: [`${wahlvorschlag.kurzname}`],
     });
   }
 
@@ -155,6 +321,11 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
       [...changeHistory.value].reverse()
     ),
     kandidatAddEinzelstimmenOrThrow,
+    kandidatAddUngueltigeStimmenOrThrow,
+    kandidatenAddStimmenInRangeOrThrow,
+    kandidatAddStreichungOrThrow,
+    kandidatenStreichungenInRangeOrThrow,
+    wahlvorschlagAddVotesOrThrow,
     stimmzettel: computed(() => stimmzettel.value),
     stimmenSummary,
     wahlvorschlaegeWithListenkreuz,

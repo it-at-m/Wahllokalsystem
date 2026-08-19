@@ -6,12 +6,14 @@ import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.t
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
 interface CommandArguments {
-  kandidatOrdnungszahl: number;
+  kandidatOrdnungszahlLowerBound: number;
+  kandidatOrdnungszahlUpperBound: number;
   countVotes: number;
 }
 
-export function useAddVotesToSingleKandidatHandler(): CommandHandler {
-  const REGEX_ADD_VOTES_TO_KANDIDAT = /^([1-9]\d{2,})(\+(\d*))?$/;
+export function useAddVotesToKandidatenRangeHandler(): CommandHandler {
+  const REGEX_ADD_VOTES_TO_KANDIDATEN_RANGE =
+    /^([1-9]\d{2,})-([1-9]\d{2,})(\+(\d+))?$/;
 
   function canHandle(command: string): boolean {
     try {
@@ -34,8 +36,9 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
     }
 
     try {
-      stimmzettel.kandidatAddEinzelstimmenOrThrow(
-        commandArguments.kandidatOrdnungszahl,
+      stimmzettel.kandidatenAddStimmenInRangeOrThrow(
+        commandArguments.kandidatOrdnungszahlLowerBound,
+        commandArguments.kandidatOrdnungszahlUpperBound,
         commandArguments.countVotes
       );
     } catch (error) {
@@ -48,12 +51,15 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
   }
 
   function _parseCommandArguments(command: string): CommandArguments | null {
-    const match = REGEX_ADD_VOTES_TO_KANDIDAT.exec(command);
+    const match = REGEX_ADD_VOTES_TO_KANDIDATEN_RANGE.exec(command);
 
     if (match?.[1] !== undefined) {
-      const votesText = match[3];
+      const votesText = match[4];
+      const bound1 = Number.parseInt(match[1]);
+      const bound2 = Number.parseInt(match[2]);
       const commandArgs = {
-        kandidatOrdnungszahl: Number.parseInt(match[1]),
+        kandidatOrdnungszahlLowerBound: Math.min(bound1, bound2),
+        kandidatOrdnungszahlUpperBound: Math.max(bound1, bound2),
         countVotes:
           votesText && votesText.length > 0 ? Number.parseInt(votesText) : 1,
       };
@@ -67,8 +73,12 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
     commandArguments: CommandArguments
   ): boolean {
     return (
-      Number.isSafeInteger(commandArguments.kandidatOrdnungszahl) &&
-      commandArguments.kandidatOrdnungszahl %
+      Number.isSafeInteger(commandArguments.kandidatOrdnungszahlLowerBound) &&
+      commandArguments.kandidatOrdnungszahlLowerBound %
+        WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL !=
+        0 &&
+      Number.isSafeInteger(commandArguments.kandidatOrdnungszahlUpperBound) &&
+      commandArguments.kandidatOrdnungszahlUpperBound %
         WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL !=
         0 &&
       Number.isSafeInteger(commandArguments.countVotes)

@@ -7,11 +7,11 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
 
 interface CommandArguments {
   kandidatOrdnungszahl: number;
-  countVotes: number;
+  countInvalidVotes: number;
 }
 
-export function useAddVotesToSingleKandidatHandler(): CommandHandler {
-  const REGEX_ADD_VOTES_TO_KANDIDAT = /^([1-9]\d{2,})(\+(\d*))?$/;
+export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
+  const REGEX_ADD_INVALID_VOTES_TO_KANDIDAT = /^[uU]([1-9]\d{2,})(\+(\d*))?$/;
 
   function canHandle(command: string): boolean {
     try {
@@ -34,9 +34,9 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
     }
 
     try {
-      stimmzettel.kandidatAddEinzelstimmenOrThrow(
+      stimmzettel.kandidatAddUngueltigeStimmenOrThrow(
         commandArguments.kandidatOrdnungszahl,
-        commandArguments.countVotes
+        commandArguments.countInvalidVotes
       );
     } catch (error) {
       if (error instanceof ManagedStimmzettelError) {
@@ -48,13 +48,13 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
   }
 
   function _parseCommandArguments(command: string): CommandArguments | null {
-    const match = REGEX_ADD_VOTES_TO_KANDIDAT.exec(command);
+    const match = REGEX_ADD_INVALID_VOTES_TO_KANDIDAT.exec(command);
 
     if (match?.[1] !== undefined) {
       const votesText = match[3];
       const commandArgs = {
         kandidatOrdnungszahl: Number.parseInt(match[1]),
-        countVotes:
+        countInvalidVotes:
           votesText && votesText.length > 0 ? Number.parseInt(votesText) : 1,
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
@@ -71,7 +71,7 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
       commandArguments.kandidatOrdnungszahl %
         WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL !=
         0 &&
-      Number.isSafeInteger(commandArguments.countVotes)
+      Number.isSafeInteger(commandArguments.countInvalidVotes)
     );
   }
 

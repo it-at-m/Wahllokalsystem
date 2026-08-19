@@ -107,7 +107,8 @@ const isBeschlussfassungStartenBtnDisabled = computed(
   () =>
     !beschlussfassungStartenBtnActive.value ||
     workflowStatus.value?.status !==
-      StimmzettelerfassungStatusEnum.SteBearbeitung
+      StimmzettelerfassungStatusEnum.SteBearbeitung ||
+    isAktualisierenLoading.value
 );
 const isRefreshBtnActive = computed(
   () => !beschlussfassungStartenBtnActive.value

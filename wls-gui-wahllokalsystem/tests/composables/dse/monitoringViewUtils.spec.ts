@@ -73,7 +73,7 @@ describe("monitoringViewUtils.ts", () => {
   it("should_BeEmptyAndNotLoading_when_initialState", () => {
     expect(unit.teamstatusList.value).toEqual([]);
     expect(unit.lastLoading.value).toBeUndefined();
-    expect(unit.isAktualisiserenLoading.value).toBe(false);
+    expect(unit.isAktualisierenLoading.value).toBe(false);
     expect(unit.workflowStatus.value).toBe(null);
   });
 
@@ -82,11 +82,11 @@ describe("monitoringViewUtils.ts", () => {
     mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(sample);
 
     const promise = unit.onMonitoringSynchronisierenClicked();
-    expect(unit.isAktualisiserenLoading.value).toBe(true);
+    expect(unit.isAktualisierenLoading.value).toBe(true);
 
     await promise;
 
-    expect(unit.isAktualisiserenLoading.value).toBe(false);
+    expect(unit.isAktualisierenLoading.value).toBe(false);
     expect(unit.teamstatusList.value).toStrictEqual(sample);
     expect(unit.lastLoading.value).toBeInstanceOf(Date);
 

@@ -12,7 +12,7 @@
           titel="Stimmzettelerfassung abgeschlossen"
           titel-class="d-flex align-center justify-center"
           data-test="base-progress-success"
-          :is-loading="isAktualisiserenLoading"
+          :is-loading="isAktualisierenLoading"
           :current="abgeschlossenNumberOfTeams"
           :total="totalNumberOfTeams"
           color="success"
@@ -50,7 +50,7 @@
       <v-card-actions>
         <base-button-refresh
           :active="isRefreshBtnActive"
-          :loading="isAktualisiserenLoading"
+          :loading="isAktualisierenLoading"
           @click="onMonitoringSynchronisierenClicked"
         />
         <base-text-button
@@ -93,7 +93,7 @@ const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 const {
   teamstatusList,
   lastLoading,
-  isAktualisiserenLoading,
+  isAktualisierenLoading,
   workflowStatus,
   onMonitoringSynchronisierenClicked,
 } = useMonitoringViewUtils(wahlID, wahlbezirkID);

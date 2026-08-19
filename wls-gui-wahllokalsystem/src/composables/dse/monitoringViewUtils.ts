@@ -11,7 +11,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);
   const lastLoading = ref<Date>();
-  const isAktualisiserenLoading = ref(false);
+  const isAktualisierenLoading = ref(false);
   const workflowStatus = ref<StimmzettelerfassungStatus | null>(null);
 
   const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
@@ -40,7 +40,7 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
 
   async function _loadTeamStatusListe(sendNotification = true) {
     try {
-      isAktualisiserenLoading.value = true;
+      isAktualisierenLoading.value = true;
       const loaded =
         await erfassungTeamStatusService.loadErfassungTeamStatusListe(
           wahlID,
@@ -52,14 +52,14 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
         lastLoading.value = new Date();
       }
     } finally {
-      isAktualisiserenLoading.value = false;
+      isAktualisierenLoading.value = false;
     }
   }
 
   return {
     teamstatusList,
     lastLoading,
-    isAktualisiserenLoading,
+    isAktualisierenLoading,
     workflowStatus,
     onMonitoringSynchronisierenClicked,
   };

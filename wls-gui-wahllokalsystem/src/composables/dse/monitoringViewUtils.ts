@@ -16,7 +16,6 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   const workflowStatus = ref<StimmzettelerfassungStatus | null>(null);
 
   const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
-  const userNotificationService = useUserNotificationService();
   const { loadDseWorkflowStatus } = useDseWorkflowStatusService();
 
   async function onMonitoringSynchronisierenClicked() {
@@ -24,25 +23,17 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   }
 
   onActivated(async () => {
-    try {
-      await _loadTeamStatusListe(false);
-    } catch {
-      userNotificationService.addNotification(
-        `Team-Status konnten nicht initialisiert werden.`,
-        UserNotificationCategoryEnum.ERROR
-      );
-    }
-    await _loadWorkflowStatus();
+    await Promise.allSettled([_loadTeamStatusListe(), _loadWorkflowStatus()]);
   });
 
-  async function _loadTeamStatusListe(sendNotification = true) {
+  async function _loadTeamStatusListe() {
     try {
       isAktualisierenLoading.value = true;
       const loaded =
         await erfassungTeamStatusService.loadErfassungTeamStatusListe(
           wahlID,
           wahlbezirkID,
-          sendNotification
+          true
         );
       if (loaded) {
         teamstatusList.value = loaded;
@@ -59,7 +50,7 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
       workflowStatus.value = await loadDseWorkflowStatus(
         wahlID,
         wahlbezirkID,
-        false
+        true
       );
     } finally {
       isWorkflowStatusLoading.value = false;

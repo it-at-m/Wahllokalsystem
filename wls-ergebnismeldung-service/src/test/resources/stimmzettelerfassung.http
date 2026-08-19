@@ -30,10 +30,10 @@ Content-Type: application/json
     ],
     "systemBeschlussvorschlag": [
       {
-        "reason": "BEISPIEL_SYSTEMGRUND"
+        "reason": "EINZELNE_STIMMEN_UNGUELTIG"
       },
       {
-        "reason": "BEISPIEL_SYSTEMGRUND"
+        "reason": "NICHT_AMTLICHER_STIMMZETTEL"
       }
     ],
     "beschlussfassung": {

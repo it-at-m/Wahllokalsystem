@@ -150,25 +150,29 @@ aber im Gegensatz zu Stores die View autonomer und weniger komplex entwickeln.
 
 Eine View stellt Informationen und Aktionen zu einem Thema bereit.
 
-Dazu werden `SingleUse`-Komponenten, also Komponenten, die nur einmal je View vorkommen sollen, verwendet. Diese
-setzen sich wiederum aus `SingleUse`- oder `Basis`-Komponenten zusammen.
+Dazu werden `SingleInstance`-Komponenten, also Komponenten, die nur einmal je View vorkommen sollen, verwendet. Diese
+setzen sich wiederum aus `SingleInstance`- oder `Basis`-Komponenten zusammen.
 
-`Views` und `SingleUse`-Komponenten können auf Stores zugreifen. `Basis`-Komponenten sollen das nicht. Die `Views` und die
-Komponenten können Composables verwenden.
+`Views` und `SingleInstance`-Komponenten können auf Stores zugreifen. `Basis`-Komponenten können das nicht. Die `Views` und die
+Komponenten können Composables verwenden. `Basis`-Komponenten können nur `Rules`- und `Formatter`-Composables verwenden.
 
-> [!IMPORTANT]
-> Dadurch, dass alle Komponenten Composables nutzen dürfen, wäre es auch denkbar, dass eine `Basis`-Komponenteein Speichern
-> ausführt. Das ist aber Aufgabe einer `SingleUse`-Komponente. `Basis`-Komponenten verwenden Composables primär zur
-> Validierung oder Formatierung, aber keine komplexere Logik.
+| Composable-Typ | Aufgabenbeschreibung                                                                                                   |
+|----------------|------------------------------------------------------------------------------------------------------------------------|
+| Rules          | Enthält Validierungsregeln für Felder                                                                                  |
+| Formatter      | Funktionen zur Anpassung der Darstellung eines Wertes. Dazu gehört auch die Umwandlung von Werten in Icons oder Farben |
+| StoreModule    | Kapselt eine Teilfunktionalität eines Store um den Store klarer strukturiert zu halten                                 |
+| Utils          | Hilfsklassen für Komponenten die komplexe Logik für die Komponenten kapseln                                            |
+| FetchService   | Stellt Funktionen bereit um Daten aus dem Backend abzurufen. Hierzug zählt auch der Service Worker                     |
+| Tools          | Stellt Funktionen für einen bestimmten Datentyp zur Verfügung                                                          |
+| Mapper         | Stellt Funktionen bereit um von einem Datentyp in einen anderen zu Mappen                                              |
+| Manger         | Kapselt diverse andere Funktionen und entscheidet ihm Rahmen der Verarbeitung an wen die Anfrage deligiert wird        |
+| Service        | Stellt allgemein Funktionen zur Verfügung die sonst ist keine Kategorie passen                                         |
 
-> [!NOTE] Beispiel: Zählen der Stimmzettel
-> Diese View besteht nur aus einer `SingleUse`-Komponente zur Erfassung der Daten. Diese `SingleUse`-Komponente verwendet als
-> Basiskomponenten unser `NumberInput` zur Eingabe von Zahlen und `TimeInput` zur Erfassung der Uhrzeit.
->
-> Die Property, über die die `SingleUse`-Komponente bestimmt, ob eine Uhrzeit zu erfassen ist, wird durch die View unter
-> Verwendung des `UserStores` befüllt.
->
-> Die `SingleUse`-Komponente verwendet ein Composable zur Formatierung von Text.
+`Mapper`-Composables können nur durch `Utlils`- oder `FetchService`-Composables verwendet werden. `Manager`-Composables werden
+nur durch `FetchService`-Composables verwendet. `StoreModule`-Composables werden nur durch `Stores` verwendet.
+
+> [!NOTE] Namenskonventionen
+> Es gibt einen separaten Abschnitt in den [Namingkonventions](/technik/naming_conventions/frontend#composables) welche beschreibt wie die Dateien zu den einzelnen Typen zu benennen sind.
 
 ## Kommunikation
 

@@ -27,7 +27,7 @@ Wahlbezirksart, ist kein Prefix zu vergeben.
 
 `Base<Type>[<Domain>]<Funktion>.vue`
 
-#### Beispiel
+**Beispiele:**
 
 `BaseButtonRefresh.vue` ... Allgemeiner Button zur Aktualisierung
 
@@ -35,11 +35,14 @@ Wahlbezirksart, ist kein Prefix zu vergeben.
 
 `BaseWahlvorstandMitgliedCard.vue` ... V-Card zur Darstellung eines Wahlvorstandsmitgliedes
 
-### Single-Use-Komponenten
+### Single-Instance-Komponenten
 
 `The[<Domain>]<Funktion><Type>.vue`
 
-#### Beispiele
+> [!NOTE]
+> Die Bezeichnung stammt aus einem älteren [StyleGuide](https://v2.vuejs.org/v2/style-guide/#Single-instance-component-names-strongly-recommended)
+
+**Beispiel:**e
 
 `TheWahlvorstandLastSendDiv.vue` ... Wahlvorstandskomponente welche die Uhrzeit der letzten Übermittlung darstellt
 
@@ -49,37 +52,91 @@ Wahlbezirksart, ist kein Prefix zu vergeben.
 
 `<domain>Store.ts`
 
-### Beispiel
+**Beispiel:**
 
 `wahlvorstandStore.ts` ... Store für den Wahlvorstand
 
 ## Composables
 
-### domainspezifische composables
+### Rules
 
-`<domain><Funktion>.ts`
+`[<domain>]Rules.ts`
 
-#### Beispiel
+Für eine Modularisierung ist es möglich spezielle Rules einer Domain zuzuordnen.
 
-`wahlvorstandService.ts` ... fachliche Funktionen zum Wahlvorstand
+### Formatter
 
-`wahlvorstandMapper.ts` ... Mappingfunktionen zum Wahlvorstand
+`<domain|typ>Formatter.ts`
 
-`wahlvorstandRules.ts` ... wahlvorstandspezifische Validierungsregeln
+Formatter gehören zu einem Datentyp oder einer Domain.
 
-### allgemeine composables
+**Beispiel:**
 
-`<funktion>.ts`
+`textFormatter.ts` ... Formartierungsfunktionen für Text
 
-#### Beispiel
+`dateTimeFormatter.ts` ... Formartierungsfunktionen für Date
 
-`formatter.ts` ... allgemein gültige Formatierungsfunktionen
+### Utils
+
+`<komponentenName>Utils.ts`
+
+**Beispiel:**
+
+`theBeschlussfassungStartenDialogUtils.ts` ... ist das Utils-Composable für die Komponente `TheBeschlussfassungStartenDialog`
+
+### StoreModule
+
+`<domain>[<Funktion>]StoreModule.ts`
+
+**Beispiel:**
+
+`briefwahlGetterStoreModule.ts` ... kapselt Funktionalität zu einem Thema eines Stores
+
+### Mapper
+
+`<domain>Mapper.ts`
+
+**Beispiel:**
+
+`wahlvorstandMapper.ts` ... enthält Mappingfunktionen zum Wahlvorstand
+
+### FetchService
+
+`<domain>FetchService.ts`
+
+**Beispiel:**
+
+`wahlvorstandFetchService.ts` ... stellt Funktionen bereit um Daten des Wahlvorstandes aus dem Backend abzurufen
+
+### Tool
+
+`<typ>Tools.ts`
+
+**Beispiel:**
+
+`wahlvorstandsMitgliedTools.ts` ... stellt Funktionen bereit rund um den Datentyp bereit, wie z.B. die Erstellung eines fachlich leeren Objektes
+
+### Manager
+
+`<topic>Manager.ts`
+
+**Beispiel:**
+
+`requestStrategyManager.ts` ... kapselt die diversen RequestStrategien und entscheidet im Rahmen der Verarbeitung, welche Strategy anzuwenden ist
+
+### Service
+
+`<topic>Service.ts`
+
+**Beispiel:**
+
+`loggingService.ts` ... stellt Funktionen bereit zu einem Thema bereit, dass zu sonst keinem Typ Composable passt
 
 ## Types
 
 `<interface>.ts`
 
-### Beispiel
+**Beispiel:**
 
 `Wahlvorstand.ts` ... enthält das Interface `Wahlvorstand` und eine Hilfsklasse die das Interface implementiert
 
@@ -89,7 +146,7 @@ Die Tests liegen im `tests`-Ordner, welcher der Aufbaustruktur des `src`-Ordners
 
 `<Testgegenstand ohne Dateiendung>.spec.ts`
 
-### Beispiel
+**Beispiel:**
 
 `TheWahlvorstandMitgliederTable.spec.ts` ... Tests zu `TheWahlvorstandMitgliederTable.vue`
 
@@ -103,7 +160,7 @@ Die Tests liegen im `tests`-Ordner, welcher der Aufbaustruktur des `src`-Ordners
 > Stories zu Komponenten, die den Store verwenden, haben auf der Übersichtsseite (`docs`) alle denselben Zustand.
 > Der Zustand für alle Komponenten entsprecht dem Zustand im Store mit der letzten Story.
 
-### Beispiel
+**Beispiel:**
 
 `BaseButtonRefresh.stories.ts` ... Stories zu `BaseButtonRefresh.vue`
 
@@ -118,6 +175,6 @@ Bei dem Wert handelt es sich **nicht** um eine ID.
 
 `on<Data><Event>`
 
-### Beispiel
+**Beispiel:**
 
 `onAnwesenheitChanged($event, mitglied)` ... Eventhandler, wenn sich die Anwesenheit geändert hat

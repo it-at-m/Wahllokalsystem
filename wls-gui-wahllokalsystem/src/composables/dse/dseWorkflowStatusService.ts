@@ -44,6 +44,7 @@ export function useDseWorkflowStatusService() {
         workflowStatus.value = model;
         return model;
       } else {
+        workflowStatus.value = null;
         return null;
       }
     } catch (error) {

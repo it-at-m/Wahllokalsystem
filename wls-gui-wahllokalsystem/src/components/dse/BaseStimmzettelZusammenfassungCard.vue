@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+import type { Wahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
 
 import { computed } from "vue";
 
@@ -49,7 +49,6 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/Sti
 
 const props = defineProps<{
   listenstimmen: Wahlvorschlag[];
-  gesamtstimmen: number;
   ungueltigestimmen: number;
   direktstimmen: number;
   reststimmen: number;
@@ -57,8 +56,12 @@ const props = defineProps<{
   gueltigkeit: StimmzettelGueltigkeitEnum;
 }>();
 
+const gesamtstimmen = computed(
+  () => props.ungueltigestimmen + props.direktstimmen + props.reststimmen
+);
+
 const einzelstimmen = computed(() => [
-  { label: "Stimmen gesamt", value: props.gesamtstimmen },
+  { label: "Stimmen gesamt", value: gesamtstimmen.value },
   { label: "ungültige Stimmen", value: props.ungueltigestimmen },
   { label: "direkt vergebene Stimmen", value: props.direktstimmen },
   { label: "Reststimmen", value: props.reststimmen },

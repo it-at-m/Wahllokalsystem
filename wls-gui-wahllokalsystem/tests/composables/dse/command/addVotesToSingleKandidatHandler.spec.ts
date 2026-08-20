@@ -80,7 +80,7 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
     });
 
     it.each([validKandidatOrdnungszahlen])(
-      "should_callKandidatAddVotesOrThrow_once_when_commandIs'%s'ValidWithoutPlus",
+      "should_callKandidatAddVotesOrThrow_when_commandIs'%s'ValidWithoutPlus",
       (kandidatOrdnungszahl) => {
         handleOrThrow(`${kandidatOrdnungszahl}`, mockManagedStimmzettel);
 

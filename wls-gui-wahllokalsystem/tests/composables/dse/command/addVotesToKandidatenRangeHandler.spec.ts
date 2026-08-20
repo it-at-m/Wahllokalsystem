@@ -91,7 +91,7 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
     });
 
     it.each(validRanges)(
-      "should_callKandidatenAddStimmenInRangeOrThrow_once_when_commandIs'%s-%s'ValidWithoutPlus",
+      "should_callKandidatenAddStimmenInRangeOrThrow_when_commandIs'%s-%s'ValidWithoutPlus",
       (lower, upper) => {
         handleOrThrow(`${lower}-${upper}`, mockManagedStimmzettel);
 

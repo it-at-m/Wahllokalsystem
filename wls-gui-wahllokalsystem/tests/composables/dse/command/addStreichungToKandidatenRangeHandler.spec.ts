@@ -81,7 +81,7 @@ describe("addStreichungToKandidatenRangeHandler.ts", () => {
     });
 
     it.each(validRanges)(
-      "should_callKandidatenStreichungenInRangeOrThrow_once_when_commandIs'%s-%s'",
+      "should_callKandidatenStreichungenInRangeOrThrow_when_commandIs'%s-%s'",
       (lower, upper) => {
         handleOrThrow(`s${lower}-${upper}`, mockManagedStimmzettel);
 

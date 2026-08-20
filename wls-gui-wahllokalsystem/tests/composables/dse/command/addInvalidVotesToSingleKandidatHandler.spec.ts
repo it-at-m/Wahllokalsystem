@@ -91,7 +91,7 @@ describe("addInvalidVotesToSingleKandidatHandler.ts", () => {
     });
 
     it.each(validKandidatOrdnungszahlen)(
-      "should_callKandidatAddInvalidVotesOrThrow_once_when_commandIs'%s'ValidWithoutPlus",
+      "should_callKandidatAddInvalidVotesOrThrow_when_commandIs'%s'ValidWithoutPlus",
       (kandidatOrdnungszahl) => {
         handleOrThrow(`u${kandidatOrdnungszahl}`, mockManagedStimmzettel);
 
@@ -105,7 +105,7 @@ describe("addInvalidVotesToSingleKandidatHandler.ts", () => {
     );
 
     it.each(validKandidatOrdnungszahlen)(
-      "should_callKandidatAddInvalidVotesOrThrow_withParsedVotes_when_command'%s'ContainsPlusAndVotes",
+      "should_callKandidatAddInvalidVotesOrThrowWithParsedVotes_when_command'%s'ContainsPlusAndVotes",
       (kandidatOrdnungszahl) => {
         handleOrThrow(`u${kandidatOrdnungszahl}+3`, mockManagedStimmzettel);
 

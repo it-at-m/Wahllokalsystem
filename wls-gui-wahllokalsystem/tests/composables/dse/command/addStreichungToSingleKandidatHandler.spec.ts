@@ -73,7 +73,7 @@ describe("addStreichungToSingleKandidatHandler.ts", () => {
     });
 
     it.each(validKandidatOrdnungszahlen)(
-      "should_callKandidatAddStreichungOrThrow_once_when_commandIs'%s'",
+      "should_callKandidatAddStreichungOrThrow_when_commandIs'%s'",
       (kandidatOrdnungszahl) => {
         handleOrThrow(`s${kandidatOrdnungszahl}`, mockManagedStimmzettel);
 

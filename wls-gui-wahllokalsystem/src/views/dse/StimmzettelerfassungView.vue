@@ -12,7 +12,7 @@
       </v-card-text>
       <v-card-actions v-if="!isStatusLoading">
         <div
-          v-if="!teamFinishedErfassung"
+          v-if="!hasTeamFinishedErfassung"
           class="d-flex w-100"
         >
           <base-text-button
@@ -156,7 +156,7 @@ async function onStimmzettelErfassungConfirmed(
   isErfassungsDialogVisible.value = false;
 }
 
-const teamFinishedErfassung = computed(
+const hasTeamFinishedErfassung = computed(
   () =>
     teamStatus.value?.status == StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
 );

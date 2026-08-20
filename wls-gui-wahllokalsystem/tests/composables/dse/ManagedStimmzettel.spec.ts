@@ -314,7 +314,7 @@ describe("ManagedStimmzettel.ts", () => {
   });
 
   describe("kandidatenAddStimmenInRangeOrThrow", () => {
-    it("should_addVotesToAllCandidatesInRange", () => {
+    it("should_addVotesToAllCandidatesInRange_when_rangeIsComplete", () => {
       const k1 = prepareManagedStimmzettelKandidat()
         .listenposition(1)
         .ordnungszahl(101)
@@ -415,7 +415,7 @@ describe("ManagedStimmzettel.ts", () => {
   });
 
   describe("kandidatAddStreichungOrThrow", () => {
-    it("should_setDurchgestrichenToTrue_forSelectedKandidat", () => {
+    it("should_setDurchgestrichenToTrue_when_kandidatExistsForOrdnungszahl", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .listenposition(1)
         .ordnungszahl(101)
@@ -452,7 +452,7 @@ describe("ManagedStimmzettel.ts", () => {
   });
 
   describe("kandidatenStreichungenInRangeOrThrow", () => {
-    it("should_setDurchgestrichenTrue_forAllCandidatesInRange", () => {
+    it("should_setDurchgestrichenTrueForAllKandidatenInRange_when_rangeIsComplete", () => {
       const k1 = prepareManagedStimmzettelKandidat()
         .listenposition(1)
         .ordnungszahl(101)
@@ -517,10 +517,7 @@ describe("ManagedStimmzettel.ts", () => {
   });
 
   describe("wahlvorschlagAddVotesOrThrow", () => {
-    it("should_incrementEachKandidatByOne_and_markWahlvorschlagSelected", () => {
-      const wv = prepareManagedStimmzettelWahlvorschlag()
-        .ordnungszahl(1)
-        .build();
+    it("should_incrementEachKandidatByOneAndMarkWahlvorschlagSelected_when_wahlvorschlagExists", () => {
       const k1 = prepareManagedStimmzettelKandidat()
         .listenposition(1)
         .ordnungszahl(101)
@@ -533,8 +530,10 @@ describe("ManagedStimmzettel.ts", () => {
         .einzelstimmen(null)
         .durchgestrichen(false)
         .build();
-      // ensure candidates are attached to the wahlvorschlag under test
-      wv.kandidaten = [k1, k2];
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .kandidaten([k1, k2])
+        .build();
 
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([wv])

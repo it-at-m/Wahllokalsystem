@@ -41,12 +41,19 @@ describe("addInvalidVotesToSingleKandidatHandler.ts", () => {
       expect(canHandle("U101+")).toBe(true);
     });
 
-    it.each(["10", "abc", "u0101", "U0101", "u100", "u1000", "u900", "u9900"])(
-      "should_returnFalse_when_command'%s'DoesNotMatchPattern",
-      (command) => {
-        expect(canHandle(command)).toBe(false);
-      }
-    );
+    it.each([
+      "10",
+      "abc",
+      "u0101",
+      "U0101",
+      "u100",
+      "u1000",
+      "u900",
+      "u9900",
+      "u101+0",
+    ])("should_returnFalse_when_command'%s'DoesNotMatchPattern", (command) => {
+      expect(canHandle(command)).toBe(false);
+    });
   });
 
   describe("handleOrThrow", () => {
@@ -59,7 +66,6 @@ describe("addInvalidVotesToSingleKandidatHandler.ts", () => {
             ordnungszahl: number,
             invalidVotesToAdd: number
           ) => void,
-        // weitere Methoden als Mocks
         kandidatAddEinzelstimmenOrThrow: vi.fn(),
         kandidatenAddStimmenInRangeOrThrow: vi.fn(),
         kandidatAddStreichungOrThrow: vi.fn(),
@@ -68,7 +74,7 @@ describe("addInvalidVotesToSingleKandidatHandler.ts", () => {
         stimmzettel: computed(() =>
           prepareManagedStimmzettelStimmzettel().build()
         ),
-        changeHistoryInReverOrder: computed(() => []),
+        changeHistoryInReverseOrder: computed(() => []),
         wahlvorschlaegeWithListenkreuz: computed(() => []),
         stimmenSummary: computed(() => ({
           einzelstimmen: 0,

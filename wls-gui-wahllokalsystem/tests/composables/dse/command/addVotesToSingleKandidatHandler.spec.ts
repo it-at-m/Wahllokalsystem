@@ -37,7 +37,7 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
       expect(canHandle("101+")).toBe(true);
     });
 
-    it.each(["10", "abc", "0101", "100", "1000", "900", "9900"])(
+    it.each(["10", "abc", "0101", "100", "1000", "900", "9900", "101+0"])(
       "should_returnFalse_when_command'%s'DoesNotMatchPattern",
       (command) => {
         expect(canHandle(command)).toBe(false);
@@ -63,7 +63,7 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
         stimmzettel: computed(() =>
           prepareManagedStimmzettelStimmzettel().build()
         ),
-        changeHistoryInReverOrder: computed(() => []),
+        changeHistoryInReverseOrder: computed(() => []),
         wahlvorschlaegeWithListenkreuz: computed(() => []),
         stimmenSummary: computed(() => ({
           einzelstimmen: 0,

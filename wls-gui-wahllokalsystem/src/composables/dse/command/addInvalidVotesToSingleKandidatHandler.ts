@@ -71,7 +71,8 @@ export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
       commandArguments.kandidatOrdnungszahl %
         WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL !=
         0 &&
-      Number.isSafeInteger(commandArguments.countInvalidVotes)
+      Number.isSafeInteger(commandArguments.countInvalidVotes) &&
+      commandArguments.countInvalidVotes > 0
     );
   }
 

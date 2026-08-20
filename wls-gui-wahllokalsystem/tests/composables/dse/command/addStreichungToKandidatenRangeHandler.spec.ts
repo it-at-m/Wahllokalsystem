@@ -22,7 +22,7 @@ describe("addStreichungToKandidatenRangeHandler.ts", () => {
     [101, 103],
     [201, 299],
     [999, 1001],
-    [1099, 1010], // unsortiert, wird im Handler sortiert
+    [1099, 1010],
   ];
 
   describe("canHandle", () => {
@@ -56,7 +56,6 @@ describe("addStreichungToKandidatenRangeHandler.ts", () => {
             lower: number,
             upper: number
           ) => void,
-        // weitere Methoden als Mocks
         kandidatAddEinzelstimmenOrThrow: vi.fn(),
         kandidatAddUngueltigeStimmenOrThrow: vi.fn(),
         kandidatenAddStimmenInRangeOrThrow: vi.fn(),
@@ -65,7 +64,7 @@ describe("addStreichungToKandidatenRangeHandler.ts", () => {
         stimmzettel: computed(() =>
           prepareManagedStimmzettelStimmzettel().build()
         ),
-        changeHistoryInReverOrder: computed(() => []),
+        changeHistoryInReverseOrder: computed(() => []),
         wahlvorschlaegeWithListenkreuz: computed(() => []),
         stimmenSummary: computed(() => ({
           einzelstimmen: 0,

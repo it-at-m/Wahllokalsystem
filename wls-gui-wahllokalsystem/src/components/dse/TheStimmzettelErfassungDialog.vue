@@ -14,8 +14,8 @@
           <v-col cols="2">
             <the-eingabehistorie-card
               :change-history="
-                stimmzettelManager.managedStimmzettel.changeHistoryInReverOrder
-                  .value
+                stimmzettelManager.managedStimmzettel
+                  .changeHistoryInReverseOrder.value
               "
             />
             <base-stimmzettel-zusammenfassung-card

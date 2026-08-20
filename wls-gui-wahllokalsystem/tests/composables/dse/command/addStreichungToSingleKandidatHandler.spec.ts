@@ -48,7 +48,6 @@ describe("addStreichungToSingleKandidatHandler.ts", () => {
           mockDefinitions.kandidatAddStreichungOrThrow as unknown as (
             ordnungszahl: number
           ) => void,
-        // weitere Methoden als Mocks
         kandidatAddEinzelstimmenOrThrow: vi.fn(),
         kandidatAddUngueltigeStimmenOrThrow: vi.fn(),
         kandidatenAddStimmenInRangeOrThrow: vi.fn(),
@@ -57,7 +56,7 @@ describe("addStreichungToSingleKandidatHandler.ts", () => {
         stimmzettel: computed(() =>
           prepareManagedStimmzettelStimmzettel().build()
         ),
-        changeHistoryInReverOrder: computed(() => []),
+        changeHistoryInReverseOrder: computed(() => []),
         wahlvorschlaegeWithListenkreuz: computed(() => []),
         stimmenSummary: computed(() => ({
           einzelstimmen: 0,

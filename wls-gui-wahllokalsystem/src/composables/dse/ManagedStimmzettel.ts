@@ -61,7 +61,7 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     ordnungszahl: number,
     votesToAdd: number
   ) {
-    if (!Number.isSafeInteger) {
+    if (!Number.isSafeInteger(votesToAdd)) {
       throw new ManagedStimmzettelError(
         "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
       );
@@ -80,7 +80,7 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     ordnungszahl: number,
     invalidVotesToAdd: number
   ) {
-    if (!Number.isSafeInteger) {
+    if (!Number.isSafeInteger(invalidVotesToAdd)) {
       throw new ManagedStimmzettelError(
         "Die Anzahl der hinzuzufügenden ungültigen Stimmen muss eine ganze Zahl sein."
       );
@@ -100,7 +100,12 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     upperOrdnungszahl: number,
     votesToAdd: number
   ) {
-    if (!Number.isSafeInteger) {
+    if (lowerOrdnungszahl > upperOrdnungszahl) {
+      throw new ManagedStimmzettelError(
+        `Der Bereich ${lowerOrdnungszahl}-${upperOrdnungszahl} ist ungültig.`
+      );
+    }
+    if (!Number.isSafeInteger(votesToAdd)) {
       throw new ManagedStimmzettelError(
         "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
       );
@@ -138,6 +143,11 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     lowerOrdnungszahl: number,
     upperOrdnungszahl: number
   ) {
+    if (lowerOrdnungszahl > upperOrdnungszahl) {
+      throw new ManagedStimmzettelError(
+        `Der Bereich ${lowerOrdnungszahl}-${upperOrdnungszahl} ist ungültig.`
+      );
+    }
     const kandidaten = [];
     for (
       let ordnungszahl = lowerOrdnungszahl;
@@ -213,13 +223,13 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     kandidat: Kandidat,
     numberOfVotesToAdd: number
   ) {
+    const votesToAdd = Math.abs(numberOfVotesToAdd);
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
-    kandidat.einzelstimmen =
-      currentEinzelstimmen + Math.abs(numberOfVotesToAdd);
+    kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${numberOfVotesToAdd > 1 ? " + " + numberOfVotesToAdd + " Stimmen" : ""}`,
+        `${kandidat.ordnungszahl}${votesToAdd > 1 ? " + " + votesToAdd + " Stimmen" : ""}`,
         kandidat.name,
       ],
     });
@@ -229,13 +239,13 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     kandidat: Kandidat,
     numberOfInvalidVotesToAdd: number
   ) {
+    const invalidVotesToAdd = Math.abs(numberOfInvalidVotesToAdd);
     const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
-    kandidat.ungueltigeStimmen =
-      currentUngueltigeStimmen + Math.abs(numberOfInvalidVotesToAdd);
+    kandidat.ungueltigeStimmen = currentUngueltigeStimmen + invalidVotesToAdd;
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${numberOfInvalidVotesToAdd > 1 ? " + " + numberOfInvalidVotesToAdd + " ungültige Stimmen" : ""}`,
+        `${kandidat.ordnungszahl}${invalidVotesToAdd > 1 ? " + " + invalidVotesToAdd + " ungültige Stimmen" : " + 1 ungültige Stimme"}`,
         kandidat.name,
       ],
     });
@@ -245,15 +255,15 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
     kandidaten: Kandidat[],
     numberOfVotesToAdd: number
   ) {
+    const votesToAdd = Math.abs(numberOfVotesToAdd);
     kandidaten.map((kandidat) => {
       const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
-      kandidat.einzelstimmen =
-        currentEinzelstimmen + Math.abs(numberOfVotesToAdd);
+      kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
     });
     changeHistory.value.push({
       type: InputHistoryTypeEnum.VOTE_RANGE,
       text: [
-        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}${numberOfVotesToAdd > 1 ? " + " + numberOfVotesToAdd + " Stimmen" : ""}`,
+        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}${votesToAdd > 1 ? " + " + votesToAdd + " Stimmen" : ""}`,
       ],
     });
   }
@@ -317,7 +327,7 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
   }
 
   return {
-    changeHistoryInReverOrder: computed(() =>
+    changeHistoryInReverseOrder: computed(() =>
       [...changeHistory.value].reverse()
     ),
     kandidatAddEinzelstimmenOrThrow,

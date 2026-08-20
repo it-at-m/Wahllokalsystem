@@ -81,7 +81,8 @@ export function useAddVotesToKandidatenRangeHandler(): CommandHandler {
       commandArguments.kandidatOrdnungszahlUpperBound %
         WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL !=
         0 &&
-      Number.isSafeInteger(commandArguments.countVotes)
+      Number.isSafeInteger(commandArguments.countVotes) &&
+      commandArguments.countVotes > 0
     );
   }
 

@@ -21,7 +21,7 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
     [101, 103],
     [201, 299],
     [999, 1001],
-    [1099, 1010], // unsortiert, wird im Handler sortiert
+    [1099, 1010],
   ];
 
   describe("canHandle", () => {
@@ -49,6 +49,7 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
       "101-",
       "101-103+",
       "101-103+abc",
+      "101-103+0",
     ])("should_returnFalse_when_command'%s'DoesNotMatchPattern", (command) => {
       expect(canHandle(command)).toBe(false);
     });
@@ -65,7 +66,6 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
             upper: number,
             votesToAdd: number
           ) => void,
-        // weitere Methoden als Mocks
         kandidatAddEinzelstimmenOrThrow: vi.fn(),
         kandidatAddUngueltigeStimmenOrThrow: vi.fn(),
         kandidatAddStreichungOrThrow: vi.fn(),
@@ -74,7 +74,7 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
         stimmzettel: computed(() =>
           prepareManagedStimmzettelStimmzettel().build()
         ),
-        changeHistoryInReverOrder: computed(() => []),
+        changeHistoryInReverseOrder: computed(() => []),
         wahlvorschlaegeWithListenkreuz: computed(() => []),
         stimmenSummary: computed(() => ({
           einzelstimmen: 0,

@@ -20,6 +20,13 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
   const validWahlvorschlagOrdnungszahlen = [
     1, 2, 9, 10, 11, 99, 100, 101, 999, 1000, 1001, 9999,
   ];
+  const commandToExpectedOrdnungszahl: [string, number][] = [
+    ["1", 1],
+    ["100", 1],
+    ["101", 101],
+    ["1000", 10],
+    ["9999", 9999],
+  ];
 
   describe("canHandle", () => {
     it.each(validWahlvorschlagOrdnungszahlen)(
@@ -46,7 +53,6 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
           mockDefinitions.wahlvorschlagAddVotesOrThrow as unknown as (
             wahlvorschlagOrdnungszahl: number
           ) => void,
-        // weitere Methoden als Mocks
         kandidatAddEinzelstimmenOrThrow: vi.fn(),
         kandidatAddUngueltigeStimmenOrThrow: vi.fn(),
         kandidatenAddStimmenInRangeOrThrow: vi.fn(),
@@ -55,7 +61,7 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
         stimmzettel: computed(() =>
           prepareManagedStimmzettelStimmzettel().build()
         ),
-        changeHistoryInReverOrder: computed(() => []),
+        changeHistoryInReverseOrder: computed(() => []),
         wahlvorschlaegeWithListenkreuz: computed(() => []),
         stimmenSummary: computed(() => ({
           einzelstimmen: 0,
@@ -71,21 +77,17 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
       vi.clearAllMocks();
     });
 
-    it.each(validWahlvorschlagOrdnungszahlen)(
-      "should_callWahlvorschlagAddVotesOrThrow_once_when_commandIs'%s'",
-      (wahlvorschlagOrdnungszahl) => {
-        handleOrThrow(`${wahlvorschlagOrdnungszahl}`, mockManagedStimmzettel);
+    it.each(commandToExpectedOrdnungszahl)(
+      "should_callWahlvorschlagAddVotesOrThrow_when_commandIs'%s'",
+      (command, expectedOrdnungszahl) => {
+        handleOrThrow(command, mockManagedStimmzettel);
 
         expect(
           mockDefinitions.wahlvorschlagAddVotesOrThrow
         ).toHaveBeenCalledTimes(1);
-        const expectedArg =
-          wahlvorschlagOrdnungszahl % 100 === 0
-            ? wahlvorschlagOrdnungszahl / 100
-            : wahlvorschlagOrdnungszahl;
         expect(
           mockDefinitions.wahlvorschlagAddVotesOrThrow.mock.calls[0]
-        ).toStrictEqual([expectedArg]);
+        ).toStrictEqual([expectedOrdnungszahl]);
       }
     );
 

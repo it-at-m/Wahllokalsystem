@@ -19,7 +19,7 @@ export function useMonitoringViewButtonStateUtils(
         StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
       ) ||
       workflowStatus.value?.status ===
-        StimmzettelerfassungStatusEnum.BeAbgeschlossen
+        StimmzettelerfassungStatusEnum.SteAbgeschlossen
   );
 
   return {

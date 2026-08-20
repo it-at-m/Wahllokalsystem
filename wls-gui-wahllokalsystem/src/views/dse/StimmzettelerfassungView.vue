@@ -143,7 +143,6 @@ function onErfassungBeendenClicked() {
 }
 
 async function onErfassungAktualisierenClicked() {
-  // reload will update button disabled states
   await reloadTeamStatus();
 }
 

@@ -1,5 +1,6 @@
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
+import type { Ref } from "vue";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
@@ -12,11 +13,13 @@ import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/Stimmzettelerfas
 
 const mockDefinitions = await vi.hoisted(async () => {
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
+  const { ref } = await import("vue");
 
   return {
     loadErfassungTeamStatus: vi.fn(),
     postErfassungTeamStatus: vi.fn(),
-    getStimmzettel: vi.fn(),
+    loadStimmzettel: vi.fn(),
+    latestStimmzettelState: ref(undefined) as Ref<Stimmzettel[] | undefined>,
     saveStimmzettel: vi.fn(),
     getEmptyStimmzettelWithStimmzettelkennung: vi.fn(),
     logError: vi.fn(),
@@ -60,13 +63,14 @@ vi.mock(
 );
 
 vi.mock(
-  import("@/composables/dse/stimmzettelService.ts"),
+  import("@/composables/dse/stimmzettelFetchService.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
     return {
-      useStimmzettelService: () => ({
-        ...mod.useStimmzettelService(),
-        getStimmzettel: mockDefinitions.getStimmzettel,
+      useStimmzettelFetchService: () => ({
+        ...mod.useStimmzettelFetchService(),
+        latestStimmzettelState: mockDefinitions.latestStimmzettelState,
+        loadStimmzettel: mockDefinitions.loadStimmzettel,
         saveStimmzettel: mockDefinitions.saveStimmzettel,
       }),
     };
@@ -109,7 +113,8 @@ vi.mock(
 describe("stimmzettelErfassungViewUtils.ts", () => {
   const { generateRandomString, generateRandomNumber } =
     useCommonTestDataFactory();
-  const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
+  const { preparePersistedStimmzettel, createPersistedStimmzettel } =
+    useStimmzettelTestDataFactory();
   const { createStimmzettelerfassungTeamStatusModel } =
     useStimmzettelerfassungTeamStatusTestDataFactory();
   const { prepareWahlvorschlaege, createWahlvorschlag } =
@@ -143,10 +148,6 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
     it("should_haveInitialTeamStatusAndStatusLoading_when_initialized", () => {
       expect(unitUnderTest.teamStatus.value).toBeNull();
       expect(unitUnderTest.isStatusLoading.value).toBe(false);
-    });
-
-    it("should_haveInitialSavedStimmzettelEmpty_when_initialized", () => {
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([]);
     });
   });
 
@@ -211,62 +212,10 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
     });
 
     it("should_loadStimmzettel_when_activatedAndLoadingIsSuccessful", async () => {
-      const spyOnIsStimmzettelLoadingSetter = vi.spyOn(
-        unitUnderTest.isStimmzettelLoading,
-        "value",
-        "set"
-      );
-
-      const mockedLoadedStimmzettel = [
-        preparePersistedStimmzettel().build(),
-        preparePersistedStimmzettel().build(),
-      ];
-      mockDefinitions.getStimmzettel.mockReturnValue(mockedLoadedStimmzettel);
-
-      expect(unitUnderTest.savedStimmzettel.value).not.toStrictEqual(
-        mockedLoadedStimmzettel
-      );
-
       await mockDefinitions.runActivatedCallbacks();
-
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual(
-        mockedLoadedStimmzettel
-      );
-      expect(mockDefinitions.getStimmzettel.mock.calls).toStrictEqual([
+      expect(mockDefinitions.loadStimmzettel.mock.calls).toStrictEqual([
         [mockedWahlId, mockedWahlbezirkId, mockedTeamId],
       ]);
-      expect(spyOnIsStimmzettelLoadingSetter.mock.calls).toStrictEqual([
-        [true],
-        [false],
-      ]);
-
-      spyOnIsStimmzettelLoadingSetter.mockRestore();
-    });
-
-    it("should_loadStimmzettel_when_activatedAndLoadingFailed", async () => {
-      const spyOnIsStimmzettelLoadingSetter = vi.spyOn(
-        unitUnderTest.isStimmzettelLoading,
-        "value",
-        "set"
-      );
-
-      mockDefinitions.getStimmzettel.mockRejectedValue(
-        new Error("mocked service error")
-      );
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([]);
-
-      await mockDefinitions.runActivatedCallbacks();
-
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([]);
-      expect(mockDefinitions.getStimmzettel.mock.calls).toStrictEqual([
-        [mockedWahlId, mockedWahlbezirkId, mockedTeamId],
-      ]);
-      expect(spyOnIsStimmzettelLoadingSetter.mock.calls).toStrictEqual([
-        [true],
-        [false],
-      ]);
-
-      spyOnIsStimmzettelLoadingSetter.mockRestore();
     });
 
     it("should_loadWahlvorschlaege_when_activatedAndLoadingIsSuccessful", async () => {
@@ -445,9 +394,9 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
   describe("saveNewStimmzettel", () => {
     it("should_appendStimmzettelAndPersist_when_initialCollectionIsEmpty", async () => {
-      const mockedNewStimmzettel: Stimmzettel =
-        preparePersistedStimmzettel().build();
+      const mockedNewStimmzettel: Stimmzettel = createPersistedStimmzettel();
 
+      mockDefinitions.latestStimmzettelState.value = undefined;
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 
       await unitUnderTest.saveNewStimmzettel(mockedNewStimmzettel);
@@ -458,34 +407,27 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         mockedTeamId,
         [mockedNewStimmzettel]
       );
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
-        mockedNewStimmzettel,
-      ]);
     });
 
     it("should_appendStimmzettelToExistingCollectionAndPersist_when_collectionAlreadyContainsItems", async () => {
-      const mockedExistingStimmzettel: Stimmzettel =
-        preparePersistedStimmzettel().build();
       const mockedNewStimmzettel: Stimmzettel =
         preparePersistedStimmzettel().build();
 
+      const mockedExistingStimmzettel = [
+        createPersistedStimmzettel(),
+        createPersistedStimmzettel(),
+      ];
+      mockDefinitions.latestStimmzettelState.value = mockedExistingStimmzettel;
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 
-      await unitUnderTest.saveNewStimmzettel(mockedExistingStimmzettel);
       await unitUnderTest.saveNewStimmzettel(mockedNewStimmzettel);
 
-      const mockedLastSaveCall =
-        mockDefinitions.saveStimmzettel.mock.calls.at(-1) ?? [];
-      const mockedSavedCollection = mockedLastSaveCall[3] as Stimmzettel[];
-
-      expect(mockedSavedCollection).toStrictEqual([
-        mockedExistingStimmzettel,
-        mockedNewStimmzettel,
-      ]);
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
-        mockedExistingStimmzettel,
-        mockedNewStimmzettel,
-      ]);
+      expect(mockDefinitions.saveStimmzettel).toHaveBeenCalledWith(
+        mockedWahlId,
+        mockedWahlbezirkId,
+        mockedTeamId,
+        [...mockedExistingStimmzettel, mockedNewStimmzettel]
+      );
     });
   });
 });

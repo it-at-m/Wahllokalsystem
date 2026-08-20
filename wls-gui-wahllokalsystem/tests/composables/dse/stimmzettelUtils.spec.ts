@@ -7,21 +7,9 @@ import type { Wahlvorschlag as UiWahlvorschlag } from "@/types/wahlvorschlaege/W
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
-
-const mockDefinitions = vi.hoisted(() => ({
-  getStimmzettel: vi.fn(),
-}));
-
-vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
-  useStimmzettelService: () => ({
-    getStimmzettel: mockDefinitions.getStimmzettel,
-    saveStimmzettel: vi.fn(),
-    getAnzahlStimmzettel: vi.fn(),
-  }),
-}));
 
 const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();

@@ -1,20 +1,23 @@
-import { computed, readonly, ref } from "vue";
+import { computed } from "vue";
 
 import { useDseWorkflowStatusService } from "@/composables/dse/dseWorkflowStatusService.ts";
-import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
+import { useStimmzettelFetchService } from "@/composables/dse/stimmzettelFetchService.ts";
 import router from "@/plugins/router.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
 import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 
-export function useBeschlussfassungStartenDialogUtils() {
+export function useTheBeschlussfassungStartenDialogUtils() {
   const { saveDseWorkflowStatus } = useDseWorkflowStatusService();
-  const { getAnzahlStimmzettel } = useStimmzettelService();
-
-  const stimmzettelCount = ref<number | null>(null);
-  const isAnzahlStimmzettelLoading = ref(false);
+  const {
+    isLoadingAnzahlStimmzettel,
+    lastLoadedAnzahlStimmzettel,
+    loadAnzahlStimmzettel,
+  } = useStimmzettelFetchService();
 
   const isConfirmButtonInLoadingState = computed(
-    () => isAnzahlStimmzettelLoading.value || stimmzettelCount.value === null
+    () =>
+      isLoadingAnzahlStimmzettel.value ||
+      lastLoadedAnzahlStimmzettel.value === undefined
   );
 
   async function updateWorkflowStatusAndNavigate(
@@ -31,20 +34,11 @@ export function useBeschlussfassungStartenDialogUtils() {
     });
   }
 
-  async function loadAnzahlStimmzettel(wahlId: string, wahlbezirkId: string) {
-    isAnzahlStimmzettelLoading.value = true;
-    try {
-      stimmzettelCount.value = null;
-      stimmzettelCount.value = await getAnzahlStimmzettel(wahlId, wahlbezirkId);
-    } finally {
-      isAnzahlStimmzettelLoading.value = false;
-    }
-  }
-
   return {
-    isAnzahlStimmzettelLoading: readonly(isAnzahlStimmzettelLoading),
     isConfirmButtonInLoadingState,
-    stimmzettelCount: readonly(stimmzettelCount),
+    isLoadingAnzahlStimmzettel,
+
+    lastLoadedAnzahlStimmzettel,
 
     loadAnzahlStimmzettel,
     updateWorkflowStatusAndNavigate,

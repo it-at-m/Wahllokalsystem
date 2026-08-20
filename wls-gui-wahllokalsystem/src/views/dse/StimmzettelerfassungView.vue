@@ -5,8 +5,8 @@
       <v-card-text>
         <base-stimmzettel-uebersicht-table
           :team-id="teamID"
-          :stimmzettel-liste="savedStimmzettel"
-          :stimmzettel-loading="isStimmzettelLoading"
+          :stimmzettel-liste="latestStimmzettelState ?? []"
+          :stimmzettel-loading="isLoadingStimmzettel"
           class="mt-3"
         />
       </v-card-text>
@@ -34,7 +34,7 @@
     <the-stimmzettelkennung-dialog
       :visible="isKennungsDialogVisible"
       :team-name="teamID"
-      :existing-stimmzettel="savedStimmzettel"
+      :existing-stimmzettel="latestStimmzettelState ?? []"
       @confirm="onStimmzettelkennungConfirmed"
       @cancel="isKennungsDialogVisible = false"
     />
@@ -87,8 +87,8 @@ const {
   isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
-  isStimmzettelLoading,
-  savedStimmzettel,
+  isLoadingStimmzettel,
+  latestStimmzettelState,
   startenBtnIsDisabled,
   startenBtnActive,
   unterbrechenBtnIsDisabled,

@@ -1,11 +1,13 @@
+import type { Mock } from "vitest";
+import type { ComputedRef } from "vue";
+
+import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
+import { useLogging } from "@/composables/common/logging.ts";
+import { useStimmzettelFetchService } from "@/composables/dse/stimmzettelFetchService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
-
-const { createStimmzettelOfTeamDTO, createPersistedStimmzettel } =
-  useStimmzettelTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   mapDtoToModel: vi.fn(),
@@ -49,21 +51,108 @@ vi.mock(
   })
 );
 
-describe("stimmzettelService.ts", () => {
-  const { getStimmzettel, saveStimmzettel, getAnzahlStimmzettel } =
-    useStimmzettelService();
+const { createAxiosResponse } = useAxiosTestDataFactory();
+const { createStimmzettelOfTeamDTO, createPersistedStimmzettel } =
+  useStimmzettelTestDataFactory();
+
+const { logDebug } = useLogging("stimmzettelFetchService.spec.ts");
+
+describe("stimmzettelFetchService.ts", () => {
+  const wahlID = "wahlID";
+  const wahlbezirkID = "wahlbezirkID";
+  const teamID = "teamID";
+
+  let unitUnderTest: ReturnType<typeof useStimmzettelFetchService>;
 
   beforeEach(() => {
-    vi.resetAllMocks();
-    vi.clearAllMocks();
+    unitUnderTest = useStimmzettelFetchService();
   });
 
-  describe("getStimmzettel", () => {
-    it("should_returnStimmzettelList_when_responseIsReceivedFromApi", async () => {
-      const wahlID = "wahlID";
-      const wahlbezirkID = "wahlbezirkID";
-      const teamID = "teamID";
+  afterEach(() => {
+    vi.resetAllMocks();
+    vi.clearAllMocks();
+    vi.useRealTimers();
+  });
 
+  describe("isLoadingStimmzettel", () => {
+    it("should_returnFalse_when_instantiated", () => {
+      expect(unitUnderTest.isLoadingStimmzettel.value).toStrictEqual(false);
+    });
+
+    it.each([
+      {
+        isApiCallSuccessful: true,
+        testcaseSuffix: "apiWasSuccessful",
+      },
+      {
+        isApiCallSuccessful: false,
+        testcaseSuffix: "apiWasNotSuccessful",
+      },
+    ])("should_updateState_when_$testcaseSuffix", async (testcaseArguments) => {
+      await _runLoadingTestcase(
+        testcaseArguments.isApiCallSuccessful,
+        mockDefinitions.getStimmzettel,
+        () => [createStimmzettelOfTeamDTO],
+        () => unitUnderTest.loadStimmzettel(wahlID, wahlbezirkID, teamID),
+        unitUnderTest.isLoadingStimmzettel
+      );
+    });
+  });
+
+  describe("isSavingStimmzettel", () => {
+    it("should_returnFalse_when_instantiated", () => {
+      expect(unitUnderTest.isSavingStimmzettel.value).toStrictEqual(false);
+    });
+
+    it.each([
+      {
+        isApiCallSuccessful: true,
+        testcaseSuffix: "apiWasSuccessful",
+      },
+      {
+        isApiCallSuccessful: false,
+        testcaseSuffix: "apiWasNotSuccessful",
+      },
+    ])("should_updateState_when_$testcaseSuffix", async (testcaseArguments) => {
+      await _runLoadingTestcase(
+        testcaseArguments.isApiCallSuccessful,
+        mockDefinitions.postStimmzettel,
+        () => null,
+        () => unitUnderTest.saveStimmzettel(wahlID, wahlbezirkID, teamID, []),
+        unitUnderTest.isSavingStimmzettel
+      );
+    });
+  });
+
+  describe("isLoadingAnzahlStimmzettel", () => {
+    it("should_returnFalse_when_instantiated", () => {
+      expect(unitUnderTest.isLoadingAnzahlStimmzettel.value).toStrictEqual(
+        false
+      );
+    });
+
+    it.each([
+      {
+        isApiCallSuccessful: true,
+        testcaseSuffix: "apiWasSuccessful",
+      },
+      {
+        isApiCallSuccessful: false,
+        testcaseSuffix: "apiWasNotSuccessful",
+      },
+    ])("should_updateState_when_$testcaseSuffix", async (testcaseArguments) => {
+      await _runLoadingTestcase(
+        testcaseArguments.isApiCallSuccessful,
+        mockDefinitions.getAnzahlStimmzettel,
+        () => 0,
+        () => unitUnderTest.loadAnzahlStimmzettel(wahlID, wahlbezirkID),
+        unitUnderTest.isLoadingAnzahlStimmzettel
+      );
+    });
+  });
+
+  describe("loadStimmzettel", () => {
+    it("should_returnStimmzettelList_when_responseIsReceivedFromApi", async () => {
       const dto1 = createStimmzettelOfTeamDTO();
       const dto2 = createStimmzettelOfTeamDTO();
 
@@ -81,9 +170,12 @@ describe("stimmzettelService.ts", () => {
         .mockReturnValueOnce(model1)
         .mockReturnValueOnce(model2);
 
-      const result = await getStimmzettel(wahlID, wahlbezirkID, teamID);
+      await unitUnderTest.loadStimmzettel(wahlID, wahlbezirkID, teamID);
 
-      expect(result).toStrictEqual([model1, model2]);
+      expect(unitUnderTest.latestStimmzettelState.value).toStrictEqual([
+        model1,
+        model2,
+      ]);
 
       expect(mockDefinitions.getStimmzettel.mock.calls.length).toStrictEqual(1);
       expect(mockDefinitions.getStimmzettel.mock.calls[0]).toStrictEqual([
@@ -110,9 +202,9 @@ describe("stimmzettelService.ts", () => {
         })
       );
 
-      const result = await getStimmzettel(wahlID, wahlbezirkID, teamID);
+      await unitUnderTest.loadStimmzettel(wahlID, wahlbezirkID, teamID);
 
-      expect(result).toStrictEqual([]);
+      expect(unitUnderTest.latestStimmzettelState.value).toStrictEqual([]);
     });
 
     it("should_returnEmptyArray_when_apiReturnedEmptyListWithStatus200", async () => {
@@ -127,9 +219,9 @@ describe("stimmzettelService.ts", () => {
         })
       );
 
-      const result = await getStimmzettel(wahlID, wahlbezirkID, teamID);
+      await unitUnderTest.loadStimmzettel(wahlID, wahlbezirkID, teamID);
 
-      expect(result).toStrictEqual([]);
+      expect(unitUnderTest.latestStimmzettelState.value).toStrictEqual([]);
       expect(mockDefinitions.mapDtoToModel).not.toHaveBeenCalled();
     });
 
@@ -143,7 +235,7 @@ describe("stimmzettelService.ts", () => {
       );
 
       await expect(async () =>
-        getStimmzettel(wahlID, wahlbezirkID, teamID)
+        unitUnderTest.loadStimmzettel(wahlID, wahlbezirkID, teamID)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
@@ -165,7 +257,7 @@ describe("stimmzettelService.ts", () => {
       );
 
       await expect(async () =>
-        getStimmzettel(wahlID, wahlbezirkID, teamID, false)
+        unitUnderTest.loadStimmzettel(wahlID, wahlbezirkID, teamID, false)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
@@ -175,7 +267,7 @@ describe("stimmzettelService.ts", () => {
   });
 
   describe("saveStimmzettel", () => {
-    it("should_sendDTO_when_modelIsGiven", async () => {
+    it("should_sendDTOAndUpdateLatestStimmzettel_when_modelIsGivenAndApiCallWasSuccessful", async () => {
       const wahlID = "wahlID";
       const wahlbezirkID = "wahlbezirkID";
       const teamID = "teamID";
@@ -185,8 +277,19 @@ describe("stimmzettelService.ts", () => {
 
       mockDefinitions.mapModelToDto.mockReturnValue(mockedDto);
 
-      await saveStimmzettel(wahlID, wahlbezirkID, teamID, stimmzettel);
+      expect(unitUnderTest.latestStimmzettelState.value).toStrictEqual(
+        undefined
+      );
+      await unitUnderTest.saveStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        stimmzettel
+      );
 
+      expect(unitUnderTest.latestStimmzettelState.value).toStrictEqual(
+        stimmzettel
+      );
       expect(mockDefinitions.postStimmzettel.mock.calls).toStrictEqual([
         [wahlID, wahlbezirkID, teamID, [mockedDto]],
       ]);
@@ -204,12 +307,18 @@ describe("stimmzettelService.ts", () => {
       const teamID = "teamID";
       const stimmzettel = [createPersistedStimmzettel()];
 
+      const spyOnLatestStimmzettelState = vi.spyOn(
+        unitUnderTest.latestStimmzettelState,
+        "value",
+        "set"
+      );
+
       mockDefinitions.postStimmzettel.mockRejectedValue(
         new Error("api call failed")
       );
 
       await expect(async () =>
-        saveStimmzettel(wahlID, wahlbezirkID, teamID, stimmzettel)
+        unitUnderTest.saveStimmzettel(wahlID, wahlbezirkID, teamID, stimmzettel)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
@@ -219,6 +328,7 @@ describe("stimmzettelService.ts", () => {
         "Speichern der Stimmzettel ist fehlgeschlagen",
         UserNotificationCategoryEnum.ERROR,
       ]);
+      expect(spyOnLatestStimmzettelState).not.toHaveBeenCalled();
     });
 
     it("should_notTriggerErrorNotification_when_anExceptionOccurredDuringApiCallButSendNotificationIsFalse", async () => {
@@ -232,7 +342,13 @@ describe("stimmzettelService.ts", () => {
       );
 
       await expect(async () =>
-        saveStimmzettel(wahlID, wahlbezirkID, teamID, stimmzettel, false)
+        unitUnderTest.saveStimmzettel(
+          wahlID,
+          wahlbezirkID,
+          teamID,
+          stimmzettel,
+          false
+        )
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
@@ -241,7 +357,7 @@ describe("stimmzettelService.ts", () => {
     });
   });
 
-  describe("getAnzahlStimmzettel", () => {
+  describe("loadAnzahlStimmzettel", () => {
     it("should_returnAnzahlStimmzettel_when_called", async () => {
       const wahlID = "wahlID";
       const wahlbezirkID = "wahlbezirkID";
@@ -252,9 +368,11 @@ describe("stimmzettelService.ts", () => {
         data: anzahlStimmzettel,
       });
 
-      const result = await getAnzahlStimmzettel(wahlID, wahlbezirkID);
+      await unitUnderTest.loadAnzahlStimmzettel(wahlID, wahlbezirkID);
 
-      expect(result).toStrictEqual(anzahlStimmzettel);
+      expect(unitUnderTest.lastLoadedAnzahlStimmzettel.value).toStrictEqual(
+        anzahlStimmzettel
+      );
     });
 
     it("should_triggerErrorNotification_when_anExceptionOccurredDuringApiCall", async () => {
@@ -266,7 +384,7 @@ describe("stimmzettelService.ts", () => {
       );
 
       await expect(async () =>
-        getAnzahlStimmzettel(wahlID, wahlbezirkID)
+        unitUnderTest.loadAnzahlStimmzettel(wahlID, wahlbezirkID)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
@@ -287,7 +405,7 @@ describe("stimmzettelService.ts", () => {
       );
 
       await expect(async () =>
-        getAnzahlStimmzettel(wahlID, wahlbezirkID, false)
+        unitUnderTest.loadAnzahlStimmzettel(wahlID, wahlbezirkID, false)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
@@ -295,4 +413,46 @@ describe("stimmzettelService.ts", () => {
       );
     });
   });
+
+  async function _runLoadingTestcase(
+    isApiCallSuccessful: boolean,
+    apiMock: Mock,
+    successDataProducer: () => unknown,
+    functionUpdatingLoadingState: (...args: unknown[]) => Promise<unknown>,
+    loadingRef: ComputedRef<boolean>
+  ) {
+    vi.useFakeTimers();
+    const timeout = 1000;
+
+    apiMock.mockImplementation(
+      () =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            if (isApiCallSuccessful) {
+              resolve(
+                createAxiosResponse({
+                  status: 200,
+                  data: successDataProducer(),
+                })
+              );
+            } else {
+              reject(new Error("mocked api error"));
+            }
+          }, timeout);
+        })
+    );
+
+    expect(loadingRef.value).toStrictEqual(false);
+    const promise = functionUpdatingLoadingState();
+    expect(loadingRef.value).toStrictEqual(true);
+
+    vi.advanceTimersByTime(timeout);
+    try {
+      await promise;
+    } catch (error) {
+      logDebug("caught error during test. its fine", error);
+    }
+
+    expect(loadingRef.value).toStrictEqual(false);
+  }
 });

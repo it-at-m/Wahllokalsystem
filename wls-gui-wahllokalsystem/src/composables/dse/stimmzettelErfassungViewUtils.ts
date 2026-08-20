@@ -7,14 +7,19 @@ import { computed, onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelErfassungViewButtonStateUtils.ts";
-import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
+import { useStimmzettelFetchService } from "@/composables/dse/stimmzettelFetchService.ts";
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 
-const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
+const {
+  isLoadingStimmzettel,
+  latestStimmzettelState,
+  loadStimmzettel,
+  saveStimmzettel,
+} = useStimmzettelFetchService();
 const { getWahlvorschlaege } = useWahlvorschlaegeService();
 const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelUtils();
 
@@ -25,9 +30,7 @@ export function useStimmzettelErfassungViewUtils(
 ) {
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
   const isStatusLoading = ref(false);
-  const isStimmzettelLoading = ref(false);
   const isWahlvorschlaegeLoading = ref(false);
-  const savedStimmzettel: Ref<Stimmzettel[]> = ref([]);
   const activeStimmzettel: Ref<Stimmzettel | null> = ref(null);
   const wahlvorschlaege = ref<Wahlvorschlag[]>([]);
 
@@ -41,7 +44,7 @@ export function useStimmzettelErfassungViewUtils(
   onActivated(async () => {
     await Promise.allSettled([
       _loadTeamStatus(),
-      _loadStimmzettel(),
+      loadStimmzettel(wahlID, wahlbezirkID, teamID),
       _loadWahlvorschlaege(),
     ]);
   });
@@ -64,7 +67,7 @@ export function useStimmzettelErfassungViewUtils(
 
   async function saveNewStimmzettel(stimmzettel: Stimmzettel) {
     const newStimmzettelCollectionToSave = [
-      ...savedStimmzettel.value,
+      ...(latestStimmzettelState.value ?? []),
       stimmzettel,
     ];
     await saveStimmzettel(
@@ -73,7 +76,6 @@ export function useStimmzettelErfassungViewUtils(
       teamID,
       newStimmzettelCollectionToSave
     );
-    savedStimmzettel.value = newStimmzettelCollectionToSave;
   }
 
   //private functions
@@ -91,19 +93,6 @@ export function useStimmzettelErfassungViewUtils(
       }
     } finally {
       isStatusLoading.value = false;
-    }
-  }
-
-  async function _loadStimmzettel() {
-    isStimmzettelLoading.value = true;
-    try {
-      savedStimmzettel.value = await getStimmzettel(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
-    } finally {
-      isStimmzettelLoading.value = false;
     }
   }
 
@@ -141,9 +130,9 @@ export function useStimmzettelErfassungViewUtils(
     isErfassungsDialogVisible,
     isKennungsDialogVisible,
     isStatusLoading: readonly(isStatusLoading),
-    isStimmzettelLoading: readonly(isStimmzettelLoading),
+    isLoadingStimmzettel,
     isWahlvorschlaegeLoading: readonly(isWahlvorschlaegeLoading),
-    savedStimmzettel: computed(() => savedStimmzettel.value),
+    latestStimmzettelState,
     wahlvorschlaege: computed(() => wahlvorschlaege.value),
 
     //actions

@@ -6,18 +6,19 @@
     canceltext="Beschlussfassung nicht starten"
     icon="$information"
     :is-confirm-loading="isConfirmButtonInLoadingState"
-    :cancel-disabled="isAnzahlStimmzettelLoading"
+    :cancel-disabled="isLoadingAnzahlStimmzettel"
     @cancel="closeDialog"
     @confirm="onConfirmClicked"
   >
     <v-skeleton-loader
-      v-if="isAnzahlStimmzettelLoading || stimmzettelCount === null"
+      v-if="isLoadingAnzahlStimmzettel || lastLoadedAnzahlStimmzettel === null"
       type="text"
     />
     <div v-else>
       Bitte bestätigen Sie, dass alle Papier-Stimmzettel aus dem gemeinsamen
       Erfassungsvorrat korrekt erfasst wurden. Es wurden insgesamt
-      {{ stimmzettelCount }} Stimmzettel von {{ teamstatusList.length }}
+      {{ lastLoadedAnzahlStimmzettel }} Stimmzettel von
+      {{ teamstatusList.length }}
       {{ teamstatusList.length == 1 ? "Team" : "Teams" }} im System erfasst.
     </div>
   </base-dialog>
@@ -29,7 +30,7 @@ import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/Stimmzette
 import { watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassungStartenDialogUtils.ts";
+import { useTheBeschlussfassungStartenDialogUtils } from "@/composables/dse/theBeschlussfassungStartenDialog.ts";
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,
@@ -43,12 +44,12 @@ const props = defineProps<{
 }>();
 
 const {
-  isAnzahlStimmzettelLoading,
+  isLoadingAnzahlStimmzettel,
   isConfirmButtonInLoadingState,
-  stimmzettelCount,
+  lastLoadedAnzahlStimmzettel,
   loadAnzahlStimmzettel,
   updateWorkflowStatusAndNavigate,
-} = useBeschlussfassungStartenDialogUtils();
+} = useTheBeschlussfassungStartenDialogUtils();
 
 watch(
   () => isDialogVisible.value,

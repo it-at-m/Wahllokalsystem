@@ -10,12 +10,12 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  getStimmzettel: vi.fn(),
+  loadStimmzettel: vi.fn(),
 }));
 
-vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
-  useStimmzettelService: vi.fn().mockImplementation(() => ({
-    getStimmzettel: mockDefinitions.getStimmzettel,
+vi.mock(import("@/composables/dse/stimmzettelFetchService.ts"), () => ({
+  useStimmzettelFetchService: vi.fn().mockImplementation(() => ({
+    loadStimmzettel: mockDefinitions.loadStimmzettel,
   })),
 }));
 
@@ -64,15 +64,15 @@ describe("dseStimmzettelTaskFactory.ts", () => {
           .build(),
       ];
 
-      mockDefinitions.getStimmzettel.mockReturnValue(Promise.resolve());
+      mockDefinitions.loadStimmzettel.mockReturnValue(Promise.resolve());
 
       const result = unitUnderTest.createTasks(taskFactoryContext);
 
       expect(result.length).toStrictEqual(1);
 
       result[0]?.callback();
-      expect(mockDefinitions.getStimmzettel).toHaveBeenCalledOnce();
-      expect(mockDefinitions.getStimmzettel).toHaveBeenCalledWith(
+      expect(mockDefinitions.loadStimmzettel).toHaveBeenCalledOnce();
+      expect(mockDefinitions.loadStimmzettel).toHaveBeenCalledWith(
         taskFactoryContext.extendedWahlMetaData[0].wahlID,
         taskFactoryContext.extendedWahlMetaData[0].wahlbezirkID,
         teamID,

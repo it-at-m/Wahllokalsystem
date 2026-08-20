@@ -1,12 +1,15 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { computed } from "vue";
 
-import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassungStartenDialogUtils.ts";
+import { useTheBeschlussfassungStartenDialogUtils } from "@/composables/dse/theBeschlussfassungStartenDialog.ts";
 import router from "@/plugins/router.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
+  isLoadingAnzahlStimmzettel: vi.fn(),
+  lastLoadedAnzahlStimmzettel: vi.fn(),
   getAnzahlStimmzettel: vi.fn(),
   saveDseWorkflowStatus: vi.fn(),
   routerPush: vi.fn(),
@@ -20,13 +23,19 @@ vi.mock(import("@/composables/dse/dseWorkflowStatusService.ts"), () => ({
 }));
 
 vi.mock(
-  import("@/composables/dse/stimmzettelService.ts"),
+  import("@/composables/dse/stimmzettelFetchService.ts"),
   async (importOrginial) => {
     const original = await importOrginial();
     return {
-      useStimmzettelService: () => ({
-        ...original.useStimmzettelService(),
-        getAnzahlStimmzettel: mockDefinitions.getAnzahlStimmzettel,
+      useStimmzettelFetchService: () => ({
+        ...original.useStimmzettelFetchService(),
+        loadAnzahlStimmzettel: mockDefinitions.getAnzahlStimmzettel,
+        isLoadingAnzahlStimmzettel: computed(() =>
+          mockDefinitions.isLoadingAnzahlStimmzettel()
+        ),
+        lastLoadedAnzahlStimmzettel: computed(() =>
+          mockDefinitions.lastLoadedAnzahlStimmzettel()
+        ),
       }),
     };
   }
@@ -34,18 +43,21 @@ vi.mock(
 
 router.push = mockDefinitions.routerPush;
 
-describe("beschlussfassungStartenDialogUtils.ts", () => {
-  const { generateRandomNumber } = useCommonTestDataFactory();
+describe("theBeschlussfassungStartenDialogUtils.ts", () => {
+  const { generateRandomNumber, generateRandomBoolean } =
+    useCommonTestDataFactory();
   const { prepareStimmzettelerfassungStatus } =
     useStimmzettelerfassungStatusTestDataFactory();
 
-  let unitUnderTest: ReturnType<typeof useBeschlussfassungStartenDialogUtils>;
+  let unitUnderTest: ReturnType<
+    typeof useTheBeschlussfassungStartenDialogUtils
+  >;
 
   const wahlID = "wahlID";
   const wahlbezirkID = "wahlbezirkID";
 
   beforeEach(() => {
-    unitUnderTest = useBeschlussfassungStartenDialogUtils();
+    unitUnderTest = useTheBeschlussfassungStartenDialogUtils();
   });
 
   afterEach(() => {
@@ -85,8 +97,9 @@ describe("beschlussfassungStartenDialogUtils.ts", () => {
     it("should_returnFalse_when_loadingWasSuccessful", async () => {
       const anzahlStimmzettel = generateRandomNumber(2);
 
-      mockDefinitions.getAnzahlStimmzettel.mockResolvedValue(anzahlStimmzettel);
-      await unitUnderTest.loadAnzahlStimmzettel(wahlID, wahlbezirkID);
+      mockDefinitions.lastLoadedAnzahlStimmzettel.mockResolvedValue(
+        anzahlStimmzettel
+      );
 
       expect(unitUnderTest.isConfirmButtonInLoadingState.value).toStrictEqual(
         false
@@ -139,65 +152,33 @@ describe("beschlussfassungStartenDialogUtils.ts", () => {
   });
 
   describe("loadAnzahlStimmzettel", () => {
-    it("should_loadAnzahlStimmzettelAndUpdateLoadingState_when_called", async () => {
-      const anzahlStimmzettel = generateRandomNumber(2);
-
-      mockDefinitions.getAnzahlStimmzettel.mockResolvedValue(anzahlStimmzettel);
-
-      const spyOnIsAnzahlStimmzettelLoading = vi.spyOn(
-        unitUnderTest.isAnzahlStimmzettelLoading,
-        "value",
-        "set"
+    it("should_useService_when_called", async () => {
+      expect(unitUnderTest.loadAnzahlStimmzettel).toBe(
+        mockDefinitions.getAnzahlStimmzettel
       );
-
-      expect(unitUnderTest.stimmzettelCount.value).toStrictEqual(null);
-      expect(unitUnderTest.isAnzahlStimmzettelLoading.value).toStrictEqual(
-        false
-      );
-
-      await unitUnderTest.loadAnzahlStimmzettel(wahlID, wahlbezirkID);
-
-      expect(mockDefinitions.getAnzahlStimmzettel.mock.calls).toStrictEqual([
-        [wahlID, wahlbezirkID],
-      ]);
-      expect(unitUnderTest.stimmzettelCount.value).toStrictEqual(
-        anzahlStimmzettel
-      );
-      expect(unitUnderTest.isAnzahlStimmzettelLoading.value).toStrictEqual(
-        false
-      );
-      expect(spyOnIsAnzahlStimmzettelLoading.mock.calls).toStrictEqual([
-        [true],
-        [false],
-      ]);
-
-      spyOnIsAnzahlStimmzettelLoading.mockRestore();
     });
+  });
 
-    it("should_resetLoadingStateAndKeepStimmzettelCountNull_when_loadingFailed", async () => {
-      const anzahlStimmzettel = generateRandomNumber(2);
-      mockDefinitions.getAnzahlStimmzettel.mockResolvedValue(anzahlStimmzettel);
-      await unitUnderTest.loadAnzahlStimmzettel(wahlID, wahlbezirkID);
-      expect(unitUnderTest.stimmzettelCount.value).toStrictEqual(
-        anzahlStimmzettel
+  describe("isLoadingAnzahlStimmzettel", () => {
+    it("should_useService_when_called", async () => {
+      const mockedIsLoadingAnzahlStimmzettel = generateRandomBoolean();
+      mockDefinitions.isLoadingAnzahlStimmzettel.mockReturnValue(
+        mockedIsLoadingAnzahlStimmzettel
       );
-      mockDefinitions.getAnzahlStimmzettel.mockClear();
-
-      const mockedServiceError = new Error("api call failed");
-      mockDefinitions.getAnzahlStimmzettel.mockRejectedValue(
-        mockedServiceError
+      expect(unitUnderTest.isLoadingAnzahlStimmzettel.value).toBe(
+        mockedIsLoadingAnzahlStimmzettel
       );
+    });
+  });
 
-      await expect(async () =>
-        unitUnderTest.loadAnzahlStimmzettel(wahlID, wahlbezirkID)
-      ).rejects.toThrow(mockedServiceError);
-
-      expect(mockDefinitions.getAnzahlStimmzettel.mock.calls).toStrictEqual([
-        [wahlID, wahlbezirkID],
-      ]);
-      expect(unitUnderTest.stimmzettelCount.value).toStrictEqual(null);
-      expect(unitUnderTest.isAnzahlStimmzettelLoading.value).toStrictEqual(
-        false
+  describe("lastLoadedAnzahlStimmzettel", () => {
+    it("should_useService_when_called", async () => {
+      const mockedLastLoadedAnzahlStimmzettel = generateRandomNumber(2);
+      mockDefinitions.lastLoadedAnzahlStimmzettel.mockReturnValue(
+        mockedLastLoadedAnzahlStimmzettel
+      );
+      expect(unitUnderTest.lastLoadedAnzahlStimmzettel.value).toBe(
+        mockedLastLoadedAnzahlStimmzettel
       );
     });
   });

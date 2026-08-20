@@ -1,7 +1,7 @@
 import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
 import type { CommandHandler } from "@/types/dse/command/CommandHandler.ts";
 
-import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/composables/dse/ManagedStimmzettel.ts";
+import { useHandlerTools } from "@/composables/dse/command/handlerTools.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
@@ -13,6 +13,7 @@ interface CommandArguments {
 export function useAddStreichungToKandidatenRangeHandler(): CommandHandler {
   const REXEG_ADD_STREICHUNG_TO_KANDIDATEN_RANGE =
     /^[sS]([1-9]\d{2,})(?:-([1-9]\d{2,}))?$/;
+  const { isValidKandidatOrdnungszahl, normalizeBounds } = useHandlerTools();
 
   function canHandle(command: string): boolean {
     try {
@@ -54,9 +55,10 @@ export function useAddStreichungToKandidatenRangeHandler(): CommandHandler {
     if (match?.[1] !== undefined) {
       const bound1 = Number.parseInt(match[1]);
       const bound2 = Number.parseInt(match[2]);
+      const { lower, upper } = normalizeBounds(bound1, bound2);
       const commandArgs = {
-        kandidatOrdnungszahlLowerBound: Math.min(bound1, bound2),
-        kandidatOrdnungszahlUpperBound: Math.max(bound1, bound2),
+        kandidatOrdnungszahlLowerBound: lower,
+        kandidatOrdnungszahlUpperBound: upper,
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {
@@ -68,14 +70,12 @@ export function useAddStreichungToKandidatenRangeHandler(): CommandHandler {
     commandArguments: CommandArguments
   ): boolean {
     return (
-      Number.isSafeInteger(commandArguments.kandidatOrdnungszahlLowerBound) &&
-      commandArguments.kandidatOrdnungszahlLowerBound %
-        WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL !=
-        0 &&
-      Number.isSafeInteger(commandArguments.kandidatOrdnungszahlUpperBound) &&
-      commandArguments.kandidatOrdnungszahlUpperBound %
-        WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL !=
-        0
+      isValidKandidatOrdnungszahl(
+        commandArguments.kandidatOrdnungszahlLowerBound
+      ) &&
+      isValidKandidatOrdnungszahl(
+        commandArguments.kandidatOrdnungszahlUpperBound
+      )
     );
   }
 

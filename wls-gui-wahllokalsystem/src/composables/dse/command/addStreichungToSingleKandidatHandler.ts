@@ -1,12 +1,13 @@
 import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
 import type { CommandHandler } from "@/types/dse/command/CommandHandler.ts";
 
-import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/composables/dse/ManagedStimmzettel.ts";
+import { useHandlerTools } from "@/composables/dse/command/handlerTools.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
 export function useAddStreichungToSingleKandidatHandler(): CommandHandler {
   const REGEX_ADD_STREICHUNG_TO_KANDIDAT = /^[sS]([1-9]\d{2,})$/;
+  const { isValidKandidatOrdnungszahl } = useHandlerTools();
 
   function canHandle(command: string): boolean {
     try {
@@ -51,10 +52,7 @@ export function useAddStreichungToSingleKandidatHandler(): CommandHandler {
   }
 
   function _isCommandArgumentsValid(commandArgument: number): boolean {
-    return (
-      Number.isSafeInteger(commandArgument) &&
-      commandArgument % WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL != 0
-    );
+    return isValidKandidatOrdnungszahl(commandArgument);
   }
 
   return {

@@ -45,6 +45,8 @@
 import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
 import type { PropType } from "vue";
 
+import { computed, ref } from "vue";
+
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import { useMonitoringViewButtonStateUtils } from "@/composables/dse/monitoringViewButtonStateUtils.ts";
 import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
@@ -86,8 +88,10 @@ const { workflowStatus } = useMonitoringViewUtils(
   props.wahlID,
   props.wahlbezirkID
 );
+
+const teamStatus = computed(() => props.teamEntry?.status);
 const { wiederOeffnenButtonIsDisabled } = useMonitoringViewButtonStateUtils(
-  props.teamEntry?.status,
+  ref({ status: teamStatus }),
   workflowStatus
 );
 

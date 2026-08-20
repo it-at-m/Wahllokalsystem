@@ -1,4 +1,5 @@
 import type { StimmzettelerfassungStatus } from "@/types/dse/StimmzettelerfassungStatus.ts";
+import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
@@ -16,7 +17,7 @@ describe("monitoringViewButtonStateUtils.ts", () => {
   const teamEnumValues = Object.values(StimmzettelerfassungTeamStatusEnum);
   const workflowEnumValues = Object.values(StimmzettelerfassungStatusEnum);
 
-  type TeamStatus = StimmzettelerfassungTeamStatusEnum | null;
+  type TeamStatus = StimmzettelerfassungTeamStatus | null;
   type WorkflowStatus = StimmzettelerfassungStatus | null;
   type TestCases = [string, TeamStatus, WorkflowStatus, boolean][];
 
@@ -25,25 +26,25 @@ describe("monitoringViewButtonStateUtils.ts", () => {
       // team REGISTRIERT
       [
         "REGISTRIERT + null",
-        StimmzettelerfassungTeamStatusEnum.REGISTRIERT,
+        { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
         null,
         true,
       ],
       [
         "REGISTRIERT + SteBearbeitung",
-        StimmzettelerfassungTeamStatusEnum.REGISTRIERT,
+        { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
         { status: StimmzettelerfassungStatusEnum.SteBearbeitung },
         true,
       ],
       [
         "REGISTRIERT + SteAbgeschlossen",
-        StimmzettelerfassungTeamStatusEnum.REGISTRIERT,
+        { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
         { status: StimmzettelerfassungStatusEnum.SteAbgeschlossen },
         true,
       ],
       [
         "REGISTRIERT + BeAbgeschlossen",
-        StimmzettelerfassungTeamStatusEnum.REGISTRIERT,
+        { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
         { status: StimmzettelerfassungStatusEnum.BeAbgeschlossen },
         true,
       ],
@@ -51,25 +52,25 @@ describe("monitoringViewButtonStateUtils.ts", () => {
       // team IN_BEARBEITUNG
       [
         "IN_BEARBEITUNG + null",
-        StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+        { status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG },
         null,
         true,
       ],
       [
         "IN_BEARBEITUNG + SteBearbeitung",
-        StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+        { status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG },
         { status: StimmzettelerfassungStatusEnum.SteBearbeitung },
         true,
       ],
       [
         "IN_BEARBEITUNG + SteAbgeschlossen",
-        StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+        { status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG },
         { status: StimmzettelerfassungStatusEnum.SteAbgeschlossen },
         true,
       ],
       [
         "IN_BEARBEITUNG + BeAbgeschlossen",
-        StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+        { status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG },
         { status: StimmzettelerfassungStatusEnum.BeAbgeschlossen },
         true,
       ],
@@ -77,25 +78,25 @@ describe("monitoringViewButtonStateUtils.ts", () => {
       // team UNTERBROCHEN
       [
         "UNTERBROCHEN + null",
-        StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
+        { status: StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN },
         null,
         true,
       ],
       [
         "UNTERBROCHEN + SteBearbeitung",
-        StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
+        { status: StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN },
         { status: StimmzettelerfassungStatusEnum.SteBearbeitung },
         true,
       ],
       [
         "UNTERBROCHEN + SteAbgeschlossen",
-        StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
+        { status: StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN },
         { status: StimmzettelerfassungStatusEnum.SteAbgeschlossen },
         true,
       ],
       [
         "UNTERBROCHEN + BeAbgeschlossen",
-        StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
+        { status: StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN },
         { status: StimmzettelerfassungStatusEnum.BeAbgeschlossen },
         true,
       ],
@@ -103,25 +104,25 @@ describe("monitoringViewButtonStateUtils.ts", () => {
       // team ABGESCHLOSSEN
       [
         "ABGESCHLOSSEN + null",
-        StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN,
+        { status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN },
         null,
         false,
       ],
       [
         "ABGESCHLOSSEN + SteBearbeitung",
-        StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN,
+        { status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN },
         { status: StimmzettelerfassungStatusEnum.SteBearbeitung },
         false,
       ],
       [
         "ABGESCHLOSSEN + SteAbgeschlossen",
-        StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN,
+        { status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN },
         { status: StimmzettelerfassungStatusEnum.SteAbgeschlossen },
         false,
       ],
       [
         "ABGESCHLOSSEN + BeAbgeschlossen",
-        StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN,
+        { status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN },
         { status: StimmzettelerfassungStatusEnum.BeAbgeschlossen },
         true,
       ],
@@ -152,8 +153,9 @@ describe("monitoringViewButtonStateUtils.ts", () => {
       "should_haveCorrectDisabledState_when_%s",
       (_label, teamStatus, workflowStatus, expectedDisabled) => {
         const workflowRef = ref<WorkflowStatus>(workflowStatus);
+        const teamStatusRef = ref<TeamStatus>(teamStatus);
         const unitUnderTest = useMonitoringViewButtonStateUtils(
-          teamStatus,
+          teamStatusRef,
           workflowRef
         );
         expect(unitUnderTest.wiederOeffnenButtonIsDisabled.value).toBe(
@@ -166,7 +168,7 @@ describe("monitoringViewButtonStateUtils.ts", () => {
       const testedStatuses = Array.from(
         new Set(
           cases
-            .map(([, team]) => team ?? undefined)
+            .map(([, team]) => team?.status)
             .filter(
               (status): status is StimmzettelerfassungTeamStatusEnum =>
                 status !== undefined

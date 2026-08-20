@@ -11,9 +11,6 @@ const mockDefinitions = vi.hoisted(() => ({
   getAnzahlStimmzettel: vi.fn(),
   saveDseWorkflowStatus: vi.fn(),
   routerPush: vi.fn(),
-  workflowStatus: ref({
-    status: StimmzettelerfassungStatusEnum.SteBearbeitung,
-  }),
 }));
 
 vi.mock(import("@/composables/dse/dseWorkflowStatusService.ts"), () => ({
@@ -21,7 +18,9 @@ vi.mock(import("@/composables/dse/dseWorkflowStatusService.ts"), () => ({
     saveDseWorkflowStatus: mockDefinitions.saveDseWorkflowStatus,
     loadDseWorkflowStatus: vi.fn(),
     isWorkflowStatusLoading: ref(false),
-    workflowStatus: mockDefinitions.workflowStatus,
+    workflowStatus: ref({
+      status: StimmzettelerfassungStatusEnum.SteBearbeitung,
+    }),
   }),
 }));
 

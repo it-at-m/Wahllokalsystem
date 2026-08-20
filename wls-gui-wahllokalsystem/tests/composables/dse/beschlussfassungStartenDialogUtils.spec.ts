@@ -1,6 +1,7 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { ref } from "vue";
 
 import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassungStartenDialogUtils.ts";
 import router from "@/plugins/router.ts";
@@ -16,6 +17,7 @@ vi.mock(import("@/composables/dse/dseWorkflowStatusService.ts"), () => ({
   useDseWorkflowStatusService: () => ({
     saveDseWorkflowStatus: mockDefinitions.saveDseWorkflowStatus,
     loadDseWorkflowStatus: vi.fn(),
+    isWorkflowStatusLoading: ref(false),
   }),
 }));
 

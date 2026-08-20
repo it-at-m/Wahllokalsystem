@@ -48,7 +48,7 @@ describe("handlerTools.ts", () => {
       [103, 101, { lower: 101, upper: 103 }],
       [201, 299, { lower: 201, upper: 299 }],
     ])(
-      "should_returnLowerUpperPair_sorted",
+      "should_returnLowerUpperPairSorted_when_called",
       (a: number, b: number, expected: { lower: number; upper: number }) => {
         expect(normalizeBounds(a, b)).toStrictEqual(expected);
       }

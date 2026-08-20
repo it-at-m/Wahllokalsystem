@@ -110,20 +110,10 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
         "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
       );
     }
-    const kandidaten = [];
-    for (
-      let ordnungszahl = lowerOrdnungszahl;
-      ordnungszahl <= upperOrdnungszahl;
-      ordnungszahl++
-    ) {
-      const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
-      if (!kandidat) {
-        throw new ManagedStimmzettelError(
-          `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
-        );
-      }
-      kandidaten.push(kandidat);
-    }
+    const kandidaten = _getKandidatenInRangeOrThrow(
+      lowerOrdnungszahl,
+      upperOrdnungszahl
+    );
 
     _internalAddVotesToKandidatenRange(kandidaten, votesToAdd);
   }
@@ -148,20 +138,10 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
         `Der Bereich ${lowerOrdnungszahl}-${upperOrdnungszahl} ist ungültig.`
       );
     }
-    const kandidaten = [];
-    for (
-      let ordnungszahl = lowerOrdnungszahl;
-      ordnungszahl <= upperOrdnungszahl;
-      ordnungszahl++
-    ) {
-      const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
-      if (!kandidat) {
-        throw new ManagedStimmzettelError(
-          `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
-        );
-      }
-      kandidaten.push(kandidat);
-    }
+    const kandidaten = _getKandidatenInRangeOrThrow(
+      lowerOrdnungszahl,
+      upperOrdnungszahl
+    );
 
     _internalAddStreichungenToKandidatenRange(kandidaten);
   }
@@ -324,6 +304,27 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
       stimmenSummary.einzelstimmen += kandidat.einzelstimmen;
     }
     return stimmenSummary;
+  }
+
+  function _getKandidatenInRangeOrThrow(
+    lowerOrdnungszahl: number,
+    upperOrdnungszahl: number
+  ): Kandidat[] {
+    const kandidaten = [];
+    for (
+      let ordnungszahl = lowerOrdnungszahl;
+      ordnungszahl <= upperOrdnungszahl;
+      ordnungszahl++
+    ) {
+      const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
+      if (!kandidat) {
+        throw new ManagedStimmzettelError(
+          `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+        );
+      }
+      kandidaten.push(kandidat);
+    }
+    return kandidaten;
   }
 
   return {

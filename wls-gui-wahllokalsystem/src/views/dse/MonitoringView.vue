@@ -152,7 +152,7 @@ async function onOpenStimmzettelerfassungClicked(teamID: string) {
     teamID
   );
 
-  await sendStatusInBearbeitung();
+  await sendStatusInBearbeitung(true);
   await onMonitoringSynchronisierenClicked();
 }
 </script>

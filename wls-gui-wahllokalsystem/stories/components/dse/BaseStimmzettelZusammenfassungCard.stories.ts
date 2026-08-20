@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/BaseStimmzettelZusammenfassungCard.vue";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
-const { createWahlvorschlag } = useWahlvorschlaegeTestDataFactory();
+const { createStimmzettelWahlvorschlag } = useStimmzettelTestDataFactory();
 
 const meta = {
   component: BaseStimmzettelZusammenfassungCard,
@@ -15,8 +15,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Valid: Story = {
   args: {
-    listenstimmen: [createWahlvorschlag(), createWahlvorschlag()],
-    gesamtstimmen: 1,
+    listenstimmen: [
+      createStimmzettelWahlvorschlag(),
+      createStimmzettelWahlvorschlag(),
+    ],
     ungueltigestimmen: 0,
     direktstimmen: 1,
     reststimmen: 0,
@@ -27,8 +29,7 @@ export const Valid: Story = {
 
 export const Invalid: Story = {
   args: {
-    listenstimmen: [createWahlvorschlag()],
-    gesamtstimmen: 1,
+    listenstimmen: [createStimmzettelWahlvorschlag()],
     ungueltigestimmen: 0,
     direktstimmen: 1,
     reststimmen: 0,
@@ -40,7 +41,6 @@ export const Invalid: Story = {
 export const BeschlussAusstehend: Story = {
   args: {
     listenstimmen: [],
-    gesamtstimmen: 1,
     ungueltigestimmen: 0,
     direktstimmen: 1,
     reststimmen: 0,

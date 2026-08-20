@@ -55,6 +55,7 @@
         />
         <base-text-button
           :active="beschlussfassungStartenBtnActive"
+          :is-disabled="isBeschlussfassungStartenBtnDisabled"
           @click="onBeschlussfassungStartenClicked"
           >Beschlussfassung starten</base-text-button
         >
@@ -79,6 +80,7 @@ import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressL
 import BaseTeamStatusListItem from "@/components/dse/BaseTeamStatusListItem.vue";
 import TheBeschlussfassungStartenDialog from "@/components/dse/TheBeschlussfassungStartenDialog.vue";
 import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 const minWidth = "220px";
@@ -92,6 +94,7 @@ const {
   teamstatusList,
   lastLoading,
   isAktualisiserenLoading,
+  workflowStatus,
   onMonitoringSynchronisierenClicked,
 } = useMonitoringViewUtils(wahlID, wahlbezirkID);
 
@@ -99,6 +102,12 @@ const beschlussfassungStartenBtnActive = computed(() =>
   teamstatusList.value.every(
     (team) => team.status === StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
   )
+);
+const isBeschlussfassungStartenBtnDisabled = computed(
+  () =>
+    !beschlussfassungStartenBtnActive.value ||
+    workflowStatus.value?.status !==
+      StimmzettelerfassungStatusEnum.SteBearbeitung
 );
 const isRefreshBtnActive = computed(
   () => !beschlussfassungStartenBtnActive.value

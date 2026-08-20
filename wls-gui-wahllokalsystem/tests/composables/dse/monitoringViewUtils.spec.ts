@@ -1,3 +1,4 @@
+import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
@@ -19,6 +20,7 @@ const mockDefinitions = await vi.hoisted(async () => {
     },
     loadErfassungTeamStatusListe: vi.fn(),
     addNotification: vi.fn(),
+    loadDseWorkflowStatus: vi.fn(),
     // Expose vue.ref for tests if needed
     ref,
   };
@@ -42,7 +44,16 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   }),
 }));
 
+vi.mock("@/composables/dse/dseWorkflowStatusService.ts", () => ({
+  useDseWorkflowStatusService: () => ({
+    loadDseWorkflowStatus: mockDefinitions.loadDseWorkflowStatus,
+  }),
+}));
+
 describe("monitoringViewUtils.ts", () => {
+  const { createStimmzettelerfassungStatus } =
+    useStimmzettelerfassungStatusTestDataFactory();
+
   const wahlID = "W1";
   const wahlbezirkID = "WB1";
 
@@ -63,6 +74,7 @@ describe("monitoringViewUtils.ts", () => {
     expect(unit.teamstatusList.value).toEqual([]);
     expect(unit.lastLoading.value).toBeUndefined();
     expect(unit.isAktualisiserenLoading.value).toBe(false);
+    expect(unit.workflowStatus.value).toBe(null);
   });
 
   it("should_loadListAndUpdateState_when_onMonitoringSynchronisierenClicked", async () => {
@@ -96,13 +108,16 @@ describe("monitoringViewUtils.ts", () => {
 
   it("should_loadListAndUpdateStateWithoutNotification_when_onActivatedSuccess", async () => {
     const sample = [{ team: "T2" }];
+    const workflowStatus = createStimmzettelerfassungStatus();
     mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(sample);
+    mockDefinitions.loadDseWorkflowStatus.mockResolvedValue(workflowStatus);
 
     await mockDefinitions.runActivatedCallbacks();
 
     expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     expect(unit.teamstatusList.value).toStrictEqual(sample);
     expect(unit.lastLoading.value).toBeInstanceOf(Date);
+    expect(unit.workflowStatus.value).toStrictEqual(workflowStatus);
 
     expect(mockDefinitions.loadErfassungTeamStatusListe).toHaveBeenCalledWith(
       wahlID,

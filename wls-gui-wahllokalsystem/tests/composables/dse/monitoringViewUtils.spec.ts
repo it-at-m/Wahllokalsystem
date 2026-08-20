@@ -74,7 +74,6 @@ describe("monitoringViewUtils.ts", () => {
     expect(unit.teamstatusList.value).toEqual([]);
     expect(unit.lastLoading.value).toBeUndefined();
     expect(unit.isAktualisiserenLoading.value).toBe(false);
-    expect(unit.workflowStatus.value).toBe(null);
   });
 
   it("should_loadListAndUpdateState_when_onMonitoringSynchronisierenClicked", async () => {
@@ -117,7 +116,6 @@ describe("monitoringViewUtils.ts", () => {
     expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     expect(unit.teamstatusList.value).toStrictEqual(sample);
     expect(unit.lastLoading.value).toBeInstanceOf(Date);
-    expect(unit.workflowStatus.value).toStrictEqual(workflowStatus);
 
     expect(mockDefinitions.loadErfassungTeamStatusListe).toHaveBeenCalledWith(
       wahlID,

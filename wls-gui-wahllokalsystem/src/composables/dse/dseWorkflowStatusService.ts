@@ -22,6 +22,7 @@ export function useDseWorkflowStatusService() {
       new Configuration({ basePath: ERGEBNISMELDUNG_SERVICE_API_URL })
     );
 
+  const workflowStatus = ref<StimmzettelerfassungStatus | null>(null);
   const isWorkflowStatusLoading = ref(false);
 
   async function loadDseWorkflowStatus(
@@ -38,7 +39,13 @@ export function useDseWorkflowStatusService() {
         );
 
       const responseData = getNullOn204OrElseResponseData(response);
-      return responseData ? dtoToModel(responseData) : null;
+      if (responseData) {
+        const model = dtoToModel(responseData);
+        workflowStatus.value = model;
+        return model;
+      } else {
+        return null;
+      }
     } catch (error) {
       if (sendNotification) {
         addNotification(
@@ -65,6 +72,7 @@ export function useDseWorkflowStatusService() {
         wahlbezirkID,
         dtoToSend
       );
+      workflowStatus.value = status;
       if (sendNotification) {
         addNotification(
           "Speichern des Workflow-Status erfolgreich",
@@ -83,6 +91,7 @@ export function useDseWorkflowStatusService() {
   }
 
   return {
+    workflowStatus: readonly(workflowStatus),
     isWorkflowStatusLoading: readonly(isWorkflowStatusLoading),
     loadDseWorkflowStatus,
     saveDseWorkflowStatus,

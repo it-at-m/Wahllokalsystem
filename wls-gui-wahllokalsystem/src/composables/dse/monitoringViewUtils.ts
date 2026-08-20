@@ -1,4 +1,3 @@
-import type { StimmzettelerfassungStatus } from "@/types/dse/StimmzettelerfassungStatus.ts";
 import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
 
 import { onActivated, ref } from "vue";
@@ -12,7 +11,6 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);
   const lastLoading = ref<Date>();
   const isAktualisiserenLoading = ref(false);
-  const workflowStatus = ref<StimmzettelerfassungStatus | null>(null);
 
   const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
   const userNotificationService = useUserNotificationService();
@@ -31,11 +29,7 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
         UserNotificationCategoryEnum.ERROR
       );
     }
-    workflowStatus.value = await loadDseWorkflowStatus(
-      wahlID,
-      wahlbezirkID,
-      false
-    );
+    await loadDseWorkflowStatus(wahlID, wahlbezirkID, false);
   });
 
   async function _loadTeamStatusListe(sendNotification: boolean) {
@@ -60,7 +54,6 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     teamstatusList,
     lastLoading,
     isAktualisiserenLoading,
-    workflowStatus,
     onMonitoringSynchronisierenClicked,
   };
 }

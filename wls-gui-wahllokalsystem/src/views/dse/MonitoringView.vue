@@ -49,7 +49,15 @@
             :team-entry="item"
             :wahl-i-d="wahlID"
             :wahlbezirk-i-d="wahlbezirkID"
-            @open-stimmzettelerfassung="onMonitoringSynchronisierenClicked"
+            :is-wieder-oeffnen-button-disabled="
+              item.status !==
+                StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN ||
+              workflowStatus?.status ===
+                StimmzettelerfassungStatusEnum.SteAbgeschlossen
+            "
+            @open-stimmzettelerfassung="
+              onOpenStimmzettelerfassungClicked(item.teamID)
+            "
           />
         </v-list>
       </v-card-text>
@@ -87,6 +95,7 @@ import BaseTeamStatusListItem from "@/components/dse/BaseTeamStatusListItem.vue"
 import TheBeschlussfassungStartenDialog from "@/components/dse/TheBeschlussfassungStartenDialog.vue";
 import { useDseWorkflowStatusService } from "@/composables/dse/dseWorkflowStatusService.ts";
 import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
+import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
@@ -101,10 +110,9 @@ const {
   teamstatusList,
   lastLoading,
   isAktualisiserenLoading,
-  workflowStatus,
   onMonitoringSynchronisierenClicked,
 } = useMonitoringViewUtils(wahlID, wahlbezirkID);
-const { loadDseWorkflowStatus } = useDseWorkflowStatusService();
+const { workflowStatus, loadDseWorkflowStatus } = useDseWorkflowStatusService();
 
 const beschlussfassungStartenBtnActive = computed(() =>
   teamstatusList.value.every(
@@ -135,5 +143,16 @@ async function onBeschlussfassungStartenClicked() {
 async function onAktualisierenClicked() {
   await loadDseWorkflowStatus(wahlID, wahlbezirkID, false);
   await onMonitoringSynchronisierenClicked(true);
+}
+
+async function onOpenStimmzettelerfassungClicked(teamID: string) {
+  const { sendStatusInBearbeitung } = useStimmzettelErfassungViewUtils(
+    wahlID,
+    wahlbezirkID,
+    teamID
+  );
+
+  await sendStatusInBearbeitung();
+  await onMonitoringSynchronisierenClicked();
 }
 </script>

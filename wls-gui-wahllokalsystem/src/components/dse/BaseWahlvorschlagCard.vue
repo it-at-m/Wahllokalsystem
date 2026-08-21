@@ -14,7 +14,6 @@
                 WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL
               "
               :name="wahlvorschlag.kurzname"
-              name-style-classes="text-subtitle-1"
               :is-gestrichen="false"
               :ungueltige-stimmen="0"
               :einzelstimmen="0"

@@ -17,6 +17,7 @@
         >
           <base-text-button
             :active="startenBtnActive"
+            class="mr-5"
             @click="onErfassungStartenClicked"
           >
             {{ startNewStimmzettelButtonText }}
@@ -35,7 +36,10 @@
             Beenden
           </base-text-button>
         </div>
-        <div v-else>
+        <div
+          v-else
+          class="w-100"
+        >
           <base-feedback-card
             title="Sie haben die Erfassung bereits abgeschlossen"
             type="information"

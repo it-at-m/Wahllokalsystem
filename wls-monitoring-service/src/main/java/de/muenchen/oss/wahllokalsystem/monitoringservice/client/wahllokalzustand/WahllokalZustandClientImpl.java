@@ -37,29 +37,23 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
 
   @Override
   public void postLastSeen(
-      final String wahlbezirkID, final String teamID, final LocalDateTime zuletztGesehen)
-      throws WlsException {
+      final String wahlbezirkID, final String teamID, final LocalDateTime zuletztGesehen) {
     try {
       wahllokalzustandControllerApi.saveWahllokalZustandLastSeen(
           wahlbezirkID, teamID, zuletztGesehen);
     } catch (final Exception exception) {
-      log.info("Last Seen nicht gesendet. Exception: {}", exception.getMessage());
-      throw exceptionFactory.createTechnischeWlsException(
-          ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
+      log.warn("Last Seen nicht gesendet. Exception: {}", exception.getMessage());
     }
   }
 
   @Override
   public void postLetzteAbmeldung(
-      String wahlbezirkID, final String teamID, final LocalDateTime letzteAbmeldung)
-      throws WlsException {
+      String wahlbezirkID, final String teamID, final LocalDateTime letzteAbmeldung) {
     try {
       wahllokalzustandControllerApi.saveWahllokalZustandLetzteAbmeldung(
           wahlbezirkID, teamID, letzteAbmeldung);
     } catch (final Exception exception) {
-      log.info("Letzte Abmeldung nicht gesendet. Exception: {}", exception.getMessage());
-      throw exceptionFactory.createTechnischeWlsException(
-          ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
+      log.warn("Letzte Abmeldung nicht gesendet. Exception: {}", exception.getMessage());
     }
   }
 

@@ -173,7 +173,7 @@ export function useRequestStrategies() {
   ): ArrayBuffer | string | null {
     let dataToStore: ArrayBuffer | string | null = null;
     if (contentType && isPdfContext(contentType)) {
-      dataToStore = responseBody;
+      dataToStore = responseBody.byteLength > 0 ? responseBody : null;
     } else if (contentType && isTextContext(contentType)) {
       dataToStore = _arrayBufferToString(responseBody);
     } else {

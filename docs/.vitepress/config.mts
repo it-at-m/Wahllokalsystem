@@ -177,6 +177,14 @@ export default withMermaid({
                   text: "Anzeige der Buttons bei unvollständigen Formularen",
                   link: `${PATH_ADR_UI}adr009-button-status.md`,
                 },
+                {
+                  text: "Vergabe von Stimmen auf dem Stimmzettel",
+                  link: `${PATH_ADR_UI}adr010-dse-stimmvergabe-stimmen-ergaenzen.md`,
+                },
+                {
+                  text: "Farbschema der Eingabehistorie",
+                  link: `${PATH_ADR_UI}adr011-dse-farbschema-eingabehistorie.md`,
+                },
               ],
             },
           ],
@@ -237,10 +245,6 @@ export default withMermaid({
               ],
             },
             { text: "Mock-Server", link: `${PATH_GUIDES}mock-server.md` },
-            {
-              text: "ArchUnit Rules Testen",
-              link: `${PATH_GUIDES}archunit-rule-tests.md`,
-            },
             {
               text: "Aktualisierung von Images",
               link: `${PATH_GUIDES}update-images.md`,

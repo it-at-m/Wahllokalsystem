@@ -49,8 +49,13 @@ entfaltet, und es werden Markierungen vorgenommen, die zeigen, wo man Stimmen fi
 #### (2) Stimmzettel erfassen {#stimmzettel-erfassen}
 
 In diesem Schritt erfolgt die Erfassung der Stimmzettel im System. Der Stimmzettelerfassungs-Workflow-Status wird
-auf `(e) STE in Bearbeitung` gesetzt. Stimmzettel, über die der gesamte Wahlvorstand
-einen Beschluss fassen muss, werden entsprechend markiert.
+auf `(e) STE in Bearbeitung` gesetzt. Stimmzettel, über die der gesamte Wahlvorstand einen Beschluss fassen muss,
+werden entsprechend markiert und mit einem oder mehreren `Vormerkungsgründen` versehen.
+
+Um eine möglichst intuitive Erfassung der Stimmen des Stimmzettels zu ermöglichen, haben wir
+[Regeln](/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen) definiert.
+
+Zur schnelleren Erfassung können spezielle [Kurzbefehle](#kurzbefehle-fur-die-erfassung) verwendet werden.
 
 #### (3) Stimmzettel ablegen
 
@@ -61,8 +66,10 @@ ein Beschluss zu fassen ist, landen so auf einem separaten Stapel.
 
 Sind alle Teams mit der Erfassung fertig und der Stimmzettelerfassungs-Workflow-Status `(f) STE abgeschlossen` wurde
 erfolgreich übermittelt, startet die Beschlussdokumentation. Der Wahlvorstand fasst die Beschlüsse zu den zuvor
-markierten Stimmzetteln und überträgt die Ergebnisse ins System. Sind alle Beschlüsse vollständig dokumentiert, wird
-der Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschlossen` gespeichert.
+markierten Stimmzetteln und überträgt die Ergebnisse ins System. Eine Zusammenfassung mehrerer
+`Vormerkungsgründe` stellt einen `Beschlussvorschlag` dar, über welchen im Gremium abgestimmt wird. Der Vorschlag,
+der am Ende die Abstimmung gewinnt, wird als `Entscheidungsgrund` gespeichert. Sind alle Beschlüsse vollständig
+dokumentiert, wird der Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschlossen` gespeichert.
 
 ### Neue Statuswerte
 
@@ -101,6 +108,7 @@ stateDiagram-v2
         Registriert --> Abgeschlossen
         InBearbeitung --> Unterbrochen
         Unterbrochen --> InBearbeitung
+        Unterbrochen --> Abgeschlossen
     }
       
     classDef steWfStatus fill:#faca7d
@@ -129,3 +137,14 @@ stateDiagram-v2
 | `(f) STE abgeschlossen`  | Der Stimmzettelerfassungs-Workflow-Status `(f) STE abgeschlossen` wird von Teams mit der Rolle **Schriftführung** gesetzt, wenn alle Teams eines Wahlbezirks die Erfassung `(d) abgeschlossen` haben und bestätigt wurde, dass es keine übrigen Stimmzettel mehr im Erfassungsvorrat gibt.                                                                                                                                                    |
 | `(g) BF abgeschlossen`   | Nach der Dokumentation aller Beschlussergebnisse [(4)](#beschluesse-erfassen) bestätigen die Teams mit der Rolle **Schriftführung**, dass die `(g) BF abgeschlossen` ist.                                                                                                                                                                                                                                                                     |
 | `(h) NS gedruckt`        | Sobald die Teams mit der Rolle **Schriftführung** die Niederschrift gedruckt haben, wird der Stimmzettelerfassungs-Workflow-Status `(h) NS gedruckt` gesetzt.                                                                                                                                                                                                                                                                                 |
+
+## Kurzbefehle für die Erfassung {#kurzbefehle-fur-die-erfassung}
+
+Um eine schnelle Erfassung der Daten des Stimmzettels zu ermöglichen, können Befehle eingegeben werden. Die Anwendung
+gibt Feedback, wenn der Befehl nicht ausführbar oder falsch war.
+
+| Befehl                           | Funktion                                                               | Beispiel |
+|----------------------------------|------------------------------------------------------------------------|----------|
+| &lt;Kandidatordnungszahl>        | Fügt eine Stimme bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101      |
+| &lt;Kandidatordnungszahl>+       | Fügt eine Stimme bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101+     |
+| &lt;Kandidatordnungszahl>+&lt;n> | Fügt `n` Stimmen bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101+3    |

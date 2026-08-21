@@ -8,14 +8,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelModelMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.util.List;
+import java.util.UUID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
@@ -72,31 +73,11 @@ public class StimmzettelControllerIntegrationTest {
       val wahlbezirkID = Instancio.create(String.class);
       val teamID = Instancio.create(String.class);
 
-      val stimmzettel1ToFind =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID, teamID, 1))
-              .create();
-      val stimmzettel2ToFind =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID, teamID, 2))
-              .create();
-      val stimmzettel3ToFind =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID, teamID, 3))
-              .create();
+      val stimmzettel1ToFind = createStimmzettelEntity(wahlbezirkID, wahlID, teamID, 1);
+      val stimmzettel2ToFind = createStimmzettelEntity(wahlbezirkID, wahlID, teamID, 2);
+      val stimmzettel3ToFind = createStimmzettelEntity(wahlbezirkID, wahlID, teamID, 3);
 
-      val stimmzettelNotToFind =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID + "sth", wahlID, teamID, 4))
-              .create();
+      val stimmzettelNotToFind = createStimmzettelEntity(wahlbezirkID + "sth", wahlID, teamID, 4);
 
       stimmzettelRepository.saveAll(
           List.of(
@@ -128,12 +109,7 @@ public class StimmzettelControllerIntegrationTest {
       val wahlbezirkID = Instancio.create(String.class);
       val teamID = Instancio.create(String.class);
 
-      val stimmzettelNotToFind =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID + "sth", wahlID, teamID, 4))
-              .create();
+      val stimmzettelNotToFind = createStimmzettelEntity(wahlbezirkID + "sth", wahlID, teamID, 4);
 
       stimmzettelRepository.saveAll(List.of(stimmzettelNotToFind));
 
@@ -216,6 +192,7 @@ public class StimmzettelControllerIntegrationTest {
             Assertions.assertThat(savedStimmzettel)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
+                .ignoringFieldsOfTypes(UUID.class)
                 .isEqualTo(
                     List.of(
                         expectedSavedStimmzettel1,
@@ -231,18 +208,8 @@ public class StimmzettelControllerIntegrationTest {
       val wahlbezirkID = Instancio.create(String.class);
       val teamID = Instancio.create(String.class);
 
-      val stimmzettel1ToReplace =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID, teamID, 4))
-              .create();
-      val stimmzettel2ToReplace =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID, teamID, 5))
-              .create();
+      val stimmzettel1ToReplace = createStimmzettelEntity(wahlbezirkID, wahlID, teamID, 4);
+      val stimmzettel2ToReplace = createStimmzettelEntity(wahlbezirkID, wahlID, teamID, 5);
       stimmzettelRepository.saveAll(List.of(stimmzettel1ToReplace, stimmzettel2ToReplace));
 
       val stimmzettel1ToSave =
@@ -286,6 +253,7 @@ public class StimmzettelControllerIntegrationTest {
             Assertions.assertThat(savedStimmzettel)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
+                .ignoringFieldsOfTypes(UUID.class)
                 .isEqualTo(
                     List.of(
                         expectedSavedStimmzettel1,
@@ -301,18 +269,8 @@ public class StimmzettelControllerIntegrationTest {
       val wahlbezirkID = Instancio.create(String.class);
       val teamID = Instancio.create(String.class);
 
-      val stimmzettel1ToReplace =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID, teamID, 4))
-              .create();
-      val stimmzettel2ToReplace =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID, teamID, 5))
-              .create();
+      val stimmzettel1ToReplace = createStimmzettelEntity(wahlbezirkID, wahlID, teamID, 4);
+      val stimmzettel2ToReplace = createStimmzettelEntity(wahlbezirkID, wahlID, teamID, 5);
       stimmzettelRepository.saveAll(List.of(stimmzettel1ToReplace, stimmzettel2ToReplace));
 
       val stimmzettel1ToSave =
@@ -360,6 +318,7 @@ public class StimmzettelControllerIntegrationTest {
             Assertions.assertThat(savedStimmzettel)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
+                .ignoringFieldsOfTypes(UUID.class)
                 .isEqualTo(List.of(stimmzettel1ToReplace, stimmzettel2ToReplace));
             Assertions.assertThat(savedStimmzettel).hasSize(2);
           });
@@ -402,48 +361,20 @@ public class StimmzettelControllerIntegrationTest {
       val wahlbezirkID = Instancio.create(String.class);
 
       val stimmzettel1ToCount =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID, Instancio.create(String.class), 1))
-              .create();
+          createStimmzettelEntity(wahlbezirkID, wahlID, Instancio.create(String.class), 1);
       val stimmzettel2ToCount =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID, Instancio.create(String.class), 2))
-              .create();
+          createStimmzettelEntity(wahlbezirkID, wahlID, Instancio.create(String.class), 2);
       val stimmzettel3ToCount =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID, Instancio.create(String.class), 3))
-              .create();
+          createStimmzettelEntity(wahlbezirkID, wahlID, Instancio.create(String.class), 3);
       val stimmzettel4ToCount =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID, Instancio.create(String.class), 4))
-              .create();
+          createStimmzettelEntity(wahlbezirkID, wahlID, Instancio.create(String.class), 4);
       val stimmzettel1ToIgnore =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID + " ", wahlID, Instancio.create(String.class), 4))
-              .create();
+          createStimmzettelEntity(wahlbezirkID + " ", wahlID, Instancio.create(String.class), 4);
       val stimmzettel2ToIgnore =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID + " ", Instancio.create(String.class), 4))
-              .create();
+          createStimmzettelEntity(wahlbezirkID, wahlID + " ", Instancio.create(String.class), 4);
       val stimmzettel3ToIgnore =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(
-                      wahlbezirkID + " ", wahlID + " ", Instancio.create(String.class), 4))
-              .create();
+          createStimmzettelEntity(
+              wahlbezirkID + " ", wahlID + " ", Instancio.create(String.class), 4);
       stimmzettelRepository.saveAll(
           List.of(
               stimmzettel1ToCount,
@@ -476,24 +407,10 @@ public class StimmzettelControllerIntegrationTest {
       val wahlID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
       val teamID = Instancio.create(String.class);
-      val stimmzettel1ToIgnore =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID + " ", wahlID, teamID, 4))
-              .create();
-      val stimmzettel2ToIgnore =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID, wahlID + " ", teamID, 4))
-              .create();
+      val stimmzettel1ToIgnore = createStimmzettelEntity(wahlbezirkID + " ", wahlID, teamID, 4);
+      val stimmzettel2ToIgnore = createStimmzettelEntity(wahlbezirkID, wahlID + " ", teamID, 4);
       val stimmzettel3ToIgnore =
-          Instancio.of(Stimmzettel.class)
-              .set(
-                  Select.field(Stimmzettel::getId),
-                  new StimmzettelID(wahlbezirkID + " ", wahlID + " ", teamID + " ", 4))
-              .create();
+          createStimmzettelEntity(wahlbezirkID + " ", wahlID + " ", teamID + " ", 4);
       stimmzettelRepository.saveAll(
           List.of(stimmzettel1ToIgnore, stimmzettel2ToIgnore, stimmzettel3ToIgnore));
 
@@ -518,5 +435,16 @@ public class StimmzettelControllerIntegrationTest {
                           "Ergebnismeldung_BUSINESSACTION_ReadCountStimmzettel"))
                   .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
     }
+  }
+
+  private Stimmzettel createStimmzettelEntity(
+      final String wahlbezirkID,
+      final String wahlID,
+      final String teamID,
+      final int stimmzettelKennung) {
+    return Instancio.of(
+            InstancioModels.createDSESTimmzettelModel(
+                wahlID, wahlbezirkID, teamID, stimmzettelKennung))
+        .create();
   }
 }

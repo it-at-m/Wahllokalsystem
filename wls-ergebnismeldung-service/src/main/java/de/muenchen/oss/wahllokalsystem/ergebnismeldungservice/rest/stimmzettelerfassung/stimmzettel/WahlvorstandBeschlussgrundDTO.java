@@ -2,5 +2,4 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettele
 
 import jakarta.validation.constraints.NotNull;
 
-public record WahlvorstandBeschlussgrundDTO(
-    @NotNull String text) {}
+public record WahlvorstandBeschlussgrundDTO(@NotNull String text) {}

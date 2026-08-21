@@ -1,0 +1,4 @@
+RENAME Beschlussgrund TO WahlvorstandBeschlussgrund;
+
+ALTER TABLE WahlvorstandBeschlussgrund RENAME CONSTRAINT pk_beschlussgrund TO pk_wahlvorstandBeschlussgrund;
+ALTER TABLE WahlvorstandBeschlussgrund RENAME CONSTRAINT fk_beschlussgrund_stimmzettel TO fk_wahlvorstandBeschlussgrund_stimmzettel;

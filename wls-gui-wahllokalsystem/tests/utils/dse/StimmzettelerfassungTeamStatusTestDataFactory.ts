@@ -37,10 +37,17 @@ export function useStimmzettelerfassungTeamStatusTestDataFactory() {
     );
   }
 
+  function prepareStimmzettelerfassungTeamStatus(): Builder<StimmzettelerfassungTeamStatus> {
+    return proxyBuilder<StimmzettelerfassungTeamStatus>(
+      createStimmzettelerfassungTeamStatusModel()
+    );
+  }
+
   return {
     createStimmzettelerfassungTeamStatusDTOData,
     createStimmzettelerfassungTeamStatusDtoEnumValue,
     createStimmzettelerfassungTeamStatusModel,
     prepareStimmzettelerfassungTeamStatusDTO,
+    prepareStimmzettelerfassungTeamStatus,
   };
 }

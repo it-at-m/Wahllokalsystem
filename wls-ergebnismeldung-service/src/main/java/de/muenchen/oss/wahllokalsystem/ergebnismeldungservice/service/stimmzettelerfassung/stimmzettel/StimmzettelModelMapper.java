@@ -27,7 +27,9 @@ public interface StimmzettelModelMapper {
   @Mapping(target = "id.wahlID", source = "owner.wahlID")
   @Mapping(target = "id.stimmzettelkennung", source = "stimmzettelModel.stimmzettelkennung")
   @Mapping(target = "gueltigkeit", source = "stimmzettelModel.gueltigkeit")
-  @Mapping(target = "beschlussvorschlag.id", ignore = true)
-  @Mapping(target = "beschlussvorschlag.stimmzettel", ignore = true)
+  @Mapping(target = "wahlvorstandBeschlussvorschlag.id", ignore = true)
+  @Mapping(target = "wahlvorstandBeschlussvorschlag.stimmzettel", ignore = true)
+  @Mapping(target = "systemBeschlussvorschlag.id", ignore = true)
+  @Mapping(target = "systemBeschlussvorschlag.stimmzettel", ignore = true)
   Stimmzettel toEntity(TeamBezirkUndWahlIDModel owner, StimmzettelOfTeamModel stimmzettelModel);
 }

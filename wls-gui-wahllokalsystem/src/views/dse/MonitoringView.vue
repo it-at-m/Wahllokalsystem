@@ -12,7 +12,7 @@
           titel="Stimmzettelerfassung abgeschlossen"
           titel-class="d-flex align-center justify-center"
           data-test="base-progress-success"
-          :is-loading="isAktualisiserenLoading"
+          :is-loading="isAktualisierenLoading"
           :current="abgeschlossenNumberOfTeams"
           :total="totalNumberOfTeams"
           color="success"
@@ -64,14 +64,24 @@
       <v-card-actions>
         <base-button-refresh
           :active="isRefreshBtnActive"
-          :loading="isAktualisiserenLoading"
+          :loading="isAktualisierenLoading"
           @click="onAktualisierenClicked"
         />
         <base-text-button
-          :active="beschlussfassungStartenBtnActive"
+          v-if="isBeschlussfassungStartenBtnVisible"
+          :active="beschlussfassungBtnActive"
           :is-disabled="isBeschlussfassungStartenBtnDisabled"
+          :loading="isWorkflowStatusLoading"
           @click="onBeschlussfassungStartenClicked"
           >Beschlussfassung starten</base-text-button
+        >
+        <base-text-button
+          v-if="isBeschlussfassungContinueBtnVisible"
+          :active="beschlussfassungBtnActive"
+          :is-disabled="isBeschlussfassungContinueBtnDisabled"
+          :loading="isWorkflowStatusLoading"
+          @click="onBeschlussfassungContinueClicked"
+          >Beschlussfassung fortsetzen</base-text-button
         >
       </v-card-actions>
     </v-card>
@@ -95,9 +105,11 @@ import BaseTeamStatusListItem from "@/components/dse/BaseTeamStatusListItem.vue"
 import TheBeschlussfassungStartenDialog from "@/components/dse/TheBeschlussfassungStartenDialog.vue";
 import { useDseWorkflowStatusService } from "@/composables/dse/dseWorkflowStatusService.ts";
 import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
+import router from "@/plugins/router.ts";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 
 const minWidth = "220px";
 const beschlussfassungStartenDialogVisible = ref(false);
@@ -109,25 +121,50 @@ const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 const {
   teamstatusList,
   lastLoading,
-  isAktualisiserenLoading,
+  isAktualisierenLoading,
+  isWorkflowStatusLoading,
+  workflowStatus,
   onMonitoringSynchronisierenClicked,
 } = useMonitoringViewUtils(wahlID, wahlbezirkID);
 const { workflowStatus, loadDseWorkflowStatus } = useDseWorkflowStatusService();
 
-const beschlussfassungStartenBtnActive = computed(() =>
+const beschlussfassungBtnActive = computed(() =>
   teamstatusList.value.every(
     (team) => team.status === StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
   )
 );
+
+const isBeschlussfassungContinueBtnDisabled = computed(
+  () =>
+    !beschlussfassungBtnActive.value ||
+    workflowStatus.value?.status !==
+      StimmzettelerfassungStatusEnum.SteAbgeschlossen ||
+    isAktualisierenLoading.value ||
+    isWorkflowStatusLoading.value
+);
+
+const isBeschlussfassungContinueBtnVisible = computed(
+  () =>
+    workflowStatus.value?.status !==
+    StimmzettelerfassungStatusEnum.SteBearbeitung
+);
+
 const isBeschlussfassungStartenBtnDisabled = computed(
   () =>
-    !beschlussfassungStartenBtnActive.value ||
+    !beschlussfassungBtnActive.value ||
     workflowStatus.value?.status !==
-      StimmzettelerfassungStatusEnum.SteBearbeitung
+      StimmzettelerfassungStatusEnum.SteBearbeitung ||
+    isAktualisierenLoading.value ||
+    isWorkflowStatusLoading.value
 );
-const isRefreshBtnActive = computed(
-  () => !beschlussfassungStartenBtnActive.value
+
+const isBeschlussfassungStartenBtnVisible = computed(
+  () =>
+    workflowStatus.value?.status ===
+    StimmzettelerfassungStatusEnum.SteBearbeitung
 );
+
+const isRefreshBtnActive = computed(() => !beschlussfassungBtnActive.value);
 
 const totalNumberOfTeams = computed(() => teamstatusList.value.length);
 
@@ -136,6 +173,13 @@ const abgeschlossenNumberOfTeams = computed(() => {
     (team) => team.status === StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
   ).length;
 });
+
+async function onBeschlussfassungContinueClicked() {
+  await router.push({
+    name: DseStepsEnum.DSE_BESCHLUSSFASSUNG,
+    params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
+  });
+}
 
 async function onBeschlussfassungStartenClicked() {
   beschlussfassungStartenDialogVisible.value = true;

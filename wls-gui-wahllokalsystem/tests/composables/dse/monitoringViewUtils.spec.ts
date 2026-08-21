@@ -2,7 +2,6 @@ import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/S
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
-import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const { ref } = await import("vue");
@@ -19,7 +18,6 @@ const mockDefinitions = await vi.hoisted(async () => {
       }
     },
     loadErfassungTeamStatusListe: vi.fn(),
-    addNotification: vi.fn(),
     loadDseWorkflowStatus: vi.fn(),
     // Expose vue.ref for tests if needed
     ref,
@@ -35,12 +33,6 @@ vi.mock("vue", () => ({
 vi.mock("@/composables/dse/stimmzettelerfassungTeamStatusService.ts", () => ({
   useStimmzettelerfassungTeamStatusService: () => ({
     loadErfassungTeamStatusListe: mockDefinitions.loadErfassungTeamStatusListe,
-  }),
-}));
-
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
   }),
 }));
 
@@ -73,7 +65,9 @@ describe("monitoringViewUtils.ts", () => {
   it("should_BeEmptyAndNotLoading_when_initialState", () => {
     expect(unit.teamstatusList.value).toEqual([]);
     expect(unit.lastLoading.value).toBeUndefined();
-    expect(unit.isAktualisiserenLoading.value).toBe(false);
+    expect(unit.isAktualisierenLoading.value).toBe(false);
+    expect(unit.isWorkflowStatusLoading.value).toBe(false);
+    expect(unit.workflowStatus.value).toBe(null);
   });
 
   it("should_loadListAndUpdateState_when_onMonitoringSynchronisierenClicked", async () => {
@@ -81,11 +75,11 @@ describe("monitoringViewUtils.ts", () => {
     mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(sample);
 
     const promise = unit.onMonitoringSynchronisierenClicked();
-    expect(unit.isAktualisiserenLoading.value).toBe(true);
+    expect(unit.isAktualisierenLoading.value).toBe(true);
 
     await promise;
 
-    expect(unit.isAktualisiserenLoading.value).toBe(false);
+    expect(unit.isAktualisierenLoading.value).toBe(false);
     expect(unit.teamstatusList.value).toStrictEqual(sample);
     expect(unit.lastLoading.value).toBeInstanceOf(Date);
 
@@ -105,41 +99,37 @@ describe("monitoringViewUtils.ts", () => {
     expect(unit.lastLoading.value).toBeUndefined();
   });
 
-  it("should_loadListAndUpdateStateWithoutNotification_when_onActivatedSuccess", async () => {
+  it("should_loadListAndUpdateState_when_onActivatedSuccess", async () => {
     const sample = [{ team: "T2" }];
     const workflowStatus = createStimmzettelerfassungStatus();
     mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(sample);
     mockDefinitions.loadDseWorkflowStatus.mockResolvedValue(workflowStatus);
+    const spyOnIsWorkflowStatusLoading = vi.spyOn(
+      unit.isWorkflowStatusLoading,
+      "value",
+      "set"
+    );
 
+    expect(unit.isWorkflowStatusLoading.value).toStrictEqual(false);
     await mockDefinitions.runActivatedCallbacks();
 
-    expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     expect(unit.teamstatusList.value).toStrictEqual(sample);
     expect(unit.lastLoading.value).toBeInstanceOf(Date);
 
     expect(mockDefinitions.loadErfassungTeamStatusListe).toHaveBeenCalledWith(
       wahlID,
       wahlbezirkID,
-      false
+      true
     );
-  });
-
-  it("should_loadTeamStatusListeAndShowError_when_onActivatedCalledWithFailure", async () => {
-    mockDefinitions.loadErfassungTeamStatusListe.mockRejectedValue(
-      new Error("fail")
-    );
-
-    await mockDefinitions.runActivatedCallbacks();
-
-    expect(mockDefinitions.addNotification).toHaveBeenCalledWith(
-      "Team-Status konnten nicht initialisiert werden.",
-      UserNotificationCategoryEnum.ERROR
-    );
-
-    expect(mockDefinitions.loadErfassungTeamStatusListe).toHaveBeenCalledWith(
+    expect(mockDefinitions.loadDseWorkflowStatus).toHaveBeenCalledWith(
       wahlID,
       wahlbezirkID,
-      false
+      true
     );
+    expect(spyOnIsWorkflowStatusLoading.mock.calls).toStrictEqual([
+      [true],
+      [false],
+    ]);
+    spyOnIsWorkflowStatusLoading.mockRestore();
   });
 });

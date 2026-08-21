@@ -37,6 +37,8 @@ export function useStimmzettelErfassungViewUtils(
 
   const buttonUtils = useStimmzettelErfassungViewButtonStateUtils(teamStatus);
 
+  const hasStimmzettel = computed(() => savedStimmzettel.value.length > 0);
+
   //Hooks
   onActivated(async () => {
     await Promise.allSettled([
@@ -149,6 +151,7 @@ export function useStimmzettelErfassungViewUtils(
     //Props
     activeStimmzettel,
     teamStatus: readonly(teamStatus),
+    hasStimmzettel,
     isErfassungsDialogVisible,
     isKennungsDialogVisible,
     isStatusLoading: readonly(isStatusLoading),

@@ -19,7 +19,7 @@
             :active="startenBtnActive"
             @click="onErfassungStartenClicked"
           >
-            Starten
+            {{ startNewStimmzettelButtonText }}
           </base-text-button>
           <base-text-button
             :is-disabled="unterbrechenBtnIsDisabled"
@@ -108,6 +108,7 @@ const {
   teamStatus,
   activeStimmzettel,
   beendenBtnActive,
+  hasStimmzettel,
   isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
@@ -122,6 +123,10 @@ const {
   startNewEmptyStimmzettelWithStimmzettelkennung,
   reloadTeamStatus,
 } = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
+
+const startNewStimmzettelButtonText = computed(() =>
+  hasStimmzettel.value ? "Fortsetzen" : "Starten"
+);
 
 function onErfassungStartenClicked() {
   isKennungsDialogVisible.value = true;

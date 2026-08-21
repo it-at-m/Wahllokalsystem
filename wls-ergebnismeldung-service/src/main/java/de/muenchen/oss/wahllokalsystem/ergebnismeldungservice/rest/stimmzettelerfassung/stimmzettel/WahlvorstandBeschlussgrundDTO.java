@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.stimmzettel;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 
 public record WahlvorstandBeschlussgrundDTO(
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) String text) {}
+    @NotNull String text) {}

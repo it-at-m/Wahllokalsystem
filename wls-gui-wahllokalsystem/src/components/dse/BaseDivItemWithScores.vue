@@ -13,7 +13,6 @@
           textDecoration: isGestrichen ? 'line-through' : 'none',
           maxWidth: '150px',
         }"
-        :class="nameStyleClasses"
         class="text-truncate"
       >
         {{ name }}
@@ -52,7 +51,6 @@ defineProps<{
   ungueltigeStimmen: number;
   einzelstimmen: number;
   reststimmen: number;
-  nameStyleClasses?: string;
 }>();
 </script>
 

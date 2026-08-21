@@ -18,9 +18,6 @@ vi.mock(import("@/composables/dse/dseWorkflowStatusService.ts"), () => ({
     saveDseWorkflowStatus: mockDefinitions.saveDseWorkflowStatus,
     loadDseWorkflowStatus: vi.fn(),
     isWorkflowStatusLoading: ref(false),
-    workflowStatus: ref({
-      status: StimmzettelerfassungStatusEnum.SteBearbeitung,
-    }),
   }),
 }));
 

@@ -7,6 +7,7 @@ public record StimmzettelOfTeamModel(
     @NotNull Integer stimmzettelkennung,
     @NotNull Integer invalideVotes,
     @NotNull StimmzettelGueltigkeitModel gueltigkeit,
-    List<BeschlussgrundModel> beschlussvorschlag,
+    List<WahlvorstandBeschlussgrundModel> wahlvorstandBeschlussvorschlag,
+    List<SystemBeschlussgrundModel> systemBeschlussvorschlag,
     BeschlussfassungModel beschlussfassung,
     List<WahlvorschlagModel> wahlvorschlaege) {}

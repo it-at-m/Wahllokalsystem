@@ -9,19 +9,41 @@ import org.junit.jupiter.api.Test;
 class StimmzettelTest {
 
   @Nested
-  class AddBeschlussvorschlag {
+  class AddWahlvorstandBeschlussvorschlag {
 
     @Test
     void should_addToListAndSetThisAsStimmzettel_when_parameterIsGiven() {
       val stimmzettel = Instancio.create(Stimmzettel.class);
-      val beschlussvormerkungToAdd = Instancio.create(Beschlussgrund.class);
+      val beschlussvormerkungToAdd = Instancio.create(WahlvorstandBeschlussgrund.class);
 
-      Assertions.assertThat(beschlussvormerkungToAdd).isNotIn(stimmzettel.getBeschlussvorschlag());
+      Assertions.assertThat(beschlussvormerkungToAdd)
+          .isNotIn(stimmzettel.getWahlvorstandBeschlussvorschlag());
       Assertions.assertThat(beschlussvormerkungToAdd.getStimmzettel()).isNotEqualTo(stimmzettel);
 
-      stimmzettel.addBeschlussvorschlag(beschlussvormerkungToAdd);
+      stimmzettel.addWahlvorstandBeschlussvorschlag(beschlussvormerkungToAdd);
 
-      Assertions.assertThat(beschlussvormerkungToAdd).isIn(stimmzettel.getBeschlussvorschlag());
+      Assertions.assertThat(beschlussvormerkungToAdd)
+          .isIn(stimmzettel.getWahlvorstandBeschlussvorschlag());
+      Assertions.assertThat(beschlussvormerkungToAdd.getStimmzettel()).isEqualTo(stimmzettel);
+    }
+  }
+
+  @Nested
+  class AddSystemBeschlussvorschlag {
+
+    @Test
+    void should_addToListAndSetThisAsStimmzettel_when_parameterIsGiven() {
+      val stimmzettel = Instancio.create(Stimmzettel.class);
+      val beschlussvormerkungToAdd = Instancio.create(SystemBeschlussgrund.class);
+
+      Assertions.assertThat(beschlussvormerkungToAdd)
+          .isNotIn(stimmzettel.getSystemBeschlussvorschlag());
+      Assertions.assertThat(beschlussvormerkungToAdd.getStimmzettel()).isNotEqualTo(stimmzettel);
+
+      stimmzettel.addSystemBeschlussvorschlag(beschlussvormerkungToAdd);
+
+      Assertions.assertThat(beschlussvormerkungToAdd)
+          .isIn(stimmzettel.getSystemBeschlussvorschlag());
       Assertions.assertThat(beschlussvormerkungToAdd.getStimmzettel()).isEqualTo(stimmzettel);
     }
   }

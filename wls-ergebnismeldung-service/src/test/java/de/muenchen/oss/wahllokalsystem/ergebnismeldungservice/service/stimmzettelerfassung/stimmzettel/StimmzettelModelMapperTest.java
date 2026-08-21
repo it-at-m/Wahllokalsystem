@@ -3,13 +3,15 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 import static org.instancio.Select.field;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Beschlussfassung;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Beschlussgrund;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Kandidat;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.KandidatId;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.SystemBeschlussgrund;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.SystemBeschlussgrundTyp;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Wahlvorschlag;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.WahlvorstandBeschlussgrund;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import java.util.List;
 import java.util.UUID;
@@ -41,11 +43,20 @@ class StimmzettelModelMapperTest {
       }
 
       private StimmzettelOfTeamModel createExpectedStimmzettel(final Stimmzettel stimmzettel) {
-        val expectedBeschlussvorschlag =
-            stimmzettel.getBeschlussvorschlag().stream()
+        val expectedWahlvorstandBeschlussvorschlag =
+            stimmzettel.getWahlvorstandBeschlussvorschlag().stream()
                 .map(
-                    givenBeschlussvorschlag ->
-                        new BeschlussgrundModel(givenBeschlussvorschlag.getText()))
+                    givenWahlvorstandBeschlussvorschlag ->
+                        new WahlvorstandBeschlussgrundModel(
+                            givenWahlvorstandBeschlussvorschlag.getText()))
+                .toList();
+        val expectedSystemBeschlussvorschlag =
+            stimmzettel.getSystemBeschlussvorschlag().stream()
+                .map(
+                    givenSystemBeschlussvorschlag ->
+                        new SystemBeschlussgrundModel(
+                            SystemBeschlussgrundEnumModel.valueOf(
+                                givenSystemBeschlussvorschlag.getReason().name())))
                 .toList();
         val expectedWahlvorschlaege =
             stimmzettel.getWahlvorschlaege().stream()
@@ -75,7 +86,8 @@ class StimmzettelModelMapperTest {
             stimmzettel.getId().getStimmzettelkennung(),
             stimmzettel.getInvalideVotes(),
             StimmzettelGueltigkeitModel.valueOf(stimmzettel.getGueltigkeit().name()),
-            expectedBeschlussvorschlag,
+            expectedWahlvorstandBeschlussvorschlag,
+            expectedSystemBeschlussvorschlag,
             new BeschlussfassungModel(
                 stimmzettel.getBeschlussfassung().getPro(),
                 stimmzettel.getBeschlussfassung().getContra(),
@@ -94,13 +106,13 @@ class StimmzettelModelMapperTest {
       @Test
       void should_returnEntity_when_modelsAreGiven() {
         val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
-        val beschlussvorschlag1 = Instancio.create(BeschlussgrundModel.class);
-        val beschlussvorschlag2 = Instancio.create(BeschlussgrundModel.class);
-        val beschlussvorschlag3 = Instancio.create(BeschlussgrundModel.class);
+        val beschlussvorschlag1 = Instancio.create(WahlvorstandBeschlussgrundModel.class);
+        val beschlussvorschlag2 = Instancio.create(WahlvorstandBeschlussgrundModel.class);
+        val beschlussvorschlag3 = Instancio.create(WahlvorstandBeschlussgrundModel.class);
         val stimmzettelOfTeamModel =
             Instancio.of(StimmzettelOfTeamModel.class)
                 .set(
-                    field(StimmzettelOfTeamModel::beschlussvorschlag),
+                    field(StimmzettelOfTeamModel::wahlvorstandBeschlussvorschlag),
                     List.of(beschlussvorschlag1, beschlussvorschlag2, beschlussvorschlag3))
                 .create();
 
@@ -118,11 +130,20 @@ class StimmzettelModelMapperTest {
           final StimmzettelOfTeamModel stimmzettel, final TeamBezirkUndWahlIDModel ownerModel) {
         val expectedResult = new Stimmzettel();
 
-        val expectedBeschlussvorschlag =
-            stimmzettel.beschlussvorschlag().stream()
+        val expectedWahlvorstandBeschlussvorschlag =
+            stimmzettel.wahlvorstandBeschlussvorschlag().stream()
                 .map(
                     givenBeschlussvorschlag ->
-                        createExpectedBeschlussgrund(givenBeschlussvorschlag, expectedResult))
+                        createExpectedWahlvorstandBeschlussgrund(
+                            givenBeschlussvorschlag, expectedResult))
+                .toList();
+
+        val expectedSystemBeschlussvorschlag =
+            stimmzettel.systemBeschlussvorschlag().stream()
+                .map(
+                    givenSystemBeschlussvorschlag ->
+                        createExpectedSystemBeschlussgrund(
+                            givenSystemBeschlussvorschlag, expectedResult))
                 .toList();
         val expectedBeschlussfassung =
             createExpectedBeschlussfassung(stimmzettel.beschlussfassung());
@@ -142,21 +163,33 @@ class StimmzettelModelMapperTest {
         expectedResult.setInvalideVotes(stimmzettel.invalideVotes());
         expectedResult.setGueltigkeit(
             StimmzettelGueltigkeit.valueOf(stimmzettel.gueltigkeit().name()));
-        expectedResult.setBeschlussvorschlag(expectedBeschlussvorschlag);
+        expectedResult.setWahlvorstandBeschlussvorschlag(expectedWahlvorstandBeschlussvorschlag);
+        expectedResult.setSystemBeschlussvorschlag(expectedSystemBeschlussvorschlag);
         expectedResult.setBeschlussfassung(expectedBeschlussfassung);
         expectedResult.setWahlvorschlaege(expectedWahlvorschlaege);
 
         return expectedResult;
       }
 
-      private Beschlussgrund createExpectedBeschlussgrund(
-          final BeschlussgrundModel beschlussgrund, final Stimmzettel stimmzettel) {
-        val expectedBeschlussgrund = new Beschlussgrund();
+      private WahlvorstandBeschlussgrund createExpectedWahlvorstandBeschlussgrund(
+          final WahlvorstandBeschlussgrundModel beschlussgrund, final Stimmzettel stimmzettel) {
+        val expectedWahlvorstandBeschlussgrund = new WahlvorstandBeschlussgrund();
 
-        expectedBeschlussgrund.setText(beschlussgrund.text());
-        expectedBeschlussgrund.setStimmzettel(stimmzettel);
+        expectedWahlvorstandBeschlussgrund.setText(beschlussgrund.text());
+        expectedWahlvorstandBeschlussgrund.setStimmzettel(stimmzettel);
 
-        return expectedBeschlussgrund;
+        return expectedWahlvorstandBeschlussgrund;
+      }
+
+      private SystemBeschlussgrund createExpectedSystemBeschlussgrund(
+          final SystemBeschlussgrundModel beschlussgrund, final Stimmzettel stimmzettel) {
+        val expectedSystemBeschlussgrund = new SystemBeschlussgrund();
+
+        expectedSystemBeschlussgrund.setReason(
+            SystemBeschlussgrundTyp.valueOf(beschlussgrund.reason().name()));
+        expectedSystemBeschlussgrund.setStimmzettel(stimmzettel);
+
+        return expectedSystemBeschlussgrund;
       }
 
       private Beschlussfassung createExpectedBeschlussfassung(

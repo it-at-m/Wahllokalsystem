@@ -52,8 +52,8 @@
             :is-wieder-oeffnen-button-disabled="
               item.status !==
                 StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN ||
-              workflowStatus?.status ===
-                StimmzettelerfassungStatusEnum.SteAbgeschlossen
+              workflowStatus?.status !==
+                StimmzettelerfassungStatusEnum.SteBearbeitung
             "
             @open-stimmzettelerfassung="
               onOpenStimmzettelerfassungClicked(item.teamID)

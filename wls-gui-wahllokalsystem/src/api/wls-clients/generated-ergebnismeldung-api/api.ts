@@ -805,7 +805,7 @@ export interface SystemBeschlussgrundDTO {
 
 export const SystemBeschlussgrundDTOReasonEnum = {
     WaehlerwilleIstZweifelsfreiErkennbar: 'WAEHLERWILLE_IST_ZWEIFELSFREI_ERKENNBAR',
-    ZuVieleEinzelstimmenAberImLimit: 'ZU_VIELE_EINZELSTIMMEN_ABER_IM_LIMIT',
+    ZuVieleEinzelstimmenAberImGesamtstimmenlimit: 'ZU_VIELE_EINZELSTIMMEN_ABER_IM_GESAMTSTIMMENLIMIT',
     KeineReststimmenvergabeMoeglich: 'KEINE_RESTSTIMMENVERGABE_MOEGLICH',
     EinzelneStimmenUngueltig: 'EINZELNE_STIMMEN_UNGUELTIG',
     WaehlerwilleNichtZweifelsfreiErkennbar: 'WAEHLERWILLE_NICHT_ZWEIFELSFREI_ERKENNBAR',

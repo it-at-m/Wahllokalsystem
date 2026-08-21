@@ -20,6 +20,10 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     await _loadTeamStatusListe();
   }
 
+  async function reloadWorkflowStatus() {
+    await _loadWorkflowStatus();
+  }
+
   onActivated(async () => {
     await Promise.allSettled([_loadTeamStatusListe(), _loadWorkflowStatus()]);
   });
@@ -62,5 +66,6 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     isWorkflowStatusLoading,
     workflowStatus,
     onMonitoringSynchronisierenClicked,
+    reloadWorkflowStatus,
   };
 }

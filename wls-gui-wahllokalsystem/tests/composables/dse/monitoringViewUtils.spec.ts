@@ -86,7 +86,7 @@ describe("monitoringViewUtils.ts", () => {
     expect(mockDefinitions.loadErfassungTeamStatusListe).toHaveBeenCalledWith(
       wahlID,
       wahlbezirkID,
-      false
+      true
     );
   });
 

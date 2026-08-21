@@ -8,35 +8,25 @@
         <div>
           <div>Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}</div>
           <div class="text-subtitle-2">
-            Partei {{ wahlvorschlag.kurzname }} -
-            {{ wahlvorschlag.ordnungszahl }}
-          </div>
-        </div>
-
-        <div class="d-flex align-center mt-3">
-          <v-checkbox
-            class="mb-1"
-            density="compact"
-            hide-details
-            :model-value="wahlvorschlag.selected"
-            :true-icon="mdiCloseBoxOutline"
-            :ripple="false"
-            readonly
-          />
-          <div class="d-flex flex-column ml-auto align-end">
-            <div class="d-flex">
-              <base-chip-anzahl-stimmen
-                :stimmen="wahlvorschlag.ungueltigeStimmen"
-                color="error"
-                :visible="!!wahlvorschlag.ungueltigeStimmen"
-                class="mr-1"
+            <base-div-item-with-scores
+              :ordnungszahl="
+                wahlvorschlag.ordnungszahl *
+                WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL
+              "
+              :name="wahlvorschlag.kurzname"
+              :is-gestrichen="false"
+              :ungueltige-stimmen="0"
+              :einzelstimmen="0"
+              :reststimmen="0"
+              ><v-checkbox
+                density="compact"
+                hide-details
+                :model-value="wahlvorschlag.selected"
+                :true-icon="mdiCloseBoxOutline"
+                :ripple="false"
+                readonly
               />
-              <base-chip-anzahl-stimmen
-                :stimmen="wahlvorschlag.gueltigeStimmen"
-                color="success"
-                :hidden="!wahlvorschlag.gueltigeStimmen"
-              />
-            </div>
+            </base-div-item-with-scores>
           </div>
         </div>
       </div>
@@ -73,9 +63,10 @@ import type { ComponentPublicInstance } from "vue";
 import { mdiCloseBoxOutline } from "@mdi/js";
 import { computed, nextTick, onActivated, ref, watch } from "vue";
 
-import BaseChipAnzahlStimmen from "@/components/dse/BaseChipAnzahlStimmen.vue";
+import BaseDivItemWithScores from "@/components/dse/BaseDivItemWithScores.vue";
 import BaseKandidatListItemContent from "@/components/dse/BaseKandidatListItemContent.vue";
 import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
+import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/composables/dse/ManagedStimmzettel.ts";
 
 const props = defineProps<{
   wahlvorschlag: Wahlvorschlag;

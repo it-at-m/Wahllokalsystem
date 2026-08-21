@@ -20,7 +20,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Beschlussgrund {
+public class WahlvorstandBeschlussgrund {
 
   @Id
   @GeneratedValue(generator = "uuid")

@@ -9,6 +9,7 @@ import StimmzettelerfassungView from "@/views/dse/StimmzettelerfassungView.vue";
 
 const {
   requireRoleSchriftfuehrung,
+  requiresStimmzettelErfassungTeamStatusAbgeschlossen,
   requiresWorkflowStatusStimmzettelerfassungAbgeschlossen,
 } = useNavigationGuards();
 
@@ -22,6 +23,10 @@ const dseRoutesRecord: Record<DseStepsEnum, RouteRecordRawWithoutName> = {
   [DseStepsEnum.DSE_MONITORING]: {
     path: BASE_PATH_DSE + "/monitoring",
     component: MonitoringView,
+    beforeEnter: [
+      requireRoleSchriftfuehrung,
+      requiresStimmzettelErfassungTeamStatusAbgeschlossen,
+    ],
   },
   [DseStepsEnum.DSE_BESCHLUSSFASSUNG]: {
     path: BASE_PATH_DSE + "/beschlussfassung",

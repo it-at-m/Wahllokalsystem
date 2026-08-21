@@ -37,7 +37,10 @@ public class Stimmzettel {
   private StimmzettelGueltigkeit gueltigkeit;
 
   @OneToMany(mappedBy = "stimmzettel", orphanRemoval = true, cascade = CascadeType.ALL)
-  private List<Beschlussgrund> beschlussvorschlag = new LinkedList<>();
+  private List<WahlvorstandBeschlussgrund> wahlvorstandBeschlussvorschlag = new LinkedList<>();
+
+  @OneToMany(mappedBy = "stimmzettel", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<SystemBeschlussgrund> systemBeschlussvorschlag = new LinkedList<>();
 
   @Embedded
   @AttributeOverrides({
@@ -50,9 +53,15 @@ public class Stimmzettel {
   @OneToMany(mappedBy = "stimmzettel", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<Wahlvorschlag> wahlvorschlaege = new LinkedList<>();
 
-  public void addBeschlussvorschlag(final Beschlussgrund beschlussgrund) {
-    beschlussvorschlag.add(beschlussgrund);
-    beschlussgrund.setStimmzettel(this);
+  public void addWahlvorstandBeschlussvorschlag(
+      final WahlvorstandBeschlussgrund wahlvorstandBeschlussgrund) {
+    wahlvorstandBeschlussvorschlag.add(wahlvorstandBeschlussgrund);
+    wahlvorstandBeschlussgrund.setStimmzettel(this);
+  }
+
+  public void addSystemBeschlussvorschlag(final SystemBeschlussgrund systemBeschlussgrund) {
+    systemBeschlussvorschlag.add(systemBeschlussgrund);
+    systemBeschlussgrund.setStimmzettel(this);
   }
 
   public void addWahlvorschlag(final Wahlvorschlag wahlvorschlag) {

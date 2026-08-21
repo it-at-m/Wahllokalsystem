@@ -1,3 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
-public record WahlvorstandBeschlussgrundModel(String text) {}
+import jakarta.validation.constraints.NotNull;
+
+public record WahlvorstandBeschlussgrundModel(@NotNull String text) {}

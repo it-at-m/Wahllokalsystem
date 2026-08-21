@@ -1,4 +1,10 @@
-INSERT INTO Konfiguration (schluessel, wert, beschreibung, standardwert)
-SELECT 'DSE_AKTIV', 'true', 'Soll die digitale Stimmzettelerfassung verwendet werden', 'true'
-FROM dual
-WHERE NOT EXISTS (SELECT * FROM Konfiguration WHERE schluessel = 'DSE_AKTIV');
+MERGE INTO Konfiguration target
+    USING (SELECT 'DSE_AKTIV'                                               AS schluessel,
+                  'true'                                                    AS wert,
+                  'Soll die digitale Stimmzettelerfassung verwendet werden' AS beschreibung,
+                  'true'                                                    AS standardwert
+           FROM dual) source
+    ON (target.schluessel = source.schluessel)
+    WHEN NOT MATCHED THEN
+        INSERT (schluessel, wert, beschreibung, standardwert)
+            VALUES (source.schluessel, source.wert, source.beschreibung, source.standardwert);

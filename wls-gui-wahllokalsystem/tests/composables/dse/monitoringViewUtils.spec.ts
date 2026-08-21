@@ -115,6 +115,7 @@ describe("monitoringViewUtils.ts", () => {
 
     expect(unit.teamstatusList.value).toStrictEqual(sample);
     expect(unit.lastLoading.value).toBeInstanceOf(Date);
+    expect(unit.workflowStatus.value).toStrictEqual(workflowStatus);
 
     expect(mockDefinitions.loadErfassungTeamStatusListe).toHaveBeenCalledWith(
       wahlID,

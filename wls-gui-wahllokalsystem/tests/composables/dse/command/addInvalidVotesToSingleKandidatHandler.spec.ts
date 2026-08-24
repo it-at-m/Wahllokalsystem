@@ -1,8 +1,6 @@
 import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
 
-import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { computed } from "vue";
 
 import { useAddInvalidVotesToSingleKandidatHandler } from "@/composables/dse/command/addInvalidVotesToSingleKandidatHandler.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
@@ -15,8 +13,6 @@ const mockDefinitions = vi.hoisted(() => ({
 describe("addInvalidVotesToSingleKandidatHandler.ts", () => {
   const { canHandle, handleOrThrow } =
     useAddInvalidVotesToSingleKandidatHandler();
-  const { prepareManagedStimmzettelStimmzettel } =
-    useManagedStimmzettelTestDataFactory();
 
   const validKandidatOrdnungszahlen = [
     101, 110, 199, 201, 210, 299, 999, 1001, 1010, 1099, 9999,
@@ -62,27 +58,8 @@ describe("addInvalidVotesToSingleKandidatHandler.ts", () => {
     beforeEach(() => {
       mockManagedStimmzettel = {
         kandidatAddUngueltigeStimmenOrThrow:
-          mockDefinitions.kandidatAddInvalidVotesOrThrow as unknown as (
-            ordnungszahl: number,
-            invalidVotesToAdd: number
-          ) => void,
-        kandidatAddEinzelstimmenOrThrow: vi.fn(),
-        kandidatenAddStimmenInRangeOrThrow: vi.fn(),
-        kandidatAddStreichungOrThrow: vi.fn(),
-        kandidatenStreichungenInRangeOrThrow: vi.fn(),
-        wahlvorschlagAddVotesOrThrow: vi.fn(),
-        stimmzettel: computed(() =>
-          prepareManagedStimmzettelStimmzettel().build()
-        ),
-        changeHistoryInReverseOrder: computed(() => []),
-        wahlvorschlaegeWithListenkreuz: computed(() => []),
-        stimmenSummary: computed(() => ({
-          einzelstimmen: 0,
-          reststimmen: 0,
-          streichungen: 0,
-          ungueltigeStimmen: 0,
-        })),
-      };
+          mockDefinitions.kandidatAddInvalidVotesOrThrow,
+      } as unknown as ManagedStimmzettel;
     });
 
     afterEach(() => {

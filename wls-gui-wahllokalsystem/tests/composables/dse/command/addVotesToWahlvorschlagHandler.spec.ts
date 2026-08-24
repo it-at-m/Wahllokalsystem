@@ -1,8 +1,6 @@
 import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
 
-import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { computed } from "vue";
 
 import { useAddVotesToWahlvorschlagHandler } from "@/composables/dse/command/addVotesToWahlvorschlagHandler.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
@@ -14,8 +12,6 @@ const mockDefinitions = vi.hoisted(() => ({
 
 describe("addVotesToWahlvorschlagHandler.ts", () => {
   const { canHandle, handleOrThrow } = useAddVotesToWahlvorschlagHandler();
-  const { prepareManagedStimmzettelStimmzettel } =
-    useManagedStimmzettelTestDataFactory();
 
   const validWahlvorschlagOrdnungszahlen = [
     1, 2, 9, 10, 11, 99, 100, 101, 999, 1000, 1001, 9999,
@@ -36,7 +32,7 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
       }
     );
 
-    it.each(["0", "abc", "010", "10000"])(
+    it.each(["0", "abc", "010"])(
       "should_returnFalse_when_command'%s'DoesNotMatchPattern",
       (command) => {
         expect(canHandle(command)).toBe(false);
@@ -50,26 +46,8 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
     beforeEach(() => {
       mockManagedStimmzettel = {
         wahlvorschlagAddVotesOrThrow:
-          mockDefinitions.wahlvorschlagAddVotesOrThrow as unknown as (
-            wahlvorschlagOrdnungszahl: number
-          ) => void,
-        kandidatAddEinzelstimmenOrThrow: vi.fn(),
-        kandidatAddUngueltigeStimmenOrThrow: vi.fn(),
-        kandidatenAddStimmenInRangeOrThrow: vi.fn(),
-        kandidatAddStreichungOrThrow: vi.fn(),
-        kandidatenStreichungenInRangeOrThrow: vi.fn(),
-        stimmzettel: computed(() =>
-          prepareManagedStimmzettelStimmzettel().build()
-        ),
-        changeHistoryInReverseOrder: computed(() => []),
-        wahlvorschlaegeWithListenkreuz: computed(() => []),
-        stimmenSummary: computed(() => ({
-          einzelstimmen: 0,
-          reststimmen: 0,
-          streichungen: 0,
-          ungueltigeStimmen: 0,
-        })),
-      };
+          mockDefinitions.wahlvorschlagAddVotesOrThrow,
+      } as unknown as ManagedStimmzettel;
     });
 
     afterEach(() => {

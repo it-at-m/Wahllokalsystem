@@ -12,8 +12,11 @@ interface CommandArguments {
 
 export function useAddVotesToSingleKandidatHandler(): CommandHandler {
   const REGEX_ADD_VOTES_TO_KANDIDAT = /^([1-9]\d{2,})(\+(\d*))?$/;
-  const { isValidCount, isValidKandidatOrdnungszahl, parseOptionalPlusCount } =
-    useHandlerTools();
+  const {
+    isValidCount,
+    isValidKandidatOrdnungszahl,
+    parseOptionalPlusCountToNumber,
+  } = useHandlerTools();
 
   function canHandle(command: string): boolean {
     try {
@@ -56,7 +59,7 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
       const votesText = match[3];
       const commandArgs = {
         kandidatOrdnungszahl: Number.parseInt(match[1]),
-        countVotes: parseOptionalPlusCount(votesText),
+        countVotes: parseOptionalPlusCountToNumber(votesText),
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {

@@ -1,8 +1,6 @@
 import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
 
-import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { computed } from "vue";
 
 import { useAddVotesToKandidatenRangeHandler } from "@/composables/dse/command/addVotesToKandidatenRangeHandler.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
@@ -14,8 +12,6 @@ const mockDefinitions = vi.hoisted(() => ({
 
 describe("addVotesToKandidatenRangeHandler.ts", () => {
   const { canHandle, handleOrThrow } = useAddVotesToKandidatenRangeHandler();
-  const { prepareManagedStimmzettelStimmzettel } =
-    useManagedStimmzettelTestDataFactory();
 
   const validRanges: [number, number][] = [
     [101, 103],
@@ -61,28 +57,8 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
     beforeEach(() => {
       mockManagedStimmzettel = {
         kandidatenAddStimmenInRangeOrThrow:
-          mockDefinitions.kandidatenAddStimmenInRangeOrThrow as unknown as (
-            lower: number,
-            upper: number,
-            votesToAdd: number
-          ) => void,
-        kandidatAddEinzelstimmenOrThrow: vi.fn(),
-        kandidatAddUngueltigeStimmenOrThrow: vi.fn(),
-        kandidatAddStreichungOrThrow: vi.fn(),
-        kandidatenStreichungenInRangeOrThrow: vi.fn(),
-        wahlvorschlagAddVotesOrThrow: vi.fn(),
-        stimmzettel: computed(() =>
-          prepareManagedStimmzettelStimmzettel().build()
-        ),
-        changeHistoryInReverseOrder: computed(() => []),
-        wahlvorschlaegeWithListenkreuz: computed(() => []),
-        stimmenSummary: computed(() => ({
-          einzelstimmen: 0,
-          reststimmen: 0,
-          streichungen: 0,
-          ungueltigeStimmen: 0,
-        })),
-      };
+          mockDefinitions.kandidatenAddStimmenInRangeOrThrow,
+      } as unknown as ManagedStimmzettel;
     });
 
     afterEach(() => {

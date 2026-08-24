@@ -1,8 +1,6 @@
 import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
 
-import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { computed } from "vue";
 
 import { useAddStreichungToKandidatenRangeHandler } from "@/composables/dse/command/addStreichungToKandidatenRangeHandler.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
@@ -15,8 +13,6 @@ const mockDefinitions = vi.hoisted(() => ({
 describe("addStreichungToKandidatenRangeHandler.ts", () => {
   const { canHandle, handleOrThrow } =
     useAddStreichungToKandidatenRangeHandler();
-  const { prepareManagedStimmzettelStimmzettel } =
-    useManagedStimmzettelTestDataFactory();
 
   const validRanges: [number, number][] = [
     [101, 103],
@@ -52,27 +48,8 @@ describe("addStreichungToKandidatenRangeHandler.ts", () => {
     beforeEach(() => {
       mockManagedStimmzettel = {
         kandidatenStreichungenInRangeOrThrow:
-          mockDefinitions.kandidatenStreichungenInRangeOrThrow as unknown as (
-            lower: number,
-            upper: number
-          ) => void,
-        kandidatAddEinzelstimmenOrThrow: vi.fn(),
-        kandidatAddUngueltigeStimmenOrThrow: vi.fn(),
-        kandidatenAddStimmenInRangeOrThrow: vi.fn(),
-        kandidatAddStreichungOrThrow: vi.fn(),
-        wahlvorschlagAddVotesOrThrow: vi.fn(),
-        stimmzettel: computed(() =>
-          prepareManagedStimmzettelStimmzettel().build()
-        ),
-        changeHistoryInReverseOrder: computed(() => []),
-        wahlvorschlaegeWithListenkreuz: computed(() => []),
-        stimmenSummary: computed(() => ({
-          einzelstimmen: 0,
-          reststimmen: 0,
-          streichungen: 0,
-          ungueltigeStimmen: 0,
-        })),
-      };
+          mockDefinitions.kandidatenStreichungenInRangeOrThrow,
+      } as unknown as ManagedStimmzettel;
     });
 
     afterEach(() => {

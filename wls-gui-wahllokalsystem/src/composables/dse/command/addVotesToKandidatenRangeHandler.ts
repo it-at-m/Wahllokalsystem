@@ -18,7 +18,7 @@ export function useAddVotesToKandidatenRangeHandler(): CommandHandler {
     isValidCount,
     isValidKandidatOrdnungszahl,
     normalizeBounds,
-    parseOptionalPlusCount,
+    parseOptionalPlusCountToNumber,
   } = useHandlerTools();
 
   function canHandle(command: string): boolean {
@@ -67,7 +67,7 @@ export function useAddVotesToKandidatenRangeHandler(): CommandHandler {
       const commandArgs = {
         kandidatOrdnungszahlLowerBound: lower,
         kandidatOrdnungszahlUpperBound: upper,
-        countVotes: parseOptionalPlusCount(votesText),
+        countVotes: parseOptionalPlusCountToNumber(votesText),
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {

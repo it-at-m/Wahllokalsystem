@@ -5,7 +5,7 @@ import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.t
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
 export function useAddVotesToWahlvorschlagHandler(): CommandHandler {
-  const REGEX_ADD_VOTES_TO_WAHLVORSCHLAG = /^[1-9]\d{0,3}$/;
+  const REGEX_ADD_VOTES_TO_WAHLVORSCHLAG = /^[1-9]\d{0,}$/;
 
   function canHandle(command: string): boolean {
     try {

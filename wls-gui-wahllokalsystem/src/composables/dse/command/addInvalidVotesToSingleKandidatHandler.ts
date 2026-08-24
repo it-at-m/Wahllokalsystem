@@ -12,8 +12,11 @@ interface CommandArguments {
 
 export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
   const REGEX_ADD_INVALID_VOTES_TO_KANDIDAT = /^[uU]([1-9]\d{2,})(\+(\d*))?$/;
-  const { isValidCount, isValidKandidatOrdnungszahl, parseOptionalPlusCount } =
-    useHandlerTools();
+  const {
+    isValidCount,
+    isValidKandidatOrdnungszahl,
+    parseOptionalPlusCountToNumber,
+  } = useHandlerTools();
 
   function canHandle(command: string): boolean {
     try {
@@ -56,7 +59,7 @@ export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
       const votesText = match[3];
       const commandArgs = {
         kandidatOrdnungszahl: Number.parseInt(match[1]),
-        countInvalidVotes: parseOptionalPlusCount(votesText),
+        countInvalidVotes: parseOptionalPlusCountToNumber(votesText),
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {

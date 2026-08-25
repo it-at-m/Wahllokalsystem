@@ -153,7 +153,7 @@ flowchart LR
     C --> D["throw<br/>UnsupportedCommandError"]
     C -->|try next handler| B
     
-    B -->|"(can handle) parse ok"| E["Handler erzeugt<br/>entsprechenden Rückgabetyp"]
+    B -->|"(can handle) parse ok"| E["Handler erzeugt<br/>entsprechenden Rückgabewert"]
     E --> F["commandHandler.handleOrThrow(...) <br/> fachliche Prüfung des Befehls"]
     F --> G{"Kandidat/Wahlvorschlag<br/>existiert und Änderung erlaubt?"}
 

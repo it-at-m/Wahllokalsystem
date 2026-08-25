@@ -10,11 +10,15 @@ import { UnsupportedCommandError } from "@/types/dse/error/UnsupportedCommandErr
 
 const { logDebug } = useLogging("stimmzettelManager");
 
-export function useStimmzettelManager(wahlvorschlaege: Wahlvorschlag[]) {
+export function useStimmzettelManager(
+  wahlvorschlaege: Wahlvorschlag[],
+  wahlID: string
+) {
   const { createStimmzettelWithWahlvorschlaege } = useStimmzettelUtils();
 
   const managedStimmzettel = useManagedStimmzettel(
-    ref(createStimmzettelWithWahlvorschlaege(wahlvorschlaege))
+    ref(createStimmzettelWithWahlvorschlaege(wahlvorschlaege)),
+    wahlID
   );
 
   /**

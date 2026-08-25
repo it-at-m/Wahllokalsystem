@@ -13,9 +13,7 @@ const mockDefinitions = vi.hoisted(() => ({
 describe("addVotesToWahlvorschlagHandler.ts", () => {
   const { canHandle, handleOrThrow } = useAddVotesToWahlvorschlagHandler();
 
-  const validWahlvorschlagOrdnungszahlen = [
-    1, 2, 9, 10, 11, 99, 100, 1000,
-  ];
+  const validWahlvorschlagOrdnungszahlen = [1, 2, 9, 10, 11, 99, 100, 1000];
   const commandToExpectedOrdnungszahl: [string, number][] = [
     ["1", 1],
     ["100", 1],

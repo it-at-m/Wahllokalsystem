@@ -5,8 +5,10 @@ import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
+import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
+import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 import { InputHistoryTypeEnum } from "@/types/dse/InputHistoryTypeEnum.ts";
 
@@ -17,8 +19,12 @@ export const WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL = 100;
  * https://it-at-m.github.io/Wahllokalsystem/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen.html
  *
  * @param stimmzettel
+ * @param wahlID
  */
-export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
+export function useManagedStimmzettel(
+  stimmzettel: Ref<Stimmzettel>,
+  wahlID: string
+) {
   const changeHistory = ref<InputHistoryItem[]>([]);
 
   const kandidatenOfStimmzettel = computed(() =>
@@ -316,10 +322,27 @@ export function useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>) {
   }
 
   function _internalAddVotesToWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
-    wahlvorschlag.kandidaten.map((kandidat) => {
-      const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
-      kandidat.einzelstimmen = currentEinzelstimmen + 1;
-    });
+    const kopfdatenStore = useKopfdatenStore();
+    const { kopfdaten } = storeToRefs(kopfdatenStore);
+    const maximalErlaubteStimmenProWaehler =
+      kopfdaten.value.find((kd) => kd.wahlID === wahlID)
+        ?.maximalErlaubteStimmenProWaehler ?? 0;
+
+    const currentGesamtStimmen =
+      stimmenSummary.value.ungueltigeStimmen +
+      stimmenSummary.value.einzelstimmen +
+      stimmenSummary.value.reststimmen;
+    let reststimmen = maximalErlaubteStimmenProWaehler - currentGesamtStimmen;
+    let index = 0;
+    while (index < reststimmen && index < wahlvorschlag.kandidaten.length) {
+      const kandidat = wahlvorschlag.kandidaten[index];
+      if (!kandidat.durchgestrichen) {
+        kandidat.reststimmen = 1;
+      } else {
+        reststimmen++;
+      }
+      index++;
+    }
     wahlvorschlag.selected = true;
     changeHistory.value.push({
       type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,

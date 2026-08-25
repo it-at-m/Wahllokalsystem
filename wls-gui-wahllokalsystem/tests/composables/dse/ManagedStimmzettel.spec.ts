@@ -412,6 +412,64 @@ describe("ManagedStimmzettel.ts", () => {
       expect(k1.einzelstimmen).toBe(4);
       expect(k2.einzelstimmen).toBe(4);
     });
+
+    it("should_throwManagedStimmzettelError_when_rangeContainsAnyStreichung", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
+        .build();
+      const k2 = prepareManagedStimmzettelKandidat()
+        .listenposition(2)
+        .ordnungszahl(102)
+        .einzelstimmen(null)
+        .durchgestrichen(true)
+        .build();
+      const k3 = prepareManagedStimmzettelKandidat()
+        .listenposition(3)
+        .ordnungszahl(103)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
+        .build();
+
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([k1, k2, k3])
+            .build(),
+        ])
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel));
+
+      expect(() => managed.kandidatenAddStimmenInRangeOrThrow(101, 103, 1)).toThrow(
+        ManagedStimmzettelError
+      );
+    });
+
+    it("should_throwManagedStimmzettelError_when_lowerBoundIsGreaterThanUpperBound", () => {
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([
+              prepareManagedStimmzettelKandidat()
+                .listenposition(1)
+                .ordnungszahl(101)
+                .einzelstimmen(null)
+                .durchgestrichen(false)
+                .build(),
+            ])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel));
+      expect(() => managed.kandidatenAddStimmenInRangeOrThrow(103, 101, 1)).toThrow(
+        ManagedStimmzettelError
+      );
+    });
   });
 
   describe("kandidatAddStreichungOrThrow", () => {
@@ -448,6 +506,36 @@ describe("ManagedStimmzettel.ts", () => {
       expect(() => managed.kandidatAddStreichungOrThrow(101)).toThrow(
         ManagedStimmzettelError
       );
+    });
+
+    it("should_preferKandidatWithoutEinzelstimmen_when_multipleCandidatesShareListenposition", () => {
+      const kandidatWithVotes = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(1)
+        .durchgestrichen(false)
+        .build();
+      const kandidatWithoutVotes = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
+        .build();
+
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidatWithVotes, kandidatWithoutVotes])
+            .build(),
+        ])
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel));
+      managed.kandidatAddStreichungOrThrow(101);
+
+      expect(kandidatWithoutVotes.durchgestrichen).toBe(true);
+      expect(kandidatWithVotes.durchgestrichen).toBe(false);
     });
   });
 

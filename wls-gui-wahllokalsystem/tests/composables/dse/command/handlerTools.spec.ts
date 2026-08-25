@@ -5,6 +5,7 @@ import { useHandlerTools } from "@/composables/dse/command/handlerTools.ts";
 describe("handlerTools.ts", () => {
   const {
     isValidKandidatOrdnungszahl,
+    isValidWahlvorschlagOrdnungszahl,
     isValidCount,
     normalizeBounds,
     parseOptionalPlusCountToNumber,
@@ -38,6 +39,22 @@ describe("handlerTools.ts", () => {
       "should_returnFalse_when_countIsNotPositiveSafeInteger: %s",
       (count: number) => {
         expect(isValidCount(count as number)).toBe(false);
+      }
+    );
+  });
+
+  describe("isValidWahlvorschlagOrdnungszahl", () => {
+    it.each([1, 2, 9, 10, 11, 99, 100, 200, 1000])(
+      "should_returnTrue_when_ordnungszahlIsSafeIntegerAndLessThan100OrMultipleOf100: %s",
+      (value) => {
+        expect(isValidWahlvorschlagOrdnungszahl(value)).toBe(true);
+      }
+    );
+
+    it.each([101, 999, 1001, 9999, NaN, 1.5, Infinity, -Infinity])(
+      "should_returnFalse_when_ordnungszahlIsGreaterOrEqual100AndNotMultipleOf100OrInvalid: %s",
+      (value: number) => {
+        expect(isValidWahlvorschlagOrdnungszahl(value as number)).toBe(false);
       }
     );
   });

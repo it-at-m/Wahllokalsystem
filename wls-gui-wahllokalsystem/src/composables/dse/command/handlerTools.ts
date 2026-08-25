@@ -8,6 +8,14 @@ export function useHandlerTools() {
     );
   }
 
+  function isValidWahlvorschlagOrdnungszahl(value: number): boolean {
+    return (
+      Number.isSafeInteger(value) &&
+      (value < 100 ||
+        value % WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL == 0)
+    );
+  }
+
   function isValidCount(value: number): boolean {
     return Number.isSafeInteger(value) && value > 0;
   }
@@ -28,6 +36,7 @@ export function useHandlerTools() {
 
   return {
     isValidKandidatOrdnungszahl,
+    isValidWahlvorschlagOrdnungszahl,
     isValidCount,
     normalizeBounds,
     parseOptionalPlusCountToNumber,

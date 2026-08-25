@@ -1,11 +1,13 @@
 import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
 import type { CommandHandler } from "@/types/dse/command/CommandHandler.ts";
 
+import { useHandlerTools } from "@/composables/dse/command/handlerTools.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
 export function useAddVotesToWahlvorschlagHandler(): CommandHandler {
   const REGEX_ADD_VOTES_TO_WAHLVORSCHLAG = /^[1-9]\d{0,}$/;
+  const { isValidWahlvorschlagOrdnungszahl } = useHandlerTools();
 
   function canHandle(command: string): boolean {
     try {
@@ -47,7 +49,7 @@ export function useAddVotesToWahlvorschlagHandler(): CommandHandler {
           ? match[0].substring(0, match[0].length - 2)
           : match[0]
       );
-      return Number.isSafeInteger(commandArg) ? commandArg : null;
+      return isValidWahlvorschlagOrdnungszahl(commandArg) ? commandArg : null;
     } else {
       return null;
     }

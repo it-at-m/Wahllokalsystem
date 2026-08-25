@@ -14,14 +14,12 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
   const { canHandle, handleOrThrow } = useAddVotesToWahlvorschlagHandler();
 
   const validWahlvorschlagOrdnungszahlen = [
-    1, 2, 9, 10, 11, 99, 100, 101, 999, 1000, 1001, 9999,
+    1, 2, 9, 10, 11, 99, 100, 1000,
   ];
   const commandToExpectedOrdnungszahl: [string, number][] = [
     ["1", 1],
     ["100", 1],
-    ["101", 101],
     ["1000", 10],
-    ["9999", 9999],
   ];
 
   describe("canHandle", () => {
@@ -32,7 +30,7 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
       }
     );
 
-    it.each(["0", "abc", "010"])(
+    it.each(["0", "abc", "010", "101", "999", "1001", "9999"])(
       "should_returnFalse_when_command'%s'DoesNotMatchPattern",
       (command) => {
         expect(canHandle(command)).toBe(false);
@@ -86,7 +84,7 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
         throw managedStimmzettelError;
       });
 
-      expect(() => handleOrThrow("101", mockManagedStimmzettel)).toThrow(
+      expect(() => handleOrThrow("100", mockManagedStimmzettel)).toThrow(
         CommandExecutionError
       );
     });
@@ -96,7 +94,7 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
         throw new Error("unexpected error");
       });
 
-      expect(() => handleOrThrow("101", mockManagedStimmzettel)).toThrow(
+      expect(() => handleOrThrow("100", mockManagedStimmzettel)).toThrow(
         CommandExecutionError
       );
     });

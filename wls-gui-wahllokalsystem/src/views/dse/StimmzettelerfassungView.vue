@@ -11,24 +11,49 @@
         />
       </v-card-text>
       <v-card-actions v-if="!isStatusLoading">
-        <base-text-button
-          :active="startenBtnActive"
-          :is-disabled="startenBtnIsDisabled"
-          @click="onErfassungStartenClicked"
-          >{{ startNewStimmzettelButtonText }}</base-text-button
+        <div
+          v-if="!hasTeamFinishedErfassung"
+          class="d-flex w-100"
         >
-        <base-text-button
-          :is-disabled="unterbrechenBtnIsDisabled"
-          @click="onErfassungUnterbrechenClicked"
-          >Unterbrechen</base-text-button
+          <base-text-button
+            :active="startenBtnActive"
+            class="mr-5"
+            @click="onErfassungStartenClicked"
+          >
+            {{ startNewStimmzettelButtonText }}
+          </base-text-button>
+          <base-text-button
+            :is-disabled="unterbrechenBtnIsDisabled"
+            @click="onErfassungUnterbrechenClicked"
+          >
+            Unterbrechen
+          </base-text-button>
+          <base-text-button
+            class="ms-auto"
+            :active="beendenBtnActive"
+            @click="onErfassungBeendenClicked"
+          >
+            Beenden
+          </base-text-button>
+        </div>
+        <div
+          v-else
+          class="w-100"
         >
-        <base-text-button
-          class="ms-auto"
-          :active="beendenBtnActive"
-          :is-disabled="beendenBtnIsDisabled"
-          @click="onErfassungBeendenClicked"
-          >Beenden</base-text-button
-        >
+          <base-feedback-card
+            title="Sie haben die Erfassung bereits abgeschlossen"
+            type="information"
+          >
+            Um weitere Stimmzettel zu erfassen oder zu korrigieren, lassen Sie
+            sich bitte von der Schriftführung wieder freischalten und
+            aktualisieren Sie dann mit dem Button die Seite.
+            <base-button-refresh
+              active
+              class="ml-5"
+              @click="onErfassungAktualisierenClicked"
+            />
+          </base-feedback-card>
+        </div>
       </v-card-actions>
     </v-card>
     <the-stimmzettelkennung-dialog
@@ -60,13 +85,16 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 
+import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseStimmzettelUebersichtTable from "@/components/dse/BaseStimmzettelUebersichtTable.vue";
 import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
 import TheStimmzettelErfassungDialog from "@/components/dse/TheStimmzettelErfassungDialog.vue";
 import TheStimmzettelkennungDialog from "@/components/dse/TheStimmzettelkennungDialog.vue";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
 
@@ -81,16 +109,15 @@ const templateRefStimmzettelBeendenDialog = useTemplateRef<
 >(STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME);
 
 const {
+  teamStatus,
   activeStimmzettel,
   beendenBtnActive,
-  beendenBtnIsDisabled,
   hasStimmzettel,
   isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
   isStimmzettelLoading,
   savedStimmzettel,
-  startenBtnIsDisabled,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
   wahlvorschlaege,
@@ -98,6 +125,7 @@ const {
   sendStatusInBearbeitung,
   sendStatusUnterbrochen,
   startNewEmptyStimmzettelWithStimmzettelkennung,
+  reloadTeamStatus,
 } = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
 
 const startNewStimmzettelButtonText = computed(() =>
@@ -123,6 +151,10 @@ function onErfassungBeendenClicked() {
   templateRefStimmzettelBeendenDialog.value?.showDialog();
 }
 
+async function onErfassungAktualisierenClicked() {
+  await reloadTeamStatus();
+}
+
 async function onStimmzettelErfassungCanceled() {
   isErfassungsDialogVisible.value = false;
 }
@@ -132,4 +164,9 @@ async function onStimmzettelErfassungConfirmed(
   await saveNewStimmzettel(confirmedStimmzettel);
   isErfassungsDialogVisible.value = false;
 }
+
+const hasTeamFinishedErfassung = computed(
+  () =>
+    teamStatus.value?.status == StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+);
 </script>

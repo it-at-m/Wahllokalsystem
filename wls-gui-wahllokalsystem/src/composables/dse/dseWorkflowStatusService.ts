@@ -1,5 +1,7 @@
 import type { StimmzettelerfassungStatus } from "@/types/dse/StimmzettelerfassungStatus.ts";
 
+import { readonly, ref } from "vue";
+
 import {
   Configuration,
   StimmzettelerfassungControllerApi,
@@ -20,11 +22,14 @@ export function useDseWorkflowStatusService() {
       new Configuration({ basePath: ERGEBNISMELDUNG_SERVICE_API_URL })
     );
 
+  const isWorkflowStatusLoading = ref(false);
+
   async function loadDseWorkflowStatus(
     wahlID: string,
     wahlbezirkID: string,
     sendNotification = true
   ): Promise<StimmzettelerfassungStatus | null> {
+    isWorkflowStatusLoading.value = true;
     try {
       const response =
         await stimmzettelerfassungControllerApi.getStimmzettelerfassungStatus(
@@ -42,6 +47,8 @@ export function useDseWorkflowStatusService() {
         );
       }
       throw error;
+    } finally {
+      isWorkflowStatusLoading.value = false;
     }
   }
 
@@ -76,6 +83,7 @@ export function useDseWorkflowStatusService() {
   }
 
   return {
+    isWorkflowStatusLoading: readonly(isWorkflowStatusLoading),
     loadDseWorkflowStatus,
     saveDseWorkflowStatus,
   };

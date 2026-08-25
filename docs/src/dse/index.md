@@ -151,6 +151,7 @@ flowchart LR
 
     B -->|"(can not handle) parse fail"| C["Next Handler /</br>Unbekannter Befehl"]
     C --> D["throw</br>UnsupportedCommandError"]
+    C -->|try next handler| B
     
     B -->|"(can handle) parse ok"| E["Handler erzeugt</br>entsprechenden Rückgabetyp"]
     E --> F["commandHandler.handleOrThrow(...) </br> fachliche Prüfung des Befehls"]

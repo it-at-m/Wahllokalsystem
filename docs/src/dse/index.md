@@ -143,6 +143,28 @@ stateDiagram-v2
 Um eine schnelle Erfassung der Daten des Stimmzettels zu ermöglichen, können Befehle eingegeben werden. Die Anwendung
 gibt Feedback, wenn der Befehl nicht ausführbar oder falsch war.
 
+### Input-Handling Architektur
+
+```mermaid
+flowchart LR
+    A["Start: User-Eingabestring"] --> B{"commandHandler.canHandle(command)"}
+
+    B -->|"(can not handle) parse fail"| C["Next Handler / Unbekannter Befehl"]
+    C --> D["throw UnsupportedCommandError"]
+    
+    B -->|"(can handle) parse ok"| E["Handler erzeugt entsprechenden Rückgabetyp"]
+    E --> F["commandHandler.handleOrThrow(...) </br> fachliche Prüfung des Befehls"]
+    F --> G{"Kandidat/Wahlvorschlag existiert und Änderung erlaubt?"}
+
+    G -->|ja| H["Anpassung Datenmodell + Update der Eingabehistorie"]
+    H --> I["Success"]
+
+    G -->|nein| J["throw CommandExecutionError"]
+    J --> K["Failure"]
+```
+
+### Befehle
+
 | Befehl                           | Funktion                                                               | Beispiel |
 |----------------------------------|------------------------------------------------------------------------|----------|
 | &lt;Kandidatordnungszahl>        | Fügt eine Stimme bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101      |

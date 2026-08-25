@@ -98,6 +98,19 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
       }
     );
 
+    it("should_callKandidatenAddStimmenInRangeOrThrowWithParsedVotes_when_commandContainsPlusAndVotes", () => {
+      handleOrThrow("101-103+3", mockManagedStimmzettel);
+
+      expect(
+        mockDefinitions.kandidatenAddStimmenInRangeOrThrow
+      ).toHaveBeenCalledTimes(1);
+      const call = mockDefinitions.kandidatenAddStimmenInRangeOrThrow.mock
+        .calls[0] as [number, number, number];
+      expect(call[0]).toBe(101);
+      expect(call[1]).toBe(103);
+      expect(call[2]).toBe(3);
+    });
+
     it("should_throwCommandExecutionError_when_commandArgumentsAreInvalid", () => {
       expect(() => handleOrThrow("10-101", mockManagedStimmzettel)).toThrow(
         CommandExecutionError

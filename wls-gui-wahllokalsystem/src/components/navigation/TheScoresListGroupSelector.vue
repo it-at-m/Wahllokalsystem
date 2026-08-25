@@ -1,19 +1,19 @@
 <template>
   <div v-if="wahlbezirkIdForWahl">
     <the-o-b-w-scores-list-group
-      v-if="wahl.wahlart === WahlWahlartEnum.Obw"
+      v-if="hasRoleSchriftfuehrung && wahl.wahlart === WahlWahlartEnum.Obw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
     />
     <the-s-r-w-scores-list-group
-      v-if="wahl.wahlart === WahlWahlartEnum.Srw"
+      v-if="hasRoleSchriftfuehrung && wahl.wahlart === WahlWahlartEnum.Srw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
     />
     <the-b-a-w-scores-list-group
-      v-if="wahl.wahlart === WahlWahlartEnum.Baw"
+      v-if="hasRoleSchriftfuehrung && wahl.wahlart === WahlWahlartEnum.Baw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
@@ -25,6 +25,13 @@
       :disabled="isMBWAuszaehlungDisabled"
       :disabled-message="disabledMessagePreviousStepsRequired"
       :is-wahl-finished="isMBWAuszaehlungFinished"
+    />
+    <the-dse-list-items
+      :wahl-id="wahl.wahlID"
+      :wahlbezirk-id="wahlbezirkIdForWahl"
+      :disabled="false"
+      disabled-message=""
+      :is-wahl-finished="false"
     />
   </div>
 </template>
@@ -40,6 +47,7 @@ import TheBAWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten
 import TheMBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheMBWScoresListGroup.vue";
 import TheOBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheOBWScoresListGroup.vue";
 import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheSRWScoresListGroup.vue";
+import TheDseListItems from "@/components/navigation/dse/TheDSEListItems.vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import {
   DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING,
@@ -67,6 +75,7 @@ const {
   isWahlvorstandErfasst,
 } = storeToRefs(useWorkflowStore());
 const { isBWB, isUWB } = storeToRefs(useUserStore());
+const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 
 const titleStimmenZaehlen = computed(
   () => `Zählen der ${getStimmzettelTermForWahl(props.wahl)}`

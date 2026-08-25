@@ -30,6 +30,8 @@ public class WahllokalZustand extends BaseEntity {
   @JdbcTypeCode(VARCHAR)
   private UUID wahlbezirkID;
 
+  private String teamID;
+
   private LocalDateTime zuletztGesehen;
 
   private LocalDateTime letzteAbmeldung;

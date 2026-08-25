@@ -8,6 +8,7 @@ import {
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
+  afterAll,
   afterEach,
   beforeAll,
   beforeEach,
@@ -26,6 +27,18 @@ import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import HomeView from "@/views/HomeView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
+
+const mockDefinitions = vi.hoisted(() => ({
+  getNextRoute: vi.fn(),
+}));
+
+vi.mock(import("@/composables/navigation/navigationService.ts"), () => ({
+  useNavigationService: () => ({
+    getNextRoute: mockDefinitions.getNextRoute,
+    routeWithName: vi.fn(),
+    routeWithNameAndParams: vi.fn(),
+  }),
+}));
 
 describe("BaseOfflineLoading.vue", () => {
   let wrapper: VueWrapper;
@@ -67,6 +80,14 @@ describe("BaseOfflineLoading.vue", () => {
       },
     });
     vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterAll(() => {
+    vi.resetAllMocks();
   });
 
   enableAutoUnmount(afterEach);
@@ -207,6 +228,9 @@ describe("BaseOfflineLoading.vue", () => {
       const pushMock = vi.fn();
       vi.spyOn(router, "push").mockImplementation(pushMock);
 
+      const mockedNextRoute = { name: ROUTE_WAHLVORSTAND };
+      mockDefinitions.getNextRoute.mockReturnValue(mockedNextRoute);
+
       const workflowStore = useWorkflowStore();
       const taskManagerStore = useInitTaskManagerStore();
       // @ts-expect-error: cannot set readonly
@@ -222,7 +246,7 @@ describe("BaseOfflineLoading.vue", () => {
 
       await nextTick();
 
-      expect(pushMock).toHaveBeenCalledWith({ name: ROUTE_WAHLVORSTAND });
+      expect(pushMock).toHaveBeenCalledWith(mockedNextRoute);
     });
 
     it("should_callOnRefreshClicked_when_refreshButtonIsClicked", async () => {

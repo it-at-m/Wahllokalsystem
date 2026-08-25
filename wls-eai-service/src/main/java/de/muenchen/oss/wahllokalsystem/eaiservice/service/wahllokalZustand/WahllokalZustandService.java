@@ -1,8 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahllokalZustand;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahllokalzustand.WahllokalZustandRepository;
+import de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahllokalzustand.dto.WahllokalZustandDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.service.IDConverter;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +17,59 @@ public class WahllokalZustandService {
 
   private final WahllokalZustandValidator wahllokalZustandValidator;
   private final WahllokalZustandMapper wahllokalZustandMapper;
+  private final IDConverter idConverter;
   private final WahllokalZustandRepository wahllokalZustandRepository;
+  private final ExceptionFactory exceptionFactory;
 
   @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveWahllokalZustand')")
   public void setWahllokalZustand(final WahllokalZustandDTO wahllokalZustandToSet) {
     wahllokalZustandValidator.validWahllokalZustandOrThrow(wahllokalZustandToSet);
     wahllokalZustandRepository.save(wahllokalZustandMapper.toEntity(wahllokalZustandToSet));
+  }
+
+  @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveWahllokalZustand')")
+  public void setWahllokalZustandLastSeen(
+      final String wahlbezirkID, final String teamID, final LocalDateTime timestamp) {
+    if (StringUtils.isBlank(wahlbezirkID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT);
+    }
+
+    if (StringUtils.isBlank(teamID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEWAHLLOKALZUSTAND_TEAMID_FEHLT);
+    }
+
+    if (timestamp == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEWAHLLOKALZUSTAND_TIMESTAMP_FEHLT);
+    }
+
+    wahllokalZustandRepository.save(
+        wahllokalZustandMapper.toEntityWithLastSeen(
+            idConverter.convertIDToUUIDOrThrow(wahlbezirkID), teamID, timestamp));
+  }
+
+  @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveWahllokalZustand')")
+  public void setWahllokalZustandLetzteAbmeldung(
+      final String wahlbezirkID, final String teamID, final LocalDateTime timestamp) {
+    if (StringUtils.isBlank(wahlbezirkID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT);
+    }
+
+    if (StringUtils.isBlank(teamID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEWAHLLOKALZUSTAND_TEAMID_FEHLT);
+    }
+
+    if (timestamp == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEWAHLLOKALZUSTAND_TIMESTAMP_FEHLT);
+    }
+
+    wahllokalZustandRepository.save(
+        wahllokalZustandMapper.toEntityWithLetzteAbmeldung(
+            idConverter.convertIDToUUIDOrThrow(wahlbezirkID), teamID, timestamp));
   }
 }

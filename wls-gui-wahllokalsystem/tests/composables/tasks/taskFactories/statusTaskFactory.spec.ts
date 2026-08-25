@@ -22,56 +22,75 @@ describe("statusTaskFactory.ts", () => {
   const statusNamePrefix = "Druckstatus - ";
 
   describe("createTasks", () => {
-    it("should_returnTaskListWithFourElements_when_calledWithFourWahldataElements", () => {
-      const extendedWahlMetaDataOne = createExtendedWahlMetaData();
-      const extendedWahlMetaDataTwo = createExtendedWahlMetaData();
-      const extendedWahlMetaDataThree = createExtendedWahlMetaData();
-      const extendedWahlMetaDataFour = createExtendedWahlMetaData();
-      const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
-        .extendedWahlMetaData([
-          extendedWahlMetaDataOne,
-          extendedWahlMetaDataTwo,
-          extendedWahlMetaDataThree,
-          extendedWahlMetaDataFour,
-        ])
-        .build();
+    describe("userHasRoleSchriftfuehrung", () => {
+      it("should_returnTaskListWithFourElements_when_calledWithFourWahldataElements", () => {
+        const extendedWahlMetaDataOne = createExtendedWahlMetaData();
+        const extendedWahlMetaDataTwo = createExtendedWahlMetaData();
+        const extendedWahlMetaDataThree = createExtendedWahlMetaData();
+        const extendedWahlMetaDataFour = createExtendedWahlMetaData();
+        const taskFactoryContext: TaskFactoryContext =
+          prepareTaskFactoryContext()
+            .isSchriftfuehrung(true)
+            .extendedWahlMetaData([
+              extendedWahlMetaDataOne,
+              extendedWahlMetaDataTwo,
+              extendedWahlMetaDataThree,
+              extendedWahlMetaDataFour,
+            ])
+            .build();
 
-      const result = createTasks(taskFactoryContext);
+        const result = createTasks(taskFactoryContext);
 
-      expect(result.length).toStrictEqual(4);
-      const expectedNames = [
-        statusNamePrefix + extendedWahlMetaDataOne.wahlName,
-        statusNamePrefix + extendedWahlMetaDataTwo.wahlName,
-        statusNamePrefix + extendedWahlMetaDataThree.wahlName,
-        statusNamePrefix + extendedWahlMetaDataFour.wahlName,
-      ];
-      const resultNames = result.map((task) => task.name);
-      expectedNames.forEach((name) => {
-        expect(resultNames).toContain(name);
+        expect(result.length).toStrictEqual(4);
+        const expectedNames = [
+          statusNamePrefix + extendedWahlMetaDataOne.wahlName,
+          statusNamePrefix + extendedWahlMetaDataTwo.wahlName,
+          statusNamePrefix + extendedWahlMetaDataThree.wahlName,
+          statusNamePrefix + extendedWahlMetaDataFour.wahlName,
+        ];
+        const resultNames = result.map((task) => task.name);
+        expectedNames.forEach((name) => {
+          expect(resultNames).toContain(name);
+        });
+      });
+
+      it("should_returnTaskListWithOneElement_when_calledWithOneWahldataElement", () => {
+        const extendedWahlMetaDataOne = createExtendedWahlMetaData();
+        const taskFactoryContext: TaskFactoryContext =
+          prepareTaskFactoryContext()
+            .isSchriftfuehrung(true)
+            .extendedWahlMetaData([extendedWahlMetaDataOne])
+            .build();
+
+        const result = createTasks(taskFactoryContext);
+
+        expect(result.length).toStrictEqual(1);
+        expect(result[0]?.name).toStrictEqual(
+          statusNamePrefix + extendedWahlMetaDataOne.wahlName
+        );
+      });
+
+      it("should_returnEmptyTaskList_when_calledWithNoWahldataElement", () => {
+        const taskFactoryContext: TaskFactoryContext =
+          prepareTaskFactoryContext()
+            .isSchriftfuehrung(true)
+            .extendedWahlMetaData([])
+            .build();
+        const result = createTasks(taskFactoryContext);
+
+        expect(result.length).toStrictEqual(0);
       });
     });
 
-    it("should_returnTaskListWithOneElement_when_calledWithOneWahldataElement", () => {
-      const extendedWahlMetaDataOne = createExtendedWahlMetaData();
-      const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
-        .extendedWahlMetaData([extendedWahlMetaDataOne])
-        .build();
+    describe("userHasNotRoleSchriftfuehrung", () => {
+      it("should_returnEmptyTaskList_when_called", () => {
+        const context = prepareTaskFactoryContext()
+          .isSchriftfuehrung(false)
+          .build();
 
-      const result = createTasks(taskFactoryContext);
-
-      expect(result.length).toStrictEqual(1);
-      expect(result[0]?.name).toStrictEqual(
-        statusNamePrefix + extendedWahlMetaDataOne.wahlName
-      );
-    });
-
-    it("should_returnEmptyTaskList_when_calledWithNoWahldataElement", () => {
-      const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
-        .extendedWahlMetaData([])
-        .build();
-      const result = createTasks(taskFactoryContext);
-
-      expect(result.length).toStrictEqual(0);
+        const result = createTasks(context);
+        expect(result.length).toStrictEqual(0);
+      });
     });
   });
 });

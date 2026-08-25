@@ -21,11 +21,11 @@
     <the-testseite-drucken-dialog v-if="showTestdruckDialog" />
     <the-broadcast-read-confirmation-dialog />
     <the-wahlvorstand-anwesenheits-check-popup-dialog
-      v-if="isUWB && isTimeToCheckAnwesenheitInFuture"
+      v-if="isUWB && hasRoleSchriftfuehrung && isTimeToCheckAnwesenheitInFuture"
       data-test="wahlvorstand-anwesenheits-check-popup-dialog"
     />
     <the-wahlschluss-check-popup-dialog
-      v-if="isTimeToCheckWahlschlussInFuture"
+      v-if="hasRoleSchriftfuehrung && isTimeToCheckWahlschlussInFuture"
     />
   </v-app>
 </template>
@@ -41,6 +41,7 @@ import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDr
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+import { useStimmzettelerfassungTeamStatusUtils } from "@/composables/dse/stimmzettelerfassungTeamStatusUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useServiceWorkerPinSyncer } from "@/composables/serviceWorker/serviceWorkerPinSyncer.ts";
 import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorkerUtils.ts";
@@ -59,7 +60,7 @@ const { loadUser, initIsNachlieferungsbezirk } = useUserStore();
 const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss } = storeToRefs(
   useInfomanagementStore()
 );
-const { isUWB, isBWB } = storeToRefs(useUserStore());
+const { isUWB, isBWB, hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions } = useWahlenStore();
 const { isOfflineCacheReady } = storeToRefs(useOnlineOfflineStore());
@@ -67,6 +68,9 @@ const { isTodayOrFuture } = useDateTimeUtils();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
+
+const { initStimmzettelerfassungTeamStatus } =
+  useStimmzettelerfassungTeamStatusUtils();
 
 const isTimeToCheckAnwesenheitInFuture = computed(() =>
   dateTimeToCheckAnwesenheit.value
@@ -92,10 +96,11 @@ onMounted(async () => {
     isOfflineCacheReady.value = await awaitServiceWorkerActive();
     await syncPin();
     await wahlenActions.initWahlen();
-    if (isBWB.value) {
+    if (isBWB.value && hasRoleSchriftfuehrung.value) {
       await initIsNachlieferungsbezirk();
     }
     await useKopfdatenStore().initKopfdaten();
+    await initStimmzettelerfassungTeamStatus();
     await initTasks();
 
     showTestdruckDialog.value = true;
@@ -103,7 +108,9 @@ onMounted(async () => {
   } catch (error) {
     console.debug(error);
   } finally {
-    startBroadcastMessageInterval();
+    if (hasRoleSchriftfuehrung.value) {
+      startBroadcastMessageInterval();
+    }
   }
 });
 

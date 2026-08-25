@@ -48,7 +48,8 @@ public interface UserModelMapper {
       WahllokalUserInfoModel wahllokalUserInfoModel,
       Set<Authority> authorities,
       String pin,
-      String username);
+      String username,
+      String teamID);
 
   default org.springframework.security.core.userdetails.User toSpringSecurityUser(User user) {
     return new org.springframework.security.core.userdetails.User(

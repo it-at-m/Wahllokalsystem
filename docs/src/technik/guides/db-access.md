@@ -11,6 +11,10 @@ Diese Benutzerkonten können nur die Tabellen sehen, die im jeweiligen Schema si
 ![mehrere Schemata ausgewählt](/tipsAndTricks/MultipleSchemasSelected.png)  
 _Auch wenn mehrere Schemata ausgewählt sind ..._
 
+> [!IMPORTANT]
+> Sollten die Schemas der Services nicht sichtbar sein, öffnen Sie für die DB-Quelle `system@localhost`
+> **Properties → General → URL** und stellen Sie sicher, dass dort die richtige URL eingetragen ist.
+
 ![nur Basisdatenservicetabellen sichtbar](/tipsAndTricks/OnlyBasisdatenServiceTablesAccessible.png)  
 _so sieht man doch nur die Tabellen zum Basisdatenservice_
 

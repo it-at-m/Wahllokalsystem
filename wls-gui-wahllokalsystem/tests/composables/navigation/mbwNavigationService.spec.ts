@@ -1,14 +1,13 @@
-import type { NavigationDefinition } from "@/types/navigation/NavigationDefinition.ts";
-import type { ComputedRef } from "vue";
-
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
 import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTestDataFactory.ts";
+import { assertThatRequiredRoutesAreReturned } from "@tests/utils/navigation/navigationTestUtils.ts";
 import { flushPromises } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMbwNavigationService } from "@/composables/navigation/mbwNavigationService.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
@@ -49,15 +48,24 @@ describe("mbwNavigationService.ts", () => {
           )
           .build(),
       ];
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleSchriftfuehrung = true;
 
       const unitUnderTest = useMbwNavigationService(wahlID, wahlbezirkID);
 
       const navigation = unitUnderTest.navigation;
 
-      assertThatRequiredRoutesAreReturned(navigation, wahlID, wahlbezirkID);
+      assertThatRequiredRoutesAreReturned(
+        navigation,
+        wahlID,
+        wahlbezirkID,
+        MbwStepsEnum
+      );
     });
 
     it("should_returnNavigation_when_statusIsSetAfterInit", async () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleSchriftfuehrung = true;
       const unitUnderTest = useMbwNavigationService(wahlID, wahlbezirkID);
       const navigation = unitUnderTest.navigation;
 
@@ -75,29 +83,12 @@ describe("mbwNavigationService.ts", () => {
       ];
       await flushPromises();
 
-      assertThatRequiredRoutesAreReturned(navigation, wahlID, wahlbezirkID);
+      assertThatRequiredRoutesAreReturned(
+        navigation,
+        wahlID,
+        wahlbezirkID,
+        MbwStepsEnum
+      );
     });
-
-    function assertThatRequiredRoutesAreReturned(
-      navigation: ComputedRef<NavigationDefinition[]>,
-      wahlID: string,
-      wahlbezirkID: string
-    ) {
-      const expectedRouteNames = Object.values(MbwStepsEnum);
-      expect(navigation.value.length).toStrictEqual(expectedRouteNames.length);
-      expectedRouteNames.forEach((expectedRouteName) => {
-        expect(navigation.value).satisfy(
-          (navigationItems: NavigationDefinition[]) => {
-            return navigationItems.some(
-              (navigationItem) =>
-                navigationItem.targetRoute.name === expectedRouteName &&
-                navigationItem.targetRoute.params?.wahlId === wahlID &&
-                navigationItem.targetRoute.params?.wahlbezirkId === wahlbezirkID
-            );
-          },
-          `route with name ${expectedRouteName} not found in navigation array`
-        );
-      });
-    }
   });
 });

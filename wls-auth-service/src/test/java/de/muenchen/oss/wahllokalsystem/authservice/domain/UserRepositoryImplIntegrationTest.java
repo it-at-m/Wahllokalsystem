@@ -114,6 +114,7 @@ class UserRepositoryImplIntegrationTest {
     void should_encryptUsername_when_savingUser() {
       val userToSave = new User();
       userToSave.setUsername(USERNAME_UNENCRYPTED);
+      userToSave.setTeamID("");
 
       val savedUser = transactionTemplate.execute(status -> userRepository.save(userToSave));
 
@@ -131,6 +132,7 @@ class UserRepositoryImplIntegrationTest {
     void should_returnUnencryptedUsername_when_savingUser() {
       val userToSave = new User();
       userToSave.setUsername("username");
+      userToSave.setTeamID("");
 
       val savedUser = transactionTemplate.execute(status -> userRepository.save(userToSave));
 
@@ -141,6 +143,7 @@ class UserRepositoryImplIntegrationTest {
     void should_throwException_when_userWithUsernameAlreadyExists() {
       val userToSave = new User();
       userToSave.setUsername(USERNAME_UNENCRYPTED);
+      userToSave.setTeamID("");
 
       transactionTemplate.execute(status -> userRepository.save(userToSave));
 
@@ -162,6 +165,7 @@ class UserRepositoryImplIntegrationTest {
     void should_encryptUsername_when_savingUser() {
       val userToSave = new User();
       userToSave.setUsername(USERNAME_UNENCRYPTED);
+      userToSave.setTeamID("");
 
       val savedUser =
           transactionTemplate.execute(status -> userRepository.saveAll(List.of(userToSave)));
@@ -180,6 +184,7 @@ class UserRepositoryImplIntegrationTest {
     void should_returnUnencryptedUsername_when_savingUser() {
       val userToSave = new User();
       userToSave.setUsername("username");
+      userToSave.setTeamID("");
 
       val savedUser =
           transactionTemplate.execute(status -> userRepository.saveAll(List.of(userToSave)));
@@ -214,6 +219,7 @@ class UserRepositoryImplIntegrationTest {
     void should_returnUser_when_searchingWithUnencryptedUsername() {
       val userToSave = new User();
       userToSave.setUsername(USERNAME_UNENCRYPTED);
+      userToSave.setTeamID("");
 
       val savedUser = transactionTemplate.execute(status -> userRepository.save(userToSave));
 
@@ -230,6 +236,7 @@ class UserRepositoryImplIntegrationTest {
     void should_returnTrue_when_searchingWithUnencryptedUsernameForExistingUser() {
       val userToSave = new User();
       userToSave.setUsername(USERNAME_UNENCRYPTED);
+      userToSave.setTeamID("");
 
       transactionTemplate.execute(status -> userRepository.save(userToSave));
 
@@ -325,6 +332,7 @@ class UserRepositoryImplIntegrationTest {
     val user = new User();
     user.setUsername(encryptedUsername);
     user.setWahltagID(wahltagID);
+    user.setTeamID("");
 
     return user;
   }
@@ -335,6 +343,7 @@ class UserRepositoryImplIntegrationTest {
 
     user.setUsername(username);
     user.setWahltagID(wahltagID);
+    user.setTeamID("");
     user.setAuthorities(Set.of(authority));
 
     return user;

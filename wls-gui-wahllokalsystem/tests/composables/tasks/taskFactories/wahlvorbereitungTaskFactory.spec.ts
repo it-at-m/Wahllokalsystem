@@ -28,44 +28,59 @@ describe("wahlvorbereitungTaskFactory.ts", () => {
     vi.clearAllMocks();
   });
   describe("createTasks", () => {
-    it("should_createTaskWithInitUrnenwahlvorbereitung_when_WahlbezirkArtIsUWB", () => {
-      const taskFactoryContext = prepareTaskFactoryContext()
-        .wahlbezirkArt(WahlbezirksArtEnum.UWB)
-        .build();
+    describe("userHasRoleSchriftfuehrung", () => {
+      it("should_createTaskWithInitUrnenwahlvorbereitung_when_WahlbezirkArtIsUWB", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(true)
+          .wahlbezirkArt(WahlbezirksArtEnum.UWB)
+          .build();
 
-      mockDefinitions.initUrnenwahlvorbereitung.mockReturnValue(
-        Promise.resolve()
-      );
+        mockDefinitions.initUrnenwahlvorbereitung.mockReturnValue(
+          Promise.resolve()
+        );
 
-      const result = createTasks(taskFactoryContext);
+        const result = createTasks(taskFactoryContext);
 
-      expect(result.length).toStrictEqual(1);
+        expect(result.length).toStrictEqual(1);
 
-      result[0]?.callback();
+        result[0]?.callback();
 
-      expect(mockDefinitions.initUrnenwahlvorbereitung).toHaveBeenCalledWith(
-        false
-      );
+        expect(mockDefinitions.initUrnenwahlvorbereitung).toHaveBeenCalledWith(
+          false
+        );
+      });
+
+      it("should_createTaskWithInitBriefwahlvorbereitung_when_WahlbezirkArtIsBWB", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(true)
+          .wahlbezirkArt(WahlbezirksArtEnum.BWB)
+          .build();
+
+        mockDefinitions.initBriefwahlvorbereitung.mockReturnValue(
+          Promise.resolve()
+        );
+
+        const result = createTasks(taskFactoryContext);
+
+        expect(result.length).toStrictEqual(1);
+
+        result[0]?.callback();
+
+        expect(mockDefinitions.initBriefwahlvorbereitung).toHaveBeenCalledWith(
+          false
+        );
+      });
     });
+  });
 
-    it("should_createTaskWithInitBriefwahlvorbereitung_when_WahlbezirkArtIsBWB", () => {
+  describe("userHasNotRoleSchriftfuehrung", () => {
+    it("should_returnNoTasks_when_called", () => {
       const taskFactoryContext = prepareTaskFactoryContext()
-        .wahlbezirkArt(WahlbezirksArtEnum.BWB)
+        .isSchriftfuehrung(false)
         .build();
 
-      mockDefinitions.initBriefwahlvorbereitung.mockReturnValue(
-        Promise.resolve()
-      );
-
       const result = createTasks(taskFactoryContext);
-
-      expect(result.length).toStrictEqual(1);
-
-      result[0]?.callback();
-
-      expect(mockDefinitions.initBriefwahlvorbereitung).toHaveBeenCalledWith(
-        false
-      );
+      expect(result.length).toStrictEqual(0);
     });
   });
 });

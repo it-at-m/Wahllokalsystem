@@ -1,7 +1,10 @@
 import type { TaskFactory } from "@/composables/tasks/TaskFactory.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
+import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
+
+const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
 
 export function useWahlvorstandTaskFactory(): TaskFactory {
   function createTasks(): Task[] {
@@ -18,7 +21,5 @@ export function useWahlvorstandTaskFactory(): TaskFactory {
     };
   }
 
-  return {
-    createTasks,
-  };
+  return whenUserIsSchriftfuehrung(createTasks);
 }

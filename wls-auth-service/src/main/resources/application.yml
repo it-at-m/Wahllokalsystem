@@ -117,5 +117,6 @@ service:
         admin: MONITORING_HELPDESK
         erfassungsteam: ERFASSUNGSTEAM
       prefixChars: "23456789abcdefghjkmnpqrstuvwxyz"
+      sizeOfTeam: 5
   info:
     oid: AUTH-SERVICE

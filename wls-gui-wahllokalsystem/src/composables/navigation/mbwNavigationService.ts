@@ -6,6 +6,7 @@ import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
@@ -13,6 +14,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
   const { getStimmzettelTermForWahlID } = useTextFormatter();
 
   const { electionWorkflowsStates } = storeToRefs(useWorkflowStore());
+  const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 
   const mbwWorkflow = computed(() =>
     electionWorkflowsStates.value.find(
@@ -25,6 +27,40 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
   const navigation: ComputedRef<NavigationDefinition[]> = computed(() => {
     if (!mbwWorkflow.value) return [];
 
+    const result: NavigationDefinition[] = [];
+
+    if (hasRoleSchriftfuehrung.value) {
+      result.push(..._createNavigationForSchriftfuehrung());
+    }
+
+    return result;
+  });
+
+  function getNextRouteOrNull() {
+    const navigationWithStepNotDone = navigation.value.find(
+      (navigationValue) =>
+        !mbwWorkflow.value?.stepsDone[navigationValue.targetRoute.name]
+    );
+    return navigationWithStepNotDone
+      ? navigationWithStepNotDone.targetRoute
+      : null;
+  }
+
+  function _createMbwRoute(
+    routeName: MbwStepsEnum,
+    wahlId: string,
+    wahlbezirkId: string
+  ): RouteLocationAsRelativeGenericWithStringName {
+    return {
+      name: routeName,
+      params: {
+        wahlId,
+        wahlbezirkId,
+      },
+    };
+  }
+
+  function _createNavigationForSchriftfuehrung() {
     return [
       {
         title: `Zählen der ${getStimmzettelTermForWahlID(wahlID)}`,
@@ -104,30 +140,6 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           : false,
       },
     ];
-  });
-
-  function getNextRouteOrNull() {
-    const navigationWithStepNotDone = navigation.value.find(
-      (navigationValue) =>
-        !mbwWorkflow.value?.stepsDone[navigationValue.targetRoute.name]
-    );
-    return navigationWithStepNotDone
-      ? navigationWithStepNotDone.targetRoute
-      : null;
-  }
-
-  function _createMbwRoute(
-    routeName: MbwStepsEnum,
-    wahlId: string,
-    wahlbezirkId: string
-  ): RouteLocationAsRelativeGenericWithStringName {
-    return {
-      name: routeName,
-      params: {
-        wahlId,
-        wahlbezirkId,
-      },
-    };
   }
 
   return {

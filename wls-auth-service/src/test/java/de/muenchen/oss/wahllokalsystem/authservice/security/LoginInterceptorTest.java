@@ -186,6 +186,7 @@ class LoginInterceptorTest {
           WahlbezirksartModel.UWB,
           "",
           Set.of(authorities),
+          "",
           "");
     }
   }

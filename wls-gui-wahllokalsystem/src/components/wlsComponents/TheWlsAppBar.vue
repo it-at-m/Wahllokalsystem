@@ -19,7 +19,7 @@
             class="navbar-text mx-2"
             style="white-space: nowrap"
           >
-            Wahlbezirk {{ wahlbezirknummer }}
+            Wahlbezirk {{ wahlbezirknummer }} - Team {{ currentUserTeamName }}
           </span>
         </v-col>
         <v-col
@@ -110,6 +110,7 @@ const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
 const { toGermanDate } = useDateTimeFormatter();
 const {
   user,
+  currentUserTeamName,
   currentUserWahltag,
   currentUserWahlbezirkNummer,
   currentUserWahlbezirkID,
@@ -137,7 +138,11 @@ function onLogoutClicked() {
 
 async function onSyncSuccess() {
   isOfflineSyncDialogVisible.value = false;
-  await logout(currentUserWahlbezirkID.value, createLogoutRoute());
+  await logout(
+    currentUserWahlbezirkID.value,
+    currentUserTeamName.value,
+    createLogoutRoute()
+  );
 }
 
 function onSyncError() {

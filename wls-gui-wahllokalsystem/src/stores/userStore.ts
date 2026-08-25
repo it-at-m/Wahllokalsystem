@@ -27,6 +27,7 @@ export const useUserStore = defineStore("user", () => {
     username: "",
     email: "",
     userEnabled: false,
+    teamName: "",
     wahltagID: "",
     wahltag: "",
     wahlbezirkID: "",
@@ -80,6 +81,8 @@ export const useUserStore = defineStore("user", () => {
       currentUserWahlbezirkID.value
     );
   }
+
+  const currentUserTeamName = computed(() => user.value.teamName);
 
   const currentUserWahlbezirkID = computed((): string => {
     return user.value.wahlbezirkID;
@@ -156,6 +159,7 @@ export const useUserStore = defineStore("user", () => {
     loadUser,
     setUser,
     getWahlbezirkIdFromWahlMetaDataByWahlId,
+    currentUserTeamName,
     currentUserWahlbezirkID,
     currentUserWahltagID,
     currentUserWahltag,

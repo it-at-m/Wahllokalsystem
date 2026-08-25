@@ -58,10 +58,11 @@ export function useMonitoringService() {
     }
   }
 
-  async function postLastSeen(wahlbezirkID: string) {
+  async function postLastSeen(wahlbezirkID: string, teamID: string) {
     try {
       await wahllokalZustandControllerApi.postLastSeen(
         wahlbezirkID,
+        teamID,
         axiosConfigWrapper().requestAsOnlineOnly()
       );
     } catch {

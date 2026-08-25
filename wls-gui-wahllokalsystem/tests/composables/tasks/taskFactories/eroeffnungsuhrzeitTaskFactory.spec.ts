@@ -23,7 +23,7 @@ vi.mock("@/stores/wahlbezirkStore.ts", () => ({
   }),
 }));
 
-const { createTaskFactoryContext } = useTasksTestDataFactory();
+const { prepareTaskFactoryContext } = useTasksTestDataFactory();
 
 describe("eroeffnungsuhrzeitTaskFactory", () => {
   let unitUnderTest: ReturnType<typeof useEroeffnungsuhrzeitTaskFactory>;
@@ -41,12 +41,25 @@ describe("eroeffnungsuhrzeitTaskFactory", () => {
   });
 
   describe("createTasks", () => {
-    it("should_returnOneTaskThatTriggersInit_when_called", () => {
-      const tasks = unitUnderTest.createTasks(createTaskFactoryContext());
-      tasks[0]?.callback();
+    describe("userHasRoleSchriftfuehrung", () => {
+      it("should_returnOneTaskThatTriggersInit_when_userHasRoleSchriftfuehrung", () => {
+        const tasks = unitUnderTest.createTasks(
+          prepareTaskFactoryContext().isSchriftfuehrung(true).build()
+        );
+        tasks[0]?.callback();
 
-      expect(tasks.length).toStrictEqual(1);
-      expect(mockDefinitions.initEroeffnungsuhrzeit).toHaveBeenCalledTimes(1);
+        expect(tasks.length).toStrictEqual(1);
+        expect(mockDefinitions.initEroeffnungsuhrzeit).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe("userHasNotRoleSchriftfuehrung", () => {
+      it("should_returnEmptyList_when_userHasNotRoleSchriftfuehrung", () => {
+        const tasks = unitUnderTest.createTasks(
+          prepareTaskFactoryContext().isSchriftfuehrung(false).build()
+        );
+        expect(tasks.length).toStrictEqual(0);
+      });
     });
   });
 });

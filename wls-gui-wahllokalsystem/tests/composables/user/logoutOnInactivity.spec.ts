@@ -41,6 +41,7 @@ const { generateRandomString } = useCommonTestDataFactory();
 const mockedNow = new Date();
 const INACTIVE_TIMEOUT_MS = 1000;
 const WAHLBEZIRKID = generateRandomString(10);
+const TEAMNAME = generateRandomString(10);
 const expectedPostLogoutRoute = createLogoutRoute(true);
 
 describe("logoutOnInactivity.ts", () => {
@@ -55,7 +56,9 @@ describe("logoutOnInactivity.ts", () => {
     vi.useFakeTimers({
       now: mockedNow,
     });
-    useUserStore().setUser(prepareUser().wahlbezirkID(WAHLBEZIRKID).build());
+    useUserStore().setUser(
+      prepareUser().wahlbezirkID(WAHLBEZIRKID).teamName(TEAMNAME).build()
+    );
   });
 
   afterEach(() => {
@@ -80,6 +83,7 @@ describe("logoutOnInactivity.ts", () => {
 
       expect(mockDefinitions.logout).toHaveBeenCalledWith(
         WAHLBEZIRKID,
+        TEAMNAME,
         expectedPostLogoutRoute
       );
     });
@@ -128,6 +132,7 @@ describe("logoutOnInactivity.ts", () => {
         await flushPromises();
         expect(mockDefinitions.logout).toHaveBeenCalledWith(
           WAHLBEZIRKID,
+          TEAMNAME,
           expectedPostLogoutRoute
         );
       }

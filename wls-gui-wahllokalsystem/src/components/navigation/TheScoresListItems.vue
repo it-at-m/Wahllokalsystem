@@ -2,7 +2,7 @@
   <div>
     <base-divider-list-item title="Ergebnisermittlung" />
     <base-workflow-list-item
-      v-if="isBWB"
+      v-if="hasRoleSchriftfuehrung && isBWB"
       title="Wahlscheine"
       :disabled="isWahlscheineDisabled && !areAllElectionsFinished"
       :subtitle="areAllElectionsFinished ? '' : subtitleWahlscheine"
@@ -12,7 +12,7 @@
       "
     />
     <base-workflow-list-item
-      v-if="isUWB"
+      v-if="hasRoleSchriftfuehrung && isUWB"
       title="Stimmabgabevermerke"
       :disabled="isStimmabgabevermerkeDisabled && !areAllElectionsFinished"
       :subtitle="areAllElectionsFinished ? '' : subtitleStimmabgabevermerke"
@@ -62,6 +62,7 @@ const {
   isAnzahlWahlscheineErfasst,
   areAllElectionsFinished,
 } = storeToRefs(useWorkflowStore());
+const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 
 const isStimmabgabevermerkeDisabled = computed(
   () => !isWahlvorstandErfasst.value || !isWahlhandlungErfasst.value

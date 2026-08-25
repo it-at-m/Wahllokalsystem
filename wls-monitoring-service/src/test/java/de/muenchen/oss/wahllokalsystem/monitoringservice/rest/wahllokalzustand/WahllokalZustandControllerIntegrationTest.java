@@ -59,26 +59,90 @@ class WahllokalZustandControllerIntegrationTest {
     @Test
     void should_notThrowAnyException_when_requestParamValid() {
       val wahlbezirkID = "wahlbezirkID";
+      val teamID = "A";
       val request =
-          MockMvcRequestBuilders.post("/businessActions/lastSeen/" + wahlbezirkID)
+          MockMvcRequestBuilders.post(
+                  "/businessActions/lastSeen?wahlbezirkID=" + wahlbezirkID + "&teamID=" + teamID)
               .with(csrf())
               .with(
                   jwt()
                       .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LASTSEEN))
-                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID).claim("teamID", teamID)));
       Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request));
     }
 
     @Test
-    void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
-      val wahlbezirkID = "  ";
+    void should_throwWlsException_when_requestParamsAreNotSet() throws Exception {
       val request =
-          MockMvcRequestBuilders.post("/businessActions/lastSeen/" + wahlbezirkID)
+          MockMvcRequestBuilders.post("/businessActions/lastSeen")
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LAST_LOGOUT))
+                      .jwt(
+                          jwt ->
+                              jwt.claim("wahlbezirkID", "wahlbezirkID").claim("teamID", "teamID")));
+      val response =
+          mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT,
+              "WLS-MONITORING",
+              "");
+
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
+    }
+
+    @Test
+    void should_throwWlsException_when_requestParamTeamIDIsInvalid() throws Exception {
+      val wahlbezirkID = "1234";
+      val teamID = "  ";
+      val request =
+          MockMvcRequestBuilders.post(
+                  "/businessActions/lastSeen?wahlbezirkID=" + wahlbezirkID + "&teamID=" + teamID)
               .with(csrf())
               .with(
                   jwt()
                       .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LASTSEEN))
-                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID).claim("teamID", teamID)));
+      val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
+              serviceID,
+              ExceptionConstants.POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG.message());
+
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
+    }
+
+    @Test
+    void should_throwWlsException_when_requestParamWahlbezirkIDIsInvalid() throws Exception {
+      val wahlbezirkID = "  ";
+      val teamID = "1234";
+      val request =
+          MockMvcRequestBuilders.post(
+                  "/businessActions/lastSeen?wahlbezirkID=" + wahlbezirkID + "&teamID=" + teamID)
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LASTSEEN))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID).claim("teamID", teamID)));
       val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
       val responseBodyAsWlsExceptionDTO =
           objectMapper.readValue(
@@ -101,13 +165,37 @@ class WahllokalZustandControllerIntegrationTest {
     void should_throwFachlicheWlsException_when_wahlbezirkIdDoesNotMatchUserWahlbezirkID()
         throws Exception {
       String wahlbezirkID = "wahlbezirkID";
+      String teamID = "teamID";
       val request =
-          MockMvcRequestBuilders.post("/businessActions/lastSeen/" + wahlbezirkID)
+          MockMvcRequestBuilders.post(
+                  "/businessActions/lastSeen?wahlbezirkID=" + wahlbezirkID + "&teamID=" + teamID)
               .with(csrf())
               .with(
                   jwt()
                       .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LASTSEEN))
-                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID + "sth")));
+                      .jwt(
+                          jwt ->
+                              jwt.claim("wahlbezirkID", wahlbezirkID + "sth")
+                                  .claim("teamID", teamID)));
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
+
+    @Test
+    void should_throwFachlicheWlsException_when_teamIdDoesNotMatchUserTeamID() throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      String teamID = "teamID";
+      val request =
+          MockMvcRequestBuilders.post(
+                  "/businessActions/lastSeen?wahlbezirkID=" + wahlbezirkID + "&teamID=" + teamID)
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LASTSEEN))
+                      .jwt(
+                          jwt ->
+                              jwt.claim("wahlbezirkID", wahlbezirkID)
+                                  .claim("teamID", teamID + "sth")));
 
       mockMvc.perform(request).andExpect(status().isForbidden());
     }
@@ -117,27 +205,34 @@ class WahllokalZustandControllerIntegrationTest {
   class PostLetzteAbmeldung {
 
     @Test
-    void should_notThrowAnyException_when_requestParamValid() {
+    void should_notThrowAnyException_when_requestParamsValid() {
       String wahlbezirkID = "wahlbezirkID";
+      String teamID = "teamID";
       val request =
-          MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + wahlbezirkID)
+          MockMvcRequestBuilders.post(
+                  "/businessActions/letzteAbmeldung?wahlbezirkID="
+                      + wahlbezirkID
+                      + "&teamID="
+                      + teamID)
               .with(csrf())
               .with(
                   jwt()
                       .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LAST_LOGOUT))
-                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID).claim("teamID", teamID)));
       Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request));
     }
 
     @Test
-    void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
+    void should_throwWlsException_when_requestParamsAreNotSet() throws Exception {
       val request =
-          MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/")
+          MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung")
               .with(csrf())
               .with(
                   jwt()
                       .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LAST_LOGOUT))
-                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID")));
+                      .jwt(
+                          jwt ->
+                              jwt.claim("wahlbezirkID", "wahlbezirkID").claim("teamID", "teamID")));
       val response =
           mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
       val responseBodyAsWlsExceptionDTO =
@@ -158,16 +253,112 @@ class WahllokalZustandControllerIntegrationTest {
     }
 
     @Test
-    void should_throwFachlicheWlsException_when_wahlbezirkIdDoesNotMatchUserWahlbezirkID()
-        throws Exception {
-      String wahlbezirkID = "wahlbezirkID";
+    void should_throwWlsException_when_requestParamTeamIdIsInvaid() throws Exception {
+      val wahlbezirkID = "1234";
+      val teamID = "  ";
       val request =
-          MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + wahlbezirkID)
+          MockMvcRequestBuilders.post(
+                  "/businessActions/letzteAbmeldung?wahlbezirkID="
+                      + wahlbezirkID
+                      + "&teamID="
+                      + teamID)
               .with(csrf())
               .with(
                   jwt()
                       .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LAST_LOGOUT))
-                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID + "sth")));
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID).claim("teamID", teamID)));
+      val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
+              "WLS-MONITORING",
+              "");
+
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
+    }
+
+    @Test
+    void should_throwWlsException_when_requestParamWahlbezirkIDIsInvaid() throws Exception {
+      val wahlbezirkID = "  ";
+      val teamID = "1234";
+      val request =
+          MockMvcRequestBuilders.post(
+                  "/businessActions/letzteAbmeldung?wahlbezirkID="
+                      + wahlbezirkID
+                      + "&teamID="
+                      + teamID)
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LAST_LOGOUT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID).claim("teamID", teamID)));
+      val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
+              "WLS-MONITORING",
+              "");
+
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
+    }
+
+    @Test
+    void should_throwFachlicheWlsException_when_wahlbezirkIdDoesNotMatchUserWahlbezirkID()
+        throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      String teamID = "teamID";
+      val request =
+          MockMvcRequestBuilders.post(
+                  "/businessActions/letzteAbmeldung?wahlbezirkID="
+                      + wahlbezirkID
+                      + "&teamID="
+                      + teamID)
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LAST_LOGOUT))
+                      .jwt(
+                          jwt ->
+                              jwt.claim("wahlbezirkID", wahlbezirkID + "sth")
+                                  .claim("teamID", teamID)));
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
+
+    @Test
+    void should_throwFachlicheWlsException_when_teamIdDoesNotMatchUserTeamID() throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      String teamID = "teamID";
+      val request =
+          MockMvcRequestBuilders.post(
+                  "/businessActions/letzteAbmeldung?wahlbezirkID="
+                      + wahlbezirkID
+                      + "&teamID="
+                      + teamID)
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LAST_LOGOUT))
+                      .jwt(
+                          jwt ->
+                              jwt.claim("wahlbezirkID", wahlbezirkID)
+                                  .claim("teamID", teamID + "sth")));
 
       mockMvc.perform(request).andExpect(status().isForbidden());
     }

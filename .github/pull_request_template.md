@@ -13,6 +13,7 @@
 - [ ] Unit-Tests gepflegt
 - [ ] Integrationstests gepflegt
 - [ ] Beispiel-Requests gepflegt
+- [ ] Bei Datenbankänderungen [database-init-Skript][database-init-script-doc-link] gepflegt
 - [ ] Texte auf Rechtschreibung und Grammatik geprüft
 
 <!-- Dokumentation -->
@@ -35,11 +36,12 @@
 
 Verwandt mit Issue #
 
-Closes #
-
 > [^1]: _Nicht zutreffende Referenzen vor dem Speichern entfernen_
 
 [naming-conventions-link]: https://it-at-m.github.io/Wahllokalsystem/technik/naming_conventions/
 [fachliche-beschreibung-link]: https://it-at-m.github.io/Wahllokalsystem/about/#fachliche-anforderungen
 [ui-ux-adrs-link]: https://it-at-m.github.io/Wahllokalsystem/technik/adr/ui/
 [gender-sensitive-language]: https://it-at-m.github.io/Wahllokalsystem/technik/adr/adr-gender-sensitive-language
+[database-init-script-doc-link]: https://it-at-m.github.io/Wahllokalsystem/technik/guides/user-data-cleanup
+
+Closes #

@@ -54,7 +54,7 @@ const {
   printTestdruck,
 } = useHelpIconCallbacks();
 
-const { isUWB } = storeToRefs(useUserStore());
+const { isUWB, hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 
 const WAHLHOTLINE_TITLE = "Wahl-Hotline";
 const WAEHLERVERZEICHNIS_TITLE = "Wählerverzeichnis";
@@ -99,7 +99,11 @@ const infoHelpData = computed(() => {
     } else if (item.title === WAHLRAUMFINDER_TITLE) {
       return isWahlraumfinderUrlAvailable();
     } else if (item.title === WAEHLERVERZEICHNIS_TITLE) {
-      return isWaehlerverzeichnisUrlAvailable() && isUWB.value;
+      return (
+        isWaehlerverzeichnisUrlAvailable() &&
+        isUWB.value &&
+        hasRoleSchriftfuehrung.value
+      );
     }
     //Rest wird immer angezeigt
     return true;

@@ -33,6 +33,8 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksErgebnisse: vi.fn(),
   createMbwWahlvorschlaegeAndErgebnisseTasks: vi.fn(),
   createTasksStapelE: vi.fn(),
+  createDseWorkflowStatusTasks: vi.fn(),
+  createDseStimmzettelTasks: vi.fn(),
 }));
 
 vi.mock(
@@ -249,6 +251,24 @@ vi.mock(
   })
 );
 
+vi.mock(
+  import("@/composables/tasks/taskFactories/dseWorkflowStatusTaskFactory.ts"),
+  () => ({
+    useDseWorkflowStatusTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createDseWorkflowStatusTasks,
+    })),
+  })
+);
+
+vi.mock(
+  import("@/composables/tasks/taskFactories/dseStimmzettelTaskFactory.ts"),
+  () => ({
+    useDSEStimmzettelTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createDseStimmzettelTasks,
+    })),
+  })
+);
+
 describe("taskListService.ts", () => {
   let unitUnderTest: ReturnType<typeof useTaskListService>;
   const { generateRandomString, generateRandomNumber } =
@@ -310,6 +330,8 @@ describe("taskListService.ts", () => {
         "Wahlvorbereitung",
         "MBW Tasks",
         "Stapel E Tasks",
+        "DSE-Workflow-Status - " + mockedWahl.name,
+        "Stimmzettel für " + mockedWahl.name,
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -350,6 +372,8 @@ describe("taskListService.ts", () => {
         "Zugelassene Wahlbriefe",
         "MBW Tasks",
         "Stapel E Tasks",
+        "DSE-Workflow-Status - " + mockedWahl.name,
+        "Stimmzettel für " + mockedWahl.name,
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -527,6 +551,18 @@ describe("taskListService.ts", () => {
       mockDefinitions.createTasksStapelE.mockReturnValue([
         {
           name: "Stapel E Tasks",
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createDseWorkflowStatusTasks.mockReturnValue([
+        {
+          name: "DSE-Workflow-Status - " + mockedWahl.name,
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createDseStimmzettelTasks.mockReturnValue([
+        {
+          name: "Stimmzettel für " + mockedWahl.name,
           callback: () => Promise.resolve(),
         },
       ]);

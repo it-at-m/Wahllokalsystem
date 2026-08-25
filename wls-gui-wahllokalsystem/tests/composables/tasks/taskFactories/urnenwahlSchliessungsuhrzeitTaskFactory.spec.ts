@@ -44,36 +44,54 @@ describe("urnenwahlSchliessungsuhrzeitTaskFactory", () => {
   });
 
   describe("createTasks", () => {
-    it("should_createOneTask_when_wahlbezirkArtIsUWB", () => {
-      const result = unitUnderTest.createTasks(
-        prepareTaskFactoryContext()
-          .wahlbezirkArt(WahlbezirksArtEnum.UWB)
-          .build()
-      );
-
-      expect(result.length).toStrictEqual(1);
-    });
-
-    it("should_createZeroTasks_when_wahlbezirkArtIsBWBW", () => {
-      const result = unitUnderTest.createTasks(
-        prepareTaskFactoryContext()
-          .wahlbezirkArt(WahlbezirksArtEnum.BWB)
-          .build()
-      );
-
-      expect(result.length).toStrictEqual(0);
-    });
-
-    it("should_callsInitFunction_when_createdTasksCallbackIsUsed", () => {
-      unitUnderTest
-        .createTasks(
+    describe("userHasRoleSchriftfuehrung", () => {
+      it("should_createOneTask_when_wahlbezirkArtIsUWB", () => {
+        const result = unitUnderTest.createTasks(
           prepareTaskFactoryContext()
+            .isSchriftfuehrung(true)
             .wahlbezirkArt(WahlbezirksArtEnum.UWB)
             .build()
-        )[0]
-        ?.callback();
+        );
 
-      expect(mockDefinitions.initSchliessungsuhrzeit).toHaveBeenCalledTimes(1);
+        expect(result.length).toStrictEqual(1);
+      });
+
+      it("should_createZeroTasks_when_wahlbezirkArtIsBWBW", () => {
+        const result = unitUnderTest.createTasks(
+          prepareTaskFactoryContext()
+            .isSchriftfuehrung(true)
+            .wahlbezirkArt(WahlbezirksArtEnum.BWB)
+            .build()
+        );
+
+        expect(result.length).toStrictEqual(0);
+      });
+
+      it("should_callsInitFunction_when_createdTasksCallbackIsUsed", () => {
+        unitUnderTest
+          .createTasks(
+            prepareTaskFactoryContext()
+              .isSchriftfuehrung(true)
+              .wahlbezirkArt(WahlbezirksArtEnum.UWB)
+              .build()
+          )[0]
+          ?.callback();
+
+        expect(mockDefinitions.initSchliessungsuhrzeit).toHaveBeenCalledTimes(
+          1
+        );
+      });
+    });
+  });
+
+  describe("userHasNotRoleSchriftfuehrung", () => {
+    it("should_createZeroTasks_when_called", () => {
+      const context = prepareTaskFactoryContext()
+        .isSchriftfuehrung(false)
+        .build();
+
+      const result = unitUnderTest.createTasks(context);
+      expect(result.length).toStrictEqual(0);
     });
   });
 });

@@ -3,6 +3,7 @@ import type { TaskFactory } from "@/composables/tasks/TaskFactory.ts";
 import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
+import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import {
   getStapelForWahlart,
@@ -10,6 +11,8 @@ import {
 } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
+const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
 
 export function useErgebnisseTaskFactory(): TaskFactory {
   const { loadErgebnisseByStapelArt } = useErgebnismeldungStore();
@@ -47,7 +50,5 @@ export function useErgebnisseTaskFactory(): TaskFactory {
     };
   }
 
-  return {
-    createTasks,
-  };
+  return whenUserIsSchriftfuehrung(createTasks);
 }

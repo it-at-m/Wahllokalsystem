@@ -13,7 +13,8 @@ const TIMEOUT_TITLE = "Inaktivität";
 export function useLogoutOnInactivity() {
   const { logDebug } = useLogging("logoutOnInactivity");
 
-  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
+  const { currentUserWahlbezirkID, currentUserTeamName } =
+    storeToRefs(useUserStore());
 
   window.addEventListener("load", _registerUserActivity);
   window.addEventListener("mousemove", _registerUserActivity);
@@ -41,7 +42,11 @@ export function useLogoutOnInactivity() {
     logDebug("Check ifUserIsActiveAndAct");
     if (_isUserInactive()) {
       logDebug("user was inactive");
-      await logout(currentUserWahlbezirkID.value, createLogoutRoute(true));
+      await logout(
+        currentUserWahlbezirkID.value,
+        currentUserTeamName.value,
+        createLogoutRoute(true)
+      );
     } else {
       logDebug("user was active");
       _resetInactivityCheck();

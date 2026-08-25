@@ -23,6 +23,7 @@ import {
   ROUTES_HOME,
 } from "@/constants";
 import { commonRouteDefinitions } from "@/plugins/router/commonRoutes.ts";
+import { dseRouteDefinitions } from "@/plugins/router/dseRoutes.ts";
 import { mbwRouteDefinitions } from "@/plugins/router/mbwRoutes.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -58,6 +59,7 @@ const {
   requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
   requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb,
   requiresIsNachlieferungsbezirk,
+  requireRoleSchriftfuehrung,
 } = useNavigationGuards();
 
 const routes = [
@@ -73,12 +75,14 @@ const routes = [
     name: ROUTE_WAHLVORSTAND,
     component: WahlvorstandAnwesenheitView,
     meta: {},
+    beforeEnter: [requireRoleSchriftfuehrung],
   },
   {
     path: "/stimmabgabe",
     name: ROUTE_STIMMABGABE,
     component: UWBStimmabgabeView,
     beforeEnter: [
+      requireRoleSchriftfuehrung,
       permitNavigationOnlyForWahlbezirksArtUwb,
       permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahlumgebungIsErfasst,
@@ -90,6 +94,7 @@ const routes = [
     name: ROUTE_WAHLUMGEBUNG,
     component: WahlumgebungView,
     beforeEnter: [
+      requireRoleSchriftfuehrung,
       permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb,
     ],
@@ -99,6 +104,7 @@ const routes = [
     name: ROUTE_BEGINN_STIMMABGABE,
     component: WahleroeffnungView,
     beforeEnter: [
+      requireRoleSchriftfuehrung,
       permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
       requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
@@ -109,6 +115,7 @@ const routes = [
     name: ROUTE_ERFASSUNG_WAHLBRIEFE,
     component: BWBWahlbriefErfassungView,
     beforeEnter: [
+      requireRoleSchriftfuehrung,
       permitNavigationOnlyForWahlbezirksArtBwb,
       permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahleroeffnungIsErfasst,
@@ -120,6 +127,7 @@ const routes = [
     name: ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
     component: UWBWaehlerverzeichnisView,
     beforeEnter: [
+      requireRoleSchriftfuehrung,
       permitNavigationOnlyForWahlbezirksArtUwb,
       permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahlumgebungIsErfasst,
@@ -130,6 +138,7 @@ const routes = [
     name: ROUTE_WAHLBRIEFE_ZULASSEN,
     component: BwbWahlbriefZulassungView,
     beforeEnter: [
+      requireRoleSchriftfuehrung,
       permitNavigationOnlyForWahlbezirksArtBwb,
       permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahleroeffnungIsErfasst,
@@ -142,6 +151,7 @@ const routes = [
     name: ROUTE_NACHLIEFERUNGEN_BEARBEITEN,
     component: BWBNachlieferungenBearbeitenView,
     beforeEnter: [
+      requireRoleSchriftfuehrung,
       permitNavigationOnlyForWahlbezirksArtBwb,
       permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahleroeffnungIsErfasst,
@@ -162,6 +172,7 @@ const routes = [
     name: ROUTE_STIMMABGABEVERMERKE,
     component: UWBStimmabgabevermerkeView,
     beforeEnter: [
+      requireRoleSchriftfuehrung,
       permitNavigationOnlyForWahlbezirksArtUwb,
       permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahlumgebungIsErfasst,
@@ -175,6 +186,7 @@ const routes = [
     name: ROUTE_WAHLSCHEINE,
     component: BWBWahlscheineView,
     beforeEnter: [
+      requireRoleSchriftfuehrung,
       permitNavigationOnlyForWahlbezirksArtBwb,
       permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahleroeffnungIsErfasst,
@@ -187,18 +199,22 @@ const routes = [
     path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelA",
     name: ROUTE_STAPEL_A,
     component: OWBStapelAView,
+    beforeEnter: [requireRoleSchriftfuehrung],
   },
   {
     path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelB",
     name: ROUTE_STAPEL_B,
     component: OBWStapelBView,
+    beforeEnter: [requireRoleSchriftfuehrung],
   },
   {
     path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelC",
     name: ROUTE_STAPEL_C,
     component: StapelCView,
+    beforeEnter: [requireRoleSchriftfuehrung],
   },
   ...mbwRouteDefinitions,
+  ...dseRouteDefinitions,
   {
     path: "/finished",
     name: ROUTE_FINISHED,

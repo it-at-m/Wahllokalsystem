@@ -124,7 +124,8 @@ class LdapConfigurationTest {
                     userWahlbezirkArt,
                     null,
                     new HashSet<>(Set.of(authoritySaved)),
-                    null);
+                    null,
+                    "");
             userRepository.save(userToSave);
           });
 

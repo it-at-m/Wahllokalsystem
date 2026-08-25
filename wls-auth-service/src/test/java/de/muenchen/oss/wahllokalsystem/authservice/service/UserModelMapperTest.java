@@ -52,7 +52,8 @@ class UserModelMapperTest {
               Wahlbezirksart.BWB,
               "pin",
               authorities,
-              "wbdid_wahlnummer");
+              "wbdid_wahlnummer",
+              "teamID");
       entityToMap.getAuthorities().forEach(authority -> authority.setUsers(Set.of(entityToMap)));
 
       val result = unitUnderTest.toModel(entityToMap);
@@ -77,7 +78,8 @@ class UserModelMapperTest {
               WahlbezirksartModel.BWB,
               entityToMap.getPin(),
               expectedAuthorities,
-              entityToMap.getWbid_wahlnummer());
+              entityToMap.getWbid_wahlnummer(),
+              entityToMap.getTeamID());
 
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
@@ -128,8 +130,10 @@ class UserModelMapperTest {
       val pin = "pin";
       val username = "username";
       val userInfo = createWahlbezirksartModelWithAllDataSet(WahlbezirksartModel.UWB);
+      val teamID = "teamID";
 
-      val result = unitUnderTest.toUser(wahltagID, userInfo, authoritiesToLink, pin, username);
+      val result =
+          unitUnderTest.toUser(wahltagID, userInfo, authoritiesToLink, pin, username, teamID);
 
       val expectedResult =
           new User(
@@ -145,7 +149,8 @@ class UserModelMapperTest {
               Wahlbezirksart.UWB,
               pin,
               authoritiesToLink,
-              userInfo.wbid_wahlnummer());
+              userInfo.wbid_wahlnummer(),
+              teamID);
       Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
     }
 

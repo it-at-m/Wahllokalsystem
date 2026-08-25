@@ -51,7 +51,7 @@ jobs:
       service: 'wls-<domain>-service'
 ```
 
-```yml {1,6-7,14} [wls-&lt;domain&gt;-service_pull-request.yml]
+```yml {1,6-7,16} [wls-&lt;domain&gt;-service_pull-request.yml]
 name: verify pull request <domain>-service
 
 on:
@@ -111,6 +111,82 @@ on:
       tag:
         required: false
         description: 'optional: gittag'
+```
+
+:::
+
+## Releases
+
+Zusätzlich muss der neue Service im Workflow `populate-release-pr.yml`, sowie im passenden PR-Template ergänzt werden:
+::: code-group
+
+```yml {23,31} [.github/workflows/populate-release-pr.yml]
+name: Populate Release PR Links
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  # ...
+
+jobs:
+  populate-links:
+    # ...
+    steps:
+      - name: Update PR with Release Links
+        uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const services = [
+              'wls-admin-service',
+              // further services,
+              'wls-<domain>-service'
+            ];
+
+            // (... more code ... )
+            
+              const serviceHeadings = {
+                'wls-admin-service': 'Admin-Service',
+                // further services,
+                'wls-<domain>-service': '<Domain>-Service'
+              };
+
+            // (... more code ... )
+```
+
+```md {15-18,28-29} [.github/PULL_REQUEST_TEMPLATE/release-pr.md]
+# Beschreibung:
+
+Releases für den Sprint XX erstellt.
+---
+
+# Backend Services Releases
+
+## Admin-Service
+
+- [Release-Notes][wls-admin-service-release]
+- [Image-Tag][wls-admin-service-image]
+
+<!-- further services -->
+
+## <Domain>-Service
+
+- [Release-Notes][wls-<domain>-service-release]
+- [Image-Tag][wls-<domain>-service-image]
+
+---
+
+<!-- Platzhalter für Release-Links - werden automatisch gefüllt -->
+
+<!-- Backend Services -->
+[wls-admin-service-release]: #
+[wls-admin-service-image]: #
+<!-- further services -->
+[wls-<domain>-service-release]: #
+[wls-<domain>-service-image]: #
 ```
 
 :::

@@ -1,82 +1,103 @@
-<div>
-  <div class="v-slide-group v-slide-group--mobile v-tabs v-tabs--horizontal v-tabs--align-tabs-start v-tabs--density-default bg-grey-lighten-3 rounded-t border-b" tabindex="-1" role="tablist">
-    <!---->
-    <div class="v-slide-group__container">
-      <div class="v-slide-group__content"><button type="button" class="v-btn v-tab-item--selected v-tab--selected v-theme--light text-primary v-btn--density-default v-btn--size-default v-btn--variant-text v-tab" tabindex="0" role="tab" aria-selected="true" data-test="wahlbriefe-zulassen-tab" value="one"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Wahlbriefe zulassen oder zurückweisen<div class="v-tab__slider text-primary"></div></span>
-          <!---->
-          <!---->
-        </button><button type="button" class="v-btn v-theme--light v-btn--density-default v-btn--size-default v-btn--variant-text v-tab" tabindex="-1" role="tab" aria-selected="false" value="two"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M5,3C3.89,3 3,3.89 3,5V19C3,20.11 3.89,21 5,21H19C20.11,21 21,20.11 21,19V5C21,3.89 20.11,3 19,3H5M5,5H19V19H5V5M7,7V9H17V7H7M7,11V13H17V11H7M7,15V17H14V15H7Z"></path></svg></i></span><span class="v-btn__content" data-no-activator=""> Beschlussergebnis <div class="v-tab__slider text-primary"></div></span>
-          <!---->
-          <!---->
-        </button></div>
-    </div>
-    <!---->
-  </div>
+<div class="v-card v-theme--light v-card--density-default v-card--variant-elevated">
   <!---->
-  <div class="v-window v-theme--light v-tabs-window">
-    <div class="v-window__container">
-      <transition-stub name="" appear="false" persisted="false" css="true">
-        <div class="v-window-item v-window-item--active v-tabs-window-item">
-          <div class="v-card v-theme--light v-card--density-default v-card--variant-elevated">
-            <!---->
-            <div class="v-card__loader">
-              <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
-                <!---->
-                <div class="v-progress-linear__background bg-primary"></div>
-                <div class="v-progress-linear__buffer bg-primary" style="width: 0%;"></div>
-                <transition-stub name="fade-transition" appear="false" persisted="false" css="true">
-                  <div class="v-progress-linear__indeterminate">
-                    <div class="v-progress-linear__indeterminate long bg-primary"></div>
-                    <div class="v-progress-linear__indeterminate short bg-primary"></div>
-                  </div>
-                </transition-stub>
-                <!---->
-              </div>
-            </div>
-            <!---->
-            <!---->
-            <div class="v-card-text">
-              <form class="v-form" novalidate="">
-                <div data-v-f1835dbc="">
-                  <div data-v-f1835dbc="" class="v-table v-theme--light v-table--density-default">
-                    <!---->
-                    <div class="v-table__wrapper">
-                      <table>
-                        <thead data-v-f1835dbc="">
-                          <tr data-v-f1835dbc="">
-                            <th data-v-f1835dbc="" class="font-weight-bold text-center">Wahlschein</th>
-                            <th data-v-f1835dbc=""></th>
-                          </tr>
-                        </thead>
-                        <tbody data-v-f1835dbc=""></tbody>
-                      </table>
-                    </div>
-                    <!---->
-                  </div>
-                  <!---->
-                  <!---->
-                </div>
-              </form>
-            </div>
-            <div class="v-card-actions"><button data-v-4343c08f="" type="button" class="v-btn v-btn--slim v-theme--light v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" data-test="addBedenklicherWahlbriefRow"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"></path></svg></i></span><span class="v-btn__content" data-no-activator=""> Neuen Beschluss erfassen </span>
-                <!---->
-                <!---->
-              </button><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" data-test="buttonSave"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Speichern und Weiter</span>
-                <!---->
-                <!---->
-              </button></div>
-            <!---->
-            <!----><span class="v-card__underlay"></span>
-          </div>
-        </div>
-      </transition-stub>
-      <transition-stub name="" appear="false" persisted="false" css="true">
-        <div class="v-window-item v-tabs-window-item" style="display: none;">
-          <!---->
+  <div class="v-card__loader">
+    <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
+      <!---->
+      <div class="v-progress-linear__background bg-primary"></div>
+      <div class="v-progress-linear__buffer bg-primary" style="width: 0%;"></div>
+      <transition-stub name="fade-transition" appear="false" persisted="false" css="true">
+        <div class="v-progress-linear__indeterminate">
+          <div class="v-progress-linear__indeterminate long bg-primary"></div>
+          <div class="v-progress-linear__indeterminate short bg-primary"></div>
         </div>
       </transition-stub>
       <!---->
     </div>
-    <!---->
   </div>
+  <!---->
+  <!---->
+  <div>
+    <div class="v-slide-group v-slide-group--mobile v-tabs v-tabs--horizontal v-tabs--align-tabs-start v-tabs--density-default bg-grey-lighten-3 rounded-t border-b" tabindex="-1" role="tablist">
+      <!---->
+      <div class="v-slide-group__container">
+        <div class="v-slide-group__content"><button type="button" class="v-btn v-tab-item--selected v-tab--selected v-theme--light text-primary v-btn--density-default v-btn--size-default v-btn--variant-text v-tab" tabindex="0" role="tab" aria-selected="true" data-test="wahlbriefe-zulassen-tab" value="one"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Wahlbriefe zulassen oder zurückweisen<div class="v-tab__slider text-primary"></div></span>
+            <!---->
+            <!---->
+          </button><button type="button" class="v-btn v-theme--light v-btn--density-default v-btn--size-default v-btn--variant-text v-tab" tabindex="-1" role="tab" aria-selected="false" value="two"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M5,3C3.89,3 3,3.89 3,5V19C3,20.11 3.89,21 5,21H19C20.11,21 21,20.11 21,19V5C21,3.89 20.11,3 19,3H5M5,5H19V19H5V5M7,7V9H17V7H7M7,11V13H17V11H7M7,15V17H14V15H7Z"></path></svg></i></span><span class="v-btn__content" data-no-activator=""> Beschlussergebnis <div class="v-tab__slider text-primary"></div></span>
+            <!---->
+            <!---->
+          </button></div>
+      </div>
+      <!---->
+    </div>
+    <!---->
+    <div class="v-window v-theme--light v-tabs-window">
+      <div class="v-window__container">
+        <transition-stub name="" appear="false" persisted="false" css="true">
+          <div class="v-window-item v-window-item--active v-tabs-window-item">
+            <div class="v-card v-theme--light v-card--density-default v-card--variant-elevated">
+              <!---->
+              <div class="v-card__loader">
+                <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
+                  <!---->
+                  <div class="v-progress-linear__background bg-primary"></div>
+                  <div class="v-progress-linear__buffer bg-primary" style="width: 0%;"></div>
+                  <transition-stub name="fade-transition" appear="false" persisted="false" css="true">
+                    <div class="v-progress-linear__indeterminate">
+                      <div class="v-progress-linear__indeterminate long bg-primary"></div>
+                      <div class="v-progress-linear__indeterminate short bg-primary"></div>
+                    </div>
+                  </transition-stub>
+                  <!---->
+                </div>
+              </div>
+              <!---->
+              <!---->
+              <div class="v-card-text">
+                <form class="v-form" novalidate="">
+                  <div data-v-f1835dbc="">
+                    <div data-v-f1835dbc="" class="v-table v-theme--light v-table--density-default">
+                      <!---->
+                      <div class="v-table__wrapper">
+                        <table>
+                          <thead data-v-f1835dbc="">
+                            <tr data-v-f1835dbc="">
+                              <th data-v-f1835dbc="" class="font-weight-bold text-center">Wahlschein</th>
+                              <th data-v-f1835dbc=""></th>
+                            </tr>
+                          </thead>
+                          <tbody data-v-f1835dbc=""></tbody>
+                        </table>
+                      </div>
+                      <!---->
+                    </div>
+                    <!---->
+                    <!---->
+                  </div>
+                </form>
+              </div>
+              <div class="v-card-actions"><button data-v-4343c08f="" type="button" class="v-btn v-btn--slim v-theme--light v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" data-test="addBedenklicherWahlbriefRow"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"></path></svg></i></span><span class="v-btn__content" data-no-activator=""> Neuen Beschluss erfassen </span>
+                  <!---->
+                  <!---->
+                </button><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" data-test="buttonSave"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Speichern und Weiter</span>
+                  <!---->
+                  <!---->
+                </button></div>
+              <!---->
+              <!----><span class="v-card__underlay"></span>
+            </div>
+          </div>
+        </transition-stub>
+        <transition-stub name="" appear="false" persisted="false" css="true">
+          <div class="v-window-item v-tabs-window-item" style="display: none;">
+            <!---->
+          </div>
+        </transition-stub>
+        <!---->
+      </div>
+      <!---->
+    </div>
+  </div>
+  <!---->
+  <!----><span class="v-card__underlay"></span>
 </div>

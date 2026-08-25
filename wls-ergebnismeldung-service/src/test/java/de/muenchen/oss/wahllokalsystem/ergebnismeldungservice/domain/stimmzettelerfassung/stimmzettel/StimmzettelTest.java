@@ -1,0 +1,68 @@
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel;
+
+import lombok.val;
+import org.assertj.core.api.Assertions;
+import org.instancio.Instancio;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+class StimmzettelTest {
+
+  @Nested
+  class AddWahlvorstandBeschlussvorschlag {
+
+    @Test
+    void should_addToListAndSetThisAsStimmzettel_when_parameterIsGiven() {
+      val stimmzettel = Instancio.create(Stimmzettel.class);
+      val beschlussvormerkungToAdd = Instancio.create(WahlvorstandBeschlussgrund.class);
+
+      Assertions.assertThat(beschlussvormerkungToAdd)
+          .isNotIn(stimmzettel.getWahlvorstandBeschlussvorschlag());
+      Assertions.assertThat(beschlussvormerkungToAdd.getStimmzettel()).isNotEqualTo(stimmzettel);
+
+      stimmzettel.addWahlvorstandBeschlussvorschlag(beschlussvormerkungToAdd);
+
+      Assertions.assertThat(beschlussvormerkungToAdd)
+          .isIn(stimmzettel.getWahlvorstandBeschlussvorschlag());
+      Assertions.assertThat(beschlussvormerkungToAdd.getStimmzettel()).isEqualTo(stimmzettel);
+    }
+  }
+
+  @Nested
+  class AddSystemBeschlussvorschlag {
+
+    @Test
+    void should_addToListAndSetThisAsStimmzettel_when_parameterIsGiven() {
+      val stimmzettel = Instancio.create(Stimmzettel.class);
+      val beschlussvormerkungToAdd = Instancio.create(SystemBeschlussgrund.class);
+
+      Assertions.assertThat(beschlussvormerkungToAdd)
+          .isNotIn(stimmzettel.getSystemBeschlussvorschlag());
+      Assertions.assertThat(beschlussvormerkungToAdd.getStimmzettel()).isNotEqualTo(stimmzettel);
+
+      stimmzettel.addSystemBeschlussvorschlag(beschlussvormerkungToAdd);
+
+      Assertions.assertThat(beschlussvormerkungToAdd)
+          .isIn(stimmzettel.getSystemBeschlussvorschlag());
+      Assertions.assertThat(beschlussvormerkungToAdd.getStimmzettel()).isEqualTo(stimmzettel);
+    }
+  }
+
+  @Nested
+  class AddWahlvorschlag {
+
+    @Test
+    void should_addToListAndSetThisAsStimmzettel_when_parameterIsGiven() {
+      val stimmzettel = Instancio.create(Stimmzettel.class);
+      val wahlvorschlagToAdd = Instancio.create(Wahlvorschlag.class);
+
+      Assertions.assertThat(wahlvorschlagToAdd).isNotIn(stimmzettel.getWahlvorschlaege());
+      Assertions.assertThat(wahlvorschlagToAdd.getStimmzettel()).isNotEqualTo(stimmzettel);
+
+      stimmzettel.addWahlvorschlag(wahlvorschlagToAdd);
+
+      Assertions.assertThat(wahlvorschlagToAdd).isIn(stimmzettel.getWahlvorschlaege());
+      Assertions.assertThat(wahlvorschlagToAdd.getStimmzettel()).isEqualTo(stimmzettel);
+    }
+  }
+}

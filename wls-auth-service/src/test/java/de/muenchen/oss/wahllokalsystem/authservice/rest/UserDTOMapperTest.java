@@ -35,6 +35,7 @@ class UserDTOMapperTest {
       val pin = "123";
       val authorities = Set.of("auth1", "auth2");
       val wbid_wahlnummer = "wbid_wahlnummer";
+      val teamID = "teamID";
       val modelToMap =
           new UserModel(
               username,
@@ -47,7 +48,8 @@ class UserDTOMapperTest {
               wahlbezirksArt,
               pin,
               authorities,
-              wbid_wahlnummer);
+              wbid_wahlnummer,
+              teamID);
 
       val result = unitUnderTest.toDTO(modelToMap);
 
@@ -63,7 +65,8 @@ class UserDTOMapperTest {
               WahlbezirksartDTO.BWB,
               pin,
               authorities,
-              wbid_wahlnummer);
+              wbid_wahlnummer,
+              teamID);
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
   }

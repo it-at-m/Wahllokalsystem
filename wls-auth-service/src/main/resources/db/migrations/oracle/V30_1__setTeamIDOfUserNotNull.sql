@@ -1,0 +1,2 @@
+ALTER TABLE Wlsuser
+    MODIFY teamID NOT NULL;

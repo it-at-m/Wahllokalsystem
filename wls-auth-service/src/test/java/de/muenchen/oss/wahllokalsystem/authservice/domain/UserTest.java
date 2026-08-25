@@ -46,7 +46,8 @@ class UserTest {
               Wahlbezirksart.UWB,
               "PIN",
               Collections.emptySet(),
-              "wbid_wahlnummer");
+              "wbid_wahlnummer",
+              "teamID");
       user.setId(UUID.randomUUID());
       return user;
     }

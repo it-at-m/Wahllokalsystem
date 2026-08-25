@@ -5,10 +5,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,30 +21,34 @@ public class WahllokalZustandController {
 
   @Operation(
       description =
-          "Letzte Anwesenheit des Wahlbezirks {wahlbezirkID}. Generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter.",
+          "Letzte Anwesenheit für das Team {teamID} des Wahlbezirks {wahlbezirkID}. Generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter.",
       responses = {
         @ApiResponse(
             responseCode = "200",
             description = "Letzte Anwesenheit erfolgreich gespeichert.")
       })
-  @PostMapping("/lastSeen/{wahlbezirkID}")
-  public void postLastSeen(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
-    log.info("postLastSeen {}", wahlbezirkID);
-    wahllokalZustandService.postLastSeen(wahlbezirkID);
+  @PostMapping("/lastSeen")
+  public void postLastSeen(
+      @RequestParam("wahlbezirkID") final String wahlbezirkID,
+      @RequestParam("teamID") final String teamID) {
+    log.info("postLastSeen Wahlbezirk: {} Team: {}", wahlbezirkID, teamID);
+    wahllokalZustandService.postLastSeen(wahlbezirkID, teamID);
   }
 
   @Operation(
       description =
-          "Empfängt die Request als Nachricht über die letzte Abmeldung des Wahlbezirks {wahlbezirkID}, generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter.",
+          "Empfängt die Request als Nachricht über die letzte Abmeldung für das Team {teamID} des Wahlbezirks {wahlbezirkID}, generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter.",
       responses = {
         @ApiResponse(
             responseCode = "200",
             description = "Letzte Abmeldung erfolgreich weiter geleitet.")
       })
-  @PostMapping("/letzteAbmeldung/{wahlbezirkID}")
-  public void postLetzteAbmeldung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
-    log.info("postLetzteAbmeldung {}", wahlbezirkID);
-    wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID);
+  @PostMapping("/letzteAbmeldung")
+  public void postLetzteAbmeldung(
+      @RequestParam("wahlbezirkID") final String wahlbezirkID,
+      @RequestParam("teamID") final String teamID) {
+    log.info("postLetzteAbmeldung Wahlbezirk: {} Team: {}", wahlbezirkID, teamID);
+    wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID, teamID);
   }
 
   @Operation(

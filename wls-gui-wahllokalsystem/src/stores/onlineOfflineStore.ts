@@ -10,7 +10,8 @@ const storeID = "onlineOffline";
 export const useOnlineOfflineStore = defineStore(storeID, () => {
   const { postLastSeen } = useMonitoringService();
   const { synchronizeOfflineData } = useDataSyncStore();
-  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
+  const { currentUserWahlbezirkID, currentUserTeamName } =
+    storeToRefs(useUserStore());
 
   const isCheckingStatus = ref<boolean>(false);
   const isOnline = ref<boolean>(true); //because when u can load the application you are online
@@ -19,7 +20,10 @@ export const useOnlineOfflineStore = defineStore(storeID, () => {
   async function checkConnectionState() {
     isCheckingStatus.value = true;
     try {
-      await postLastSeen(currentUserWahlbezirkID.value);
+      await postLastSeen(
+        currentUserWahlbezirkID.value,
+        currentUserTeamName.value
+      );
       isOnline.value = true;
     } catch {
       isOnline.value = false;

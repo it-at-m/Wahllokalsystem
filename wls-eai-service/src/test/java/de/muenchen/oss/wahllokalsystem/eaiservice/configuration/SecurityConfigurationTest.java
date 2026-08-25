@@ -236,7 +236,7 @@ class SecurityConfigurationTest {
                   null,
                   null,
                   Collections.emptySet(),
-                  0l,
+                  0L,
                   Collections.emptySet(),
                   WahlartDTO.BEB));
       api.perform(
@@ -260,7 +260,7 @@ class SecurityConfigurationTest {
                   null,
                   null,
                   Collections.emptySet(),
-                  0l,
+                  0L,
                   Collections.emptySet(),
                   WahlartDTO.BEB));
       api.perform(

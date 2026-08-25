@@ -9,6 +9,7 @@ import { registerRoute } from "workbox-routing";
 import { useRequestStrategyManager } from "@/composables/api/RequestStrategyManager.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
+import { REGEX_MATCH_BACKEND_API_CALLS } from "@/service-worker/wahlWorkerConstants.ts";
 import { ServiceWorkerMessageTypeEnum } from "@/types/serviceWorker/ServiceWorkerMessageTypeEnum.ts";
 
 // declare let self: any;
@@ -64,10 +65,10 @@ self.oninstall = () => {
 // registerRoute ALWAYS expects a Response as return value!!
 
 // GET-Requests
-registerRoute(new RegExp("/api/.+"), getRequestHandler, "GET");
+registerRoute(REGEX_MATCH_BACKEND_API_CALLS, getRequestHandler, "GET");
 
 // POST-Requests
-registerRoute(new RegExp("/api/.+"), postRequestHandler, "POST");
+registerRoute(REGEX_MATCH_BACKEND_API_CALLS, postRequestHandler, "POST");
 
 /*****************************************************************************************************************
  * handler functions

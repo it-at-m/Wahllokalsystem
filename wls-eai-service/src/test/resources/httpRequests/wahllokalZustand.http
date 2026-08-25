@@ -18,6 +18,14 @@ Content-Type: application/json
   ]
 }
 
+### post Wahllokal Zustand LastSeen | user wls_all_uwb
+POST {{ WLS_EAI_SERVICE_URL }}/wahllokalzustand/lastSeen?wahlbezirkID=9899cae4-df9a-4ffc-a940-f20cf2280171&teamID=A&timestamp=2025-06-20T08:54:00.000
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### post Wahllokal Zustand Letzte Abmeldung | user wls_all_uwb
+POST {{ WLS_EAI_SERVICE_URL }}/wahllokalzustand/letzteAbmeldung?wahlbezirkID=9899cae4-df9a-4ffc-a940-f20cf2280171&teamID=A&timestamp=2025-06-20T08:54:00.000
+Authorization: Bearer {{$auth.token("auth-service")}}
+
 ### post Wahllokal Zustand | user wls_all_bwb
 POST {{ WLS_EAI_SERVICE_URL }}/wahllokalzustand
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -37,3 +45,11 @@ Content-Type: application/json
     }
   ]
 }
+
+### post Wahllokal Zustand lastSeen | user wls_all_bwb
+POST {{ WLS_EAI_SERVICE_URL }}/wahllokalzustand/lastSeen?wahlbezirkID=9081145c-dc16-4a9b-8255-5c49ddb98c14&teamID=A&timestamp=2025-06-20T08:54:00.000
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### post Wahllokal Zustand Letzte Abmeldung | user wls_all_bwb
+POST {{ WLS_EAI_SERVICE_URL }}/wahllokalzustand/letzteAbmeldung?wahlbezirkID=9081145c-dc16-4a9b-8255-5c49ddb98c14&teamID=A&timestamp=2025-06-20T08:54:00.000
+Authorization: Bearer {{$auth.token("auth-service")}}

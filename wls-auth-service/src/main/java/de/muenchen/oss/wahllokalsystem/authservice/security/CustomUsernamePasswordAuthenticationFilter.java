@@ -30,6 +30,7 @@ import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 @Slf4j
@@ -207,14 +208,24 @@ public class CustomUsernamePasswordAuthenticationFilter
       return false;
     }
 
-    if (savedRequest.getRedirectUrl().contains(wahllokalguiClientId)) {
+    if (hasRedirectUrlRequiredClientId(savedRequest.getRedirectUrl(), wahllokalguiClientId)) {
       return hasRequiredAuthority(userDetails, userService.getSchriftfuehrungAuthorityName())
           | hasRequiredAuthority(userDetails, userService.getErfassungsteamAuthorityName());
-    } else if (savedRequest.getRedirectUrl().contains(adminguiClientId)) {
+    } else if (hasRedirectUrlRequiredClientId(savedRequest.getRedirectUrl(), adminguiClientId)) {
       return hasRequiredAuthority(userDetails, userService.getAdminAuthorityName());
     }
 
     return false;
+  }
+
+  private boolean hasRedirectUrlRequiredClientId(
+      final String redirectUrl, final String requiredClientID) {
+    try {
+      val uriComponents = UriComponentsBuilder.fromUriString(redirectUrl).build();
+      return requiredClientID.equals(uriComponents.getQueryParams().getFirst("client_id"));
+    } catch (final RuntimeException exception) {
+      return false;
+    }
   }
 
   private boolean isPenaltyOver(LocalDateTime lastLoginAttempt) {

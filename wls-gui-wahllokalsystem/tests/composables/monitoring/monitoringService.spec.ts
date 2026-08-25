@@ -215,27 +215,29 @@ describe("monitoringService.ts", () => {
   describe("postLastSeen", () => {
     it("should_throwNoError_when_requestSucceeded", async () => {
       const wahlbezirkID = "wahlbezirkID";
+      const teamID = "teamID";
 
       mockDefinitions.postLastSeen.mockResolvedValue(null);
 
-      await postLastSeen(wahlbezirkID);
+      await postLastSeen(wahlbezirkID, teamID);
 
       expect(mockDefinitions.postLastSeen.mock.calls).toStrictEqual([
-        [wahlbezirkID, axiosConfigWrapper().requestAsOnlineOnly()],
+        [wahlbezirkID, teamID, axiosConfigWrapper().requestAsOnlineOnly()],
       ]);
     });
 
     it("should_throwNewError_when_requestFailed", async () => {
       const wahlbezirkID = "wahlbezirkID";
+      const teamID = "teamID";
 
       const mockedApiError = new Error("mocked api call failed");
       mockDefinitions.postLastSeen.mockRejectedValue(mockedApiError);
 
-      await expect(postLastSeen(wahlbezirkID)).rejects.toThrow(
+      await expect(postLastSeen(wahlbezirkID, teamID)).rejects.toThrow(
         "postLastSeen failed"
       );
       expect(mockDefinitions.postLastSeen.mock.calls).toStrictEqual([
-        [wahlbezirkID, axiosConfigWrapper().requestAsOnlineOnly()],
+        [wahlbezirkID, teamID, axiosConfigWrapper().requestAsOnlineOnly()],
       ]);
     });
   });

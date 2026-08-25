@@ -6,14 +6,12 @@
         ref="wahlscheinValidationForm"
         v-model="isFormValid"
       >
-        <base-number-input
+        <v-text-field
           :model-value="wahlscheinnummer"
-          :min-valid="1"
-          :max-valid="9999999"
           :rules="[requiredWahlscheinnummer]"
           label="Wahlscheinnummer"
           max-width="300"
-          data-test="number-input-wahlscheinnummer"
+          data-test="input-wahlscheinnummer"
           @update:model-value="onWahlscheinnummerChanged"
           @blur="resetWahlscheinnummerValidation"
         />
@@ -137,7 +135,6 @@ import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
-import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -158,7 +155,7 @@ const { ungueltigeWahlscheineActions } = useWahlbezirkStore();
 const { ungueltigeWahlscheineState, ungueltigeWahlscheineGetter } =
   storeToRefs(useWahlbezirkStore());
 
-const wahlscheinnummer = ref<null | number>(null);
+const wahlscheinnummer = ref<null | string>(null);
 //null - no hit on search
 //undefined - not search yet, or search was reset
 //value - found something while searching
@@ -206,7 +203,7 @@ function onRefreshClicked() {
 }
 
 const searchTriggered = ref(false);
-const requiredWahlscheinnummer = (v: number | null | undefined) => {
+const requiredWahlscheinnummer = (v: string | null | undefined) => {
   if (!searchTriggered.value) return true;
   return v === null || v === undefined
     ? "Bitte Wahlscheinnummer angeben"
@@ -246,7 +243,7 @@ async function onSaveAbstimmungsergebnisClicked() {
   isAbstimmungsergebnisFormValid.value = false;
 }
 
-function onWahlscheinnummerChanged(newValue: number | null | undefined) {
+function onWahlscheinnummerChanged(newValue: string | null | undefined) {
   if (newValue !== undefined) {
     wahlscheinnummer.value = newValue;
   } else {

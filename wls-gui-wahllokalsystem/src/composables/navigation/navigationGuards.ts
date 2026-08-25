@@ -3,8 +3,12 @@ import type {
   RouteLocationNormalizedGeneric,
 } from "vue-router";
 
+import { useDseWorkflowStatusService } from "@/composables/dse/dseWorkflowStatusService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 type NavigationGuardFactory<T> = (options: T) => NavigationGuard;
 
@@ -75,6 +79,12 @@ export function useNavigationGuards() {
   const requiresIsNachlieferungsbezirk: NavigationGuard = () =>
     useUserStore().isNachlieferungsbezirk;
 
+  const requireRoleErfassungteam: NavigationGuard = () =>
+    useUserStore().hasRoleErfassungsteam;
+
+  const requireRoleSchriftfuehrung: NavigationGuard = () =>
+    useUserStore().hasRoleSchriftfuehrung;
+
   const permitNavigationOnlyForWahlbezirksArtUwb: NavigationGuard = () =>
     useUserStore().isUWB;
 
@@ -83,6 +93,58 @@ export function useNavigationGuards() {
 
   const permitNavigationOnlyIfUserIsLoggedOut: NavigationGuard = () =>
     !useUserStore().isUserLoggedIn;
+
+  const requiresStimmzettelErfassungTeamStatusAbgeschlossen: NavigationGuard =
+    async (to) => {
+      const { wahlId, wahlbezirkId } = to.params;
+
+      if (wahlId === undefined || Array.isArray(wahlId)) {
+        return false;
+      }
+      if (wahlbezirkId === undefined || Array.isArray(wahlbezirkId)) {
+        return false;
+      }
+
+      const { loadErfassungTeamStatus } =
+        useStimmzettelerfassungTeamStatusService();
+
+      try {
+        const status = await loadErfassungTeamStatus(
+          wahlId,
+          wahlbezirkId,
+          useUserStore().currentUserTeamName,
+          false
+        );
+        return (
+          status?.status === StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+        );
+      } catch {
+        return false;
+      }
+    };
+
+  const requiresWorkflowStatusStimmzettelerfassungAbgeschlossen: NavigationGuard =
+    async (to) => {
+      const { wahlId, wahlbezirkId } = to.params;
+
+      if (wahlId === undefined || Array.isArray(wahlId)) {
+        return false;
+      }
+      if (wahlbezirkId === undefined || Array.isArray(wahlbezirkId)) {
+        return false;
+      }
+
+      const { loadDseWorkflowStatus } = useDseWorkflowStatusService();
+
+      try {
+        const status = await loadDseWorkflowStatus(wahlId, wahlbezirkId, false);
+        return !(
+          status?.status === StimmzettelerfassungStatusEnum.SteBearbeitung
+        );
+      } catch {
+        return false;
+      }
+    };
 
   function _isStepDone(
     to: RouteLocationNormalizedGeneric,
@@ -120,5 +182,9 @@ export function useNavigationGuards() {
     requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
     requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
     requiresIsNachlieferungsbezirk,
+    requireRoleErfassungteam,
+    requireRoleSchriftfuehrung,
+    requiresStimmzettelErfassungTeamStatusAbgeschlossen,
+    requiresWorkflowStatusStimmzettelerfassungAbgeschlossen,
   };
 }

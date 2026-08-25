@@ -11,7 +11,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabe
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.EingenommenerWahlschein;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeStimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModelMapper;
@@ -273,15 +273,15 @@ public class StimmabgabevermerkeControllerIntegrationTest {
   private Stimmabgabevermerke createWahldaten(
       final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer) {
     val emptyWahldaten = new Stimmabgabevermerke();
-    val stimmzettel1 = new Stimmzettel();
+    val stimmzettel1 = new StimmabgabevermerkeStimmzettel();
     stimmzettel1.setAnzahl(20);
     stimmzettel1.setStimmzettelart(Stimmzettelart.KLEIN);
 
-    val stimmzettel2 = new Stimmzettel();
+    val stimmzettel2 = new StimmabgabevermerkeStimmzettel();
     stimmzettel2.setAnzahl(21);
     stimmzettel2.setStimmzettelart(Stimmzettelart.GROSS);
 
-    val stimmzettel3 = new Stimmzettel();
+    val stimmzettel3 = new StimmabgabevermerkeStimmzettel();
     stimmzettel3.setAnzahl(22);
     stimmzettel3.setStimmzettelart(Stimmzettelart.BEIDE);
 

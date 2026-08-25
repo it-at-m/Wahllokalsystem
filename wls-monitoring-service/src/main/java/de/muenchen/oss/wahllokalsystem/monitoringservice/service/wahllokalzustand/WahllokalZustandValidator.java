@@ -29,4 +29,10 @@ public class WahllokalZustandValidator {
       throw wlsException;
     }
   }
+
+  public void validTeamIDOrThrow(String teamID, final FachlicheWlsException wlsException) {
+    if (StringUtils.isBlank(teamID)) {
+      throw wlsException;
+    }
+  }
 }

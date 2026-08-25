@@ -158,10 +158,7 @@ flowchart LR
     F --> G{"Kandidat/Wahlvorschlag<br/>existiert und Änderung erlaubt?"}
 
     G -->|ja| H["Anpassung Datenmodell +<br/>Update der Eingabehistorie"]
-    H --> I["Success"]
-
     G -->|nein| J["throw <br/> CommandExecutionError"]
-    J --> K["Failure"]
 ```
 
 ### Befehle

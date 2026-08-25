@@ -5,7 +5,7 @@ import { delay, http, HttpResponse } from "msw";
 import { ref } from "vue";
 import { VBtn } from "vuetify/components";
 
-import TheStimmzettelerfassungBeendenDialog from "@/components/dse/TheStimmzettelerfassungBeendenDialog.vue";
+import TheStimmzettelerfassungBeendenDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelerfassungBeendenDialog.vue";
 
 const { generateRandomString } = useCommonTestDataFactory();
 

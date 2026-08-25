@@ -68,7 +68,7 @@ vi.mock(
   })
 );
 vi.mock(
-  import("@/composables/dse/stimmzettelerfassungTeamStatusUtils.ts"),
+  import("@/composables/dse/teamStatus/stimmzettelerfassungTeamStatusUtils.ts"),
   () => ({
     useStimmzettelerfassungTeamStatusUtils: () => ({
       initStimmzettelerfassungTeamStatus:

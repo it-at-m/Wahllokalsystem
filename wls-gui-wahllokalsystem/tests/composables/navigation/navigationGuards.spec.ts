@@ -16,8 +16,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/teamStatus/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/workflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({

@@ -3,12 +3,12 @@ import type {
   RouteLocationNormalizedGeneric,
 } from "vue-router";
 
-import { useDseWorkflowStatusService } from "@/composables/dse/dseWorkflowStatusService.ts";
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/teamStatus/stimmzettelerfassungTeamStatusService.ts";
+import { useDseWorkflowStatusService } from "@/composables/dse/workflowStatus/dseWorkflowStatusService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/teamStatus/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/workflowStatus/StimmzettelerfassungStatusEnum.ts";
 
 type NavigationGuardFactory<T> = (options: T) => NavigationGuard;
 

@@ -98,3 +98,80 @@ Content-Type: application/json
     "wahlvorschlaege": []
   }
 ]
+
+### save single Stimmzettel of team - wls_mbw_uwb - team A
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL}}/stimmzettelerfassung/wahl/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e/wahlbezirk/d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a/team/A/stimmzettel/1
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+"invalideVotes": 2,
+"gueltigkeit": "VALID",
+"beschlussvorschlag": [
+  {
+    "text": "vormerkung 1"
+  },
+  {
+    "text": "vormerkung 2"
+  }
+],
+"beschlussfassung": {
+  "pro": 3,
+  "contra": 4,
+  "text": "beschlussfassung text"
+},
+"wahlvorschlaege": [
+  {
+    "wahlvorschlagID": "wahlvorschlagID1",
+    "selected": false,
+    "kandidaten": [
+      {
+        "id": {
+          "kandidatID": "kandidat1.1",
+          "nennungsNummer": 1
+        },
+        "discarded": false,
+        "votesByVoter": 3,
+        "invalidVotes": 4,
+        "votesByWahlvorschlag": 5
+      },
+      {
+        "id": {
+          "kandidatID": "kandidat1.1",
+          "nennungsNummer": 2
+        },
+        "discarded": true,
+        "votesByVoter": 0,
+        "invalidVotes": 0,
+        "votesByWahlvorschlag": 0
+      }
+    ]
+  },
+  {
+    "wahlvorschlagID": "wahlvorschlagID2",
+    "selected": true,
+    "kandidaten": [
+      {
+        "id": {
+          "kandidatID": "kandidat2.1",
+          "nennungsNummer": 1
+        },
+        "discarded": false,
+        "votesByVoter": 3,
+        "invalidVotes": 4,
+        "votesByWahlvorschlag": 5
+      },
+      {
+        "id": {
+          "kandidatID": "kandidat2.1",
+          "nennungsNummer": 2
+        },
+        "discarded": true,
+        "votesByVoter": 0,
+        "invalidVotes": 0,
+        "votesByWahlvorschlag": 0
+      }
+    ]
+  }
+]
+}

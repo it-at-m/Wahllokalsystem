@@ -550,6 +550,54 @@ export type MeldungDTOValidierungsstatusEnum = typeof MeldungDTOValidierungsstat
 /**
  * 
  * @export
+ * @interface SingleStimmzettelDTO
+ */
+export interface SingleStimmzettelDTO {
+    /**
+     * 
+     * @type {number}
+     * @memberof SingleStimmzettelDTO
+     */
+    'invalideVotes': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SingleStimmzettelDTO
+     */
+    'gueltigkeit': SingleStimmzettelDTOGueltigkeitEnum;
+    /**
+     * 
+     * @type {Array<BeschlussgrundDTO>}
+     * @memberof SingleStimmzettelDTO
+     */
+    'beschlussvorschlag'?: Array<BeschlussgrundDTO>;
+    /**
+     * 
+     * @type {BeschlussfassungDTO}
+     * @memberof SingleStimmzettelDTO
+     */
+    'beschlussfassung'?: BeschlussfassungDTO;
+    /**
+     * 
+     * @type {Array<WahlvorschlagDTO>}
+     * @memberof SingleStimmzettelDTO
+     */
+    'wahlvorschlaege'?: Array<WahlvorschlagDTO>;
+}
+
+export const SingleStimmzettelDTOGueltigkeitEnum = {
+    Valid: 'VALID',
+    Invalid: 'INVALID',
+    BeschlussAusstehend: 'BESCHLUSS_AUSSTEHEND',
+    BwbPseudoStimmzettelLeererUmschlag: 'BWB_PSEUDO_STIMMZETTEL_LEERER_UMSCHLAG',
+    Leer: 'LEER'
+} as const;
+
+export type SingleStimmzettelDTOGueltigkeitEnum = typeof SingleStimmzettelDTOGueltigkeitEnum[keyof typeof SingleStimmzettelDTOGueltigkeitEnum];
+
+/**
+ * 
+ * @export
  * @interface StatusDTO
  */
 export interface StatusDTO {
@@ -3137,11 +3185,11 @@ export const StimmzettelControllerApiAxiosParamCreator = function (configuration
          * @param {string} wahlbezirkID 
          * @param {string} teamID 
          * @param {number} stimmzettelkennung 
-         * @param {StimmzettelDTO} stimmzettelDTO 
+         * @param {SingleStimmzettelDTO} singleStimmzettelDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postStimmzettel1: async (wahlID: string, wahlbezirkID: string, teamID: string, stimmzettelkennung: number, stimmzettelDTO: StimmzettelDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        postStimmzettel1: async (wahlID: string, wahlbezirkID: string, teamID: string, stimmzettelkennung: number, singleStimmzettelDTO: SingleStimmzettelDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'wahlID' is not null or undefined
             assertParamExists('postStimmzettel1', 'wahlID', wahlID)
             // verify required parameter 'wahlbezirkID' is not null or undefined
@@ -3150,8 +3198,8 @@ export const StimmzettelControllerApiAxiosParamCreator = function (configuration
             assertParamExists('postStimmzettel1', 'teamID', teamID)
             // verify required parameter 'stimmzettelkennung' is not null or undefined
             assertParamExists('postStimmzettel1', 'stimmzettelkennung', stimmzettelkennung)
-            // verify required parameter 'stimmzettelDTO' is not null or undefined
-            assertParamExists('postStimmzettel1', 'stimmzettelDTO', stimmzettelDTO)
+            // verify required parameter 'singleStimmzettelDTO' is not null or undefined
+            assertParamExists('postStimmzettel1', 'singleStimmzettelDTO', singleStimmzettelDTO)
             const localVarPath = `/stimmzettelerfassung/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/stimmzettel/{stimmzettelkennung}`
                 .replace(`{${"wahlID"}}`, encodeURIComponent(String(wahlID)))
                 .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)))
@@ -3179,7 +3227,7 @@ export const StimmzettelControllerApiAxiosParamCreator = function (configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(stimmzettelDTO, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(singleStimmzettelDTO, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3244,12 +3292,12 @@ export const StimmzettelControllerApiFp = function(configuration?: Configuration
          * @param {string} wahlbezirkID 
          * @param {string} teamID 
          * @param {number} stimmzettelkennung 
-         * @param {StimmzettelDTO} stimmzettelDTO 
+         * @param {SingleStimmzettelDTO} singleStimmzettelDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postStimmzettel1(wahlID: string, wahlbezirkID: string, teamID: string, stimmzettelkennung: number, stimmzettelDTO: StimmzettelDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postStimmzettel1(wahlID, wahlbezirkID, teamID, stimmzettelkennung, stimmzettelDTO, options);
+        async postStimmzettel1(wahlID: string, wahlbezirkID: string, teamID: string, stimmzettelkennung: number, singleStimmzettelDTO: SingleStimmzettelDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postStimmzettel1(wahlID, wahlbezirkID, teamID, stimmzettelkennung, singleStimmzettelDTO, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['StimmzettelControllerApi.postStimmzettel1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -3303,12 +3351,12 @@ export const StimmzettelControllerApiFactory = function (configuration?: Configu
          * @param {string} wahlbezirkID 
          * @param {string} teamID 
          * @param {number} stimmzettelkennung 
-         * @param {StimmzettelDTO} stimmzettelDTO 
+         * @param {SingleStimmzettelDTO} singleStimmzettelDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postStimmzettel1(wahlID: string, wahlbezirkID: string, teamID: string, stimmzettelkennung: number, stimmzettelDTO: StimmzettelDTO, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.postStimmzettel1(wahlID, wahlbezirkID, teamID, stimmzettelkennung, stimmzettelDTO, options).then((request) => request(axios, basePath));
+        postStimmzettel1(wahlID: string, wahlbezirkID: string, teamID: string, stimmzettelkennung: number, singleStimmzettelDTO: SingleStimmzettelDTO, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.postStimmzettel1(wahlID, wahlbezirkID, teamID, stimmzettelkennung, singleStimmzettelDTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3365,13 +3413,13 @@ export class StimmzettelControllerApi extends BaseAPI {
      * @param {string} wahlbezirkID 
      * @param {string} teamID 
      * @param {number} stimmzettelkennung 
-     * @param {StimmzettelDTO} stimmzettelDTO 
+     * @param {SingleStimmzettelDTO} singleStimmzettelDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof StimmzettelControllerApi
      */
-    public postStimmzettel1(wahlID: string, wahlbezirkID: string, teamID: string, stimmzettelkennung: number, stimmzettelDTO: StimmzettelDTO, options?: RawAxiosRequestConfig) {
-        return StimmzettelControllerApiFp(this.configuration).postStimmzettel1(wahlID, wahlbezirkID, teamID, stimmzettelkennung, stimmzettelDTO, options).then((request) => request(this.axios, this.basePath));
+    public postStimmzettel1(wahlID: string, wahlbezirkID: string, teamID: string, stimmzettelkennung: number, singleStimmzettelDTO: SingleStimmzettelDTO, options?: RawAxiosRequestConfig) {
+        return StimmzettelControllerApiFp(this.configuration).postStimmzettel1(wahlID, wahlbezirkID, teamID, stimmzettelkennung, singleStimmzettelDTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

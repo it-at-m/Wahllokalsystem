@@ -94,7 +94,7 @@ public class StimmzettelController {
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("teamID") final String teamID,
       @PathVariable("stimmzettelkennung") final Integer stimmzettelkennung,
-      @RequestBody StimmzettelDTO stimmzettel) {
+      @RequestBody SingleStimmzettelDTO stimmzettel) {
     val modelValuesToSave = stimmzettelDTOMapper.toModel(stimmzettel, stimmzettelkennung);
     stimmzettelService.saveStimmzettel(
         new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID), List.of(modelValuesToSave));

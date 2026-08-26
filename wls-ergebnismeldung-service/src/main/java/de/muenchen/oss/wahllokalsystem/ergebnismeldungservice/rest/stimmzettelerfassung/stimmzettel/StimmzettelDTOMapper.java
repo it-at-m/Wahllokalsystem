@@ -8,7 +8,7 @@ public interface StimmzettelDTOMapper {
 
   StimmzettelOfTeamModel toModel(StimmzettelOfTeamDTO stimmzettelDTO);
 
-  StimmzettelOfTeamModel toModel(StimmzettelDTO stimmzettelDTO, Integer stimmzettelkennung);
+  StimmzettelOfTeamModel toModel(SingleStimmzettelDTO stimmzettelDTO, Integer stimmzettelkennung);
 
   StimmzettelOfTeamDTO toDTO(StimmzettelOfTeamModel stimmzettelOfTeamModel);
 }

@@ -147,19 +147,17 @@ gibt Feedback, wenn der Befehl nicht ausführbar oder falsch war.
 
 ```mermaid
 flowchart LR
-    A["Start: User-Eingabestring"] --> B{"commandHandler.canHandle(command)"}
+    A["Start: User-Eingabestring"] --> B{"`_commandHandler.canHandle(command)_ <br/><br/> technische Prüfung des Befehls: <br/> Eingabe ist korrekt und kann verarbeitet werden?`"}
 
-    B -->|"(can not handle) parse fail"| C{"Weitere handler vorhanden ?"}
+    B -->|nein| C{"Weitere handler vorhanden ?"}
     
     C -->|"ja (try next handler)"| B
-    C -->|"nein (command not found)"| D["throw<br/>UnsupportedCommandError"]
+    C -->|"nein (command not found)"| D["throw <br/> UnsupportedCommandError"]
     
-    B -->|"(can handle) parse ok"| E["Handler erzeugt<br/>entsprechenden Rückgabewert"]
-    E --> F["commandHandler.handleOrThrow(...) <br/> fachliche Prüfung des Befehls"]
-    F --> G{"Kandidat/Wahlvorschlag<br/>existiert und Änderung erlaubt?"}
+    B -->|ja| F{"`_commandHandler.handleOrThrow(...)_ <br/><br/> fachliche Prüfung des Befehls: <br/> Kandidat/Wahlvorschlag existiert und Änderung erlaubt?`"}
 
-    G -->|ja| H["Anpassung Datenmodell +<br/>Update der Eingabehistorie"]
-    G -->|nein| J["throw <br/> CommandExecutionError"]
+    F -->|ja| H["Anpassung Datenmodell + <br/> Update der Eingabehistorie"]
+    F -->|nein| J["throw <br/> CommandExecutionError"]
 ```
 
 ### Befehle

@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
+import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 import type { CommandHandler } from "@/types/dse/command/CommandHandler.ts";
 
 import { useHandlerTools } from "@/composables/dse/command/handlerTools.ts";
@@ -17,6 +17,7 @@ export function useAddVotesToKandidatenRangeHandler(): CommandHandler {
   const {
     isValidCount,
     isValidKandidatOrdnungszahl,
+    isValidRange,
     normalizeBounds,
     parseOptionalPlusCountToNumber,
   } = useHandlerTools();
@@ -85,7 +86,11 @@ export function useAddVotesToKandidatenRangeHandler(): CommandHandler {
       isValidKandidatOrdnungszahl(
         commandArguments.kandidatOrdnungszahlUpperBound
       ) &&
-      isValidCount(commandArguments.countVotes)
+      isValidCount(commandArguments.countVotes) &&
+      isValidRange(
+        commandArguments.kandidatOrdnungszahlLowerBound,
+        commandArguments.kandidatOrdnungszahlUpperBound
+      )
     );
   }
 

@@ -1,23 +1,28 @@
-import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/composables/dse/ManagedStimmzettel.ts";
+import { MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 
 export function useHandlerTools() {
   function isValidKandidatOrdnungszahl(value: number): boolean {
     return (
-      Number.isSafeInteger(value) &&
-      value % WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL != 0
+      Number.isSafeInteger(value) && value % MULTIPLIER_FOR_ORDNUNGSZAHL != 0
     );
   }
 
   function isValidWahlvorschlagOrdnungszahl(value: number): boolean {
     return (
       Number.isSafeInteger(value) &&
-      (value < 100 ||
-        value % WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL == 0)
+      (value < 100 || value % MULTIPLIER_FOR_ORDNUNGSZAHL == 0)
     );
   }
 
   function isValidCount(value: number): boolean {
     return Number.isSafeInteger(value) && value > 0;
+  }
+
+  function isValidRange(lowerBound: number, upperBound: number) {
+    return (
+      Math.floor(lowerBound / MULTIPLIER_FOR_ORDNUNGSZAHL) ===
+      Math.floor(upperBound / MULTIPLIER_FOR_ORDNUNGSZAHL)
+    );
   }
 
   function normalizeBounds(
@@ -38,6 +43,7 @@ export function useHandlerTools() {
     isValidKandidatOrdnungszahl,
     isValidWahlvorschlagOrdnungszahl,
     isValidCount,
+    isValidRange,
     normalizeBounds,
     parseOptionalPlusCountToNumber,
   };

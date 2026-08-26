@@ -10,8 +10,7 @@
           <div class="text-subtitle-2">
             <base-div-item-with-scores
               :ordnungszahl="
-                wahlvorschlag.ordnungszahl *
-                WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL
+                wahlvorschlag.ordnungszahl * MULTIPLIER_FOR_ORDNUNGSZAHL
               "
               :name="wahlvorschlag.kurzname"
               :is-gestrichen="false"
@@ -66,7 +65,7 @@ import { computed, nextTick, onActivated, ref, watch } from "vue";
 import BaseDivItemWithScores from "@/components/dse/BaseDivItemWithScores.vue";
 import BaseKandidatListItemContent from "@/components/dse/BaseKandidatListItemContent.vue";
 import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
-import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/composables/dse/ManagedStimmzettel.ts";
+import { MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 
 const props = defineProps<{
   wahlvorschlag: Wahlvorschlag;

@@ -1,5 +1,6 @@
-import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
+import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 
+import { validKandidatOrdnungszahlen } from "@tests/utils/dse/CommandTestTools";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useAddVotesToSingleKandidatHandler } from "@/composables/dse/command/addVotesToSingleKandidatHandler.ts";
@@ -12,10 +13,6 @@ const mockDefinitions = vi.hoisted(() => ({
 
 describe("addVotesToSingleKandidatHandler.ts", () => {
   const { canHandle, handleOrThrow } = useAddVotesToSingleKandidatHandler();
-
-  const validKandidatOrdnungszahlen = [
-    101, 110, 199, 201, 210, 299, 999, 1001, 1010, 1099, 9999,
-  ];
 
   describe("canHandle", () => {
     it.each(validKandidatOrdnungszahlen)(

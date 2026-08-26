@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
+import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -16,7 +16,6 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
   const validRanges: [number, number][] = [
     [101, 103],
     [201, 299],
-    [999, 1001],
     [1099, 1010],
   ];
 
@@ -46,6 +45,7 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
       "101-103+",
       "101-103+abc",
       "101-103+0",
+      "125-203",
     ])("should_returnFalse_when_command'%s'DoesNotMatchPattern", (command) => {
       expect(canHandle(command)).toBe(false);
     });

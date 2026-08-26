@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
+import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 

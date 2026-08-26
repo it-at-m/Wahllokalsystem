@@ -3,12 +3,12 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { ref } from "vue";
 
-import { useManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
+import { useManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
 
-describe("ManagedStimmzettel.ts", () => {
+describe("managedStimmzettel.ts", () => {
   const mockedWahlId = "wahl-1";
   const {
     prepareManagedStimmzettelStimmzettel,
@@ -191,30 +191,6 @@ describe("ManagedStimmzettel.ts", () => {
       );
     });
 
-    it("should_addAbsoluteNumberOfVotes_when_votesToAddIsNegative", () => {
-      const kandidat = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([kandidat])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.kandidatAddEinzelstimmenOrThrow(101, -3);
-
-      expect(kandidat.einzelstimmen).toBe(3);
-    });
-
     it("should_incrementVotes_when_addVotesMultipleTimes", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .listenposition(1)
@@ -345,30 +321,6 @@ describe("ManagedStimmzettel.ts", () => {
   });
 
   describe("kandidatAddUngueltigeStimmenOrThrow", () => {
-    it("should_addAbsoluteNumberOfInvalidVotes_when_negativeValueProvided", () => {
-      const kandidat = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .ungueltigeStimmen(null)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([kandidat])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.kandidatAddUngueltigeStimmenOrThrow(101, -3);
-
-      expect(kandidat.ungueltigeStimmen).toBe(3);
-    });
-
     it("should_throwManagedStimmzettelError_when_noKandidatForGivenOrdnungszahl", () => {
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([])
@@ -451,37 +403,6 @@ describe("ManagedStimmzettel.ts", () => {
       ).toThrow(ManagedStimmzettelError);
     });
 
-    it("should_addAbsoluteNumberOfVotes_when_votesToAddIsNegative", () => {
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([k1, k2])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.kandidatenAddStimmenInRangeOrThrow(101, 102, -4);
-
-      expect(k1.einzelstimmen).toBe(4);
-      expect(k2.einzelstimmen).toBe(4);
-    });
-
     it("should_throwManagedStimmzettelError_when_rangeContainsAnyStreichung", () => {
       const k1 = prepareManagedStimmzettelKandidat()
         .listenposition(1)
@@ -515,28 +436,6 @@ describe("ManagedStimmzettel.ts", () => {
 
       expect(() =>
         managed.kandidatenAddStimmenInRangeOrThrow(101, 103, 1)
-      ).toThrow(ManagedStimmzettelError);
-    });
-
-    it("should_throwManagedStimmzettelError_when_lowerBoundIsGreaterThanUpperBound", () => {
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([
-              prepareManagedStimmzettelKandidat()
-                .listenposition(1)
-                .ordnungszahl(101)
-                .einzelstimmen(null)
-                .durchgestrichen(false)
-                .build(),
-            ])
-            .build(),
-        ])
-        .build();
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-      expect(() =>
-        managed.kandidatenAddStimmenInRangeOrThrow(103, 101, 1)
       ).toThrow(ManagedStimmzettelError);
     });
 

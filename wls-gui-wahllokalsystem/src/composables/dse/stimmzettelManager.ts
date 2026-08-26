@@ -4,7 +4,7 @@ import { ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { COMMAND_HANDLERS } from "@/composables/dse/command/commandHandlers.ts";
-import { useManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
+import { useManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
 import { UnsupportedCommandError } from "@/types/dse/error/UnsupportedCommandError.ts";
 

@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
+import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 import type { CommandHandler } from "@/types/dse/command/CommandHandler.ts";
 
 import { useHandlerTools } from "@/composables/dse/command/handlerTools.ts";

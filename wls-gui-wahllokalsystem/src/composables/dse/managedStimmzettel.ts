@@ -12,8 +12,6 @@ import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 import { InputHistoryTypeEnum } from "@/types/dse/InputHistoryTypeEnum.ts";
 
-export const WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL = 100;
-
 /**
  * Check UI/UX Adr to see the rules:
  * https://it-at-m.github.io/Wahllokalsystem/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen.html
@@ -81,11 +79,10 @@ export function useManagedStimmzettel(
     ordnungszahl: number,
     votesToAdd: number
   ) {
-    if (!Number.isSafeInteger(votesToAdd)) {
-      throw new ManagedStimmzettelError(
-        "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
-      );
-    }
+    _isNotSafeIntegerThrow(
+      votesToAdd,
+      "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
+    );
     const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(
@@ -100,11 +97,10 @@ export function useManagedStimmzettel(
     ordnungszahl: number,
     invalidVotesToAdd: number
   ) {
-    if (!Number.isSafeInteger(invalidVotesToAdd)) {
-      throw new ManagedStimmzettelError(
-        "Die Anzahl der hinzuzufügenden ungültigen Stimmen muss eine ganze Zahl sein."
-      );
-    }
+    _isNotSafeIntegerThrow(
+      invalidVotesToAdd,
+      "Die Anzahl der hinzuzufügenden ungültigen Stimmen muss eine ganze Zahl sein."
+    );
     const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(
@@ -120,16 +116,10 @@ export function useManagedStimmzettel(
     upperOrdnungszahl: number,
     votesToAdd: number
   ) {
-    if (lowerOrdnungszahl > upperOrdnungszahl) {
-      throw new ManagedStimmzettelError(
-        `Der Bereich ${lowerOrdnungszahl}-${upperOrdnungszahl} ist ungültig.`
-      );
-    }
-    if (!Number.isSafeInteger(votesToAdd)) {
-      throw new ManagedStimmzettelError(
-        "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
-      );
-    }
+    _isNotSafeIntegerThrow(
+      votesToAdd,
+      "Die Anzahl der hinzuzufügenden Stimmen muss eine ganze Zahl sein."
+    );
     const kandidaten = _getKandidatenInRangeOrThrow(
       lowerOrdnungszahl,
       upperOrdnungszahl
@@ -161,11 +151,6 @@ export function useManagedStimmzettel(
     lowerOrdnungszahl: number,
     upperOrdnungszahl: number
   ) {
-    if (lowerOrdnungszahl > upperOrdnungszahl) {
-      throw new ManagedStimmzettelError(
-        `Der Bereich ${lowerOrdnungszahl}-${upperOrdnungszahl} ist ungültig.`
-      );
-    }
     const kandidaten = _getKandidatenInRangeOrThrow(
       lowerOrdnungszahl,
       upperOrdnungszahl
@@ -448,6 +433,12 @@ export function useManagedStimmzettel(
     return stimmzettel.value.wahlvorschlaege.find((wahlvorschlag) =>
       wahlvorschlag.kandidaten.find((k) => k.kandidatId === kandidat.kandidatId)
     );
+  }
+
+  function _isNotSafeIntegerThrow(value: number, errorMessage: string) {
+    if (!Number.isSafeInteger(value)) {
+      throw new ManagedStimmzettelError(errorMessage);
+    }
   }
 
   return {

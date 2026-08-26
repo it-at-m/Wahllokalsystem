@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
+import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 import type { CommandHandler } from "@/types/dse/command/CommandHandler.ts";
 
 import { useHandlerTools } from "@/composables/dse/command/handlerTools.ts";
@@ -13,7 +13,8 @@ interface CommandArguments {
 export function useAddStreichungToKandidatenRangeHandler(): CommandHandler {
   const REXEG_ADD_STREICHUNG_TO_KANDIDATEN_RANGE =
     /^[sS]([1-9]\d{2,})(?:-([1-9]\d{2,}))?$/;
-  const { isValidKandidatOrdnungszahl, normalizeBounds } = useHandlerTools();
+  const { isValidKandidatOrdnungszahl, isValidRange, normalizeBounds } =
+    useHandlerTools();
 
   function canHandle(command: string): boolean {
     try {
@@ -74,6 +75,10 @@ export function useAddStreichungToKandidatenRangeHandler(): CommandHandler {
         commandArguments.kandidatOrdnungszahlLowerBound
       ) &&
       isValidKandidatOrdnungszahl(
+        commandArguments.kandidatOrdnungszahlUpperBound
+      ) &&
+      isValidRange(
+        commandArguments.kandidatOrdnungszahlLowerBound,
         commandArguments.kandidatOrdnungszahlUpperBound
       )
     );

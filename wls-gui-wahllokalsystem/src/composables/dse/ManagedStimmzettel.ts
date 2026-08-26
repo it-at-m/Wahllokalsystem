@@ -137,7 +137,9 @@ export function useManagedStimmzettel(
         `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
       );
     }
-
+    if (kandidat.durchgestrichen) {
+      throw new ManagedStimmzettelError(`Kandidat ist bereits gestrichen.`);
+    }
     _internalAddStreichungToKandidat(kandidat);
   }
 
@@ -154,6 +156,9 @@ export function useManagedStimmzettel(
       lowerOrdnungszahl,
       upperOrdnungszahl
     );
+    if (kandidaten.every((kandidat) => kandidat.durchgestrichen)) {
+      throw new ManagedStimmzettelError(`Der Bereich ist bereits gestrichen.`);
+    }
 
     _internalAddStreichungenToKandidatenRange(kandidaten);
   }
@@ -167,7 +172,11 @@ export function useManagedStimmzettel(
         `Wahlvorschlag mit Ordnungszahl ${wahlvorschlagOrdnungszahl} existiert nicht.`
       );
     }
-
+    if (wahlvorschlag.selected) {
+      throw new ManagedStimmzettelError(
+        `Wahlvorschlag ist bereits ausgewählt.`
+      );
+    }
     _internalAddVotesToWahlvorschlag(wahlvorschlag);
   }
 
@@ -264,7 +273,7 @@ export function useManagedStimmzettel(
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${votesToAdd > 1 ? " + " + votesToAdd + " Stimmen" : ""}`,
+        `${kandidat.ordnungszahl}${" + " + votesToAdd + (votesToAdd > 1 ? " Stimmen" : " Stimme")}`,
         kandidat.name,
       ],
     });
@@ -280,7 +289,7 @@ export function useManagedStimmzettel(
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${invalidVotesToAdd > 1 ? " + " + invalidVotesToAdd + " ungültige Stimmen" : " + 1 ungültige Stimme"}`,
+        `${kandidat.ordnungszahl}${" + " + invalidVotesToAdd + " ungültige " + (invalidVotesToAdd > 1 ? "Stimmen" : "Stimme")}`,
         kandidat.name,
       ],
     });
@@ -298,7 +307,7 @@ export function useManagedStimmzettel(
     changeHistory.value.push({
       type: InputHistoryTypeEnum.VOTE_RANGE,
       text: [
-        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}${votesToAdd > 1 ? " + " + votesToAdd + " Stimmen" : ""}`,
+        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}${" + " + votesToAdd + (votesToAdd > 1 ? " Stimmen" : " Stimme")}`,
       ],
     });
   }

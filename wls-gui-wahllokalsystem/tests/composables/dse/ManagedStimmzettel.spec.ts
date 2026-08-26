@@ -648,6 +648,7 @@ describe("ManagedStimmzettel.ts", () => {
         .build();
       const wv = prepareManagedStimmzettelWahlvorschlag()
         .ordnungszahl(1)
+        .selected(false)
         .kandidaten([k1, k2])
         .build();
 

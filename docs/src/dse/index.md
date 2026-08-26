@@ -149,8 +149,10 @@ gibt Feedback, wenn der Befehl nicht ausführbar oder falsch war.
 flowchart LR
     A["Start: User-Eingabestring"] --> B{"commandHandler.canHandle(command)"}
 
-    B -->|"(can not handle) parse fail"| C["Next Handler /<br/>Unbekannter Befehl"]
-    C --> D["throw<br/>UnsupportedCommandError"]
+    B -->|"(can not handle) parse fail"| C{"Weitere handler vorhanden ?"}
+    
+    C -->|"ja (try next handler)"| B
+    C -->|"nein (command not found)"| D["throw<br/>UnsupportedCommandError"]
     
     B -->|"(can handle) parse ok"| E["Handler erzeugt<br/>entsprechenden Rückgabewert"]
     E --> F["commandHandler.handleOrThrow(...) <br/> fachliche Prüfung des Befehls"]

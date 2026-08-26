@@ -270,6 +270,7 @@ export function useManagedStimmzettel(
     const votesToAdd = Math.abs(numberOfVotesToAdd);
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
     kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
+    _addVotesForKandidatToWahlvorschlag(kandidat, votesToAdd);
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
@@ -286,6 +287,7 @@ export function useManagedStimmzettel(
     const invalidVotesToAdd = Math.abs(numberOfInvalidVotesToAdd);
     const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
     kandidat.ungueltigeStimmen = currentUngueltigeStimmen + invalidVotesToAdd;
+    _addInvalidVotesForKandidatToWahlvorschlag(kandidat, invalidVotesToAdd);
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
@@ -303,6 +305,7 @@ export function useManagedStimmzettel(
     kandidaten.map((kandidat) => {
       const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
       kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
+      _addVotesForKandidatToWahlvorschlag(kandidat, votesToAdd);
     });
     changeHistory.value.push({
       type: InputHistoryTypeEnum.VOTE_RANGE,
@@ -347,6 +350,7 @@ export function useManagedStimmzettel(
       const kandidat = wahlvorschlag.kandidaten[index];
       if (!kandidat.durchgestrichen) {
         kandidat.reststimmen = 1;
+        wahlvorschlag.gueltigeStimmen += 1;
       } else {
         reststimmen++;
       }
@@ -407,6 +411,32 @@ export function useManagedStimmzettel(
       kandidatenByOrdnungszahl.map((kandidat) => kandidaten.push(kandidat));
     }
     return kandidaten;
+  }
+
+  function _addVotesForKandidatToWahlvorschlag(
+    kandidat: Kandidat,
+    votesToAdd: number
+  ) {
+    const wahlvorschlagToUpdate = _getWahlvorschlagForKandidat(kandidat);
+    if (wahlvorschlagToUpdate) {
+      wahlvorschlagToUpdate.gueltigeStimmen += votesToAdd;
+    }
+  }
+
+  function _addInvalidVotesForKandidatToWahlvorschlag(
+    kandidat: Kandidat,
+    invalidVotesToAdd: number
+  ) {
+    const wahlvorschlagToUpdate = _getWahlvorschlagForKandidat(kandidat);
+    if (wahlvorschlagToUpdate) {
+      wahlvorschlagToUpdate.ungueltigeStimmen += invalidVotesToAdd;
+    }
+  }
+
+  function _getWahlvorschlagForKandidat(kandidat: Kandidat) {
+    return stimmzettel.value.wahlvorschlaege.find((wahlvorschlag) =>
+      wahlvorschlag.kandidaten.find((k) => k.kandidatId === kandidat.kandidatId)
+    );
   }
 
   return {

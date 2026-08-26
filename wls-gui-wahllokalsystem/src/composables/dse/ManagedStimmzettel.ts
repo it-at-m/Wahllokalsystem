@@ -56,6 +56,20 @@ export function useManagedStimmzettel(
     )
   );
 
+  const remainingVotes = computed(() => {
+    const kopfdatenStore = useKopfdatenStore();
+    const { kopfdaten } = storeToRefs(kopfdatenStore);
+    const maximalErlaubteStimmenProWaehler =
+      kopfdaten.value.find((kd) => kd.wahlID === wahlID)
+        ?.maximalErlaubteStimmenProWaehler ?? 0;
+
+    const currentGesamtStimmen =
+      stimmenSummary.value.ungueltigeStimmen +
+      stimmenSummary.value.einzelstimmen +
+      stimmenSummary.value.reststimmen;
+    return maximalErlaubteStimmenProWaehler - currentGesamtStimmen;
+  });
+
   /**
    *
    * @param ordnungszahl
@@ -269,8 +283,10 @@ export function useManagedStimmzettel(
   ) {
     const votesToAdd = Math.abs(numberOfVotesToAdd);
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
-    kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
-    _addVotesForKandidatToWahlvorschlag(kandidat, votesToAdd);
+    const remainingVotesForKandidat =
+      remainingVotes.value > votesToAdd ? votesToAdd : remainingVotes.value;
+    kandidat.einzelstimmen = currentEinzelstimmen + remainingVotesForKandidat;
+    _addVotesForKandidatToWahlvorschlag(kandidat, remainingVotesForKandidat);
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
@@ -304,8 +320,10 @@ export function useManagedStimmzettel(
     const votesToAdd = Math.abs(numberOfVotesToAdd);
     kandidaten.map((kandidat) => {
       const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
-      kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
-      _addVotesForKandidatToWahlvorschlag(kandidat, votesToAdd);
+      const remainingVotesForKandidat =
+        remainingVotes.value > votesToAdd ? votesToAdd : remainingVotes.value;
+      kandidat.einzelstimmen = currentEinzelstimmen + remainingVotesForKandidat;
+      _addVotesForKandidatToWahlvorschlag(kandidat, remainingVotesForKandidat);
     });
     changeHistory.value.push({
       type: InputHistoryTypeEnum.VOTE_RANGE,
@@ -334,25 +352,18 @@ export function useManagedStimmzettel(
   }
 
   function _internalAddVotesToWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
-    const kopfdatenStore = useKopfdatenStore();
-    const { kopfdaten } = storeToRefs(kopfdatenStore);
-    const maximalErlaubteStimmenProWaehler =
-      kopfdaten.value.find((kd) => kd.wahlID === wahlID)
-        ?.maximalErlaubteStimmenProWaehler ?? 0;
-
-    const currentGesamtStimmen =
-      stimmenSummary.value.ungueltigeStimmen +
-      stimmenSummary.value.einzelstimmen +
-      stimmenSummary.value.reststimmen;
-    let reststimmen = maximalErlaubteStimmenProWaehler - currentGesamtStimmen;
+    let remainingVotesForWahlvorschlag = remainingVotes.value;
     let index = 0;
-    while (index < reststimmen && index < wahlvorschlag.kandidaten.length) {
+    while (
+      index < remainingVotesForWahlvorschlag &&
+      index < wahlvorschlag.kandidaten.length
+    ) {
       const kandidat = wahlvorschlag.kandidaten[index];
       if (!kandidat.durchgestrichen) {
         kandidat.reststimmen = 1;
         wahlvorschlag.gueltigeStimmen += 1;
       } else {
-        reststimmen++;
+        remainingVotesForWahlvorschlag++;
       }
       index++;
     }

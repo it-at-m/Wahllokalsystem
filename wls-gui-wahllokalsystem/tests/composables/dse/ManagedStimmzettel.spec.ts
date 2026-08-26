@@ -1,6 +1,6 @@
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { ref } from "vue";
 
 import { useManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
@@ -18,6 +18,23 @@ describe("ManagedStimmzettel.ts", () => {
 
   beforeAll(() => {
     setActivePinia(createPinia());
+  });
+
+  beforeEach(() => {
+    const kdStore = useKopfdatenStore();
+    kdStore.kopfdaten = [
+      {
+        wahlID: mockedWahlId,
+        wahlbezirkID: "wb-1",
+        gemeinde: "",
+        stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
+        stimmzettelgebietsnummer: "",
+        stimmzettelgebietsname: "",
+        wahlname: "",
+        wahlbezirknummer: "",
+        maximalErlaubteStimmenProWaehler: 999,
+      },
+    ];
   });
 
   describe("kandidatAddEinzelstimmenOrThrow", () => {
@@ -281,6 +298,50 @@ describe("ManagedStimmzettel.ts", () => {
         ManagedStimmzettelError
       );
     });
+
+    it("should_onlyAddUpToRemainingVotes_when_requestedExceedsRemainingVotes", () => {
+      const kdStore = useKopfdatenStore();
+      kdStore.kopfdaten = [
+        {
+          wahlID: mockedWahlId,
+          wahlbezirkID: "wb-1",
+          gemeinde: "",
+          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
+          stimmzettelgebietsnummer: "",
+          stimmzettelgebietsname: "",
+          wahlname: "",
+          wahlbezirknummer: "",
+          maximalErlaubteStimmenProWaehler: 2,
+        },
+      ];
+
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(0)
+        .ungueltigeStimmen(0)
+        .reststimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .selected(false)
+        .gueltigeStimmen(0)
+        .ungueltigeStimmen(0)
+        .kandidaten([kandidat])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+      managed.kandidatAddEinzelstimmenOrThrow(101, 3);
+
+      expect(kandidat.einzelstimmen).toBe(2);
+      expect(managed.stimmenSummary.value.einzelstimmen).toBe(2);
+      expect(wv.gueltigeStimmen).toBe(2);
+    });
   });
 
   describe("kandidatAddUngueltigeStimmenOrThrow", () => {
@@ -477,6 +538,103 @@ describe("ManagedStimmzettel.ts", () => {
       expect(() =>
         managed.kandidatenAddStimmenInRangeOrThrow(103, 101, 1)
       ).toThrow(ManagedStimmzettelError);
+    });
+
+    it("should_distributeOnlyUpToRemainingVotesAcrossRange_when_requestedExceedsRemainingVotes", () => {
+      const kdStore = useKopfdatenStore();
+      kdStore.kopfdaten = [
+        {
+          wahlID: mockedWahlId,
+          wahlbezirkID: "wb-1",
+          gemeinde: "",
+          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
+          stimmzettelgebietsnummer: "",
+          stimmzettelgebietsname: "",
+          wahlname: "",
+          wahlbezirknummer: "",
+          maximalErlaubteStimmenProWaehler: 3,
+        },
+      ];
+
+      const k1 = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(0)
+        .ungueltigeStimmen(0)
+        .reststimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const k2 = prepareManagedStimmzettelKandidat()
+        .listenposition(2)
+        .ordnungszahl(102)
+        .einzelstimmen(0)
+        .ungueltigeStimmen(0)
+        .reststimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .selected(false)
+        .gueltigeStimmen(0)
+        .ungueltigeStimmen(0)
+        .kandidaten([k1, k2])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+      managed.kandidatenAddStimmenInRangeOrThrow(101, 102, 2);
+
+      expect(k1.einzelstimmen).toBe(2);
+      expect(k2.einzelstimmen).toBe(1);
+      expect(managed.stimmenSummary.value.einzelstimmen).toBe(3);
+      expect(wv.gueltigeStimmen).toBe(3);
+    });
+
+    it("should_respectRemainingVotes_whenAddingToRange", () => {
+      const kdStore = useKopfdatenStore();
+      kdStore.kopfdaten = [
+        {
+          wahlID: mockedWahlId,
+          wahlbezirkID: "wb-1",
+          gemeinde: "",
+          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
+          stimmzettelgebietsnummer: "",
+          stimmzettelgebietsname: "",
+          wahlname: "",
+          wahlbezirknummer: "",
+          maximalErlaubteStimmenProWaehler: 3,
+        },
+      ];
+
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(0)
+        .ungueltigeStimmen(0)
+        .reststimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .selected(false)
+        .gueltigeStimmen(0)
+        .ungueltigeStimmen(0)
+        .kandidaten([kandidat])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      managed.kandidatAddEinzelstimmenOrThrow(101, 1);
+      managed.kandidatAddEinzelstimmenOrThrow(101, 5);
+
+      expect(kandidat.einzelstimmen).toBe(3);
+      expect(managed.stimmenSummary.value.einzelstimmen).toBe(3);
+      expect(wv.gueltigeStimmen).toBe(3);
     });
   });
 

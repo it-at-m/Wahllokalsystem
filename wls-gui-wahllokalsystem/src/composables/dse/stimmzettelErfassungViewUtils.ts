@@ -37,6 +37,8 @@ export function useStimmzettelErfassungViewUtils(
 
   const buttonUtils = useStimmzettelErfassungViewButtonStateUtils(teamStatus);
 
+  const hasStimmzettel = computed(() => savedStimmzettel.value.length > 0);
+
   //Hooks
   onActivated(async () => {
     await Promise.allSettled([
@@ -54,12 +56,18 @@ export function useStimmzettelErfassungViewUtils(
       getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung);
   }
 
-  async function sendStatusInBearbeitung() {
-    await _postTeamStatus(StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG);
+  async function sendStatusInBearbeitung(sendNotification = false) {
+    await _postTeamStatus(
+      StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+      sendNotification
+    );
   }
 
-  async function sendStatusUnterbrochen() {
-    await _postTeamStatus(StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN);
+  async function sendStatusUnterbrochen(sendNotification = false) {
+    await _postTeamStatus(
+      StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
+      sendNotification
+    );
   }
 
   async function saveNewStimmzettel(stimmzettel: Stimmzettel) {
@@ -74,6 +82,10 @@ export function useStimmzettelErfassungViewUtils(
       newStimmzettelCollectionToSave
     );
     savedStimmzettel.value = newStimmzettelCollectionToSave;
+  }
+
+  async function reloadTeamStatus() {
+    await _loadTeamStatus();
   }
 
   //private functions
@@ -119,7 +131,8 @@ export function useStimmzettelErfassungViewUtils(
   }
 
   async function _postTeamStatus(
-    statusToChange: StimmzettelerfassungTeamStatusEnum
+    statusToChange: StimmzettelerfassungTeamStatusEnum,
+    sendNotification: boolean
   ) {
     const newStatus: StimmzettelerfassungTeamStatus = {
       status: statusToChange,
@@ -129,7 +142,7 @@ export function useStimmzettelErfassungViewUtils(
       wahlbezirkID,
       teamID,
       newStatus,
-      false
+      sendNotification
     );
     teamStatus.value = newStatus;
   }
@@ -138,6 +151,7 @@ export function useStimmzettelErfassungViewUtils(
     //Props
     activeStimmzettel,
     teamStatus: readonly(teamStatus),
+    hasStimmzettel,
     isErfassungsDialogVisible,
     isKennungsDialogVisible,
     isStatusLoading: readonly(isStatusLoading),
@@ -151,6 +165,7 @@ export function useStimmzettelErfassungViewUtils(
     sendStatusUnterbrochen,
     saveNewStimmzettel,
     startNewEmptyStimmzettelWithStimmzettelkennung,
+    reloadTeamStatus,
 
     //imported functions
     ...buttonUtils,

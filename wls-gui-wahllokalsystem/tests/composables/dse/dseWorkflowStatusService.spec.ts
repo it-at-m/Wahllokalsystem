@@ -53,8 +53,11 @@ const {
 } = useStimmzettelerfassungStatusTestDataFactory();
 
 describe("DseWorkflowStatusService.ts", () => {
-  const { loadDseWorkflowStatus, saveDseWorkflowStatus } =
-    useDseWorkflowStatusService();
+  const {
+    isWorkflowStatusLoading,
+    loadDseWorkflowStatus,
+    saveDseWorkflowStatus,
+  } = useDseWorkflowStatusService();
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -137,6 +140,31 @@ describe("DseWorkflowStatusService.ts", () => {
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
+    });
+
+    it("should_toggleLoadingState_when_called", async () => {
+      vi.useFakeTimers();
+
+      const wahlID = "wahlID";
+      const wahlbezirkID = "wahlbezirkID";
+      const timeout = 100;
+
+      mockDefinitions.getStimmzettelerfassungStatus.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({});
+          }, timeout);
+        })
+      );
+
+      expect(isWorkflowStatusLoading.value).toBe(false);
+      const promise = loadDseWorkflowStatus(wahlID, wahlbezirkID);
+      expect(isWorkflowStatusLoading.value).toBe(true);
+      vi.advanceTimersByTime(timeout);
+      await promise;
+      expect(isWorkflowStatusLoading.value).toBe(false);
+
+      vi.useRealTimers();
     });
   });
 

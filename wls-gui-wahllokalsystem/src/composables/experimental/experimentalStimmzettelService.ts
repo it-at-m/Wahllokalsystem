@@ -67,7 +67,10 @@ export function useStimmzettelRepo(
   }
 
   async function saveById(key: StimmzettelKey, entity: Stimmzettel) {
-    await dbInstance.setItem(StimmzettelKeyProducer.produceKey(key), entity);
+    await dbInstance.setItem(
+      StimmzettelKeyProducer.produceKey(key),
+      toRaw(entity)
+    );
   }
 
   return {

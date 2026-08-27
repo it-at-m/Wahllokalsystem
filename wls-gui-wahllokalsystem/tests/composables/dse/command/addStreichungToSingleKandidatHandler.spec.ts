@@ -1,6 +1,9 @@
 import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 
-import { validKandidatOrdnungszahlen } from "@tests/utils/dse/CommandTestTools";
+import {
+  invalidKandidatOrdnungszahlenCommand,
+  validKandidatOrdnungszahlen,
+} from "@tests/utils/dse/CommandTestTools";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useAddStreichungToSingleKandidatHandler } from "@/composables/dse/command/addStreichungToSingleKandidatHandler.ts";
@@ -24,10 +27,10 @@ describe("addStreichungToSingleKandidatHandler.ts", () => {
       }
     );
 
-    it.each(["10", "abc", "s0101", "S0101", "s100", "s1000", "s900", "s9900"])(
+    it.each(invalidKandidatOrdnungszahlenCommand)(
       "should_returnFalse_when_command'%s'DoesNotMatchPattern",
       (command) => {
-        expect(canHandle(command)).toBe(false);
+        expect(canHandle(`s${command}`)).toBe(false);
       }
     );
   });

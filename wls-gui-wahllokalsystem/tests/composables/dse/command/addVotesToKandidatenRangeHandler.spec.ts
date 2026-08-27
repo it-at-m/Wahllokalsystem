@@ -1,5 +1,9 @@
 import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 
+import {
+  invalidCommandRanges,
+  validRanges,
+} from "@tests/utils/dse/CommandTestTools";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useAddVotesToKandidatenRangeHandler } from "@/composables/dse/command/addVotesToKandidatenRangeHandler.ts";
@@ -12,12 +16,6 @@ const mockDefinitions = vi.hoisted(() => ({
 
 describe("addVotesToKandidatenRangeHandler.ts", () => {
   const { canHandle, handleOrThrow } = useAddVotesToKandidatenRangeHandler();
-
-  const validRanges: [number, number][] = [
-    [101, 103],
-    [201, 299],
-    [1099, 1010],
-  ];
 
   describe("canHandle", () => {
     it.each(validRanges)(
@@ -35,20 +33,12 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
       expect(canHandle("101-103+1")).toBe(true);
     });
 
-    it.each([
-      "10-101",
-      "abc-200",
-      "100-1000",
-      "101-100",
-      "101-1000",
-      "101-",
-      "101-103+",
-      "101-103+abc",
-      "101-103+0",
-      "125-203",
-    ])("should_returnFalse_when_command'%s'DoesNotMatchPattern", (command) => {
-      expect(canHandle(command)).toBe(false);
-    });
+    it.each([...invalidCommandRanges, "101-103+", "101-103+abc", "101-103+0"])(
+      "should_returnFalse_when_command'%s'DoesNotMatchPattern",
+      (command) => {
+        expect(canHandle(command)).toBe(false);
+      }
+    );
   });
 
   describe("handleOrThrow", () => {

@@ -7,6 +7,7 @@ describe("handlerTools.ts", () => {
     isValidKandidatOrdnungszahl,
     isValidWahlvorschlagOrdnungszahl,
     isValidCount,
+    isValidRange,
     normalizeBounds,
     parseOptionalPlusCountToNumber,
   } = useHandlerTools();
@@ -68,6 +69,34 @@ describe("handlerTools.ts", () => {
       "should_returnLowerUpperPairSorted_when_called",
       (a: number, b: number, expected: { lower: number; upper: number }) => {
         expect(normalizeBounds(a, b)).toStrictEqual(expected);
+      }
+    );
+  });
+
+  describe("isValidRange", () => {
+    it.each([
+      [101, 199],
+      [199, 101],
+      [100, 199],
+      [200, 299],
+      [1000, 1099],
+    ])(
+      "should_returnTrue_when_boundsAreWithinSameHundreds: %s-%s",
+      (lower: number, upper: number) => {
+        expect(isValidRange(lower, upper)).toBe(true);
+      }
+    );
+
+    it.each([
+      [99, 101],
+      [199, 200],
+      [100, 200],
+      [0, 100],
+      [50, 150],
+    ])(
+      "should_returnFalse_when_boundsSpanDifferentHundreds: %s-%s",
+      (lower: number, upper: number) => {
+        expect(isValidRange(lower, upper)).toBe(false);
       }
     );
   });

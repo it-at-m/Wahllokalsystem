@@ -14,7 +14,7 @@ export function useStimmzettelService() {
   const { addNotification } = useUserNotificationService();
   const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
     useCommonApiUtils();
-  const { toModel, toDTO } = useStimmzettelMapper();
+  const { toModel, toDTO, toSingleStimmzettelDTO } = useStimmzettelMapper();
 
   const ergebnismeldungConfiguration = new Configuration({
     basePath: ERGEBNISMELDUNG_SERVICE_API_URL,
@@ -85,6 +85,22 @@ export function useStimmzettelService() {
     }
   }
 
+  async function saveSingleStimmzettel(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string,
+    stimmzettel: Stimmzettel
+  ) {
+    const dto = toSingleStimmzettelDTO(stimmzettel);
+    await stimmzettelControllerApi.postStimmzettel1(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      stimmzettel.stimmzettelkennung,
+      dto
+    );
+  }
+
   async function getAnzahlStimmzettel(
     wahlID: string,
     wahlbezirkID: string,
@@ -111,6 +127,7 @@ export function useStimmzettelService() {
   return {
     getStimmzettel,
     saveStimmzettel,
+    saveSingleStimmzettel,
     getAnzahlStimmzettel,
   };
 }

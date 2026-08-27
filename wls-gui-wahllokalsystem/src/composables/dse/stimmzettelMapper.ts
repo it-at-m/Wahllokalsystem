@@ -2,6 +2,8 @@ import type {
   BeschlussfassungDTO,
   BeschlussgrundDTO,
   KandidatDTO,
+  SingleStimmzettelDTO,
+  StimmzettelDTO,
   StimmzettelOfTeamDTO,
   WahlvorschlagDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
@@ -35,6 +37,28 @@ export function useStimmzettelMapper() {
       gueltigkeit: model.gueltigkeit,
       invalideVotes: model.invalideVotes,
       stimmzettelkennung: model.stimmzettelkennung,
+      wahlvorschlaege:
+        model.wahlvorschlaege.length > 0
+          ? model.wahlvorschlaege.map((wahlvorschlag) =>
+              _wahlvorschlagModelToDto(wahlvorschlag)
+            )
+          : undefined,
+      beschlussfassung: model.beschlussfassung
+        ? _beschlussfassungModelToDto(model.beschlussfassung)
+        : undefined,
+      beschlussvorschlag:
+        model.beschlussvorschlag.length > 0
+          ? model.beschlussvorschlag.map((beschlussgrund) =>
+              _beschlussgrundModelToDto(beschlussgrund)
+            )
+          : undefined,
+    };
+  }
+
+  function toSingleStimmzettelDTO(model: Stimmzettel): SingleStimmzettelDTO {
+    return {
+      gueltigkeit: model.gueltigkeit,
+      invalideVotes: model.invalideVotes,
       wahlvorschlaege:
         model.wahlvorschlaege.length > 0
           ? model.wahlvorschlaege.map((wahlvorschlag) =>
@@ -144,5 +168,6 @@ export function useStimmzettelMapper() {
   return {
     toModel,
     toDTO,
+    toSingleStimmzettelDTO,
   };
 }

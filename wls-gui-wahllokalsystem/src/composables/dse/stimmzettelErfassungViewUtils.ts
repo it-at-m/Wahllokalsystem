@@ -7,14 +7,13 @@ import { computed, onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelErfassungViewButtonStateUtils.ts";
-import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelUtils.ts";
+import { useExperimentalStimmzettelService } from "@/composables/experimental/experimentalStimmzettelService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 
-const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
 const { getWahlvorschlaege } = useWahlvorschlaegeService();
 const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelUtils();
 
@@ -23,6 +22,11 @@ export function useStimmzettelErfassungViewUtils(
   wahlbezirkID: string,
   teamID: string
 ) {
+  const { getStimmzettel, saveStimmzettel } = useExperimentalStimmzettelService(
+    wahlID,
+    wahlbezirkID
+  );
+
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
   const isStatusLoading = ref(false);
   const isStimmzettelLoading = ref(false);
@@ -69,12 +73,7 @@ export function useStimmzettelErfassungViewUtils(
       ...savedStimmzettel.value,
       stimmzettel,
     ];
-    await saveStimmzettel(
-      wahlID,
-      wahlbezirkID,
-      teamID,
-      newStimmzettelCollectionToSave
-    );
+    await saveStimmzettel(teamID, stimmzettel.stimmzettelkennung, stimmzettel);
     savedStimmzettel.value = newStimmzettelCollectionToSave;
   }
 
@@ -99,11 +98,7 @@ export function useStimmzettelErfassungViewUtils(
   async function _loadStimmzettel() {
     isStimmzettelLoading.value = true;
     try {
-      savedStimmzettel.value = await getStimmzettel(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
+      savedStimmzettel.value = await getStimmzettel(teamID);
     } finally {
       isStimmzettelLoading.value = false;
     }

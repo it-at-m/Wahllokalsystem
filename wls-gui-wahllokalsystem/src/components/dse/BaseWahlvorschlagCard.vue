@@ -14,9 +14,14 @@
               "
               :name="wahlvorschlag.kurzname"
               :is-gestrichen="false"
-              :ungueltige-stimmen="0"
-              :einzelstimmen="0"
-              :reststimmen="0"
+              :ungueltige-stimmen="wahlvorschlag.ungueltigeStimmen"
+              :einzelstimmen="wahlvorschlag.gueltigeStimmen"
+              :reststimmen="
+                wahlvorschlag.kandidaten.reduce(
+                  (sum, kandidat) => sum + (kandidat.reststimmen ?? 0),
+                  0
+                )
+              "
               ><v-checkbox
                 density="compact"
                 hide-details

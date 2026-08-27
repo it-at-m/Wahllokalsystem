@@ -233,11 +233,7 @@ export function useManagedStimmzettel(
     const firstNennungWithoutDurchstreichung = kandidatenForListenPosition.find(
       (kandidat) => !kandidat.durchgestrichen
     );
-    if (firstNennungWithoutDurchstreichung) {
-      return firstNennungWithoutDurchstreichung;
-    }
-
-    return kandidatenForListenPosition[0];
+    return firstNennungWithoutDurchstreichung ?? kandidatenForListenPosition[0];
   }
 
   function _findKandidatToAddStreichung(

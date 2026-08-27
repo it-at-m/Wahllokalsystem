@@ -276,6 +276,163 @@ describe("managedStimmzettel.ts", () => {
     });
   });
 
+  describe("kandidatRemoveEinzelstimmenOrThrow", () => {
+    it("should_throwManagedStimmzettelError_when_noKandidatForGivenOrdnungszahl", () => {
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([])
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+      expect(() => managed.kandidatRemoveEinzelstimmenOrThrow(101, 1)).toThrow(
+        ManagedStimmzettelError
+      );
+    });
+
+    it("should_throwManagedStimmzettelError_when_votesToRemoveIsNaNOrInfiniteOrFractional", () => {
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([])
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+      expect(() =>
+        managed.kandidatRemoveEinzelstimmenOrThrow(101, Number.NaN)
+      ).toThrow(ManagedStimmzettelError);
+      expect(() =>
+        managed.kandidatRemoveEinzelstimmenOrThrow(101, Number.NEGATIVE_INFINITY)
+      ).toThrow(ManagedStimmzettelError);
+      expect(() =>
+        managed.kandidatRemoveEinzelstimmenOrThrow(101, Number.POSITIVE_INFINITY)
+      ).toThrow(ManagedStimmzettelError);
+      expect(() => managed.kandidatRemoveEinzelstimmenOrThrow(101, 0.1)).toThrow(
+        ManagedStimmzettelError
+      );
+    });
+
+    it("should_throwManagedStimmzettelError_when_votesToRemoveExceedsExistingEinzelstimmen", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(2)
+        .durchgestrichen(false)
+        .build();
+
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidat])
+            .build(),
+        ])
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+      expect(() => managed.kandidatRemoveEinzelstimmenOrThrow(101, 3)).toThrow(
+        ManagedStimmzettelError
+      );
+    });
+
+    it("should_decrementEinzelstimmenAndUpdateSummary_when_validRemoval", () => {
+      const kdStore = useKopfdatenStore();
+      kdStore.kopfdaten = [
+        {
+          wahlID: mockedWahlId,
+          wahlbezirkID: "wb-1",
+          gemeinde: "",
+          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
+          stimmzettelgebietsnummer: "",
+          stimmzettelgebietsname: "",
+          wahlname: "",
+          wahlbezirknummer: "",
+          maximalErlaubteStimmenProWaehler: 2,
+        },
+      ];
+
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(2)
+        .ungueltigeStimmen(0)
+        .reststimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .selected(true)
+        .gueltigeStimmen(2)
+        .ungueltigeStimmen(0)
+        .kandidaten([kandidat])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+      managed.kandidatRemoveEinzelstimmenOrThrow(101, 1);
+
+      expect(kandidat.einzelstimmen).toBe(1);
+      expect(managed.stimmenSummary.value.einzelstimmen).toBe(1);
+      expect(wv.gueltigeStimmen).toBe(1);
+    });
+
+    it("should_reassignReststimmen_when_votesRemovedAndRemainingVotesBecomePositive", () => {
+      const kdStore = useKopfdatenStore();
+      kdStore.kopfdaten = [
+        {
+          wahlID: mockedWahlId,
+          wahlbezirkID: "wb-1",
+          gemeinde: "",
+          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
+          stimmzettelgebietsnummer: "",
+          stimmzettelgebietsname: "",
+          wahlname: "",
+          wahlbezirknummer: "",
+          maximalErlaubteStimmenProWaehler: 2,
+        },
+      ];
+
+      const k1 = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(1)
+        .ungueltigeStimmen(0)
+        .reststimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const k2 = prepareManagedStimmzettelKandidat()
+        .listenposition(2)
+        .ordnungszahl(102)
+        .einzelstimmen(1)
+        .ungueltigeStimmen(0)
+        .reststimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .selected(true)
+        .gueltigeStimmen(2)
+        .ungueltigeStimmen(0)
+        .kandidaten([k1, k2])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+      // Remove one direct vote so that remainingVotes > 0 and reststimmen can be re-assigned
+      managed.kandidatRemoveEinzelstimmenOrThrow(101, 1);
+
+      expect(k1.einzelstimmen).toBe(0);
+      expect(k1.reststimmen).toBe(1);
+      expect(wv.gueltigeStimmen).toBe(1);
+      expect(managed.stimmenSummary.value.reststimmen).toBe(1);
+    });
+  });
+
   describe("kandidatAddUngueltigeStimmenOrThrow", () => {
     it("should_throwManagedStimmzettelError_when_noKandidatForGivenOrdnungszahl", () => {
       const stimmzettel = prepareManagedStimmzettelStimmzettel()

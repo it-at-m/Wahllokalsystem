@@ -51,7 +51,6 @@ vi.mock("@/stores/wahlvorstandStore.ts", () => ({
     resetAllAnwesenheiten: mockDefinitions.resetAllAnwesenheiten,
   }),
 }));
-
 vi.mock("@/stores/monitoringStore.ts", () => ({
   useMonitoringStore: () => ({
     sendWaehler: mockDefinitions.sendWaehler,
@@ -203,7 +202,7 @@ describe("BaseWahlschliessungCard.vue", () => {
       ).toStrictEqual(enteredTime.getTime());
     });
 
-    it("should_callSendSchliessungsuhrzeitAndResetAnwesenheitenAndSendWahlbeteiligung_when_saveButtonIsClicked", async () => {
+    it("should_callSendSchliessungsuhrzeitAndResetAnwesenheiten_when_saveButtonIsClicked", async () => {
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly
       infomanagementStore.fruehesteSchliessungsuhrzeit = "17:00:00";

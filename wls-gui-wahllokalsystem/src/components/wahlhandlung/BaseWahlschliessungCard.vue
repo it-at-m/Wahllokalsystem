@@ -66,7 +66,6 @@ import {
 import router from "@/plugins/router.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
-import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
@@ -80,7 +79,6 @@ const { resetAllAnwesenheiten } = useWahlvorstandStore();
 const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 const { isVorfaelleMaintained } = storeToRefs(useEreignisStore());
-const { sendWaehler } = useMonitoringStore();
 
 const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
 
@@ -102,7 +100,6 @@ async function onEreignisseBearbeiten() {
 
 async function onSaveSchliessungsuhrzeitClicked() {
   await schliessungsuhrzeitActions.sendSchliessungsuhrzeit();
-  await sendWaehler();
   resetAllAnwesenheiten();
   await onSchliessungsuhrzeitSentChanged(
     schliessungsuhrzeitState.value.schliessungsuhrzeitSent

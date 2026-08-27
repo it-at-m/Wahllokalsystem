@@ -6,17 +6,15 @@ import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.t
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
 interface CommandArguments {
-  kandidatOrdnungszahl: number;
-  countVotes: number;
+  kandidatOrdnungszahlLowerBound: number;
+  kandidatOrdnungszahlUpperBound: number;
 }
 
-export function useAddVotesToSingleKandidatHandler(): CommandHandler {
-  const REGEX_ADD_VOTES_TO_KANDIDAT = /^([1-9]\d{2,})(\+(\d*))?$/;
-  const {
-    isValidCount,
-    isValidKandidatOrdnungszahl,
-    parseOptionalPlusCountToNumber,
-  } = useHandlerTools();
+export function useAddStreichungToKandidatenRangeHandler(): CommandHandler {
+  const REXEG_ADD_STREICHUNG_TO_KANDIDATEN_RANGE =
+    /^[sS]([1-9]\d{2,})(?:-([1-9]\d{2,}))?$/;
+  const { isValidKandidatOrdnungszahl, isValidRange, normalizeBounds } =
+    useHandlerTools();
 
   function canHandle(command: string): boolean {
     try {
@@ -34,14 +32,14 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
     const commandArguments = _parseCommandArguments(command);
     if (!commandArguments) {
       throw new CommandExecutionError(
-        "Kandidat*in oder Stimmenanzahl konnten nicht eindeutig identifiziert werden."
+        "Kandidat konnte nicht eindeutig identifiziert werden."
       );
     }
 
     try {
-      stimmzettel.kandidatAddEinzelstimmenOrThrow(
-        commandArguments.kandidatOrdnungszahl,
-        commandArguments.countVotes
+      stimmzettel.kandidatenStreichungenInRangeOrThrow(
+        commandArguments.kandidatOrdnungszahlLowerBound,
+        commandArguments.kandidatOrdnungszahlUpperBound
       );
     } catch (error) {
       if (error instanceof ManagedStimmzettelError) {
@@ -53,13 +51,15 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
   }
 
   function _parseCommandArguments(command: string): CommandArguments | null {
-    const match = REGEX_ADD_VOTES_TO_KANDIDAT.exec(command);
+    const match = REXEG_ADD_STREICHUNG_TO_KANDIDATEN_RANGE.exec(command);
 
     if (match?.[1] !== undefined) {
-      const votesText = match[3];
+      const bound1 = Number.parseInt(match[1]);
+      const bound2 = Number.parseInt(match[2]);
+      const { lower, upper } = normalizeBounds(bound1, bound2);
       const commandArgs = {
-        kandidatOrdnungszahl: Number.parseInt(match[1]),
-        countVotes: parseOptionalPlusCountToNumber(votesText),
+        kandidatOrdnungszahlLowerBound: lower,
+        kandidatOrdnungszahlUpperBound: upper,
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {
@@ -71,8 +71,16 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
     commandArguments: CommandArguments
   ): boolean {
     return (
-      isValidKandidatOrdnungszahl(commandArguments.kandidatOrdnungszahl) &&
-      isValidCount(commandArguments.countVotes)
+      isValidKandidatOrdnungszahl(
+        commandArguments.kandidatOrdnungszahlLowerBound
+      ) &&
+      isValidKandidatOrdnungszahl(
+        commandArguments.kandidatOrdnungszahlUpperBound
+      ) &&
+      isValidRange(
+        commandArguments.kandidatOrdnungszahlLowerBound,
+        commandArguments.kandidatOrdnungszahlUpperBound
+      )
     );
   }
 

@@ -1,16 +1,18 @@
-import { MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
+import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 
 export function useHandlerTools() {
   function isValidKandidatOrdnungszahl(value: number): boolean {
     return (
-      Number.isSafeInteger(value) && value % MULTIPLIER_FOR_ORDNUNGSZAHL != 0
+      Number.isSafeInteger(value) &&
+      value % WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL != 0
     );
   }
 
   function isValidWahlvorschlagOrdnungszahl(value: number): boolean {
     return (
       Number.isSafeInteger(value) &&
-      (value < 100 || value % MULTIPLIER_FOR_ORDNUNGSZAHL == 0)
+      (value < 100 ||
+        value % WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL == 0)
     );
   }
 
@@ -20,8 +22,10 @@ export function useHandlerTools() {
 
   function isValidRange(lowerBound: number, upperBound: number) {
     return (
-      Math.floor(lowerBound / MULTIPLIER_FOR_ORDNUNGSZAHL) ===
-      Math.floor(upperBound / MULTIPLIER_FOR_ORDNUNGSZAHL)
+      Math.floor(
+        lowerBound / WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL
+      ) ===
+      Math.floor(upperBound / WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL)
     );
   }
 

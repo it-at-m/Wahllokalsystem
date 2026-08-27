@@ -5,7 +5,7 @@ import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/Wahlvorschla
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
-import { MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
+import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/StimmzettelGueltigkeitEnum.ts";
 
 export function useStimmzettelUtils() {
@@ -66,7 +66,8 @@ export function useStimmzettelUtils() {
         nennung: nennung,
         listenposition: kandidat.listenposition,
         ordnungszahl:
-          MULTIPLIER_FOR_ORDNUNGSZAHL * wahlvorschlagOfKandiat.ordnungszahl +
+          WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL *
+            wahlvorschlagOfKandiat.ordnungszahl +
           kandidat.listenposition,
         einzelstimmen: null,
         durchgestrichen: false,

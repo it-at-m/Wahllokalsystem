@@ -3,7 +3,7 @@ import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts
 import {
   invalidKandidatOrdnungszahlenCommand,
   validKandidatOrdnungszahlen,
-} from "@tests/utils/dse/CommandTestTools";
+} from "@tests/utils/dse/commandTestTools.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useAddVotesToSingleKandidatHandler } from "@/composables/dse/command/addVotesToSingleKandidatHandler.ts";

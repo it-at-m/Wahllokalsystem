@@ -3,7 +3,7 @@ import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts
 import {
   invalidCommandRanges,
   validRanges,
-} from "@tests/utils/dse/CommandTestTools";
+} from "@tests/utils/dse/commandTestTools.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useAddStreichungToKandidatenRangeHandler } from "@/composables/dse/command/addStreichungToKandidatenRangeHandler.ts";

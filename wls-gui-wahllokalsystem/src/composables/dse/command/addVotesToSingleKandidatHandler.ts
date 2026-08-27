@@ -15,7 +15,7 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
   const {
     isValidCount,
     isValidKandidatOrdnungszahl,
-    parseOptionalPlusCountToNumber,
+    parseOptionalCountToNumber,
   } = useHandlerTools();
 
   function canHandle(command: string): boolean {
@@ -59,7 +59,7 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
       const votesText = match[3];
       const commandArgs = {
         kandidatOrdnungszahl: Number.parseInt(match[1]),
-        countVotes: parseOptionalPlusCountToNumber(votesText),
+        countVotes: parseOptionalCountToNumber(votesText),
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {

@@ -9,7 +9,7 @@ describe("handlerTools.ts", () => {
     isValidCount,
     isValidRange,
     normalizeBounds,
-    parseOptionalPlusCountToNumber,
+    parseOptionalCountToNumber,
   } = useHandlerTools();
 
   describe("isValidKandidatOrdnungszahl", () => {
@@ -101,10 +101,10 @@ describe("handlerTools.ts", () => {
     );
   });
 
-  describe("parseOptionalPlusCountToNumber", () => {
+  describe("parseOptionalCountToNumber", () => {
     it("should_defaultToOne_when_textIsUndefinedOrEmpty", () => {
-      expect(parseOptionalPlusCountToNumber(undefined)).toBe(1);
-      expect(parseOptionalPlusCountToNumber("")).toBe(1);
+      expect(parseOptionalCountToNumber(undefined)).toBe(1);
+      expect(parseOptionalCountToNumber("")).toBe(1);
     });
 
     it.each([
@@ -113,14 +113,14 @@ describe("handlerTools.ts", () => {
       ["10", 10],
       ["003", 3],
     ])("should_parsePositiveInteger_when_textIsProvided", (text, expected) => {
-      expect(parseOptionalPlusCountToNumber(text)).toBe(expected);
+      expect(parseOptionalCountToNumber(text)).toBe(expected);
     });
 
     it.each(["a", "-1", "+", "1.5"])(
       "should_returnNaN_when_textIsInvalid: %s",
       (text) => {
         expect(
-          Number.isNaN(parseOptionalPlusCountToNumber(text as string))
+          Number.isNaN(parseOptionalCountToNumber(text as string))
         ).toBe(true);
       }
     );

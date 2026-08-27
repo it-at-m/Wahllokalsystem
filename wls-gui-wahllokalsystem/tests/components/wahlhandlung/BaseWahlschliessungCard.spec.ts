@@ -29,6 +29,7 @@ import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts
 const mockDefinitions = vi.hoisted(() => ({
   postUrnenwahlSchliessungsuhrzeit: vi.fn(),
   resetAllAnwesenheiten: vi.fn(),
+  sendWaehler: vi.fn(),
 }));
 
 vi.mock(
@@ -48,6 +49,12 @@ vi.mock(
 vi.mock("@/stores/wahlvorstandStore.ts", () => ({
   useWahlvorstandStore: () => ({
     resetAllAnwesenheiten: mockDefinitions.resetAllAnwesenheiten,
+  }),
+}));
+
+vi.mock("@/stores/monitoringStore.ts", () => ({
+  useMonitoringStore: () => ({
+    sendWaehler: mockDefinitions.sendWaehler,
   }),
 }));
 
@@ -196,7 +203,7 @@ describe("BaseWahlschliessungCard.vue", () => {
       ).toStrictEqual(enteredTime.getTime());
     });
 
-    it("should_callSendSchliessungsuhrzeitAndResetAnwesenheiten_when_saveButtonIsClicked", async () => {
+    it("should_callSendSchliessungsuhrzeitAndResetAnwesenheitenAndSendWahlbeteiligung_when_saveButtonIsClicked", async () => {
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly
       infomanagementStore.fruehesteSchliessungsuhrzeit = "17:00:00";
@@ -223,6 +230,7 @@ describe("BaseWahlschliessungCard.vue", () => {
       );
 
       expect(sendUhrzeitSpy).toHaveBeenCalled();
+      expect(mockDefinitions.sendWaehler).toHaveBeenCalled();
       expect(mockDefinitions.resetAllAnwesenheiten).toHaveBeenCalled();
     });
   });

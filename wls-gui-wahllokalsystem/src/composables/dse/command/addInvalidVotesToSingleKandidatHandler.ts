@@ -7,11 +7,11 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
 
 interface CommandArguments {
   kandidatOrdnungszahl: number;
-  countVotes: number;
+  countInvalidVotes: number;
 }
 
-export function useAddVotesToSingleKandidatHandler(): CommandHandler {
-  const REGEX_ADD_VOTES_TO_KANDIDAT = /^([1-9]\d{2,})(\+(\d*))?$/;
+export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
+  const REGEX_ADD_INVALID_VOTES_TO_KANDIDAT = /^[uU]([1-9]\d{2,})(\+(\d*))?$/;
   const {
     isValidCount,
     isValidKandidatOrdnungszahl,
@@ -34,14 +34,14 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
     const commandArguments = _parseCommandArguments(command);
     if (!commandArguments) {
       throw new CommandExecutionError(
-        "Kandidat*in oder Stimmenanzahl konnten nicht eindeutig identifiziert werden."
+        "Kandidat oder Stimmenanzahl konnten nicht eindeutig identifiziert werden."
       );
     }
 
     try {
-      stimmzettel.kandidatAddEinzelstimmenOrThrow(
+      stimmzettel.kandidatAddUngueltigeStimmenOrThrow(
         commandArguments.kandidatOrdnungszahl,
-        commandArguments.countVotes
+        commandArguments.countInvalidVotes
       );
     } catch (error) {
       if (error instanceof ManagedStimmzettelError) {
@@ -53,13 +53,13 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
   }
 
   function _parseCommandArguments(command: string): CommandArguments | null {
-    const match = REGEX_ADD_VOTES_TO_KANDIDAT.exec(command);
+    const match = REGEX_ADD_INVALID_VOTES_TO_KANDIDAT.exec(command);
 
     if (match?.[1] !== undefined) {
       const votesText = match[3];
       const commandArgs = {
         kandidatOrdnungszahl: Number.parseInt(match[1]),
-        countVotes: parseOptionalPlusCountToNumber(votesText),
+        countInvalidVotes: parseOptionalPlusCountToNumber(votesText),
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {
@@ -72,7 +72,7 @@ export function useAddVotesToSingleKandidatHandler(): CommandHandler {
   ): boolean {
     return (
       isValidKandidatOrdnungszahl(commandArguments.kandidatOrdnungszahl) &&
-      isValidCount(commandArguments.countVotes)
+      isValidCount(commandArguments.countInvalidVotes)
     );
   }
 

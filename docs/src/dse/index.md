@@ -162,8 +162,15 @@ flowchart LR
 
 ### Befehle
 
-| Befehl                           | Funktion                                                               | Beispiel |
-|----------------------------------|------------------------------------------------------------------------|----------|
-| &lt;Kandidatordnungszahl>        | Fügt eine Stimme bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101      |
-| &lt;Kandidatordnungszahl>+       | Fügt eine Stimme bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101+     |
-| &lt;Kandidatordnungszahl>+&lt;n> | Fügt `n` Stimmen bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101+3    |
+| Befehl                                | Funktion                                                                                                                                         | Beispiel  |
+|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|-----------|
+| &lt;Kandidatordnungszahl>             | Fügt eine Stimme bei dem/der Kandidat\*in mit der `Ordnungszahl` hinzu                                                                           | 101       |
+| &lt;Kandidatordnungszahl>+            | Fügt eine Stimme bei dem/der Kandidat\*in mit der `Ordnungszahl` hinzu                                                                           | 101+      |
+| &lt;Kandidatordnungszahl>+&lt;n>      | Fügt `n` Stimmen bei dem/der Kandidat\*in mit der `Ordnungszahl` hinzu                                                                           | 101+3     |
+| [u/U]&lt;Kandidatordnungszahl>        | Fügt 1 ungültige Stimme bei dem/der Kandidat\*in mit der `Ordnungszahl` hinzu                                                                    | u101      |
+| [u/U]&lt;Kandidatordnungszahl>+&lt;n> | Fügt `n` ungültige Stimmen bei dem/der Kandidat\*in mit der `Ordnungszahl` hinzu                                                                 | u101+3    |
+| &lt;untere>-&lt;obere>                | Fügt je 1 Stimme bei allen Kandidat\*innen im Bereich der `Ordnungszahl` von `untere`–`obere` hinzu                                              | 501-510   |
+| &lt;untere>-&lt;obere>+&lt;n>         | Fügt je `n` Stimmen im Bereich der `Ordnungszahl` von `untere`–`obere` hinzu                                                                     | 527-535+2 |
+| &lt;Wahlvorschlagsnummer>             | Kennzeichnet den Wahlvorschlag mit `Ordnungszahl` (Die Eingabe erfolgt entweder als Wahlvorschlagsnummer oder als Ordnungszahl mit „00“ am Ende) | 5, 500    |
+| [s/S]&lt;Kandidatordnungszahl>        | Streichung für den/die Kandidat\*in mit der `Ordnungszahl`                                                                                       | s501      |
+| [s/S]&lt;untere>-&lt;obere>           | Streichungen für alle Kandidat\*innen im Bereich der `Ordnungszahl` von `untere`–`obere`                                                         | s501-509  |

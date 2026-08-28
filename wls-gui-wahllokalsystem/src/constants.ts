@@ -81,3 +81,5 @@ export const SAVE_CONTINUE = "Speichern und Weiter";
 export const ITEMS_PER_PAGE_TITLE = "Anzahl pro Seite";
 export const TABLE_NO_DATA_TEXT_STIMMZETTEL = "Noch keine Stimmzettel erfasst";
 export const TABLE_LOADING_DATA_STIMMZETTEL = "Stimmzettel werden geladen";
+
+export const WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL = 100;

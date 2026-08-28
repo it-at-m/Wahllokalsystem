@@ -864,6 +864,30 @@ describe("navigationGuards.ts", () => {
       );
       expect(result).toStrictEqual(false);
     });
+    it("should_returnFalse_when_stimmzettelErfassungTeamStatusIsNull", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      mockDefinitions.loadDseWorkflowStatus.mockReturnValue(null);
+
+      const result =
+        await requiresWorkflowStatusStimmzettelerfassungAbgeschlossen(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+      expect(mockDefinitions.loadDseWorkflowStatus.mock.calls[0]).toStrictEqual(
+        [wahlId, wahlbezirkId, false]
+      );
+      expect(result).toStrictEqual(false);
+    });
   });
 
   describe("requiresStimmzettelErfassungTeamStatusAbgeschlossen", () => {

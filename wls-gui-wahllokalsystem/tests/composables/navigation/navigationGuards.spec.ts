@@ -780,7 +780,7 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("requiresWorkflowStatusStimmzettelerfassungAbgeschlossen", () => {
-    it("should_returnTrue_when_stimmzettelErfassungTeamStatusIsSteAbgeschlossen", async () => {
+    it("should_returnTrue_when_stimmzettelErfassungStatusIsSteAbgeschlossen", async () => {
       const wahlId = "wahlId";
       const wahlbezirkId = "wahlbezirkId";
       const to = {
@@ -808,7 +808,7 @@ describe("navigationGuards.ts", () => {
       );
       expect(result).toStrictEqual(true);
     });
-    it("should_returnTrue_when_stimmzettelErfassungTeamStatusIsBeAbgeschlossen", async () => {
+    it("should_returnTrue_when_stimmzettelErfassungStatusIsBeAbgeschlossen", async () => {
       const wahlId = "wahlId";
       const wahlbezirkId = "wahlbezirkId";
       const to = {
@@ -836,7 +836,7 @@ describe("navigationGuards.ts", () => {
       );
       expect(result).toStrictEqual(true);
     });
-    it("should_returnFalse_when_stimmzettelErfassungTeamStatusIsInBearbeitung", async () => {
+    it("should_returnFalse_when_stimmzettelErfassungStatusIsInBearbeitung", async () => {
       const wahlId = "wahlId";
       const wahlbezirkId = "wahlbezirkId";
       const to = {
@@ -864,7 +864,7 @@ describe("navigationGuards.ts", () => {
       );
       expect(result).toStrictEqual(false);
     });
-    it("should_returnFalse_when_stimmzettelErfassungTeamStatusIsNull", async () => {
+    it("should_returnFalse_when_stimmzettelErfassungStatusIsNull", async () => {
       const wahlId = "wahlId";
       const wahlbezirkId = "wahlbezirkId";
       const to = {

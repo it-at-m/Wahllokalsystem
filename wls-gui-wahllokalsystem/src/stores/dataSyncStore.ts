@@ -7,6 +7,7 @@ const storeID = "dataSync";
 export const useDataSyncStore = defineStore(storeID, () => {
   const {
     synchronizeOfflineData,
+    registerSyncAdapter,
     getSyncTasks,
     dirtyTasksAfterSync,
     hasTasksToRun,
@@ -27,5 +28,6 @@ export const useDataSyncStore = defineStore(storeID, () => {
     lastSyncUpdateTime,
     synchronizeOfflineData,
     getSyncTasks,
+    registerSyncAdapter,
   };
 });

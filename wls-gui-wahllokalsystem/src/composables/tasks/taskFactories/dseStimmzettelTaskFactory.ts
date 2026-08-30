@@ -6,10 +6,12 @@ import type { Task } from "@/types/tasks/Task.ts";
 import { storeToRefs } from "pinia";
 
 import { useExperimentalStimmzettelService } from "@/composables/experimental/experimentalStimmzettelService.ts";
+import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 export function useDSEStimmzettelTaskFactory(): TaskFactory {
   const { currentUserTeamName } = storeToRefs(useUserStore());
+  const { registerSyncAdapter } = useDataSyncStore();
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     return taskFactoryContext.extendedWahlMetaData.map(
@@ -18,12 +20,18 @@ export function useDSEStimmzettelTaskFactory(): TaskFactory {
   }
 
   function _createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {
-    const { initOfflineCachedStimmzettel } = useExperimentalStimmzettelService(
+    const stimmzettelService = useExperimentalStimmzettelService(
       taskFactoryMetaData.wahlID,
       taskFactoryMetaData.wahlbezirkID
     );
+
+    registerSyncAdapter(stimmzettelService);
+
     return {
-      callback: () => initOfflineCachedStimmzettel(currentUserTeamName.value),
+      callback: () =>
+        stimmzettelService.initOfflineCachedStimmzettel(
+          currentUserTeamName.value
+        ),
       name: `Stimmzettel für ${taskFactoryMetaData.wahlName}`,
     };
   }

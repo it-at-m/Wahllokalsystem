@@ -1,3 +1,7 @@
+import type {
+  SyncAdapter,
+  SyncTask,
+} from "@/composables/experimental/experimentalStimmzettelService.ts";
 import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import type { SyncronizeDataResult } from "@/types/indexDB/SyncronizeDataResult.ts";
 import type { Task } from "@/types/tasks/Task.ts";
@@ -21,15 +25,23 @@ export function useDataSyncer() {
   const isOfflineDataSyncing = ref(false);
   const lastSyncUpdateTime = ref<null | Date>(null);
   const dirtyTasksAfterSync = ref<Task[] | null>(null);
+  const syncAdapter = ref<SyncAdapter[]>([]);
 
   const numberOfDirtyTasksAfterSync = computed(
     (): number | undefined => dirtyTasksAfterSync.value?.length
   );
 
   async function getSyncTasks() {
-    const itemsToSync = await indexDBSingleton.getDirtyItems();
-    itemsToSync.sort(_compareSyncItemByTimeStamp);
-    return itemsToSync.map((item) => ({
+    const tasksFromAdapter: SyncTask[] = [];
+    await Promise.allSettled(
+      syncAdapter.value.map(async (adapter) =>
+        tasksFromAdapter.push(...(await adapter.getTasks()))
+      )
+    );
+
+    const commonDirtyItemsToSync = await indexDBSingleton.getDirtyItems();
+    commonDirtyItemsToSync.sort(_compareSyncItemByTimeStamp);
+    const commonDirtyItemsSyncTasks = commonDirtyItemsToSync.map((item) => ({
       name: item.key,
       callback: () =>
         axios.request(
@@ -40,6 +52,8 @@ export function useDataSyncer() {
           )
         ),
     }));
+
+    return [...commonDirtyItemsSyncTasks, ...tasksFromAdapter];
   }
 
   async function synchronizeOfflineData(): Promise<SyncronizeDataResult | null> {
@@ -65,6 +79,10 @@ export function useDataSyncer() {
     };
   }
 
+  function registerSyncAdapter(adapter: SyncAdapter) {
+    syncAdapter.value.push(adapter);
+  }
+
   function _compareSyncItemByTimeStamp(
     a: { item: IndexDBValue },
     b: { item: IndexDBValue }
@@ -87,6 +105,7 @@ export function useDataSyncer() {
   return {
     ...taskManager,
     getSyncTasks,
+    registerSyncAdapter,
     synchronizeOfflineData,
     numberOfDirtyTasksAfterSync,
     lastSyncUpdateTime,

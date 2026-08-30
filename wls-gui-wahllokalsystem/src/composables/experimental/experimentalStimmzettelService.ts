@@ -9,12 +9,12 @@ import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 //https://github.com/mdn/dom-examples/blob/main/indexeddb-examples/idbindex/scripts/main.js
 //https://developer.mozilla.org/en-US/docs/Web/API/IDBIndex
 
-interface SyncTask {
+export interface SyncTask {
   name: string;
   callback: () => Promise<void>;
 }
 
-interface SyncAdapter {
+export interface SyncAdapter {
   getTasks: () => Promise<SyncTask[]>;
 }
 
@@ -162,8 +162,18 @@ export function useExperimentalStimmzettelService(
     createTransmittedRessource,
   } = useOfflineCachedRessourceTools();
 
-  function getTasksToSync(): Promise<SyncTask[]> {
-    return Promise.resolve([]);
+  async function getTasksToSync(): Promise<SyncTask[]> {
+    const allItems = await getAll();
+    const dirtyItems = allItems.filter(
+      (item) => item.fetchState === FetchStateEnum.DIRTY
+    );
+    return dirtyItems.map(
+      (item) =>
+        ({
+          name: `stimmzettel ${item.resource.stimmzettelkennung} von ${item.resource.teamID} wird gespeichert`,
+          callback: () => _transmitStimmzettelAndStoreResult(item.resource),
+        }) as SyncTask
+    );
   }
 
   async function initOfflineCachedStimmzettel(teamID: string) {

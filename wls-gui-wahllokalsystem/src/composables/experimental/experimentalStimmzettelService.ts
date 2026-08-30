@@ -193,10 +193,7 @@ export function useExperimentalStimmzettelService(
 
   async function getStimmzettel(teamID: string): Promise<Stimmzettel[]> {
     const stimmzettelFromIndexDB = await getAllByTeam(teamID);
-    if (stimmzettelFromIndexDB.length > 0) {
-      return stimmzettelFromIndexDB.map((i) => i.resource);
-    }
-    return await _fetchStoreAndReturnStimmzettel(teamID, true); //TODO nur machen wenn nicht weiß ob die Daten in der DB stimmen
+    return stimmzettelFromIndexDB.map((i) => i.resource);
   }
 
   async function saveStimmzettel(stimmzettel: Stimmzettel) {

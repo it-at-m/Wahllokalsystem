@@ -76,9 +76,18 @@ export function useOfflineCachedRessourceTools() {
 interface KeyProducer<T> {
   produceKey: (entity: T) => string;
 }
+interface KeyExtractor<T> {
+  extractKey: (key: string) => T;
+}
 
-const StimmzettelKeyProducer: KeyProducer<StimmzettelKey> = {
-  produceKey: (entity) => `${entity.teamID}_${entity.kennung}`,
+const StimmzettelKeyProducer: KeyProducer<StimmzettelKey> &
+  KeyExtractor<StimmzettelKey> = {
+  produceKey: (entity) => {
+    return JSON.stringify(entity, ["teamID", "kennung"]);
+  },
+  extractKey: (key: string) => {
+    return JSON.parse(key) as StimmzettelKey;
+  },
 };
 
 interface StimmzettelKey {
@@ -98,6 +107,17 @@ export function useStimmzettelRepo(wahlID: string, wahlbezirkID: string) {
     await dbInstance.iterate((value) => {
       //TODO validate item
       result.push(value as OfflineCachedResource<Stimmzettel>);
+    });
+    return result;
+  }
+
+  async function getAllByTeam(teamID: string) {
+    const result: OfflineCachedResource<Stimmzettel>[] = [];
+    await dbInstance.iterate((value, key) => {
+      const parsedKey = StimmzettelKeyProducer.extractKey(key);
+      if (parsedKey.teamID === teamID) {
+        result.push(value as OfflineCachedResource<Stimmzettel>);
+      }
     });
     return result;
   }
@@ -124,6 +144,7 @@ export function useStimmzettelRepo(wahlID: string, wahlbezirkID: string) {
 
   return {
     getAll,
+    getAllByTeam,
     save,
     saveAll,
   };
@@ -133,7 +154,10 @@ export function useExperimentalStimmzettelService(
   wahlID: string,
   wahlbezirkID: string
 ) {
-  const { getAll, save, saveAll } = useStimmzettelRepo(wahlID, wahlbezirkID);
+  const { getAll, getAllByTeam, save, saveAll } = useStimmzettelRepo(
+    wahlID,
+    wahlbezirkID
+  );
   const {
     getStimmzettel: fetchStimmzettel,
     saveSingleStimmzettel,
@@ -168,11 +192,11 @@ export function useExperimentalStimmzettelService(
   }
 
   async function getStimmzettel(teamID: string): Promise<Stimmzettel[]> {
-    const stimmzettelFromIndexDB = await getAll();
+    const stimmzettelFromIndexDB = await getAllByTeam(teamID);
     if (stimmzettelFromIndexDB.length > 0) {
-      return stimmzettelFromIndexDB.map((i) => i.resource); //TODO Filter auf Team
+      return stimmzettelFromIndexDB.map((i) => i.resource);
     }
-    return await _fetchStoreAndReturnStimmzettel(teamID, true);
+    return await _fetchStoreAndReturnStimmzettel(teamID, true); //TODO nur machen wenn nicht weiß ob die Daten in der DB stimmen
   }
 
   async function saveStimmzettel(stimmzettel: Stimmzettel) {

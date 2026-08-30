@@ -6,6 +6,7 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
 
 export interface IndexDBComposable {
+  dbInstance: LocalForage;
   cryptoKey: CryptoKey | null;
   setKey: (key: CryptoKey) => void;
   getItemFromIDB: (key: string) => Promise<IndexDBValue | null>;
@@ -16,11 +17,18 @@ export interface IndexDBComposable {
     }[]
   >;
   storeItem: (key: string, data: IndexDBValue) => Promise<void>;
-  setupIndexDB: () => void;
   clearIndexDBWhenOwnerNotMatches: (owner: string) => void;
 }
 
 let instance: IndexDBComposable | null = null;
+
+export const indexedDBConfig: LocalForageOptions = {
+  driver: localforage.INDEXEDDB,
+  name: "wahldb",
+  version: 1.0,
+  storeName: "wahlstore",
+  description: "store for data of electoral district",
+};
 
 export const useIndexDB = () => {
   const { logDebug, logError } = useLogging("useIndexDB");
@@ -30,6 +38,7 @@ export const useIndexDB = () => {
 
   if (!instance) {
     instance = {
+      dbInstance: localforage.createInstance(indexedDBConfig),
       cryptoKey: null as CryptoKey | null,
 
       setKey(key: CryptoKey) {
@@ -41,7 +50,7 @@ export const useIndexDB = () => {
 
       async getItemFromIDB(key: string): Promise<IndexDBValue | null> {
         try {
-          const item = await localforage.getItem<IndexDBValue>(key);
+          const item = await this.dbInstance.getItem<IndexDBValue>(key);
           if (item) {
             return item.data
               ? ({
@@ -63,7 +72,7 @@ export const useIndexDB = () => {
           key: string;
           item: IndexDBValue;
         }[] = [];
-        await localforage.iterate((value: IndexDBValue, key) => {
+        await this.dbInstance.iterate((value: IndexDBValue, key) => {
           if (value.dirty === true) {
             matchingItems.push({
               key,
@@ -96,9 +105,9 @@ export const useIndexDB = () => {
       async storeItem(key: string, data: IndexDBValue) {
         try {
           if (data.data === null) {
-            await localforage.setItem(key, data);
+            await this.dbInstance.setItem(key, data);
           } else {
-            await localforage.setItem(key, {
+            await this.dbInstance.setItem(key, {
               ...data,
               data: await encrypt(data.data, this.cryptoKey),
             });
@@ -109,23 +118,14 @@ export const useIndexDB = () => {
         }
       },
 
-      setupIndexDB() {
-        localforage.config({
-          driver: localforage.INDEXEDDB,
-          name: "wahldb",
-          version: 1.0,
-          storeName: "wahlstore",
-          description: "store for data of electoral district",
-        });
-      },
-
       async clearIndexDBWhenOwnerNotMatches(owner: string) {
         const userFromIDB = await localforage.getItem<string>(OWNER_DB_KEY);
         if (userFromIDB !== owner) {
           try {
-            await localforage.clear();
+            await this.dbInstance.dropInstance({ name: indexedDBConfig.name });
+            this.dbInstance = localforage.createInstance(indexedDBConfig);
             logDebug("IndexedDB wurde erfolgreich geleert");
-            await localforage.setItem(OWNER_DB_KEY, owner);
+            await this.dbInstance.setItem(OWNER_DB_KEY, owner);
           } catch (error) {
             logDebug("Fehler beim Leeren der IndexedDB: ", error);
           }

@@ -8,14 +8,12 @@ import { registerRoute } from "workbox-routing";
 
 import { useRequestStrategyManager } from "@/composables/api/RequestStrategyManager.ts";
 import { useLogging } from "@/composables/common/logging.ts";
-import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { REGEX_MATCH_BACKEND_API_CALLS } from "@/service-worker/wahlWorkerConstants.ts";
 import { ServiceWorkerMessageTypeEnum } from "@/types/serviceWorker/ServiceWorkerMessageTypeEnum.ts";
 
 // declare let self: any;
 declare let self: ServiceWorkerGlobalScope;
 
-const indexDBSingleton = useIndexDB();
 const { handleRequestWithStrategy } = useRequestStrategyManager();
 const { log } = useLogging("wahl-worker");
 
@@ -36,7 +34,6 @@ log(`iteration - 10.3`);
 /*****************************************************************************************************************
  * configuration
  ****************************************************************************************************************/
-indexDBSingleton.setupIndexDB();
 
 /*****************************************************************************************************************
  * event listeners

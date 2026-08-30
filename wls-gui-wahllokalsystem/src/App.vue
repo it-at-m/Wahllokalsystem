@@ -89,7 +89,6 @@ const indexDBSingleton = useIndexDB();
 
 onMounted(async () => {
   // config for service worker indexed db (same config as in wahl-worker.js !)
-  indexDBSingleton.setupIndexDB();
 
   try {
     await loadUser();

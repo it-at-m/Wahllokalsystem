@@ -85,7 +85,7 @@ const isTimeToCheckWahlschlussInFuture = computed(() =>
     : false
 );
 
-const indexDBSingleton = useIndexDB();
+useIndexDB();
 
 onMounted(async () => {
   // config for service worker indexed db (same config as in wahl-worker.js !)

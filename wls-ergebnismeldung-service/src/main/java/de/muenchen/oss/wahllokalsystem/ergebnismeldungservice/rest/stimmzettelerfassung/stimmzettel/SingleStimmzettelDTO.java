@@ -8,6 +8,7 @@ import java.util.List;
 public record SingleStimmzettelDTO(
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED) Integer invalideVotes,
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED) StimmzettelGueltigkeitDTO gueltigkeit,
-    List<BeschlussgrundDTO> beschlussvorschlag,
+    List<WahlvorstandBeschlussgrundDTO> wahlvorstandBeschlussvorschlag,
+    List<SystemBeschlussgrundDTO> systemBeschlussvorschlag,
     BeschlussfassungDTO beschlussfassung,
     List<WahlvorschlagDTO> wahlvorschlaege) {}

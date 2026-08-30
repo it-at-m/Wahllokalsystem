@@ -89,7 +89,7 @@ public class StimmzettelController {
   @PostMapping(
       "wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/stimmzettel/{stimmzettelkennung}")
   @ResponseStatus(HttpStatus.CREATED)
-  public void postStimmzettel(
+  public void postSingleStimmzettel(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("teamID") final String teamID,

@@ -185,7 +185,7 @@ export function useExperimentalStimmzettelService(
   }
 
   async function initOfflineCachedStimmzettel(teamID: string) {
-    const existingStimmzettel = await getAll();
+    const existingStimmzettel = await getAllByTeam(teamID);
     if (existingStimmzettel.length === 0) {
       await _fetchStoreAndReturnStimmzettel(teamID, false);
     }

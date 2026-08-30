@@ -62,12 +62,18 @@ export function useStimmzettelErfassungViewUtils(
     );
   }
 
-  async function sendStatusInBearbeitung() {
-    await _postTeamStatus(StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG);
+  async function sendStatusInBearbeitung(sendNotification = false) {
+    await _postTeamStatus(
+      StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+      sendNotification
+    );
   }
 
-  async function sendStatusUnterbrochen() {
-    await _postTeamStatus(StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN);
+  async function sendStatusUnterbrochen(sendNotification = false) {
+    await _postTeamStatus(
+      StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
+      sendNotification
+    );
   }
 
   async function saveNewStimmzettel(stimmzettel: Stimmzettel) {
@@ -77,6 +83,10 @@ export function useStimmzettelErfassungViewUtils(
     ];
     await saveStimmzettel(stimmzettel);
     savedStimmzettel.value = newStimmzettelCollectionToSave;
+  }
+
+  async function reloadTeamStatus() {
+    await _loadTeamStatus();
   }
 
   //private functions
@@ -118,7 +128,8 @@ export function useStimmzettelErfassungViewUtils(
   }
 
   async function _postTeamStatus(
-    statusToChange: StimmzettelerfassungTeamStatusEnum
+    statusToChange: StimmzettelerfassungTeamStatusEnum,
+    sendNotification: boolean
   ) {
     const newStatus: StimmzettelerfassungTeamStatus = {
       status: statusToChange,
@@ -128,7 +139,7 @@ export function useStimmzettelErfassungViewUtils(
       wahlbezirkID,
       teamID,
       newStatus,
-      false
+      sendNotification
     );
     teamStatus.value = newStatus;
   }
@@ -151,6 +162,7 @@ export function useStimmzettelErfassungViewUtils(
     sendStatusUnterbrochen,
     saveNewStimmzettel,
     startNewEmptyStimmzettelWithStimmzettelkennung,
+    reloadTeamStatus,
 
     //imported functions
     ...buttonUtils,

@@ -1,8 +1,10 @@
-import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
+import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 
-import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
+import {
+  invalidKandidatOrdnungszahlenCommand,
+  validKandidatOrdnungszahlen,
+} from "@tests/utils/dse/commandTestTools.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { computed } from "vue";
 
 import { useAddVotesToSingleKandidatHandler } from "@/composables/dse/command/addVotesToSingleKandidatHandler.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
@@ -14,12 +16,6 @@ const mockDefinitions = vi.hoisted(() => ({
 
 describe("addVotesToSingleKandidatHandler.ts", () => {
   const { canHandle, handleOrThrow } = useAddVotesToSingleKandidatHandler();
-  const { prepareManagedStimmzettelStimmzettel } =
-    useManagedStimmzettelTestDataFactory();
-
-  const validKandidatOrdnungszahlen = [
-    101, 110, 199, 201, 210, 299, 999, 1001, 1010, 1099, 9999,
-  ];
 
   describe("canHandle", () => {
     it.each(validKandidatOrdnungszahlen)(
@@ -37,7 +33,7 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
       expect(canHandle("101+")).toBe(true);
     });
 
-    it.each(["10", "abc", "0101", "100", "1000", "900", "9900"])(
+    it.each(invalidKandidatOrdnungszahlenCommand)(
       "should_returnFalse_when_command'%s'DoesNotMatchPattern",
       (command) => {
         expect(canHandle(command)).toBe(false);
@@ -51,22 +47,8 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
     beforeEach(() => {
       mockManagedStimmzettel = {
         kandidatAddEinzelstimmenOrThrow:
-          mockDefinitions.kandidatAddVotesOrThrow as unknown as (
-            ordnungszahl: number,
-            votesToAdd: number
-          ) => void,
-        stimmzettel: computed(() =>
-          prepareManagedStimmzettelStimmzettel().build()
-        ),
-        changeHistoryInReverOrder: computed(() => []),
-        wahlvorschlaegeWithListenkreuz: computed(() => []),
-        stimmenSummary: computed(() => ({
-          einzelstimmen: 0,
-          reststimmen: 0,
-          streichungen: 0,
-          ungueltigeStimmen: 0,
-        })),
-      };
+          mockDefinitions.kandidatAddVotesOrThrow,
+      } as unknown as ManagedStimmzettel;
     });
 
     afterEach(() => {
@@ -75,7 +57,7 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
     });
 
     it.each([validKandidatOrdnungszahlen])(
-      "should_callKandidatAddVotesOrThrow_once_when_commandIs'%s'ValidWithoutPlus",
+      "should_callKandidatAddVotesOrThrow_when_commandIs'%s'ValidWithoutPlus",
       (kandidatOrdnungszahl) => {
         handleOrThrow(`${kandidatOrdnungszahl}`, mockManagedStimmzettel);
 

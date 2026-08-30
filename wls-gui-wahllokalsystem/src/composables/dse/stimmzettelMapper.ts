@@ -1,10 +1,10 @@
 import type {
   BeschlussfassungDTO,
-  BeschlussgrundDTO,
   KandidatDTO,
   SingleStimmzettelDTO,
   StimmzettelOfTeamDTO,
   WahlvorschlagDTO,
+  WahlvorstandBeschlussgrundDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Beschlussfassung } from "@/types/dse/persistedStimmzettel/Beschlussfassung.ts";
 import type { Beschlussgrund } from "@/types/dse/persistedStimmzettel/Beschlussgrund.ts";
@@ -22,8 +22,8 @@ export function useStimmzettelMapper() {
       ),
       invalideVotes: dto.invalideVotes,
       gueltigkeit: dto.gueltigkeit,
-      beschlussvorschlag: (dto.beschlussvorschlag ?? []).map(
-        (beschlussgrundDTO: BeschlussgrundDTO) =>
+      beschlussvorschlag: (dto.wahlvorstandBeschlussvorschlag ?? []).map(
+        (beschlussgrundDTO: WahlvorstandBeschlussgrundDTO) =>
           _beschlussgrundDtoToModel(beschlussgrundDTO)
       ),
       beschlussfassung: dto.beschlussfassung
@@ -46,7 +46,7 @@ export function useStimmzettelMapper() {
       beschlussfassung: model.beschlussfassung
         ? _beschlussfassungModelToDto(model.beschlussfassung)
         : undefined,
-      beschlussvorschlag:
+      wahlvorstandBeschlussvorschlag:
         model.beschlussvorschlag.length > 0
           ? model.beschlussvorschlag.map((beschlussgrund) =>
               _beschlussgrundModelToDto(beschlussgrund)
@@ -121,7 +121,9 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _beschlussgrundDtoToModel(dto: BeschlussgrundDTO): Beschlussgrund {
+  function _beschlussgrundDtoToModel(
+    dto: WahlvorstandBeschlussgrundDTO
+  ): Beschlussgrund {
     return {
       text: dto.text,
     };
@@ -137,7 +139,9 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _beschlussgrundModelToDto(model: Beschlussgrund): BeschlussgrundDTO {
+  function _beschlussgrundModelToDto(
+    model: Beschlussgrund
+  ): WahlvorstandBeschlussgrundDTO {
     return {
       text: model.text,
     };

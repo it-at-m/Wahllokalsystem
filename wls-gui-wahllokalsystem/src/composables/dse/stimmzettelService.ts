@@ -96,7 +96,7 @@ export function useStimmzettelService() {
     stimmzettel: Stimmzettel
   ) {
     const dto = toSingleStimmzettelDTO(stimmzettel);
-    await stimmzettelControllerApi.postStimmzettel1(
+    await stimmzettelControllerApi.postSingleStimmzettel(
       wahlID,
       wahlbezirkID,
       stimmzettel.teamID,

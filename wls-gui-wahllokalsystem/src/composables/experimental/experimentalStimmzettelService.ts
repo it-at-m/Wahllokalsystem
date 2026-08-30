@@ -73,17 +73,6 @@ export function useOfflineCachedRessourceTools() {
   };
 }
 
-interface ReadAllRepository<T> {
-  getAll: () => Promise<OfflineCachedResource<T>[]>;
-}
-
-interface WriteResourceRepository<T> {
-  save: (cachedRessource: OfflineCachedResource<T>) => Promise<void>;
-}
-interface WriteAllRepository<T> {
-  saveAll: (cachedRessource: OfflineCachedResource<T>[]) => Promise<void>;
-}
-
 interface KeyProducer<T> {
   produceKey: (entity: T) => string;
 }
@@ -97,12 +86,7 @@ interface StimmzettelKey {
   kennung: number;
 }
 
-export function useStimmzettelRepo(
-  wahlID: string,
-  wahlbezirkID: string
-): WriteResourceRepository<Stimmzettel> &
-  ReadAllRepository<Stimmzettel> &
-  WriteAllRepository<Stimmzettel> {
+export function useStimmzettelRepo(wahlID: string, wahlbezirkID: string) {
   const dbInstance = localforage.createInstance({
     driver: localforage.INDEXEDDB,
     name: "wahldb",

@@ -18,36 +18,41 @@ public class StimmzettelValidator {
   private final ExceptionFactory exceptionFactory;
   private final TeamBezirkUndWahlIDModelValidator teamBezirkUndWahlIDModelValidator;
 
+  public void validOrThrow(final StimmzettelOfTeamModel stimmzettel) {
+    if (stimmzettel == null) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.STIMMZETTEL_FEHLEN);
+    }
+
+    verifyThatGueltigkeitIsGiven(stimmzettel);
+    verifyThatStimmzettelKennungIsGiven(stimmzettel);
+    verifyThatInvalideVotesIsGiven(stimmzettel);
+    if (stimmzettel.wahlvorschlaege() != null) {
+      stimmzettel
+          .wahlvorschlaege()
+          .forEach(
+              wahlvorschlag -> {
+                verifyThatWahlvorschlagIdIsGiven(wahlvorschlag);
+                verifyThatSelectedIsGiven(wahlvorschlag);
+                if (wahlvorschlag.kandidaten() != null) {
+                  wahlvorschlag
+                      .kandidaten()
+                      .forEach(
+                          kandidat -> {
+                            verifyThatIdIsGiven(kandidat);
+                            verifyThatKandidatIdIsGiven(kandidat);
+                            verifyThatDiscardedIsGiven(kandidat);
+                          });
+                }
+              });
+    }
+  }
+
   public void validOrThrow(final List<StimmzettelOfTeamModel> listOfStimmzettel) {
     if (listOfStimmzettel == null) {
       throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.STIMMZETTEL_FEHLEN);
     }
 
-    listOfStimmzettel.forEach(
-        stimmzettel -> {
-          verifyThatGueltigkeitIsGiven(stimmzettel);
-          verifyThatStimmzettelKennungIsGiven(stimmzettel);
-          verifyThatInvalideVotesIsGiven(stimmzettel);
-          if (stimmzettel.wahlvorschlaege() != null) {
-            stimmzettel
-                .wahlvorschlaege()
-                .forEach(
-                    wahlvorschlag -> {
-                      verifyThatWahlvorschlagIdIsGiven(wahlvorschlag);
-                      verifyThatSelectedIsGiven(wahlvorschlag);
-                      if (wahlvorschlag.kandidaten() != null) {
-                        wahlvorschlag
-                            .kandidaten()
-                            .forEach(
-                                kandidat -> {
-                                  verifyThatIdIsGiven(kandidat);
-                                  verifyThatKandidatIdIsGiven(kandidat);
-                                  verifyThatDiscardedIsGiven(kandidat);
-                                });
-                      }
-                    });
-          }
-        });
+    listOfStimmzettel.forEach(this::validOrThrow);
 
     verifyThatStimmzettelKennungIsUnique(listOfStimmzettel);
   }

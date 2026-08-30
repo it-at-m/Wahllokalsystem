@@ -55,6 +55,21 @@ public class StimmzettelService {
   }
 
   @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_WriteStimmzettelOfTeam')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+          + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
+  @Transactional
+  public void saveStimmzettel(
+      @P("param") final TeamBezirkUndWahlIDModel stimmzettelOwner,
+      final StimmzettelOfTeamModel stimmzettelToSave) {
+    stimmzettelValidator.validOrThrow(stimmzettelOwner);
+    stimmzettelValidator.validOrThrow(stimmzettelToSave);
+
+    val entityToSave = stimmzettelModelMapper.toEntity(stimmzettelOwner, stimmzettelToSave);
+    stimmzettelRepository.save(entityToSave);
+  }
+
+  @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_ReadCountStimmzettel')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
   public int getAnzahlStimmzettel(@P("param") final BezirkUndWahlID bezirkUndWahlID) {

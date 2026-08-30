@@ -24,9 +24,11 @@ export function useStimmzettelUtils() {
   }
 
   function getEmptyStimmzettelWithStimmzettelkennung(
+    teamID: string,
     stimmzettelkennung: number
   ): PersistedStimmzettel {
     return {
+      teamID: teamID,
       stimmzettelkennung: stimmzettelkennung,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
       invalideVotes: 0,

@@ -56,8 +56,10 @@ export function useStimmzettelErfassungViewUtils(
   function startNewEmptyStimmzettelWithStimmzettelkennung(
     stimmzettelkennung: number
   ) {
-    activeStimmzettel.value =
-      getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung);
+    activeStimmzettel.value = getEmptyStimmzettelWithStimmzettelkennung(
+      teamID,
+      stimmzettelkennung
+    );
   }
 
   async function sendStatusInBearbeitung() {
@@ -73,7 +75,7 @@ export function useStimmzettelErfassungViewUtils(
       ...savedStimmzettel.value,
       stimmzettel,
     ];
-    await saveStimmzettel(teamID, stimmzettel.stimmzettelkennung, stimmzettel);
+    await saveStimmzettel(stimmzettel);
     savedStimmzettel.value = newStimmzettelCollectionToSave;
   }
 

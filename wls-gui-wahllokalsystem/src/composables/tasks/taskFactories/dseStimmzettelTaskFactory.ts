@@ -18,12 +18,12 @@ export function useDSEStimmzettelTaskFactory(): TaskFactory {
   }
 
   function _createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {
-    const { getStimmzettel } = useExperimentalStimmzettelService(
+    const { initOfflineCachedStimmzettel } = useExperimentalStimmzettelService(
       taskFactoryMetaData.wahlID,
       taskFactoryMetaData.wahlbezirkID
     );
     return {
-      callback: () => getStimmzettel(currentUserTeamName.value, false),
+      callback: () => initOfflineCachedStimmzettel(currentUserTeamName.value),
       name: `Stimmzettel für ${taskFactoryMetaData.wahlName}`,
     };
   }

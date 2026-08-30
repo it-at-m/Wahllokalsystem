@@ -1,7 +1,7 @@
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
 import localforage from "localforage";
-import { unref } from "vue";
+import { toRaw } from "vue";
 
 import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 
@@ -18,12 +18,70 @@ interface SyncAdapter {
   getTasks: () => Promise<SyncTask[]>;
 }
 
-interface Repository {}
+export const FetchStateEnum = {
+  PENDING: "PENDING",
+  TRANSMITTED: "TRANSMITTED",
+  DIRTY: "DIRTY",
+} as const;
+export type FetchState = (typeof FetchStateEnum)[keyof typeof FetchStateEnum];
 
-interface StimmzettelRepository extends Repository {
-  saveById: (id: StimmzettelKey, entity: Stimmzettel) => Promise<void>;
-  saveAll: (team: string, entities: Stimmzettel[]) => Promise<void>;
-  getAll: () => Promise<Stimmzettel[]>;
+interface OfflineCachedResource<T> {
+  resource: T;
+  fetchState: FetchState | undefined;
+}
+
+export function useOfflineCachedRessourceTools() {
+  function createDirtyRessource<T>(resource: T): OfflineCachedResource<T> {
+    return {
+      resource: _asRaw(resource),
+      fetchState: FetchStateEnum.DIRTY,
+    };
+  }
+
+  function createPendingRessource<T>(resource: T): OfflineCachedResource<T> {
+    return {
+      resource: _asRaw(resource),
+      fetchState: FetchStateEnum.PENDING,
+    };
+  }
+
+  function createTransmittedRessource<T>(
+    resource: T
+  ): OfflineCachedResource<T> {
+    return {
+      resource: _asRaw(resource),
+      fetchState: FetchStateEnum.TRANSMITTED,
+    };
+  }
+
+  function createReceivedRessource<T>(resource: T): OfflineCachedResource<T> {
+    return {
+      resource: _asRaw(resource),
+      fetchState: undefined,
+    };
+  }
+
+  function _asRaw<T>(ressource: T): T {
+    return toRaw(ressource);
+  }
+
+  return {
+    createDirtyRessource,
+    createPendingRessource,
+    createReceivedRessource,
+    createTransmittedRessource,
+  };
+}
+
+interface ReadAllRepository<T> {
+  getAll: () => Promise<OfflineCachedResource<T>[]>;
+}
+
+interface WriteResourceRepository<T> {
+  save: (cachedRessource: OfflineCachedResource<T>) => Promise<void>;
+}
+interface WriteAllRepository<T> {
+  saveAll: (cachedRessource: OfflineCachedResource<T>[]) => Promise<void>;
 }
 
 interface KeyProducer<T> {
@@ -42,40 +100,47 @@ interface StimmzettelKey {
 export function useStimmzettelRepo(
   wahlID: string,
   wahlbezirkID: string
-): StimmzettelRepository {
+): WriteResourceRepository<Stimmzettel> &
+  ReadAllRepository<Stimmzettel> &
+  WriteAllRepository<Stimmzettel> {
   const dbInstance = localforage.createInstance({
     driver: localforage.INDEXEDDB,
-    name: "stimmzettel",
-    storeName: `${wahlID}_${wahlbezirkID}`,
+    name: "wahldb",
+    storeName: `stimmzettel_${wahlID}_${wahlbezirkID}`,
   });
 
   async function getAll() {
-    const result: Stimmzettel[] = [];
+    const result: OfflineCachedResource<Stimmzettel>[] = [];
     await dbInstance.iterate((value) => {
-      result.push(value as Stimmzettel);
+      //TODO validate item
+      result.push(value as OfflineCachedResource<Stimmzettel>);
     });
     return result;
   }
 
-  async function saveAll(team: string, stimmzettelToSave: Stimmzettel[]) {
-    stimmzettelToSave.forEach((stimmzettel) =>
-      saveById(
-        { teamID: team, kennung: stimmzettel.stimmzettelkennung },
-        stimmzettel
-      )
-    );
+  async function saveAll(ressources: OfflineCachedResource<Stimmzettel>[]) {
+    const savePromises: Promise<void>[] = [];
+    ressources.forEach((ressource) => savePromises.push(save(ressource)));
+
+    await Promise.allSettled(savePromises);
   }
 
-  async function saveById(key: StimmzettelKey, entity: Stimmzettel) {
+  async function save(
+    offlineCachedStimmzettel: OfflineCachedResource<Stimmzettel>
+  ) {
+    const key: StimmzettelKey = {
+      kennung: offlineCachedStimmzettel.resource.stimmzettelkennung,
+      teamID: offlineCachedStimmzettel.resource.teamID,
+    };
     await dbInstance.setItem(
       StimmzettelKeyProducer.produceKey(key),
-      toRaw(entity)
+      toRaw(offlineCachedStimmzettel)
     );
   }
 
   return {
     getAll,
-    saveById,
+    save,
     saveAll,
   };
 }
@@ -84,73 +149,73 @@ export function useExperimentalStimmzettelService(
   wahlID: string,
   wahlbezirkID: string
 ) {
-  const { getAll, saveById, saveAll } = useStimmzettelRepo(
-    wahlID,
-    wahlbezirkID
-  );
-  const { getStimmzettel: fetchStimmzettel, saveSingleStimmzettel } =
-    useStimmzettelService();
+  const { getAll, save, saveAll } = useStimmzettelRepo(wahlID, wahlbezirkID);
+  const {
+    getStimmzettel: fetchStimmzettel,
+    saveSingleStimmzettel,
+    getAnzahlStimmzettel,
+  } = useStimmzettelService();
+  const {
+    createDirtyRessource,
+    createPendingRessource,
+    createReceivedRessource,
+    createTransmittedRessource,
+  } = useOfflineCachedRessourceTools();
 
   function getTasksToSync(): Promise<SyncTask[]> {
     return Promise.resolve([]);
   }
 
-  function someMoreFunction() {
-    return "hello world";
+  async function initOfflineCachedStimmzettel(teamID: string) {
+    const existingStimmzettel = await getAll();
+    if (existingStimmzettel.length === 0) {
+      await _fetchStoreAndReturnStimmzettel(teamID, false);
+    }
   }
 
-  async function getStimmzettel(
-    teamID: string,
-    sendNotification = true
-  ): Promise<Stimmzettel[]> {
+  async function getStimmzettel(teamID: string): Promise<Stimmzettel[]> {
     const stimmzettelFromIndexDB = await getAll();
     if (stimmzettelFromIndexDB.length > 0) {
-      return stimmzettelFromIndexDB; //TODO Filter auf Team
+      return stimmzettelFromIndexDB.map((i) => i.resource); //TODO Filter auf Team
     }
+    return await _fetchStoreAndReturnStimmzettel(teamID, true);
+  }
+
+  async function saveStimmzettel(stimmzettel: Stimmzettel) {
+    await save(createPendingRessource(stimmzettel));
+    _transmitStimmzettelAndStoreResult(stimmzettel);
+  }
+
+  async function _transmitStimmzettelAndStoreResult(stimmzettel: Stimmzettel) {
+    try {
+      await saveSingleStimmzettel(wahlID, wahlbezirkID, stimmzettel);
+      await save(createTransmittedRessource(stimmzettel));
+    } catch {
+      await save(createDirtyRessource(stimmzettel));
+    }
+  }
+
+  async function _fetchStoreAndReturnStimmzettel(
+    teamID: string,
+    sendNotification: boolean
+  ): Promise<Stimmzettel[]> {
     const fetchedStimmzettel = await fetchStimmzettel(
       wahlID,
       wahlbezirkID,
       teamID,
       sendNotification
     );
-    await saveAll(teamID, fetchedStimmzettel);
+    const offlineRessources = fetchedStimmzettel.map((stimmzettel) =>
+      createReceivedRessource(stimmzettel)
+    );
+    await saveAll(offlineRessources);
     return fetchedStimmzettel;
   }
 
-  async function saveStimmzettel(
-    teamID: string,
-    stimmzettelkennung: number,
-    stimmzettel: Stimmzettel
-  ) {
-    //save in indexedDB for feedback
-    await saveById(
-      { kennung: stimmzettelkennung, teamID: teamID },
-      unref(stimmzettel)
-    ); //TODO Pending state
-    //transmit and saveResult (dirty/clean)
-    _transmitStimmzettelAndStoreResult(teamID, unref(stimmzettel));
-  }
-
-  async function _transmitStimmzettelAndStoreResult(
-    teamID: string,
-    stimmzettel: Stimmzettel
-  ) {
-    try {
-      await saveSingleStimmzettel(wahlID, wahlbezirkID, teamID, stimmzettel);
-      await saveById(
-        { kennung: stimmzettel.stimmzettelkennung, teamID: teamID },
-        stimmzettel
-      ); //TODO CleanState
-    } catch (e) {
-      await saveById(
-        { kennung: stimmzettel.stimmzettelkennung, teamID: teamID },
-        stimmzettel
-      ); //TODO: Dirty state
-    }
-  }
-
   return {
+    initOfflineCachedStimmzettel,
     saveStimmzettel,
+    getAnzahlStimmzettel: () => getAnzahlStimmzettel(wahlID, wahlbezirkID),
     getStimmzettel,
     getTasks: getTasksToSync,
   };

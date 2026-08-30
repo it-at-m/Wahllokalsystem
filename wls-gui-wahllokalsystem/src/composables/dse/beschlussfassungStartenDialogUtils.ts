@@ -1,14 +1,20 @@
 import { computed, readonly, ref } from "vue";
 
 import { useDseWorkflowStatusService } from "@/composables/dse/dseWorkflowStatusService.ts";
-import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
+import { useExperimentalStimmzettelService } from "@/composables/experimental/experimentalStimmzettelService.ts";
 import router from "@/plugins/router.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
 import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 
-export function useBeschlussfassungStartenDialogUtils() {
+export function useBeschlussfassungStartenDialogUtils(
+  wahlId: string,
+  wahlbezirkId: string
+) {
   const { saveDseWorkflowStatus } = useDseWorkflowStatusService();
-  const { getAnzahlStimmzettel } = useStimmzettelService();
+  const { getAnzahlStimmzettel } = useExperimentalStimmzettelService(
+    wahlId,
+    wahlbezirkId
+  );
 
   const stimmzettelCount = ref<number | null>(null);
   const isAnzahlStimmzettelLoading = ref(false);
@@ -17,10 +23,7 @@ export function useBeschlussfassungStartenDialogUtils() {
     () => isAnzahlStimmzettelLoading.value || stimmzettelCount.value === null
   );
 
-  async function updateWorkflowStatusAndNavigate(
-    wahlId: string,
-    wahlbezirkId: string
-  ) {
+  async function updateWorkflowStatusAndNavigate() {
     await saveDseWorkflowStatus(wahlId, wahlbezirkId, {
       status: StimmzettelerfassungStatusEnum.SteAbgeschlossen,
     });
@@ -31,11 +34,11 @@ export function useBeschlussfassungStartenDialogUtils() {
     });
   }
 
-  async function loadAnzahlStimmzettel(wahlId: string, wahlbezirkId: string) {
+  async function loadAnzahlStimmzettel() {
     isAnzahlStimmzettelLoading.value = true;
     try {
       stimmzettelCount.value = null;
-      stimmzettelCount.value = await getAnzahlStimmzettel(wahlId, wahlbezirkId);
+      stimmzettelCount.value = await getAnzahlStimmzettel();
     } finally {
       isAnzahlStimmzettelLoading.value = false;
     }

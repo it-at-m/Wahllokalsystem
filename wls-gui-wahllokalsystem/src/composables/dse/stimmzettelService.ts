@@ -34,11 +34,14 @@ export function useStimmzettelService() {
       const response = await stimmzettelControllerApi.getStimmzettel(
         wahlID,
         wahlbezirkID,
-        teamID
+        teamID,
+        axiosConfigWrapper().requestAsOnlineOnly()
       );
       const responseData = getNullOn204OrElseResponseData(response);
       return (
-        responseData?.map((stimmzettelDTO) => toModel(stimmzettelDTO)) ?? []
+        responseData?.map((stimmzettelDTO) =>
+          toModel(teamID, stimmzettelDTO)
+        ) ?? []
       );
     } catch (error) {
       if (sendNotification) {
@@ -66,7 +69,9 @@ export function useStimmzettelService() {
         wahlID,
         wahlbezirkID,
         teamID,
-        dtosToSend
+        dtosToSend,
+
+        axiosConfigWrapper().requestAsOnlineOnly()
       );
       if (sendNotification) {
         addNotification(
@@ -88,16 +93,16 @@ export function useStimmzettelService() {
   async function saveSingleStimmzettel(
     wahlID: string,
     wahlbezirkID: string,
-    teamID: string,
     stimmzettel: Stimmzettel
   ) {
     const dto = toSingleStimmzettelDTO(stimmzettel);
     await stimmzettelControllerApi.postStimmzettel1(
       wahlID,
       wahlbezirkID,
-      teamID,
+      stimmzettel.teamID,
       stimmzettel.stimmzettelkennung,
-      dto
+      dto,
+      axiosConfigWrapper().requestAsOnlineOnly()
     );
   }
 

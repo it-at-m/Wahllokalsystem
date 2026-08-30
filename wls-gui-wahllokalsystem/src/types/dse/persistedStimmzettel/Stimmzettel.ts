@@ -5,6 +5,7 @@ import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschl
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 export interface Stimmzettel {
+  teamID: string;
   stimmzettelkennung: number;
   wahlvorschlaege: Wahlvorschlag[];
 

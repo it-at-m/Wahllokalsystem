@@ -48,13 +48,13 @@ const {
   stimmzettelCount,
   loadAnzahlStimmzettel,
   updateWorkflowStatusAndNavigate,
-} = useBeschlussfassungStartenDialogUtils();
+} = useBeschlussfassungStartenDialogUtils(props.wahlId, props.wahlbezirkId);
 
 watch(
   () => isDialogVisible.value,
   async (newVal) => {
     if (newVal) {
-      await loadAnzahlStimmzettel(props.wahlId, props.wahlbezirkId);
+      await loadAnzahlStimmzettel();
     }
   }
 );
@@ -64,7 +64,7 @@ function closeDialog() {
 }
 
 async function onConfirmClicked() {
-  await updateWorkflowStatusAndNavigate(props.wahlId, props.wahlbezirkId);
+  await updateWorkflowStatusAndNavigate();
   closeDialog();
 }
 </script>

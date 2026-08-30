@@ -3,7 +3,6 @@ import type {
   BeschlussgrundDTO,
   KandidatDTO,
   SingleStimmzettelDTO,
-  StimmzettelDTO,
   StimmzettelOfTeamDTO,
   WahlvorschlagDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
@@ -14,8 +13,9 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 
 export function useStimmzettelMapper() {
-  function toModel(dto: StimmzettelOfTeamDTO): Stimmzettel {
+  function toModel(teamID: string, dto: StimmzettelOfTeamDTO): Stimmzettel {
     return {
+      teamID: teamID,
       stimmzettelkennung: dto.stimmzettelkennung,
       wahlvorschlaege: (dto.wahlvorschlaege ?? []).map((wahlvorschlagDTO) =>
         _wahlvorschlagDtoToModel(wahlvorschlagDTO as WahlvorschlagDTO)

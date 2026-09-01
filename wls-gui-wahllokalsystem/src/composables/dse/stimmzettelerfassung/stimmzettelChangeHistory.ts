@@ -23,7 +23,7 @@ export function useStimmzettelChangeHistory() {
       ],
     });
 
-    _updateLatestUsedData(kandidat, null);
+    _updateLatestUsedData(kandidat);
   }
 
   function registerKandidatEinzelstimmenRangeSet(
@@ -39,7 +39,7 @@ export function useStimmzettelChangeHistory() {
       ],
     });
 
-    _updateLatestUsedData(lastKandidat, null);
+    _updateLatestUsedData(lastKandidat);
   }
 
   function registerKandidatUngueltigeStimmenAdded(
@@ -54,7 +54,7 @@ export function useStimmzettelChangeHistory() {
       ],
     });
 
-    _updateLatestUsedData(kandidat, null);
+    _updateLatestUsedData(kandidat);
   }
 
   function registerKandidatStreichungSet(kandidat: Kandidat) {
@@ -63,7 +63,7 @@ export function useStimmzettelChangeHistory() {
       text: [`${kandidat.ordnungszahl}`, kandidat.name],
     });
 
-    _updateLatestUsedData(kandidat, null);
+    _updateLatestUsedData(kandidat);
   }
 
   function registerKandidatStreichungRangeSet(kandidaten: Kandidat[]) {
@@ -74,7 +74,7 @@ export function useStimmzettelChangeHistory() {
       text: [`${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl}`],
     });
 
-    _updateLatestUsedData(lastKandidat, null);
+    _updateLatestUsedData(lastKandidat);
   }
 
   function registerWahlvorschlagSelected(wahlvorschlag: Wahlvorschlag) {
@@ -83,15 +83,21 @@ export function useStimmzettelChangeHistory() {
       text: [`${wahlvorschlag.kurzname}`],
     });
 
-    _updateLatestUsedData(null, wahlvorschlag);
+    _updateLatestUsedData(wahlvorschlag);
   }
 
+  function _updateLatestUsedData(kandidat: Kandidat): void;
+  function _updateLatestUsedData(wahlvorschlag: Wahlvorschlag): void;
   function _updateLatestUsedData(
-    kandidat: Kandidat | null,
-    wahlvorschlag: Wahlvorschlag | null
-  ) {
-    lastUsedKandidat.value = kandidat;
-    lastUsedWahlvorschlag.value = wahlvorschlag;
+    latestUsedData: Kandidat | Wahlvorschlag
+  ): void {
+    if ("kandidatId" in latestUsedData) {
+      lastUsedKandidat.value = latestUsedData;
+      lastUsedWahlvorschlag.value = latestUsedData.owningWahlvorschlag;
+    } else {
+      lastUsedKandidat.value = null;
+      lastUsedWahlvorschlag.value = latestUsedData;
+    }
   }
 
   return {

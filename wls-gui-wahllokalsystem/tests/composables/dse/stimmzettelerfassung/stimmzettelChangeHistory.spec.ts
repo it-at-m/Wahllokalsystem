@@ -75,7 +75,9 @@ describe("stimmzettelChangeHistory.ts", () => {
         },
       ]);
       expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
-      expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        kandidat.owningWahlvorschlag
+      );
     });
 
     it("should_addPluralVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", () => {
@@ -96,7 +98,9 @@ describe("stimmzettelChangeHistory.ts", () => {
         },
       ]);
       expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
-      expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        kandidat.owningWahlvorschlag
+      );
     });
   });
 
@@ -125,7 +129,9 @@ describe("stimmzettelChangeHistory.ts", () => {
         },
       ]);
       expect(changeHistory.lastUsedKandidat.value).toStrictEqual(lastKandidat);
-      expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        lastKandidat.owningWahlvorschlag
+      );
     });
 
     it("should_addPluralVoteRangeHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", () => {
@@ -152,7 +158,9 @@ describe("stimmzettelChangeHistory.ts", () => {
         },
       ]);
       expect(changeHistory.lastUsedKandidat.value).toStrictEqual(lastKandidat);
-      expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        lastKandidat.owningWahlvorschlag
+      );
     });
   });
 
@@ -175,7 +183,9 @@ describe("stimmzettelChangeHistory.ts", () => {
         },
       ]);
       expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
-      expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        kandidat.owningWahlvorschlag
+      );
     });
 
     it("should_addPluralInvalidVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", () => {
@@ -196,7 +206,9 @@ describe("stimmzettelChangeHistory.ts", () => {
         },
       ]);
       expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
-      expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        kandidat.owningWahlvorschlag
+      );
     });
   });
 
@@ -219,7 +231,9 @@ describe("stimmzettelChangeHistory.ts", () => {
         },
       ]);
       expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
-      expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        kandidat.owningWahlvorschlag
+      );
     });
   });
 
@@ -248,7 +262,9 @@ describe("stimmzettelChangeHistory.ts", () => {
         },
       ]);
       expect(changeHistory.lastUsedKandidat.value).toStrictEqual(lastKandidat);
-      expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        lastKandidat.owningWahlvorschlag
+      );
     });
   });
 

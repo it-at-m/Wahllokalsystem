@@ -7,7 +7,6 @@ import { useAWerteTaskFactory } from "@/composables/tasks/taskFactories/aWerteTa
 import { useBeanstandeteWahlbriefeTaskFactory } from "@/composables/tasks/taskFactories/beanstandeteWahlbriefeTaskFactory.ts";
 import { useBegruendungTaskFactory } from "@/composables/tasks/taskFactories/begruendungTaskFactory.ts";
 import { useDSEStimmzettelTaskFactory } from "@/composables/tasks/taskFactories/dseStimmzettelTaskFactory.ts";
-import { useDseWorkflowStatusTaskFactory } from "@/composables/tasks/taskFactories/dseWorkflowStatusTaskFactory.ts";
 import { useEreignisseTaskFactory } from "@/composables/tasks/taskFactories/ereignisseTaskFactory.ts";
 import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts";
 import { useEroeffnungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactories/eroeffnungsuhrzeitTaskFactory.ts";
@@ -17,6 +16,7 @@ import { useMBWWahlvorschlaegeAndErgebnisseTaskFactory } from "@/composables/tas
 import { useStapelETaskFactory } from "@/composables/tasks/taskFactories/stapelETaskFactory.ts";
 import { useStatusTaskFactory } from "@/composables/tasks/taskFactories/statusTaskFactory.ts";
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
+import { useDseWorkflowStatusTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelerfassungStatusTaskFactory.ts";
 import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
 import { useUrnenwahlSchliessungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts";

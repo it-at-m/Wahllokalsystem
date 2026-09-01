@@ -76,9 +76,9 @@ import { useRoute } from "vue-router";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
-import TheEingabehistorieCard from "@/components/dse/TheEingabehistorieCard.vue";
-import TheStimmzettelCommandProcessingTextField from "@/components/dse/TheStimmzettelCommandProcessingTextField.vue";
-import TheStimmzettelContent from "@/components/dse/TheStimmzettelContent.vue";
+import TheEingabehistorieCard from "@/components/dse/stimmzettelerfassung/TheEingabehistorieCard.vue";
+import TheStimmzettelCommandProcessingTextField from "@/components/dse/stimmzettelerfassung/TheStimmzettelCommandProcessingTextField.vue";
+import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStimmzettelContent.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 

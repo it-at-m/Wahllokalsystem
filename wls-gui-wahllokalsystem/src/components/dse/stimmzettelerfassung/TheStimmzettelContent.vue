@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 
-import BaseWahlvorschlagCard from "./stimmzettelerfassung/baseComponents/BaseWahlvorschlagCard.vue";
+import BaseWahlvorschlagCard from "./baseComponents/BaseWahlvorschlagCard.vue";
 
 defineProps<{
   activeWahlvorschlagId: string | null;

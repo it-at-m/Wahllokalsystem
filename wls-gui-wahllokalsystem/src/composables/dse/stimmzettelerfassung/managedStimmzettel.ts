@@ -148,6 +148,14 @@ export function useManagedStimmzettel(
         `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
       );
     }
+    if (
+      !kandidat.ungueltigeStimmen ||
+      kandidat.ungueltigeStimmen < invalidVotesToRemove
+    ) {
+      throw new ManagedStimmzettelError(
+        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${invalidVotesToRemove} ungültigen Stimmen abgezogen werden.`
+      );
+    }
 
     _internalRemoveInvalidVotesFromKandidat(kandidat, invalidVotesToRemove);
   }

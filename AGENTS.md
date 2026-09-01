@@ -137,7 +137,7 @@ get-started doc.
 Vue 3 Composition API + TypeScript + Vuetify, Pinia for state, vue-router, PWA via
 `vite-plugin-pwa` + Workbox (offline support is a core requirement). Source organized by domain
 subfolder (`common` for shared, `<domain>` for domain-specific) across: `api/` (generated clients),
-`components/`, `composables/`, `stores/`, `views`, `types`, `plugins`, `service-worker`,
+`components/`, `composables/`, `stores/`, `views/`, `types/`, `plugins/`, `service-worker/`,
 `resources/openapis/`.
 
 - Component hierarchy: **Views** → **SingleUse** components → **Basis** components. Views and

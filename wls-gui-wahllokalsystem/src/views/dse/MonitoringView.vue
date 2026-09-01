@@ -101,9 +101,9 @@ import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseLatestLoadDiv from "@/components/common/div/BaseLatestLoadDiv.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
-import BaseTeamStatusListItem from "@/components/dse/BaseTeamStatusListItem.vue";
 import TheBeschlussfassungStartenDialog from "@/components/dse/beschlussfassung/TheBeschlussfassungStartenDialog.vue";
-import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
+import BaseTeamStatusListItem from "@/components/dse/monitoring/BaseTeamStatusListItem.vue";
+import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
 import router from "@/plugins/router.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";

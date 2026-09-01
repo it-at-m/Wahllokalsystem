@@ -1,7 +1,7 @@
 import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
+import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const { ref } = await import("vue");

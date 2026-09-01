@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/ManagedStimmzettel.ts";
+import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
 
 export interface CommandHandler {
   canHandle: (command: string) => boolean;

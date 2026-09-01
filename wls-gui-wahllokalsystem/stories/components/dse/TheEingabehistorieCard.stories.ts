@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import TheEingabehistorieCard from "@/components/dse/stimmzettelerfassung/TheEingabehistorieCard.vue";
-import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHistoryTypeEnum.ts";
+import TheEingabehistorieCard from "@/components/dse/TheEingabehistorieCard.vue";
+import { InputHistoryTypeEnum } from "@/types/dse/InputHistoryTypeEnum.ts";
 
 const meta = {
   component: TheEingabehistorieCard,

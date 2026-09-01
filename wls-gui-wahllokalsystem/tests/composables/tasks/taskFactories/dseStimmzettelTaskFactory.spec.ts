@@ -13,14 +13,11 @@ const mockDefinitions = vi.hoisted(() => ({
   getStimmzettel: vi.fn(),
 }));
 
-vi.mock(
-  import("@/composables/dse/stimmzettelerfassung/stimmzettelService.ts"),
-  () => ({
-    useStimmzettelService: vi.fn().mockImplementation(() => ({
-      getStimmzettel: mockDefinitions.getStimmzettel,
-    })),
-  })
-);
+vi.mock(import("@/composables/dse/stimmzettelService.ts"), () => ({
+  useStimmzettelService: vi.fn().mockImplementation(() => ({
+    getStimmzettel: mockDefinitions.getStimmzettel,
+  })),
+}));
 
 describe("dseStimmzettelTaskFactory.ts", () => {
   let unitUnderTest: ReturnType<typeof useDSEStimmzettelTaskFactory>;

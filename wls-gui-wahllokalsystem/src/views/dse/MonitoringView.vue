@@ -87,12 +87,12 @@ import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseLatestLoadDiv from "@/components/common/div/BaseLatestLoadDiv.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
-import TheBeschlussfassungStartenDialog from "@/components/dse/beschlussfassung/TheBeschlussfassungStartenDialog.vue";
-import BaseTeamStatusListItem from "@/components/dse/monitoring/BaseTeamStatusListItem.vue";
-import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
+import BaseTeamStatusListItem from "@/components/dse/BaseTeamStatusListItem.vue";
+import TheBeschlussfassungStartenDialog from "@/components/dse/TheBeschlussfassungStartenDialog.vue";
+import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
 import router from "@/plugins/router.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/teamStatus/StimmzettelerfassungTeamStatusEnum.ts";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/workflowStatus/StimmzettelerfassungStatusEnum.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
 import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 
 const minWidth = "220px";

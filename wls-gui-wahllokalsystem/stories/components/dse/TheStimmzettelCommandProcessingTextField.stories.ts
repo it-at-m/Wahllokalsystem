@@ -4,8 +4,8 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 
-import TheStimmzettelCommandProcessingTextField from "@/components/dse/stimmzettelerfassung/TheStimmzettelCommandProcessingTextField.vue";
-import { useStimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
+import TheStimmzettelCommandProcessingTextField from "@/components/dse/TheStimmzettelCommandProcessingTextField.vue";
+import { useStimmzettelManager } from "@/composables/dse/stimmzettelManager.ts";
 
 const meta = {
   component: TheStimmzettelCommandProcessingTextField,

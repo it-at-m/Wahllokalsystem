@@ -1,9 +1,9 @@
-import type { Beschlussgrund } from "@/types/dse/beschlussfassung/Beschlussgrund.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { Beschlussgrund } from "@/types/dse/Beschlussgrund.ts";
+import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 import type { Meta, StoryFn } from "@storybook/vue3";
 
-import BaseStimmzettelUebersichtTable from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelUebersichtTable.vue";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
+import BaseStimmzettelUebersichtTable from "@/components/dse/BaseStimmzettelUebersichtTable.vue";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/StimmzettelGueltigkeitEnum.ts";
 
 function createDummyStimmzettelListe(): Stimmzettel[] {
   return [

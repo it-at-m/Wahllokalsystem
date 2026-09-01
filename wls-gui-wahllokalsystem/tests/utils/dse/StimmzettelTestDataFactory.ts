@@ -6,20 +6,20 @@ import type {
   WahlvorschlagDTO,
   WahlvorstandBeschlussgrundDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
-import type { Beschlussfassung as PersistedBeschlussfassung } from "@/types/dse/stimmzettelerfassung/persistedStimmzettel/Beschlussfassung.ts";
-import type { Beschlussgrund as PersistedBeschlussgrund } from "@/types/dse/stimmzettelerfassung/persistedStimmzettel/Beschlussgrund.ts";
-import type { Kandidat as PersistedKandidat } from "@/types/dse/stimmzettelerfassung/persistedStimmzettel/Kandidat.ts";
-import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/persistedStimmzettel/Stimmzettel.ts";
-import type { Wahlvorschlag as PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/persistedStimmzettel/Wahlvorschlag.ts";
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
+import type { Kandidat } from "@/types/dse/Kandidat.ts";
+import type { Beschlussfassung as PersistedBeschlussfassung } from "@/types/dse/persistedStimmzettel/Beschlussfassung.ts";
+import type { Beschlussgrund as PersistedBeschlussgrund } from "@/types/dse/persistedStimmzettel/Beschlussgrund.ts";
+import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
+import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Wahlvorschlag as PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
+import type { Wahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { StimmzettelOfTeamDTOGueltigkeitEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const {
   generateRandomNumber,

@@ -1,4 +1,4 @@
-import BaseKandidatListItemContent from "@/components/dse/stimmzettelerfassung/baseComponents/BaseKandidatListItemContent.vue";
+import BaseKandidatListItemContent from "@/components/dse/BaseKandidatListItemContent.vue";
 
 export default {
   title: "components/dse/BaseKandidatListItemContent",

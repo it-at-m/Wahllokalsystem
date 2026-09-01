@@ -1,4 +1,4 @@
-import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStimmzettelContent.vue";
+import TheStimmzettelContent from "@/components/dse/TheStimmzettelContent.vue";
 
 export default {
   title: "components/dse/TheStimmzettelContent",

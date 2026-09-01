@@ -5,7 +5,7 @@ import type { Task } from "@/types/tasks/Task.ts";
 
 import { storeToRefs } from "pinia";
 
-import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
+import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 export function useDSEStimmzettelTaskFactory(): TaskFactory {

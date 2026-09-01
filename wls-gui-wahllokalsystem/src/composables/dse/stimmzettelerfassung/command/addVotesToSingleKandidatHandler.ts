@@ -1,5 +1,5 @@
 import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/ManagedStimmzettel.ts";
-import type { CommandHandler } from "@/types/dse/stimmzettelerfassung/command/CommandHandler.ts";
+import type { CommandHandler } from "@/types/dse/command/CommandHandler.ts";
 
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/composables/dse/stimmzettelerfassung/ManagedStimmzettel.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";

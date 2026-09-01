@@ -1,4 +1,4 @@
-import type { Beschlussgrund } from "@/types/dse/Beschlussgrund.ts";
+import type { Beschlussgrund } from "@/types/dse/beschlussfassung/Beschlussgrund.ts";
 import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
 import type { Meta, StoryFn } from "@storybook/vue3";
 

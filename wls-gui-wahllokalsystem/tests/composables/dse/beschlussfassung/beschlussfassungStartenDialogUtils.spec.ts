@@ -3,7 +3,7 @@ import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/S
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
-import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassungStartenDialogUtils.ts";
+import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassung/beschlussfassungStartenDialogUtils.ts";
 import router from "@/plugins/router.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
 

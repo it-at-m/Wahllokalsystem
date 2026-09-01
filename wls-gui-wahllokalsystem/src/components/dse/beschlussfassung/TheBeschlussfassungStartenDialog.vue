@@ -29,7 +29,7 @@ import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/Stimmzette
 import { watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassungStartenDialogUtils.ts";
+import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassung/beschlussfassungStartenDialogUtils.ts";
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,

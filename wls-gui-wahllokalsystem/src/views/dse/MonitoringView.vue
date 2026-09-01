@@ -102,7 +102,7 @@ import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseLatestLoadDiv from "@/components/common/div/BaseLatestLoadDiv.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
 import BaseTeamStatusListItem from "@/components/dse/BaseTeamStatusListItem.vue";
-import TheBeschlussfassungStartenDialog from "@/components/dse/TheBeschlussfassungStartenDialog.vue";
+import TheBeschlussfassungStartenDialog from "@/components/dse/beschlussfassung/TheBeschlussfassungStartenDialog.vue";
 import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
 import router from "@/plugins/router.ts";

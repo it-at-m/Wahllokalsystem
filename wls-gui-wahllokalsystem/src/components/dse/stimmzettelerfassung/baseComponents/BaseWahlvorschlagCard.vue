@@ -84,6 +84,7 @@ const kandidatenListe = computed(() => props.wahlvorschlag.kandidaten);
 const listItems = ref<(ComponentPublicInstance | null)[]>([]);
 const { scrollIntoView, triggerRippleEffect } = useViewportUtils();
 
+//TODO refactor to function instead of constant
 const isDividerZwischenGleichemKandidat = (index: number) => {
   if (index <= 0) return false;
   const prev = kandidatenListe.value[index - 1];
@@ -92,6 +93,7 @@ const isDividerZwischenGleichemKandidat = (index: number) => {
   return prev.kandidatId === curr.kandidatId;
 };
 
+//TODO refactor to function instead of constant
 const focusActive = async () => {
   const id = props.activeKandidatId;
   if (!id) return;

@@ -142,13 +142,13 @@ subfolder (`common` for shared, `<domain>` for domain-specific) across: `api/` (
 
 - Component hierarchy: **Views** → **SingleUse** components → **Basis** components. Views and
   SingleUse components may read stores; Basis components may **not** (props/events only). Basis
-  components may nur Rules- und Formatter-Composables für Formatierung/Validierung nutzen, keine
-  Geschäftslogik oder Backendzugriffe. Saving is a SingleUse-component responsibility.
-- Composables sind typisiert (siehe `docs/src/technik/systemspecification/frontend.md`): Rules,
+  components may only use Rules- and Formatter-composables for formatting/validation, not
+  business logic or backend access. Saving is a SingleUse-component responsibility.
+- Composables are categorized (see `docs/src/technik/systemspecification/frontend.md`): Rules,
   Formatter, StoreModule, State, Utils, FetchService, Tools, Mapper, Manager, Service. Mapper
-  werden ausschließlich von Utils- oder FetchService-Composables verwendet, Manager nur von
-  FetchService, StoreModule nur von Stores. Views/SingleUse-Komponenten verwenden höherwertige
-  Composables (z.B. FetchService, Service, Manager, Tools, State), Basis-Komponenten nur
+  composables are only used by Utils- or FetchService-composables; Manager composables only by
+  FetchService; StoreModule composables only by stores. Views/SingleUse components use higher-level
+  composables (e.g. FetchService, Service, Manager, Tools, State), Basis components only
   Rules/Formatter.
 - Backend access path mirrors the backend: `store → FetchService (composable) → client + mapper`.
   Components and stores do not call generated API clients directly; they delegate to composables.

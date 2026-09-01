@@ -98,7 +98,7 @@ Formatter gehören zu einem Datentyp oder einer Domain.
 
 **Beispiel:**
 
-`stimmzettelWorkflowStatusState.ts` ... Verwaltet einen konkreten WorkflowStatus (Daten und Loading) für einen konkreten Wahlbezirk 
+`stimmzettelWorkflowStatusState.ts` ... Verwaltet einen konkreten WorkflowStatus (Daten und Loading) für einen konkreten Wahlbezirk
 
 ### Mapper
 

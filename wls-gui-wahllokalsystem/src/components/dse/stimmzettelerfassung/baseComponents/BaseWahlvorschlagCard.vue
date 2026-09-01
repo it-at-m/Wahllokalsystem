@@ -45,6 +45,7 @@
             :id="`kandidat-${index}`"
             :key="index"
             ref="listItems"
+            v-ripple="kandidat.kandidatId === activeKandidatId"
             tabindex="-1"
           >
             <v-divider
@@ -81,7 +82,7 @@ const props = defineProps<{
 const kandidatenListe = computed(() => props.wahlvorschlag.kandidaten);
 
 const listItems = ref<(ComponentPublicInstance | null)[]>([]);
-const { scrollIntoView } = useViewportUtils();
+const { scrollIntoView, triggerRippleEffect } = useViewportUtils();
 
 const isDividerZwischenGleichemKandidat = (index: number) => {
   if (index <= 0) return false;
@@ -111,10 +112,7 @@ const focusActive = async () => {
   if (item?.$el) {
     const selector = `#kandidat-${lastIndex}`;
     scrollIntoView(selector);
-
-    if (typeof item.$el.focus === "function") {
-      item.$el.focus();
-    }
+    triggerRippleEffect(item.$el);
   }
 };
 

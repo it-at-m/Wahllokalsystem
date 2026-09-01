@@ -9,7 +9,25 @@ export function useViewportUtils() {
     }
   }
 
+  function triggerRippleEffect(element: HTMLElement) {
+    const rect = element.getBoundingClientRect();
+
+    const eventOptions = {
+      bubbles: false,
+      cancelable: false,
+      clientX: rect.left + rect.width / 2,
+      clientY: rect.top + rect.height / 2,
+    };
+
+    element.dispatchEvent(new MouseEvent("mousedown", eventOptions));
+
+    window.setTimeout(() => {
+      element.dispatchEvent(new MouseEvent("mouseup", eventOptions));
+    }, 350);
+  }
+
   return {
     scrollIntoView,
+    triggerRippleEffect,
   };
 }

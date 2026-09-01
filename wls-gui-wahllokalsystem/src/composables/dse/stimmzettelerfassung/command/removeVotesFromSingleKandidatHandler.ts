@@ -18,7 +18,7 @@ export function useRemoveVotesFromSingleKandidatHandler(): CommandHandler {
     parseOptionalCountToNumber,
   } = useHandlerTools();
 
-  function canHandle(command:string): boolean {
+  function canHandle(command: string): boolean {
     try {
       const commandArguments = _parseCommandArguments(command);
       return !!commandArguments;
@@ -27,7 +27,10 @@ export function useRemoveVotesFromSingleKandidatHandler(): CommandHandler {
     }
   }
 
-  function handleOrThrow(command:string, stimmzettel: ManagedStimmzettel): void {
+  function handleOrThrow(
+    command: string,
+    stimmzettel: ManagedStimmzettel
+  ): void {
     const commandArguments = _parseCommandArguments(command);
     if (!commandArguments) {
       throw new CommandExecutionError(

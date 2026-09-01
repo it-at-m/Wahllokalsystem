@@ -61,9 +61,9 @@ describe("removeVotesFromSingleKandidatHandler.ts", () => {
       (kandidatOrdnungszahl) => {
         handleOrThrow(`${kandidatOrdnungszahl}-`, mockManagedStimmzettel);
 
-        expect(mockDefinitions.kandidatRemoveVotesOrThrow).toHaveBeenCalledTimes(
-          1
-        );
+        expect(
+          mockDefinitions.kandidatRemoveVotesOrThrow
+        ).toHaveBeenCalledTimes(1);
         expect(
           mockDefinitions.kandidatRemoveVotesOrThrow.mock.calls[0]
         ).toStrictEqual([kandidatOrdnungszahl, 1]);
@@ -75,9 +75,9 @@ describe("removeVotesFromSingleKandidatHandler.ts", () => {
       (kandidatOrdnungszahl) => {
         handleOrThrow(`${kandidatOrdnungszahl}-3`, mockManagedStimmzettel);
 
-        expect(mockDefinitions.kandidatRemoveVotesOrThrow).toHaveBeenCalledTimes(
-          1
-        );
+        expect(
+          mockDefinitions.kandidatRemoveVotesOrThrow
+        ).toHaveBeenCalledTimes(1);
         expect(
           mockDefinitions.kandidatRemoveVotesOrThrow.mock.calls[0]
         ).toStrictEqual([kandidatOrdnungszahl, 3]);

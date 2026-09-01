@@ -93,8 +93,10 @@ export function useManagedStimmzettel(
     _internalAddVotesToKandidat(kandidat, votesToAdd);
   }
 
-  function kandidatRemoveEinzelstimmenOrThrow(ordnungszahl: number,
-                                              votesToRemove: number) {
+  function kandidatRemoveEinzelstimmenOrThrow(
+    ordnungszahl: number,
+    votesToRemove: number
+  ) {
     _isNotSafeIntegerThrow(
       votesToRemove,
       "Die Anzahl der zu entfernenden Stimmen muss eine ganze Zahl sein."
@@ -287,7 +289,6 @@ export function useManagedStimmzettel(
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
     kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
     _updateReststimmenWhenVotesAdded();
-    _addVotesForKandidatToWahlvorschlag(kandidat, votesToAdd);
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
@@ -297,13 +298,14 @@ export function useManagedStimmzettel(
     });
   }
 
-  function _internalRemoveVotesFromKandidat(kandidat: Kandidat,
-                                            numberOfVotesToRemove: number) {
+  function _internalRemoveVotesFromKandidat(
+    kandidat: Kandidat,
+    numberOfVotesToRemove: number
+  ) {
     const votesToRemove = Math.abs(numberOfVotesToRemove);
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
     kandidat.einzelstimmen = currentEinzelstimmen - votesToRemove;
     _updateReststimmenWhenVotesRemoved();
-    _removeVotesForKandidatToWahlvorschlag(kandidat, votesToRemove);
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
       text: [
@@ -320,7 +322,6 @@ export function useManagedStimmzettel(
     const invalidVotesToAdd = Math.abs(numberOfInvalidVotesToAdd);
     const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
     kandidat.ungueltigeStimmen = currentUngueltigeStimmen + invalidVotesToAdd;
-    _addInvalidVotesForKandidatToWahlvorschlag(kandidat, invalidVotesToAdd);
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
@@ -339,7 +340,6 @@ export function useManagedStimmzettel(
       const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
       kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
       _updateReststimmenWhenVotesAdded();
-      _addVotesForKandidatToWahlvorschlag(kandidat, votesToAdd);
     });
     changeHistory.value.push({
       type: InputHistoryTypeEnum.VOTE_RANGE,
@@ -443,36 +443,6 @@ export function useManagedStimmzettel(
     return kandidaten;
   }
 
-  function _addVotesForKandidatToWahlvorschlag(
-    kandidat: Kandidat,
-    votesToAdd: number
-  ) {
-    const wahlvorschlagToUpdate = _getWahlvorschlagForKandidat(kandidat);
-    if (wahlvorschlagToUpdate) {
-      wahlvorschlagToUpdate.gueltigeStimmen += votesToAdd;
-    }
-  }
-
-  function _removeVotesForKandidatToWahlvorschlag(
-    kandidat: Kandidat,
-    votesToRemove: number
-  ) {
-    const wahlvorschlagToUpdate = _getWahlvorschlagForKandidat(kandidat);
-    if (wahlvorschlagToUpdate) {
-      wahlvorschlagToUpdate.gueltigeStimmen -= votesToRemove;
-    }
-  }
-
-  function _addInvalidVotesForKandidatToWahlvorschlag(
-    kandidat: Kandidat,
-    invalidVotesToAdd: number
-  ) {
-    const wahlvorschlagToUpdate = _getWahlvorschlagForKandidat(kandidat);
-    if (wahlvorschlagToUpdate) {
-      wahlvorschlagToUpdate.ungueltigeStimmen += invalidVotesToAdd;
-    }
-  }
-
   function _updateReststimmenWhenVotesAdded() {
     if (remainingVotes.value < 0) {
       const wahlvorschlagToUpdate = stimmzettel.value.wahlvorschlaege.find(
@@ -506,19 +476,15 @@ export function useManagedStimmzettel(
       );
       if (wahlvorschlagToUpdate) {
         for (let i = remainingVotes.value; i > 0; i--) {
-          const kandidatToUpdate = wahlvorschlagToUpdate.kandidaten.find(kandidat => !kandidat.reststimmen || kandidat.reststimmen === 0);
+          const kandidatToUpdate = wahlvorschlagToUpdate.kandidaten.find(
+            (kandidat) => !kandidat.reststimmen || kandidat.reststimmen === 0
+          );
           if (kandidatToUpdate) {
             kandidatToUpdate.reststimmen = 1;
           }
         }
       }
     }
-  }
-
-  function _getWahlvorschlagForKandidat(kandidat: Kandidat) {
-    return stimmzettel.value.wahlvorschlaege.find((wahlvorschlag) =>
-      wahlvorschlag.kandidaten.find((k) => k.kandidatId === kandidat.kandidatId)
-    );
   }
 
   function _isNotSafeIntegerThrow(value: number, errorMessage: string) {

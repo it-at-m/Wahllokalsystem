@@ -300,14 +300,20 @@ describe("managedStimmzettel.ts", () => {
         managed.kandidatRemoveEinzelstimmenOrThrow(101, Number.NaN)
       ).toThrow(ManagedStimmzettelError);
       expect(() =>
-        managed.kandidatRemoveEinzelstimmenOrThrow(101, Number.NEGATIVE_INFINITY)
+        managed.kandidatRemoveEinzelstimmenOrThrow(
+          101,
+          Number.NEGATIVE_INFINITY
+        )
       ).toThrow(ManagedStimmzettelError);
       expect(() =>
-        managed.kandidatRemoveEinzelstimmenOrThrow(101, Number.POSITIVE_INFINITY)
+        managed.kandidatRemoveEinzelstimmenOrThrow(
+          101,
+          Number.POSITIVE_INFINITY
+        )
       ).toThrow(ManagedStimmzettelError);
-      expect(() => managed.kandidatRemoveEinzelstimmenOrThrow(101, 0.1)).toThrow(
-        ManagedStimmzettelError
-      );
+      expect(() =>
+        managed.kandidatRemoveEinzelstimmenOrThrow(101, 0.1)
+      ).toThrow(ManagedStimmzettelError);
     });
 
     it("should_throwManagedStimmzettelError_when_votesToRemoveExceedsExistingEinzelstimmen", () => {
@@ -361,8 +367,6 @@ describe("managedStimmzettel.ts", () => {
       const wv = prepareManagedStimmzettelWahlvorschlag()
         .ordnungszahl(1)
         .selected(true)
-        .gueltigeStimmen(2)
-        .ungueltigeStimmen(0)
         .kandidaten([kandidat])
         .build();
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -375,7 +379,6 @@ describe("managedStimmzettel.ts", () => {
 
       expect(kandidat.einzelstimmen).toBe(1);
       expect(managed.stimmenSummary.value.einzelstimmen).toBe(1);
-      expect(wv.gueltigeStimmen).toBe(1);
     });
 
     it("should_reassignReststimmen_when_votesRemovedAndRemainingVotesBecomePositive", () => {
@@ -413,8 +416,6 @@ describe("managedStimmzettel.ts", () => {
       const wv = prepareManagedStimmzettelWahlvorschlag()
         .ordnungszahl(1)
         .selected(true)
-        .gueltigeStimmen(2)
-        .ungueltigeStimmen(0)
         .kandidaten([k1, k2])
         .build();
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -428,7 +429,6 @@ describe("managedStimmzettel.ts", () => {
 
       expect(k1.einzelstimmen).toBe(0);
       expect(k1.reststimmen).toBe(1);
-      expect(wv.gueltigeStimmen).toBe(1);
       expect(managed.stimmenSummary.value.reststimmen).toBe(1);
     });
   });
@@ -587,8 +587,6 @@ describe("managedStimmzettel.ts", () => {
       const wv = prepareManagedStimmzettelWahlvorschlag()
         .ordnungszahl(1)
         .selected(false)
-        .gueltigeStimmen(0)
-        .ungueltigeStimmen(0)
         .kandidaten([k1, k2])
         .build();
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -602,7 +600,6 @@ describe("managedStimmzettel.ts", () => {
       expect(k1.einzelstimmen).toBe(2);
       expect(k2.einzelstimmen).toBe(2);
       expect(managed.stimmenSummary.value.einzelstimmen).toBe(4);
-      expect(wv.gueltigeStimmen).toBe(4);
     });
 
     it("should_addAllVotesToSingleKandidat_evenIfRequestedExceedsRemainingVotes", () => {
@@ -632,8 +629,6 @@ describe("managedStimmzettel.ts", () => {
       const wv = prepareManagedStimmzettelWahlvorschlag()
         .ordnungszahl(1)
         .selected(false)
-        .gueltigeStimmen(0)
-        .ungueltigeStimmen(0)
         .kandidaten([kandidat])
         .build();
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -646,7 +641,6 @@ describe("managedStimmzettel.ts", () => {
 
       expect(kandidat.einzelstimmen).toBe(6);
       expect(managed.stimmenSummary.value.einzelstimmen).toBe(6);
-      expect(wv.gueltigeStimmen).toBe(6);
     });
   });
 
@@ -838,8 +832,6 @@ describe("managedStimmzettel.ts", () => {
       const wv = prepareManagedStimmzettelWahlvorschlag()
         .ordnungszahl(1)
         .selected(false)
-        .gueltigeStimmen(0)
-        .ungueltigeStimmen(0)
         .kandidaten([k1, k2, k3])
         .build();
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -890,8 +882,6 @@ describe("managedStimmzettel.ts", () => {
       const wv = prepareManagedStimmzettelWahlvorschlag()
         .ordnungszahl(1)
         .selected(false)
-        .gueltigeStimmen(0)
-        .ungueltigeStimmen(0)
         .kandidaten([k1, k2])
         .build();
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -946,8 +936,6 @@ describe("managedStimmzettel.ts", () => {
       const wv = prepareManagedStimmzettelWahlvorschlag()
         .ordnungszahl(1)
         .selected(false)
-        .gueltigeStimmen(0)
-        .ungueltigeStimmen(0)
         .kandidaten([k1, k2])
         .build();
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
@@ -964,7 +952,6 @@ describe("managedStimmzettel.ts", () => {
       expect(k2.einzelstimmen).toBe(1);
       expect(k1.reststimmen).toBe(0);
       expect(k2.reststimmen).toBe(0);
-      expect(wv.gueltigeStimmen).toBe(2);
       expect(managed.stimmenSummary.value.einzelstimmen).toBe(2);
       expect(managed.stimmenSummary.value.reststimmen).toBe(0);
     });

@@ -119,9 +119,9 @@ describe("handlerTools.ts", () => {
     it.each(["a", "-1", "+", "1.5"])(
       "should_returnNaN_when_textIsInvalid: %s",
       (text) => {
-        expect(
-          Number.isNaN(parseOptionalCountToNumber(text as string))
-        ).toBe(true);
+        expect(Number.isNaN(parseOptionalCountToNumber(text as string))).toBe(
+          true
+        );
       }
     );
   });

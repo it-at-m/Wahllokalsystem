@@ -74,7 +74,7 @@ describe("stimmzettelChangeHistory.ts", () => {
           text: ["101 + 1 Stimme", "Max Mustermann"],
         },
       ]);
-      expect(changeHistory.lastUsedKandidat.value).toBe(kandidat);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
       expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
     });
 
@@ -95,7 +95,7 @@ describe("stimmzettelChangeHistory.ts", () => {
           text: ["101 + 2 Stimmen", "Max Mustermann"],
         },
       ]);
-      expect(changeHistory.lastUsedKandidat.value).toBe(kandidat);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
       expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
     });
   });
@@ -124,7 +124,7 @@ describe("stimmzettelChangeHistory.ts", () => {
           text: ["101-103 + 1 Stimme"],
         },
       ]);
-      expect(changeHistory.lastUsedKandidat.value).toBe(lastKandidat);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(lastKandidat);
       expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
     });
 
@@ -151,7 +151,7 @@ describe("stimmzettelChangeHistory.ts", () => {
           text: ["101-103 + 2 Stimmen"],
         },
       ]);
-      expect(changeHistory.lastUsedKandidat.value).toBe(lastKandidat);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(lastKandidat);
       expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
     });
   });
@@ -174,7 +174,7 @@ describe("stimmzettelChangeHistory.ts", () => {
           text: ["101 + 1 ungültige Stimme", "Max Mustermann"],
         },
       ]);
-      expect(changeHistory.lastUsedKandidat.value).toBe(kandidat);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
       expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
     });
 
@@ -195,7 +195,7 @@ describe("stimmzettelChangeHistory.ts", () => {
           text: ["101 + 2 ungültige Stimmen", "Max Mustermann"],
         },
       ]);
-      expect(changeHistory.lastUsedKandidat.value).toBe(kandidat);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
       expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
     });
   });
@@ -218,7 +218,7 @@ describe("stimmzettelChangeHistory.ts", () => {
           text: ["101", "Max Mustermann"],
         },
       ]);
-      expect(changeHistory.lastUsedKandidat.value).toBe(kandidat);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
       expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
     });
   });
@@ -247,7 +247,7 @@ describe("stimmzettelChangeHistory.ts", () => {
           text: ["101-103"],
         },
       ]);
-      expect(changeHistory.lastUsedKandidat.value).toBe(lastKandidat);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(lastKandidat);
       expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
     });
   });
@@ -270,7 +270,9 @@ describe("stimmzettelChangeHistory.ts", () => {
         },
       ]);
       expect(changeHistory.lastUsedKandidat.value).toBeNull();
-      expect(changeHistory.lastUsedWahlvorschlag.value).toBe(wahlvorschlag);
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        wahlvorschlag
+      );
     });
   });
 });

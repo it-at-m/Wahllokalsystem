@@ -33,6 +33,9 @@
               >
                 Status
               </div>
+              <div class="font-weight-bold align-center justify-center">
+                Stimmzettelerfassung
+              </div>
             </template>
           </v-list-item>
           <v-divider
@@ -44,6 +47,17 @@
             :key="item.teamID"
             :min-width="minWidth"
             :team-entry="item"
+            :wahl-i-d="wahlID"
+            :wahlbezirk-i-d="wahlbezirkID"
+            :is-wieder-oeffnen-button-disabled="
+              item.status !==
+                StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN ||
+              workflowStatus?.status !==
+                StimmzettelerfassungStatusEnum.SteBearbeitung
+            "
+            @open-stimmzettelerfassung="
+              onOpenStimmzettelerfassungClicked(item.teamID)
+            "
           />
         </v-list>
       </v-card-text>
@@ -51,7 +65,7 @@
         <base-button-refresh
           :active="isRefreshBtnActive"
           :loading="isAktualisierenLoading"
-          @click="onMonitoringSynchronisierenClicked"
+          @click="onAktualisierenClicked"
         />
         <base-text-button
           v-if="isBeschlussfassungStartenBtnVisible"
@@ -90,6 +104,7 @@ import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressL
 import BaseTeamStatusListItem from "@/components/dse/BaseTeamStatusListItem.vue";
 import TheBeschlussfassungStartenDialog from "@/components/dse/TheBeschlussfassungStartenDialog.vue";
 import { useMonitoringViewUtils } from "@/composables/dse/monitoringViewUtils.ts";
+import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelErfassungViewUtils.ts";
 import router from "@/plugins/router.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
@@ -109,6 +124,7 @@ const {
   isWorkflowStatusLoading,
   workflowStatus,
   onMonitoringSynchronisierenClicked,
+  reloadWorkflowStatus,
 } = useMonitoringViewUtils(wahlID, wahlbezirkID);
 
 const beschlussfassungBtnActive = computed(() =>
@@ -166,5 +182,20 @@ async function onBeschlussfassungContinueClicked() {
 
 async function onBeschlussfassungStartenClicked() {
   beschlussfassungStartenDialogVisible.value = true;
+}
+async function onAktualisierenClicked() {
+  await reloadWorkflowStatus();
+  await onMonitoringSynchronisierenClicked();
+}
+
+async function onOpenStimmzettelerfassungClicked(teamID: string) {
+  const { sendStatusInBearbeitung } = useStimmzettelErfassungViewUtils(
+    wahlID,
+    wahlbezirkID,
+    teamID
+  );
+
+  await sendStatusInBearbeitung(true);
+  await onMonitoringSynchronisierenClicked();
 }
 </script>

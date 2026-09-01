@@ -14,8 +14,8 @@
           <v-col cols="2">
             <the-eingabehistorie-card
               :change-history="
-                stimmzettelManager.managedStimmzettel.changeHistoryInReverOrder
-                  .value
+                stimmzettelManager.managedStimmzettel
+                  .changeHistoryInReverseOrder.value
               "
             />
             <base-stimmzettel-zusammenfassung-card
@@ -71,6 +71,7 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
+import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
@@ -102,8 +103,12 @@ const emit = defineEmits<{
   confirm: [stimmzettel: Stimmzettel];
 }>();
 
+const route = useRoute();
+const wahlID = route.params.wahlId as string;
+
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
-  props.wahlvorschlaege
+  props.wahlvorschlaege,
+  wahlID
 );
 
 const { currentUserTeamName } = storeToRefs(useUserStore());

@@ -25,7 +25,7 @@ export function useAddStreichungToSingleKandidatHandler(): CommandHandler {
     const commandArgument = _parseCommandArguments(command);
     if (!commandArgument) {
       throw new CommandExecutionError(
-        "Kandidat konnte nicht eindeutig identifiziert werden."
+        "Kandidat*in konnte nicht eindeutig identifiziert werden."
       );
     }
 

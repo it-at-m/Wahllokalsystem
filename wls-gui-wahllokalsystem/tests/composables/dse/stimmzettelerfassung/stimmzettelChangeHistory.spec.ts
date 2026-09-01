@@ -1,6 +1,6 @@
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { flushPromises } from "@vue/test-utils";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHistoryTypeEnum.ts";
@@ -9,10 +9,14 @@ describe("stimmzettelChangeHistory.ts", () => {
   const { createStimmzettelKandidat, createStimmzettelWahlvorschlag } =
     useStimmzettelTestDataFactory();
 
+  let changeHistory: ReturnType<typeof useStimmzettelChangeHistory>;
+
+  beforeEach(() => {
+    changeHistory = useStimmzettelChangeHistory();
+  });
+
   describe("changeHistoryInReverseOrder", () => {
     it("should_returnEmptyHistory_when_noChangeWasRegistered", () => {
-      const changeHistory = useStimmzettelChangeHistory();
-
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([]);
       expect(changeHistory.lastUsedKandidat.value).toBeNull();
       expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
@@ -33,8 +37,6 @@ describe("stimmzettelChangeHistory.ts", () => {
         ...createStimmzettelWahlvorschlag(),
         kurzname: "WV",
       };
-
-      const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerKandidatEinzelstimmenAdded(firstKandidat, 1);
       changeHistory.registerKandidatStreichungSet(secondKandidat);
@@ -65,8 +67,6 @@ describe("stimmzettelChangeHistory.ts", () => {
         name: "Max Mustermann",
       };
 
-      const changeHistory = useStimmzettelChangeHistory();
-
       changeHistory.registerKandidatEinzelstimmenAdded(kandidat, 1);
 
       await flushPromises();
@@ -89,8 +89,6 @@ describe("stimmzettelChangeHistory.ts", () => {
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
-
-      const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerKandidatEinzelstimmenAdded(kandidat, 2);
 
@@ -119,8 +117,6 @@ describe("stimmzettelChangeHistory.ts", () => {
         ...createStimmzettelKandidat(),
         ordnungszahl: 103,
       };
-
-      const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerKandidatEinzelstimmenRangeSet(
         [firstKandidat, lastKandidat],
@@ -151,8 +147,6 @@ describe("stimmzettelChangeHistory.ts", () => {
         ordnungszahl: 103,
       };
 
-      const changeHistory = useStimmzettelChangeHistory();
-
       changeHistory.registerKandidatEinzelstimmenRangeSet(
         [firstKandidat, lastKandidat],
         2
@@ -181,8 +175,6 @@ describe("stimmzettelChangeHistory.ts", () => {
         name: "Max Mustermann",
       };
 
-      const changeHistory = useStimmzettelChangeHistory();
-
       changeHistory.registerKandidatUngueltigeStimmenAdded(kandidat, 1);
 
       await flushPromises();
@@ -205,8 +197,6 @@ describe("stimmzettelChangeHistory.ts", () => {
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
-
-      const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerKandidatUngueltigeStimmenAdded(kandidat, 2);
 
@@ -232,8 +222,6 @@ describe("stimmzettelChangeHistory.ts", () => {
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
-
-      const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerKandidatStreichungSet(kandidat);
 
@@ -263,8 +251,6 @@ describe("stimmzettelChangeHistory.ts", () => {
         ordnungszahl: 103,
       };
 
-      const changeHistory = useStimmzettelChangeHistory();
-
       changeHistory.registerKandidatStreichungRangeSet([
         firstKandidat,
         lastKandidat,
@@ -291,8 +277,6 @@ describe("stimmzettelChangeHistory.ts", () => {
         ...createStimmzettelWahlvorschlag(),
         kurzname: "WV",
       };
-
-      const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerWahlvorschlagSelected(wahlvorschlag);
 

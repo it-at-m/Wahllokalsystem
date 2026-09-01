@@ -7,6 +7,7 @@ public record StimmzettelOfTeamDTO(
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED) Integer stimmzettelkennung,
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED) Integer invalideVotes,
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED) StimmzettelGueltigkeitDTO gueltigkeit,
-    List<BeschlussgrundDTO> beschlussvorschlag,
+    List<WahlvorstandBeschlussgrundDTO> wahlvorstandBeschlussvorschlag,
+    List<SystemBeschlussgrundDTO> systemBeschlussvorschlag,
     BeschlussfassungDTO beschlussfassung,
     List<WahlvorschlagDTO> wahlvorschlaege) {}

@@ -1,18 +1,18 @@
 import type {
   BeschlussfassungDTO,
-  BeschlussgrundDTO,
   KandidatDTO,
   KandidatIdDTO,
   StimmzettelOfTeamDTO,
   WahlvorschlagDTO,
+  WahlvorstandBeschlussgrundDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { Kandidat } from "@/types/dse/Kandidat.ts";
 import type { Beschlussfassung as PersistedBeschlussfassung } from "@/types/dse/persistedStimmzettel/Beschlussfassung.ts";
 import type { Beschlussgrund as PersistedBeschlussgrund } from "@/types/dse/persistedStimmzettel/Beschlussgrund.ts";
 import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag as PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
-import type { Wahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
+import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
@@ -74,7 +74,7 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelBeschlussgrundDTO(): BeschlussgrundDTO {
+  function createStimmzettelWahlvorstandBeschlussgrundDTO(): WahlvorstandBeschlussgrundDTO {
     return {
       text: generateRandomString(20),
     };
@@ -146,10 +146,10 @@ export function useStimmzettelTestDataFactory() {
         Object.values(StimmzettelOfTeamDTOGueltigkeitEnum)
       ),
       beschlussfassung: createStimmzettelBeschlussfassungDTO(),
-      beschlussvorschlag: [
-        createStimmzettelBeschlussgrundDTO(),
-        createStimmzettelBeschlussgrundDTO(),
-        createStimmzettelBeschlussgrundDTO(),
+      wahlvorstandBeschlussvorschlag: [
+        createStimmzettelWahlvorstandBeschlussgrundDTO(),
+        createStimmzettelWahlvorstandBeschlussgrundDTO(),
+        createStimmzettelWahlvorstandBeschlussgrundDTO(),
       ],
       wahlvorschlaege: [
         createStimmzettelWahlvorschlagDTO(),
@@ -204,9 +204,9 @@ export function useStimmzettelTestDataFactory() {
     );
   }
 
-  function prepareStimmzettelBeschlussgrundDTO(): Builder<BeschlussgrundDTO> {
-    return proxyBuilder<BeschlussgrundDTO>(
-      createStimmzettelBeschlussgrundDTO()
+  function prepareStimmzettelBeschlussgrundDTO(): Builder<WahlvorstandBeschlussgrundDTO> {
+    return proxyBuilder<WahlvorstandBeschlussgrundDTO>(
+      createStimmzettelWahlvorstandBeschlussgrundDTO()
     );
   }
 

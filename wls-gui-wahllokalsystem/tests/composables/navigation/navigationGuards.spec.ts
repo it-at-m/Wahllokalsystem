@@ -16,8 +16,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -25,16 +25,22 @@ const mockDefinitions = vi.hoisted(() => ({
   loadErfassungTeamStatus: vi.fn(),
 }));
 
-vi.mock("@/composables/dse/dseWorkflowStatusService.ts", () => ({
-  useDseWorkflowStatusService: () => ({
-    loadDseWorkflowStatus: mockDefinitions.loadDseWorkflowStatus,
-  }),
-}));
-vi.mock("@/composables/dse/stimmzettelerfassungTeamStatusService.ts", () => ({
-  useStimmzettelerfassungTeamStatusService: () => ({
-    loadErfassungTeamStatus: mockDefinitions.loadErfassungTeamStatus,
-  }),
-}));
+vi.mock(
+  "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts",
+  () => ({
+    useDseWorkflowStatusService: () => ({
+      loadDseWorkflowStatus: mockDefinitions.loadDseWorkflowStatus,
+    }),
+  })
+);
+vi.mock(
+  "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts",
+  () => ({
+    useStimmzettelerfassungTeamStatusService: () => ({
+      loadErfassungTeamStatus: mockDefinitions.loadErfassungTeamStatus,
+    }),
+  })
+);
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
@@ -780,7 +786,7 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("requiresWorkflowStatusStimmzettelerfassungAbgeschlossen", () => {
-    it("should_returnTrue_when_stimmzettelErfassungTeamStatusIsSteAbgeschlossen", async () => {
+    it("should_returnTrue_when_stimmzettelErfassungStatusIsSteAbgeschlossen", async () => {
       const wahlId = "wahlId";
       const wahlbezirkId = "wahlbezirkId";
       const to = {
@@ -808,7 +814,7 @@ describe("navigationGuards.ts", () => {
       );
       expect(result).toStrictEqual(true);
     });
-    it("should_returnTrue_when_stimmzettelErfassungTeamStatusIsBeAbgeschlossen", async () => {
+    it("should_returnTrue_when_stimmzettelErfassungStatusIsBeAbgeschlossen", async () => {
       const wahlId = "wahlId";
       const wahlbezirkId = "wahlbezirkId";
       const to = {
@@ -836,7 +842,7 @@ describe("navigationGuards.ts", () => {
       );
       expect(result).toStrictEqual(true);
     });
-    it("should_returnFalse_when_stimmzettelErfassungTeamStatusIsInBearbeitung", async () => {
+    it("should_returnFalse_when_stimmzettelErfassungStatusIsInBearbeitung", async () => {
       const wahlId = "wahlId";
       const wahlbezirkId = "wahlbezirkId";
       const to = {
@@ -851,6 +857,30 @@ describe("navigationGuards.ts", () => {
           .status(StimmzettelerfassungStatusEnum.SteBearbeitung)
           .build()
       );
+
+      const result =
+        await requiresWorkflowStatusStimmzettelerfassungAbgeschlossen(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+      expect(mockDefinitions.loadDseWorkflowStatus.mock.calls[0]).toStrictEqual(
+        [wahlId, wahlbezirkId, false]
+      );
+      expect(result).toStrictEqual(false);
+    });
+    it("should_returnFalse_when_stimmzettelErfassungStatusIsNull", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      mockDefinitions.loadDseWorkflowStatus.mockReturnValue(null);
 
       const result =
         await requiresWorkflowStatusStimmzettelerfassungAbgeschlossen(

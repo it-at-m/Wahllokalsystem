@@ -101,7 +101,7 @@ stateDiagram-v2
         NSGedruckt --> [*]
     }
     
-    state Stimmzettelerfassungs-Status {
+    state Stimmzettelerfassungs-Team-Status {
         [*] --> Registriert
         Registriert --> InBearbeitung
         InBearbeitung --> Abgeschlossen
@@ -143,8 +143,34 @@ stateDiagram-v2
 Um eine schnelle Erfassung der Daten des Stimmzettels zu ermöglichen, können Befehle eingegeben werden. Die Anwendung
 gibt Feedback, wenn der Befehl nicht ausführbar oder falsch war.
 
-| Befehl                           | Funktion                                                               | Beispiel |
-|----------------------------------|------------------------------------------------------------------------|----------|
-| &lt;Kandidatordnungszahl>        | Fügt eine Stimme bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101      |
-| &lt;Kandidatordnungszahl>+       | Fügt eine Stimme bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101+     |
-| &lt;Kandidatordnungszahl>+&lt;n> | Fügt `n` Stimmen bei dem/der Kandidat\*In mit der `Ordnungszahl` hinzu | 101+3    |
+### Input-Handling Architektur
+
+```mermaid
+flowchart LR
+    A["Start: User-Eingabestring"] --> B{"`_commandHandler.canHandle(command)_ <br/><br/> technische Prüfung des Befehls: <br/> Eingabe ist korrekt und kann verarbeitet werden?`"}
+
+    B -->|nein| C{"Weitere handler vorhanden ?"}
+    
+    C -->|"ja (try next handler)"| B
+    C -->|"nein (command not found)"| D["throw <br/> UnsupportedCommandError"]
+    
+    B -->|ja| F{"`_commandHandler.handleOrThrow(...)_ <br/><br/> fachliche Prüfung des Befehls: <br/> Kandidat/Wahlvorschlag existiert und Änderung erlaubt?`"}
+
+    F -->|ja| H["Anpassung Datenmodell + <br/> Update der Eingabehistorie"]
+    F -->|nein| J["throw <br/> CommandExecutionError"]
+```
+
+### Befehle
+
+| Befehl                                | Funktion                                                                                                                                         | Beispiel  |
+|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|-----------|
+| &lt;Kandidatordnungszahl>             | Fügt eine Stimme bei dem/der Kandidat\*in mit der `Ordnungszahl` hinzu                                                                           | 101       |
+| &lt;Kandidatordnungszahl>+            | Fügt eine Stimme bei dem/der Kandidat\*in mit der `Ordnungszahl` hinzu                                                                           | 101+      |
+| &lt;Kandidatordnungszahl>+&lt;n>      | Fügt `n` Stimmen bei dem/der Kandidat\*in mit der `Ordnungszahl` hinzu                                                                           | 101+3     |
+| [u/U]&lt;Kandidatordnungszahl>        | Fügt 1 ungültige Stimme bei dem/der Kandidat\*in mit der `Ordnungszahl` hinzu                                                                    | u101      |
+| [u/U]&lt;Kandidatordnungszahl>+&lt;n> | Fügt `n` ungültige Stimmen bei dem/der Kandidat\*in mit der `Ordnungszahl` hinzu                                                                 | u101+3    |
+| &lt;untere>-&lt;obere>                | Fügt je 1 Stimme bei allen Kandidat\*innen im Bereich der `Ordnungszahl` von `untere`–`obere` hinzu                                              | 501-510   |
+| &lt;untere>-&lt;obere>+&lt;n>         | Fügt je `n` Stimmen im Bereich der `Ordnungszahl` von `untere`–`obere` hinzu                                                                     | 527-535+2 |
+| &lt;Wahlvorschlagsnummer>             | Kennzeichnet den Wahlvorschlag mit `Ordnungszahl` (Die Eingabe erfolgt entweder als Wahlvorschlagsnummer oder als Ordnungszahl mit „00“ am Ende) | 5, 500    |
+| [s/S]&lt;Kandidatordnungszahl>        | Streichung für den/die Kandidat\*in mit der `Ordnungszahl`                                                                                       | s501      |
+| [s/S]&lt;untere>-&lt;obere>           | Streichungen für alle Kandidat\*innen im Bereich der `Ordnungszahl` von `untere`–`obere`                                                         | s501-509  |

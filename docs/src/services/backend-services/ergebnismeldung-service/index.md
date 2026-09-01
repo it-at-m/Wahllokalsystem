@@ -112,10 +112,6 @@ Der Bearbeitungsstand der Stimmzettelfassung eines Wahlbezirkes einer Wahl wird 
 Der Bearbeitungsstand eines Teams, Schriftführung oder Erfassungsteam, bei der Stimmzettelfassung eines Wahlbezirkes einer Wahl
 wird damit verwaltet. Siehe dazu die [Statusbeschreibung](/dse/#neue-statuswerte).
 
-Das Primärteam, welches in der Anwendung alle Funktionen verwenden kann, in der Regel Team `A`, bzw. das Team
-mit dem/der Schriftführer\*In, darf auch den Status von anderen Teams setzen. Das ist zum Beispiel zum Freischalten
-der Erfassung für ein Erfassungsteam notwendig.
-
 ### Übermittlung einer Ergebnismeldung
 
 Eine Ergebnismeldung kann eine Schnellmeldung oder eine Niederschrift sein, welche an das externe System übermittelt wird.

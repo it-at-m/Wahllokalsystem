@@ -1,12 +1,12 @@
 import type { StimmzettelerfassungStatusDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { StimmzettelerfassungStatus } from "@/types/dse/StimmzettelerfassungStatus.ts";
+import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatus.ts";
 
 import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import { StimmzettelerfassungStatusDTOStatusEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { useStimmzettelerfassungStatusMapper } from "@/composables/dse/stimmzettelerfassungStatusMapper.ts";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
+import { useStimmzettelerfassungStatusMapper } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusMapper.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
 const {
   prepareStimmzettelerfassungStatusDTO,

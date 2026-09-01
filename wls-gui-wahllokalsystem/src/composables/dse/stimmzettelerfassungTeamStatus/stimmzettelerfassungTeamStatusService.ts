@@ -1,5 +1,5 @@
-import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
-import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
+import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
+import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEntry.ts";
 
 import { ref } from "vue";
 
@@ -8,7 +8,7 @@ import {
   StimmzettelerfassungTeamStatusControllerApi,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
-import { useStimmzettelerfassungTeamStatusMapper } from "@/composables/dse/stimmzettelerfassungTeamStatusMapper.ts";
+import { useStimmzettelerfassungTeamStatusMapper } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";

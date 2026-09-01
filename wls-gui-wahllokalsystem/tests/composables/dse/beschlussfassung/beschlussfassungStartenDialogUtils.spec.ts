@@ -5,7 +5,7 @@ import { ref } from "vue";
 
 import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassung/beschlussfassungStartenDialogUtils.ts";
 import router from "@/plugins/router.ts";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getAnzahlStimmzettel: vi.fn(),
@@ -13,13 +13,16 @@ const mockDefinitions = vi.hoisted(() => ({
   routerPush: vi.fn(),
 }));
 
-vi.mock(import("@/composables/dse/dseWorkflowStatusService.ts"), () => ({
-  useDseWorkflowStatusService: () => ({
-    saveDseWorkflowStatus: mockDefinitions.saveDseWorkflowStatus,
-    loadDseWorkflowStatus: vi.fn(),
-    isWorkflowStatusLoading: ref(false),
-  }),
-}));
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts"),
+  () => ({
+    useDseWorkflowStatusService: () => ({
+      saveDseWorkflowStatus: mockDefinitions.saveDseWorkflowStatus,
+      loadDseWorkflowStatus: vi.fn(),
+      isWorkflowStatusLoading: ref(false),
+    }),
+  })
+);
 
 vi.mock(
   import("@/composables/dse/stimmzettelerfassung/stimmzettelService.ts"),

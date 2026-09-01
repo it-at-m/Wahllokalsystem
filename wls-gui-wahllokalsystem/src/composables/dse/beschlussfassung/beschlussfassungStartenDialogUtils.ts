@@ -1,9 +1,9 @@
 import { computed, readonly, ref } from "vue";
 
-import { useDseWorkflowStatusService } from "@/composables/dse/dseWorkflowStatusService.ts";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
+import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
 import router from "@/plugins/router.ts";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 
 export function useBeschlussfassungStartenDialogUtils() {

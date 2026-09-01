@@ -1,5 +1,5 @@
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
+import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
@@ -8,7 +8,7 @@ import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
@@ -46,7 +46,7 @@ vi.mock("vue", async (importOriginal) => {
 });
 
 vi.mock(
-  import("@/composables/dse/stimmzettelerfassungTeamStatusService.ts"),
+  import("@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
     return {

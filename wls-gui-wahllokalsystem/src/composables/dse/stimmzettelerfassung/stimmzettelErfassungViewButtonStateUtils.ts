@@ -1,9 +1,9 @@
-import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
+import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 import type { Ref } from "vue";
 
 import { computed } from "vue";
 
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 export function useStimmzettelErfassungViewButtonStateUtils(
   teamStatus: Ref<StimmzettelerfassungTeamStatus | null>

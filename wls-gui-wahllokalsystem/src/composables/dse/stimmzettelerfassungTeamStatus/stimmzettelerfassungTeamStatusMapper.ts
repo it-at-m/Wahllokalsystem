@@ -2,8 +2,8 @@ import type {
   StimmzettelerfassungTeamStatusDTO,
   StimmzettelerfassungTeamStatusEntryDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
-import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
+import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
+import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEntry.ts";
 
 import {
   mdiAccountCheck,
@@ -13,7 +13,7 @@ import {
 } from "@mdi/js";
 
 import { StimmzettelerfassungTeamStatusDTOStatusEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const STATUS_DTO_ENUM_TO_MODEL_ENUM: Record<
   StimmzettelerfassungTeamStatusDTOStatusEnum,

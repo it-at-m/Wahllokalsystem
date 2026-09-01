@@ -94,7 +94,7 @@ import TheStimmzettelErfassungDialog from "@/components/dse/stimmzettelerfassung
 import TheStimmzettelkennungDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelkennungDialog.vue";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
 

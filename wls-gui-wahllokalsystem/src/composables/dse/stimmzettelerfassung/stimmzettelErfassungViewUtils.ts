@@ -1,5 +1,5 @@
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { StimmzettelerfassungTeamStatus } from "@/types/dse/StimmzettelerfassungTeamStatus.ts";
+import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
@@ -8,9 +8,9 @@ import { computed, onActivated, readonly, ref } from "vue";
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewButtonStateUtils.ts";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 

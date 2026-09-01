@@ -1,10 +1,10 @@
-import type { StimmzettelerfassungStatus } from "@/types/dse/StimmzettelerfassungStatus.ts";
-import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
+import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEntry.ts";
+import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatus.ts";
 
 import { onActivated, ref } from "vue";
 
-import { useDseWorkflowStatusService } from "@/composables/dse/dseWorkflowStatusService.ts";
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
+import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
 
 export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);

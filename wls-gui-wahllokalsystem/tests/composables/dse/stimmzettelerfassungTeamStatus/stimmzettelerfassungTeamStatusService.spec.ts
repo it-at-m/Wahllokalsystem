@@ -1,12 +1,12 @@
 import type { StimmzettelerfassungTeamStatusEntryDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
+import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEntry.ts";
 
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => {
@@ -60,13 +60,16 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   }),
 }));
 
-vi.mock("@/composables/dse/stimmzettelerfassungTeamStatusMapper.ts", () => ({
-  useStimmzettelerfassungTeamStatusMapper: () => ({
-    dtoToModel: mockDefinitions.dtoToModel,
-    dtoEntryToModelEntry: mockDefinitions.dtoEntryToModelEntry,
-    modelToDto: mockDefinitions.modelToDto,
-  }),
-}));
+vi.mock(
+  "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusMapper.ts",
+  () => ({
+    useStimmzettelerfassungTeamStatusMapper: () => ({
+      dtoToModel: mockDefinitions.dtoToModel,
+      dtoEntryToModelEntry: mockDefinitions.dtoEntryToModelEntry,
+      modelToDto: mockDefinitions.modelToDto,
+    }),
+  })
+);
 
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({

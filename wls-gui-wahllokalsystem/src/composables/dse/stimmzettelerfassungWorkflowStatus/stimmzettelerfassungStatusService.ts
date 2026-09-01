@@ -1,4 +1,4 @@
-import type { StimmzettelerfassungStatus } from "@/types/dse/StimmzettelerfassungStatus.ts";
+import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatus.ts";
 
 import { readonly, ref } from "vue";
 
@@ -7,7 +7,7 @@ import {
   StimmzettelerfassungControllerApi,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
-import { useStimmzettelerfassungStatusMapper } from "@/composables/dse/stimmzettelerfassungStatusMapper.ts";
+import { useStimmzettelerfassungStatusMapper } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";

@@ -3,20 +3,23 @@ import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useDseWorkflowStatusTaskFactory } from "@/composables/tasks/taskFactories/dseWorkflowStatusTaskFactory.ts";
+import { useDseWorkflowStatusTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelerfassungStatusTaskFactory.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   loadDseWorkflowStatus: vi.fn(),
 }));
 
-vi.mock("@/composables/dse/dseWorkflowStatusService.ts", () => ({
-  useDseWorkflowStatusService: vi.fn().mockImplementation(() => ({
-    loadDseWorkflowStatus: mockDefinitions.loadDseWorkflowStatus,
-  })),
-}));
+vi.mock(
+  "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts",
+  () => ({
+    useDseWorkflowStatusService: vi.fn().mockImplementation(() => ({
+      loadDseWorkflowStatus: mockDefinitions.loadDseWorkflowStatus,
+    })),
+  })
+);
 
-describe("dseWorkflowStatusTaskFactory.ts", () => {
+describe("stimmzettelerfassungStatusTaskFactory.ts", () => {
   const { prepareTaskFactoryContext } = useTasksTestDataFactory();
   const { createTasks } = useDseWorkflowStatusTaskFactory();
   const { prepareWahl } = useWahlTestDataFactory();

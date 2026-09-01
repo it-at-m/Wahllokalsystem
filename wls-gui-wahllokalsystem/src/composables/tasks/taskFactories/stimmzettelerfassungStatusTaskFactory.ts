@@ -2,7 +2,7 @@ import type { TaskFactory } from "@/composables/tasks/TaskFactory.ts";
 import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
-import { useDseWorkflowStatusService } from "@/composables/dse/dseWorkflowStatusService.ts";
+import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
 import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 
 const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();

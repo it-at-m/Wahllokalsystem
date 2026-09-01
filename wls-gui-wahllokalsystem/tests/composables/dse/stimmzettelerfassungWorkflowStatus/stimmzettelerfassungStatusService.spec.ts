@@ -1,7 +1,7 @@
 import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useDseWorkflowStatusService } from "@/composables/dse/dseWorkflowStatusService.ts";
+import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -30,7 +30,7 @@ vi.mock(
   }
 );
 vi.mock(
-  import("@/composables/dse/stimmzettelerfassungStatusMapper.ts"),
+  import("@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusMapper.ts"),
   () => ({
     useStimmzettelerfassungStatusMapper: () => ({
       dtoToModel: mockDefinitions.mapDtoToModel,

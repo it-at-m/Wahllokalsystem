@@ -42,11 +42,11 @@
   </v-list-item>
 </template>
 <script setup lang="ts">
-import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/StimmzettelerfassungTeamStatusEntry.ts";
+import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEntry.ts";
 import type { PropType } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import { useStimmzettelerfassungTeamStatusMapper } from "@/composables/dse/stimmzettelerfassungTeamStatusMapper.ts";
+import { useStimmzettelerfassungTeamStatusMapper } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusMapper.ts";
 
 const { statusModelEnumToDisplayString, statusConfig } =
   useStimmzettelerfassungTeamStatusMapper();

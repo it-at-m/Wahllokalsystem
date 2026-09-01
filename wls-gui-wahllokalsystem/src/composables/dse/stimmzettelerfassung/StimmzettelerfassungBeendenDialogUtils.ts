@@ -1,13 +1,13 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_FINISHED } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 

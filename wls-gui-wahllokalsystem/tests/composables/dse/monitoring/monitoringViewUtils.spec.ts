@@ -30,17 +30,24 @@ vi.mock("vue", () => ({
     mockDefinitions.registerActivated(cb),
 }));
 
-vi.mock("@/composables/dse/stimmzettelerfassungTeamStatusService.ts", () => ({
-  useStimmzettelerfassungTeamStatusService: () => ({
-    loadErfassungTeamStatusListe: mockDefinitions.loadErfassungTeamStatusListe,
-  }),
-}));
+vi.mock(
+  "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts",
+  () => ({
+    useStimmzettelerfassungTeamStatusService: () => ({
+      loadErfassungTeamStatusListe:
+        mockDefinitions.loadErfassungTeamStatusListe,
+    }),
+  })
+);
 
-vi.mock("@/composables/dse/dseWorkflowStatusService.ts", () => ({
-  useDseWorkflowStatusService: () => ({
-    loadDseWorkflowStatus: mockDefinitions.loadDseWorkflowStatus,
-  }),
-}));
+vi.mock(
+  "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts",
+  () => ({
+    useDseWorkflowStatusService: () => ({
+      loadDseWorkflowStatus: mockDefinitions.loadDseWorkflowStatus,
+    }),
+  })
+);
 
 describe("monitoringViewUtils.ts", () => {
   const { createStimmzettelerfassungStatus } =

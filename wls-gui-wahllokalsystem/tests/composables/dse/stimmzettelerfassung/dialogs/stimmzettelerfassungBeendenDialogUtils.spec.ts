@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelerfassungBeendenDialogUtils } from "@/composables/dse/stimmzettelerfassung/StimmzettelerfassungBeendenDialogUtils.ts";
 import { ROUTE_FINISHED } from "@/constants.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -43,12 +43,15 @@ vi.mock("@/stores/userStore.ts", () => ({
   }),
 }));
 
-vi.mock("@/composables/dse/stimmzettelerfassungTeamStatusService.ts", () => ({
-  useStimmzettelerfassungTeamStatusService: () => ({
-    isSaving: mockDefinitions.isSavingRef,
-    postErfassungTeamStatus: mockDefinitions.postErfassungTeamStatus,
-  }),
-}));
+vi.mock(
+  "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts",
+  () => ({
+    useStimmzettelerfassungTeamStatusService: () => ({
+      isSaving: mockDefinitions.isSavingRef,
+      postErfassungTeamStatus: mockDefinitions.postErfassungTeamStatus,
+    }),
+  })
+);
 
 vi.mock("@/plugins/router.ts", () => ({
   default: {

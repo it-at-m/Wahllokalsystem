@@ -1,8 +1,8 @@
 import type { StimmzettelerfassungStatusDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { StimmzettelerfassungStatus } from "@/types/dse/StimmzettelerfassungStatus.ts";
+import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatus.ts";
 
 import { StimmzettelerfassungStatusDTOStatusEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
 const STATUS_DTO_ENUM_TO_MODEL_ENUM: Record<
   StimmzettelerfassungStatusDTOStatusEnum,

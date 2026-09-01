@@ -106,8 +106,8 @@ import BaseTeamStatusListItem from "@/components/dse/monitoring/BaseTeamStatusLi
 import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
 import router from "@/plugins/router.ts";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/StimmzettelerfassungStatusEnum.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 
 const minWidth = "220px";

@@ -252,7 +252,7 @@ vi.mock(
 );
 
 vi.mock(
-  import("@/composables/tasks/taskFactories/dseWorkflowStatusTaskFactory.ts"),
+  import("@/composables/tasks/taskFactories/stimmzettelerfassungStatusTaskFactory.ts"),
   () => ({
     useDseWorkflowStatusTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createDseWorkflowStatusTasks,

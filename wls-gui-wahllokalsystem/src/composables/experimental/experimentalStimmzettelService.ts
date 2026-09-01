@@ -3,7 +3,7 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import localforage from "localforage";
 import { toRaw } from "vue";
 
-import { useStimmzettelService } from "@/composables/dse/stimmzettelService.ts";
+import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
 
 //https://mdn.github.io/dom-examples/indexeddb-examples/idbindex/
 //https://github.com/mdn/dom-examples/blob/main/indexeddb-examples/idbindex/scripts/main.js

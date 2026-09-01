@@ -1,6 +1,6 @@
-import type { Kandidat } from "@/types/dse/Kandidat.ts";
-import type { Stimmzettel } from "@/types/dse/Stimmzettel.ts";
-import type { Wahlvorschlag } from "@/types/dse/Wahlvorschlag.ts";
+import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";

@@ -137,14 +137,21 @@ get-started doc.
 Vue 3 Composition API + TypeScript + Vuetify, Pinia for state, vue-router, PWA via
 `vite-plugin-pwa` + Workbox (offline support is a core requirement). Source organized by domain
 subfolder (`common` for shared, `<domain>` for domain-specific) across: `api/` (generated clients),
-`components/`, `composables/`, `stores/`, `views/`, `types/`, `plugins/`, `service-worker/`,
+`components/`, `composables/`, `stores/`, `views`, `types`, `plugins`, `service-worker`,
 `resources/openapis/`.
 
 - Component hierarchy: **Views** → **SingleUse** components → **Basis** components. Views and
   SingleUse components may read stores; Basis components may **not** (props/events only). Basis
-  components use composables only for formatting/validation, not business logic. Saving is a
-  SingleUse-component responsibility.
-- Backend access path mirrors the backend: `store → service (composable) → client + mapper`.
+  components may nur Rules- und Formatter-Composables für Formatierung/Validierung nutzen, keine
+  Geschäftslogik oder Backendzugriffe. Saving is a SingleUse-component responsibility.
+- Composables sind typisiert (siehe `docs/src/technik/systemspecification/frontend.md`): Rules,
+  Formatter, StoreModule, State, Utils, FetchService, Tools, Mapper, Manager, Service. Mapper
+  werden ausschließlich von Utils- oder FetchService-Composables verwendet, Manager nur von
+  FetchService, StoreModule nur von Stores. Views/SingleUse-Komponenten verwenden höherwertige
+  Composables (z.B. FetchService, Service, Manager, Tools, State), Basis-Komponenten nur
+  Rules/Formatter.
+- Backend access path mirrors the backend: `store → FetchService (composable) → client + mapper`.
+  Components and stores do not call generated API clients directly; they delegate to composables.
 - View state is preserved across navigation via `keep-alive` (with a per-path `key` when one view
   serves multiple routes) and/or stores.
 - `tests/` and `stories/` mirror the `src/` folder structure exactly. Component tests use Vitest

@@ -119,7 +119,7 @@ public class TeamStatusServiceSecurityTest {
     void
         should_getAccess_when_allRequiredAuthoritiesArePresentWithTeamIDEvaluatorReturnsFalseButUserHasWahlvorstandAuthority() {
       de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils.runWith(
-              ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SAVE_TEAMSTATUS, "WLS_WAHLVORSTAND"));
+          ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SAVE_TEAMSTATUS, "WLS_WAHLVORSTAND"));
 
       val teamID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
@@ -132,7 +132,7 @@ public class TeamStatusServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatNoException()
-              .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, ErfassungTeamStatusModel.REGISTRIERT));
+          .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, ErfassungTeamStatusModel.REGISTRIERT));
     }
 
     @Test

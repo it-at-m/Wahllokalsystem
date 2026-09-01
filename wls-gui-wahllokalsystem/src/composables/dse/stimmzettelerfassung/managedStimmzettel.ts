@@ -134,6 +134,24 @@ export function useManagedStimmzettel(
     _internalAddInvalidVotesToKandidat(kandidat, invalidVotesToAdd);
   }
 
+  function kandidatRemoveUngueltigeStimmenOrThrow(
+    ordnungszahl: number,
+    invalidVotesToRemove: number
+  ) {
+    _isNotSafeIntegerThrow(
+      invalidVotesToRemove,
+      "Die Anzahl der zu entfernenden ungültigen Stimmen muss eine ganze Zahl sein."
+    );
+    const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
+    if (!kandidat) {
+      throw new ManagedStimmzettelError(
+        `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+      );
+    }
+
+    _internalRemoveInvalidVotesFromKandidat(kandidat, invalidVotesToRemove);
+  }
+
   function kandidatenAddStimmenInRangeOrThrow(
     lowerOrdnungszahl: number,
     upperOrdnungszahl: number,
@@ -170,6 +188,21 @@ export function useManagedStimmzettel(
     _internalAddStreichungToKandidat(kandidat);
   }
 
+  function kandidatRemoveStreichungOrThrow(ordnungszahl: number) {
+    const kandidat = _getKandidatToRemoveStreichungByOrdnungszahl(ordnungszahl);
+    if (!kandidat) {
+      throw new ManagedStimmzettelError(
+        `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+      );
+    }
+    if (!kandidat.durchgestrichen) {
+      throw new ManagedStimmzettelError(
+        `Für Kandidat mit Ordnungszahl ${ordnungszahl} kann keine Streichung entfernt werden.`
+      );
+    }
+    _internalRemoveStreichungFromKandidat(kandidat);
+  }
+
   function kandidatenStreichungenInRangeOrThrow(
     lowerOrdnungszahl: number,
     upperOrdnungszahl: number
@@ -183,6 +216,22 @@ export function useManagedStimmzettel(
     }
 
     _internalAddStreichungenToKandidatenRange(kandidaten);
+  }
+
+  function kandidatenRemoveStreichungenInRangeOrThrow(
+    lowerOrdnungszahl: number,
+    upperOrdnungszahl: number
+  ) {
+    const kandidaten = _getKandidatenInRangeOrThrow(
+      lowerOrdnungszahl,
+      upperOrdnungszahl
+    );
+    if (kandidaten.every((kandidat) => !kandidat.durchgestrichen)) {
+      throw new ManagedStimmzettelError(
+        `Im Bereich sind bereits alle Streichungen entfernt.`
+      );
+    }
+    _internalRemoveStreichungenFromKandidatenRange(kandidaten);
   }
 
   function wahlvorschlagAddVotesOrThrow(wahlvorschlagOrdnungszahl: number) {
@@ -200,6 +249,21 @@ export function useManagedStimmzettel(
       );
     }
     _internalAddVotesToWahlvorschlag(wahlvorschlag);
+  }
+
+  function wahlvorschlagRemoveVotesOrThrow(wahlvorschlagOrdnungszahl: number) {
+    const wahlvorschlag = _getWahlvorschlagToAddVotesByOrdnungszahl(
+      wahlvorschlagOrdnungszahl
+    );
+    if (!wahlvorschlag) {
+      throw new ManagedStimmzettelError(
+        `Wahlvorschlag mit Ordnungszahl ${wahlvorschlagOrdnungszahl} existiert nicht.`
+      );
+    }
+    if (!wahlvorschlag.selected) {
+      throw new ManagedStimmzettelError(`Wahlvorschlag ist bereits abgewählt.`);
+    }
+    _internalRemoveVotesFromWahlvorschlag(wahlvorschlag);
   }
 
   function _getKandidatToAddVotesForRangeByOrdnungszahl(ordnungszahl: number) {
@@ -232,6 +296,18 @@ export function useManagedStimmzettel(
       return undefined;
     } else {
       return _findKandidatToAddStreichung(kandidatenWithOrdnungszahl);
+    }
+  }
+
+  function _getKandidatToRemoveStreichungByOrdnungszahl(ordnungszahl: number) {
+    const kandidatenWithOrdnungszahl = kandidatenOfStimmzettel.value.filter(
+      (kandidat) => kandidat.ordnungszahl === ordnungszahl
+    );
+
+    if (kandidatenWithOrdnungszahl.length === 0) {
+      return undefined;
+    } else {
+      return _findKandidatToRemoveStreichung(kandidatenWithOrdnungszahl);
     }
   }
 
@@ -278,6 +354,18 @@ export function useManagedStimmzettel(
       return firstNennungWithoutDurchstreichung;
     }
 
+    return kandidatenForListenPosition[0];
+  }
+
+  function _findKandidatToRemoveStreichung(
+    kandidatenForListenPosition: Kandidat[]
+  ) {
+    const kandidatWithDurchstreichung = kandidatenForListenPosition.find(
+      (kandidat) => kandidat.durchgestrichen
+    );
+    if (kandidatWithDurchstreichung) {
+      return kandidatWithDurchstreichung;
+    }
     return kandidatenForListenPosition[0];
   }
 
@@ -331,6 +419,23 @@ export function useManagedStimmzettel(
     });
   }
 
+  function _internalRemoveInvalidVotesFromKandidat(
+    kandidat: Kandidat,
+    numberOfVotesToRemove: number
+  ) {
+    const invalidVotesToRemove = Math.abs(numberOfVotesToRemove);
+    const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
+    kandidat.ungueltigeStimmen =
+      currentUngueltigeStimmen - invalidVotesToRemove;
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
+      text: [
+        `${kandidat.ordnungszahl}${" - " + invalidVotesToRemove + " ungültige " + (invalidVotesToRemove > 1 ? "Stimmen" : "Stimme")}`,
+        kandidat.name,
+      ],
+    });
+  }
+
   function _internalAddVotesToKandidatenRange(
     kandidaten: Kandidat[],
     numberOfVotesToAdd: number
@@ -357,10 +462,30 @@ export function useManagedStimmzettel(
     });
   }
 
+  function _internalRemoveStreichungFromKandidat(kandidat: Kandidat) {
+    kandidat.durchgestrichen = false;
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
+      text: [`${kandidat.ordnungszahl}`, kandidat.name],
+    });
+  }
+
   function _internalAddStreichungenToKandidatenRange(kandidaten: Kandidat[]) {
     kandidaten.map((kandidat) => (kandidat.durchgestrichen = true));
     changeHistory.value.push({
       type: InputHistoryTypeEnum.DISCARD_RANGE,
+      text: [
+        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}`,
+      ],
+    });
+  }
+
+  function _internalRemoveStreichungenFromKandidatenRange(
+    kandidaten: Kandidat[]
+  ) {
+    kandidaten.map((kandidat) => (kandidat.durchgestrichen = false));
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
       text: [
         `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}`,
       ],
@@ -389,6 +514,15 @@ export function useManagedStimmzettel(
     wahlvorschlag.selected = true;
     changeHistory.value.push({
       type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
+      text: [`${wahlvorschlag.kurzname}`],
+    });
+  }
+
+  function _internalRemoveVotesFromWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
+    wahlvorschlag.kandidaten.map((kandidat) => (kandidat.reststimmen = 0));
+    wahlvorschlag.selected = false;
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.REVOKE_WAHLVORSCHLAG,
       text: [`${wahlvorschlag.kurzname}`],
     });
   }
@@ -500,10 +634,14 @@ export function useManagedStimmzettel(
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,
     kandidatAddUngueltigeStimmenOrThrow,
+    kandidatRemoveUngueltigeStimmenOrThrow,
     kandidatenAddStimmenInRangeOrThrow,
     kandidatAddStreichungOrThrow,
+    kandidatRemoveStreichungOrThrow,
     kandidatenStreichungenInRangeOrThrow,
+    kandidatenRemoveStreichungenInRangeOrThrow,
     wahlvorschlagAddVotesOrThrow,
+    wahlvorschlagRemoveVotesOrThrow,
     stimmzettel: computed(() => stimmzettel.value),
     stimmenSummary,
     wahlvorschlaegeWithListenkreuz,

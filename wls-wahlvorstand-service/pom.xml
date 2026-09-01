@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-wahlvorstand-service</artifactId>
-    <version>0.5.21-SNAPSHOT</version>
+    <version>0.5.22-SNAPSHOT</version>
     <name>wls_wahlvorstand_service</name>
 
     <properties>
@@ -36,7 +36,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.springdoc.version>2.9.0</org.springdoc.version>
-        <wls.common.version>1.8.0</wls.common.version>
+        <wls.common.version>1.8.1</wls.common.version>
         <com.tngtech.archunit.version>1.5.0</com.tngtech.archunit.version>
     </properties>
 

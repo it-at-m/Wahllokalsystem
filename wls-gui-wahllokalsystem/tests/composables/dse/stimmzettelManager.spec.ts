@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/ManagedStimmzettel.ts";
+import type { ManagedStimmzettel } from "@/composables/dse/managedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -49,9 +49,10 @@ describe("stimmzettelManager.ts", () => {
       mockDefinitions.handlerOneCanHandle.mockReturnValue(true);
       mockDefinitions.handlerTwoCanHandle.mockReturnValue(false);
 
-      const { parseCommandOrThrowError } = useStimmzettelManager([
-        dummyWahlvorschlag,
-      ]);
+      const { parseCommandOrThrowError } = useStimmzettelManager(
+        [dummyWahlvorschlag],
+        "wahl-1"
+      );
 
       parseCommandOrThrowError(command);
 
@@ -77,9 +78,10 @@ describe("stimmzettelManager.ts", () => {
       mockDefinitions.handlerOneCanHandle.mockReturnValue(false);
       mockDefinitions.handlerTwoCanHandle.mockReturnValue(false);
 
-      const { parseCommandOrThrowError } = useStimmzettelManager([
-        dummyWahlvorschlag,
-      ]);
+      const { parseCommandOrThrowError } = useStimmzettelManager(
+        [dummyWahlvorschlag],
+        "wahl-1"
+      );
 
       expect(() => parseCommandOrThrowError(command)).toThrow(
         UnsupportedCommandError
@@ -98,9 +100,10 @@ describe("stimmzettelManager.ts", () => {
         throw error;
       });
 
-      const { parseCommandOrThrowError } = useStimmzettelManager([
-        dummyWahlvorschlag,
-      ]);
+      const { parseCommandOrThrowError } = useStimmzettelManager(
+        [dummyWahlvorschlag],
+        "wahl-1"
+      );
 
       expect(() => parseCommandOrThrowError(command)).toThrow(
         CommandExecutionError

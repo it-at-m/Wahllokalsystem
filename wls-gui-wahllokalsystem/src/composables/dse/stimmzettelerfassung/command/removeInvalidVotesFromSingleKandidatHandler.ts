@@ -34,7 +34,7 @@ export function useRemoveInvalidVotesFromSingleKandidatHandler(): CommandHandler
     const commandArguments = _parseCommandArguments(command);
     if (!commandArguments) {
       throw new CommandExecutionError(
-        "Kandidat oder Stimmenanzahl konnten nicht eindeutig identifiziert werden."
+        "Kandidat*in oder Stimmenanzahl konnten nicht eindeutig identifiziert werden."
       );
     }
 

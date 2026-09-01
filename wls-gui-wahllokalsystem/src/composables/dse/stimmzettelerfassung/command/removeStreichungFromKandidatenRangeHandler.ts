@@ -32,7 +32,7 @@ export function useRemoveStreichungToKandidatenRangeHandler(): CommandHandler {
     const commandArguments = _parseCommandArguments(command);
     if (!commandArguments) {
       throw new CommandExecutionError(
-        "Kandidat konnte nicht eindeutig identifiziert werden."
+        "Kandidat*in konnte nicht eindeutig identifiziert werden."
       );
     }
 

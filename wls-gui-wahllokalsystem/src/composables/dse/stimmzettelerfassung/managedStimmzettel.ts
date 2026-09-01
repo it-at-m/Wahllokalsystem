@@ -127,7 +127,7 @@ export function useManagedStimmzettel(
     const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(
-        `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+        `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
       );
     }
 
@@ -179,11 +179,11 @@ export function useManagedStimmzettel(
     const kandidat = _getKandidatForStreichungByOrdnungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(
-        `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+        `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
       );
     }
     if (kandidat.durchgestrichen) {
-      throw new ManagedStimmzettelError(`Kandidat ist bereits gestrichen.`);
+      throw new ManagedStimmzettelError(`Kandidat*in ist bereits gestrichen.`);
     }
     _internalAddStreichungToKandidat(kandidat);
   }
@@ -569,7 +569,7 @@ export function useManagedStimmzettel(
         _getKandidatToAddVotesForRangeByOrdnungszahl(ordnungszahl);
       if (!kandidatenByOrdnungszahl) {
         throw new ManagedStimmzettelError(
-          `Kandidat mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+          `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
         );
       }
       kandidatenByOrdnungszahl.map((kandidat) => kandidaten.push(kandidat));

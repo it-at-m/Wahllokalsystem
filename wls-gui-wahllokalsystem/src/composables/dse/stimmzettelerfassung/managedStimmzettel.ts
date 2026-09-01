@@ -1,4 +1,3 @@
-import type { InputHistoryItem } from "@/types/dse/stimmzettelerfassung/InputHistoryItem.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { StimmenSummary } from "@/types/dse/stimmzettelerfassung/StimmenSummary.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
@@ -6,11 +5,11 @@ import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschl
 import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 
+import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
-import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHistoryTypeEnum.ts";
 
 /**
  * Check UI/UX Adr to see the rules:
@@ -23,7 +22,7 @@ export function useManagedStimmzettel(
   stimmzettel: Ref<Stimmzettel>,
   wahlID: string
 ) {
-  const changeHistory = ref<InputHistoryItem[]>([]);
+  const changeHistory = useStimmzettelChangeHistory();
 
   const kandidatenOfStimmzettel = computed(() =>
     stimmzettel.value.wahlvorschlaege
@@ -267,13 +266,7 @@ export function useManagedStimmzettel(
     kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
     _updateReststimmen();
     _addVotesForKandidatToWahlvorschlag(kandidat, votesToAdd);
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.ADD_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl}${" + " + votesToAdd + (votesToAdd > 1 ? " Stimmen" : " Stimme")}`,
-        kandidat.name,
-      ],
-    });
+    changeHistory.registerKandidatEinzelstimmenAdded(kandidat, votesToAdd);
   }
 
   function _internalAddInvalidVotesToKandidat(
@@ -284,13 +277,10 @@ export function useManagedStimmzettel(
     const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
     kandidat.ungueltigeStimmen = currentUngueltigeStimmen + invalidVotesToAdd;
     _addInvalidVotesForKandidatToWahlvorschlag(kandidat, invalidVotesToAdd);
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.ADD_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl}${" + " + invalidVotesToAdd + " ungültige " + (invalidVotesToAdd > 1 ? "Stimmen" : "Stimme")}`,
-        kandidat.name,
-      ],
-    });
+    changeHistory.registerKandidatUngueltigeStimmenAdded(
+      kandidat,
+      invalidVotesToAdd
+    );
   }
 
   function _internalAddVotesToKandidatenRange(
@@ -304,30 +294,17 @@ export function useManagedStimmzettel(
       _updateReststimmen();
       _addVotesForKandidatToWahlvorschlag(kandidat, votesToAdd);
     });
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.VOTE_RANGE,
-      text: [
-        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}${" + " + votesToAdd + (votesToAdd > 1 ? " Stimmen" : " Stimme")}`,
-      ],
-    });
+    changeHistory.registerKandidatEinzelstimmenRangeSet(kandidaten, votesToAdd);
   }
 
   function _internalAddStreichungToKandidat(kandidat: Kandidat) {
     kandidat.durchgestrichen = true;
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.DISCARD_KANDIDAT,
-      text: [`${kandidat.ordnungszahl}`, kandidat.name],
-    });
+    changeHistory.registerKandidatStreichungSet(kandidat);
   }
 
   function _internalAddStreichungenToKandidatenRange(kandidaten: Kandidat[]) {
     kandidaten.map((kandidat) => (kandidat.durchgestrichen = true));
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.DISCARD_RANGE,
-      text: [
-        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}`,
-      ],
-    });
+    changeHistory.registerKandidatStreichungRangeSet(kandidaten);
   }
 
   function _internalAddVotesToWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
@@ -350,10 +327,7 @@ export function useManagedStimmzettel(
       index++;
     }
     wahlvorschlag.selected = true;
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
-      text: [`${wahlvorschlag.kurzname}`],
-    });
+    changeHistory.registerWahlvorschlagSelected(wahlvorschlag);
   }
 
   function _hasKandidatAnyStimmeOrStreichung(kandidat: Kandidat) {
@@ -465,9 +439,8 @@ export function useManagedStimmzettel(
   }
 
   return {
-    changeHistoryInReverseOrder: computed(() =>
-      [...changeHistory.value].reverse()
-    ),
+    changeHistory,
+
     kandidatAddEinzelstimmenOrThrow,
     kandidatAddUngueltigeStimmenOrThrow,
     kandidatenAddStimmenInRangeOrThrow,

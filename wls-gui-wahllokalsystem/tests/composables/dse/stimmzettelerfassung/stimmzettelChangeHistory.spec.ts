@@ -1,4 +1,5 @@
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { flushPromises } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
 
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
@@ -57,7 +58,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   });
 
   describe("registerKandidatEinzelstimmenAdded", () => {
-    it("should_addSingularVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", () => {
+    it("should_addSingularVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
       const kandidat = {
         ...createStimmzettelKandidat(),
         ordnungszahl: 101,
@@ -67,6 +68,8 @@ describe("stimmzettelChangeHistory.ts", () => {
       const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerKandidatEinzelstimmenAdded(kandidat, 1);
+
+      await flushPromises();
 
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
@@ -80,7 +83,7 @@ describe("stimmzettelChangeHistory.ts", () => {
       );
     });
 
-    it("should_addPluralVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", () => {
+    it("should_addPluralVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", async () => {
       const kandidat = {
         ...createStimmzettelKandidat(),
         ordnungszahl: 101,
@@ -90,6 +93,8 @@ describe("stimmzettelChangeHistory.ts", () => {
       const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerKandidatEinzelstimmenAdded(kandidat, 2);
+
+      await flushPromises();
 
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
@@ -105,7 +110,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   });
 
   describe("registerKandidatEinzelstimmenRangeSet", () => {
-    it("should_addSingularVoteRangeHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", () => {
+    it("should_addSingularVoteRangeHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
       const firstKandidat = {
         ...createStimmzettelKandidat(),
         ordnungszahl: 101,
@@ -122,6 +127,8 @@ describe("stimmzettelChangeHistory.ts", () => {
         1
       );
 
+      await flushPromises();
+
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
           type: InputHistoryTypeEnum.VOTE_RANGE,
@@ -134,7 +141,7 @@ describe("stimmzettelChangeHistory.ts", () => {
       );
     });
 
-    it("should_addPluralVoteRangeHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", () => {
+    it("should_addPluralVoteRangeHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", async () => {
       const firstKandidat = {
         ...createStimmzettelKandidat(),
         ordnungszahl: 101,
@@ -151,6 +158,8 @@ describe("stimmzettelChangeHistory.ts", () => {
         2
       );
 
+      await flushPromises();
+
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
           type: InputHistoryTypeEnum.VOTE_RANGE,
@@ -165,7 +174,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   });
 
   describe("registerKandidatUngueltigeStimmenAdded", () => {
-    it("should_addSingularInvalidVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", () => {
+    it("should_addSingularInvalidVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
       const kandidat = {
         ...createStimmzettelKandidat(),
         ordnungszahl: 101,
@@ -175,6 +184,8 @@ describe("stimmzettelChangeHistory.ts", () => {
       const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerKandidatUngueltigeStimmenAdded(kandidat, 1);
+
+      await flushPromises();
 
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
@@ -188,7 +199,7 @@ describe("stimmzettelChangeHistory.ts", () => {
       );
     });
 
-    it("should_addPluralInvalidVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", () => {
+    it("should_addPluralInvalidVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", async () => {
       const kandidat = {
         ...createStimmzettelKandidat(),
         ordnungszahl: 101,
@@ -198,6 +209,8 @@ describe("stimmzettelChangeHistory.ts", () => {
       const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerKandidatUngueltigeStimmenAdded(kandidat, 2);
+
+      await flushPromises();
 
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
@@ -213,7 +226,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   });
 
   describe("registerKandidatStreichungSet", () => {
-    it("should_addDiscardKandidatHistoryEntryAndUpdateLastUsedKandidat_when_kandidatWasGiven", () => {
+    it("should_addDiscardKandidatHistoryEntryAndUpdateLastUsedKandidat_when_kandidatWasGiven", async () => {
       const kandidat = {
         ...createStimmzettelKandidat(),
         ordnungszahl: 101,
@@ -223,6 +236,8 @@ describe("stimmzettelChangeHistory.ts", () => {
       const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerKandidatStreichungSet(kandidat);
+
+      await flushPromises();
 
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
@@ -238,7 +253,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   });
 
   describe("registerKandidatStreichungRangeSet", () => {
-    it("should_addDiscardRangeHistoryEntryAndUpdateLastUsedKandidat_when_kandidatenWereGiven", () => {
+    it("should_addDiscardRangeHistoryEntryAndUpdateLastUsedKandidat_when_kandidatenWereGiven", async () => {
       const firstKandidat = {
         ...createStimmzettelKandidat(),
         ordnungszahl: 101,
@@ -255,6 +270,8 @@ describe("stimmzettelChangeHistory.ts", () => {
         lastKandidat,
       ]);
 
+      await flushPromises();
+
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
           type: InputHistoryTypeEnum.DISCARD_RANGE,
@@ -269,7 +286,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   });
 
   describe("registerWahlvorschlagSelected", () => {
-    it("should_addWahlvorschlagHistoryEntryAndUpdateLastUsedWahlvorschlag_when_wahlvorschlagWasGiven", () => {
+    it("should_addWahlvorschlagHistoryEntryAndUpdateLastUsedWahlvorschlag_when_wahlvorschlagWasGiven", async () => {
       const wahlvorschlag = {
         ...createStimmzettelWahlvorschlag(),
         kurzname: "WV",
@@ -278,6 +295,8 @@ describe("stimmzettelChangeHistory.ts", () => {
       const changeHistory = useStimmzettelChangeHistory();
 
       changeHistory.registerWahlvorschlagSelected(wahlvorschlag);
+
+      await flushPromises();
 
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {

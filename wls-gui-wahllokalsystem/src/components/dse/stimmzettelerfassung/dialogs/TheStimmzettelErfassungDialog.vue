@@ -48,7 +48,7 @@
               :active-wahlvorschlag-id="
                 wahlvorschlagIdOfLatestChangeWahlvorschlag
               "
-              :active-kandidat-id="kandidatIdOfLatestChangeKandidat"
+              :active-kandidat="latestChangedKandidat"
               :wahlvorschlaege="
                 stimmzettelManager.managedStimmzettel.stimmzettel.value
                   .wahlvorschlaege
@@ -67,6 +67,7 @@
 
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
@@ -121,8 +122,8 @@ const wahlvorschlagIdOfLatestChangeWahlvorschlag = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
 );
-const kandidatIdOfLatestChangeKandidat = computed<string | null>(
-  () => changeHistory.value.lastUsedKandidat?.value?.kandidatId ?? null
+const latestChangedKandidat = computed<Kandidat | null>(
+  () => changeHistory.value.lastUsedKandidat.value ?? null
 );
 
 function onCancelClicked() {

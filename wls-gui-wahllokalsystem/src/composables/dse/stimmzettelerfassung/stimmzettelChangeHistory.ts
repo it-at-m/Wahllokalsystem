@@ -2,7 +2,7 @@ import type { InputHistoryItem } from "@/types/dse/stimmzettelerfassung/InputHis
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 
 import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHistoryTypeEnum.ts";
 
@@ -86,11 +86,18 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(wahlvorschlag);
   }
 
-  function _updateLatestUsedData(kandidat: Kandidat): void;
-  function _updateLatestUsedData(wahlvorschlag: Wahlvorschlag): void;
-  function _updateLatestUsedData(
+  async function _updateLatestUsedData(kandidat: Kandidat): Promise<void>;
+  async function _updateLatestUsedData(
+    wahlvorschlag: Wahlvorschlag
+  ): Promise<void>;
+  async function _updateLatestUsedData(
     latestUsedData: Kandidat | Wahlvorschlag
-  ): void {
+  ): Promise<void> {
+    lastUsedKandidat.value = null;
+    lastUsedWahlvorschlag.value = null;
+
+    await nextTick();
+
     if ("kandidatId" in latestUsedData) {
       lastUsedKandidat.value = latestUsedData;
       lastUsedWahlvorschlag.value = latestUsedData.owningWahlvorschlag;

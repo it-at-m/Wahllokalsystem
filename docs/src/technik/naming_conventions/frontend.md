@@ -92,6 +92,14 @@ Formatter gehören zu einem Datentyp oder einer Domain.
 
 `briefwahlGetterStoreModule.ts` ... kapselt Funktionalität zu einem Thema eines Stores
 
+### State
+
+`<domain>[<Funktion>]State.ts`
+
+**Beispiel:**
+
+`stimmzettelWorkflowStatusState.ts` ... Verwaltet einen konkreten WorkflowStatus (Daten und Loading) für einen konkreten Wahlbezirk 
+
 ### Mapper
 
 `<domain>Mapper.ts`

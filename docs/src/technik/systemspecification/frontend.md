@@ -156,17 +156,18 @@ setzen sich wiederum aus `SingleInstance`- oder `Basis`-Komponenten zusammen.
 `Views` und `SingleInstance`-Komponenten können auf Stores zugreifen. `Basis`-Komponenten können das nicht. Die `Views` und die
 Komponenten können Composables verwenden. `Basis`-Komponenten können nur `Rules`- und `Formatter`-Composables verwenden.
 
-| Composable-Typ | Aufgabenbeschreibung                                                                                                   |
-|----------------|------------------------------------------------------------------------------------------------------------------------|
-| Rules          | Enthält Validierungsregeln für Felder                                                                                  |
-| Formatter      | Funktionen zur Anpassung der Darstellung eines Wertes. Dazu gehört auch die Umwandlung von Werten in Icons oder Farben |
-| StoreModule    | Kapselt Teilfunktionalität eines Stores, um den Store klarer zu strukturieren                                          |
-| Utils          | Stellt Hilfsfunktionen für Komponenten mit komplexer Logik bereit                                                      |
-| FetchService   | Stellt Funktionen bereit um Daten aus dem Backend abzurufen. Hierzu zählt auch der Service Worker                      |
-| Tools          | Stellt Funktionen für einen bestimmten Datentyp zur Verfügung                                                          |
-| Mapper         | Stellt Funktionen bereit um von einem Datentyp in einen Anderen zu Mappen                                              |
-| Manager        | Kapselt weitere Funktionen und entscheidet im Rahmen der Verarbeitung, an wen die Anfrage delegiert wird               |
-| Service        | Stellt allgemeine Funktionen zur Verfügung, die in keine andere Kategorie passen                                       |
+| Composable-Typ | Aufgabenbeschreibung                                                                                                                          |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| Rules          | Enthält Validierungsregeln für Felder                                                                                                         |
+| Formatter      | Funktionen zur Anpassung der Darstellung eines Wertes. Dazu gehört auch die Umwandlung von Werten in Icons oder Farben                        |
+| StoreModule    | Kapselt Teilfunktionalität eines Stores, um den Store klarer zu strukturieren                                                                 |
+| State          | Verwaltet einen konkreten Zustand (z.B. Daten und ob diese gerade geladen werden), welcher aber im Gegensatz zu einem Store nicht global ist. |
+| Utils          | Stellt Hilfsfunktionen für Komponenten mit komplexer Logik bereit                                                                             |
+| FetchService   | Stellt Funktionen bereit um Daten aus dem Backend abzurufen. Hierzu zählt auch der Service Worker                                             |
+| Tools          | Stellt Funktionen für einen bestimmten Datentyp zur Verfügung                                                                                 |
+| Mapper         | Stellt Funktionen bereit um von einem Datentyp in einen Anderen zu Mappen                                                                     |
+| Manager        | Kapselt weitere Funktionen und entscheidet im Rahmen der Verarbeitung, an wen die Anfrage delegiert wird                                      |
+| Service        | Stellt allgemeine Funktionen zur Verfügung, die in keine andere Kategorie passen                                                              |
 
 `Mapper`-Composables können nur durch `Utils`- oder `FetchService`-Composables verwendet werden. `Manager`-Composables werden
 nur durch `FetchService`-Composables verwendet. `StoreModule`-Composables werden nur durch `Stores` verwendet.

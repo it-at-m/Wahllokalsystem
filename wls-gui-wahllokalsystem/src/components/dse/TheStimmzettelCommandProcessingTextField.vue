@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { StimmzettelManager } from "@/composables/dse/stimmzettelManager.ts";
+import type { StimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
 import type { PropType } from "vue";
 
 import { ref } from "vue";

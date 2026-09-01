@@ -4,7 +4,7 @@
     <v-card-text>
       <div v-if="firstHistoryItem">
         <div class="font-weight-bold d-flex align-center ga-1">
-          <input-history-icon :input-type="firstHistoryItem.type" />
+          <base-eingabehistorie-icon :input-type="firstHistoryItem.type" />
           <div>
             <div
               v-for="text in firstHistoryItem.text"
@@ -27,7 +27,7 @@
         :key="index"
       >
         <div class="d-flex align-center ga-1">
-          <input-history-icon :input-type="item.type" />
+          <base-eingabehistorie-icon :input-type="item.type" />
           <div>
             <div
               v-for="text in item.text"
@@ -46,11 +46,11 @@
 </template>
 
 <script setup lang="ts">
-import type { InputHistoryItem } from "@/types/dse/InputHistoryItem";
+import type { InputHistoryItem } from "@/types/dse/stimmzettelerfassung/InputHistoryItem.ts";
 
 import { computed } from "vue";
 
-import InputHistoryIcon from "@/components/dse/InputHistoryIcon.vue";
+import BaseEingabehistorieIcon from "@/components/dse/stimmzettelerfassung/baseComponents/BaseEingabehistorieIcon.vue";
 
 const props = defineProps<{
   changeHistory: InputHistoryItem[];

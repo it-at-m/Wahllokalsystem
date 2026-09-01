@@ -22,7 +22,7 @@ vi.mock(import("@/composables/dse/dseWorkflowStatusService.ts"), () => ({
 }));
 
 vi.mock(
-  import("@/composables/dse/stimmzettelService.ts"),
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelService.ts"),
   async (importOrginial) => {
     const original = await importOrginial();
     return {

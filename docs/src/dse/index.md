@@ -101,7 +101,7 @@ stateDiagram-v2
         NSGedruckt --> [*]
     }
     
-    state Stimmzettelerfassungs-Status {
+    state Stimmzettelerfassungs-Team-Status {
         [*] --> Registriert
         Registriert --> InBearbeitung
         InBearbeitung --> Abgeschlossen

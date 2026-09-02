@@ -13,10 +13,7 @@
         <v-row>
           <v-col cols="2">
             <the-eingabehistorie-card
-              :change-history="
-                stimmzettelManager.managedStimmzettel
-                  .changeHistoryInReverseOrder.value
-              "
+              :change-history="changeHistory.changeHistoryInReverseOrder.value"
             />
             <base-stimmzettel-zusammenfassung-card
               class="mt-2"
@@ -48,7 +45,10 @@
               :stimmzettel-manager="stimmzettelManager"
             />
             <the-stimmzettel-content
-              :active-wahlvorschlag-id="null"
+              :active-wahlvorschlag-id="
+                wahlvorschlagIdOfLatestChangeWahlvorschlag
+              "
+              :active-kandidat="latestChangedKandidat"
               :wahlvorschlaege="
                 stimmzettelManager.managedStimmzettel.stimmzettel.value
                   .wahlvorschlaege
@@ -71,10 +71,12 @@
 
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -116,6 +118,17 @@ const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
 );
 
 const { currentUserTeamName } = storeToRefs(useUserStore());
+
+const changeHistory = computed(
+  () => stimmzettelManager.managedStimmzettel.changeHistory
+);
+const wahlvorschlagIdOfLatestChangeWahlvorschlag = computed<string | null>(
+  () =>
+    changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
+);
+const latestChangedKandidat = computed<Kandidat | null>(
+  () => changeHistory.value.lastUsedKandidat.value ?? null
+);
 
 function onCancelClicked() {
   emit("cancel");

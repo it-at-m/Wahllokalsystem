@@ -4,6 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
+  const { ref } = await import("vue");
+
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
 
   return {
@@ -17,17 +19,16 @@ const mockDefinitions = await vi.hoisted(async () => {
     },
     loadErfassungTeamStatusListe: vi.fn(),
     loadDseWorkflowStatus: vi.fn(),
+    // Expose vue.ref for tests if needed
+    ref,
   };
 });
 
-vi.mock("vue", async (importOriginal) => {
-  const actual = (await importOriginal()) as object;
-  return {
-    ...actual,
-    onActivated: (cb: () => Promise<void> | void) =>
-      mockDefinitions.registerActivated(cb),
-  };
-});
+vi.mock("vue", () => ({
+  ref: mockDefinitions.ref,
+  onActivated: (cb: () => Promise<void> | void) =>
+    mockDefinitions.registerActivated(cb),
+}));
 
 vi.mock(
   "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts",

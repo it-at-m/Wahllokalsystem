@@ -124,7 +124,7 @@ const {
   isWorkflowStatusLoading,
   workflowStatus,
   onMonitoringSynchronisierenClicked,
-  loadWorkflowStatus,
+  reloadWorkflowStatus,
 } = useMonitoringViewUtils(wahlID, wahlbezirkID);
 
 const beschlussfassungBtnActive = computed(() =>
@@ -184,7 +184,7 @@ async function onBeschlussfassungStartenClicked() {
   beschlussfassungStartenDialogVisible.value = true;
 }
 async function onAktualisierenClicked() {
-  await loadWorkflowStatus();
+  await reloadWorkflowStatus();
   await onMonitoringSynchronisierenClicked();
 }
 

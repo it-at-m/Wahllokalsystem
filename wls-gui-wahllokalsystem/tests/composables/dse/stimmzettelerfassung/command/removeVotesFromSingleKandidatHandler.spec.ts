@@ -56,7 +56,7 @@ describe("removeVotesFromSingleKandidatHandler.ts", () => {
       vi.clearAllMocks();
     });
 
-    it.each([validKandidatOrdnungszahlen])(
+    it.each(validKandidatOrdnungszahlen)(
       "should_callKandidatRemoveVotesOrThrow_when_commandIs'%s'WithMinusWithoutVotes",
       (kandidatOrdnungszahl) => {
         handleOrThrow(`${kandidatOrdnungszahl}-`, mockManagedStimmzettel);
@@ -70,7 +70,7 @@ describe("removeVotesFromSingleKandidatHandler.ts", () => {
       }
     );
 
-    it.each([validKandidatOrdnungszahlen])(
+    it.each(validKandidatOrdnungszahlen)(
       "should_callKandidatRemoveVotesOrThrow_withParsedVotes_when_command'%s'ContainsMinusAndVotes",
       (kandidatOrdnungszahl) => {
         handleOrThrow(`${kandidatOrdnungszahl}-3`, mockManagedStimmzettel);

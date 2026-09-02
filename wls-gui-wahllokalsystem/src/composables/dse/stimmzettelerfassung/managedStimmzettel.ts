@@ -68,6 +68,19 @@ export function useManagedStimmzettel(
     return maximalErlaubteStimmenProWaehler - currentGesamtStimmen;
   });
 
+  function resetStimmzettel() {
+    changeHistory.value = [];
+    stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
+      wahlvorschlag.selected = false;
+      wahlvorschlag.kandidaten.map((kandidat) => {
+        kandidat.einzelstimmen = null;
+        kandidat.ungueltigeStimmen = null;
+        kandidat.reststimmen = null;
+        kandidat.durchgestrichen = false;
+      });
+    });
+  }
+
   /**
    *
    * @param ordnungszahl
@@ -435,6 +448,7 @@ export function useManagedStimmzettel(
     const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
     kandidat.ungueltigeStimmen =
       currentUngueltigeStimmen - invalidVotesToRemove;
+    _updateReststimmenWhenVotesRemoved();
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
       text: [
@@ -529,6 +543,7 @@ export function useManagedStimmzettel(
   function _internalRemoveVotesFromWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
     wahlvorschlag.kandidaten.map((kandidat) => (kandidat.reststimmen = 0));
     wahlvorschlag.selected = false;
+    _updateReststimmenWhenVotesRemoved();
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REVOKE_WAHLVORSCHLAG,
       text: [`${wahlvorschlag.kurzname}`],
@@ -619,7 +634,11 @@ export function useManagedStimmzettel(
       if (wahlvorschlagToUpdate) {
         for (let i = remainingVotes.value; i > 0; i--) {
           const kandidatToUpdate = wahlvorschlagToUpdate.kandidaten.find(
-            (kandidat) => !kandidat.reststimmen || kandidat.reststimmen === 0
+            (kandidat) =>
+              !kandidat.durchgestrichen &&
+              !kandidat.einzelstimmen &&
+              !kandidat.ungueltigeStimmen &&
+              !kandidat.reststimmen
           );
           if (kandidatToUpdate) {
             kandidatToUpdate.reststimmen = 1;
@@ -639,6 +658,7 @@ export function useManagedStimmzettel(
     changeHistoryInReverseOrder: computed(() =>
       [...changeHistory.value].reverse()
     ),
+    resetStimmzettel,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,
     kandidatAddUngueltigeStimmenOrThrow,

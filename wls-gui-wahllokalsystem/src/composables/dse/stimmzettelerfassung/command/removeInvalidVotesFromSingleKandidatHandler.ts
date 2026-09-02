@@ -11,7 +11,7 @@ interface CommandArguments {
 }
 
 export function useRemoveInvalidVotesFromSingleKandidatHandler(): CommandHandler {
-  const REGEX_REMOVE_INVALID_VOTES_TO_KANDIDAT = /^[uU]([1-9]\d{2,})(-(\d*))?$/;
+  const REGEX_REMOVE_INVALID_VOTES_TO_KANDIDAT = /^[uU]([1-9]\d{2,})-(\d*)?$/;
   const {
     isValidCount,
     isValidKandidatOrdnungszahl,
@@ -56,7 +56,7 @@ export function useRemoveInvalidVotesFromSingleKandidatHandler(): CommandHandler
     const match = REGEX_REMOVE_INVALID_VOTES_TO_KANDIDAT.exec(command);
 
     if (match?.[1] !== undefined) {
-      const votesText = match[3];
+      const votesText = match[2];
       const commandArgs = {
         kandidatOrdnungszahl: Number.parseInt(match[1]),
         removeInvalidVotes: parseOptionalCountToNumber(votesText),

@@ -6,6 +6,7 @@ import { createPinia, setActivePinia } from "pinia";
 import BaseStimmzettelSonderfaelleCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelSonderfaelleCard.vue";
 import pinia from "@/plugins/pinia.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -80,5 +81,23 @@ export const BWB: Story = {
     modelValueInvalidVotes: 0,
     modelValueGueltigkeit: null,
     systemBeschlussgruende: [],
+  },
+};
+
+export const BWBWithSystemBeschluesse: Story = {
+  async beforeEach() {
+    const store = useUserStore(pinia);
+    const user = createUserLocalDevelopment();
+    user.wahlbezirksArt = WahlbezirksArtEnum.BWB;
+    store.setUser(user);
+  },
+  args: {
+    modelValue: createDummyStimmzettel(),
+    modelValueInvalidVotes: 0,
+    modelValueGueltigkeit: null,
+    systemBeschlussgruende: [
+      { reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig },
+      { reason: SystemBeschlussgrundReasonEnum.NichtAmtlicherStimmzettel },
+    ],
   },
 };

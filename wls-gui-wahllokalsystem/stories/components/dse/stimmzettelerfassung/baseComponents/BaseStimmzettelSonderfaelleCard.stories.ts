@@ -40,6 +40,8 @@ export const UWB: Story = {
     modelValueGueltigkeit: null,
     systemBeschlussgruende: [],
     modelValueWahlvorstandBeschlussvorschlag: [],
+    stimmzettelkennung: 42,
+    teamId: "A",
   },
 };
 
@@ -55,6 +57,8 @@ export const BWB: Story = {
     modelValueGueltigkeit: null,
     systemBeschlussgruende: [],
     modelValueWahlvorstandBeschlussvorschlag: [],
+    stimmzettelkennung: 42,
+    teamId: "A",
   },
 };
 
@@ -73,5 +77,7 @@ export const BWBWithSystemBeschluesse: Story = {
       { reason: SystemBeschlussgrundReasonEnum.NichtAmtlicherStimmzettel },
     ],
     modelValueWahlvorstandBeschlussvorschlag: [],
+    stimmzettelkennung: 42,
+    teamId: "A",
   },
 };

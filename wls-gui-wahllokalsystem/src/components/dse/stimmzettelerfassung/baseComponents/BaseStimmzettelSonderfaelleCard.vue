@@ -32,6 +32,24 @@
           />
         </div>
       </div>
+
+      <base-dialog
+        :visible="isStimmzettelFehltInstructionDialogVisible"
+        dialogtitle="Bitte Kennung anbringen"
+        confirmtext="Bestätigen"
+        icon="$information"
+        @confirm="onStimmzettelFehlInstructionDialogConfirm"
+      >
+        <div>
+          Bitte notieren Sie die Stimmzettelkennung auf dem Umschlag oder auf
+          dem Hilfsblatt.
+        </div>
+
+        <base-stimmzettelkennung-strong-text
+          :stimmzettelkennung="stimmzettelkennung"
+          :team-name="teamId"
+        />
+      </base-dialog>
     </v-card-text>
     <v-card-title v-if="showBeschlussfassung">Beschlussfassung</v-card-title>
     <v-card-text v-if="showBeschlussfassung">
@@ -64,8 +82,10 @@ import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/Wa
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
+import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
@@ -112,8 +132,16 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  stimmzettelkennung: {
+    type: Number,
+    required: true,
+  },
   systemBeschlussgruende: {
     type: Array as PropType<SystemBeschlussgrund[]>,
+    required: true,
+  },
+  teamId: {
+    type: String,
     required: true,
   },
 });
@@ -178,6 +206,8 @@ const systemBeschlussgruendeAsText = computed(() =>
   props.systemBeschlussgruende.map((grund) => grund.reason).join(", ")
 );
 
+const isStimmzettelFehltInstructionDialogVisible = ref(false);
+
 const wahlvorstandBeschlussvorschlaegeItems = [
   "unzulässiger Zusatz/Vorbehalt",
   "Stimmzettel vollständig durchgestrichen",
@@ -198,8 +228,13 @@ function onStimmzettelFehltChanged(newValue: boolean | null) {
   if (newValue) {
     modelValueGueltigkeit.value =
       StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag;
+    isStimmzettelFehltInstructionDialogVisible.value = true;
   } else {
     modelValueGueltigkeit.value = null;
   }
+}
+
+function onStimmzettelFehlInstructionDialogConfirm() {
+  isStimmzettelFehltInstructionDialogVisible.value = false;
 }
 </script>

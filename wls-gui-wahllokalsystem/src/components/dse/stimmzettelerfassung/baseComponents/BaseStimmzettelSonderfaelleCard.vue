@@ -101,8 +101,8 @@ const REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE =
 const { createBeschlussgrundWithText } = useBeschlussgrundTools();
 const { required } = useRules();
 
-const modelValueInvalidVotes = defineModel("modelValueInvalidVotes", {
-  type: [Number, null],
+const modelValueInvalidVotes = defineModel("invalidVotes", {
+  type: [Number, null] as PropType<number | null>,
   required: true,
 });
 const modelValueIsBeschlussfassungValid = defineModel(

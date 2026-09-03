@@ -7,11 +7,11 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
 
 interface CommandArguments {
   kandidatOrdnungszahl: number;
-  countInvalidVotes: number;
+  removeInvalidVotes: number;
 }
 
-export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
-  const REGEX_ADD_INVALID_VOTES_TO_KANDIDAT = /^[uU]([1-9]\d{2,})(\+(\d*))?$/;
+export function useRemoveInvalidVotesFromSingleKandidatHandler(): CommandHandler {
+  const REGEX_REMOVE_INVALID_VOTES_TO_KANDIDAT = /^[uU]([1-9]\d{2,})-(\d*)?$/;
   const {
     isValidCount,
     isValidKandidatOrdnungszahl,
@@ -39,9 +39,9 @@ export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
     }
 
     try {
-      stimmzettel.kandidatAddUngueltigeStimmenOrThrow(
+      stimmzettel.kandidatRemoveUngueltigeStimmenOrThrow(
         commandArguments.kandidatOrdnungszahl,
-        commandArguments.countInvalidVotes
+        commandArguments.removeInvalidVotes
       );
     } catch (error) {
       if (error instanceof ManagedStimmzettelError) {
@@ -53,13 +53,13 @@ export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
   }
 
   function _parseCommandArguments(command: string): CommandArguments | null {
-    const match = REGEX_ADD_INVALID_VOTES_TO_KANDIDAT.exec(command);
+    const match = REGEX_REMOVE_INVALID_VOTES_TO_KANDIDAT.exec(command);
 
     if (match?.[1] !== undefined) {
-      const votesText = match[3];
+      const votesText = match[2];
       const commandArgs = {
         kandidatOrdnungszahl: Number.parseInt(match[1]),
-        countInvalidVotes: parseOptionalCountToNumber(votesText),
+        removeInvalidVotes: parseOptionalCountToNumber(votesText),
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {
@@ -72,7 +72,7 @@ export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
   ): boolean {
     return (
       isValidKandidatOrdnungszahl(commandArguments.kandidatOrdnungszahl) &&
-      isValidCount(commandArguments.countInvalidVotes)
+      isValidCount(commandArguments.removeInvalidVotes)
     );
   }
 

@@ -96,6 +96,8 @@ export function useStimmzettelChangeHistory() {
     lastUsedKandidat.value = null;
     lastUsedWahlvorschlag.value = null;
 
+    //Auf nächsten Tick warten, damit die Komponenten, welche die refs verwenden, ihren Zustand vergessen,
+    //das ist wichtig, damit auch bei gleichen Werten ggf. eine Aktualisierung erfolgt
     await nextTick();
 
     if ("kandidatId" in latestUsedData) {

@@ -26,7 +26,10 @@ public class TeamStatusService {
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungTeamstatus')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
-          + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
+          + " and ("
+          + "@teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)"
+          + " or hasAuthority('WLS_WAHLVORSTAND')"
+          + ")")
   @Transactional
   public void saveTeamStatus(
       @P("param") final TeamBezirkUndWahlIDModel id,

@@ -79,33 +79,27 @@
           class="d-flex flex-column"
           style="flex: 0 0 300px"
         >
-          <the-eingabehistorie-card
-            :change-history="changeHistory.changeHistoryInReverseOrder.value"
-            class="d-flex flex-column"
-          />
-          <base-stimmzettel-zusammenfassung-card
-            class="mt-2 d-flex flex-column"
-            :listenstimmen="
-              stimmzettelManager.managedStimmzettel
-                .wahlvorschlaegeWithListenkreuz.value
+          <base-stimmzettel-sonderfaelle-card
+            v-model:invalid-votes="
+              stimmzettelManager.managedStimmzettel.stimmzettel.value
+                .invalideVotes
             "
-            :ungueltigestimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .ungueltigeStimmen
+            v-model:beschlussfassung-valid="isBeschlussfassungValid"
+            v-model:gueltigkeit="
+              stimmzettelManager.managedStimmzettel.stimmzettel.value
+                .gueltigkeit
             "
-            :direktstimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .einzelstimmen
+            v-model:wahlvorstand-beschlussvorschlag="
+              stimmzettelManager.managedStimmzettel.stimmzettel.value
+                .wahlvorstandBeschlussvorschlag
             "
-            :reststimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .reststimmen
+            :team-id="currentUserTeamName"
+            :system-beschlussgruende="
+              stimmzettelManager.managedStimmzettel.stimmzettel.value
+                .systemBeschlussvorschlag
             "
-            :streichungen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .streichungen
-            "
-            :gueltigkeit="'VALID'"
+            :stimmzettelkennung="stimmzettel.stimmzettelkennung"
+            :is-b-w-b="isBWB"
           />
         </div>
       </v-card-text>
@@ -115,7 +109,10 @@
         >
         <v-spacer />
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
-        <base-wls-button-save @click="onSavedClicked" />
+        <base-wls-button-save
+          :disabled="isSaveDisabled"
+          @click="onSavedClicked"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -128,11 +125,12 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
+import BaseStimmzettelSonderfaelleCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelSonderfaelleCard.vue";
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
 import TheEingabehistorieCard from "@/components/dse/stimmzettelerfassung/TheEingabehistorieCard.vue";
 import TheStimmzettelCommandProcessingTextField from "@/components/dse/stimmzettelerfassung/TheStimmzettelCommandProcessingTextField.vue";
@@ -169,11 +167,12 @@ const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
   wahlID
 );
 
-const { currentUserTeamName } = storeToRefs(useUserStore());
+const { currentUserTeamName, isBWB } = storeToRefs(useUserStore());
 
 const changeHistory = computed(
   () => stimmzettelManager.managedStimmzettel.changeHistory
 );
+const isSaveDisabled = computed(() => isBeschlussfassungValid.value === false);
 const wahlvorschlagIdOfLatestChangeWahlvorschlag = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
@@ -181,6 +180,8 @@ const wahlvorschlagIdOfLatestChangeWahlvorschlag = computed<string | null>(
 const latestChangedKandidat = computed<Kandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
 );
+
+const isBeschlussfassungValid = ref(true);
 
 function onCancelClicked() {
   emit("cancel");

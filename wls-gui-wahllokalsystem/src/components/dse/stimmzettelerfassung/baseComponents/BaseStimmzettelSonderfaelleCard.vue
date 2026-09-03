@@ -86,7 +86,6 @@ import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBe
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { PropType } from "vue";
 
-import { storeToRefs } from "pinia";
 import { computed, nextTick, ref, useTemplateRef } from "vue";
 import { VCombobox } from "vuetify/components";
 
@@ -94,13 +93,10 @@ import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE =
   "comboBoxWahlvorstandBeschlussgruende";
-
-const { isBWB } = storeToRefs(useUserStore());
 
 const { createBeschlussgrundWithText } = useBeschlussgrundTools();
 const { required } = useRules();
@@ -144,6 +140,10 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  isBWB: {
+    type: Boolean,
+    required: true,
   },
   showBeschlussfassung: {
     type: Boolean,

@@ -39,7 +39,7 @@
 
         <!-- Core Frameworks -->
         <spring-cloud-dependencies.version>2025.0.3</spring-cloud-dependencies.version>
-        <wls.common.version>1.8.0</wls.common.version>
+        <wls.common.version>1.8.1</wls.common.version>
 
         <!-- Linting & Formatting -->
         <spotless-maven-plugin.version>3.10.1</spotless-maven-plugin.version>

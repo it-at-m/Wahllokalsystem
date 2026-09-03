@@ -19,9 +19,9 @@
         hide-details
         @update:model-value="onStimmzettelFehltChanged"
       />
-      <div class="d-flex justify-space-between align-center">
+      <div class="d-flex justify-space-between align-center ga-1">
         <div>ungültige Stimmen die nicht zugeordnet werden können</div>
-        <div style="flex: 0 1 100px">
+        <div style="flex: 0 1 130px">
           <v-number-input
             v-model="modelValueInvalidVotes"
             :disabled="isInputOfInvalidVotesDisabled"

@@ -93,6 +93,12 @@
               stimmzettelManager.managedStimmzettel.stimmzettel.value
                 .wahlvorstandBeschlussvorschlag
             "
+            :deny-selection-of-stimmzettel-fehlt="
+              stimmzettelManager.managedStimmzettel.hasAnyValuesSet.value
+            "
+            :deny-selection-of-stimmzettel-leer="
+              stimmzettelManager.managedStimmzettel.hasAnyValuesSet.value
+            "
             :team-id="currentUserTeamName"
             :system-beschlussgruende="
               stimmzettelManager.managedStimmzettel.stimmzettel.value

@@ -4,7 +4,10 @@
     persistent
     fullscreen
   >
-    <v-card style="height: 100vh; min-height: 0; max-width: 100%">
+    <v-card
+      class="h-screen"
+      style="min-height: 0; max-width: 100%"
+    >
       <v-card-title>
         Erfassung Stimmzettel Nummer {{ currentUserTeamName }}
         {{ stimmzettel.stimmzettelkennung }}
@@ -54,7 +57,10 @@
             class="flex-0-0"
             :stimmzettel-manager="stimmzettelManager"
           />
-          <div style="flex: 1 1 0; min-height: 0; display: flex; min-width: 0">
+          <div
+            class="flex-1-1-0 d-flex"
+            style="min-height: 0; min-width: 0"
+          >
             <the-stimmzettel-content
               v-if="true"
               :active-wahlvorschlag-id="
@@ -133,8 +139,6 @@ import TheStimmzettelCommandProcessingTextField from "@/components/dse/stimmzett
 import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStimmzettelContent.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-
-const items = [1, 2, 3, 4, 5];
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,

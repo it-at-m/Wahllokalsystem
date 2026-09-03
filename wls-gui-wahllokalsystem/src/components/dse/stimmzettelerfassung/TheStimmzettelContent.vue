@@ -3,7 +3,8 @@
     show-arrows
     center-active
     :model-value="activeWahlvorschlagId"
-    style="flex: 1 1 0; min-width: 0"
+    class="flex-1-1-0"
+    style="min-width: 0"
   >
     <v-slide-group-item
       v-for="wv in wahlvorschlaege"

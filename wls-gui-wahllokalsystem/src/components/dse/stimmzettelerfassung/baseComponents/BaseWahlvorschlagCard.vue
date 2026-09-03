@@ -1,9 +1,6 @@
 <template>
   <v-card class="ma-1 d-flex flex-column">
-    <v-card-title
-      class="flex-0-0 d-flex flex-column"
-      style="width: 100%"
-    >
+    <v-card-title class="flex-0-0 d-flex flex-column w-100">
       <div>Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}</div>
       <div class="text-subtitle-2">
         <base-div-item-with-scores
@@ -14,17 +11,17 @@
           :name="wahlvorschlag.kurzname"
           :is-gestrichen="false"
           :ungueltige-stimmen="
-                wahlvorschlag.kandidaten.reduce(
-                  (sum, kandidat) => sum + (kandidat.ungueltigeStimmen ?? 0),
-                  0
-                )
-              "
+            wahlvorschlag.kandidaten.reduce(
+              (sum, kandidat) => sum + (kandidat.ungueltigeStimmen ?? 0),
+              0
+            )
+          "
           :einzelstimmen="
-                wahlvorschlag.kandidaten.reduce(
-                  (sum, kandidat) => sum + (kandidat.einzelstimmen ?? 0),
-                  0
-                )
-              "
+            wahlvorschlag.kandidaten.reduce(
+              (sum, kandidat) => sum + (kandidat.einzelstimmen ?? 0),
+              0
+            )
+          "
           :reststimmen="
             wahlvorschlag.kandidaten.reduce(
               (sum, kandidat) => sum + (kandidat.reststimmen ?? 0),
@@ -142,10 +139,6 @@ onActivated(() => {
 </script>
 
 <style scoped>
-:root {
-  --v-h: calc(100vh - 100px);
-}
-
 .activeKandidat {
   border: solid 1px;
   border-color: rgb(var(--v-theme-primary));

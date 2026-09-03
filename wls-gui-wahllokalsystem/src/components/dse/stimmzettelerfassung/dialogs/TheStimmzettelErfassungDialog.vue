@@ -14,14 +14,15 @@
         class="ga-3 d-flex"
       >
         <div
-          class="flex-0-0-0"
+          class="flex-0-0-0 d-flex flex-column"
           style="max-width: 16%"
         >
           <the-eingabehistorie-card
             :change-history="changeHistory.changeHistoryInReverseOrder.value"
+            class="d-flex flex-column"
           />
           <base-stimmzettel-zusammenfassung-card
-            class="mt-2"
+            class="mt-2 d-flex flex-column"
             :listenstimmen="
               stimmzettelManager.managedStimmzettel
                 .wahlvorschlaegeWithListenkreuz.value

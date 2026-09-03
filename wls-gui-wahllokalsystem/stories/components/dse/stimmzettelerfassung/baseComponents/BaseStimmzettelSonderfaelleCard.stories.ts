@@ -52,6 +52,7 @@ const meta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
+
 export const UWB: Story = {
   async beforeEach() {
     const store = useUserStore(pinia);
@@ -63,8 +64,10 @@ export const UWB: Story = {
     modelValue: createDummyStimmzettel(),
     modelValueInvalidVotes: 0,
     modelValueGueltigkeit: null,
+    systemBeschlussgruende: [],
   },
 };
+
 export const BWB: Story = {
   async beforeEach() {
     const store = useUserStore(pinia);
@@ -76,5 +79,6 @@ export const BWB: Story = {
     modelValue: createDummyStimmzettel(),
     modelValueInvalidVotes: 0,
     modelValueGueltigkeit: null,
+    systemBeschlussgruende: [],
   },
 };

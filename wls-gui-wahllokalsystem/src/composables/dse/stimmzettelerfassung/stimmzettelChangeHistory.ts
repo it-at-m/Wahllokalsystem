@@ -26,6 +26,21 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(kandidat);
   }
 
+  function registerKandidatEinzelstimmenRemoved(
+    kandidat: Kandidat,
+    count: number
+  ) {
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
+      text: [
+        `${kandidat.ordnungszahl}${" - " + count + (count > 1 ? " Stimmen" : " Stimme")}`,
+        kandidat.name,
+      ],
+    });
+
+    _updateLatestUsedData(kandidat);
+  }
+
   function registerKandidatEinzelstimmenRangeSet(
     kandidaten: Kandidat[],
     count: number
@@ -57,9 +72,33 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(kandidat);
   }
 
+  function registerKandidatUngueltigeStimmenRemoved(
+    kandidat: Kandidat,
+    count: number
+  ) {
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
+      text: [
+        `${kandidat.ordnungszahl}${" - " + count + " ungültige " + (count > 1 ? "Stimmen" : "Stimme")}`,
+        kandidat.name,
+      ],
+    });
+
+    _updateLatestUsedData(kandidat);
+  }
+
   function registerKandidatStreichungSet(kandidat: Kandidat) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.DISCARD_KANDIDAT,
+      text: [`${kandidat.ordnungszahl}`, kandidat.name],
+    });
+
+    _updateLatestUsedData(kandidat);
+  }
+
+  function registerKandidatStreichungUnset(kandidat: Kandidat) {
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
       text: [`${kandidat.ordnungszahl}`, kandidat.name],
     });
 
@@ -77,6 +116,18 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(lastKandidat);
   }
 
+  function registerKandidatStreichungRangeUnset(kandidaten: Kandidat[]) {
+    const firstKandidat = kandidaten[0];
+    const lastKandidat = kandidaten[kandidaten.length - 1];
+
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
+      text: [`${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl}`],
+    });
+
+    _updateLatestUsedData(lastKandidat);
+  }
+
   function registerWahlvorschlagSelected(wahlvorschlag: Wahlvorschlag) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
@@ -84,6 +135,21 @@ export function useStimmzettelChangeHistory() {
     });
 
     _updateLatestUsedData(wahlvorschlag);
+  }
+
+  function registerWahlvorschlagDeselected(wahlvorschlag: Wahlvorschlag) {
+    changeHistory.value.push({
+      type: InputHistoryTypeEnum.REVOKE_WAHLVORSCHLAG,
+      text: [`${wahlvorschlag.kurzname}`],
+    });
+
+    _updateLatestUsedData(wahlvorschlag);
+  }
+
+  function reset() {
+    changeHistory.value = [];
+    lastUsedWahlvorschlag.value = null;
+    lastUsedKandidat.value = null;
   }
 
   async function _updateLatestUsedData(kandidat: Kandidat): Promise<void>;
@@ -117,10 +183,16 @@ export function useStimmzettelChangeHistory() {
     lastUsedWahlvorschlag,
 
     registerKandidatEinzelstimmenAdded,
+    registerKandidatEinzelstimmenRemoved,
     registerKandidatEinzelstimmenRangeSet,
     registerKandidatUngueltigeStimmenAdded,
+    registerKandidatUngueltigeStimmenRemoved,
     registerKandidatStreichungSet,
+    registerKandidatStreichungUnset,
     registerKandidatStreichungRangeSet,
+    registerKandidatStreichungRangeUnset,
     registerWahlvorschlagSelected,
+    registerWahlvorschlagDeselected,
+    reset,
   };
 }

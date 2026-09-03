@@ -7,6 +7,7 @@ import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
+
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
@@ -67,6 +68,19 @@ export function useManagedStimmzettel(
     return maximalErlaubteStimmenProWaehler - currentGesamtStimmen;
   });
 
+  function resetStimmzettel() {
+    changeHistory.reset();
+    stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
+      wahlvorschlag.selected = false;
+      wahlvorschlag.kandidaten.map((kandidat) => {
+        kandidat.einzelstimmen = null;
+        kandidat.ungueltigeStimmen = null;
+        kandidat.reststimmen = null;
+        kandidat.durchgestrichen = false;
+      });
+    });
+  }
+
   /**
    *
    * @param ordnungszahl
@@ -92,6 +106,29 @@ export function useManagedStimmzettel(
     _internalAddVotesToKandidat(kandidat, votesToAdd);
   }
 
+  function kandidatRemoveEinzelstimmenOrThrow(
+    ordnungszahl: number,
+    votesToRemove: number
+  ) {
+    _isNotSafeIntegerThrow(
+      votesToRemove,
+      "Die Anzahl der zu entfernenden Stimmen muss eine ganze Zahl sein."
+    );
+    const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
+    if (!kandidat) {
+      throw new ManagedStimmzettelError(
+        `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+      );
+    }
+    if (!kandidat.einzelstimmen || kandidat.einzelstimmen < votesToRemove) {
+      throw new ManagedStimmzettelError(
+        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${votesToRemove} Stimmen abgezogen werden.`
+      );
+    }
+
+    _internalRemoveVotesFromKandidat(kandidat, votesToRemove);
+  }
+
   function kandidatAddUngueltigeStimmenOrThrow(
     ordnungszahl: number,
     invalidVotesToAdd: number
@@ -108,6 +145,32 @@ export function useManagedStimmzettel(
     }
 
     _internalAddInvalidVotesToKandidat(kandidat, invalidVotesToAdd);
+  }
+
+  function kandidatRemoveUngueltigeStimmenOrThrow(
+    ordnungszahl: number,
+    invalidVotesToRemove: number
+  ) {
+    _isNotSafeIntegerThrow(
+      invalidVotesToRemove,
+      "Die Anzahl der zu entfernenden ungültigen Stimmen muss eine ganze Zahl sein."
+    );
+    const kandidat = _getKandidatToAddVotesByUserByOrdnungszahl(ordnungszahl);
+    if (!kandidat) {
+      throw new ManagedStimmzettelError(
+        `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+      );
+    }
+    if (
+      !kandidat.ungueltigeStimmen ||
+      kandidat.ungueltigeStimmen < invalidVotesToRemove
+    ) {
+      throw new ManagedStimmzettelError(
+        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${invalidVotesToRemove} ungültigen Stimmen abgezogen werden.`
+      );
+    }
+
+    _internalRemoveInvalidVotesFromKandidat(kandidat, invalidVotesToRemove);
   }
 
   function kandidatenAddStimmenInRangeOrThrow(
@@ -146,6 +209,21 @@ export function useManagedStimmzettel(
     _internalAddStreichungToKandidat(kandidat);
   }
 
+  function kandidatRemoveStreichungOrThrow(ordnungszahl: number) {
+    const kandidat = _getKandidatToRemoveStreichungByOrdnungszahl(ordnungszahl);
+    if (!kandidat) {
+      throw new ManagedStimmzettelError(
+        `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
+      );
+    }
+    if (!kandidat.durchgestrichen) {
+      throw new ManagedStimmzettelError(
+        `Für Kandidat*in mit Ordnungszahl ${ordnungszahl} kann keine Streichung entfernt werden.`
+      );
+    }
+    _internalRemoveStreichungFromKandidat(kandidat);
+  }
+
   function kandidatenStreichungenInRangeOrThrow(
     lowerOrdnungszahl: number,
     upperOrdnungszahl: number
@@ -159,6 +237,22 @@ export function useManagedStimmzettel(
     }
 
     _internalAddStreichungenToKandidatenRange(kandidaten);
+  }
+
+  function kandidatenRemoveStreichungenInRangeOrThrow(
+    lowerOrdnungszahl: number,
+    upperOrdnungszahl: number
+  ) {
+    const kandidaten = _getKandidatenInRangeOrThrow(
+      lowerOrdnungszahl,
+      upperOrdnungszahl
+    );
+    if (kandidaten.every((kandidat) => !kandidat.durchgestrichen)) {
+      throw new ManagedStimmzettelError(
+        `Im Bereich sind bereits alle Streichungen entfernt.`
+      );
+    }
+    _internalRemoveStreichungenFromKandidatenRange(kandidaten);
   }
 
   function wahlvorschlagAddVotesOrThrow(wahlvorschlagOrdnungszahl: number) {
@@ -176,6 +270,21 @@ export function useManagedStimmzettel(
       );
     }
     _internalAddVotesToWahlvorschlag(wahlvorschlag);
+  }
+
+  function wahlvorschlagRemoveVotesOrThrow(wahlvorschlagOrdnungszahl: number) {
+    const wahlvorschlag = _getWahlvorschlagToAddVotesByOrdnungszahl(
+      wahlvorschlagOrdnungszahl
+    );
+    if (!wahlvorschlag) {
+      throw new ManagedStimmzettelError(
+        `Wahlvorschlag mit Ordnungszahl ${wahlvorschlagOrdnungszahl} existiert nicht.`
+      );
+    }
+    if (!wahlvorschlag.selected) {
+      throw new ManagedStimmzettelError(`Wahlvorschlag ist bereits abgewählt.`);
+    }
+    _internalRemoveVotesFromWahlvorschlag(wahlvorschlag);
   }
 
   function _getKandidatToAddVotesForRangeByOrdnungszahl(ordnungszahl: number) {
@@ -208,6 +317,18 @@ export function useManagedStimmzettel(
       return undefined;
     } else {
       return _findKandidatToAddStreichung(kandidatenWithOrdnungszahl);
+    }
+  }
+
+  function _getKandidatToRemoveStreichungByOrdnungszahl(ordnungszahl: number) {
+    const kandidatenWithOrdnungszahl = kandidatenOfStimmzettel.value.filter(
+      (kandidat) => kandidat.ordnungszahl === ordnungszahl
+    );
+
+    if (kandidatenWithOrdnungszahl.length === 0) {
+      return undefined;
+    } else {
+      return _findKandidatToRemoveStreichung(kandidatenWithOrdnungszahl);
     }
   }
 
@@ -257,6 +378,18 @@ export function useManagedStimmzettel(
     return kandidatenForListenPosition[0];
   }
 
+  function _findKandidatToRemoveStreichung(
+    kandidatenForListenPosition: Kandidat[]
+  ) {
+    const kandidatWithDurchstreichung = kandidatenForListenPosition.find(
+      (kandidat) => kandidat.durchgestrichen
+    );
+    if (kandidatWithDurchstreichung) {
+      return kandidatWithDurchstreichung;
+    }
+    return kandidatenForListenPosition[0];
+  }
+
   function _internalAddVotesToKandidat(
     kandidat: Kandidat,
     numberOfVotesToAdd: number
@@ -264,9 +397,19 @@ export function useManagedStimmzettel(
     const votesToAdd = Math.abs(numberOfVotesToAdd);
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
     kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
-    _updateReststimmen();
-    _addVotesForKandidatToWahlvorschlag(kandidat, votesToAdd);
+    _updateReststimmenWhenVotesAdded();
     changeHistory.registerKandidatEinzelstimmenAdded(kandidat, votesToAdd);
+  }
+
+  function _internalRemoveVotesFromKandidat(
+    kandidat: Kandidat,
+    numberOfVotesToRemove: number
+  ) {
+    const votesToRemove = Math.abs(numberOfVotesToRemove);
+    const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
+    kandidat.einzelstimmen = currentEinzelstimmen - votesToRemove;
+    _updateReststimmenWhenVotesRemoved();
+    changeHistory.registerKandidatEinzelstimmenRemoved(kandidat, votesToRemove);
   }
 
   function _internalAddInvalidVotesToKandidat(
@@ -276,10 +419,24 @@ export function useManagedStimmzettel(
     const invalidVotesToAdd = Math.abs(numberOfInvalidVotesToAdd);
     const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
     kandidat.ungueltigeStimmen = currentUngueltigeStimmen + invalidVotesToAdd;
-    _addInvalidVotesForKandidatToWahlvorschlag(kandidat, invalidVotesToAdd);
     changeHistory.registerKandidatUngueltigeStimmenAdded(
       kandidat,
       invalidVotesToAdd
+    );
+  }
+
+  function _internalRemoveInvalidVotesFromKandidat(
+    kandidat: Kandidat,
+    numberOfVotesToRemove: number
+  ) {
+    const invalidVotesToRemove = Math.abs(numberOfVotesToRemove);
+    const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
+    kandidat.ungueltigeStimmen =
+      currentUngueltigeStimmen - invalidVotesToRemove;
+    _updateReststimmenWhenVotesRemoved();
+    changeHistory.registerKandidatUngueltigeStimmenRemoved(
+      kandidat,
+      invalidVotesToRemove
     );
   }
 
@@ -291,8 +448,7 @@ export function useManagedStimmzettel(
     kandidaten.map((kandidat) => {
       const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
       kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
-      _updateReststimmen();
-      _addVotesForKandidatToWahlvorschlag(kandidat, votesToAdd);
+      _updateReststimmenWhenVotesAdded();
     });
     changeHistory.registerKandidatEinzelstimmenRangeSet(kandidaten, votesToAdd);
   }
@@ -302,9 +458,21 @@ export function useManagedStimmzettel(
     changeHistory.registerKandidatStreichungSet(kandidat);
   }
 
+  function _internalRemoveStreichungFromKandidat(kandidat: Kandidat) {
+    kandidat.durchgestrichen = false;
+    changeHistory.registerKandidatStreichungUnset(kandidat);
+  }
+
   function _internalAddStreichungenToKandidatenRange(kandidaten: Kandidat[]) {
     kandidaten.map((kandidat) => (kandidat.durchgestrichen = true));
     changeHistory.registerKandidatStreichungRangeSet(kandidaten);
+  }
+
+  function _internalRemoveStreichungenFromKandidatenRange(
+    kandidaten: Kandidat[]
+  ) {
+    kandidaten.map((kandidat) => (kandidat.durchgestrichen = false));
+    changeHistory.registerKandidatStreichungRangeUnset(kandidaten);
   }
 
   function _internalAddVotesToWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
@@ -328,6 +496,13 @@ export function useManagedStimmzettel(
     }
     wahlvorschlag.selected = true;
     changeHistory.registerWahlvorschlagSelected(wahlvorschlag);
+  }
+
+  function _internalRemoveVotesFromWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
+    wahlvorschlag.kandidaten.map((kandidat) => (kandidat.reststimmen = 0));
+    wahlvorschlag.selected = false;
+    _updateReststimmenWhenVotesRemoved();
+    changeHistory.registerWahlvorschlagDeselected(wahlvorschlag);
   }
 
   function _hasKandidatAnyStimmeOrStreichung(kandidat: Kandidat) {
@@ -380,27 +555,7 @@ export function useManagedStimmzettel(
     return kandidaten;
   }
 
-  function _addVotesForKandidatToWahlvorschlag(
-    kandidat: Kandidat,
-    votesToAdd: number
-  ) {
-    const wahlvorschlagToUpdate = _getWahlvorschlagForKandidat(kandidat);
-    if (wahlvorschlagToUpdate) {
-      wahlvorschlagToUpdate.gueltigeStimmen += votesToAdd;
-    }
-  }
-
-  function _addInvalidVotesForKandidatToWahlvorschlag(
-    kandidat: Kandidat,
-    invalidVotesToAdd: number
-  ) {
-    const wahlvorschlagToUpdate = _getWahlvorschlagForKandidat(kandidat);
-    if (wahlvorschlagToUpdate) {
-      wahlvorschlagToUpdate.ungueltigeStimmen += invalidVotesToAdd;
-    }
-  }
-
-  function _updateReststimmen() {
+  function _updateReststimmenWhenVotesAdded() {
     if (remainingVotes.value < 0) {
       const wahlvorschlagToUpdate = stimmzettel.value.wahlvorschlaege.find(
         (wahlvorschlag) =>
@@ -426,10 +581,26 @@ export function useManagedStimmzettel(
     }
   }
 
-  function _getWahlvorschlagForKandidat(kandidat: Kandidat) {
-    return stimmzettel.value.wahlvorschlaege.find((wahlvorschlag) =>
-      wahlvorschlag.kandidaten.find((k) => k.kandidatId === kandidat.kandidatId)
-    );
+  function _updateReststimmenWhenVotesRemoved() {
+    if (remainingVotes.value > 0) {
+      const wahlvorschlagToUpdate = stimmzettel.value.wahlvorschlaege.find(
+        (wahlvorschlag) => wahlvorschlag.selected
+      );
+      if (wahlvorschlagToUpdate) {
+        for (let i = remainingVotes.value; i > 0; i--) {
+          const kandidatToUpdate = wahlvorschlagToUpdate.kandidaten.find(
+            (kandidat) =>
+              !kandidat.durchgestrichen &&
+              !kandidat.einzelstimmen &&
+              !kandidat.ungueltigeStimmen &&
+              !kandidat.reststimmen
+          );
+          if (kandidatToUpdate) {
+            kandidatToUpdate.reststimmen = 1;
+          }
+        }
+      }
+    }
   }
 
   function _isNotSafeIntegerThrow(value: number, errorMessage: string) {
@@ -442,11 +613,16 @@ export function useManagedStimmzettel(
     changeHistory,
 
     kandidatAddEinzelstimmenOrThrow,
+    kandidatRemoveEinzelstimmenOrThrow,
     kandidatAddUngueltigeStimmenOrThrow,
+    kandidatRemoveUngueltigeStimmenOrThrow,
     kandidatenAddStimmenInRangeOrThrow,
     kandidatAddStreichungOrThrow,
+    kandidatRemoveStreichungOrThrow,
     kandidatenStreichungenInRangeOrThrow,
+    kandidatenRemoveStreichungenInRangeOrThrow,
     wahlvorschlagAddVotesOrThrow,
+    wahlvorschlagRemoveVotesOrThrow,
     stimmzettel: computed(() => stimmzettel.value),
     stimmenSummary,
     wahlvorschlaegeWithListenkreuz,

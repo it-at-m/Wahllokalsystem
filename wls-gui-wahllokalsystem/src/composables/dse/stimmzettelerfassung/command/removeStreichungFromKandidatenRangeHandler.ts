@@ -6,17 +6,15 @@ import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.t
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
 interface CommandArguments {
-  kandidatOrdnungszahl: number;
-  countInvalidVotes: number;
+  kandidatOrdnungszahlLowerBound: number;
+  kandidatOrdnungszahlUpperBound: number;
 }
 
-export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
-  const REGEX_ADD_INVALID_VOTES_TO_KANDIDAT = /^[uU]([1-9]\d{2,})(\+(\d*))?$/;
-  const {
-    isValidCount,
-    isValidKandidatOrdnungszahl,
-    parseOptionalCountToNumber,
-  } = useHandlerTools();
+export function useRemoveStreichungToKandidatenRangeHandler(): CommandHandler {
+  const REXEG_REMOVE_STREICHUNG_TO_KANDIDATEN_RANGE =
+    /^[sS]([1-9]\d{2,})-([1-9]\d{2,})-$/;
+  const { isValidKandidatOrdnungszahl, isValidRange, normalizeBounds } =
+    useHandlerTools();
 
   function canHandle(command: string): boolean {
     try {
@@ -34,14 +32,14 @@ export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
     const commandArguments = _parseCommandArguments(command);
     if (!commandArguments) {
       throw new CommandExecutionError(
-        "Kandidat*in oder Stimmenanzahl konnten nicht eindeutig identifiziert werden."
+        "Kandidat*in konnte nicht eindeutig identifiziert werden."
       );
     }
 
     try {
-      stimmzettel.kandidatAddUngueltigeStimmenOrThrow(
-        commandArguments.kandidatOrdnungszahl,
-        commandArguments.countInvalidVotes
+      stimmzettel.kandidatenRemoveStreichungenInRangeOrThrow(
+        commandArguments.kandidatOrdnungszahlLowerBound,
+        commandArguments.kandidatOrdnungszahlUpperBound
       );
     } catch (error) {
       if (error instanceof ManagedStimmzettelError) {
@@ -53,13 +51,15 @@ export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
   }
 
   function _parseCommandArguments(command: string): CommandArguments | null {
-    const match = REGEX_ADD_INVALID_VOTES_TO_KANDIDAT.exec(command);
+    const match = REXEG_REMOVE_STREICHUNG_TO_KANDIDATEN_RANGE.exec(command);
 
     if (match?.[1] !== undefined) {
-      const votesText = match[3];
+      const bound1 = Number.parseInt(match[1]);
+      const bound2 = Number.parseInt(match[2]);
+      const { lower, upper } = normalizeBounds(bound1, bound2);
       const commandArgs = {
-        kandidatOrdnungszahl: Number.parseInt(match[1]),
-        countInvalidVotes: parseOptionalCountToNumber(votesText),
+        kandidatOrdnungszahlLowerBound: lower,
+        kandidatOrdnungszahlUpperBound: upper,
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {
@@ -71,8 +71,16 @@ export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
     commandArguments: CommandArguments
   ): boolean {
     return (
-      isValidKandidatOrdnungszahl(commandArguments.kandidatOrdnungszahl) &&
-      isValidCount(commandArguments.countInvalidVotes)
+      isValidKandidatOrdnungszahl(
+        commandArguments.kandidatOrdnungszahlLowerBound
+      ) &&
+      isValidKandidatOrdnungszahl(
+        commandArguments.kandidatOrdnungszahlUpperBound
+      ) &&
+      isValidRange(
+        commandArguments.kandidatOrdnungszahlLowerBound,
+        commandArguments.kandidatOrdnungszahlUpperBound
+      )
     );
   }
 

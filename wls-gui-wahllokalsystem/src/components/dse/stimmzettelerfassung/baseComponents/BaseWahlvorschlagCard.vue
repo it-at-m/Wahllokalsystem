@@ -1,67 +1,64 @@
 <template>
-  <v-card class="ma-1">
-    <v-card-title>
-      <div
-        class="d-flex flex-column"
-        style="width: 100%"
-      >
-        <div>
-          <div>Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}</div>
-          <div class="text-subtitle-2">
-            <base-div-item-with-scores
-              :ordnungszahl="
-                wahlvorschlag.ordnungszahl *
-                WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL
-              "
-              :name="wahlvorschlag.kurzname"
-              :is-gestrichen="false"
-              :ungueltige-stimmen="wahlvorschlag.ungueltigeStimmen"
-              :einzelstimmen="wahlvorschlag.gueltigeStimmen"
-              :reststimmen="
-                wahlvorschlag.kandidaten.reduce(
-                  (sum, kandidat) => sum + (kandidat.reststimmen ?? 0),
-                  0
-                )
-              "
-              ><v-checkbox
-                density="compact"
-                hide-details
-                :model-value="wahlvorschlag.selected"
-                :true-icon="mdiCloseBoxOutline"
-                :ripple="false"
-                readonly
-              />
-            </base-div-item-with-scores>
-          </div>
-        </div>
+  <v-card class="ma-1 d-flex flex-column">
+    <v-card-title
+      class="flex-0-0 d-flex flex-column"
+      style="width: 100%"
+    >
+      <div>Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}</div>
+      <div class="text-subtitle-2">
+        <base-div-item-with-scores
+          :ordnungszahl="
+            wahlvorschlag.ordnungszahl *
+            WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL
+          "
+          :name="wahlvorschlag.kurzname"
+          :is-gestrichen="false"
+          :ungueltige-stimmen="wahlvorschlag.ungueltigeStimmen"
+          :einzelstimmen="wahlvorschlag.gueltigeStimmen"
+          :reststimmen="
+            wahlvorschlag.kandidaten.reduce(
+              (sum, kandidat) => sum + (kandidat.reststimmen ?? 0),
+              0
+            )
+          "
+          ><v-checkbox
+            density="compact"
+            hide-details
+            :model-value="wahlvorschlag.selected"
+            :true-icon="mdiCloseBoxOutline"
+            :ripple="false"
+            readonly
+          />
+        </base-div-item-with-scores>
       </div>
     </v-card-title>
 
-    <v-card-text class="pa-0">
-      <div style="max-height: 600px; overflow-y: auto">
-        <v-list>
-          <v-list-item
-            v-for="(kandidat, index) in kandidatenListe"
-            :id="`kandidat-${index}`"
-            :key="index"
-            ref="listItems"
-            :class="{
-              activeKandidat:
-                kandidat.kandidatId === activeKandidat?.kandidatId &&
-                kandidat.nennung === activeKandidat?.nennung,
-            }"
-            tabindex="-1"
-          >
-            <v-divider
-              v-if="index !== 0"
-              :variant="
-                isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
-              "
-            />
-            <base-kandidat-list-item-content :kandidat="kandidat" />
-          </v-list-item>
-        </v-list>
-      </div>
+    <v-card-text
+      class="pa-0 flex-1-1 d-flex"
+      style="min-height: 0"
+    >
+      <v-list style="flex: 1 1 auto; min-height: 0; overflow-y: auto">
+        <v-list-item
+          v-for="(kandidat, index) in kandidatenListe"
+          :id="`kandidat-${index}`"
+          :key="index"
+          ref="listItems"
+          :class="{
+            activeKandidat:
+              kandidat.kandidatId === activeKandidat?.kandidatId &&
+              kandidat.nennung === activeKandidat?.nennung,
+          }"
+          tabindex="-1"
+        >
+          <v-divider
+            v-if="index !== 0"
+            :variant="
+              isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
+            "
+          />
+          <base-kandidat-list-item-content :kandidat="kandidat" />
+        </v-list-item>
+      </v-list>
     </v-card-text>
   </v-card>
 </template>
@@ -76,7 +73,6 @@ import { computed, nextTick, onActivated, ref, watch } from "vue";
 
 import BaseDivItemWithScores from "@/components/dse/stimmzettelerfassung/baseComponents/BaseDivItemWithScores.vue";
 import BaseKandidatListItemContent from "@/components/dse/stimmzettelerfassung/baseComponents/BaseKandidatListItemContent.vue";
-import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 
 const props = defineProps<{
@@ -87,7 +83,6 @@ const props = defineProps<{
 const kandidatenListe = computed(() => props.wahlvorschlag.kandidaten);
 
 const listItems = ref<(ComponentPublicInstance | null)[]>([]);
-const { scrollIntoView } = useViewportUtils();
 
 //TODO refactor to function instead of constant
 const isDividerZwischenGleichemKandidat = (index: number) => {
@@ -121,8 +116,7 @@ const focusActive = async () => {
   const item = listItems.value[lastIndex];
 
   if (item?.$el) {
-    const selector = `#kandidat-${lastIndex}`;
-    scrollIntoView(selector);
+    item.$el.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 };
 
@@ -140,6 +134,10 @@ onActivated(() => {
 </script>
 
 <style scoped>
+:root {
+  --v-h: calc(100vh - 100px);
+}
+
 .activeKandidat {
   border: solid 1px;
   border-color: rgb(var(--v-theme-primary));

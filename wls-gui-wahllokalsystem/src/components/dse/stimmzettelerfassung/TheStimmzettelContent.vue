@@ -1,22 +1,21 @@
 <template>
-  <v-sheet class="mx-auto">
-    <v-slide-group
-      show-arrows
-      center-active
-      :model-value="activeWahlvorschlagId"
+  <v-slide-group
+    show-arrows
+    center-active
+    :model-value="activeWahlvorschlagId"
+    style="flex: 1 1 auto"
+  >
+    <v-slide-group-item
+      v-for="wv in wahlvorschlaege"
+      :key="wv.wahlvorschlagID"
+      :value="wv.wahlvorschlagID"
     >
-      <v-slide-group-item
-        v-for="wv in wahlvorschlaege"
-        :key="wv.wahlvorschlagID"
-        :value="wv.wahlvorschlagID"
-      >
-        <base-wahlvorschlag-card
-          :wahlvorschlag="wv"
-          :active-kandidat="activeKandidat"
-        />
-      </v-slide-group-item>
-    </v-slide-group>
-  </v-sheet>
+      <base-wahlvorschlag-card
+        :wahlvorschlag="wv"
+        :active-kandidat="activeKandidat"
+      />
+    </v-slide-group-item>
+  </v-slide-group>
 </template>
 
 <script setup lang="ts">

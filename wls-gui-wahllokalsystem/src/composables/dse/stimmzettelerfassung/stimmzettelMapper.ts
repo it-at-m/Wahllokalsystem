@@ -2,6 +2,7 @@ import type {
   BeschlussfassungDTO,
   KandidatDTO,
   StimmzettelOfTeamDTO,
+  SystemBeschlussgrundDTO,
   WahlvorschlagDTO,
   WahlvorstandBeschlussgrundDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
@@ -13,6 +14,14 @@ import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschl
 
 export function useStimmzettelMapper() {
   function toModel(dto: StimmzettelOfTeamDTO, teamID: string): Stimmzettel {
+    const userBeschlussgruende = (dto.wahlvorstandBeschlussvorschlag ?? []).map(
+      (beschlussgrundDTO: WahlvorstandBeschlussgrundDTO) =>
+        _beschlussgrundDtoToModel(beschlussgrundDTO)
+    );
+    const systemBeschlussgruende = (dto.systemBeschlussvorschlag ?? []).map(
+      (systemBeschlussgrundDTO: SystemBeschlussgrundDTO) =>
+        _beschlussgrundDtoToModel(systemBeschlussgrundDTO)
+    );
     return {
       stimmzettelkennung: dto.stimmzettelkennung,
       teamID: teamID,
@@ -21,10 +30,7 @@ export function useStimmzettelMapper() {
       ),
       invalideVotes: dto.invalideVotes,
       gueltigkeit: dto.gueltigkeit,
-      beschlussvorschlag: (dto.wahlvorstandBeschlussvorschlag ?? []).map(
-        (beschlussgrundDTO: WahlvorstandBeschlussgrundDTO) =>
-          _beschlussgrundDtoToModel(beschlussgrundDTO)
-      ),
+      beschlussvorschlag: [...userBeschlussgruende, ...systemBeschlussgruende],
       beschlussfassung: dto.beschlussfassung
         ? _beschlussfassungDtoToModel(dto.beschlussfassung)
         : null,
@@ -99,10 +105,10 @@ export function useStimmzettelMapper() {
   }
 
   function _beschlussgrundDtoToModel(
-    dto: WahlvorstandBeschlussgrundDTO
+    dto: WahlvorstandBeschlussgrundDTO | SystemBeschlussgrundDTO
   ): Beschlussgrund {
     return {
-      text: dto.text,
+      text: "text" in dto ? dto.text : dto.reason,
     };
   }
 

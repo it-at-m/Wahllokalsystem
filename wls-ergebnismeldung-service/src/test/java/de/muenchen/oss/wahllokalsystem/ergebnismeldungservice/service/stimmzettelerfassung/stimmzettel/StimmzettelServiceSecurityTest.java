@@ -69,7 +69,7 @@ class StimmzettelServiceSecurityTest {
       Mockito.when(
               teamIDPermissionEvaluator.tokenUserteamIdMatches(
                   Mockito.eq(ownerModel.teamID()), Mockito.any()))
-          .thenReturn(true);
+          .thenReturn(false);
 
       SecurityUtils.runWith(
           ArrayUtils.addAll(new String[] {Authorities.SERVICE_GET_STIMMZETEL}, "WLS_WAHLVORSTAND"));
@@ -166,7 +166,7 @@ class StimmzettelServiceSecurityTest {
       Mockito.when(
               teamIDPermissionEvaluator.tokenUserteamIdMatches(
                   Mockito.eq(ownerModel.teamID()), Mockito.any()))
-          .thenReturn(true);
+          .thenReturn(false);
 
       SecurityUtils.runWith(
           ArrayUtils.addAll(

@@ -406,7 +406,8 @@ export function useManagedStimmzettel(
   ) {
     const votesToRemove = Math.abs(numberOfVotesToRemove);
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
-    kandidat.einzelstimmen = currentEinzelstimmen - votesToRemove;
+    const newValue = currentEinzelstimmen - votesToRemove;
+    kandidat.einzelstimmen = newValue > 0 ? newValue : null;
     _updateReststimmenWhenVotesRemoved();
     changeHistory.registerKandidatEinzelstimmenRemoved(kandidat, votesToRemove);
   }
@@ -610,7 +611,7 @@ export function useManagedStimmzettel(
 
   return {
     changeHistory,
-
+    resetStimmzettel,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,
     kandidatAddUngueltigeStimmenOrThrow,
@@ -622,9 +623,6 @@ export function useManagedStimmzettel(
     kandidatenRemoveStreichungenInRangeOrThrow,
     wahlvorschlagAddVotesOrThrow,
     wahlvorschlagRemoveVotesOrThrow,
-
-    resetStimmzettel,
-
     stimmzettel: computed(() => stimmzettel.value),
     stimmenSummary,
     wahlvorschlaegeWithListenkreuz,

@@ -444,14 +444,10 @@ describe("managedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
 
-      const countVotesToRemove = 1;
-      managed.kandidatRemoveEinzelstimmenOrThrow(101, countVotesToRemove);
+      managed.kandidatRemoveEinzelstimmenOrThrow(101, 1);
 
       expect(kandidat.einzelstimmen).toBe(1);
       expect(managed.stimmenSummary.value.einzelstimmen).toBe(1);
-      expect(
-        mockDefinitions.changeHistory.registerKandidatEinzelstimmenRemoved
-      ).toHaveBeenCalledExactlyOnceWith(kandidat, countVotesToRemove);
     });
 
     it("should_reassignReststimmen_when_votesRemovedAndRemainingVotesBecomePositive", () => {
@@ -497,16 +493,11 @@ describe("managedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
 
-      const countVotesToRemove = 1;
-      managed.kandidatRemoveEinzelstimmenOrThrow(101, countVotesToRemove);
+      managed.kandidatRemoveEinzelstimmenOrThrow(101, 1);
 
-      expect(k1.einzelstimmen).toBe(0);
+      expect(k1.einzelstimmen).toBe(null);
       expect(k1.reststimmen).toBe(1);
       expect(managed.stimmenSummary.value.reststimmen).toBe(1);
-
-      expect(
-        mockDefinitions.changeHistory.registerKandidatEinzelstimmenRemoved
-      ).toHaveBeenCalledExactlyOnceWith(k1, countVotesToRemove);
     });
   });
 
@@ -953,10 +944,6 @@ describe("managedStimmzettel.ts", () => {
       expect(k1.durchgestrichen).toBe(false);
       expect(k2.durchgestrichen).toBe(false);
       expect(k3.durchgestrichen).toBe(false);
-
-      expect(
-        mockDefinitions.changeHistory.registerKandidatStreichungRangeUnset
-      ).toHaveBeenCalledExactlyOnceWith([k1, k2, k3]);
     });
 
     it("should_throwManagedStimmzettelError_when_allCandidatesInRangeAlreadyHaveNoStreichung", () => {

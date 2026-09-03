@@ -6,7 +6,7 @@ import {
 } from "@tests/utils/dse/commandTestTools.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useRemoveStreichungToKandidatenRangeHandler } from "@/composables/dse/stimmzettelerfassung/command/removeStreichungFromKandidatenRangeHandler.ts";
+import { useRemoveStreichungFromKandidatenRangeHandler } from "@/composables/dse/stimmzettelerfassung/command/removeStreichungFromKandidatenRangeHandler.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
@@ -16,7 +16,7 @@ const mockDefinitions = vi.hoisted(() => ({
 
 describe("removeStreichungFromKandidatenRangeHandler.ts", () => {
   const { canHandle, handleOrThrow } =
-    useRemoveStreichungToKandidatenRangeHandler();
+    useRemoveStreichungFromKandidatenRangeHandler();
 
   describe("canHandle", () => {
     it.each(validRanges)(

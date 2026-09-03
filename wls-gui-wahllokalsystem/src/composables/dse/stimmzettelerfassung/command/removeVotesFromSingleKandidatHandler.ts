@@ -7,7 +7,7 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
 
 interface CommandArguments {
   kandidatOrdnungszahl: number;
-  removeVotes: number;
+  countVotesToRemove: number;
 }
 
 export function useRemoveVotesFromSingleKandidatHandler(): CommandHandler {
@@ -41,7 +41,7 @@ export function useRemoveVotesFromSingleKandidatHandler(): CommandHandler {
     try {
       stimmzettel.kandidatRemoveEinzelstimmenOrThrow(
         commandArguments.kandidatOrdnungszahl,
-        commandArguments.removeVotes
+        commandArguments.countVotesToRemove
       );
     } catch (error) {
       if (error instanceof ManagedStimmzettelError) {
@@ -59,7 +59,7 @@ export function useRemoveVotesFromSingleKandidatHandler(): CommandHandler {
       const votesText = match[2];
       const commandArgs = {
         kandidatOrdnungszahl: Number.parseInt(match[1]),
-        removeVotes: parseOptionalCountToNumber(votesText),
+        countVotesToRemove: parseOptionalCountToNumber(votesText),
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {
@@ -72,7 +72,7 @@ export function useRemoveVotesFromSingleKandidatHandler(): CommandHandler {
   ): boolean {
     return (
       isValidKandidatOrdnungszahl(commandArguments.kandidatOrdnungszahl) &&
-      isValidCount(commandArguments.removeVotes)
+      isValidCount(commandArguments.countVotesToRemove)
     );
   }
 

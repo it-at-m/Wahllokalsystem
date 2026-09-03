@@ -76,7 +76,7 @@ const modelValueInvalidVotes = defineModel("modelValueInvalidVotes", {
   required: true,
 });
 const modelValueGueltigkeit = defineModel("modelValueGueltigkeit", {
-  type: Object as PropType<StimmzettelGueltigkeitEnum | null>,
+  type: [Object, null] as PropType<StimmzettelGueltigkeitEnum | null>,
   required: true,
 });
 const modelValueStimmzettel = defineModel("modelValue", {

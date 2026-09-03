@@ -144,15 +144,16 @@ const isBeschlussfassungContinueBtnDisabled = computed(
 
 const isBeschlussfassungContinueBtnVisible = computed(
   () =>
-    workflowStatus.value?.status !==
-    StimmzettelerfassungStatusEnum.SteBearbeitung
+    workflowStatus.value?.status ===
+    StimmzettelerfassungStatusEnum.SteAbgeschlossen
 );
 
 const isBeschlussfassungStartenBtnDisabled = computed(
   () =>
     !beschlussfassungBtnActive.value ||
-    workflowStatus.value?.status !==
-      StimmzettelerfassungStatusEnum.SteBearbeitung ||
+    (workflowStatus.value?.status !==
+      StimmzettelerfassungStatusEnum.SteBearbeitung &&
+      workflowStatus.value !== null) ||
     isAktualisierenLoading.value ||
     isWorkflowStatusLoading.value
 );
@@ -160,7 +161,8 @@ const isBeschlussfassungStartenBtnDisabled = computed(
 const isBeschlussfassungStartenBtnVisible = computed(
   () =>
     workflowStatus.value?.status ===
-    StimmzettelerfassungStatusEnum.SteBearbeitung
+      StimmzettelerfassungStatusEnum.SteBearbeitung ||
+    workflowStatus.value === null
 );
 
 const isRefreshBtnActive = computed(() => !beschlussfassungBtnActive.value);

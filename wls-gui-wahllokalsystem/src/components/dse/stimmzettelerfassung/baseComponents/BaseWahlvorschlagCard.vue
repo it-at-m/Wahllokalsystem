@@ -93,15 +93,15 @@ const kandidatenListe = computed(() => props.wahlvorschlag.kandidaten);
 const listItems = ref<(ComponentPublicInstance | null)[]>([]);
 const { scrollIntoView } = useViewportUtils();
 
-const isDividerZwischenGleichemKandidat = (index: number) => {
+function isDividerZwischenGleichemKandidat(index: number) {
   if (index <= 0) return false;
   const prev = kandidatenListe.value[index - 1];
   const curr = kandidatenListe.value[index];
   if (!prev || !curr) return false;
   return prev.kandidatId === curr.kandidatId;
-};
+}
 
-const focusActive = async () => {
+async function focusActive() {
   const id = props.activeKandidatId;
   if (!id) return;
 
@@ -126,7 +126,7 @@ const focusActive = async () => {
       item.$el.focus();
     }
   }
-};
+}
 
 watch(
   [() => props.activeKandidatId, kandidatenListe],

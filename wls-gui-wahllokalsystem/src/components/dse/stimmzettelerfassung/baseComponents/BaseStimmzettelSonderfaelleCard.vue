@@ -65,16 +65,18 @@
         @update:model-value="onMarkForBeschlussfassungModelUpdated"
       />
       Begründung auswählen oder eingeben
-      <v-combobox
-        :ref="REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE"
-        v-model="stimmzettelWahlvorstandBeschlussgruende"
-        :items="wahlvorstandBeschlussvorschlaegeItems"
-        class="combobox-as-textarea mt-1"
-        multiple
-        chips
-        closable-chips
-        :rules="wahlvorstandBeschlussvorschlaegeRules"
-      />
+      <v-form v-model="modelValueIsBeschlussfassungValid">
+        <v-combobox
+          :ref="REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE"
+          v-model="stimmzettelWahlvorstandBeschlussgruende"
+          :items="wahlvorstandBeschlussvorschlaegeItems"
+          class="combobox-as-textarea mt-1"
+          multiple
+          chips
+          closable-chips
+          :rules="wahlvorstandBeschlussvorschlaegeRules"
+        />
+      </v-form>
     </v-card-text>
   </v-card>
 </template>
@@ -107,6 +109,14 @@ const modelValueInvalidVotes = defineModel("modelValueInvalidVotes", {
   type: Number,
   required: true,
 });
+const modelValueIsBeschlussfassungValid = defineModel(
+  "modelValueIsBeschlussfassungValid",
+  {
+    type: Boolean,
+    required: false,
+    default: true,
+  }
+);
 const modelValueGueltigkeit = defineModel("modelValueGueltigkeit", {
   type: [Object, null] as PropType<StimmzettelGueltigkeitEnum | null>,
   required: true,
@@ -120,11 +130,6 @@ const modelValueWahlvorstandBeschlussvorschlag = defineModel(
 );
 
 const props = defineProps({
-  showBeschlussfassung: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
   denySelectionOfStimmzettelLeer: {
     type: Boolean,
     required: false,
@@ -139,6 +144,11 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  showBeschlussfassung: {
+    type: Boolean,
+    required: false,
+    default: true,
   },
   stimmzettelkennung: {
     type: Number,

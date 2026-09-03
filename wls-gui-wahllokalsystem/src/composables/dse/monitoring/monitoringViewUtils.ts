@@ -8,8 +8,10 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     wahlID,
     wahlbezirkID
   );
-  const stimmzettelerfassungTeamState =
-    useStimmzettelerfassungTeamStatusState();
+  const stimmzettelerfassungTeamState = useStimmzettelerfassungTeamStatusState(
+    wahlID,
+    wahlbezirkID
+  );
 
   async function onMonitoringSynchronisierenClicked() {
     await stimmzettelerfassungTeamState.loadTeamStatusListe();

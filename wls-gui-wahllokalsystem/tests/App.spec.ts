@@ -10,7 +10,7 @@ import {
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 import App from "@/App.vue";
@@ -33,7 +33,6 @@ const mockDefinitions = vi.hoisted(() => ({
   getBeanstandeteWahlbriefe: vi.fn(),
   syncPin: vi.fn(),
   initStimmzettelerfassungTeamStatus: vi.fn(),
-  loadTeamStatusListe: vi.fn(),
 }));
 
 vi.mock(import("@/composables/wahl/wahlService.ts"), () => ({
@@ -69,15 +68,11 @@ vi.mock(
   })
 );
 vi.mock(
-  import("@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusState.ts"),
+  import("@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusUtils.ts"),
   () => ({
-    useStimmzettelerfassungTeamStatusState: () => ({
+    useStimmzettelerfassungTeamStatusUtils: () => ({
       initStimmzettelerfassungTeamStatus:
         mockDefinitions.initStimmzettelerfassungTeamStatus,
-      loadTeamStatusListe: mockDefinitions.loadTeamStatusListe,
-      teamstatusList: ref([]),
-      isTeamStatusLoading: ref(false),
-      lastTeamstatusLoadingTime: ref(new Date()),
     }),
   })
 );

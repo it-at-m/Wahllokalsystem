@@ -12,9 +12,10 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 
 export function useStimmzettelMapper() {
-  function toModel(dto: StimmzettelOfTeamDTO): Stimmzettel {
+  function toModel(dto: StimmzettelOfTeamDTO, teamID: string): Stimmzettel {
     return {
       stimmzettelkennung: dto.stimmzettelkennung,
+      teamID: teamID,
       wahlvorschlaege: (dto.wahlvorschlaege ?? []).map((wahlvorschlagDTO) =>
         _wahlvorschlagDtoToModel(wahlvorschlagDTO as WahlvorschlagDTO)
       ),

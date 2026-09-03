@@ -38,7 +38,9 @@ export function useStimmzettelService() {
       );
       const responseData = getNullOn204OrElseResponseData(response);
       return (
-        responseData?.map((stimmzettelDTO) => toModel(stimmzettelDTO)) ?? []
+        responseData?.map((stimmzettelDTO) =>
+          toModel(stimmzettelDTO, teamID)
+        ) ?? []
       );
     } catch (error) {
       if (sendNotification) {

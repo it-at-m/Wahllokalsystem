@@ -36,7 +36,7 @@
     <v-card-title v-if="showBeschlussfassung">Beschlussfassung</v-card-title>
     <v-card-text v-if="showBeschlussfassung">
       <v-checkbox
-        :model-value="isCheckboxMarkForBeschlussfassingSelected"
+        :model-value="isCheckboxMarkForBeschlussfassungSelected"
         label="für Beschlussfassung vormerken"
         :disabled="isCheckboxMarkeForBeschlussfassungDisabled"
         class="mb-4"
@@ -149,7 +149,7 @@ const isStimmzettelFehltSelected = computed(
     StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag
 );
 
-const isCheckboxMarkForBeschlussfassingSelected = computed(
+const isCheckboxMarkForBeschlussfassungSelected = computed(
   () => hasSystemBeschlussGrund.value
 );
 

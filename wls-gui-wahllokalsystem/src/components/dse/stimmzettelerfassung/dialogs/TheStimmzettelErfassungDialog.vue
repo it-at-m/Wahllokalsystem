@@ -46,7 +46,10 @@
               stimmzettelManager.managedStimmzettel.stimmenSummary.value
                 .streichungen
             "
-            :gueltigkeit="'VALID'"
+            :gueltigkeit="
+              stimmzettelManager.managedStimmzettel.stimmzettel.value
+                .gueltigkeit
+            "
           />
         </div>
         <div

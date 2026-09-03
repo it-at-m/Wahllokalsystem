@@ -25,9 +25,10 @@
           <v-number-input
             v-model="modelValueInvalidVotes"
             :disabled="isInputOfInvalidVotesDisabled"
-            control-variant="hidden"
+            control-variant="stacked"
             density="compact"
             hide-details
+            :clearable="false"
             :min="0"
           />
         </div>
@@ -61,6 +62,7 @@
         density="compact"
         :hint="systemBeschlussgruendeAsText"
         :persistent-hint="!!systemBeschlussgruendeAsText"
+        @update:model-value="onMarkForBeschlussfassungModelUpdated"
       />
       Begründung auswählen oder eingeben
       <v-combobox
@@ -94,7 +96,6 @@ const { isBWB } = storeToRefs(useUserStore());
 
 const { createBeschlussgrundWithText } = useBeschlussgrundTools();
 
-//TODO kann noch null werden wenn man es löscht
 const modelValueInvalidVotes = defineModel("modelValueInvalidVotes", {
   type: Number,
   required: true,
@@ -178,7 +179,10 @@ const isStimmzettelFehltSelected = computed(
 );
 
 const isCheckboxMarkForBeschlussfassungSelected = computed(
-  () => hasSystemBeschlussGrund.value
+  () =>
+    hasSystemBeschlussGrund.value ||
+    modelValueGueltigkeit.value ===
+      StimmzettelGueltigkeitEnum.BeschlussAusstehend
 );
 
 const isCheckboxStimmzettelFehltDisabled = computed(
@@ -218,6 +222,15 @@ const wahlvorstandBeschlussvorschlaegeItems = [
   "Briefwahl: Mehrere Stimmzettel im Umschlag, einer gekennzeichnet, die anderen leer",
   "Briefwahl: Mehrere unterschiedlich gekennzeichnete Stimmzettel im Umschlag",
 ];
+
+function onMarkForBeschlussfassungModelUpdated(newValue: boolean | null) {
+  if (newValue) {
+    modelValueGueltigkeit.value =
+      StimmzettelGueltigkeitEnum.BeschlussAusstehend;
+  } else {
+    modelValueGueltigkeit.value = null;
+  }
+}
 
 function onStimmzettelLeerChanged(newValue: boolean | null) {
   if (newValue) {

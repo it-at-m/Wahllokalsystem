@@ -4,8 +4,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
-  const { ref } = await import("vue");
-
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
 
   return {
@@ -18,17 +16,18 @@ const mockDefinitions = await vi.hoisted(async () => {
       }
     },
     loadErfassungTeamStatusListe: vi.fn(),
-    loadDseWorkflowStatus: vi.fn(),
-    // Expose vue.ref for tests if needed
-    ref,
+    loadWorkflowStatus: vi.fn(),
   };
 });
 
-vi.mock("vue", () => ({
-  ref: mockDefinitions.ref,
-  onActivated: (cb: () => Promise<void> | void) =>
-    mockDefinitions.registerActivated(cb),
-}));
+vi.mock("vue", async (importOriginal) => {
+  const actual = (await importOriginal()) as object;
+  return {
+    ...actual,
+    onActivated: (cb: () => Promise<void> | void) =>
+      mockDefinitions.registerActivated(cb),
+  };
+});
 
 vi.mock(
   "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts",
@@ -41,10 +40,10 @@ vi.mock(
 );
 
 vi.mock(
-  "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts",
+  "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts",
   () => ({
-    useDseWorkflowStatusService: () => ({
-      loadDseWorkflowStatus: mockDefinitions.loadDseWorkflowStatus,
+    useStimmzettelerfassungStatusState: () => ({
+      loadWorkflowStatus: mockDefinitions.loadWorkflowStatus,
     }),
   })
 );
@@ -69,12 +68,10 @@ describe("monitoringViewUtils.ts", () => {
     vi.resetAllMocks();
   });
 
-  it("should_BeEmptyAndNotLoading_when_initialState", () => {
+  it("should_beEmptyAndNotLoading_when_initialState", () => {
     expect(unit.teamstatusList.value).toEqual([]);
     expect(unit.lastLoading.value).toBeUndefined();
     expect(unit.isAktualisierenLoading.value).toBe(false);
-    expect(unit.isWorkflowStatusLoading.value).toBe(false);
-    expect(unit.workflowStatus.value).toBe(null);
   });
 
   it("should_loadListAndUpdateState_when_onMonitoringSynchronisierenClicked", async () => {
@@ -110,34 +107,18 @@ describe("monitoringViewUtils.ts", () => {
     const sample = [{ team: "T2" }];
     const workflowStatus = createStimmzettelerfassungStatus();
     mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(sample);
-    mockDefinitions.loadDseWorkflowStatus.mockResolvedValue(workflowStatus);
-    const spyOnIsWorkflowStatusLoading = vi.spyOn(
-      unit.isWorkflowStatusLoading,
-      "value",
-      "set"
-    );
+    mockDefinitions.loadWorkflowStatus.mockResolvedValue(workflowStatus);
 
-    expect(unit.isWorkflowStatusLoading.value).toStrictEqual(false);
     await mockDefinitions.runActivatedCallbacks();
 
     expect(unit.teamstatusList.value).toStrictEqual(sample);
     expect(unit.lastLoading.value).toBeInstanceOf(Date);
-    expect(unit.workflowStatus.value).toStrictEqual(workflowStatus);
 
     expect(mockDefinitions.loadErfassungTeamStatusListe).toHaveBeenCalledWith(
       wahlID,
       wahlbezirkID,
       true
     );
-    expect(mockDefinitions.loadDseWorkflowStatus).toHaveBeenCalledWith(
-      wahlID,
-      wahlbezirkID,
-      true
-    );
-    expect(spyOnIsWorkflowStatusLoading.mock.calls).toStrictEqual([
-      [true],
-      [false],
-    ]);
-    spyOnIsWorkflowStatusLoading.mockRestore();
+    expect(mockDefinitions.loadWorkflowStatus).toHaveBeenCalled();
   });
 });

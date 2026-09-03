@@ -13,7 +13,8 @@ function createDummyStimmzettel(): Stimmzettel {
   return {
     stimmzettelkennung: 0,
     wahlvorschlaege: [],
-    beschlussvorschlag: [],
+    wahlvorstandBeschlussvorschlag: [],
+    systemBeschlussvorschlag: [],
     beschlussfassung: null,
     invalideVotes: 0,
     gueltigkeit: null,

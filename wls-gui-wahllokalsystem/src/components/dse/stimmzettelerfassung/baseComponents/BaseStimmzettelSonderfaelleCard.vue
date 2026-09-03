@@ -109,9 +109,11 @@ const props = defineProps({
 
 const stimmzettelWahlvorstandBeschlussgruende = computed({
   get: () =>
-    modelValueStimmzettel.value.beschlussvorschlag.map((grund) => grund.text),
+    modelValueStimmzettel.value.wahlvorstandBeschlussvorschlag.map(
+      (grund) => grund.text
+    ),
   set: (gruende) => {
-    modelValueStimmzettel.value.beschlussvorschlag = gruende.map(
+    modelValueStimmzettel.value.wahlvorstandBeschlussvorschlag = gruende.map(
       createBeschlussgrundWithText
     );
   },

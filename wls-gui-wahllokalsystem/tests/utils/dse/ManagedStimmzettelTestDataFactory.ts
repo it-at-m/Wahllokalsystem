@@ -43,7 +43,8 @@ export function useManagedStimmzettelTestDataFactory() {
       ],
       invalideVotes: generateRandomNumber(2),
       gueltigkeit: null,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     };
   }

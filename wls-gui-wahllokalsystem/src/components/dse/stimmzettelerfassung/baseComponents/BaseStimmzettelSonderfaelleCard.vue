@@ -209,11 +209,14 @@ const systemBeschlussgruendeAsText = computed(() =>
 const isStimmzettelFehltInstructionDialogVisible = ref(false);
 
 const wahlvorstandBeschlussvorschlaegeItems = [
-  "unzulässiger Zusatz/Vorbehalt",
-  "Stimmzettel vollständig durchgestrichen",
-  "Wählerwille nicht zweifelsfrei erkennbar",
-  "handschriftlich ergänzte Person",
-  "Kennzeichnung nicht eindeutig zuzuordnen",
+  "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)",
+  "einzelne Stimmen ungültig",
+  "Wählerwille ist nicht zweifelsfrei erkennbar",
+  "Stimmzettel ist mit einem besonderen Merkmal, Zusatz oder Vorbehalt versehen",
+  "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
+  "Briefwahl: Mehrere gleich gekennzeichnete Stimmzettel im Umschlag",
+  "Briefwahl: Mehrere Stimmzettel im Umschlag, einer gekennzeichnet, die anderen leer",
+  "Briefwahl: Mehrere unterschiedlich gekennzeichnete Stimmzettel im Umschlag",
 ];
 
 function onStimmzettelLeerChanged(newValue: boolean | null) {

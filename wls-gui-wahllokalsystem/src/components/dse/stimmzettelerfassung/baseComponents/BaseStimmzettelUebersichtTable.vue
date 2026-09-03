@@ -84,7 +84,7 @@ const { isVorgemerktFuerBeschluss, getVormerkungsgrund } =
   useStimmzettelUtils();
 
 function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
-  // Bearbeiten-Funktionalität Platzhalter.
+  // TODO Bearbeiten-Funktionalität Platzhalter. #3384
   console.debug(JSON.stringify(stimmzettel));
 }
 </script>

@@ -21,3 +21,7 @@ Es soll nur möglich sein, Werte über die Zahlentasten der Tastatur direkt zu e
 
 Die Interaktionsmöglichkeiten bei `VNumberInput` wurden beschränkt. Spinner-Buttons sind bei der
 Eingabe nicht mehr verfügbar, und eine Veränderung des Wertes über die Pfeiltasten ist ebenfalls nicht mehr möglich.
+
+## Ausnahmen
+
+- Eingabe von ungültigen Stimmen eines Stimmzettels im Rahmen der Stimmzettelerfassung, um zu sehen, ob das den Usern positiv auffällt.

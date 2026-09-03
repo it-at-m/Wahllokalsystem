@@ -66,13 +66,14 @@
       />
       Begründung auswählen oder eingeben
       <v-combobox
+        :ref="REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE"
         v-model="stimmzettelWahlvorstandBeschlussgruende"
         :items="wahlvorstandBeschlussvorschlaegeItems"
         class="combobox-as-textarea mt-1"
         multiple
         chips
         closable-chips
-        hide-details
+        :rules="wahlvorstandBeschlussvorschlaegeRules"
       />
     </v-card-text>
   </v-card>
@@ -84,17 +85,23 @@ import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/Wa
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed, nextTick, ref, useTemplateRef } from "vue";
+import { VCombobox } from "vuetify/components";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
+const REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE =
+  "comboBoxWahlvorstandBeschlussgruende";
+
 const { isBWB } = storeToRefs(useUserStore());
 
 const { createBeschlussgrundWithText } = useBeschlussgrundTools();
+const { required } = useRules();
 
 const modelValueInvalidVotes = defineModel("modelValueInvalidVotes", {
   type: Number,
@@ -210,7 +217,21 @@ const systemBeschlussgruendeAsText = computed(() =>
   props.systemBeschlussgruende.map((grund) => grund.reason).join(", ")
 );
 
+const wahlvorstandBeschlussvorschlaegeRules = computed(() => {
+  if (
+    isCheckboxMarkForBeschlussfassungSelected.value &&
+    !hasSystemBeschlussGrund.value
+  ) {
+    return [required];
+  } else {
+    return [];
+  }
+});
+
 const isStimmzettelFehltInstructionDialogVisible = ref(false);
+const templateRefComboxBoxWahlvorstandBeschlussgruende = useTemplateRef<
+  typeof VCombobox
+>(REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE);
 
 const wahlvorstandBeschlussvorschlaegeItems = [
   "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)",
@@ -230,6 +251,10 @@ function onMarkForBeschlussfassungModelUpdated(newValue: boolean | null) {
   } else {
     modelValueGueltigkeit.value = null;
   }
+
+  nextTick(() => {
+    templateRefComboxBoxWahlvorstandBeschlussgruende.value?.validate();
+  });
 }
 
 function onStimmzettelLeerChanged(newValue: boolean | null) {

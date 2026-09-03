@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
 
+import com.github.jknack.handlebars.internal.lang3.ArrayUtils;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
@@ -53,6 +54,25 @@ class StimmzettelServiceSecurityTest {
           .thenReturn(true);
 
       SecurityUtils.runWith(Authorities.SERVICE_GET_STIMMZETEL);
+      Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getStimmzettel(ownerModel));
+    }
+
+    @Test
+    void
+        should_getAccess_when_allRequiredAuthoritiesArePresentWithTeamIDEvaluatorReturnsFalseButUserHasWahlvorstandAuthority() {
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(ownerModel.wahlbezirkID()), Mockito.any()))
+          .thenReturn(true);
+      Mockito.when(
+              teamIDPermissionEvaluator.tokenUserteamIdMatches(
+                  Mockito.eq(ownerModel.teamID()), Mockito.any()))
+          .thenReturn(true);
+
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(new String[] {Authorities.SERVICE_GET_STIMMZETEL}, "WLS_WAHLVORSTAND"));
       Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getStimmzettel(ownerModel));
     }
 
@@ -129,6 +149,28 @@ class StimmzettelServiceSecurityTest {
           .thenReturn(true);
 
       SecurityUtils.runWith(Authorities.SERVICE_WRITE_STIMMZETEL);
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave));
+    }
+
+    @Test
+    void
+        should_getAccess_when_allRequiredAuthoritiesArePresentWithTeamIDEvaluatorReturnsFalseButUserHasWahlvorstandAuthority() {
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
+      val stimmzettelToSave = Instancio.ofList(StimmzettelOfTeamModel.class).size(5).create();
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(ownerModel.wahlbezirkID()), Mockito.any()))
+          .thenReturn(true);
+      Mockito.when(
+              teamIDPermissionEvaluator.tokenUserteamIdMatches(
+                  Mockito.eq(ownerModel.teamID()), Mockito.any()))
+          .thenReturn(true);
+
+      SecurityUtils.runWith(
+              ArrayUtils.addAll(
+                      new String[] {Authorities.SERVICE_WRITE_STIMMZETEL}, "WLS_WAHLVORSTAND"));
       Assertions.assertThatNoException()
           .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave));
     }

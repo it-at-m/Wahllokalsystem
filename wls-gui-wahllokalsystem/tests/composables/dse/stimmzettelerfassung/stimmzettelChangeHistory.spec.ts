@@ -107,6 +107,54 @@ describe("stimmzettelChangeHistory.ts", () => {
     });
   });
 
+  describe("registerKandidatEinzelstimmenRemoved", () => {
+    it("should_addSingularVoteRemovalHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
+      const kandidat = {
+        ...createStimmzettelKandidat(),
+        ordnungszahl: 101,
+        name: "Max Mustermann",
+      };
+
+      changeHistory.registerKandidatEinzelstimmenRemoved(kandidat, 1);
+
+      await flushPromises();
+
+      expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
+        {
+          type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
+          text: ["101 - 1 Stimme", "Max Mustermann"],
+        },
+      ]);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        kandidat.owningWahlvorschlag
+      );
+    });
+
+    it("should_addPluralVoteRemovalHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", async () => {
+      const kandidat = {
+        ...createStimmzettelKandidat(),
+        ordnungszahl: 101,
+        name: "Max Mustermann",
+      };
+
+      changeHistory.registerKandidatEinzelstimmenRemoved(kandidat, 2);
+
+      await flushPromises();
+
+      expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
+        {
+          type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
+          text: ["101 - 2 Stimmen", "Max Mustermann"],
+        },
+      ]);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        kandidat.owningWahlvorschlag
+      );
+    });
+  });
+
   describe("registerKandidatEinzelstimmenRangeSet", () => {
     it("should_addSingularVoteRangeHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
       const firstKandidat = {
@@ -215,6 +263,54 @@ describe("stimmzettelChangeHistory.ts", () => {
     });
   });
 
+  describe("registerKandidatUngueltigeStimmenRemoved", () => {
+    it("should_addSingularInvalidVoteRemovalHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
+      const kandidat = {
+        ...createStimmzettelKandidat(),
+        ordnungszahl: 101,
+        name: "Max Mustermann",
+      };
+
+      changeHistory.registerKandidatUngueltigeStimmenRemoved(kandidat, 1);
+
+      await flushPromises();
+
+      expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
+        {
+          type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
+          text: ["101 - 1 ungültige Stimme", "Max Mustermann"],
+        },
+      ]);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        kandidat.owningWahlvorschlag
+      );
+    });
+
+    it("should_addPluralInvalidVoteRemovalHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", async () => {
+      const kandidat = {
+        ...createStimmzettelKandidat(),
+        ordnungszahl: 101,
+        name: "Max Mustermann",
+      };
+
+      changeHistory.registerKandidatUngueltigeStimmenRemoved(kandidat, 2);
+
+      await flushPromises();
+
+      expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
+        {
+          type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
+          text: ["101 - 2 ungültige Stimmen", "Max Mustermann"],
+        },
+      ]);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        kandidat.owningWahlvorschlag
+      );
+    });
+  });
+
   describe("registerKandidatStreichungSet", () => {
     it("should_addDiscardKandidatHistoryEntryAndUpdateLastUsedKandidat_when_kandidatWasGiven", async () => {
       const kandidat = {
@@ -230,6 +326,31 @@ describe("stimmzettelChangeHistory.ts", () => {
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
           type: InputHistoryTypeEnum.DISCARD_KANDIDAT,
+          text: ["101", "Max Mustermann"],
+        },
+      ]);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        kandidat.owningWahlvorschlag
+      );
+    });
+  });
+
+  describe("registerKandidatStreichungUnset", () => {
+    it("should_addRevokeDiscardKandidatHistoryEntryAndUpdateLastUsedKandidat_when_kandidatWasGiven", async () => {
+      const kandidat = {
+        ...createStimmzettelKandidat(),
+        ordnungszahl: 101,
+        name: "Max Mustermann",
+      };
+
+      changeHistory.registerKandidatStreichungUnset(kandidat);
+
+      await flushPromises();
+
+      expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
+        {
+          type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
           text: ["101", "Max Mustermann"],
         },
       ]);
@@ -271,6 +392,37 @@ describe("stimmzettelChangeHistory.ts", () => {
     });
   });
 
+  describe("registerKandidatStreichungRangeUnset", () => {
+    it("should_addRevokeDiscardRangeHistoryEntryAndUpdateLastUsedKandidat_when_kandidatenWereGiven", async () => {
+      const firstKandidat = {
+        ...createStimmzettelKandidat(),
+        ordnungszahl: 101,
+      };
+      const lastKandidat = {
+        ...createStimmzettelKandidat(),
+        ordnungszahl: 103,
+      };
+
+      changeHistory.registerKandidatStreichungRangeUnset([
+        firstKandidat,
+        lastKandidat,
+      ]);
+
+      await flushPromises();
+
+      expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
+        {
+          type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
+          text: ["101-103"],
+        },
+      ]);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(lastKandidat);
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        lastKandidat.owningWahlvorschlag
+      );
+    });
+  });
+
   describe("registerWahlvorschlagSelected", () => {
     it("should_addWahlvorschlagHistoryEntryAndUpdateLastUsedWahlvorschlag_when_wahlvorschlagWasGiven", async () => {
       const wahlvorschlag = {
@@ -292,6 +444,61 @@ describe("stimmzettelChangeHistory.ts", () => {
       expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
         wahlvorschlag
       );
+    });
+  });
+
+  describe("registerWahlvorschlagDeselected", () => {
+    it("should_addRevokeWahlvorschlagHistoryEntryAndUpdateLastUsedWahlvorschlag_when_wahlvorschlagWasGiven", async () => {
+      const wahlvorschlag = {
+        ...createStimmzettelWahlvorschlag(),
+        kurzname: "WV",
+      };
+
+      changeHistory.registerWahlvorschlagDeselected(wahlvorschlag);
+
+      await flushPromises();
+
+      expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
+        {
+          type: InputHistoryTypeEnum.REVOKE_WAHLVORSCHLAG,
+          text: ["WV"],
+        },
+      ]);
+      expect(changeHistory.lastUsedKandidat.value).toBeNull();
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        wahlvorschlag
+      );
+    });
+  });
+
+  describe("reset", () => {
+    it("should_clearHistoryAndLastUsedData_when_called", async () => {
+      const kandidat = {
+        ...createStimmzettelKandidat(),
+        ordnungszahl: 101,
+        name: "Max Mustermann",
+      };
+
+      changeHistory.registerKandidatEinzelstimmenAdded(kandidat, 1);
+
+      await flushPromises();
+
+      expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
+        {
+          type: InputHistoryTypeEnum.ADD_USER_VOTE,
+          text: ["101 + 1 Stimme", "Max Mustermann"],
+        },
+      ]);
+      expect(changeHistory.lastUsedKandidat.value).toStrictEqual(kandidat);
+      expect(changeHistory.lastUsedWahlvorschlag.value).toStrictEqual(
+        kandidat.owningWahlvorschlag
+      );
+
+      changeHistory.reset();
+
+      expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([]);
+      expect(changeHistory.lastUsedKandidat.value).toBeNull();
+      expect(changeHistory.lastUsedWahlvorschlag.value).toBeNull();
     });
   });
 });

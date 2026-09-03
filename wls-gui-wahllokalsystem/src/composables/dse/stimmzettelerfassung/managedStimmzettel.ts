@@ -7,7 +7,6 @@ import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
-
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
@@ -623,6 +622,9 @@ export function useManagedStimmzettel(
     kandidatenRemoveStreichungenInRangeOrThrow,
     wahlvorschlagAddVotesOrThrow,
     wahlvorschlagRemoveVotesOrThrow,
+
+    resetStimmzettel,
+
     stimmzettel: computed(() => stimmzettel.value),
     stimmenSummary,
     wahlvorschlaegeWithListenkreuz,

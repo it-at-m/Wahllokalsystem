@@ -102,7 +102,7 @@ const { createBeschlussgrundWithText } = useBeschlussgrundTools();
 const { required } = useRules();
 
 const modelValueInvalidVotes = defineModel("modelValueInvalidVotes", {
-  type: Number,
+  type: [Number, null],
   required: true,
 });
 const modelValueIsBeschlussfassungValid = defineModel(

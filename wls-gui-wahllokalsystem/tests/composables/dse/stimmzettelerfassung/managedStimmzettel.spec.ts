@@ -426,7 +426,7 @@ describe("managedStimmzettel.ts", () => {
 
       managed.kandidatRemoveEinzelstimmenOrThrow(101, 1);
 
-      expect(k1.einzelstimmen).toBe(0);
+      expect(k1.einzelstimmen).toBe(null);
       expect(k1.reststimmen).toBe(1);
       expect(managed.stimmenSummary.value.reststimmen).toBe(1);
     });

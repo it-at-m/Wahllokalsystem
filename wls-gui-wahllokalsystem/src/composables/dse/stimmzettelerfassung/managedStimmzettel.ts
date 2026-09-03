@@ -413,7 +413,8 @@ export function useManagedStimmzettel(
   ) {
     const votesToRemove = Math.abs(numberOfVotesToRemove);
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
-    kandidat.einzelstimmen = currentEinzelstimmen - votesToRemove;
+    const newValue = currentEinzelstimmen - votesToRemove;
+    kandidat.einzelstimmen = newValue > 0 ? newValue : null;
     _updateReststimmenWhenVotesRemoved();
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,

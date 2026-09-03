@@ -111,7 +111,7 @@ const modelValueIsBeschlussfassungValid = defineModel("beschlussfassungValid", {
   default: true,
 });
 const modelValueGueltigkeit = defineModel("gueltigkeit", {
-  type: [Object, null] as PropType<StimmzettelGueltigkeitEnum | null>,
+  type: [String, null] as PropType<StimmzettelGueltigkeitEnum | null>,
   required: true,
 });
 const modelValueWahlvorstandBeschlussvorschlag = defineModel(

@@ -206,6 +206,7 @@ const isCheckboxStimmzettelFehltDisabled = computed(
   () =>
     props.denySelectionOfStimmzettelFehlt ||
     isStimmzettelLeerSelected.value ||
+    isCheckboxMarkForBeschlussfassungSelected.value ||
     hasInvalidVotes.value
 );
 
@@ -213,6 +214,7 @@ const isCheckboxStimmzettelLeerDisabled = computed(
   () =>
     props.denySelectionOfStimmzettelLeer ||
     isStimmzettelFehltSelected.value ||
+    isCheckboxMarkForBeschlussfassungSelected.value ||
     hasInvalidVotes.value
 );
 

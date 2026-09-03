@@ -7,11 +7,11 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
 
 interface CommandArguments {
   kandidatOrdnungszahl: number;
-  removeInvalidVotes: number;
+  countInvalidVotesToRemove: number;
 }
 
 export function useRemoveInvalidVotesFromSingleKandidatHandler(): CommandHandler {
-  const REGEX_REMOVE_INVALID_VOTES_TO_KANDIDAT = /^[uU]([1-9]\d{2,})-(\d*)?$/;
+  const REGEX_REMOVE_INVALID_VOTES_OF_KANDIDAT = /^[uU]([1-9]\d{2,})-(\d*)?$/;
   const {
     isValidCount,
     isValidKandidatOrdnungszahl,
@@ -41,7 +41,7 @@ export function useRemoveInvalidVotesFromSingleKandidatHandler(): CommandHandler
     try {
       stimmzettel.kandidatRemoveUngueltigeStimmenOrThrow(
         commandArguments.kandidatOrdnungszahl,
-        commandArguments.removeInvalidVotes
+        commandArguments.countInvalidVotesToRemove
       );
     } catch (error) {
       if (error instanceof ManagedStimmzettelError) {
@@ -53,13 +53,13 @@ export function useRemoveInvalidVotesFromSingleKandidatHandler(): CommandHandler
   }
 
   function _parseCommandArguments(command: string): CommandArguments | null {
-    const match = REGEX_REMOVE_INVALID_VOTES_TO_KANDIDAT.exec(command);
+    const match = REGEX_REMOVE_INVALID_VOTES_OF_KANDIDAT.exec(command);
 
     if (match?.[1] !== undefined) {
       const votesText = match[2];
       const commandArgs = {
         kandidatOrdnungszahl: Number.parseInt(match[1]),
-        removeInvalidVotes: parseOptionalCountToNumber(votesText),
+        countInvalidVotesToRemove: parseOptionalCountToNumber(votesText),
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {
@@ -72,7 +72,7 @@ export function useRemoveInvalidVotesFromSingleKandidatHandler(): CommandHandler
   ): boolean {
     return (
       isValidKandidatOrdnungszahl(commandArguments.kandidatOrdnungszahl) &&
-      isValidCount(commandArguments.removeInvalidVotes)
+      isValidCount(commandArguments.countInvalidVotesToRemove)
     );
   }
 

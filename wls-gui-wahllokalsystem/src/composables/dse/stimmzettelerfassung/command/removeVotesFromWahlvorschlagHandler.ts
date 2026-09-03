@@ -6,7 +6,7 @@ import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.t
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
 export function useRemoveVotesFromWahlvorschlagHandler(): CommandHandler {
-  const REGEX_REMOVE_VOTES_TO_WAHLVORSCHLAG = /^([1-9]\d*)(-)$/;
+  const REGEX_REMOVE_VOTE_OF_WAHLVORSCHLAG = /^([1-9]\d*)(-)$/;
   const { isValidWahlvorschlagOrdnungszahl } = useHandlerTools();
 
   function canHandle(command: string): boolean {
@@ -41,7 +41,7 @@ export function useRemoveVotesFromWahlvorschlagHandler(): CommandHandler {
   }
 
   function _parseCommandArguments(command: string): number | null {
-    const match = REGEX_REMOVE_VOTES_TO_WAHLVORSCHLAG.exec(command);
+    const match = REGEX_REMOVE_VOTE_OF_WAHLVORSCHLAG.exec(command);
 
     if (match?.[1] !== undefined) {
       const commandArg = Number.parseInt(

@@ -10,8 +10,8 @@ interface CommandArguments {
   kandidatOrdnungszahlUpperBound: number;
 }
 
-export function useRemoveStreichungToKandidatenRangeHandler(): CommandHandler {
-  const REXEG_REMOVE_STREICHUNG_TO_KANDIDATEN_RANGE =
+export function useRemoveStreichungFromKandidatenRangeHandler(): CommandHandler {
+  const REXEG_REMOVE_STREICHUNG_FROM_KANDIDATEN_RANGE =
     /^[sS]([1-9]\d{2,})-([1-9]\d{2,})-$/;
   const { isValidKandidatOrdnungszahl, isValidRange, normalizeBounds } =
     useHandlerTools();
@@ -51,7 +51,7 @@ export function useRemoveStreichungToKandidatenRangeHandler(): CommandHandler {
   }
 
   function _parseCommandArguments(command: string): CommandArguments | null {
-    const match = REXEG_REMOVE_STREICHUNG_TO_KANDIDATEN_RANGE.exec(command);
+    const match = REXEG_REMOVE_STREICHUNG_FROM_KANDIDATEN_RANGE.exec(command);
 
     if (match?.[1] !== undefined) {
       const bound1 = Number.parseInt(match[1]);

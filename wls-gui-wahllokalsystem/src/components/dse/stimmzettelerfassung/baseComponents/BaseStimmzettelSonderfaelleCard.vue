@@ -105,20 +105,17 @@ const modelValueInvalidVotes = defineModel("invalidVotes", {
   type: [Number, null] as PropType<number | null>,
   required: true,
 });
-const modelValueIsBeschlussfassungValid = defineModel(
-  "modelValueIsBeschlussfassungValid",
-  {
-    type: Boolean,
-    required: false,
-    default: true,
-  }
-);
-const modelValueGueltigkeit = defineModel("modelValueGueltigkeit", {
+const modelValueIsBeschlussfassungValid = defineModel("beschlussfassungValid", {
+  type: Boolean,
+  required: false,
+  default: true,
+});
+const modelValueGueltigkeit = defineModel("gueltigkeit", {
   type: [Object, null] as PropType<StimmzettelGueltigkeitEnum | null>,
   required: true,
 });
 const modelValueWahlvorstandBeschlussvorschlag = defineModel(
-  "modelValueWahlvorstandBeschlussvorschlag",
+  "wahlvorstandBeschlussvorschlag",
   {
     type: Array as PropType<WahlvorstandBeschlussgrund[]>,
     required: true,
@@ -174,7 +171,11 @@ const stimmzettelWahlvorstandBeschlussgruende = computed({
   },
 });
 
-const hasInvalidVotes = computed(() => modelValueInvalidVotes.value > 0);
+const hasInvalidVotes = computed(() =>
+  modelValueInvalidVotes.value === null
+    ? false
+    : modelValueInvalidVotes.value > 0
+);
 const hasSystemBeschlussGrund = computed(
   () => props.systemBeschlussgruende.length > 0
 );

@@ -27,10 +27,10 @@ type Story = StoryObj<typeof meta>;
 export const UWB: Story = {
   args: {
     isBWB: false,
-    modelValueInvalidVotes: 0,
-    modelValueGueltigkeit: null,
+    invalidVotes: 0,
+    gueltigkeit: null,
     systemBeschlussgruende: [],
-    modelValueWahlvorstandBeschlussvorschlag: [],
+    wahlvorstandBeschlussvorschlag: [],
     stimmzettelkennung: 42,
     teamId: "A",
   },
@@ -39,10 +39,10 @@ export const UWB: Story = {
 export const BWB: Story = {
   args: {
     isBWB: true,
-    modelValueInvalidVotes: 0,
-    modelValueGueltigkeit: null,
+    invalidVotes: 0,
+    gueltigkeit: null,
     systemBeschlussgruende: [],
-    modelValueWahlvorstandBeschlussvorschlag: [],
+    wahlvorstandBeschlussvorschlag: [],
     stimmzettelkennung: 42,
     teamId: "A",
   },
@@ -51,13 +51,13 @@ export const BWB: Story = {
 export const BWBWithSystemBeschluesse: Story = {
   args: {
     isBWB: true,
-    modelValueInvalidVotes: 0,
-    modelValueGueltigkeit: null,
+    invalidVotes: 0,
+    gueltigkeit: null,
     systemBeschlussgruende: [
       { reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig },
       { reason: SystemBeschlussgrundReasonEnum.NichtAmtlicherStimmzettel },
     ],
-    modelValueWahlvorstandBeschlussvorschlag: [],
+    wahlvorstandBeschlussvorschlag: [],
     stimmzettelkennung: 42,
     teamId: "A",
   },

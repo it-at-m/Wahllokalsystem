@@ -36,11 +36,13 @@
     <v-card-title v-if="showBeschlussfassung">Beschlussfassung</v-card-title>
     <v-card-text v-if="showBeschlussfassung">
       <v-checkbox
-        :model-value="false"
+        :model-value="isCheckboxMarkForBeschlussfassingSelected"
         label="für Beschlussfassung vormerken"
         :disabled="isCheckboxMarkeForBeschlussfassungDisabled"
         class="mb-4"
         density="compact"
+        :hint="systemBeschlussgruendeAsText"
+        :persistent-hint="!!systemBeschlussgruendeAsText"
       />
       Begründung auswählen oder eingeben
       <v-combobox
@@ -57,7 +59,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
+import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
@@ -71,6 +74,7 @@ const { isBWB } = storeToRefs(useUserStore());
 
 const { createBeschlussgrundWithText } = useBeschlussgrundTools();
 
+//TODO kann noch null werden wenn man es löscht
 const modelValueInvalidVotes = defineModel("modelValueInvalidVotes", {
   type: Number,
   required: true,
@@ -79,10 +83,13 @@ const modelValueGueltigkeit = defineModel("modelValueGueltigkeit", {
   type: [Object, null] as PropType<StimmzettelGueltigkeitEnum | null>,
   required: true,
 });
-const modelValueStimmzettel = defineModel("modelValue", {
-  type: Object as PropType<Stimmzettel>,
-  required: true,
-});
+const modelValueWahlvorstandBeschlussvorschlag = defineModel(
+  "modelValueWahlvorstandBeschlussvorschlag",
+  {
+    type: Array as PropType<WahlvorstandBeschlussgrund[]>,
+    required: true,
+  }
+);
 
 const props = defineProps({
   showBeschlussfassung: {
@@ -105,24 +112,32 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  systemBeschlussgruende: {
+    type: Array as PropType<SystemBeschlussgrund[]>,
+    required: true,
+  },
 });
 
 const stimmzettelWahlvorstandBeschlussgruende = computed({
   get: () =>
-    modelValueStimmzettel.value.wahlvorstandBeschlussvorschlag.map(
-      (grund) => grund.text
-    ),
+    modelValueWahlvorstandBeschlussvorschlag.value.map((grund) => grund.text),
   set: (gruende) => {
-    modelValueStimmzettel.value.wahlvorstandBeschlussvorschlag = gruende.map(
+    modelValueWahlvorstandBeschlussvorschlag.value = gruende.map(
       createBeschlussgrundWithText
     );
   },
 });
 
 const hasInvalidVotes = computed(() => modelValueInvalidVotes.value > 0);
+const hasSystemBeschlussGrund = computed(
+  () => props.systemBeschlussgruende.length > 0
+);
 
 const isCheckboxMarkeForBeschlussfassungDisabled = computed(
-  () => isStimmzettelLeerSelected.value || isStimmzettelFehltSelected.value
+  () =>
+    isStimmzettelLeerSelected.value ||
+    isStimmzettelFehltSelected.value ||
+    hasSystemBeschlussGrund.value
 );
 
 const isStimmzettelLeerSelected = computed(
@@ -132,6 +147,10 @@ const isStimmzettelFehltSelected = computed(
   () =>
     modelValueGueltigkeit.value ===
     StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag
+);
+
+const isCheckboxMarkForBeschlussfassingSelected = computed(
+  () => hasSystemBeschlussGrund.value
 );
 
 const isCheckboxStimmzettelFehltDisabled = computed(
@@ -153,6 +172,10 @@ const isInputOfInvalidVotesDisabled = computed(
     props.denyInputForInvalidVotes ||
     isStimmzettelFehltSelected.value ||
     isStimmzettelLeerSelected.value
+);
+
+const systemBeschlussgruendeAsText = computed(() =>
+  props.systemBeschlussgruende.map((grund) => grund.reason).join(", ")
 );
 
 const wahlvorstandBeschlussvorschlaegeItems = [

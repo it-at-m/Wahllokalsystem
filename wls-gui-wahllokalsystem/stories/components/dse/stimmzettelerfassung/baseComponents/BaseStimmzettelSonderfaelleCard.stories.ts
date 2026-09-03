@@ -1,4 +1,3 @@
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { createPinia, setActivePinia } from "pinia";
@@ -10,34 +9,9 @@ import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/Sys
 import { createUserLocalDevelopment } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-function createDummyStimmzettel(): Stimmzettel {
-  return {
-    stimmzettelkennung: 0,
-    wahlvorschlaege: [],
-    wahlvorstandBeschlussvorschlag: [],
-    systemBeschlussvorschlag: [],
-    beschlussfassung: null,
-    invalideVotes: 0,
-    gueltigkeit: null,
-  };
-}
-
 const meta = {
   component: BaseStimmzettelSonderfaelleCard,
-  argTypes: {
-    modelValue: {
-      table: {
-        category: "props",
-        type: { summary: "Stimmzettel" },
-      },
-    },
-    "onUpdate:modelValue": {
-      name: "update:modelValue",
-      table: {
-        category: "events",
-      },
-    },
-  },
+  argTypes: {},
   decorators: [
     (story) => {
       const pinia = createPinia();
@@ -62,10 +36,10 @@ export const UWB: Story = {
     store.setUser(user);
   },
   args: {
-    modelValue: createDummyStimmzettel(),
     modelValueInvalidVotes: 0,
     modelValueGueltigkeit: null,
     systemBeschlussgruende: [],
+    modelValueWahlvorstandBeschlussvorschlag: [],
   },
 };
 
@@ -77,10 +51,10 @@ export const BWB: Story = {
     store.setUser(user);
   },
   args: {
-    modelValue: createDummyStimmzettel(),
     modelValueInvalidVotes: 0,
     modelValueGueltigkeit: null,
     systemBeschlussgruende: [],
+    modelValueWahlvorstandBeschlussvorschlag: [],
   },
 };
 
@@ -92,12 +66,12 @@ export const BWBWithSystemBeschluesse: Story = {
     store.setUser(user);
   },
   args: {
-    modelValue: createDummyStimmzettel(),
     modelValueInvalidVotes: 0,
     modelValueGueltigkeit: null,
     systemBeschlussgruende: [
       { reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig },
       { reason: SystemBeschlussgrundReasonEnum.NichtAmtlicherStimmzettel },
     ],
+    modelValueWahlvorstandBeschlussvorschlag: [],
   },
 };

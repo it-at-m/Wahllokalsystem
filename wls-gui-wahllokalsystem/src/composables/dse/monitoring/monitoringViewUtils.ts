@@ -1,31 +1,30 @@
 import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEntry.ts";
-import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatus.ts";
 
 import { onActivated, ref } from "vue";
 
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
-import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
+import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
 
 export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
+  const stimmzettelerfassungState = useStimmzettelerfassungStatusState(
+    wahlID,
+    wahlbezirkID
+  );
   const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);
   const lastLoading = ref<Date>();
   const isAktualisierenLoading = ref(false);
-  const isWorkflowStatusLoading = ref(false);
-  const workflowStatus = ref<StimmzettelerfassungStatus | null>(null);
 
   const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
-  const { loadDseWorkflowStatus } = useDseWorkflowStatusService();
 
   async function onMonitoringSynchronisierenClicked() {
     await _loadTeamStatusListe();
   }
 
-  async function reloadWorkflowStatus() {
-    await _loadWorkflowStatus();
-  }
-
   onActivated(async () => {
-    await Promise.allSettled([_loadTeamStatusListe(), _loadWorkflowStatus()]);
+    await Promise.allSettled([
+      _loadTeamStatusListe(),
+      stimmzettelerfassungState.loadWorkflowStatus(),
+    ]);
   });
 
   async function _loadTeamStatusListe() {
@@ -46,26 +45,12 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  async function _loadWorkflowStatus() {
-    isWorkflowStatusLoading.value = true;
-    try {
-      workflowStatus.value = await loadDseWorkflowStatus(
-        wahlID,
-        wahlbezirkID,
-        true
-      );
-    } finally {
-      isWorkflowStatusLoading.value = false;
-    }
-  }
-
   return {
     teamstatusList,
     lastLoading,
     isAktualisierenLoading,
-    isWorkflowStatusLoading,
-    workflowStatus,
     onMonitoringSynchronisierenClicked,
-    reloadWorkflowStatus,
+
+    ...stimmzettelerfassungState,
   };
 }

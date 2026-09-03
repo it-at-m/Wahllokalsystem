@@ -169,8 +169,8 @@ class StimmzettelServiceSecurityTest {
           .thenReturn(true);
 
       SecurityUtils.runWith(
-              ArrayUtils.addAll(
-                      new String[] {Authorities.SERVICE_WRITE_STIMMZETEL}, "WLS_WAHLVORSTAND"));
+          ArrayUtils.addAll(
+              new String[] {Authorities.SERVICE_WRITE_STIMMZETEL}, "WLS_WAHLVORSTAND"));
       Assertions.assertThatNoException()
           .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave));
     }

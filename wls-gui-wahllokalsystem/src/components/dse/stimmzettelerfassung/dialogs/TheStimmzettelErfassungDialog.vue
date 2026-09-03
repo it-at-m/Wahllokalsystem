@@ -4,7 +4,7 @@
     persistent
     fullscreen
   >
-    <v-card style="height: 100vh; min-height: 0">
+    <v-card style="height: 100vh; min-height: 0; max-width: 100%">
       <v-card-title>
         Erfassung Stimmzettel Nummer {{ currentUserTeamName }}
         {{ stimmzettel.stimmzettelkennung }}
@@ -14,8 +14,8 @@
         class="ga-3 d-flex"
       >
         <div
-          class="flex-0-0-0 d-flex flex-column"
-          style="max-width: 16%"
+          class="d-flex flex-column"
+          style="flex: 0 0 200px"
         >
           <the-eingabehistorie-card
             :change-history="changeHistory.changeHistoryInReverseOrder.value"
@@ -48,13 +48,13 @@
         </div>
         <div
           class="flex-1-1 d-flex flex-column"
-          style="min-height: 0; max-width: 84%"
+          style="min-height: 0; min-width: 0"
         >
           <the-stimmzettel-command-processing-text-field
             class="flex-0-0"
             :stimmzettel-manager="stimmzettelManager"
           />
-          <div style="flex: 1 1 auto; min-height: 0; display: flex">
+          <div style="flex: 1 1 0; min-height: 0; display: flex; min-width: 0">
             <the-stimmzettel-content
               v-if="true"
               :active-wahlvorschlag-id="
@@ -65,37 +65,42 @@
                 stimmzettelManager.managedStimmzettel.stimmzettel.value
                   .wahlvorschlaege
               "
-              style="min-height: 0; overflow-y: auto"
+              style="min-height: 0; overflow-y: auto; min-width: 0"
             />
-            <!--            <div-->
-            <!--              v-for="i in items"-->
-            <!--              :key="i"-->
-            <!--            >-->
-            <!--              <div>-->
-            <!--                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed-->
-            <!--                diam nonumy eirmod tempor invidunt ut labore et dolore magna-->
-            <!--                aliquyam erat, sed diam voluptua. At vero eos et accusam et-->
-            <!--                justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea-->
-            <!--                takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum-->
-            <!--                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy-->
-            <!--                eirmod tempor invidunt ut labore et dolore magna aliquyam erat,-->
-            <!--                sed diam voluptua. At vero eos et accusam et justo duo dolores-->
-            <!--                et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus-->
-            <!--                est Lorem ipsum dolor sit amet.-->
-            <!--              </div>-->
-            <!--              <div style="height: 48px">{{ i }}.1</div>-->
-            <!--              <div>{{ i }}.2</div>-->
-            <!--              <div>{{ i }}.3</div>-->
-            <!--              <div>{{ i }}.4</div>-->
-            <!--              <div>{{ i }}.5</div>-->
-            <!--              <div>{{ i }}.6</div>-->
-            <!--              <div>{{ i }}.7</div>-->
-            <!--              <div>{{ i }}.8</div>-->
-            <!--              <div>{{ i }}.9</div>-->
-            <!--              <div>{{ i }}.10</div>-->
-            <!--              <div>{{ i }}.11</div>-->
-            <!--            </div>-->
           </div>
+        </div>
+        <div
+          class="d-flex flex-column"
+          style="flex: 0 0 300px"
+        >
+          <the-eingabehistorie-card
+            :change-history="changeHistory.changeHistoryInReverseOrder.value"
+            class="d-flex flex-column"
+          />
+          <base-stimmzettel-zusammenfassung-card
+            class="mt-2 d-flex flex-column"
+            :listenstimmen="
+              stimmzettelManager.managedStimmzettel
+                .wahlvorschlaegeWithListenkreuz.value
+            "
+            :ungueltigestimmen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .ungueltigeStimmen
+            "
+            :direktstimmen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .einzelstimmen
+            "
+            :reststimmen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .reststimmen
+            "
+            :streichungen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .streichungen
+            "
+            :gueltigkeit="'VALID'"
+          />
         </div>
       </v-card-text>
       <v-card-actions>

@@ -3,7 +3,7 @@
     show-arrows
     center-active
     :model-value="activeWahlvorschlagId"
-    style="flex: 1 1 auto"
+    style="flex: 1 1 0; min-width: 0"
   >
     <v-slide-group-item
       v-for="wv in wahlvorschlaege"
@@ -13,6 +13,7 @@
       <base-wahlvorschlag-card
         :wahlvorschlag="wv"
         :active-kandidat="activeKandidat"
+        style="min-width: 0"
       />
     </v-slide-group-item>
   </v-slide-group>

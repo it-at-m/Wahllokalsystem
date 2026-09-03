@@ -4,13 +4,14 @@ import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/d
 import { setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useStimmzettelerfassungTeamStatusUtils } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusUtils.ts";
+import { useStimmzettelerfassungTeamStatusState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusState.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   loadErfassungTeamStatus: vi.fn(),
+  loadTeamStatusListe: vi.fn(),
   postErfassungTeamStatus: vi.fn(),
   addNotification: vi.fn(),
 }));
@@ -23,6 +24,7 @@ vi.mock(
       useStimmzettelerfassungTeamStatusService: () => ({
         ...mod.useStimmzettelerfassungTeamStatusService(),
         loadErfassungTeamStatus: mockDefinitions.loadErfassungTeamStatus,
+        loadErfassungTeamStatusListe: mockDefinitions.loadTeamStatusListe,
         postErfassungTeamStatus: mockDefinitions.postErfassungTeamStatus,
       }),
     };
@@ -42,12 +44,14 @@ vi.mock(
   }
 );
 
-describe("stimmzettelerfassungTeamStatusUtils.ts", () => {
-  let unitUnderTest: ReturnType<typeof useStimmzettelerfassungTeamStatusUtils>;
+describe("stimmzettelerfassungTeamStatusState.ts", () => {
+  let unitUnderTest: ReturnType<typeof useStimmzettelerfassungTeamStatusState>;
 
   const { generateRandomString } = useCommonTestDataFactory();
-  const { createStimmzettelerfassungTeamStatusDTOData } =
-    useStimmzettelerfassungTeamStatusTestDataFactory();
+  const {
+    createStimmzettelerfassungTeamStatusDTOData,
+    createStimmzettelerfassungTeamStatusListe,
+  } = useStimmzettelerfassungTeamStatusTestDataFactory();
 
   const wahlMedata = {
     wahlbezirkID: generateRandomString(10),
@@ -62,12 +66,18 @@ describe("stimmzettelerfassungTeamStatusUtils.ts", () => {
         createSpy: vi.fn,
       })
     );
-    unitUnderTest = useStimmzettelerfassungTeamStatusUtils();
+    unitUnderTest = useStimmzettelerfassungTeamStatusState();
   });
 
   afterEach(() => {
     vi.resetAllMocks();
     vi.clearAllMocks();
+  });
+
+  it("should_haveInitialState_when_created", () => {
+    expect(unitUnderTest.teamstatusList.value).toEqual([]);
+    expect(unitUnderTest.lastTeamstatusLoadingTime.value).toBeUndefined();
+    expect(unitUnderTest.isTeamStatusLoading.value).toBe(false);
   });
 
   describe("initStimmzettelerfassungTeamStatus", () => {
@@ -180,6 +190,50 @@ describe("stimmzettelerfassungTeamStatusUtils.ts", () => {
         expect.any(String),
         UserNotificationCategoryEnum.ERROR
       );
+    });
+  });
+
+  describe("loadTeamStatusListe", async () => {
+    it("should_setLoadingAndUpdateStatus_when_loadWorkflowStatusSucceeds", async () => {
+      const { currentUserHauptWahlID, currentUserWahlbezirkID } =
+        storeToRefs(useUserStore());
+      // @ts-expect-error: cannot set readonly
+      currentUserHauptWahlID.value = "wahlID";
+      // @ts-expect-error: cannot set readonly
+      currentUserWahlbezirkID.value = "wahlbezirkID";
+
+      const mockedListe = createStimmzettelerfassungTeamStatusListe();
+      mockDefinitions.loadTeamStatusListe.mockResolvedValue(mockedListe);
+
+      const spy = vi.spyOn(unitUnderTest.isTeamStatusLoading, "value", "set");
+
+      const loadingPromise = unitUnderTest.loadTeamStatusListe();
+      expect(unitUnderTest.isTeamStatusLoading.value).toBe(true);
+      await loadingPromise;
+
+      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledWith(
+        "wahlID",
+        "wahlbezirkID",
+        true
+      );
+      expect(unitUnderTest.teamstatusList.value).toEqual(mockedListe);
+      expect(unitUnderTest.lastTeamstatusLoadingTime.value).toBeInstanceOf(
+        Date
+      );
+      expect(unitUnderTest.isTeamStatusLoading.value).toBe(false);
+      expect(spy.mock.calls).toStrictEqual([[true], [false]]);
+      spy.mockReset();
+    });
+
+    it("should_resetLoadingAndRethrow_when_loadFails", async () => {
+      const error = new Error("boom");
+      mockDefinitions.loadTeamStatusListe.mockRejectedValue(error);
+
+      await expect(unitUnderTest.loadTeamStatusListe()).rejects.toBe(error);
+
+      expect(unitUnderTest.isTeamStatusLoading.value).toBe(false);
+      expect(unitUnderTest.teamstatusList.value).toStrictEqual([]);
+      expect(unitUnderTest.lastTeamstatusLoadingTime.value).toBeUndefined();
     });
   });
 });

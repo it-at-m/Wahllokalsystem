@@ -41,7 +41,7 @@ import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDr
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
-import { useStimmzettelerfassungTeamStatusUtils } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusUtils.ts";
+import { useStimmzettelerfassungTeamStatusState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusState.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useServiceWorkerPinSyncer } from "@/composables/serviceWorker/serviceWorkerPinSyncer.ts";
 import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorkerUtils.ts";
@@ -70,7 +70,7 @@ const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
 const { initStimmzettelerfassungTeamStatus } =
-  useStimmzettelerfassungTeamStatusUtils();
+  useStimmzettelerfassungTeamStatusState();
 
 const isTimeToCheckAnwesenheitInFuture = computed(() =>
   dateTimeToCheckAnwesenheit.value

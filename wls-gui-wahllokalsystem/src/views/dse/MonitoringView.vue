@@ -4,7 +4,9 @@
       <v-card-title class="d-flex align-center justify-space-between">
         <span>Statusübersicht Stimmzettelerfassung</span>
         <div class="d-flex flex-column align-start">
-          <base-latest-load-div :last-loading-date="lastLoading" />
+          <base-latest-load-div
+            :last-loading-date="lastTeamstatusLoadingTime"
+          />
         </div>
       </v-card-title>
       <v-card-text>
@@ -12,7 +14,7 @@
           titel="Stimmzettelerfassung abgeschlossen"
           titel-class="d-flex align-center justify-center"
           data-test="base-progress-success"
-          :is-loading="isAktualisierenLoading"
+          :is-loading="isTeamStatusLoading"
           :current="abgeschlossenNumberOfTeams"
           :total="totalNumberOfTeams"
           color="success"
@@ -64,7 +66,7 @@
       <v-card-actions>
         <base-button-refresh
           :active="isRefreshBtnActive"
-          :loading="isAktualisierenLoading"
+          :loading="isTeamStatusLoading"
           @click="onAktualisierenClicked"
         />
         <base-text-button
@@ -119,8 +121,8 @@ const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 
 const {
   teamstatusList,
-  lastLoading,
-  isAktualisierenLoading,
+  lastTeamstatusLoadingTime,
+  isTeamStatusLoading,
   isWorkflowStatusLoading,
   workflowStatus,
   onMonitoringSynchronisierenClicked,
@@ -138,7 +140,7 @@ const isBeschlussfassungContinueBtnDisabled = computed(
     !beschlussfassungBtnActive.value ||
     workflowStatus.value?.status !==
       StimmzettelerfassungStatusEnum.SteAbgeschlossen ||
-    isAktualisierenLoading.value ||
+    isTeamStatusLoading.value ||
     isWorkflowStatusLoading.value
 );
 
@@ -153,7 +155,7 @@ const isBeschlussfassungStartenBtnDisabled = computed(
     !beschlussfassungBtnActive.value ||
     workflowStatus.value?.status !==
       StimmzettelerfassungStatusEnum.SteBearbeitung ||
-    isAktualisierenLoading.value ||
+    isTeamStatusLoading.value ||
     isWorkflowStatusLoading.value
 );
 

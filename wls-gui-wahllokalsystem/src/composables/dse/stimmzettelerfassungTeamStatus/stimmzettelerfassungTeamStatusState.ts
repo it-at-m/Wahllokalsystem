@@ -1,4 +1,7 @@
+import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEntry.ts";
+
 import { storeToRefs } from "pinia";
+import { readonly, ref } from "vue";
 
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
@@ -6,12 +9,23 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-export function useStimmzettelerfassungTeamStatusUtils() {
-  const { loadErfassungTeamStatus, postErfassungTeamStatus } =
-    useStimmzettelerfassungTeamStatusService();
-  const { currentUserWahlMetadata, currentUserTeamName } =
-    storeToRefs(useUserStore());
+export function useStimmzettelerfassungTeamStatusState() {
+  const {
+    loadErfassungTeamStatus,
+    postErfassungTeamStatus,
+    loadErfassungTeamStatusListe,
+  } = useStimmzettelerfassungTeamStatusService();
+  const {
+    currentUserWahlMetadata,
+    currentUserTeamName,
+    currentUserHauptWahlID,
+    currentUserWahlbezirkID,
+  } = storeToRefs(useUserStore());
   const { addNotification } = useUserNotificationService();
+
+  const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);
+  const isTeamStatusLoading = ref(false);
+  const lastTeamstatusLoadingTime = ref<Date>();
 
   async function initStimmzettelerfassungTeamStatus() {
     try {
@@ -41,7 +55,28 @@ export function useStimmzettelerfassungTeamStatusUtils() {
     }
   }
 
+  async function loadTeamStatusListe() {
+    try {
+      isTeamStatusLoading.value = true;
+      const loaded = await loadErfassungTeamStatusListe(
+        currentUserHauptWahlID.value,
+        currentUserWahlbezirkID.value,
+        true
+      );
+      if (loaded) {
+        teamstatusList.value = loaded;
+        lastTeamstatusLoadingTime.value = new Date();
+      }
+    } finally {
+      isTeamStatusLoading.value = false;
+    }
+  }
+
   return {
+    teamstatusList: teamstatusList,
+    lastTeamstatusLoadingTime: readonly(lastTeamstatusLoadingTime),
+    isTeamStatusLoading: readonly(isTeamStatusLoading),
     initStimmzettelerfassungTeamStatus,
+    loadTeamStatusListe,
   };
 }

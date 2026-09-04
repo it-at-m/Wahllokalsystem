@@ -1,6 +1,6 @@
 import { onActivated } from "vue";
 
-import { useStimmzettelerfassungTeamStatusState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusState.ts";
+import { useStimmzettelerfassungTeamStatusListState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts";
 import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
 
 export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
@@ -8,10 +8,8 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     wahlID,
     wahlbezirkID
   );
-  const stimmzettelerfassungTeamState = useStimmzettelerfassungTeamStatusState(
-    wahlID,
-    wahlbezirkID
-  );
+  const stimmzettelerfassungTeamState =
+    useStimmzettelerfassungTeamStatusListState(wahlID, wahlbezirkID);
 
   async function onMonitoringSynchronisierenClicked() {
     await stimmzettelerfassungTeamState.loadTeamStatusListe();

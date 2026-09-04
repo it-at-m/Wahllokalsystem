@@ -4,7 +4,7 @@ import { readonly, ref } from "vue";
 
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 
-export function useStimmzettelerfassungTeamStatusState(
+export function useStimmzettelerfassungTeamStatusListState(
   wahlID: string,
   wahlbezirkID: string
 ) {
@@ -12,12 +12,12 @@ export function useStimmzettelerfassungTeamStatusState(
     useStimmzettelerfassungTeamStatusService();
 
   const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);
-  const isTeamStatusLoading = ref(false);
+  const isTeamStatusListLoading = ref(false);
   const lastTeamstatusLoadingTime = ref<Date>();
 
   async function loadTeamStatusListe() {
     try {
-      isTeamStatusLoading.value = true;
+      isTeamStatusListLoading.value = true;
       const loaded = await loadErfassungTeamStatusListe(
         wahlID,
         wahlbezirkID,
@@ -28,14 +28,14 @@ export function useStimmzettelerfassungTeamStatusState(
         lastTeamstatusLoadingTime.value = new Date();
       }
     } finally {
-      isTeamStatusLoading.value = false;
+      isTeamStatusListLoading.value = false;
     }
   }
 
   return {
     teamstatusList,
     lastTeamstatusLoadingTime: readonly(lastTeamstatusLoadingTime),
-    isTeamStatusLoading: readonly(isTeamStatusLoading),
+    isTeamStatusListLoading: readonly(isTeamStatusListLoading),
     loadTeamStatusListe,
   };
 }

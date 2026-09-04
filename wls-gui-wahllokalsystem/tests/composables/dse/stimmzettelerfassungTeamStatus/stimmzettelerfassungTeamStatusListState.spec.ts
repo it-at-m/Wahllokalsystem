@@ -3,7 +3,7 @@ import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/d
 import { setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useStimmzettelerfassungTeamStatusState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusState.ts";
+import { useStimmzettelerfassungTeamStatusListState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   loadErfassungTeamStatus: vi.fn(),
@@ -40,8 +40,10 @@ vi.mock(
   }
 );
 
-describe("stimmzettelerfassungTeamStatusState.ts", () => {
-  let unitUnderTest: ReturnType<typeof useStimmzettelerfassungTeamStatusState>;
+describe("stimmzettelerfassungTeamStatusListState.ts", () => {
+  let unitUnderTest: ReturnType<
+    typeof useStimmzettelerfassungTeamStatusListState
+  >;
 
   const { createStimmzettelerfassungTeamStatusListe } =
     useStimmzettelerfassungTeamStatusTestDataFactory();
@@ -55,7 +57,7 @@ describe("stimmzettelerfassungTeamStatusState.ts", () => {
         createSpy: vi.fn,
       })
     );
-    unitUnderTest = useStimmzettelerfassungTeamStatusState(
+    unitUnderTest = useStimmzettelerfassungTeamStatusListState(
       wahlID,
       wahlbezirkID
     );
@@ -69,7 +71,7 @@ describe("stimmzettelerfassungTeamStatusState.ts", () => {
   it("should_haveInitialState_when_created", () => {
     expect(unitUnderTest.teamstatusList.value).toEqual([]);
     expect(unitUnderTest.lastTeamstatusLoadingTime.value).toBeUndefined();
-    expect(unitUnderTest.isTeamStatusLoading.value).toBe(false);
+    expect(unitUnderTest.isTeamStatusListLoading.value).toBe(false);
   });
 
   describe("loadTeamStatusListe", async () => {
@@ -77,10 +79,14 @@ describe("stimmzettelerfassungTeamStatusState.ts", () => {
       const mockedListe = createStimmzettelerfassungTeamStatusListe();
       mockDefinitions.loadTeamStatusListe.mockResolvedValue(mockedListe);
 
-      const spy = vi.spyOn(unitUnderTest.isTeamStatusLoading, "value", "set");
+      const spy = vi.spyOn(
+        unitUnderTest.isTeamStatusListLoading,
+        "value",
+        "set"
+      );
 
       const loadingPromise = unitUnderTest.loadTeamStatusListe();
-      expect(unitUnderTest.isTeamStatusLoading.value).toBe(true);
+      expect(unitUnderTest.isTeamStatusListLoading.value).toBe(true);
       await loadingPromise;
 
       expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledWith(
@@ -92,7 +98,7 @@ describe("stimmzettelerfassungTeamStatusState.ts", () => {
       expect(unitUnderTest.lastTeamstatusLoadingTime.value).toBeInstanceOf(
         Date
       );
-      expect(unitUnderTest.isTeamStatusLoading.value).toBe(false);
+      expect(unitUnderTest.isTeamStatusListLoading.value).toBe(false);
       expect(spy.mock.calls).toStrictEqual([[true], [false]]);
       spy.mockReset();
     });
@@ -103,7 +109,7 @@ describe("stimmzettelerfassungTeamStatusState.ts", () => {
 
       await expect(unitUnderTest.loadTeamStatusListe()).rejects.toBe(error);
 
-      expect(unitUnderTest.isTeamStatusLoading.value).toBe(false);
+      expect(unitUnderTest.isTeamStatusListLoading.value).toBe(false);
       expect(unitUnderTest.teamstatusList.value).toStrictEqual([]);
       expect(unitUnderTest.lastTeamstatusLoadingTime.value).toBeUndefined();
     });

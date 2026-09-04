@@ -14,7 +14,7 @@
           titel="Stimmzettelerfassung abgeschlossen"
           titel-class="d-flex align-center justify-center"
           data-test="base-progress-success"
-          :is-loading="isTeamStatusLoading"
+          :is-loading="isTeamStatusListLoading"
           :current="abgeschlossenNumberOfTeams"
           :total="totalNumberOfTeams"
           color="success"
@@ -66,7 +66,7 @@
       <v-card-actions>
         <base-button-refresh
           :active="isRefreshBtnActive"
-          :loading="isTeamStatusLoading"
+          :loading="isTeamStatusListLoading"
           @click="onAktualisierenClicked"
         />
         <base-text-button
@@ -122,7 +122,7 @@ const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 const {
   teamstatusList,
   lastTeamstatusLoadingTime,
-  isTeamStatusLoading,
+  isTeamStatusListLoading,
   isWorkflowStatusLoading,
   workflowStatus,
   onMonitoringSynchronisierenClicked,
@@ -140,7 +140,7 @@ const isBeschlussfassungContinueBtnDisabled = computed(
     !beschlussfassungBtnActive.value ||
     workflowStatus.value?.status !==
       StimmzettelerfassungStatusEnum.SteAbgeschlossen ||
-    isTeamStatusLoading.value ||
+    isTeamStatusListLoading.value ||
     isWorkflowStatusLoading.value
 );
 
@@ -155,7 +155,7 @@ const isBeschlussfassungStartenBtnDisabled = computed(
     !beschlussfassungBtnActive.value ||
     workflowStatus.value?.status !==
       StimmzettelerfassungStatusEnum.SteBearbeitung ||
-    isTeamStatusLoading.value ||
+    isTeamStatusListLoading.value ||
     isWorkflowStatusLoading.value
 );
 

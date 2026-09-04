@@ -71,7 +71,7 @@
         />
         <base-text-button
           v-if="isBeschlussfassungStartenBtnVisible"
-          :active="beschlussfassungBtnActive"
+          :active="isBeschlussfassungBtnActive"
           :is-disabled="isBeschlussfassungStartenBtnDisabled"
           :loading="isWorkflowStatusLoading"
           @click="onBeschlussfassungStartenClicked"
@@ -79,7 +79,7 @@
         >
         <base-text-button
           v-if="isBeschlussfassungContinueBtnVisible"
-          :active="beschlussfassungBtnActive"
+          :active="isBeschlussfassungBtnActive"
           :is-disabled="isBeschlussfassungContinueBtnDisabled"
           :loading="isWorkflowStatusLoading"
           @click="onBeschlussfassungContinueClicked"
@@ -122,6 +122,11 @@ const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 const {
   teamstatusList,
   lastTeamstatusLoadingTime,
+  isBeschlussfassungBtnActive,
+  isBeschlussfassungContinueBtnDisabled,
+  isBeschlussfassungContinueBtnVisible,
+  isBeschlussfassungStartenBtnDisabled,
+  isBeschlussfassungStartenBtnVisible,
   isTeamStatusListLoading,
   isWorkflowStatusLoading,
   workflowStatus,
@@ -129,45 +134,7 @@ const {
   loadWorkflowStatus,
 } = useMonitoringViewUtils(wahlID, wahlbezirkID);
 
-const beschlussfassungBtnActive = computed(() =>
-  teamstatusList.value.every(
-    (team) => team.status === StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
-  )
-);
-
-const isBeschlussfassungContinueBtnDisabled = computed(
-  () =>
-    !beschlussfassungBtnActive.value ||
-    workflowStatus.value?.status !==
-      StimmzettelerfassungStatusEnum.SteAbgeschlossen ||
-    isTeamStatusListLoading.value ||
-    isWorkflowStatusLoading.value
-);
-
-const isBeschlussfassungContinueBtnVisible = computed(
-  () =>
-    workflowStatus.value?.status ===
-    StimmzettelerfassungStatusEnum.SteAbgeschlossen
-);
-
-const isBeschlussfassungStartenBtnDisabled = computed(
-  () =>
-    !beschlussfassungBtnActive.value ||
-    (workflowStatus.value?.status !==
-      StimmzettelerfassungStatusEnum.SteBearbeitung &&
-      workflowStatus.value !== null) ||
-    isTeamStatusListLoading.value ||
-    isWorkflowStatusLoading.value
-);
-
-const isBeschlussfassungStartenBtnVisible = computed(
-  () =>
-    workflowStatus.value?.status ===
-      StimmzettelerfassungStatusEnum.SteBearbeitung ||
-    workflowStatus.value === null
-);
-
-const isRefreshBtnActive = computed(() => !beschlussfassungBtnActive.value);
+const isRefreshBtnActive = computed(() => !isBeschlussfassungBtnActive.value);
 
 const totalNumberOfTeams = computed(() => teamstatusList.value.length);
 

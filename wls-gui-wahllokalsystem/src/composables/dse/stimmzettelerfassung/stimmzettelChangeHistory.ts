@@ -4,12 +4,15 @@ import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschl
 
 import { computed, nextTick, ref } from "vue";
 
+import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHistoryTypeEnum.ts";
 
 export function useStimmzettelChangeHistory() {
   const changeHistory = ref<InputHistoryItem[]>([]);
   const lastUsedWahlvorschlag = ref<Wahlvorschlag | null>(null);
   const lastUsedKandidat = ref<Kandidat | null>(null);
+
+  const { createTextVotes, createTextInvalidVotes } = useTextFormatter();
 
   function registerKandidatEinzelstimmenAdded(
     kandidat: Kandidat,
@@ -18,7 +21,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl} + ${_createTextVotes(count)}`,
+        `${kandidat.ordnungszahl} + ${createTextVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -33,7 +36,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl} - ${_createTextVotes(count)}`,
+        `${kandidat.ordnungszahl} - ${createTextVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -50,7 +53,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.VOTE_RANGE,
       text: [
-        `${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl} + ${_createTextVotes(count)}`,
+        `${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl} + ${createTextVotes(count)}`,
       ],
     });
 
@@ -64,7 +67,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl} + ${_createTextInvalidVotes(count)}`,
+        `${kandidat.ordnungszahl} + ${createTextInvalidVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -79,7 +82,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl} - ${_createTextInvalidVotes(count)}`,
+        `${kandidat.ordnungszahl} - ${createTextInvalidVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -150,18 +153,6 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value = [];
     lastUsedWahlvorschlag.value = null;
     lastUsedKandidat.value = null;
-  }
-
-  function _createTextVotes(count: number) {
-    return `${count} ${_createTextWithCorrectNumberTermStimme(count)}`;
-  }
-
-  function _createTextInvalidVotes(count: number) {
-    return `${count} ungültige ${_createTextWithCorrectNumberTermStimme(count)}`;
-  }
-
-  function _createTextWithCorrectNumberTermStimme(count: number) {
-    return `${count > 1 ? "Stimmen" : "Stimme"}`;
   }
 
   async function _updateLatestUsedData(

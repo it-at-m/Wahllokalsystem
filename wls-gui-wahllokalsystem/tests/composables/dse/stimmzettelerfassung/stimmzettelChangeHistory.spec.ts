@@ -155,7 +155,7 @@ describe("stimmzettelChangeHistory.ts", () => {
     });
   });
 
-  describe("registerKandidatEinzelstimmenRangeSet", () => {
+  describe("registerKandidatEinzelstimmenRangeAdded", () => {
     it("should_addSingularVoteRangeHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
       const firstKandidat = {
         ...createStimmzettelKandidat(),
@@ -166,7 +166,7 @@ describe("stimmzettelChangeHistory.ts", () => {
         ordnungszahl: 103,
       };
 
-      changeHistory.registerKandidatEinzelstimmenRangeSet(
+      changeHistory.registerKandidatEinzelstimmenRangeAdded(
         [firstKandidat, lastKandidat],
         1
       );
@@ -195,7 +195,7 @@ describe("stimmzettelChangeHistory.ts", () => {
         ordnungszahl: 103,
       };
 
-      changeHistory.registerKandidatEinzelstimmenRangeSet(
+      changeHistory.registerKandidatEinzelstimmenRangeAdded(
         [firstKandidat, lastKandidat],
         2
       );

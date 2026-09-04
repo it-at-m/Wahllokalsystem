@@ -62,10 +62,7 @@
             style="min-height: 0; min-width: 0"
           >
             <the-stimmzettel-content
-              v-if="true"
-              :active-wahlvorschlag-id="
-                wahlvorschlagIdOfLatestChangeWahlvorschlag
-              "
+              :active-wahlvorschlag-id="latestChangedWahlvorschlagId"
               :active-kandidat="latestChangedKandidat"
               :wahlvorschlaege="
                 stimmzettelManager.managedStimmzettel.stimmzettel.value
@@ -174,7 +171,7 @@ const { currentUserTeamName } = storeToRefs(useUserStore());
 const changeHistory = computed(
   () => stimmzettelManager.managedStimmzettel.changeHistory
 );
-const wahlvorschlagIdOfLatestChangeWahlvorschlag = computed<string | null>(
+const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
 );

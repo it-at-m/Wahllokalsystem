@@ -67,15 +67,12 @@ vi.mock(
     }),
   })
 );
-vi.mock(
-  import("@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusUtils.ts"),
-  () => ({
-    useStimmzettelerfassungTeamStatusUtils: () => ({
-      initStimmzettelerfassungTeamStatus:
-        mockDefinitions.initStimmzettelerfassungTeamStatus,
-    }),
-  })
-);
+vi.mock(import("@/composables/appUtils.ts"), () => ({
+  useStimmzettelerfassungTeamStatusUtils: () => ({
+    initStimmzettelerfassungTeamStatus:
+      mockDefinitions.initStimmzettelerfassungTeamStatus,
+  }),
+}));
 vi.mock(
   import("@/composables/serviceWorker/serviceWorkerUtils.ts"),
   async (importOriginal) => {

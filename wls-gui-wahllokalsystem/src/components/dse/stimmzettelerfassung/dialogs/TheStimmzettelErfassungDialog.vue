@@ -111,6 +111,7 @@ const route = useRoute();
 const wahlID = route.params.wahlId as string;
 
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
+  computed(() => props.stimmzettel.stimmzettelkennung),
   props.wahlvorschlaege,
   wahlID
 );
@@ -133,7 +134,7 @@ function onCancelClicked() {
 }
 
 function onSavedClicked() {
-  emit("confirm", props.stimmzettel);
+  emit("confirm", stimmzettelManager.getStimmzettelSnapshot());
 }
 
 function onResetClicked() {

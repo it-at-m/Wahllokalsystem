@@ -17,7 +17,7 @@ export function useStimmzettelUtils() {
       stimmzettelkennung: 0,
       beschlussvorschlag: [],
       beschlussfassung: null,
-      gueltigkeit: null,
+      gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
       invalideVotes: 0,
       wahlvorschlaege: initWahlvorschlaege,
     };

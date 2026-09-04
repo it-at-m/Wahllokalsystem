@@ -10,6 +10,7 @@ import type { Beschlussgrund } from "@/types/dse/persistedStimmzettel/Beschlussg
 import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
+import type { Stimmzettel as ManageableStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 
 export function useStimmzettelMapper() {
   function toModel(dto: StimmzettelOfTeamDTO): Stimmzettel {
@@ -27,6 +28,44 @@ export function useStimmzettelMapper() {
       beschlussfassung: dto.beschlussfassung
         ? _beschlussfassungDtoToModel(dto.beschlussfassung)
         : null,
+    };
+  }
+
+  function toPersistedStimmzettel(
+    manageableStimmzettel: ManageableStimmzettel,
+    stimmzettelkennung: number
+  ): Stimmzettel {
+    if (!manageableStimmzettel.gueltigkeit) {
+      throw new Error("Stimmzettel muss eine Gültigkeit besitzen");
+    }
+
+    const mappedWahlvorschlaege: Wahlvorschlag[] =
+      manageableStimmzettel.wahlvorschlaege.map((wahlvorschlag) => {
+        const mappedKandidaten: Kandidat[] = wahlvorschlag.kandidaten.map(
+          (kandidat) => ({
+            kandidatId: kandidat.kandidatId,
+            nennung: kandidat.nennung,
+            votesByWahlvorschlag: kandidat.reststimmen ?? 0,
+            invalidVotes: kandidat.ungueltigeStimmen ?? 0,
+            votesByVoter: kandidat.einzelstimmen ?? 0,
+            isDiscarded: kandidat.durchgestrichen ?? false,
+          })
+        );
+
+        return {
+          kandidaten: mappedKandidaten,
+          wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
+          selected: wahlvorschlag.selected,
+        };
+      });
+
+    return {
+      stimmzettelkennung: stimmzettelkennung,
+      gueltigkeit: manageableStimmzettel.gueltigkeit,
+      invalideVotes: manageableStimmzettel.invalideVotes ?? 0,
+      wahlvorschlaege: mappedWahlvorschlaege,
+      beschlussvorschlag: manageableStimmzettel.beschlussvorschlag,
+      beschlussfassung: manageableStimmzettel.beschlussfassung,
     };
   }
 
@@ -147,6 +186,7 @@ export function useStimmzettelMapper() {
 
   return {
     toModel,
+    toPersistedStimmzettel,
     toDTO,
   };
 }

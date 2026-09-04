@@ -60,7 +60,11 @@
           >Zurücksetzen</base-text-button
         >
         <v-spacer />
-        <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
+        <base-text-button
+          :disabled="isCancelButtonDisabled"
+          @click="onCancelClicked"
+          >Abbrechen</base-text-button
+        >
         <base-wls-button-save @click="onSavedClicked" />
       </v-card-actions>
       <the-stimmzettel-erfassung-cancel-confirmation-dialog
@@ -127,6 +131,9 @@ const { currentUserTeamName } = storeToRefs(useUserStore());
 
 const changeHistory = computed(
   () => stimmzettelManager.managedStimmzettel.changeHistory
+);
+const isCancelButtonDisabled = computed(
+  () => stimmzettelManager.managedStimmzettel.hasAnyValuesSet.value
 );
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>

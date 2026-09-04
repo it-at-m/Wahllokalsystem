@@ -15,21 +15,7 @@
     </template>
 
     <template #[`item.gueltigkeit`]="{ item }">
-      <v-icon
-        v-if="isVorgemerktFuerBeschluss(item)"
-        icon="$stimmzettelBeschluss"
-        color="info"
-      />
-      <v-icon
-        v-else-if="item.gueltigkeit === StimmzettelGueltigkeitEnum.Valid"
-        icon="$stimmzettelGueltig"
-        color="success"
-      />
-      <v-icon
-        v-else
-        icon="$stimmzettelUngueltig"
-        color="error"
-      />
+      <base-stimmzettel-gueltigkeit-icon :value="item.gueltigkeit" />
     </template>
 
     <template #[`item.vormerkungsgrund`]="{ item }">
@@ -55,13 +41,13 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 
 import { ref } from "vue";
 
+import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
 import {
   ITEMS_PER_PAGE_TITLE,
   TABLE_LOADING_DATA_STIMMZETTEL,
   TABLE_NO_DATA_TEXT_STIMMZETTEL,
 } from "@/constants.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
   teamId: string;

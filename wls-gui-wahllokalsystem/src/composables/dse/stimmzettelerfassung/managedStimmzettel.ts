@@ -7,7 +7,6 @@ import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
-import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
@@ -24,8 +23,6 @@ export function useManagedStimmzettel(
   wahlID: string
 ) {
   const changeHistory = useStimmzettelChangeHistory();
-
-  const { createTextWithCorrectNumberTermStimme } = useTextFormatter();
 
   const kandidatenOfStimmzettel = computed(() =>
     stimmzettel.value.wahlvorschlaege
@@ -124,7 +121,7 @@ export function useManagedStimmzettel(
     }
     if (!kandidat.einzelstimmen || kandidat.einzelstimmen < votesToRemove) {
       throw new ManagedStimmzettelError(
-        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${votesToRemove} ${createTextWithCorrectNumberTermStimme(votesToRemove)} abgezogen bekommen.`
+        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} kann diese Menge an Stimmen nicht abgezogen werden.`
       );
     }
 
@@ -168,7 +165,7 @@ export function useManagedStimmzettel(
       kandidat.ungueltigeStimmen < invalidVotesToRemove
     ) {
       throw new ManagedStimmzettelError(
-        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${invalidVotesToRemove} ungültigen ${createTextWithCorrectNumberTermStimme(invalidVotesToRemove)} abgezogen bekommen.`
+        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} kann diese Menge an ungültigen Stimmen nicht abgezogen werden.`
       );
     }
 

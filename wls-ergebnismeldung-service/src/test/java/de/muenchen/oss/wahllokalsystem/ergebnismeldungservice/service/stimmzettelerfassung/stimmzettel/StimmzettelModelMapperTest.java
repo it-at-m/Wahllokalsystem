@@ -68,8 +68,8 @@ class StimmzettelModelMapperTest {
                                   givenKandidaten ->
                                       new KandidatModel(
                                           new KandidatIdModel(
-                                              givenKandidaten.getId().getKandidatID(),
-                                              givenKandidaten.getId().getNennungsNummer()),
+                                              givenKandidaten.getKandidatID().getKandidatID(),
+                                              givenKandidaten.getKandidatID().getNennungsNummer()),
                                           givenKandidaten.isDiscarded(),
                                           givenKandidaten.getVotesByVoter(),
                                           givenKandidaten.getInvalidVotes(),
@@ -222,7 +222,7 @@ class StimmzettelModelMapperTest {
           final KandidatModel kandidat, final Wahlvorschlag wahlvorschlag) {
         val expectedResult = new Kandidat();
 
-        expectedResult.setId(
+        expectedResult.setKandidatID(
             new KandidatId(kandidat.id().kandidatID(), kandidat.id().nennungsNummer()));
         expectedResult.setWahlvorschlag(wahlvorschlag);
         expectedResult.setDiscarded(kandidat.discarded());
@@ -250,7 +250,7 @@ class StimmzettelModelMapperTest {
       private Kandidat createExpectedKandidat(final KandidatModel kandidat) {
         val expectedKandidat = new Kandidat();
 
-        expectedKandidat.setId(
+        expectedKandidat.setKandidatID(
             new KandidatId(kandidat.id().kandidatID(), kandidat.id().nennungsNummer()));
         expectedKandidat.setDiscarded(kandidat.discarded());
         expectedKandidat.setVotesByVoter(kandidat.votesByVoter());

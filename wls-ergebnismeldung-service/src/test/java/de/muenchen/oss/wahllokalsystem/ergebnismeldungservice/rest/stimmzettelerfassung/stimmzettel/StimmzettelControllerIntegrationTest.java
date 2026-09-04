@@ -163,13 +163,18 @@ public class StimmzettelControllerIntegrationTest {
           Instancio.of(StimmzettelOfTeamDTO.class)
               .set(Select.field(StimmzettelOfTeamDTO::stimmzettelkennung), 3)
               .create();
+      val stimmzettel4WithEqualValuesLikeStimmzetetl1 =
+            Instancio.of(StimmzettelOfTeamDTO.class)
+              .set(Select.field(StimmzettelOfTeamDTO::stimmzettelkennung), 4)
+              .set(Select.field(StimmzettelOfTeamDTO::wahlvorschlaege), stimmzettel1ToSave.wahlvorschlaege())
+              .create();
 
       api.perform(
               createRequest(
                   wahlID,
                   wahlbezirkID,
                   teamID,
-                  List.of(stimmzettel1ToSave, stimmzettel2ToSave, stimmzettel3ToSave)))
+                  List.of(stimmzettel1ToSave, stimmzettel2ToSave, stimmzettel3ToSave, stimmzettel4WithEqualValuesLikeStimmzetetl1)))
           .andExpect(status().isCreated());
 
       transactionTemplate.executeWithoutResult(
@@ -189,6 +194,10 @@ public class StimmzettelControllerIntegrationTest {
                 stimmzettelModelMapper.toEntity(
                     new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
                     stimmzettelDTOMapper.toModel(stimmzettel3ToSave));
+            val expectedSavedStimmzettel4 =
+                stimmzettelModelMapper.toEntity(
+                    new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
+                    stimmzettelDTOMapper.toModel(stimmzettel4WithEqualValuesLikeStimmzetetl1));
             Assertions.assertThat(savedStimmzettel)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
@@ -197,8 +206,9 @@ public class StimmzettelControllerIntegrationTest {
                     List.of(
                         expectedSavedStimmzettel1,
                         expectedSavedStimmzettel2,
-                        expectedSavedStimmzettel3));
-            Assertions.assertThat(savedStimmzettel).hasSize(3);
+                        expectedSavedStimmzettel3,
+                        expectedSavedStimmzettel4));
+            Assertions.assertThat(savedStimmzettel).hasSize(4);
           });
     }
 

@@ -55,10 +55,11 @@
             :id="`kandidat-${index}`"
             :key="index"
             ref="listItems"
-            v-ripple="
-              kandidat.kandidatId === activeKandidat?.kandidatId &&
-              kandidat.nennung === activeKandidat?.nennung
-            "
+            :class="{
+              activeKandidat:
+                kandidat.kandidatId === activeKandidat?.kandidatId &&
+                kandidat.nennung === activeKandidat?.nennung,
+            }"
             tabindex="-1"
           >
             <v-divider
@@ -96,19 +97,17 @@ const props = defineProps<{
 const kandidatenListe = computed(() => props.wahlvorschlag.kandidaten);
 
 const listItems = ref<(ComponentPublicInstance | null)[]>([]);
-const { scrollIntoView, triggerRippleEffect } = useViewportUtils();
+const { scrollIntoView } = useViewportUtils();
 
-//TODO refactor to function instead of constant
-const isDividerZwischenGleichemKandidat = (index: number) => {
+function isDividerZwischenGleichemKandidat(index: number) {
   if (index <= 0) return false;
   const prev = kandidatenListe.value[index - 1];
   const curr = kandidatenListe.value[index];
   if (!prev || !curr) return false;
   return prev.kandidatId === curr.kandidatId;
-};
+}
 
-//TODO refactor to function instead of constant
-const focusActive = async () => {
+async function focusActive() {
   const id = props.activeKandidat?.kandidatId;
   if (!id) return;
 
@@ -132,9 +131,8 @@ const focusActive = async () => {
   if (item?.$el) {
     const selector = `#kandidat-${lastIndex}`;
     scrollIntoView(selector);
-    triggerRippleEffect(item.$el);
   }
-};
+}
 
 watch(
   [() => props.activeKandidat, kandidatenListe],
@@ -148,3 +146,10 @@ onActivated(() => {
   focusActive();
 });
 </script>
+
+<style scoped>
+.activeKandidat {
+  border: solid 1px;
+  border-color: rgb(var(--v-theme-primary));
+}
+</style>

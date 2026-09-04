@@ -84,13 +84,19 @@ describe("removeVotesFromSingleKandidatHandler.ts", () => {
       }
     );
 
-    it("should_throwCommandExecutionError_when_commandArgumentsAreInvalid", () => {
+    it("should_throwCommandExecutionError_when_ordnungszahlIsInvalid", () => {
       expect(() => handleOrThrow("10", mockManagedStimmzettel)).toThrow(
         CommandExecutionError
       );
+    });
+
+    it("should_throwCommandExecutionError_when_ordnungszahlHasWrongFormat", () => {
       expect(() => handleOrThrow("abc", mockManagedStimmzettel)).toThrow(
         CommandExecutionError
       );
+    });
+
+    it("should_throwCommandExecutionError_when_commandDoesNotMatchToHandler", () => {
       expect(() => handleOrThrow("101-0", mockManagedStimmzettel)).toThrow(
         CommandExecutionError
       );

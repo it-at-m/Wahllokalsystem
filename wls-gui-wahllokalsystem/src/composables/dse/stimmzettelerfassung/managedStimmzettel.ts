@@ -69,7 +69,7 @@ export function useManagedStimmzettel(
   } = useReststimmeTools(wahlID, stimmenSummary, stimmzettel);
 
   function resetStimmzettel() {
-    changeHistory.resetChangeHistory();
+    changeHistory.reset();
     stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
       wahlvorschlag.selected = false;
       wahlvorschlag.kandidaten.map((kandidat) => {
@@ -201,7 +201,10 @@ export function useManagedStimmzettel(
     }
     kandidaten.map((kandidat) => addVotesToKandidat(kandidat, votesToAdd));
     updateReststimmenWhenVotesAdded();
-    changeHistory.registerKandidatEinzelstimmenRangeSet(kandidaten, votesToAdd);
+    changeHistory.registerKandidatEinzelstimmenRangeAdded(
+      kandidaten,
+      votesToAdd
+    );
   }
 
   function kandidatAddStreichungOrThrow(ordnungszahl: number) {
@@ -231,7 +234,7 @@ export function useManagedStimmzettel(
       );
     }
     kandidat.durchgestrichen = false;
-    changeHistory.registerKandidatStreichungRemoved(kandidat);
+    changeHistory.registerKandidatStreichungUnset(kandidat);
   }
 
   function kandidatenStreichungenInRangeOrThrow(
@@ -263,7 +266,7 @@ export function useManagedStimmzettel(
       );
     }
     kandidaten.map((kandidat) => (kandidat.durchgestrichen = false));
-    changeHistory.registerKandidatStreichungRangeRemoved(kandidaten);
+    changeHistory.registerKandidatStreichungRangeUnset(kandidaten);
   }
 
   function wahlvorschlagAddVotesOrThrow(wahlvorschlagOrdnungszahl: number) {

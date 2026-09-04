@@ -6,7 +6,7 @@ import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.t
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
 export function useRemoveStreichungFromSingleKandidatHandler(): CommandHandler {
-  const REGEX_REMOVE_STREICHUNG_TO_KANDIDAT = /^[sS]([1-9]\d{2,})-$/;
+  const REGEX_REMOVE_STREICHUNG_OF_KANDIDAT = /^[sS]([1-9]\d{2,})-$/;
   const { isValidKandidatOrdnungszahl } = useHandlerTools();
 
   function canHandle(command: string): boolean {
@@ -41,7 +41,7 @@ export function useRemoveStreichungFromSingleKandidatHandler(): CommandHandler {
   }
 
   function _parseCommandArguments(command: string): number | null {
-    const match = REGEX_REMOVE_STREICHUNG_TO_KANDIDAT.exec(command);
+    const match = REGEX_REMOVE_STREICHUNG_OF_KANDIDAT.exec(command);
 
     if (match?.[1] !== undefined) {
       const commandArg = Number.parseInt(match[1]);

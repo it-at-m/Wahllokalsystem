@@ -64,13 +64,19 @@ describe("removeStreichungFromSingleKandidatHandler.ts", () => {
       }
     );
 
-    it("should_throwCommandExecutionError_when_commandArgumentsAreInvalid", () => {
+    it("should_throwCommandExecutionError_when_ordnungszahlIsInvalid", () => {
       expect(() => handleOrThrow("s10", mockManagedStimmzettel)).toThrow(
         CommandExecutionError
       );
+    });
+
+    it("should_throwCommandExecutionError_when_ordnungszahlHasWrongFormat", () => {
       expect(() => handleOrThrow("sabc", mockManagedStimmzettel)).toThrow(
         CommandExecutionError
       );
+    });
+
+    it("should_throwCommandExecutionError_when_minusIsMissing", () => {
       expect(() => handleOrThrow("s101", mockManagedStimmzettel)).toThrow(
         CommandExecutionError
       );

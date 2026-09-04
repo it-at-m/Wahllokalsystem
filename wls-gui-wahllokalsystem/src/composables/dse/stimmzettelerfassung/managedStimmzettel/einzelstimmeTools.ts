@@ -8,7 +8,8 @@ export function useEinzelstimmeTools() {
 
   function removeVotesFromKandidat(kandidat: Kandidat, numberOfVotes: number) {
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
-    kandidat.einzelstimmen = currentEinzelstimmen - numberOfVotes;
+    const newValue = currentEinzelstimmen - numberOfVotes;
+    kandidat.einzelstimmen = newValue > 0 ? newValue : null;
   }
 
   return {

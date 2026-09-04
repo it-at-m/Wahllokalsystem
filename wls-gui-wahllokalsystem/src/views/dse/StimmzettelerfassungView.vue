@@ -129,7 +129,12 @@ const {
 } = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
 
 const startNewStimmzettelButtonText = computed(() =>
-  hasStimmzettel.value ? "Fortsetzen" : "Starten"
+  hasStimmzettel.value ||
+  teamStatus.value?.status ===
+    StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN ||
+  teamStatus.value?.status === StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+    ? "Fortsetzen"
+    : "Starten"
 );
 
 function onErfassungStartenClicked() {

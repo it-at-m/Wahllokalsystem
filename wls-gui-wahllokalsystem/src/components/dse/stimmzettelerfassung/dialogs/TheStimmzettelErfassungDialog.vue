@@ -60,9 +60,20 @@
           >Zurücksetzen</base-text-button
         >
         <v-spacer />
-        <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
+        <base-text-button
+          :disabled="isCancelButtonDisabled"
+          @click="onCancelClicked"
+          >Abbrechen</base-text-button
+        >
         <base-wls-button-save @click="onSavedClicked" />
       </v-card-actions>
+      <the-stimmzettel-erfassung-cancel-confirmation-dialog
+        :visible="isCancelConfirmationDialogVisible"
+        :team-name="currentUserTeamName"
+        :stimmzettelkennung="stimmzettel.stimmzettelkennung"
+        @confirm="onCancelConfirmationDialogConfirmed"
+        @cancel="onCancelConfirmationDialogCancelled"
+      />
     </v-card>
   </v-dialog>
 </template>
@@ -74,12 +85,13 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
+import TheStimmzettelErfassungCancelConfirmationDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungCancelConfirmationDialog.vue";
 import TheEingabehistorieCard from "@/components/dse/stimmzettelerfassung/TheEingabehistorieCard.vue";
 import TheStimmzettelCommandProcessingTextField from "@/components/dse/stimmzettelerfassung/TheStimmzettelCommandProcessingTextField.vue";
 import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStimmzettelContent.vue";
@@ -120,6 +132,9 @@ const { currentUserTeamName } = storeToRefs(useUserStore());
 const changeHistory = computed(
   () => stimmzettelManager.managedStimmzettel.changeHistory
 );
+const isCancelButtonDisabled = computed(
+  () => stimmzettelManager.managedStimmzettel.hasAnyValuesSet.value
+);
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
@@ -128,7 +143,18 @@ const latestChangedKandidat = computed<Kandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
 );
 
+const isCancelConfirmationDialogVisible = ref(false);
+
 function onCancelClicked() {
+  isCancelConfirmationDialogVisible.value = true;
+}
+
+function onCancelConfirmationDialogCancelled() {
+  isCancelConfirmationDialogVisible.value = false;
+}
+
+function onCancelConfirmationDialogConfirmed() {
+  isCancelConfirmationDialogVisible.value = false;
   emit("cancel");
 }
 

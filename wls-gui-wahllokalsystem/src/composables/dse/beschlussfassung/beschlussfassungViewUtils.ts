@@ -3,7 +3,7 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import { computed, onActivated, ref } from "vue";
 
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
-import { useStimmzettelerfassungTeamStatusState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusState.ts";
+import { useStimmzettelerfassungTeamStatusListState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts";
 import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
@@ -19,7 +19,7 @@ export function useBeschlussfassungViewUtils(
     wahlbezirkID
   );
   const { teamstatusList, loadTeamStatusListe } =
-    useStimmzettelerfassungTeamStatusState(wahlID, wahlbezirkID);
+    useStimmzettelerfassungTeamStatusListState(wahlID, wahlbezirkID);
   const isStimmzettelForBeschlussLoading = ref(false);
   const stimmzettelForBeschlussfassung = ref<Stimmzettel[]>([]);
 

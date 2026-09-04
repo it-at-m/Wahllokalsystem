@@ -37,9 +37,9 @@ vi.mock("vue", async (importOriginal) => {
 });
 
 vi.mock(
-  "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusState.ts",
+  "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts",
   () => ({
-    useStimmzettelerfassungTeamStatusState: () => ({
+    useStimmzettelerfassungTeamStatusListState: () => ({
       loadTeamStatusListe: mockDefinitions.loadTeamStatusListe,
       teamstatusList: ref(mockDefinitions.teamstatusList),
     }),

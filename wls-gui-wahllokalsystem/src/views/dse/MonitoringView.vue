@@ -54,8 +54,9 @@
             :is-wieder-oeffnen-button-disabled="
               item.status !==
                 StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN ||
-              workflowStatus?.status !==
-                StimmzettelerfassungStatusEnum.SteBearbeitung
+              (workflowStatus?.status !==
+                StimmzettelerfassungStatusEnum.SteBearbeitung &&
+                !!workflowStatus)
             "
             @open-stimmzettelerfassung="
               onOpenStimmzettelerfassungClicked(item.teamID)
@@ -72,7 +73,7 @@
         <base-text-button
           v-if="isBeschlussfassungStartenBtnVisible"
           :active="isBeschlussfassungBtnActive"
-          :is-disabled="isBeschlussfassungStartenBtnDisabled"
+          :is-disabled="isMoveOnToBeschlussfassungDisabled"
           :loading="isWorkflowStatusLoading"
           @click="onBeschlussfassungStartenClicked"
           >Beschlussfassung starten</base-text-button
@@ -80,7 +81,7 @@
         <base-text-button
           v-if="isBeschlussfassungContinueBtnVisible"
           :active="isBeschlussfassungBtnActive"
-          :is-disabled="isBeschlussfassungContinueBtnDisabled"
+          :is-disabled="isMoveOnToBeschlussfassungDisabled"
           :loading="isWorkflowStatusLoading"
           @click="onBeschlussfassungContinueClicked"
           >Beschlussfassung fortsetzen</base-text-button
@@ -123,10 +124,9 @@ const {
   teamstatusList,
   lastTeamstatusLoadingTime,
   isBeschlussfassungBtnActive,
-  isBeschlussfassungContinueBtnDisabled,
   isBeschlussfassungContinueBtnVisible,
-  isBeschlussfassungStartenBtnDisabled,
   isBeschlussfassungStartenBtnVisible,
+  isMoveOnToBeschlussfassungDisabled,
   isTeamStatusListLoading,
   isWorkflowStatusLoading,
   workflowStatus,

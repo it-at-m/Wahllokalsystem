@@ -65,6 +65,14 @@
             <appender-ref ref="STDOUT" />
         </logger>
 
+        <!-- use info to see hibernate statistics -->
+        <!-- requires spring.jpa.properties.hibernate.generate_statistics=true -->
+        <logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener"
+                level="warn"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
         <!-- Logger usage -->
         <root level="info">
             <appender-ref ref="STDOUT" />

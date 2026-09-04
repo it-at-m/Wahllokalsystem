@@ -123,7 +123,7 @@ export function useManagedStimmzettel(
     }
     if (!kandidat.einzelstimmen || kandidat.einzelstimmen < votesToRemove) {
       throw new ManagedStimmzettelError(
-        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${votesToRemove} Stimmen abgezogen werden.`
+        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} kann diese Menge an Stimmen nicht abgezogen werden.`
       );
     }
 
@@ -167,7 +167,7 @@ export function useManagedStimmzettel(
       kandidat.ungueltigeStimmen < invalidVotesToRemove
     ) {
       throw new ManagedStimmzettelError(
-        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${invalidVotesToRemove} ungültigen Stimmen abgezogen werden.`
+        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} kann diese Menge an ungültigen Stimmen nicht abgezogen werden.`
       );
     }
 
@@ -452,7 +452,10 @@ export function useManagedStimmzettel(
       kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
       _updateReststimmenWhenVotesAdded();
     });
-    changeHistory.registerKandidatEinzelstimmenRangeSet(kandidaten, votesToAdd);
+    changeHistory.registerKandidatEinzelstimmenRangeAdded(
+      kandidaten,
+      votesToAdd
+    );
   }
 
   function _internalAddStreichungToKandidat(kandidat: Kandidat) {

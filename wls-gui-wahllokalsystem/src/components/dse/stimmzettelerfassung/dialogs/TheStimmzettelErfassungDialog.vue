@@ -65,10 +65,7 @@
             style="min-height: 0; min-width: 0"
           >
             <the-stimmzettel-content
-              v-if="true"
-              :active-wahlvorschlag-id="
-                wahlvorschlagIdOfLatestChangeWahlvorschlag
-              "
+              :active-wahlvorschlag-id="latestChangedWahlvorschlagId"
               :active-kandidat="latestChangedKandidat"
               :wahlvorschlaege="
                 stimmzettelManager.managedStimmzettel.stimmzettel.value
@@ -178,19 +175,19 @@ const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
 
 const { currentUserTeamName, isBWB } = storeToRefs(useUserStore());
 
+const isBeschlussfassungValid = ref(true);
+
 const changeHistory = computed(
   () => stimmzettelManager.managedStimmzettel.changeHistory
 );
 const isSaveDisabled = computed(() => isBeschlussfassungValid.value === false);
-const wahlvorschlagIdOfLatestChangeWahlvorschlag = computed<string | null>(
+const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
 );
 const latestChangedKandidat = computed<Kandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
 );
-
-const isBeschlussfassungValid = ref(true);
 
 function onCancelClicked() {
   emit("cancel");

@@ -20,7 +20,7 @@ const mockDefinitions = vi.hoisted(() => ({
   changeHistory: {
     registerKandidatEinzelstimmenAdded: vi.fn(),
     registerKandidatEinzelstimmenRemoved: vi.fn(),
-    registerKandidatEinzelstimmenRangeSet: vi.fn(),
+    registerKandidatEinzelstimmenRangeAdded: vi.fn(),
     registerKandidatUngueltigeStimmenAdded: vi.fn(),
     registerKandidatUngueltigeStimmenRemoved: vi.fn(),
     registerKandidatStreichungSet: vi.fn(),
@@ -760,7 +760,7 @@ describe("managedStimmzettel.ts", () => {
       expect(k2.einzelstimmen).toBe(2);
       expect(k3.einzelstimmen).toBe(2);
       expect(
-        mockDefinitions.changeHistory.registerKandidatEinzelstimmenRangeSet
+        mockDefinitions.changeHistory.registerKandidatEinzelstimmenRangeAdded
       ).toHaveBeenCalledExactlyOnceWith([k1, k2, k3], countVotes);
     });
 
@@ -880,7 +880,7 @@ describe("managedStimmzettel.ts", () => {
       expect(k2.einzelstimmen).toBe(2);
       expect(managed.stimmenSummary.value.einzelstimmen).toBe(4);
       expect(
-        mockDefinitions.changeHistory.registerKandidatEinzelstimmenRangeSet
+        mockDefinitions.changeHistory.registerKandidatEinzelstimmenRangeAdded
       ).toHaveBeenCalledExactlyOnceWith([k1, k2], countVotes);
     });
 

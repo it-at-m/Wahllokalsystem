@@ -4,12 +4,15 @@ import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschl
 
 import { computed, nextTick, ref } from "vue";
 
+import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHistoryTypeEnum.ts";
 
 export function useStimmzettelChangeHistory() {
   const changeHistory = ref<InputHistoryItem[]>([]);
   const lastUsedWahlvorschlag = ref<Wahlvorschlag | null>(null);
   const lastUsedKandidat = ref<Kandidat | null>(null);
+
+  const { createTextVotes, createTextInvalidVotes } = useTextFormatter();
 
   function registerKandidatEinzelstimmenAdded(
     kandidat: Kandidat,
@@ -18,7 +21,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${" + " + count + (count > 1 ? " Stimmen" : " Stimme")}`,
+        `${kandidat.ordnungszahl} + ${createTextVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -33,7 +36,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${" - " + count + (count > 1 ? " Stimmen" : " Stimme")}`,
+        `${kandidat.ordnungszahl} - ${createTextVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -41,7 +44,7 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(kandidat);
   }
 
-  function registerKandidatEinzelstimmenRangeSet(
+  function registerKandidatEinzelstimmenRangeAdded(
     kandidaten: Kandidat[],
     count: number
   ) {
@@ -50,7 +53,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.VOTE_RANGE,
       text: [
-        `${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl}${" + " + count + (count > 1 ? " Stimmen" : " Stimme")}`,
+        `${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl} + ${createTextVotes(count)}`,
       ],
     });
 
@@ -64,7 +67,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${" + " + count + " ungültige " + (count > 1 ? "Stimmen" : "Stimme")}`,
+        `${kandidat.ordnungszahl} + ${createTextInvalidVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -79,7 +82,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${" - " + count + " ungültige " + (count > 1 ? "Stimmen" : "Stimme")}`,
+        `${kandidat.ordnungszahl} - ${createTextInvalidVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -162,8 +165,8 @@ export function useStimmzettelChangeHistory() {
     lastUsedKandidat.value = null;
     lastUsedWahlvorschlag.value = null;
 
-    //Auf nächsten Tick warten, damit die Komponenten, welche die refs verwenden, ihren Zustand vergessen,
-    //das ist wichtig, damit auch bei gleichen Werten ggf. eine Aktualisierung erfolgt
+    // Wait for the next tick so that the components using the refs forget their state,
+    // this is important to ensure that an update occurs even with the same values
     await nextTick();
 
     if ("kandidatId" in latestUsedData) {
@@ -184,7 +187,7 @@ export function useStimmzettelChangeHistory() {
 
     registerKandidatEinzelstimmenAdded,
     registerKandidatEinzelstimmenRemoved,
-    registerKandidatEinzelstimmenRangeSet,
+    registerKandidatEinzelstimmenRangeAdded,
     registerKandidatUngueltigeStimmenAdded,
     registerKandidatUngueltigeStimmenRemoved,
     registerKandidatStreichungSet,

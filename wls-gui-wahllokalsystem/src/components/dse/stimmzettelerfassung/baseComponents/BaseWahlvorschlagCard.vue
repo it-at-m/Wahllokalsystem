@@ -55,6 +55,11 @@
             :id="`kandidat-${index}`"
             :key="index"
             ref="listItems"
+            :class="{
+              activeKandidat:
+                kandidat.kandidatId === activeKandidat?.kandidatId &&
+                kandidat.nennung === activeKandidat?.nennung,
+            }"
             tabindex="-1"
           >
             <v-divider
@@ -72,6 +77,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { ComponentPublicInstance } from "vue";
 
@@ -85,7 +91,7 @@ import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts
 
 const props = defineProps<{
   wahlvorschlag: Wahlvorschlag;
-  activeKandidatId?: string | null;
+  activeKandidat?: Kandidat | null;
 }>();
 
 const kandidatenListe = computed(() => props.wahlvorschlag.kandidaten);
@@ -102,15 +108,19 @@ function isDividerZwischenGleichemKandidat(index: number) {
 }
 
 async function focusActive() {
-  const id = props.activeKandidatId;
+  const id = props.activeKandidat?.kandidatId;
   if (!id) return;
+
+  const nennung = props.activeKandidat?.nennung;
+  if (!nennung) return;
 
   const kandidaten = kandidatenListe.value;
   if (!kandidaten || kandidaten.length === 0) return;
 
   let lastIndex = -1;
   for (let i = 0; i < kandidaten.length; i++) {
-    if (kandidaten[i].kandidatId === id) lastIndex = i;
+    if (kandidaten[i].kandidatId === id && kandidaten[i].nennung === nennung)
+      lastIndex = i;
   }
   if (lastIndex === -1) return;
 
@@ -121,15 +131,11 @@ async function focusActive() {
   if (item?.$el) {
     const selector = `#kandidat-${lastIndex}`;
     scrollIntoView(selector);
-
-    if (typeof item.$el.focus === "function") {
-      item.$el.focus();
-    }
   }
 }
 
 watch(
-  [() => props.activeKandidatId, kandidatenListe],
+  [() => props.activeKandidat, kandidatenListe],
   () => {
     focusActive();
   },
@@ -140,3 +146,10 @@ onActivated(() => {
   focusActive();
 });
 </script>
+
+<style scoped>
+.activeKandidat {
+  border: solid 1px;
+  border-color: rgb(var(--v-theme-primary));
+}
+</style>

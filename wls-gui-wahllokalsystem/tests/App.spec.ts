@@ -68,7 +68,7 @@ vi.mock(
   })
 );
 vi.mock(import("@/composables/appUtils.ts"), () => ({
-  useStimmzettelerfassungTeamStatusUtils: () => ({
+  useAppUtils: () => ({
     initStimmzettelerfassungTeamStatus:
       mockDefinitions.initStimmzettelerfassungTeamStatus,
   }),

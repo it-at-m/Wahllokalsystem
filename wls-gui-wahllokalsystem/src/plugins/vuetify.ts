@@ -41,6 +41,8 @@ import {
   mdiSend,
   mdiSignalCellular3,
   mdiSignalOff,
+  mdiSortAscending,
+  mdiSortDescending,
   mdiTextBoxCheck,
   mdiTextBoxOutline,
   mdiToaster,
@@ -104,6 +106,8 @@ export default createVuetify({
       stimmzettelCommandAcceptList: mdiPlaylistCheck,
       stimmzettelCommandDiscardRange: mdiAccountMultipleMinusOutline,
       stimmzettelCommandVoteRange: mdiAccountMultiplePlusOutline,
+      asc: mdiSortAscending,
+      desc: mdiSortDescending,
     },
     sets: {
       mdi,

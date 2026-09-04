@@ -152,10 +152,6 @@ export function useStimmzettelChangeHistory() {
     lastUsedKandidat.value = null;
   }
 
-  async function _updateLatestUsedData(kandidat: Kandidat): Promise<void>;
-  async function _updateLatestUsedData(
-    wahlvorschlag: Wahlvorschlag
-  ): Promise<void>;
   async function _updateLatestUsedData(
     latestUsedData: Kandidat | Wahlvorschlag
   ): Promise<void> {

@@ -39,7 +39,7 @@ export function useTextFormatter() {
   }
 
   function createTextWithCorrectNumberTermStimme(count: number) {
-    return `${count > 1 ? "Stimmen" : "Stimme"}`;
+    return `${Math.abs(count) === 1 ? "Stimme" : "Stimmen"}`;
   }
 
   return {

@@ -27,7 +27,7 @@ describe("textFormatter.ts", () => {
 
   describe("createTextVotes", () => {
     it.each([
-      { count: 0, expectedText: "0 Stimme" },
+      { count: 0, expectedText: "0 Stimmen" },
       { count: 1, expectedText: "1 Stimme" },
       { count: 2, expectedText: "2 Stimmen" },
     ])(
@@ -40,7 +40,7 @@ describe("textFormatter.ts", () => {
 
   describe("createTextInvalidVotes", () => {
     it.each([
-      { count: 0, expectedText: "0 ungültige Stimme" },
+      { count: 0, expectedText: "0 ungültige Stimmen" },
       { count: 1, expectedText: "1 ungültige Stimme" },
       { count: 2, expectedText: "2 ungültige Stimmen" },
     ])(
@@ -53,7 +53,7 @@ describe("textFormatter.ts", () => {
 
   describe("createTextWithCorrectNumberTermStimme", () => {
     it.each([
-      { count: 0, expectedText: "Stimme" },
+      { count: 0, expectedText: "Stimmen" },
       { count: 1, expectedText: "Stimme" },
       { count: 2, expectedText: "Stimmen" },
     ])(

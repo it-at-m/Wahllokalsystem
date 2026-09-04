@@ -58,6 +58,10 @@
         </v-row>
       </v-card-text>
       <v-card-actions>
+        <base-text-button @click="onResetClicked"
+          >Zurücksetzen</base-text-button
+        >
+        <v-spacer />
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
         <base-wls-button-save @click="onSavedClicked" />
       </v-card-actions>
@@ -119,5 +123,9 @@ function onCancelClicked() {
 
 function onSavedClicked() {
   emit("confirm", props.stimmzettel);
+}
+
+function onResetClicked() {
+  stimmzettelManager.managedStimmzettel.resetStimmzettel();
 }
 </script>

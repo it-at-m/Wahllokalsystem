@@ -41,7 +41,7 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(kandidat);
   }
 
-  function registerKandidatEinzelstimmenRangeSet(
+  function registerKandidatEinzelstimmenRangeAdded(
     kandidaten: Kandidat[],
     count: number
   ) {
@@ -184,7 +184,7 @@ export function useStimmzettelChangeHistory() {
 
     registerKandidatEinzelstimmenAdded,
     registerKandidatEinzelstimmenRemoved,
-    registerKandidatEinzelstimmenRangeSet,
+    registerKandidatEinzelstimmenRangeAdded,
     registerKandidatUngueltigeStimmenAdded,
     registerKandidatUngueltigeStimmenRemoved,
     registerKandidatStreichungSet,

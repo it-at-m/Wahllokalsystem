@@ -450,7 +450,10 @@ export function useManagedStimmzettel(
       kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
       _updateReststimmenWhenVotesAdded();
     });
-    changeHistory.registerKandidatEinzelstimmenRangeSet(kandidaten, votesToAdd);
+    changeHistory.registerKandidatEinzelstimmenRangeAdded(
+      kandidaten,
+      votesToAdd
+    );
   }
 
   function _internalAddStreichungToKandidat(kandidat: Kandidat) {

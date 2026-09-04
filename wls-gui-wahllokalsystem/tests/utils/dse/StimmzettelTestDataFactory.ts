@@ -252,6 +252,7 @@ export function useStimmzettelTestDataFactory() {
     createPersistedStimmzettelKandidat,
     createPersistedStimmzettel,
     createStimmzettelOfTeamDTO,
+    createStimmzettelKandidat,
     createStimmzettelKandidatDTO,
     createStimmzettelWahlvorschlag,
     preparePersistedStimmzettel,

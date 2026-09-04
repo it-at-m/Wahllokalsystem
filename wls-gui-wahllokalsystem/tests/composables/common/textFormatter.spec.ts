@@ -10,14 +10,60 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 describe("textFormatter.ts", () => {
-  const { getStimmzettelTermForWahl, getStimmzettelTermForWahlID } =
-    useTextFormatter();
+  const {
+    createTextVotes,
+    createTextInvalidVotes,
+    createTextWithCorrectNumberTermStimme,
+    getStimmzettelTermForWahl,
+    getStimmzettelTermForWahlID,
+  } = useTextFormatter();
   const { generateRandomString } = useCommonTestDataFactory();
   const { prepareUser } = useUserTestDataFactory();
   const { prepareWahl } = useWahlTestDataFactory();
 
   beforeEach(() => {
     setActivePinia(createPinia());
+  });
+
+  describe("createTextVotes", () => {
+    it.each([
+      { count: 0, expectedText: "0 Stimmen" },
+      { count: 1, expectedText: "1 Stimme" },
+      { count: 2, expectedText: "2 Stimmen" },
+    ])(
+      "should_returnTextWithCorrectNumberTermStimme_when_givenCount$count",
+      ({ count, expectedText }) => {
+        expect(createTextVotes(count)).toStrictEqual(expectedText);
+      }
+    );
+  });
+
+  describe("createTextInvalidVotes", () => {
+    it.each([
+      { count: 0, expectedText: "0 ungültige Stimmen" },
+      { count: 1, expectedText: "1 ungültige Stimme" },
+      { count: 2, expectedText: "2 ungültige Stimmen" },
+    ])(
+      "should_returnTextWithCorrectNumberTermStimme_when_givenCount$count",
+      ({ count, expectedText }) => {
+        expect(createTextInvalidVotes(count)).toStrictEqual(expectedText);
+      }
+    );
+  });
+
+  describe("createTextWithCorrectNumberTermStimme", () => {
+    it.each([
+      { count: 0, expectedText: "Stimmen" },
+      { count: 1, expectedText: "Stimme" },
+      { count: 2, expectedText: "Stimmen" },
+    ])(
+      "should_returnCorrectNumberTermStimme_when_givenCount$count",
+      ({ count, expectedText }) => {
+        expect(createTextWithCorrectNumberTermStimme(count)).toStrictEqual(
+          expectedText
+        );
+      }
+    );
   });
 
   describe("getStimmzettelTermForWahl", () => {

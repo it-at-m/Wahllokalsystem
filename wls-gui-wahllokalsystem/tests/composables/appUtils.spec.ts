@@ -4,7 +4,7 @@ import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/d
 import { setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useStimmzettelerfassungTeamStatusUtils } from "@/composables/appUtils.ts";
+import { useAppUtils } from "@/composables/appUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -43,7 +43,7 @@ vi.mock(
 );
 
 describe("appUtils.ts", () => {
-  let unitUnderTest: ReturnType<typeof useStimmzettelerfassungTeamStatusUtils>;
+  let unitUnderTest: ReturnType<typeof useAppUtils>;
 
   const { generateRandomString } = useCommonTestDataFactory();
   const { createStimmzettelerfassungTeamStatusDTOData } =
@@ -62,7 +62,7 @@ describe("appUtils.ts", () => {
         createSpy: vi.fn,
       })
     );
-    unitUnderTest = useStimmzettelerfassungTeamStatusUtils();
+    unitUnderTest = useAppUtils();
   });
 
   afterEach(() => {

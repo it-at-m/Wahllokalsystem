@@ -12,7 +12,7 @@
       >
         <base-wahlvorschlag-card
           :wahlvorschlag="wv"
-          :active-kandidat-id="activeKandidatId"
+          :active-kandidat="activeKandidat"
         />
       </v-slide-group-item>
     </v-slide-group>
@@ -20,13 +20,14 @@
 </template>
 
 <script setup lang="ts">
+import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 
 import BaseWahlvorschlagCard from "./baseComponents/BaseWahlvorschlagCard.vue";
 
 defineProps<{
   activeWahlvorschlagId: string | null;
-  activeKandidatId?: string | null;
+  activeKandidat: Kandidat | null;
   wahlvorschlaege: Wahlvorschlag[];
 }>();
 </script>

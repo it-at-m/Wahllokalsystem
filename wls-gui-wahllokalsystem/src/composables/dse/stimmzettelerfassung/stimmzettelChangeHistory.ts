@@ -18,7 +18,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${" + " + count + (count > 1 ? " Stimmen" : " Stimme")}`,
+        `${kandidat.ordnungszahl} + ${_createTextVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -33,7 +33,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${" - " + count + (count > 1 ? " Stimmen" : " Stimme")}`,
+        `${kandidat.ordnungszahl} - ${_createTextVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -50,7 +50,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.VOTE_RANGE,
       text: [
-        `${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl}${" + " + count + (count > 1 ? " Stimmen" : " Stimme")}`,
+        `${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl} + ${_createTextVotes(count)}`,
       ],
     });
 
@@ -64,7 +64,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${" + " + count + " ungültige " + (count > 1 ? "Stimmen" : "Stimme")}`,
+        `${kandidat.ordnungszahl} + ${_createTextInvalidVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -79,7 +79,7 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
       text: [
-        `${kandidat.ordnungszahl}${" - " + count + " ungültige " + (count > 1 ? "Stimmen" : "Stimme")}`,
+        `${kandidat.ordnungszahl} - ${_createTextInvalidVotes(count)}`,
         kandidat.name,
       ],
     });
@@ -150,6 +150,18 @@ export function useStimmzettelChangeHistory() {
     changeHistory.value = [];
     lastUsedWahlvorschlag.value = null;
     lastUsedKandidat.value = null;
+  }
+
+  function _createTextVotes(count: number) {
+    return `${count} ${_createTextWithCorrectNumberTermStimme(count)}`;
+  }
+
+  function _createTextInvalidVotes(count: number) {
+    return `${count} ungültige ${_createTextWithCorrectNumberTermStimme(count)}`;
+  }
+
+  function _createTextWithCorrectNumberTermStimme(count: number) {
+    return `${count > 1 ? "Stimmen" : "Stimme"}`;
   }
 
   async function _updateLatestUsedData(

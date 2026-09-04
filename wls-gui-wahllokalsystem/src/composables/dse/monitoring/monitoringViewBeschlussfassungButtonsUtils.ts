@@ -13,17 +13,19 @@ export function useMonitoringViewBeschlussfassungButtonsUtils(
   teamstatusList: Ref<StimmzettelerfassungTeamStatusEntry[]>,
   workflowStatus: Ref<StimmzettelerfassungStatus | null>
 ) {
-  const isBeschlussfassungBtnActive = computed(() =>
-    teamstatusList.value.every(
-      (team) => team.status === StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
-    )
+  const isBeschlussfassungBtnActive = computed(
+    () =>
+      teamstatusList.value.every(
+        (team) =>
+          team.status === StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+      ) && teamstatusList.value.length > 0
   );
 
-  const isBeschlussfassungContinueBtnDisabled = computed(
+  const isMoveOnToBeschlussfassungDisabled = computed(
     () =>
       !isBeschlussfassungBtnActive.value ||
-      workflowStatus.value?.status !==
-        StimmzettelerfassungStatusEnum.SteAbgeschlossen ||
+      workflowStatus.value?.status ===
+        StimmzettelerfassungStatusEnum.BeAbgeschlossen ||
       isTeamStatusListLoading.value ||
       isWorkflowStatusLoading.value
   );
@@ -31,17 +33,9 @@ export function useMonitoringViewBeschlussfassungButtonsUtils(
   const isBeschlussfassungContinueBtnVisible = computed(
     () =>
       workflowStatus.value?.status ===
-      StimmzettelerfassungStatusEnum.SteAbgeschlossen
-  );
-
-  const isBeschlussfassungStartenBtnDisabled = computed(
-    () =>
-      !isBeschlussfassungBtnActive.value ||
-      (workflowStatus.value?.status !==
-        StimmzettelerfassungStatusEnum.SteBearbeitung &&
-        workflowStatus.value !== null) ||
-      isTeamStatusListLoading.value ||
-      isWorkflowStatusLoading.value
+        StimmzettelerfassungStatusEnum.SteAbgeschlossen ||
+      workflowStatus.value?.status ===
+        StimmzettelerfassungStatusEnum.BeAbgeschlossen
   );
 
   const isBeschlussfassungStartenBtnVisible = computed(
@@ -53,9 +47,8 @@ export function useMonitoringViewBeschlussfassungButtonsUtils(
 
   return {
     isBeschlussfassungBtnActive,
-    isBeschlussfassungContinueBtnDisabled,
     isBeschlussfassungContinueBtnVisible,
-    isBeschlussfassungStartenBtnDisabled,
     isBeschlussfassungStartenBtnVisible,
+    isMoveOnToBeschlussfassungDisabled,
   };
 }

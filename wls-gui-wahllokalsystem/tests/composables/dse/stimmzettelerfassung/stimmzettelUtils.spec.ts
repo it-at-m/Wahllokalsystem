@@ -52,7 +52,8 @@ describe("stimmzettelUtils.ts", () => {
 
       const expected: Stimmzettel = {
         stimmzettelkennung: 0,
-        beschlussvorschlag: [],
+        wahlvorstandBeschlussvorschlag: [],
+        systemBeschlussvorschlag: [],
         beschlussfassung: null,
         gueltigkeit: null,
         invalideVotes: 0,
@@ -235,7 +236,8 @@ describe("stimmzettelUtils.ts", () => {
 
       const expected: Stimmzettel = {
         stimmzettelkennung: 0,
-        beschlussvorschlag: [],
+        wahlvorstandBeschlussvorschlag: [],
+        systemBeschlussvorschlag: [],
         beschlussfassung: null,
         gueltigkeit: null,
         invalideVotes: 0,

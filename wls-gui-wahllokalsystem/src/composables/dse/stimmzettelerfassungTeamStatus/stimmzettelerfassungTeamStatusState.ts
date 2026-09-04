@@ -33,7 +33,7 @@ export function useStimmzettelerfassungTeamStatusState(
   }
 
   return {
-    teamstatusList: teamstatusList,
+    teamstatusList,
     lastTeamstatusLoadingTime: readonly(lastTeamstatusLoadingTime),
     isTeamStatusLoading: readonly(isTeamStatusLoading),
     loadTeamStatusListe,

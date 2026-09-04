@@ -39,9 +39,9 @@ import TheWahlschlussCheckPopupDialog from "@/components/wahlhandlung/TheWahlsch
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDruckenDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
+import { useStimmzettelerfassungTeamStatusUtils } from "@/composables/appUtils.ts";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
-import { useStimmzettelerfassungTeamStatusUtils } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useServiceWorkerPinSyncer } from "@/composables/serviceWorker/serviceWorkerPinSyncer.ts";
 import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorkerUtils.ts";

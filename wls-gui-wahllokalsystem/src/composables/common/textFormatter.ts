@@ -30,7 +30,22 @@ export function useTextFormatter() {
     return isUWB ? "Stimmabgabevermerke" : "Wahlscheine";
   }
 
+  function createTextVotes(count: number) {
+    return `${count} ${createTextWithCorrectNumberTermStimme(count)}`;
+  }
+
+  function createTextInvalidVotes(count: number) {
+    return `${count} ungültige ${createTextWithCorrectNumberTermStimme(count)}`;
+  }
+
+  function createTextWithCorrectNumberTermStimme(count: number) {
+    return `${count > 1 ? "Stimmen" : "Stimme"}`;
+  }
+
   return {
+    createTextVotes,
+    createTextInvalidVotes,
+    createTextWithCorrectNumberTermStimme,
     getStimmzettelTermForWahl,
     getStimmzettelTermForWahlID,
     getWahlscheineOrStimmabgabevermerkeTerm,

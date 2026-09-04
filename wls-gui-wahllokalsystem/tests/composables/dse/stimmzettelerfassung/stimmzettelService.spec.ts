@@ -96,8 +96,8 @@ describe("stimmzettelService.ts", () => {
       ]);
 
       expect(mockDefinitions.mapDtoToModel.mock.calls).toStrictEqual([
-        [dto1],
-        [dto2],
+        [dto1, teamID],
+        [dto2, teamID],
       ]);
     });
 

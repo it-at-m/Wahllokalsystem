@@ -29,10 +29,7 @@
         class="mb-2 mt-2"
         :thickness="2"
       />
-      <v-icon
-        :icon="gueltigkeitIconMap[gueltigkeit]"
-        :color="gueltigkeitColorMap[gueltigkeit]"
-      />
+      <base-stimmzettel-gueltigkeit-icon :value="gueltigkeit" />
       <span class="ml-2 font-weight-bold">{{
         gueltigkeitTextMap[gueltigkeit]
       }}</span>
@@ -45,6 +42,7 @@ import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschl
 
 import { computed } from "vue";
 
+import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
@@ -67,23 +65,6 @@ const einzelstimmen = computed(() => [
   { label: "Reststimmen", value: props.reststimmen },
   { label: "Streichungen", value: props.streichungen },
 ]);
-
-const gueltigkeitIconMap = {
-  [StimmzettelGueltigkeitEnum.Valid]: "$stimmzettelGueltig",
-  [StimmzettelGueltigkeitEnum.Invalid]: "$stimmzettelUngueltig",
-  [StimmzettelGueltigkeitEnum.BeschlussAusstehend]: "$stimmzettelBeschluss",
-  [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]:
-    "$stimmzettelUngueltig",
-  [StimmzettelGueltigkeitEnum.Leer]: "$stimmzettelUngueltig",
-};
-
-const gueltigkeitColorMap = {
-  [StimmzettelGueltigkeitEnum.Valid]: "success",
-  [StimmzettelGueltigkeitEnum.Invalid]: "error",
-  [StimmzettelGueltigkeitEnum.BeschlussAusstehend]: "info",
-  [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]: "error",
-  [StimmzettelGueltigkeitEnum.Leer]: "error",
-};
 
 const gueltigkeitTextMap = {
   [StimmzettelGueltigkeitEnum.Valid]: "Stimmzettel ist gültig",

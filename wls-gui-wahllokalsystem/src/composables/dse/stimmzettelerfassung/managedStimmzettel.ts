@@ -24,6 +24,8 @@ export function useManagedStimmzettel(
 ) {
   const changeHistory = useStimmzettelChangeHistory();
 
+  const hasAnyValuesSet = computed(() => kandidatenWithValues.value.length > 0);
+
   const kandidatenOfStimmzettel = computed(() =>
     stimmzettel.value.wahlvorschlaege
       .map((wahlvorschlag) => wahlvorschlag.kandidaten)
@@ -614,6 +616,7 @@ export function useManagedStimmzettel(
 
   return {
     changeHistory,
+    hasAnyValuesSet,
     resetStimmzettel,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,

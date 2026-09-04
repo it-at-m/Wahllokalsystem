@@ -112,6 +112,14 @@ describe("Validation rules", () => {
     ])("should_returnErrorMessage_when_input%s", (text, input) => {
       expect(rule(input)).toBeTypeOf("string");
     });
+
+    it("should_returnErrorMessage_when_arrayIsEmpty", () => {
+      expect(rule([])).toBeTypeOf("string");
+    });
+
+    it("should_returnTrue_when_arrayContainsOneItem", () => {
+      expect(rule([1])).toStrictEqual(true);
+    });
   });
 
   describe("timeNotInFuture", () => {

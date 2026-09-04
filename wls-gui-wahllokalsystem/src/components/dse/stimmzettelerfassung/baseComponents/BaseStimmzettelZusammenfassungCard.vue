@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Zusammenfassung</v-card-title>
-    <v-card-text>
+    <v-card-text class="overflow-y-auto">
       <div class="font-weight-bold mb-2">Listenstimmen</div>
       <div v-if="listenstimmen.length == 0">Keine Listenkreuze gesetzt</div>
       <div v-else>

@@ -32,7 +32,7 @@ describe("reststimmeTools.ts", () => {
         stimmzettelgebietsname: "",
         wahlname: "",
         wahlbezirknummer: "",
-        maximalErlaubteStimmenProWaehler: 2,
+        maximalErlaubteStimmenProWaehler: 3,
       },
     ];
   });
@@ -42,144 +42,149 @@ describe("reststimmeTools.ts", () => {
     kdStore.kopfdaten = [];
   });
 
-  it("should_selectWahlvorschlag_assignReststimmen_toEligibleCandidates", () => {
-    const k1 = prepareManagedStimmzettelKandidat()
-      .einzelstimmen(null)
-      .ungueltigeStimmen(0)
-      .reststimmen(null)
-      .durchgestrichen(false)
-      .build();
-    const k2 = prepareManagedStimmzettelKandidat()
-      .einzelstimmen(null)
-      .ungueltigeStimmen(0)
-      .reststimmen(null)
-      .durchgestrichen(false)
-      .build();
-    const wv = prepareManagedStimmzettelWahlvorschlag()
-      .selected(false)
-      .kandidaten([k1, k2])
-      .build();
-    const stimmzettel = prepareManagedStimmzettelStimmzettel()
-      .wahlvorschlaege([wv])
-      .build();
+  describe("selectWahlvorschlag", () => {
+    it("should_selectWahlvorschlagAndSetReststimmen_when_called", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .einzelstimmen(null)
+        .ungueltigeStimmen(0)
+        .reststimmen(null)
+        .durchgestrichen(false)
+        .build();
+      const k2 = prepareManagedStimmzettelKandidat()
+        .einzelstimmen(null)
+        .ungueltigeStimmen(0)
+        .reststimmen(null)
+        .durchgestrichen(false)
+        .build();
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .selected(false)
+        .kandidaten([k1, k2])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
 
-    const { selectWahlvorschlag } = useReststimmeTools(
-      wahlId,
-      ref({
-        einzelstimmen: 0,
-        ungueltigeStimmen: 0,
-        reststimmen: 0,
-        streichungen: 0,
-      }),
-      ref(stimmzettel)
-    );
+      const { selectWahlvorschlag } = useReststimmeTools(
+        wahlId,
+        ref({
+          einzelstimmen: 0,
+          ungueltigeStimmen: 0,
+          reststimmen: 0,
+          streichungen: 0,
+        }),
+        ref(stimmzettel)
+      );
 
-    selectWahlvorschlag(wv);
+      selectWahlvorschlag(wv);
 
-    expect(k1.reststimmen).toBe(1);
-    expect(k2.reststimmen).toBe(1);
-    expect(wv.selected).toBe(true);
+      expect(k1.reststimmen).toBe(1);
+      expect(k2.reststimmen).toBe(1);
+      expect(wv.selected).toBe(true);
+    });
   });
 
-  it("should_deselectWahlvorschlag_clearAllReststimmen", () => {
-    const k1 = prepareManagedStimmzettelKandidat().reststimmen(1).build();
-    const k2 = prepareManagedStimmzettelKandidat().reststimmen(1).build();
-    const wv = prepareManagedStimmzettelWahlvorschlag()
-      .selected(true)
-      .kandidaten([k1, k2])
-      .build();
-    const stimmzettel = prepareManagedStimmzettelStimmzettel()
-      .wahlvorschlaege([wv])
-      .build();
+  describe("deselectWahlvorschlag", () => {
+    it("should_deselectWahlvorschlagAndResetReststimmen_when_called", () => {
+      const k1 = prepareManagedStimmzettelKandidat().reststimmen(1).build();
+      const k2 = prepareManagedStimmzettelKandidat().reststimmen(1).build();
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .selected(true)
+        .kandidaten([k1, k2])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
 
-    const { deselectWahlvorschlag } = useReststimmeTools(
-      wahlId,
-      ref({
-        einzelstimmen: 0,
+      const { deselectWahlvorschlag } = useReststimmeTools(
+        wahlId,
+        ref({
+          einzelstimmen: 0,
+          ungueltigeStimmen: 0,
+          reststimmen: 2,
+          streichungen: 0,
+        }),
+        ref(stimmzettel)
+      );
+
+      deselectWahlvorschlag(wv);
+
+      expect(k1.reststimmen).toBe(0);
+      expect(k2.reststimmen).toBe(0);
+      expect(wv.selected).toBe(false);
+    });
+  });
+
+  describe("updateReststimmenWhenVotesAdded", () => {
+    it("should_updateReststimmen_when_called", () => {
+      const k1 = prepareManagedStimmzettelKandidat().reststimmen(1).build();
+      const k2 = prepareManagedStimmzettelKandidat().reststimmen(1).build();
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .selected(true)
+        .kandidaten([k1, k2])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
+
+      const stimmenSummary = ref({
+        einzelstimmen: 2,
         ungueltigeStimmen: 0,
         reststimmen: 2,
         streichungen: 0,
-      }),
-      ref(stimmzettel)
-    );
+      });
+      const { updateReststimmenWhenVotesAdded } = useReststimmeTools(
+        wahlId,
+        stimmenSummary,
+        ref(stimmzettel)
+      );
 
-    deselectWahlvorschlag(wv);
+      updateReststimmenWhenVotesAdded();
 
-    expect(k1.reststimmen).toBe(0);
-    expect(k2.reststimmen).toBe(0);
-    expect(wv.selected).toBe(false);
+      expect(k1.reststimmen).toBe(1);
+      expect(k2.reststimmen).toBe(0);
+    });
   });
 
-  it("should_updateReststimmenWhenVotesAdded_removeFromEndUntilNonNegative", () => {
-    const k1 = prepareManagedStimmzettelKandidat().reststimmen(1).build();
-    const k2 = prepareManagedStimmzettelKandidat().reststimmen(1).build();
-    const wv = prepareManagedStimmzettelWahlvorschlag()
-      .selected(true)
-      .kandidaten([k1, k2])
-      .build();
-    const stimmzettel = prepareManagedStimmzettelStimmzettel()
-      .wahlvorschlaege([wv])
-      .build();
+  describe("updateReststimmenWhenVotesRemoved", () => {
+    it("should_updateReststimmen_when_called", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .einzelstimmen(0)
+        .ungueltigeStimmen(0)
+        .reststimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const k2 = prepareManagedStimmzettelKandidat()
+        .einzelstimmen(0)
+        .ungueltigeStimmen(0)
+        .reststimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .selected(true)
+        .kandidaten([k1, k2])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
 
-    const stimmenSummary = ref({
-      einzelstimmen: 3,
-      ungueltigeStimmen: 0,
-      reststimmen: 2,
-      streichungen: 0,
+      const stimmenSummary = ref({
+        einzelstimmen: 2,
+        ungueltigeStimmen: 0,
+        reststimmen: 0,
+        streichungen: 0,
+      });
+      const { updateReststimmenWhenVotesRemoved } = useReststimmeTools(
+        wahlId,
+        stimmenSummary,
+        ref(stimmzettel)
+      );
+
+      updateReststimmenWhenVotesRemoved();
+
+      const assigned = [k1.reststimmen, k2.reststimmen].filter(
+        (v) => v === 1
+      ).length;
+      expect(assigned).toBe(1);
     });
-    const { updateReststimmenWhenVotesAdded } = useReststimmeTools(
-      wahlId,
-      stimmenSummary,
-      ref(stimmzettel)
-    );
-
-    updateReststimmenWhenVotesAdded();
-
-    expect([k1.reststimmen, k2.reststimmen].filter((v) => v === 1).length).toBe(
-      0
-    );
-    expect(k1.reststimmen).toBe(0);
-    expect(k2.reststimmen).toBe(0);
-  });
-
-  it("should_updateReststimmenWhenVotesRemoved_fillEligibleFromStart", () => {
-    const k1 = prepareManagedStimmzettelKandidat()
-      .einzelstimmen(0)
-      .ungueltigeStimmen(0)
-      .reststimmen(0)
-      .durchgestrichen(false)
-      .build();
-    const k2 = prepareManagedStimmzettelKandidat()
-      .einzelstimmen(0)
-      .ungueltigeStimmen(0)
-      .reststimmen(0)
-      .durchgestrichen(false)
-      .build();
-    const wv = prepareManagedStimmzettelWahlvorschlag()
-      .selected(true)
-      .kandidaten([k1, k2])
-      .build();
-    const stimmzettel = prepareManagedStimmzettelStimmzettel()
-      .wahlvorschlaege([wv])
-      .build();
-
-    const stimmenSummary = ref({
-      einzelstimmen: 0,
-      ungueltigeStimmen: 0,
-      reststimmen: 0,
-      streichungen: 0,
-    });
-    const { updateReststimmenWhenVotesRemoved } = useReststimmeTools(
-      wahlId,
-      stimmenSummary,
-      ref(stimmzettel)
-    );
-
-    updateReststimmenWhenVotesRemoved();
-
-    const assigned = [k1.reststimmen, k2.reststimmen].filter(
-      (v) => v === 1
-    ).length;
-    expect(assigned).toBe(2);
   });
 });

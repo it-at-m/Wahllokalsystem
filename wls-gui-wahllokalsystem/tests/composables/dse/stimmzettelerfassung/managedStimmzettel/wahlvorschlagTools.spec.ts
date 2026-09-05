@@ -10,23 +10,25 @@ describe("wahlvorschlagTools.ts", () => {
     prepareManagedStimmzettelWahlvorschlag,
   } = useManagedStimmzettelTestDataFactory();
 
-  it("should_findWahlvorschlagByOrdnungszahl_when_called", () => {
-    const wv1 = prepareManagedStimmzettelWahlvorschlag()
-      .ordnungszahl(1)
-      .build();
-    const wv2 = prepareManagedStimmzettelWahlvorschlag()
-      .ordnungszahl(2)
-      .build();
-    const stimmzettel = prepareManagedStimmzettelStimmzettel()
-      .wahlvorschlaege([wv1, wv2])
-      .build();
+  describe("getWahlvorschlagByOrdnungszahl", () => {
+    it("should_findWahlvorschlagByOrdnungszahl_when_called", () => {
+      const wv1 = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .build();
+      const wv2 = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(2)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv1, wv2])
+        .build();
 
-    const { getWahlvorschlagByOrdnungszahl } = useWahlvorschlagTools(
-      ref(stimmzettel)
-    );
+      const { getWahlvorschlagByOrdnungszahl } = useWahlvorschlagTools(
+        ref(stimmzettel)
+      );
 
-    expect(getWahlvorschlagByOrdnungszahl(1)).toStrictEqual(wv1);
-    expect(getWahlvorschlagByOrdnungszahl(2)).toStrictEqual(wv2);
-    expect(getWahlvorschlagByOrdnungszahl(3)).toBeUndefined();
+      expect(getWahlvorschlagByOrdnungszahl(1)).toStrictEqual(wv1);
+      expect(getWahlvorschlagByOrdnungszahl(2)).toStrictEqual(wv2);
+      expect(getWahlvorschlagByOrdnungszahl(3)).toBeUndefined();
+    });
   });
 });

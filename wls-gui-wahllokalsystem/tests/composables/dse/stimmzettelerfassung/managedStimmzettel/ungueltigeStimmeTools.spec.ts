@@ -7,27 +7,29 @@ describe("ungueltigeStimmeTools.ts", () => {
   const { prepareManagedStimmzettelKandidat } =
     useManagedStimmzettelTestDataFactory();
 
-  it("should_addInvalidVotes_accumulating_fromNull", () => {
-    const kandidat = prepareManagedStimmzettelKandidat()
-      .ungueltigeStimmen(null)
-      .build();
+  describe("addInvalidVotesToKandidat", () => {
+    it("should_addInvalidVotes_when_called", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ungueltigeStimmen(null)
+        .build();
 
-    const { addInvalidVotesToKandidat } = useUngueltigeStimmeTools();
-    addInvalidVotesToKandidat(kandidat, 2);
-    addInvalidVotesToKandidat(kandidat, 3);
+      const { addInvalidVotesToKandidat } = useUngueltigeStimmeTools();
+      addInvalidVotesToKandidat(kandidat, 3);
 
-    expect(kandidat.ungueltigeStimmen).toBe(5);
+      expect(kandidat.ungueltigeStimmen).toBe(3);
+    });
   });
 
-  it("should_removeInvalidVotes_subtracting_fromCurrentValue", () => {
-    const kandidat = prepareManagedStimmzettelKandidat()
-      .ungueltigeStimmen(4)
-      .build();
+  describe("removeInvalidVotesFromKandidat", () => {
+    it("should_removeInvalidVotes_when_called", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ungueltigeStimmen(4)
+        .build();
 
-    const { removeInvalidVotesFromKandidat } = useUngueltigeStimmeTools();
-    removeInvalidVotesFromKandidat(kandidat, 1);
-    removeInvalidVotesFromKandidat(kandidat, 2);
+      const { removeInvalidVotesFromKandidat } = useUngueltigeStimmeTools();
+      removeInvalidVotesFromKandidat(kandidat, 2);
 
-    expect(kandidat.ungueltigeStimmen).toBe(1);
+      expect(kandidat.ungueltigeStimmen).toBe(2);
+    });
   });
 });

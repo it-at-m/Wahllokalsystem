@@ -12,6 +12,10 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 import type { Stimmzettel as ManageableStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/KandidatTools.ts";
+
+const { hasAnyKennzeichen } = useKandidatTools();
+
 export function useStimmzettelMapper() {
   function toModel(dto: StimmzettelOfTeamDTO): Stimmzettel {
     return {
@@ -40,24 +44,26 @@ export function useStimmzettelMapper() {
     }
 
     const mappedWahlvorschlaege: Wahlvorschlag[] =
-      manageableStimmzettel.wahlvorschlaege.map((wahlvorschlag) => {
-        const mappedKandidaten: Kandidat[] = wahlvorschlag.kandidaten.map(
-          (kandidat) => ({
-            kandidatId: kandidat.kandidatId,
-            nennung: kandidat.nennung,
-            votesByWahlvorschlag: kandidat.reststimmen ?? 0,
-            invalidVotes: kandidat.ungueltigeStimmen ?? 0,
-            votesByVoter: kandidat.einzelstimmen ?? 0,
-            isDiscarded: kandidat.durchgestrichen ?? false,
-          })
-        );
+      manageableStimmzettel.wahlvorschlaege
+        .map((wahlvorschlag) => {
+          const mappedKandidaten: Kandidat[] = wahlvorschlag.kandidaten
+            .filter((kandidat) => hasAnyKennzeichen(kandidat))
+            .map((kandidat) => ({
+              kandidatId: kandidat.kandidatId,
+              nennung: kandidat.nennung,
+              votesByWahlvorschlag: kandidat.reststimmen ?? 0,
+              invalidVotes: kandidat.ungueltigeStimmen ?? 0,
+              votesByVoter: kandidat.einzelstimmen ?? 0,
+              isDiscarded: kandidat.durchgestrichen ?? false,
+            }));
 
-        return {
-          kandidaten: mappedKandidaten,
-          wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
-          selected: wahlvorschlag.selected,
-        };
-      });
+          return {
+            kandidaten: mappedKandidaten,
+            wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
+            selected: wahlvorschlag.selected,
+          };
+        })
+        .filter((wahlvorschlag) => wahlvorschlag.kandidaten.length > 0);
 
     return {
       stimmzettelkennung: stimmzettelkennung,

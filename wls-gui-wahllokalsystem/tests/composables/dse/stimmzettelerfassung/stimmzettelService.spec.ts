@@ -39,6 +39,7 @@ vi.mock(
     useStimmzettelMapper: () => ({
       toModel: mockDefinitions.mapDtoToModel,
       toDTO: mockDefinitions.mapModelToDto,
+      toPersistedStimmzettel: vi.fn(),
     }),
   })
 );

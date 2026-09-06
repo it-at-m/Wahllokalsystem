@@ -35,7 +35,6 @@ export function useManagedStimmzettelTestDataFactory() {
 
   function createManagedStimmzettelStimmzettel(): Stimmzettel {
     return {
-      stimmzettelkennung: generateRandomNumber(6),
       wahlvorschlaege: [
         createManagedStimmzettelWahlvorschlag(),
         createManagedStimmzettelWahlvorschlag(),

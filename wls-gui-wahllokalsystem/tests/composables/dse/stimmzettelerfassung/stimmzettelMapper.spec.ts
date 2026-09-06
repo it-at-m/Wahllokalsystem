@@ -6,13 +6,16 @@ import type {
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
 
 const {
+  createStimmzettel,
   createStimmzettelOfTeamDTO,
   prepareStimmzettelOfTeamDTO,
   createStimmzettelKandidatDTO,
@@ -29,9 +32,10 @@ const {
   preparePersistedStimmzettelWahlvorschlag,
   prepareStimmzettelWahlvorschlagDTO,
 } = useStimmzettelTestDataFactory();
+const { generateRandomNumber } = useCommonTestDataFactory();
 
 describe("stimmzettelMapper.ts", () => {
-  const { toModel, toDTO } = useStimmzettelMapper();
+  const { toModel, toPersistedStimmzettel, toDTO } = useStimmzettelMapper();
 
   describe("toModel", () => {
     it("should_mapAllFields_when_dtoIsGiven", () => {
@@ -354,6 +358,43 @@ describe("stimmzettelMapper.ts", () => {
       expect(
         result.wahlvorschlaege?.[0].kandidaten?.[0].invalidVotes
       ).toBeUndefined();
+    });
+  });
+
+  describe("toPersistedStimmzettel", () => {
+    it("should_returnPersistedStimmzettel_when_dseStimmzettelIsGiven", () => {
+      const stimmzettelkennung = generateRandomNumber(2);
+      const dseStimmzettel = createStimmzettel();
+
+      const result = toPersistedStimmzettel(dseStimmzettel, stimmzettelkennung);
+
+      const expectedWahlvorschlaege: Wahlvorschlag[] =
+        dseStimmzettel.wahlvorschlaege.map((wahlvorschlag) => {
+          const kandidaten: Kandidat[] = wahlvorschlag.kandidaten.map(
+            (kandidat) => ({
+              votesByWahlvorschlag: kandidat.reststimmen,
+              invalidVotes: kandidat.ungueltigeStimmen,
+              votesByVoter: kandidat.einzelstimmen,
+              isDiscarded: kandidat.durchgestrichen,
+              nennung: kandidat.nennung,
+              kandidatId: kandidat.kandidatId,
+            })
+          );
+          return {
+            kandidaten,
+            selected: wahlvorschlag.selected,
+            wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
+          };
+        });
+      const expectedResult: Stimmzettel = {
+        stimmzettelkennung,
+        beschlussfassung: dseStimmzettel.beschlussfassung,
+        beschlussvorschlag: [],
+        invalideVotes: dseStimmzettel.invalideVotes,
+        wahlvorschlaege: expectedWahlvorschlaege,
+        gueltigkeit: dseStimmzettel.gueltigkeit,
+      };
+      expect(result).toStrictEqual(expectedResult);
     });
   });
 });

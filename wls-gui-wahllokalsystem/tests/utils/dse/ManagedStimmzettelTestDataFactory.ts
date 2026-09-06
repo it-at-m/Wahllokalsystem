@@ -6,9 +6,15 @@ import type { Builder } from "@tests/utils/Builder.ts";
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+
 export function useManagedStimmzettelTestDataFactory() {
-  const { generateRandomNumber, generateRandomBoolean, generateRandomString } =
-    useCommonTestDataFactory();
+  const {
+    generateRandomNumber,
+    generateRandomBoolean,
+    getRandomItem,
+    generateRandomString,
+  } = useCommonTestDataFactory();
 
   function createManagedStimmzettelKandidat(): Kandidat {
     return createManagedStimmzettelWahlvorschlag().kandidaten[0];
@@ -41,7 +47,7 @@ export function useManagedStimmzettelTestDataFactory() {
         createManagedStimmzettelWahlvorschlag(),
       ],
       invalideVotes: generateRandomNumber(2),
-      gueltigkeit: null,
+      gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),
       beschlussvorschlag: [],
       beschlussfassung: null,
     };

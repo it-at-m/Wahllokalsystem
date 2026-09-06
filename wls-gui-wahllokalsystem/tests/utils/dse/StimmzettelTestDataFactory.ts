@@ -12,6 +12,7 @@ import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmze
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag as PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
@@ -29,6 +30,20 @@ const {
 } = useCommonTestDataFactory();
 
 export function useStimmzettelTestDataFactory() {
+  function createStimmzettel(): Stimmzettel {
+    return {
+      gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),
+      wahlvorschlaege: [
+        createStimmzettelWahlvorschlag(),
+        createStimmzettelWahlvorschlag(),
+        createStimmzettelWahlvorschlag(),
+      ],
+      beschlussfassung: createStimmzettelBeschlussfassung(),
+      beschlussvorschlag: [], //TODO
+      invalideVotes: generateRandomNumber(2),
+    };
+  }
+
   function createStimmzettelKandidatDTO(): KandidatDTO {
     return {
       id: createStimmzettelKandidatIdDTO(),
@@ -250,6 +265,7 @@ export function useStimmzettelTestDataFactory() {
   return {
     createPersistedStimmzettelKandidat,
     createPersistedStimmzettel,
+    createStimmzettel,
     createStimmzettelOfTeamDTO,
     createStimmzettelKandidat,
     createStimmzettelKandidatDTO,

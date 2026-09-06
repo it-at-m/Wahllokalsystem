@@ -102,6 +102,10 @@ Die von Wähler\*Innen hinterlassenen Kennzeichen auf einem Stimmzettel können 
 Ergebnissen, die auf Stapeln aufbauen, hat man hier Rohdaten, welche erst später für die Übermittlung
 summiert werden.
 
+Das Primärteam, welches in der Anwendung alle Funktionen verwenden kann – in der Regel Team `A` bzw. das Team mit
+dem/der Schriftführer*In – darf auch die Stimmzettel von anderen Teams lesen und Schreiben. Das ist zum Beispiel
+notwendig, um die Beschlüsse zu fassen.
+
 ### Lesen und Schreiben vom Status der Stimmzettelerfassung
 
 Der Bearbeitungsstand der Stimmzettelfassung eines Wahlbezirkes einer Wahl wird damit verwaltet. Siehe dazu die

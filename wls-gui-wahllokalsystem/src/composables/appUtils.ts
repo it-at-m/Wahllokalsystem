@@ -6,7 +6,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-export function useStimmzettelerfassungTeamStatusUtils() {
+export function useAppUtils() {
   const { loadErfassungTeamStatus, postErfassungTeamStatus } =
     useStimmzettelerfassungTeamStatusService();
   const { currentUserWahlMetadata, currentUserTeamName } =

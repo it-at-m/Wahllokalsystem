@@ -11,6 +11,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.TeamIDPermissionEvalu
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Nested;
@@ -53,6 +54,25 @@ class StimmzettelServiceSecurityTest {
           .thenReturn(true);
 
       SecurityUtils.runWith(Authorities.SERVICE_GET_STIMMZETEL);
+      Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getStimmzettel(ownerModel));
+    }
+
+    @Test
+    void
+        should_getAccess_when_allRequiredAuthoritiesArePresentWithTeamIDEvaluatorReturnsFalseButUserHasWahlvorstandAuthority() {
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(ownerModel.wahlbezirkID()), Mockito.any()))
+          .thenReturn(true);
+      Mockito.when(
+              teamIDPermissionEvaluator.tokenUserteamIdMatches(
+                  Mockito.eq(ownerModel.teamID()), Mockito.any()))
+          .thenReturn(false);
+
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(new String[] {Authorities.SERVICE_GET_STIMMZETEL}, "WLS_WAHLVORSTAND"));
       Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getStimmzettel(ownerModel));
     }
 
@@ -129,6 +149,28 @@ class StimmzettelServiceSecurityTest {
           .thenReturn(true);
 
       SecurityUtils.runWith(Authorities.SERVICE_WRITE_STIMMZETEL);
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave));
+    }
+
+    @Test
+    void
+        should_getAccess_when_allRequiredAuthoritiesArePresentWithTeamIDEvaluatorReturnsFalseButUserHasWahlvorstandAuthority() {
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
+      val stimmzettelToSave = Instancio.ofList(StimmzettelOfTeamModel.class).size(5).create();
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(ownerModel.wahlbezirkID()), Mockito.any()))
+          .thenReturn(true);
+      Mockito.when(
+              teamIDPermissionEvaluator.tokenUserteamIdMatches(
+                  Mockito.eq(ownerModel.teamID()), Mockito.any()))
+          .thenReturn(false);
+
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              new String[] {Authorities.SERVICE_WRITE_STIMMZETEL}, "WLS_WAHLVORSTAND"));
       Assertions.assertThatNoException()
           .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave));
     }

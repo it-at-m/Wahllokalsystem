@@ -1,3 +1,4 @@
+import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { StimmenSummary } from "@/types/dse/stimmzettelerfassung/StimmenSummary.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
@@ -9,7 +10,9 @@ import { computed } from "vue";
 
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
+import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 /**
  * Check UI/UX Adr to see the rules:
@@ -17,20 +20,101 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
  *
  * @param stimmzettel
  * @param wahlID
+ * @param maxEinzelstimmen
  */
 export function useManagedStimmzettel(
   stimmzettel: Ref<Stimmzettel>,
-  wahlID: string
+  wahlID: string,
+  maxEinzelstimmen = 3
 ) {
   const changeHistory = useStimmzettelChangeHistory();
+  const { kopfdaten } = storeToRefs(useKopfdatenStore());
+  const maximalErlaubteStimmenProWaehler = computed(
+    () =>
+      kopfdaten.value.find((kd) => kd.wahlID === wahlID)
+        ?.maximalErlaubteStimmenProWaehler ?? 0
+  );
+
+  const countTotalVotes = computed(
+    () =>
+      kandidatenWithValues.value.reduce(
+        (total, kandidat) =>
+          total +
+          (kandidat.einzelstimmen ?? 0) +
+          (kandidat.ungueltigeStimmen ?? 0) +
+          (kandidat.reststimmen ?? 0),
+        0
+      ) + (stimmzettel.value.invalideVotes ?? 0)
+  );
+  const countTotalEinzelstimmen = computed(() =>
+    kandidatenWithValues.value.reduce(
+      (total, kandidat) => total + (kandidat.einzelstimmen ?? 0),
+      0
+    )
+  );
+  const countTotalUngueltigeStimmen = computed(
+    () =>
+      kandidatenWithValues.value.reduce(
+        (total, kandidat) => total + (kandidat.ungueltigeStimmen ?? 0),
+        0
+      ) + (stimmzettel.value.invalideVotes ?? 0)
+  );
+
+  const effectiveStimmzettelGueltigkeit = computed(() => {
+    if (systemErrors.value.length > 0) {
+      return StimmzettelGueltigkeitEnum.BeschlussAusstehend;
+    }
+
+    return stimmzettel.value.gueltigkeit;
+  });
 
   const hasAnyValuesSet = computed(() => kandidatenWithValues.value.length > 0);
+
+  const hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen = computed(() =>
+    kandidatenWithValues.value.some(
+      (kandidat) => (kandidat.einzelstimmen ?? 0) > maxEinzelstimmen
+    )
+  );
+  const hasSystemErrorAnyKandidatWithInvalidVotes = computed(() =>
+    kandidatenWithValues.value.some(
+      (kandidat) => (kandidat.ungueltigeStimmen ?? 0) > 0
+    )
+  );
 
   const kandidatenOfStimmzettel = computed(() =>
     stimmzettel.value.wahlvorschlaege
       .map((wahlvorschlag) => wahlvorschlag.kandidaten)
       .flat()
   );
+
+  const systemErrors = computed(() => {
+    const result: SystemBeschlussgrund[] = [];
+
+    if (hasSystemErrorAnyKandidatWithInvalidVotes.value) {
+      result.push({
+        reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+      });
+    }
+
+    if (
+      hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen.value &&
+      countTotalVotes.value <= maximalErlaubteStimmenProWaehler.value
+    ) {
+      result.push({
+        reason:
+          SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+      });
+    }
+
+    if (countTotalVotes.value > maximalErlaubteStimmenProWaehler.value) {
+      result.push({
+        reason:
+          SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+      });
+    }
+
+    return result;
+  });
 
   const kandidatenWithValues = computed(() =>
     kandidatenOfStimmzettel.value.filter(_hasKandidatAnyStimmeOrStreichung)
@@ -56,17 +140,11 @@ export function useManagedStimmzettel(
   );
 
   const remainingVotes = computed(() => {
-    const kopfdatenStore = useKopfdatenStore();
-    const { kopfdaten } = storeToRefs(kopfdatenStore);
-    const maximalErlaubteStimmenProWaehler =
-      kopfdaten.value.find((kd) => kd.wahlID === wahlID)
-        ?.maximalErlaubteStimmenProWaehler ?? 0;
-
     const currentGesamtStimmen =
       stimmenSummary.value.ungueltigeStimmen +
       stimmenSummary.value.einzelstimmen +
       stimmenSummary.value.reststimmen;
-    return maximalErlaubteStimmenProWaehler - currentGesamtStimmen;
+    return maximalErlaubteStimmenProWaehler.value - currentGesamtStimmen;
   });
 
   function resetStimmzettel() {
@@ -80,6 +158,9 @@ export function useManagedStimmzettel(
         kandidat.durchgestrichen = false;
       });
     });
+    stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
+    stimmzettel.value.invalideVotes = null;
+    stimmzettel.value.wahlvorstandBeschlussvorschlag = [];
   }
 
   /**
@@ -616,7 +697,11 @@ export function useManagedStimmzettel(
 
   return {
     changeHistory,
+    effectiveStimmzettelGueltigkeit,
     hasAnyValuesSet,
+    hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen,
+    hasSystemErrorAnyKandidatWithInvalidVotes,
+    systemErrors,
     resetStimmzettel,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,

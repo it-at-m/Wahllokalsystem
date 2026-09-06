@@ -47,8 +47,8 @@
                 .streichungen
             "
             :gueltigkeit="
-              stimmzettelManager.managedStimmzettel.stimmzettel.value
-                .gueltigkeit
+              stimmzettelManager.managedStimmzettel
+                .effectiveStimmzettelGueltigkeit.value
             "
           />
         </div>
@@ -59,6 +59,7 @@
           <the-stimmzettel-command-processing-text-field
             class="flex-0-0"
             :stimmzettel-manager="stimmzettelManager"
+            :disabled="isCommandInputFieldDisabled"
           />
           <div
             class="flex-1-1-0 d-flex"
@@ -101,8 +102,7 @@
             "
             :team-id="currentUserTeamName"
             :system-beschlussgruende="
-              stimmzettelManager.managedStimmzettel.stimmzettel.value
-                .systemBeschlussvorschlag
+              stimmzettelManager.managedStimmzettel.systemErrors.value
             "
             :stimmzettelkennung="stimmzettel.stimmzettelkennung"
             :is-b-w-b="isBWB"
@@ -143,6 +143,7 @@ import TheStimmzettelCommandProcessingTextField from "@/components/dse/stimmzett
 import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStimmzettelContent.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
@@ -180,6 +181,12 @@ const isBeschlussfassungValid = ref(true);
 const changeHistory = computed(
   () => stimmzettelManager.managedStimmzettel.changeHistory
 );
+const isCommandInputFieldDisabled = computed(
+  () =>
+    stimmzettelGueltigkeit.value ===
+      StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag ||
+    stimmzettelGueltigkeit.value === StimmzettelGueltigkeitEnum.Leer
+);
 const isSaveDisabled = computed(() => isBeschlussfassungValid.value === false);
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
@@ -187,6 +194,9 @@ const latestChangedWahlvorschlagId = computed<string | null>(
 );
 const latestChangedKandidat = computed<Kandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
+);
+const stimmzettelGueltigkeit = computed(
+  () => stimmzettelManager.managedStimmzettel.stimmzettel.value.gueltigkeit
 );
 
 function onCancelClicked() {

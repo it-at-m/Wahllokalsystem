@@ -12,6 +12,9 @@ const mockDefinitions = vi.hoisted(() => ({
   handlerTwoCanHandle: vi.fn(),
   handlerOneHandleOrThrow: vi.fn(),
   handlerTwoHandleOrThrow: vi.fn(),
+  mangedStimmzettel: {
+    kandidatAddEinzelstimmenOrThrow: vi.fn(),
+  },
 }));
 
 vi.mock(
@@ -30,6 +33,12 @@ vi.mock(
     return { COMMAND_HANDLERS: handlers };
   }
 );
+vi.mock("@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts", () => ({
+  useManagedStimmzettel: () => ({
+    kandidatAddEinzelstimmenOrThrow:
+      mockDefinitions.mangedStimmzettel.kandidatAddEinzelstimmenOrThrow,
+  }),
+}));
 
 describe("stimmzettelManager.ts", () => {
   const dummyWahlvorschlag: Wahlvorschlag = {

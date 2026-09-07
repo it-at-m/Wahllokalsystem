@@ -163,7 +163,7 @@ public class StimmzettelControllerIntegrationTest {
           Instancio.of(StimmzettelOfTeamDTO.class)
               .set(Select.field(StimmzettelOfTeamDTO::stimmzettelkennung), 3)
               .create();
-      val stimmzettel4WithEqualValuesLikeStimmzetetl1 =
+      val stimmzettel4WithEqualValuesLikeStimmzettel1 =
           Instancio.of(StimmzettelOfTeamDTO.class)
               .set(Select.field(StimmzettelOfTeamDTO::stimmzettelkennung), 4)
               .set(
@@ -180,7 +180,7 @@ public class StimmzettelControllerIntegrationTest {
                       stimmzettel1ToSave,
                       stimmzettel2ToSave,
                       stimmzettel3ToSave,
-                      stimmzettel4WithEqualValuesLikeStimmzetetl1)))
+                      stimmzettel4WithEqualValuesLikeStimmzettel1)))
           .andExpect(status().isCreated());
 
       transactionTemplate.executeWithoutResult(
@@ -203,7 +203,7 @@ public class StimmzettelControllerIntegrationTest {
             val expectedSavedStimmzettel4 =
                 stimmzettelModelMapper.toEntity(
                     new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
-                    stimmzettelDTOMapper.toModel(stimmzettel4WithEqualValuesLikeStimmzetetl1));
+                    stimmzettelDTOMapper.toModel(stimmzettel4WithEqualValuesLikeStimmzettel1));
             Assertions.assertThat(savedStimmzettel)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()

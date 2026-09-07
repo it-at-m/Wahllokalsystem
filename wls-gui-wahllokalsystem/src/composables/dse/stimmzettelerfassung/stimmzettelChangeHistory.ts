@@ -126,7 +126,7 @@ export function useStimmzettelChangeHistory() {
   function registerWahlvorschlagSelected(wahlvorschlag: Wahlvorschlag) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
-      text: [`${wahlvorschlag.kurzname}`],
+      text: [`${wahlvorschlag.ordnungszahl} - ${wahlvorschlag.kurzname}`],
     });
 
     _updateLatestUsedData(wahlvorschlag);
@@ -135,7 +135,7 @@ export function useStimmzettelChangeHistory() {
   function registerWahlvorschlagDeselected(wahlvorschlag: Wahlvorschlag) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REVOKE_WAHLVORSCHLAG,
-      text: [`${wahlvorschlag.kurzname}`],
+      text: [`${wahlvorschlag.ordnungszahl} - ${wahlvorschlag.kurzname}`],
     });
 
     _updateLatestUsedData(wahlvorschlag);

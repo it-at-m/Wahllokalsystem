@@ -36,6 +36,7 @@ describe("stimmzettelChangeHistory.ts", () => {
       const wahlvorschlag = {
         ...createStimmzettelWahlvorschlag(),
         kurzname: "WV",
+        ordnungszahl: 1,
       };
 
       changeHistory.registerKandidatEinzelstimmenAdded(firstKandidat, 1);
@@ -45,7 +46,7 @@ describe("stimmzettelChangeHistory.ts", () => {
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
           type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
-          text: ["WV"],
+          text: ["1 - WV"],
         },
         {
           type: InputHistoryTypeEnum.DISCARD_KANDIDAT,
@@ -428,6 +429,7 @@ describe("stimmzettelChangeHistory.ts", () => {
       const wahlvorschlag = {
         ...createStimmzettelWahlvorschlag(),
         kurzname: "WV",
+        ordnungszahl: 1,
       };
 
       changeHistory.registerWahlvorschlagSelected(wahlvorschlag);
@@ -437,7 +439,7 @@ describe("stimmzettelChangeHistory.ts", () => {
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
           type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
-          text: ["WV"],
+          text: ["1 - WV"],
         },
       ]);
       expect(changeHistory.lastUsedKandidat.value).toBeNull();
@@ -452,6 +454,7 @@ describe("stimmzettelChangeHistory.ts", () => {
       const wahlvorschlag = {
         ...createStimmzettelWahlvorschlag(),
         kurzname: "WV",
+        ordnungszahl: 1,
       };
 
       changeHistory.registerWahlvorschlagDeselected(wahlvorschlag);
@@ -461,7 +464,7 @@ describe("stimmzettelChangeHistory.ts", () => {
       expect(changeHistory.changeHistoryInReverseOrder.value).toStrictEqual([
         {
           type: InputHistoryTypeEnum.REVOKE_WAHLVORSCHLAG,
-          text: ["WV"],
+          text: ["1 - WV"],
         },
       ]);
       expect(changeHistory.lastUsedKandidat.value).toBeNull();

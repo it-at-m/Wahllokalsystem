@@ -64,7 +64,7 @@
         :persistent-hint="!!systemBeschlussgruendeAsText"
         @update:model-value="onMarkForBeschlussfassungModelUpdated"
       />
-      Begründung auswählen oder eingeben
+      Begründung auswählen oder eingeben (abweichende Gründe mit Enter bestätigen)
       <v-form v-model="modelValueIsBeschlussfassungValid">
         <v-combobox
           :ref="REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE"
@@ -247,7 +247,6 @@ const templateRefComboxBoxWahlvorstandBeschlussgruende = useTemplateRef<
 >(REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE);
 
 const wahlvorstandBeschlussvorschlaegeItems = [
-  "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)",
   "einzelne Stimmen ungültig",
   "Wählerwille ist nicht zweifelsfrei erkennbar",
   "Stimmzettel ist mit einem besonderen Merkmal, Zusatz oder Vorbehalt versehen",

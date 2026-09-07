@@ -156,5 +156,24 @@ describe("beschlussfassungViewUtils.ts", () => {
       expect(mockDefinitions.getStimmzettel).toHaveBeenCalledTimes(2);
       expect(unitUnderTest.stimmzettelForBeschlussfassung.value).toEqual([]);
     });
+
+    it("should_toggleLoadingState_when_getStimmzettelFails", async () => {
+      const mockedError = new Error("error");
+      mockDefinitions.getStimmzettel.mockRejectedValue(mockedError);
+
+      const spy = vi.spyOn(
+        unitUnderTest.isStimmzettelForBeschlussLoading,
+        "value",
+        "set"
+      );
+
+      const loadingPromise = mockDefinitions.runActivatedCallbacks();
+      expect(unitUnderTest.isStimmzettelForBeschlussLoading.value).toBe(true);
+      await loadingPromise;
+
+      expect(unitUnderTest.isStimmzettelForBeschlussLoading.value).toBe(false);
+      expect(spy.mock.calls).toStrictEqual([[true], [false]]);
+      spy.mockReset();
+    });
   });
 });

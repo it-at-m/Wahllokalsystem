@@ -65,7 +65,7 @@ describe("KandidatTools.ts", () => {
   );
 
   it.each([1, 10])(
-    "should_returnTrue_when_listenstimmenIsLargerThan0By'%d'",
+    "should_returnTrue_when_ungueltigeStimmenIsLargerThan0By'%d'",
     (listenstimmen) => {
       const kandidat = prepareStimmzettelKandidat()
         .durchgestrichen(false)

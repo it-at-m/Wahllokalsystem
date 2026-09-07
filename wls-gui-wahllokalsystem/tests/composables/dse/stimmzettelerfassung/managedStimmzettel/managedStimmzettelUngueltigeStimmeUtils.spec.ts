@@ -33,5 +33,29 @@ describe("managedStimmzettelUngueltigeStimmeUtils.ts", () => {
 
       expect(kandidat.ungueltigeStimmen).toBe(2);
     });
+
+    it("should_setInvalidVotesToNull_when_newValueIsZero", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ungueltigeStimmen(4)
+        .build();
+
+      const { removeInvalidVotesFromKandidat } =
+        useManagedStimmzettelUngueltigeStimmeUtils();
+      removeInvalidVotesFromKandidat(kandidat, 4);
+
+      expect(kandidat.ungueltigeStimmen).toBe(null);
+    });
+
+    it("should_setInvalidVotesToNull_when_newValueIsLowerThanZero", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ungueltigeStimmen(4)
+        .build();
+
+      const { removeInvalidVotesFromKandidat } =
+        useManagedStimmzettelUngueltigeStimmeUtils();
+      removeInvalidVotesFromKandidat(kandidat, 5);
+
+      expect(kandidat.ungueltigeStimmen).toBe(null);
+    });
   });
 });

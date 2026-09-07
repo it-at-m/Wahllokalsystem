@@ -15,7 +15,8 @@ export function useStimmzettelUtils() {
     const initWahlvorschlaege = wahlvorschlaege.map(_toDSEWahlvorschlag);
     return {
       stimmzettelkennung: 0,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
       gueltigkeit: null,
       invalideVotes: 0,

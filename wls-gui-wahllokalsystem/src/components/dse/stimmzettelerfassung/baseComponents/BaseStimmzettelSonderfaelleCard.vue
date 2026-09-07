@@ -99,7 +99,8 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
 const REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE =
   "comboBoxWahlvorstandBeschlussgruende";
 
-const { createBeschlussgrundWithText } = useBeschlussgrundTools();
+const { createBeschlussgrundWithText, getWahlvorstandBeschlussvorschlaege } =
+  useBeschlussgrundTools();
 const { required } = useRules();
 
 const modelValueInvalidVotes = defineModel("invalidVotes", {
@@ -231,6 +232,9 @@ const systemBeschlussgruendeAsText = computed(() =>
   props.systemBeschlussgruende.map((grund) => grund.reason).join(", ")
 );
 
+const wahlvorstandBeschlussvorschlaegeItems = computed(() =>
+  getWahlvorstandBeschlussvorschlaege(props.isBWB)
+);
 const wahlvorstandBeschlussvorschlaegeRules = computed(() => {
   if (
     isCheckboxMarkForBeschlussfassungSelected.value &&
@@ -246,16 +250,6 @@ const isStimmzettelFehltInstructionDialogVisible = ref(false);
 const templateRefComboxBoxWahlvorstandBeschlussgruende = useTemplateRef<
   typeof VCombobox
 >(REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE);
-
-const wahlvorstandBeschlussvorschlaegeItems = [
-  "einzelne Stimmen ungültig",
-  "Wählerwille ist nicht zweifelsfrei erkennbar",
-  "Stimmzettel ist mit einem besonderen Merkmal, Zusatz oder Vorbehalt versehen",
-  "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
-  "Briefwahl: Mehrere gleich gekennzeichnete Stimmzettel im Umschlag",
-  "Briefwahl: Mehrere Stimmzettel im Umschlag, einer gekennzeichnet, die anderen leer",
-  "Briefwahl: Mehrere unterschiedlich gekennzeichnete Stimmzettel im Umschlag",
-];
 
 function onMarkForBeschlussfassungModelUpdated(newValue: boolean | null) {
   if (newValue) {

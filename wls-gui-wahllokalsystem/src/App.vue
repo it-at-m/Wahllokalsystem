@@ -39,7 +39,7 @@ import TheWahlschlussCheckPopupDialog from "@/components/wahlhandlung/TheWahlsch
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDruckenDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
-import { useStimmzettelerfassungTeamStatusUtils } from "@/composables/appUtils.ts";
+import { useAppUtils } from "@/composables/appUtils.ts";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
@@ -69,8 +69,7 @@ const { isTodayOrFuture } = useDateTimeUtils();
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
-const { initStimmzettelerfassungTeamStatus } =
-  useStimmzettelerfassungTeamStatusUtils();
+const { initStimmzettelerfassungTeamStatus } = useAppUtils();
 
 const isTimeToCheckAnwesenheitInFuture = computed(() =>
   dateTimeToCheckAnwesenheit.value

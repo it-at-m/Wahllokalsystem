@@ -8,7 +8,7 @@
     :loading-text="TABLE_LOADING_DATA_STIMMZETTEL"
     :items-per-page-text="ITEMS_PER_PAGE_TITLE"
     :no-data-text="TABLE_NO_DATA_TEXT_BESCHLUSSFASSUNG"
-    :multi-sort="true"
+    multi-sort
     sticky
   >
     <template #[`item.beschlussgrund`]="{ item }">

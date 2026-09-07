@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Eingabehistorie</v-card-title>
-    <v-card-text>
+    <v-card-text class="overflow-y-auto">
       <div v-if="firstHistoryItem">
         <div class="font-weight-bold d-flex align-center ga-1">
           <base-eingabehistorie-icon :input-type="firstHistoryItem.type" />

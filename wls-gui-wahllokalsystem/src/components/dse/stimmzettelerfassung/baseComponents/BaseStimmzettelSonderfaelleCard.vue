@@ -42,8 +42,8 @@
         @confirm="onStimmzettelFehlInstructionDialogConfirm"
       >
         <div>
-          Bitte notieren Sie die Stimmzettelkennung auf dem Umschlag oder auf
-          dem Hilfsblatt.
+          Bitte notieren Sie die Stimmzettelkennung des fehlenden Stimmzettels
+          auf dem Umschlag oder auf dem Hilfsblatt.
         </div>
 
         <base-stimmzettelkennung-strong-text
@@ -64,7 +64,8 @@
         :persistent-hint="!!systemBeschlussgruendeAsText"
         @update:model-value="onMarkForBeschlussfassungModelUpdated"
       />
-      Begründung auswählen oder eingeben
+      Begründung auswählen oder eingeben (abweichende Gründe mit Enter
+      bestätigen)
       <v-form v-model="modelValueIsBeschlussfassungValid">
         <v-combobox
           :ref="REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE"
@@ -98,7 +99,8 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
 const REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE =
   "comboBoxWahlvorstandBeschlussgruende";
 
-const { createBeschlussgrundWithText } = useBeschlussgrundTools();
+const { createBeschlussgrundWithText, getWahlvorstandBeschlussvorschlaege } =
+  useBeschlussgrundTools();
 const { required } = useRules();
 
 const modelValueInvalidVotes = defineModel("invalidVotes", {
@@ -230,6 +232,9 @@ const systemBeschlussgruendeAsText = computed(() =>
   props.systemBeschlussgruende.map((grund) => grund.reason).join(", ")
 );
 
+const wahlvorstandBeschlussvorschlaegeItems = computed(() =>
+  getWahlvorstandBeschlussvorschlaege(props.isBWB)
+);
 const wahlvorstandBeschlussvorschlaegeRules = computed(() => {
   if (
     isCheckboxMarkForBeschlussfassungSelected.value &&
@@ -245,17 +250,6 @@ const isStimmzettelFehltInstructionDialogVisible = ref(false);
 const templateRefComboxBoxWahlvorstandBeschlussgruende = useTemplateRef<
   typeof VCombobox
 >(REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE);
-
-const wahlvorstandBeschlussvorschlaegeItems = [
-  "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)",
-  "einzelne Stimmen ungültig",
-  "Wählerwille ist nicht zweifelsfrei erkennbar",
-  "Stimmzettel ist mit einem besonderen Merkmal, Zusatz oder Vorbehalt versehen",
-  "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
-  "Briefwahl: Mehrere gleich gekennzeichnete Stimmzettel im Umschlag",
-  "Briefwahl: Mehrere Stimmzettel im Umschlag, einer gekennzeichnet, die anderen leer",
-  "Briefwahl: Mehrere unterschiedlich gekennzeichnete Stimmzettel im Umschlag",
-];
 
 function onMarkForBeschlussfassungModelUpdated(newValue: boolean | null) {
   if (newValue) {

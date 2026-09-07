@@ -56,7 +56,8 @@ describe("stimmzettelManager.ts", () => {
       const { parseCommandOrThrowError } = useStimmzettelManager(
         computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1"
+        "wahl-1",
+        "team A"
       );
 
       parseCommandOrThrowError(command);
@@ -86,7 +87,8 @@ describe("stimmzettelManager.ts", () => {
       const { parseCommandOrThrowError } = useStimmzettelManager(
         computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1"
+        "wahl-1",
+        "team A"
       );
 
       expect(() => parseCommandOrThrowError(command)).toThrow(
@@ -109,7 +111,8 @@ describe("stimmzettelManager.ts", () => {
       const { parseCommandOrThrowError } = useStimmzettelManager(
         computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1"
+        "wahl-1",
+        "team A"
       );
 
       expect(() => parseCommandOrThrowError(command)).toThrow(

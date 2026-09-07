@@ -16,7 +16,8 @@ const { logDebug } = useLogging("stimmzettelManager");
 export function useStimmzettelManager(
   stimmzettelkennung: ComputedRef<number>,
   wahlvorschlaege: Wahlvorschlag[],
-  wahlID: string
+  wahlID: string,
+  teamID: string
 ) {
   const { createStimmzettelWithWahlvorschlaege } = useStimmzettelUtils();
   const { toPersistedStimmzettel } = useStimmzettelMapper();
@@ -30,7 +31,8 @@ export function useStimmzettelManager(
   function getStimmzettelSnapshot(): PersistedStimmzettel {
     return toPersistedStimmzettel(
       stimmzettelToManage.value,
-      stimmzettelkennung.value
+      stimmzettelkennung.value,
+      teamID
     );
   }
 

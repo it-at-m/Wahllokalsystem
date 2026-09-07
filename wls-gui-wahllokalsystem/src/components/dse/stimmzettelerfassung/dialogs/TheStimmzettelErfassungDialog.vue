@@ -110,13 +110,14 @@ const emit = defineEmits<{
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
 
+const { currentUserTeamName } = storeToRefs(useUserStore());
+
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
   computed(() => props.stimmzettel.stimmzettelkennung),
   props.wahlvorschlaege,
-  wahlID
+  wahlID,
+  currentUserTeamName.value
 );
-
-const { currentUserTeamName } = storeToRefs(useUserStore());
 
 const changeHistory = computed(
   () => stimmzettelManager.managedStimmzettel.changeHistory

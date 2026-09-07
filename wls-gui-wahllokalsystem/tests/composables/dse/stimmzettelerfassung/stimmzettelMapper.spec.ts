@@ -32,15 +32,17 @@ const {
 
 describe("stimmzettelMapper.ts", () => {
   const { toModel, toDTO } = useStimmzettelMapper();
+  const teamID = "teamID";
 
   describe("toModel", () => {
     it("should_mapAllFields_when_dtoIsGiven", () => {
       const dtoToMap = createStimmzettelOfTeamDTO();
 
-      const result: Stimmzettel = toModel(dtoToMap);
+      const result: Stimmzettel = toModel(dtoToMap, teamID);
 
       const expectedResult: Stimmzettel = preparePersistedStimmzettel()
         .stimmzettelkennung(dtoToMap.stimmzettelkennung)
+        .teamID(teamID)
         .invalideVotes(dtoToMap.invalideVotes)
         .gueltigkeit(dtoToMap.gueltigkeit)
         .beschlussfassung(
@@ -87,7 +89,7 @@ describe("stimmzettelMapper.ts", () => {
         .wahlvorschlaege(undefined)
         .build();
 
-      const result = toModel(dtoWithoutWahlvorschlaege);
+      const result = toModel(dtoWithoutWahlvorschlaege, teamID);
 
       expect(result.wahlvorschlaege).toStrictEqual([]);
     });
@@ -97,7 +99,7 @@ describe("stimmzettelMapper.ts", () => {
         .wahlvorstandBeschlussvorschlag(undefined)
         .build();
 
-      const result = toModel(dtoWithoutBeschlussvorschlag);
+      const result = toModel(dtoWithoutBeschlussvorschlag, teamID);
 
       expect(result.beschlussvorschlag).toStrictEqual([]);
     });
@@ -107,7 +109,7 @@ describe("stimmzettelMapper.ts", () => {
         .wahlvorstandBeschlussvorschlag([])
         .build();
 
-      const result = toModel(dtoWithoutBeschlussvorschlag);
+      const result = toModel(dtoWithoutBeschlussvorschlag, teamID);
 
       expect(result.beschlussvorschlag).toStrictEqual([]);
     });
@@ -117,7 +119,7 @@ describe("stimmzettelMapper.ts", () => {
         .beschlussfassung(undefined)
         .build();
 
-      const result = toModel(dtoWithoutBeschlussfassung);
+      const result = toModel(dtoWithoutBeschlussfassung, teamID);
 
       expect(result.beschlussfassung).toBeNull();
     });
@@ -127,7 +129,7 @@ describe("stimmzettelMapper.ts", () => {
         .wahlvorschlaege([])
         .build();
 
-      const result = toModel(dtoWithEmptyWahlvorschlaege);
+      const result = toModel(dtoWithEmptyWahlvorschlaege, teamID);
 
       expect(result.wahlvorschlaege).toStrictEqual([]);
     });
@@ -139,7 +141,7 @@ describe("stimmzettelMapper.ts", () => {
         ])
         .build();
 
-      const result = toModel(dtoWithEmptyKandidaten);
+      const result = toModel(dtoWithEmptyKandidaten, teamID);
 
       expect(result.wahlvorschlaege[0].kandidaten).toStrictEqual([]);
     });
@@ -151,7 +153,7 @@ describe("stimmzettelMapper.ts", () => {
         ])
         .build();
 
-      const result = toModel(dtoWithUndefinedKandidaten);
+      const result = toModel(dtoWithUndefinedKandidaten, teamID);
 
       expect(result.wahlvorschlaege[0].kandidaten).toStrictEqual([]);
     });
@@ -166,7 +168,7 @@ describe("stimmzettelMapper.ts", () => {
         ])
         .build();
 
-      const result = toModel(dtoWithSingleKandidat);
+      const result = toModel(dtoWithSingleKandidat, teamID);
 
       const expectedKandidat = preparePersistedStimmzettelKandidat()
         .kandidatId(singleKandidat.id.kandidatID)
@@ -195,7 +197,7 @@ describe("stimmzettelMapper.ts", () => {
         ])
         .build();
 
-      const result = toModel(dtoWithKandidatWithoutVotes);
+      const result = toModel(dtoWithKandidatWithoutVotes, teamID);
 
       expect(result.wahlvorschlaege[0].kandidaten[0].votesByVoter).toBeNull();
       expect(result.wahlvorschlaege[0].kandidaten[0].invalidVotes).toBeNull();

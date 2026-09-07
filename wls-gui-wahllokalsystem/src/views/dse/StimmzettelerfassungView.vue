@@ -61,7 +61,7 @@
       :team-name="teamID"
       :existing-stimmzettel="savedStimmzettel"
       @confirm="onStimmzettelkennungConfirmed"
-      @cancel="isKennungsDialogVisible = false"
+      @cancel="onStimmzettelkennungCanceled"
     />
     <the-stimmzettel-erfassung-dialog
       v-if="activeStimmzettel"
@@ -70,6 +70,7 @@
       :wahlvorschlaege="wahlvorschlaege"
       @cancel="onStimmzettelErfassungCanceled"
       @confirm="onStimmzettelErfassungConfirmed"
+      @confirm-next="onStimmzettelErfassungConfirmedAndOpenNextStimmzettel"
     />
     <the-stimmzettelerfassung-beenden-dialog
       :ref="STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME"
@@ -143,6 +144,11 @@ async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
   isErfassungsDialogVisible.value = true;
 }
 
+function onStimmzettelkennungCanceled() {
+  isKennungsDialogVisible.value = false;
+  isErfassungsDialogVisible.value = false;
+}
+
 async function onErfassungUnterbrechenClicked() {
   await sendStatusUnterbrochen();
 }
@@ -163,6 +169,13 @@ async function onStimmzettelErfassungConfirmed(
 ) {
   await saveNewStimmzettel(confirmedStimmzettel);
   isErfassungsDialogVisible.value = false;
+}
+async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
+  confirmedStimmzettel: Stimmzettel
+) {
+  await saveNewStimmzettel(confirmedStimmzettel);
+
+  isKennungsDialogVisible.value = true;
 }
 
 const hasTeamFinishedErfassung = computed(

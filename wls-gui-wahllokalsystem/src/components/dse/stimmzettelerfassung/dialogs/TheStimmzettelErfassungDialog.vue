@@ -61,7 +61,41 @@
         >
         <v-spacer />
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
-        <base-wls-button-save @click="onSavedClicked" />
+        <v-btn-group
+          color="primary"
+          density="compact"
+        >
+          <base-wls-button-save
+            :save-text="currentAction.title"
+            @click="executeSelectedAction"
+          />
+
+          <v-menu transition="scale-transition">
+            <template #activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon="$chevronDown"
+                class="px-0"
+                style="border: 1px solid rgb(var(--v-theme-primary))"
+                active
+              />
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(action, index) in actions"
+                :key="index"
+                @click="selectAction(action)"
+              >
+                <v-list-item-title
+                  :class="
+                    currentAction.title == action.title ? 'text-grey' : ''
+                  "
+                  >{{ action.title }}</v-list-item-title
+                >
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-btn-group>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -74,7 +108,7 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -86,12 +120,17 @@ import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStim
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
+interface Action {
+  title: string;
+  action: () => void;
+}
+
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
   required: false,
 });
 
-const props = defineProps({
+const properties = defineProps({
   stimmzettel: {
     type: Object as PropType<Stimmzettel>,
     required: true,
@@ -105,13 +144,36 @@ const props = defineProps({
 const emit = defineEmits<{
   cancel: [];
   confirm: [stimmzettel: Stimmzettel];
+  confirmNext: [stimmzettel: Stimmzettel];
 }>();
+
+const actions = [
+  {
+    title: "Speichern und weiter",
+    action: () => onSavedClickedAndNext(),
+  },
+  {
+    title: "Speichern und schließen",
+    action: () => onSavedClickedAndClose(),
+  },
+];
+
+const currentAction = ref(actions[0]);
+
+watch(
+  () => isDialogVisibleModel.value,
+  () => {
+    if (isDialogVisibleModel.value) {
+      currentAction.value = actions[0];
+    }
+  }
+);
 
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
 
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
-  props.wahlvorschlaege,
+  properties.wahlvorschlaege,
   wahlID
 );
 
@@ -132,11 +194,23 @@ function onCancelClicked() {
   emit("cancel");
 }
 
-function onSavedClicked() {
-  emit("confirm", props.stimmzettel);
+function onSavedClickedAndClose() {
+  emit("confirm", properties.stimmzettel);
+}
+
+function onSavedClickedAndNext() {
+  emit("confirmNext", properties.stimmzettel);
 }
 
 function onResetClicked() {
   stimmzettelManager.managedStimmzettel.resetStimmzettel();
+}
+
+function selectAction(action: Action) {
+  currentAction.value = action;
+}
+
+function executeSelectedAction() {
+  currentAction.value.action();
 }
 </script>

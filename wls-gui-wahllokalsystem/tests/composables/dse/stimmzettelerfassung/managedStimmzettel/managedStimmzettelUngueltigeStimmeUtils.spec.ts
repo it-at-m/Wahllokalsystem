@@ -33,5 +33,17 @@ describe("managedStimmzettelUngueltigeStimmeUtils.ts", () => {
 
       expect(kandidat.ungueltigeStimmen).toBe(2);
     });
+
+    it("should_setInvalidVotesToNull_when_newValueIsZero", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ungueltigeStimmen(4)
+        .build();
+
+      const { removeInvalidVotesFromKandidat } =
+        useManagedStimmzettelUngueltigeStimmeUtils();
+      removeInvalidVotesFromKandidat(kandidat, 4);
+
+      expect(kandidat.ungueltigeStimmen).toBe(null);
+    });
   });
 });

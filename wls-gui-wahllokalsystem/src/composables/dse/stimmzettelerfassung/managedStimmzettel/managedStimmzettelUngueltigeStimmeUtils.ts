@@ -14,7 +14,8 @@ export function useManagedStimmzettelUngueltigeStimmeUtils() {
     numberOfVotes: number
   ) {
     const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
-    kandidat.ungueltigeStimmen = currentUngueltigeStimmen - numberOfVotes;
+    const newValue = currentUngueltigeStimmen - numberOfVotes;
+    kandidat.ungueltigeStimmen = newValue > 0 ? newValue : null;
   }
 
   return {

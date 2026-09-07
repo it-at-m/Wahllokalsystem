@@ -32,12 +32,15 @@ export function useBeschlussfassungViewUtils(
   );
 
   const isBeschlussfassungBeendenButtonDisabled = computed(() => {
-    return (
-      workflowStatus.value?.status ===
-        StimmzettelerfassungStatusEnum.BeAbgeschlossen ||
-      stimmzettelForBeschlussfassung.value.length !==
-        completedStimmzettelForBeschlussfassung.value.length
-    );
+    if (isStimmzettelForBeschlussLoading.value) return true;
+    else {
+      return (
+        workflowStatus.value?.status ===
+          StimmzettelerfassungStatusEnum.BeAbgeschlossen ||
+        stimmzettelForBeschlussfassung.value.length !==
+          completedStimmzettelForBeschlussfassung.value.length
+      );
+    }
   });
 
   onActivated(async () => {

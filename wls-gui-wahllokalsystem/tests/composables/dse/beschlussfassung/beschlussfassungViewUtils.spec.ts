@@ -288,5 +288,12 @@ describe("beschlussfassungViewUtils.ts", () => {
         true
       );
     });
+
+    it("should_returnTrue_when_teamStatusIsLoading", async () => {
+      unitUnderTest.isStimmzettelForBeschlussLoading.value = true;
+      expect(unitUnderTest.isBeschlussfassungBeendenButtonDisabled.value).toBe(
+        true
+      );
+    });
   });
 });

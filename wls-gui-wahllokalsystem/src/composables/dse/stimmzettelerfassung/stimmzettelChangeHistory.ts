@@ -20,10 +20,7 @@ export function useStimmzettelChangeHistory() {
   ) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl} + ${createTextVotes(count)}`,
-        kandidat.name,
-      ],
+      text: [`${kandidat.ordnungszahl} + ${createTextVotes(count)}`],
     });
 
     _updateLatestUsedData(kandidat);
@@ -35,10 +32,7 @@ export function useStimmzettelChangeHistory() {
   ) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl} - ${createTextVotes(count)}`,
-        kandidat.name,
-      ],
+      text: [`${kandidat.ordnungszahl} - ${createTextVotes(count)}`],
     });
 
     _updateLatestUsedData(kandidat);
@@ -66,10 +60,7 @@ export function useStimmzettelChangeHistory() {
   ) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl} + ${createTextInvalidVotes(count)}`,
-        kandidat.name,
-      ],
+      text: [`${kandidat.ordnungszahl} + ${createTextInvalidVotes(count)}`],
     });
 
     _updateLatestUsedData(kandidat);
@@ -81,10 +72,7 @@ export function useStimmzettelChangeHistory() {
   ) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl} - ${createTextInvalidVotes(count)}`,
-        kandidat.name,
-      ],
+      text: [`${kandidat.ordnungszahl} - ${createTextInvalidVotes(count)}`],
     });
 
     _updateLatestUsedData(kandidat);
@@ -93,7 +81,7 @@ export function useStimmzettelChangeHistory() {
   function registerKandidatStreichungSet(kandidat: Kandidat) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.DISCARD_KANDIDAT,
-      text: [`${kandidat.ordnungszahl}`, kandidat.name],
+      text: [`${kandidat.ordnungszahl} gestrichen`],
     });
 
     _updateLatestUsedData(kandidat);
@@ -102,7 +90,7 @@ export function useStimmzettelChangeHistory() {
   function registerKandidatStreichungUnset(kandidat: Kandidat) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
-      text: [`${kandidat.ordnungszahl}`, kandidat.name],
+      text: [`${kandidat.ordnungszahl} Streichung entfernt`],
     });
 
     _updateLatestUsedData(kandidat);
@@ -113,7 +101,9 @@ export function useStimmzettelChangeHistory() {
     const lastKandidat = kandidaten[kandidaten.length - 1];
     changeHistory.value.push({
       type: InputHistoryTypeEnum.DISCARD_RANGE,
-      text: [`${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl}`],
+      text: [
+        `${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl} gestrichen`,
+      ],
     });
 
     _updateLatestUsedData(lastKandidat);
@@ -125,7 +115,9 @@ export function useStimmzettelChangeHistory() {
 
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
-      text: [`${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl}`],
+      text: [
+        `${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl} Streichung entfernt`,
+      ],
     });
 
     _updateLatestUsedData(lastKandidat);

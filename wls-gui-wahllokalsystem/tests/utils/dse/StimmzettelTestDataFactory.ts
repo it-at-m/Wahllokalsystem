@@ -54,23 +54,21 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelKandidat(): Kandidat {
-    const wahlvorschlag = _createStimmzettelWahlvorschlagWithoutKandidaten();
-    const result = {
+  function createStimmzettelKandidat(
+    owningWahlvorschlag: Wahlvorschlag
+  ): Kandidat {
+    return {
       reststimmen: generateRandomNumber(2),
       ungueltigeStimmen: generateRandomNumber(2),
       ordnungszahl: generateRandomNumber(2),
       listenposition: generateRandomNumber(2),
       name: generateRandomString(10),
       einzelstimmen: generateRandomNumber(2),
-      owningWahlvorschlag: wahlvorschlag,
+      owningWahlvorschlag: owningWahlvorschlag,
       durchgestrichen: generateRandomBoolean(),
       kandidatId: generateRandomString(10),
       nennung: generateRandomNumber(1),
     };
-    wahlvorschlag.kandidaten = [result];
-
-    return result;
   }
 
   function createStimmzettelBeschlussfassungDTO(): BeschlussfassungDTO {
@@ -139,9 +137,9 @@ export function useStimmzettelTestDataFactory() {
   function createStimmzettelWahlvorschlag(): Wahlvorschlag {
     const result = _createStimmzettelWahlvorschlagWithoutKandidaten();
     result.kandidaten = [
-      createStimmzettelKandidat(),
-      createStimmzettelKandidat(),
-      createStimmzettelKandidat(),
+      createStimmzettelKandidat(result),
+      createStimmzettelKandidat(result),
+      createStimmzettelKandidat(result),
     ];
     return result;
   }
@@ -194,6 +192,10 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
+  function prepareStimmzettel(): Builder<Stimmzettel> {
+    return proxyBuilder<Stimmzettel>(createStimmzettel());
+  }
+
   function prepareStimmzettelOfTeamDTO(): Builder<StimmzettelOfTeamDTO> {
     return proxyBuilder<StimmzettelOfTeamDTO>(createStimmzettelOfTeamDTO());
   }
@@ -232,6 +234,14 @@ export function useStimmzettelTestDataFactory() {
     );
   }
 
+  function prepareStimmzettelKandidat(
+    owningWahlvorschlag: Wahlvorschlag
+  ): Builder<Kandidat> {
+    return proxyBuilder<Kandidat>(
+      createStimmzettelKandidat(owningWahlvorschlag)
+    );
+  }
+
   function prepareStimmzettelKandidatDTO(): Builder<KandidatDTO> {
     return proxyBuilder<KandidatDTO>(createStimmzettelKandidatDTO());
   }
@@ -248,6 +258,10 @@ export function useStimmzettelTestDataFactory() {
     return proxyBuilder<PersistedWahlvorschlag>(
       createPersistedStimmzettelWahlvorschlag()
     );
+  }
+
+  function prepareStimmzettelWahlvorschlag(): Builder<Wahlvorschlag> {
+    return proxyBuilder<Wahlvorschlag>(createStimmzettelWahlvorschlag());
   }
 
   function _createStimmzettelWahlvorschlagWithoutKandidaten(): Wahlvorschlag {
@@ -276,11 +290,14 @@ export function useStimmzettelTestDataFactory() {
     preparePersistedStimmzettelBeschlussgrund,
     preparePersistedStimmzettelKandidat,
     preparePersistedStimmzettelWahlvorschlag,
+    prepareStimmzettel,
     prepareStimmzettelOfTeamDTO,
     prepareStimmzettelBeschlussfassungDTO,
     prepareStimmzettelBeschlussgrundDTO,
+    prepareStimmzettelKandidat,
     prepareStimmzettelKandidatDTO,
     prepareStimmzettelKandidatIdDTO,
+    prepareStimmzettelWahlvorschlag,
     prepareStimmzettelWahlvorschlagDTO,
   };
 }

@@ -47,6 +47,7 @@ export function useBeschlussfassungViewUtils(
   async function _loadStimmzettelAndFilterForBeschlussfassung() {
     isStimmzettelForBeschlussLoading.value = true;
     try {
+      stimmzettelForBeschlussfassung.value = [];
       await loadTeamStatusListe();
       const registeredTeams = computed(() =>
         teamstatusList.value.map((team) => team.teamID)

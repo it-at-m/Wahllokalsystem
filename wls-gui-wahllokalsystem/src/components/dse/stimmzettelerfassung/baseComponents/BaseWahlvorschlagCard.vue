@@ -45,26 +45,29 @@
       style="min-height: 0"
     >
       <v-list style="flex: 1 1 auto; min-height: 0; overflow-y: auto">
-        <v-list-item
+        <template
           v-for="(kandidat, index) in kandidatenListe"
-          :id="`kandidat-${index}`"
           :key="index"
-          ref="listItems"
-          :class="{
-            activeKandidat:
-              kandidat.kandidatId === activeKandidat?.kandidatId &&
-              kandidat.nennung === activeKandidat?.nennung,
-          }"
-          tabindex="-1"
         >
+          <v-list-item
+            :id="`kandidat-${index}`"
+            ref="listItems"
+            :class="{
+              activeKandidat:
+                kandidat.kandidatId === activeKandidat?.kandidatId &&
+                kandidat.nennung === activeKandidat?.nennung,
+            }"
+            tabindex="-1"
+          >
+            <base-kandidat-list-item-content :kandidat="kandidat" />
+          </v-list-item>
           <v-divider
-            v-if="index !== 0"
+            v-if="index < kandidatenListe.length - 1"
             :variant="
-              isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
+              isDividerZwischenGleichemKandidat(index + 1) ? 'dashed' : 'solid'
             "
           />
-          <base-kandidat-list-item-content :kandidat="kandidat" />
-        </v-list-item>
+        </template>
       </v-list>
     </v-card-text>
   </v-card>

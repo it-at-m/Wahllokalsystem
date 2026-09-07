@@ -15,7 +15,12 @@ public interface StimmzettelModelMapper {
   @Mapping(target = "gueltigkeit", source = "gueltigkeit")
   StimmzettelOfTeamModel toModel(Stimmzettel stimmzettel);
 
+  @Mapping(target = "id", source = "kandidatID")
+  KandidatModel toModel(Kandidat kandidat);
+
   @Mapping(target = "wahlvorschlag", ignore = true)
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "kandidatID", source = "id")
   Kandidat toEntity(KandidatModel kandidatModel);
 
   @Mapping(target = "id", ignore = true)

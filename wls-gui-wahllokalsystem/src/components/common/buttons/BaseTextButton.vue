@@ -1,6 +1,6 @@
 <template>
   <v-btn
-    class="border-primary"
+    class="primary-button-border"
     active-color="primary"
     variant="flat"
     :disabled="isDisabled"

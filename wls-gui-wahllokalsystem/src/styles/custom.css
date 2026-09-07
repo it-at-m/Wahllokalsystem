@@ -32,6 +32,6 @@
   opacity: 0.01;
 }
 
-.border-primary {
+.primary-button-border {
   border: 1px solid rgb(var(--v-theme-primary));
 }

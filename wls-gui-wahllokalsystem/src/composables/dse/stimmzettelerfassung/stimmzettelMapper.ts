@@ -50,10 +50,6 @@ export function useStimmzettelMapper() {
     stimmzettelkennung: number,
     teamID: string
   ): Stimmzettel {
-    if (!manageableStimmzettel.gueltigkeit) {
-      throw new Error("Stimmzettel muss eine Gültigkeit besitzen");
-    }
-
     const mappedWahlvorschlaege: Wahlvorschlag[] =
       manageableStimmzettel.wahlvorschlaege
         .map((wahlvorschlag) => {

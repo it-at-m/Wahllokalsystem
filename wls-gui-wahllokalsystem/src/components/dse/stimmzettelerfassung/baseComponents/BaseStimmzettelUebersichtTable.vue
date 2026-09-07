@@ -15,7 +15,7 @@
     </template>
 
     <template #[`item.gueltigkeit`]="{ item }">
-      <base-stimmzettel-gueltigkeit-icon :value="item.gueltigkeit" />
+      <base-stimmzettel-gueltigkeit-icon :gueltigkeit="item.gueltigkeit" />
     </template>
 
     <template #[`item.vormerkungsgrund`]="{ item }">

@@ -1,7 +1,7 @@
 <template>
   <v-icon
-    :icon="hideBeschlussIcon && value === 'BESCHLUSS_AUSSTEHEND' ? '' : icon"
-    :color="hideBeschlussIcon && value === 'BESCHLUSS_AUSSTEHEND' ? '' : color"
+    :icon="icon"
+    :color="color"
   />
 </template>
 <script setup lang="ts">
@@ -11,11 +11,10 @@ import type { PropType } from "vue";
 import { computed } from "vue";
 
 const props = defineProps({
-  value: {
+  gueltigkeit: {
     type: String as PropType<StimmzettelGueltigkeitEnum>,
     required: true,
   },
-  hideBeschlussIcon: { type: Boolean },
 });
 
 const typeMapping: Record<StimmzettelGueltigkeitEnum, string> = {
@@ -33,6 +32,6 @@ const colorMapping: Record<StimmzettelGueltigkeitEnum, string> = {
   LEER: "error",
 };
 
-const icon = computed(() => typeMapping[props.value]);
-const color = computed(() => colorMapping[props.value]);
+const icon = computed(() => typeMapping[props.gueltigkeit]);
+const color = computed(() => colorMapping[props.gueltigkeit]);
 </script>

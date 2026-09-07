@@ -29,7 +29,7 @@
         class="mb-2 mt-2"
         :thickness="2"
       />
-      <base-stimmzettel-gueltigkeit-icon :value="gueltigkeit" />
+      <base-stimmzettel-gueltigkeit-icon :gueltigkeit="gueltigkeit" />
       <span class="ml-2 font-weight-bold">{{
         gueltigkeitTextMap[gueltigkeit]
       }}</span>

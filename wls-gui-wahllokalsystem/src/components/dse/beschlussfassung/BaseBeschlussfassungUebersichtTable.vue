@@ -24,8 +24,8 @@
 
     <template #[`item.gueltigkeit`]="{ value }">
       <base-stimmzettel-gueltigkeit-icon
-        :value="value"
-        hide-beschluss-icon
+        v-if="value !== StimmzettelGueltigkeitEnum.BeschlussAusstehend"
+        :gueltigkeit="value"
       />
       {{ value == "VALID" ? "gültig" : value == "INVALID" ? "ungültig" : "" }}
     </template>
@@ -56,6 +56,7 @@ import {
   TABLE_LOADING_DATA_STIMMZETTEL,
   TABLE_NO_DATA_TEXT_BESCHLUSSFASSUNG,
 } from "@/constants.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
   stimmzettelListe: Stimmzettel[];

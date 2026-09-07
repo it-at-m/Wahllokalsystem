@@ -11,7 +11,6 @@ import {
   mdiArrowRightBold,
   mdiCheckboxMarkedCircleOutline,
   mdiCheckCircle,
-  mdiChevronDown,
   mdiCircleOffOutline,
   mdiCloudUpload,
   mdiContentSave,
@@ -105,7 +104,6 @@ export default createVuetify({
       stimmzettelCommandAcceptList: mdiPlaylistCheck,
       stimmzettelCommandDiscardRange: mdiAccountMultipleMinusOutline,
       stimmzettelCommandVoteRange: mdiAccountMultiplePlusOutline,
-      chevronDown: mdiChevronDown,
     },
     sets: {
       mdi,

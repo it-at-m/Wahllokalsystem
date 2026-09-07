@@ -69,7 +69,7 @@
       :stimmzettel="activeStimmzettel"
       :wahlvorschlaege="wahlvorschlaege"
       @cancel="onStimmzettelErfassungCanceled"
-      @confirm="onStimmzettelErfassungConfirmed"
+      @confirm-close="onStimmzettelErfassungConfirmed"
       @confirm-next="onStimmzettelErfassungConfirmedAndOpenNextStimmzettel"
     />
     <the-stimmzettelerfassung-beenden-dialog

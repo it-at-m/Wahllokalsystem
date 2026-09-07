@@ -61,41 +61,10 @@
         >
         <v-spacer />
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
-        <v-btn-group
-          color="primary"
-          density="compact"
-        >
-          <base-wls-button-save
-            :save-text="currentAction.title"
-            @click="executeSelectedAction"
-          />
-
-          <v-menu transition="scale-transition">
-            <template #activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon="$chevronDown"
-                class="px-0"
-                style="border: 1px solid rgb(var(--v-theme-primary))"
-                active
-              />
-            </template>
-            <v-list>
-              <v-list-item
-                v-for="(action, index) in actions"
-                :key="index"
-                @click="selectAction(action)"
-              >
-                <v-list-item-title
-                  :class="
-                    currentAction.title == action.title ? 'text-grey' : ''
-                  "
-                  >{{ action.title }}</v-list-item-title
-                >
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-btn-group>
+        <base-save-button-with-action-menu
+          :model-value="currentAction"
+          :actions="actions"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -111,19 +80,15 @@ import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
+import BaseSaveButtonWithActionMenu from "@/components/common/buttons/BaseSaveButtonWithActionMenu.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
 import TheEingabehistorieCard from "@/components/dse/stimmzettelerfassung/TheEingabehistorieCard.vue";
 import TheStimmzettelCommandProcessingTextField from "@/components/dse/stimmzettelerfassung/TheStimmzettelCommandProcessingTextField.vue";
 import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStimmzettelContent.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-
-interface Action {
-  title: string;
-  action: () => void;
-}
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
@@ -143,13 +108,13 @@ const properties = defineProps({
 
 const emit = defineEmits<{
   cancel: [];
-  confirm: [stimmzettel: Stimmzettel];
+  confirmClose: [stimmzettel: Stimmzettel];
   confirmNext: [stimmzettel: Stimmzettel];
 }>();
 
 const actions = [
   {
-    title: "Speichern und weiter",
+    title: SAVE_CONTINUE,
     action: () => onSavedClickedAndNext(),
   },
   {
@@ -195,7 +160,7 @@ function onCancelClicked() {
 }
 
 function onSavedClickedAndClose() {
-  emit("confirm", properties.stimmzettel);
+  emit("confirmClose", properties.stimmzettel);
 }
 
 function onSavedClickedAndNext() {
@@ -204,13 +169,5 @@ function onSavedClickedAndNext() {
 
 function onResetClicked() {
   stimmzettelManager.managedStimmzettel.resetStimmzettel();
-}
-
-function selectAction(action: Action) {
-  currentAction.value = action;
-}
-
-function executeSelectedAction() {
-  currentAction.value.action();
 }
 </script>

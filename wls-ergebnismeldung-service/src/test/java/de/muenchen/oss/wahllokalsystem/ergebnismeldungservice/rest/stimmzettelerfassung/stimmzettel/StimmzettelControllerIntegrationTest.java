@@ -164,9 +164,11 @@ public class StimmzettelControllerIntegrationTest {
               .set(Select.field(StimmzettelOfTeamDTO::stimmzettelkennung), 3)
               .create();
       val stimmzettel4WithEqualValuesLikeStimmzetetl1 =
-            Instancio.of(StimmzettelOfTeamDTO.class)
+          Instancio.of(StimmzettelOfTeamDTO.class)
               .set(Select.field(StimmzettelOfTeamDTO::stimmzettelkennung), 4)
-              .set(Select.field(StimmzettelOfTeamDTO::wahlvorschlaege), stimmzettel1ToSave.wahlvorschlaege())
+              .set(
+                  Select.field(StimmzettelOfTeamDTO::wahlvorschlaege),
+                  stimmzettel1ToSave.wahlvorschlaege())
               .create();
 
       api.perform(
@@ -174,7 +176,11 @@ public class StimmzettelControllerIntegrationTest {
                   wahlID,
                   wahlbezirkID,
                   teamID,
-                  List.of(stimmzettel1ToSave, stimmzettel2ToSave, stimmzettel3ToSave, stimmzettel4WithEqualValuesLikeStimmzetetl1)))
+                  List.of(
+                      stimmzettel1ToSave,
+                      stimmzettel2ToSave,
+                      stimmzettel3ToSave,
+                      stimmzettel4WithEqualValuesLikeStimmzetetl1)))
           .andExpect(status().isCreated());
 
       transactionTemplate.executeWithoutResult(

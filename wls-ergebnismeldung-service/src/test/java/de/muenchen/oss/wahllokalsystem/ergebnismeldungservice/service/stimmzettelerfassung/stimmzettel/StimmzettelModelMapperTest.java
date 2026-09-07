@@ -105,13 +105,15 @@ class StimmzettelModelMapperTest {
 
         val result = unitUnderTest.toModel(entityToMap);
 
-        val expectedResult = new KandidatModel(
-                new KandidatIdModel(entityToMap.getKandidatID().getKandidatID(), entityToMap.getKandidatID().getNennungsNummer()),
+        val expectedResult =
+            new KandidatModel(
+                new KandidatIdModel(
+                    entityToMap.getKandidatID().getKandidatID(),
+                    entityToMap.getKandidatID().getNennungsNummer()),
                 entityToMap.isDiscarded(),
                 entityToMap.getVotesByVoter(),
                 entityToMap.getInvalidVotes(),
-                entityToMap.getVotesByWahlvorschlag()
-        );
+                entityToMap.getVotesByWahlvorschlag());
 
         Assertions.assertThat(result).isEqualTo(expectedResult);
       }

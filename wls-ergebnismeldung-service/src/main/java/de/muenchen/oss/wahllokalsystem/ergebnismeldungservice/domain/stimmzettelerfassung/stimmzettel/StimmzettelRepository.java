@@ -11,16 +11,18 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
   List<Stimmzettel> findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
       String wahlbezirkID, String wahlID, String teamID);
 
-  @Query("""
-    DELETE FROM Stimmzettel stimmzettel
-    WHERE stimmzettel.id.wahlbezirkID = :wahlbezirkID
-      AND stimmzettel.id.wahlID = :wahlID
-      AND stimmzettel.id.teamID = :teamID
-    """
-  )
+  @Query(
+      """
+                DELETE FROM Stimmzettel stimmzettel
+                WHERE stimmzettel.id.wahlbezirkID = :wahlbezirkID
+                  AND stimmzettel.id.wahlID = :wahlID
+                  AND stimmzettel.id.teamID = :teamID
+                """)
   @Modifying
   void deleteByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
-      @Param("wahlbezirkID") String wahlbezirkID, @Param("wahlID") String wahlID, @Param("teamID") String teamID);
+      @Param("wahlbezirkID") String wahlbezirkID,
+      @Param("wahlID") String wahlID,
+      @Param("teamID") String teamID);
 
   int countByIdWahlbezirkIDAndIdWahlID(String wahlbezirkID, String wahlID);
 }

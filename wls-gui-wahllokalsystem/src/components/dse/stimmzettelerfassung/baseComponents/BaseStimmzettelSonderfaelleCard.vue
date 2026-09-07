@@ -42,8 +42,8 @@
         @confirm="onStimmzettelFehlInstructionDialogConfirm"
       >
         <div>
-          Bitte notieren Sie die Stimmzettelkennung auf dem Umschlag oder auf
-          dem Hilfsblatt.
+          Bitte notieren Sie die Stimmzettelkennung des fehlenden Stimmzettels
+          auf dem Umschlag oder auf dem Hilfsblatt.
         </div>
 
         <base-stimmzettelkennung-strong-text

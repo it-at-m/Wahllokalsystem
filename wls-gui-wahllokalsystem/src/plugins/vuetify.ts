@@ -155,5 +155,9 @@ export default createVuetify({
     VListItem: {
       prependGap: 10,
     },
+    VDataTable: {
+      sortAscIcon: "$asc",
+      sortDescIcon: "$desc",
+    },
   },
 });

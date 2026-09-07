@@ -9,8 +9,6 @@
     :items-per-page-text="ITEMS_PER_PAGE_TITLE"
     :no-data-text="TABLE_NO_DATA_TEXT_BESCHLUSSFASSUNG"
     :multi-sort="true"
-    sort-asc-icon="$asc"
-    sort-desc-icon="$desc"
     sticky
   >
     <template #[`item.beschlussgrund`]="{ item }">

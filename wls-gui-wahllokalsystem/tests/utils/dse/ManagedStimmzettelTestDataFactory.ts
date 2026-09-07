@@ -48,7 +48,8 @@ export function useManagedStimmzettelTestDataFactory() {
       ],
       invalideVotes: generateRandomNumber(2),
       gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     };
   }

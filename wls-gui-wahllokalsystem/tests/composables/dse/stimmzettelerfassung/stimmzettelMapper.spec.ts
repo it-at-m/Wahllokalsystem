@@ -78,7 +78,12 @@ describe("stimmzettelMapper.ts", () => {
             .text(dtoToMap.beschlussfassung!.text!)
             .build()
         )
-        .beschlussvorschlag(
+        .systemBeschlussvorschlag(
+          dtoToMap.systemBeschlussvorschlag!.map((dtoSystemBschlussgrund) => ({
+            reason: dtoSystemBschlussgrund.reason,
+          }))
+        )
+        .wahlvorstandBeschlussvorschlag(
           dtoToMap.wahlvorstandBeschlussvorschlag!.map(
             (dtoWahlvorstandBeschlussgrund) =>
               preparePersistedStimmzettelBeschlussgrund()
@@ -120,24 +125,44 @@ describe("stimmzettelMapper.ts", () => {
       expect(result.wahlvorschlaege).toStrictEqual([]);
     });
 
-    it("should_returnEmptyBeschlussvorschlag_when_dtoBeschlussvorschlagIsUndefined", () => {
+    it("should_returnEmptyWahlvorstandBeschlussvorschlag_when_dtoWahlvorstandBeschlussvorschlagIsUndefined", () => {
       const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
         .wahlvorstandBeschlussvorschlag(undefined)
         .build();
 
       const result = toModel(dtoWithoutBeschlussvorschlag, teamID);
 
-      expect(result.beschlussvorschlag).toStrictEqual([]);
+      expect(result.wahlvorstandBeschlussvorschlag).toStrictEqual([]);
     });
 
-    it("should_returnEmptyBeschlussvorschlag_when_dtoBeschlussvorschlagIsEmpty", () => {
+    it("should_returnEmptySystemBeschlussvorschlag_when_dtoSystemBeschlussvorschlagIsUndefined", () => {
+      const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
+        .systemBeschlussvorschlag(undefined)
+        .build();
+
+      const result = toModel(dtoWithoutBeschlussvorschlag, teamID);
+
+      expect(result.systemBeschlussvorschlag).toStrictEqual([]);
+    });
+
+    it("should_returnEmptyWahlvorstandBeschlussvorschlag_when_dtoWahlvorstandBeschlussvorschlagIsEmpty", () => {
       const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
         .wahlvorstandBeschlussvorschlag([])
         .build();
 
       const result = toModel(dtoWithoutBeschlussvorschlag, teamID);
 
-      expect(result.beschlussvorschlag).toStrictEqual([]);
+      expect(result.wahlvorstandBeschlussvorschlag).toStrictEqual([]);
+    });
+
+    it("should_returnEmptySystemBeschlussvorschlag_when_dtoSystemBeschlussvorschlagIsEmpty", () => {
+      const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
+        .systemBeschlussvorschlag([])
+        .build();
+
+      const result = toModel(dtoWithoutBeschlussvorschlag, teamID);
+
+      expect(result.systemBeschlussvorschlag).toStrictEqual([]);
     });
 
     it("should_returnNullBeschlussfassung_when_dtoBeschlussfassungIsUndefined", () => {
@@ -250,8 +275,13 @@ describe("stimmzettelMapper.ts", () => {
             .text(modelToMap.beschlussfassung!.text!)
             .build()
         )
+        .systemBeschlussvorschlag(
+          modelToMap.systemBeschlussvorschlag.map((modelBeschlussgrund) => ({
+            reason: modelBeschlussgrund.reason,
+          }))
+        )
         .wahlvorstandBeschlussvorschlag(
-          modelToMap.beschlussvorschlag.map((modelBeschlussgrund) =>
+          modelToMap.wahlvorstandBeschlussvorschlag.map((modelBeschlussgrund) =>
             prepareStimmzettelBeschlussgrundDTO()
               .text(modelBeschlussgrund.text)
               .build()
@@ -295,14 +325,24 @@ describe("stimmzettelMapper.ts", () => {
       expect(result.wahlvorschlaege).toBeUndefined();
     });
 
-    it("should_returnUndefinedBeschlussvorschlag_when_modelBeschlussvorschlagIsEmpty", () => {
+    it("should_returnUndefinedWahlvorstandBeschlussvorschlag_when_modelWahlvorstandBeschlussvorschlagIsEmpty", () => {
       const modelWithoutBeschlussvorschlag = preparePersistedStimmzettel()
-        .beschlussvorschlag([])
+        .wahlvorstandBeschlussvorschlag([])
         .build();
 
       const result = toDTO(modelWithoutBeschlussvorschlag);
 
       expect(result.wahlvorstandBeschlussvorschlag).toBeUndefined();
+    });
+
+    it("should_returnUndefinedSystemBeschlussvorschlag_when_modelSystemBeschlussvorschlagIsEmpty", () => {
+      const modelWithoutBeschlussvorschlag = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag([])
+        .build();
+
+      const result = toDTO(modelWithoutBeschlussvorschlag);
+
+      expect(result.systemBeschlussvorschlag).toBeUndefined();
     });
 
     it("should_returnUndefinedBeschlussfassung_when_modelBeschlussfassungIsNull", () => {
@@ -421,8 +461,9 @@ describe("stimmzettelMapper.ts", () => {
         stimmzettelkennung,
         teamID,
         beschlussfassung: dseStimmzettel.beschlussfassung,
-        beschlussvorschlag: [],
-        invalideVotes: dseStimmzettel.invalideVotes,
+        systemBeschlussvorschlag: [],
+        wahlvorstandBeschlussvorschlag: [],
+        invalideVotes: dseStimmzettel.invalideVotes!,
         wahlvorschlaege: expectedWahlvorschlaege,
         gueltigkeit: dseStimmzettel.gueltigkeit,
       };

@@ -11,9 +11,10 @@
     <div>
       Bitte übertragen Sie die Stimmzettelkennung auf den Papier-Stimmzettel.
     </div>
-    <div class="mt-3 text-h1 font-weight-bold text-center">
-      {{ teamName }} {{ nextStimmzettelkennung }}
-    </div>
+    <base-stimmzettelkennung-strong-text
+      :stimmzettelkennung="nextStimmzettelkennung"
+      :team-name="teamName"
+    />
   </base-dialog>
 </template>
 
@@ -23,6 +24,7 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import { computed } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useStimmzettelkennungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelkennungDialogUtils.ts";
 
 const { getNextStimmzettelNumber } = useStimmzettelkennungDialogUtils();

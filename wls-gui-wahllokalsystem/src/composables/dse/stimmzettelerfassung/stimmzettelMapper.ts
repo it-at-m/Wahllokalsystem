@@ -6,8 +6,9 @@ import type {
   WahlvorschlagDTO,
   WahlvorstandBeschlussgrundDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
+import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { Beschlussfassung } from "@/types/dse/persistedStimmzettel/Beschlussfassung.ts";
-import type { Beschlussgrund } from "@/types/dse/persistedStimmzettel/Beschlussgrund.ts";
 import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
@@ -19,13 +20,14 @@ const { hasAnyKennzeichen } = useKandidatTools();
 
 export function useStimmzettelMapper() {
   function toModel(dto: StimmzettelOfTeamDTO, teamID: string): Stimmzettel {
-    const userBeschlussgruende = (dto.wahlvorstandBeschlussvorschlag ?? []).map(
-      (beschlussgrundDTO: WahlvorstandBeschlussgrundDTO) =>
-        _beschlussgrundDtoToModel(beschlussgrundDTO)
+    const wahlvorstandBeschlussgruende = (
+      dto.wahlvorstandBeschlussvorschlag ?? []
+    ).map((beschlussgrundDTO: WahlvorstandBeschlussgrundDTO) =>
+      _wahlvorstandBeschlussgrundDtoToModel(beschlussgrundDTO)
     );
     const systemBeschlussgruende = (dto.systemBeschlussvorschlag ?? []).map(
       (systemBeschlussgrundDTO: SystemBeschlussgrundDTO) =>
-        _beschlussgrundDtoToModel(systemBeschlussgrundDTO)
+        _systemBeschlussgrundDtoToModel(systemBeschlussgrundDTO)
     );
     return {
       stimmzettelkennung: dto.stimmzettelkennung,
@@ -35,7 +37,8 @@ export function useStimmzettelMapper() {
       ),
       invalideVotes: dto.invalideVotes,
       gueltigkeit: dto.gueltigkeit,
-      beschlussvorschlag: [...userBeschlussgruende, ...systemBeschlussgruende],
+      wahlvorstandBeschlussvorschlag: wahlvorstandBeschlussgruende,
+      systemBeschlussvorschlag: systemBeschlussgruende,
       beschlussfassung: dto.beschlussfassung
         ? _beschlussfassungDtoToModel(dto.beschlussfassung)
         : null,
@@ -79,7 +82,14 @@ export function useStimmzettelMapper() {
       gueltigkeit: manageableStimmzettel.gueltigkeit,
       invalideVotes: manageableStimmzettel.invalideVotes ?? 0,
       wahlvorschlaege: mappedWahlvorschlaege,
-      beschlussvorschlag: manageableStimmzettel.beschlussvorschlag,
+      wahlvorstandBeschlussvorschlag:
+        manageableStimmzettel.wahlvorstandBeschlussvorschlag.map(
+          (vorschlag) => ({ text: vorschlag.text })
+        ),
+      systemBeschlussvorschlag:
+        manageableStimmzettel.systemBeschlussvorschlag.map((vorschlag) => ({
+          reason: vorschlag.reason,
+        })),
       beschlussfassung: manageableStimmzettel.beschlussfassung,
     };
   }
@@ -99,9 +109,15 @@ export function useStimmzettelMapper() {
         ? _beschlussfassungModelToDto(model.beschlussfassung)
         : undefined,
       wahlvorstandBeschlussvorschlag:
-        model.beschlussvorschlag.length > 0
-          ? model.beschlussvorschlag.map((beschlussgrund) =>
-              _beschlussgrundModelToDto(beschlussgrund)
+        model.wahlvorstandBeschlussvorschlag.length > 0
+          ? model.wahlvorstandBeschlussvorschlag.map((beschlussgrund) =>
+              _wahlvorstandBeschlussgrundModelToDto(beschlussgrund)
+            )
+          : undefined,
+      systemBeschlussvorschlag:
+        model.systemBeschlussvorschlag.length > 0
+          ? model.systemBeschlussvorschlag.map((beschlussgrund) =>
+              _systemBeschlussgrundModelToDto(beschlussgrund)
             )
           : undefined,
     };
@@ -151,11 +167,19 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _beschlussgrundDtoToModel(
-    dto: WahlvorstandBeschlussgrundDTO | SystemBeschlussgrundDTO
-  ): Beschlussgrund {
+  function _systemBeschlussgrundDtoToModel(
+    dto: SystemBeschlussgrundDTO
+  ): SystemBeschlussgrund {
     return {
-      text: "text" in dto ? dto.text : dto.reason,
+      reason: dto.reason,
+    };
+  }
+
+  function _wahlvorstandBeschlussgrundDtoToModel(
+    dto: WahlvorstandBeschlussgrundDTO
+  ): WahlvorstandBeschlussgrund {
+    return {
+      text: dto.text,
     };
   }
 
@@ -169,8 +193,16 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _beschlussgrundModelToDto(
-    model: Beschlussgrund
+  function _systemBeschlussgrundModelToDto(
+    model: SystemBeschlussgrund
+  ): SystemBeschlussgrundDTO {
+    return {
+      reason: model.reason,
+    };
+  }
+
+  function _wahlvorstandBeschlussgrundModelToDto(
+    model: WahlvorstandBeschlussgrund
   ): WahlvorstandBeschlussgrundDTO {
     return {
       text: model.text,

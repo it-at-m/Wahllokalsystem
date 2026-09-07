@@ -1,6 +1,6 @@
 <template>
   <v-btn
-    class="base-text-button"
+    class="border-primary"
     active-color="primary"
     variant="flat"
     :disabled="isDisabled"
@@ -14,9 +14,3 @@ defineProps<{
   isDisabled?: boolean;
 }>();
 </script>
-
-<style scoped>
-.base-text-button {
-  border: 1px solid rgb(var(--v-theme-primary));
-}
-</style>

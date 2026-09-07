@@ -31,3 +31,7 @@
 .v-btn.v-btn--active:focus > .v-btn__overlay {
   opacity: 0.01;
 }
+
+.border-primary {
+  border: 1px solid rgb(var(--v-theme-primary));
+}

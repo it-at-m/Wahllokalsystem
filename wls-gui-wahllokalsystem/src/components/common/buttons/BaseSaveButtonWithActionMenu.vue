@@ -12,7 +12,7 @@
       <template #activator="{ props }">
         <base-button-folding
           v-bind="props"
-          style="border: 1px solid rgb(var(--v-theme-primary))"
+          class="border-primary"
           active
         />
       </template>

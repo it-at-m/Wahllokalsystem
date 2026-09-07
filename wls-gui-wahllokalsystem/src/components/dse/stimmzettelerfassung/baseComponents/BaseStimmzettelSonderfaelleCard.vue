@@ -64,7 +64,8 @@
         :persistent-hint="!!systemBeschlussgruendeAsText"
         @update:model-value="onMarkForBeschlussfassungModelUpdated"
       />
-      Begründung auswählen oder eingeben (abweichende Gründe mit Enter bestätigen)
+      Begründung auswählen oder eingeben (abweichende Gründe mit Enter
+      bestätigen)
       <v-form v-model="modelValueIsBeschlussfassungValid">
         <v-combobox
           :ref="REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE"

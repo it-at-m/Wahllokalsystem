@@ -46,6 +46,7 @@ const {
   prepareStimmzettelKandidatDTO,
   prepareStimmzettelKandidatIdDTO,
   preparePersistedStimmzettelWahlvorschlag,
+  prepareStimmzettelWahlvorschlag,
   prepareStimmzettelWahlvorschlagDTO,
 } = useStimmzettelTestDataFactory();
 const { generateRandomNumber, generateRandomString } =
@@ -475,7 +476,9 @@ describe("stimmzettelMapper.ts", () => {
       const teamID = generateRandomString(10);
 
       const dseStimmzettel = prepareStimmzettel()
-        .wahlvorschlaege([createStimmzettelWahlvorschlag()])
+        .wahlvorschlaege([
+          prepareStimmzettelWahlvorschlag().selected(false).build(),
+        ])
         .build();
 
       mockDefinitions.hasAnyKennzeichen.mockReturnValue(false);
@@ -491,6 +494,31 @@ describe("stimmzettelMapper.ts", () => {
       );
 
       expect(result.wahlvorschlaege).toStrictEqual([]);
+    });
+
+    it("should_returnPersistedStimmzettelWithReducedDataButKeepWahlvorschlag_when_stimmzettelHasSelectedWahlvorschlagWithoutKandidatenWithStimmen", () => {
+      const stimmzettelkennung = generateRandomNumber(2);
+      const teamID = generateRandomString(10);
+
+      const dseStimmzettel = prepareStimmzettel()
+        .wahlvorschlaege([
+          prepareStimmzettelWahlvorschlag().selected(true).build(),
+        ])
+        .build();
+
+      mockDefinitions.hasAnyKennzeichen.mockReturnValue(false);
+
+      expect(
+        dseStimmzettel.wahlvorschlaege[0].kandidaten.length > 0
+      ).toStrictEqual(true);
+
+      const result = toPersistedStimmzettel(
+        dseStimmzettel,
+        stimmzettelkennung,
+        teamID
+      );
+
+      expect(result.wahlvorschlaege.length).toStrictEqual(1);
     });
 
     it("should_returnPersistedStimmzettelWithReducedData_when_stimmzettelHasWahlvorschlaegWithKandidatenWithAndWithoutAnyKennzeichen", () => {

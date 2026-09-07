@@ -74,7 +74,10 @@ export function useStimmzettelMapper() {
             selected: wahlvorschlag.selected,
           };
         })
-        .filter((wahlvorschlag) => wahlvorschlag.kandidaten.length > 0);
+        .filter(
+          (wahlvorschlag) =>
+            wahlvorschlag.kandidaten.length > 0 || wahlvorschlag.selected
+        );
 
     return {
       teamID: teamID,

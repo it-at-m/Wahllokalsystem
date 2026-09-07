@@ -63,8 +63,8 @@
           </v-list-item>
           <v-divider
             :variant="
-                isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
-              "
+              isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
+            "
           />
         </template>
       </v-list>

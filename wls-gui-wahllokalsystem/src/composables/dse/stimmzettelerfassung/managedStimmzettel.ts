@@ -355,7 +355,7 @@ export function useManagedStimmzettel(
   }
 
   function _isNotSafeIntegerThrow(value: number, errorMessage: string) {
-    if (!Number.isSafeInteger(value) || value < 0) {
+    if (!Number.isSafeInteger(value) || value <= 0) {
       throw new ManagedStimmzettelError(errorMessage);
     }
   }

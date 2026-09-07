@@ -54,7 +54,26 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelKandidat(
+  function createStimmzettelKandidat(): Kandidat {
+    const wahlvorschlag = _createStimmzettelWahlvorschlagWithoutKandidaten();
+    const result = {
+      reststimmen: generateRandomNumber(2),
+      ungueltigeStimmen: generateRandomNumber(2),
+      ordnungszahl: generateRandomNumber(2),
+      listenposition: generateRandomNumber(2),
+      name: generateRandomString(10),
+      einzelstimmen: generateRandomNumber(2),
+      owningWahlvorschlag: wahlvorschlag,
+      durchgestrichen: generateRandomBoolean(),
+      kandidatId: generateRandomString(10),
+      nennung: generateRandomNumber(1),
+    };
+    wahlvorschlag.kandidaten = [result];
+
+    return result;
+  }
+
+  function createStimmzettelKandidatOfWahlvorschlag(
     owningWahlvorschlag: Wahlvorschlag
   ): Kandidat {
     return {
@@ -137,9 +156,9 @@ export function useStimmzettelTestDataFactory() {
   function createStimmzettelWahlvorschlag(): Wahlvorschlag {
     const result = _createStimmzettelWahlvorschlagWithoutKandidaten();
     result.kandidaten = [
-      createStimmzettelKandidat(result),
-      createStimmzettelKandidat(result),
-      createStimmzettelKandidat(result),
+      createStimmzettelKandidatOfWahlvorschlag(result),
+      createStimmzettelKandidatOfWahlvorschlag(result),
+      createStimmzettelKandidatOfWahlvorschlag(result),
     ];
     return result;
   }
@@ -234,11 +253,15 @@ export function useStimmzettelTestDataFactory() {
     );
   }
 
-  function prepareStimmzettelKandidat(
+  function prepareStimmzettelKandidat(): Builder<Kandidat> {
+    return proxyBuilder<Kandidat>(createStimmzettelKandidat());
+  }
+
+  function prepareStimmzettelKandidatOfWahlvorschlag(
     owningWahlvorschlag: Wahlvorschlag
   ): Builder<Kandidat> {
     return proxyBuilder<Kandidat>(
-      createStimmzettelKandidat(owningWahlvorschlag)
+      createStimmzettelKandidatOfWahlvorschlag(owningWahlvorschlag)
     );
   }
 
@@ -283,6 +306,7 @@ export function useStimmzettelTestDataFactory() {
     createStimmzettel,
     createStimmzettelOfTeamDTO,
     createStimmzettelKandidat,
+    createStimmzettelKandidatOfWahlvorschlag,
     createStimmzettelKandidatDTO,
     createStimmzettelWahlvorschlag,
     preparePersistedStimmzettel,
@@ -295,6 +319,7 @@ export function useStimmzettelTestDataFactory() {
     prepareStimmzettelBeschlussfassungDTO,
     prepareStimmzettelBeschlussgrundDTO,
     prepareStimmzettelKandidat,
+    prepareStimmzettelKandidatOfWahlvorschlag,
     prepareStimmzettelKandidatDTO,
     prepareStimmzettelKandidatIdDTO,
     prepareStimmzettelWahlvorschlag,

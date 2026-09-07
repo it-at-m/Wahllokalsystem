@@ -42,7 +42,7 @@ const {
   preparePersistedStimmzettelBeschlussgrund,
   prepareStimmzettelBeschlussgrundDTO,
   preparePersistedStimmzettelKandidat,
-  prepareStimmzettelKandidat,
+  prepareStimmzettelKandidatOfWahlvorschlag,
   prepareStimmzettelKandidatDTO,
   prepareStimmzettelKandidatIdDTO,
   preparePersistedStimmzettelWahlvorschlag,
@@ -457,14 +457,15 @@ describe("stimmzettelMapper.ts", () => {
       const teamID = generateRandomString(10);
 
       const wahlvorschlag = createStimmzettelWahlvorschlag();
-      const kandidatWithKennzeichen = prepareStimmzettelKandidat(wahlvorschlag)
-        .kandidatId("k1")
-        .build();
-      const kandidatWithoutKennzeichen = prepareStimmzettelKandidat(
+      const kandidatWithKennzeichen = prepareStimmzettelKandidatOfWahlvorschlag(
         wahlvorschlag
       )
-        .kandidatId("k2")
+        .kandidatId("k1")
         .build();
+      const kandidatWithoutKennzeichen =
+        prepareStimmzettelKandidatOfWahlvorschlag(wahlvorschlag)
+          .kandidatId("k2")
+          .build();
       wahlvorschlag.kandidaten = [
         kandidatWithKennzeichen,
         kandidatWithoutKennzeichen,

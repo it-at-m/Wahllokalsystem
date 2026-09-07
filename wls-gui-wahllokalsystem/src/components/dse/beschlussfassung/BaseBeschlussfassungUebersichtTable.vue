@@ -9,7 +9,7 @@
     :items-per-page-text="ITEMS_PER_PAGE_TITLE"
     :no-data-text="TABLE_NO_DATA_TEXT_BESCHLUSSFASSUNG"
     multi-sort
-    sticky
+    fixed-header
   >
     <template #[`item.beschlussgrund`]="{ item }">
       {{ getVormerkungsOrEntscheidungsgrundBasedOnBeschlussfassung(item) }}

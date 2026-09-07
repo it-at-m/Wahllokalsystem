@@ -54,24 +54,24 @@ export function useBeschlussfassungViewUtils(
       const stimmzettelOfAllTeams: Stimmzettel[] = [];
 
       for (const teamId of registeredTeams.value) {
-        const stimmzettelforTeam = await getStimmzettel(
+        const stimmzettelOfTeam = await getStimmzettel(
           wahlID,
           wahlbezirkID,
           teamId
         );
-        stimmzettelOfAllTeams.push(...stimmzettelforTeam);
+        stimmzettelOfAllTeams.push(...stimmzettelOfTeam);
       }
 
-      const onlyStimmzettelforBeschlussfassung = stimmzettelOfAllTeams.filter(
+      const onlyStimmzettelForBeschlussfassung = stimmzettelOfAllTeams.filter(
         (stimmzettel) =>
           stimmzettel.gueltigkeit ===
             StimmzettelGueltigkeitEnum.BeschlussAusstehend ||
           stimmzettel.beschlussfassung !== null
       );
 
-      if (onlyStimmzettelforBeschlussfassung.length > 0) {
+      if (onlyStimmzettelForBeschlussfassung.length > 0) {
         stimmzettelForBeschlussfassung.value =
-          onlyStimmzettelforBeschlussfassung;
+          onlyStimmzettelForBeschlussfassung;
       }
     } finally {
       isStimmzettelForBeschlussLoading.value = false;

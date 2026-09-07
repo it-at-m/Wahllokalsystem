@@ -6,6 +6,7 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/Sti
 
 export interface Stimmzettel {
   stimmzettelkennung: number;
+  teamID: string;
   wahlvorschlaege: Wahlvorschlag[];
 
   invalideVotes: number;

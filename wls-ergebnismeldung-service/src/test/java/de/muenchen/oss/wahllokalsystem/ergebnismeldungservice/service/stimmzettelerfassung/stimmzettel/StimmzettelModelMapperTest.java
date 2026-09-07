@@ -95,6 +95,27 @@ class StimmzettelModelMapperTest {
             expectedWahlvorschlaege);
       }
     }
+
+    @Nested
+    class OfKandidat {
+
+      @Test
+      void should_returnKandidatModel_when_kandidatEntityIsGiven() {
+        val entityToMap = Instancio.create(Kandidat.class);
+
+        val result = unitUnderTest.toModel(entityToMap);
+
+        val expectedResult = new KandidatModel(
+                new KandidatIdModel(entityToMap.getKandidatID().getKandidatID(), entityToMap.getKandidatID().getNennungsNummer()),
+                entityToMap.isDiscarded(),
+                entityToMap.getVotesByVoter(),
+                entityToMap.getInvalidVotes(),
+                entityToMap.getVotesByWahlvorschlag()
+        );
+
+        Assertions.assertThat(result).isEqualTo(expectedResult);
+      }
+    }
   }
 
   @Nested

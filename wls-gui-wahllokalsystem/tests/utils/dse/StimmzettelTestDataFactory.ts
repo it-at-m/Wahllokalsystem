@@ -162,6 +162,7 @@ export function useStimmzettelTestDataFactory() {
   function createPersistedStimmzettel(): PersistedStimmzettel {
     return {
       stimmzettelkennung: generateRandomNumber(6),
+      teamID: generateRandomString(1),
       wahlvorschlaege: [
         createPersistedStimmzettelWahlvorschlag(),
         createPersistedStimmzettelWahlvorschlag(),

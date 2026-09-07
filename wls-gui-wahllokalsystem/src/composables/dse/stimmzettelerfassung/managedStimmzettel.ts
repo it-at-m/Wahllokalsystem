@@ -1,4 +1,3 @@
-import type { InputHistoryItem } from "@/types/dse/stimmzettelerfassung/InputHistoryItem.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { StimmenSummary } from "@/types/dse/stimmzettelerfassung/StimmenSummary.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
@@ -6,11 +5,11 @@ import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschl
 import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 
+import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
-import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHistoryTypeEnum.ts";
 
 /**
  * Check UI/UX Adr to see the rules:
@@ -23,7 +22,7 @@ export function useManagedStimmzettel(
   stimmzettel: Ref<Stimmzettel>,
   wahlID: string
 ) {
-  const changeHistory = ref<InputHistoryItem[]>([]);
+  const changeHistory = useStimmzettelChangeHistory();
 
   const kandidatenOfStimmzettel = computed(() =>
     stimmzettel.value.wahlvorschlaege
@@ -69,7 +68,7 @@ export function useManagedStimmzettel(
   });
 
   function resetStimmzettel() {
-    changeHistory.value = [];
+    changeHistory.reset();
     stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
       wahlvorschlag.selected = false;
       wahlvorschlag.kandidaten.map((kandidat) => {
@@ -122,7 +121,7 @@ export function useManagedStimmzettel(
     }
     if (!kandidat.einzelstimmen || kandidat.einzelstimmen < votesToRemove) {
       throw new ManagedStimmzettelError(
-        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${votesToRemove} Stimmen abgezogen werden.`
+        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} kann diese Menge an Stimmen nicht abgezogen werden.`
       );
     }
 
@@ -166,7 +165,7 @@ export function useManagedStimmzettel(
       kandidat.ungueltigeStimmen < invalidVotesToRemove
     ) {
       throw new ManagedStimmzettelError(
-        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${invalidVotesToRemove} ungültigen Stimmen abgezogen werden.`
+        `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} kann diese Menge an ungültigen Stimmen nicht abgezogen werden.`
       );
     }
 
@@ -398,13 +397,7 @@ export function useManagedStimmzettel(
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
     kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
     _updateReststimmenWhenVotesAdded();
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.ADD_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl}${" + " + votesToAdd + (votesToAdd > 1 ? " Stimmen" : " Stimme")}`,
-        kandidat.name,
-      ],
-    });
+    changeHistory.registerKandidatEinzelstimmenAdded(kandidat, votesToAdd);
   }
 
   function _internalRemoveVotesFromKandidat(
@@ -416,13 +409,7 @@ export function useManagedStimmzettel(
     const newValue = currentEinzelstimmen - votesToRemove;
     kandidat.einzelstimmen = newValue > 0 ? newValue : null;
     _updateReststimmenWhenVotesRemoved();
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl}${" - " + votesToRemove + (votesToRemove > 1 ? " Stimmen" : " Stimme")}`,
-        kandidat.name,
-      ],
-    });
+    changeHistory.registerKandidatEinzelstimmenRemoved(kandidat, votesToRemove);
   }
 
   function _internalAddInvalidVotesToKandidat(
@@ -432,13 +419,10 @@ export function useManagedStimmzettel(
     const invalidVotesToAdd = Math.abs(numberOfInvalidVotesToAdd);
     const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
     kandidat.ungueltigeStimmen = currentUngueltigeStimmen + invalidVotesToAdd;
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.ADD_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl}${" + " + invalidVotesToAdd + " ungültige " + (invalidVotesToAdd > 1 ? "Stimmen" : "Stimme")}`,
-        kandidat.name,
-      ],
-    });
+    changeHistory.registerKandidatUngueltigeStimmenAdded(
+      kandidat,
+      invalidVotesToAdd
+    );
   }
 
   function _internalRemoveInvalidVotesFromKandidat(
@@ -450,13 +434,10 @@ export function useManagedStimmzettel(
     kandidat.ungueltigeStimmen =
       currentUngueltigeStimmen - invalidVotesToRemove;
     _updateReststimmenWhenVotesRemoved();
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl}${" - " + invalidVotesToRemove + " ungültige " + (invalidVotesToRemove > 1 ? "Stimmen" : "Stimme")}`,
-        kandidat.name,
-      ],
-    });
+    changeHistory.registerKandidatUngueltigeStimmenRemoved(
+      kandidat,
+      invalidVotesToRemove
+    );
   }
 
   function _internalAddVotesToKandidatenRange(
@@ -469,50 +450,32 @@ export function useManagedStimmzettel(
       kandidat.einzelstimmen = currentEinzelstimmen + votesToAdd;
       _updateReststimmenWhenVotesAdded();
     });
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.VOTE_RANGE,
-      text: [
-        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}${" + " + votesToAdd + (votesToAdd > 1 ? " Stimmen" : " Stimme")}`,
-      ],
-    });
+    changeHistory.registerKandidatEinzelstimmenRangeAdded(
+      kandidaten,
+      votesToAdd
+    );
   }
 
   function _internalAddStreichungToKandidat(kandidat: Kandidat) {
     kandidat.durchgestrichen = true;
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.DISCARD_KANDIDAT,
-      text: [`${kandidat.ordnungszahl}`, kandidat.name],
-    });
+    changeHistory.registerKandidatStreichungSet(kandidat);
   }
 
   function _internalRemoveStreichungFromKandidat(kandidat: Kandidat) {
     kandidat.durchgestrichen = false;
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
-      text: [`${kandidat.ordnungszahl}`, kandidat.name],
-    });
+    changeHistory.registerKandidatStreichungUnset(kandidat);
   }
 
   function _internalAddStreichungenToKandidatenRange(kandidaten: Kandidat[]) {
     kandidaten.map((kandidat) => (kandidat.durchgestrichen = true));
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.DISCARD_RANGE,
-      text: [
-        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}`,
-      ],
-    });
+    changeHistory.registerKandidatStreichungRangeSet(kandidaten);
   }
 
   function _internalRemoveStreichungenFromKandidatenRange(
     kandidaten: Kandidat[]
   ) {
     kandidaten.map((kandidat) => (kandidat.durchgestrichen = false));
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
-      text: [
-        `${kandidaten[0].ordnungszahl}-${kandidaten[kandidaten.length - 1].ordnungszahl}`,
-      ],
-    });
+    changeHistory.registerKandidatStreichungRangeUnset(kandidaten);
   }
 
   function _internalAddVotesToWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
@@ -535,20 +498,14 @@ export function useManagedStimmzettel(
       index++;
     }
     wahlvorschlag.selected = true;
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
-      text: [`${wahlvorschlag.kurzname}`],
-    });
+    changeHistory.registerWahlvorschlagSelected(wahlvorschlag);
   }
 
   function _internalRemoveVotesFromWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
     wahlvorschlag.kandidaten.map((kandidat) => (kandidat.reststimmen = 0));
     wahlvorschlag.selected = false;
     _updateReststimmenWhenVotesRemoved();
-    changeHistory.value.push({
-      type: InputHistoryTypeEnum.REVOKE_WAHLVORSCHLAG,
-      text: [`${wahlvorschlag.kurzname}`],
-    });
+    changeHistory.registerWahlvorschlagDeselected(wahlvorschlag);
   }
 
   function _hasKandidatAnyStimmeOrStreichung(kandidat: Kandidat) {
@@ -656,9 +613,7 @@ export function useManagedStimmzettel(
   }
 
   return {
-    changeHistoryInReverseOrder: computed(() =>
-      [...changeHistory.value].reverse()
-    ),
+    changeHistory,
     resetStimmzettel,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,

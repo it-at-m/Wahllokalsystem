@@ -180,6 +180,7 @@ export function useStimmzettelChangeHistory() {
     ),
     lastUsedKandidat,
     lastUsedWahlvorschlag,
+
     registerKandidatEinzelstimmenAdded,
     registerKandidatEinzelstimmenRemoved,
     registerKandidatEinzelstimmenRangeAdded,

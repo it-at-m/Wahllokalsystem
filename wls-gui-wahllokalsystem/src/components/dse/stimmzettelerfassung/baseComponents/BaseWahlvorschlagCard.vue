@@ -61,6 +61,7 @@
           >
             <base-kandidat-list-item-content :kandidat="kandidat" />
             <v-divider
+              v-if="index < kandidatenListe.length - 1"
               :variant="
                 isDividerZwischenGleichemKandidat(index + 1)
                   ? 'dashed'

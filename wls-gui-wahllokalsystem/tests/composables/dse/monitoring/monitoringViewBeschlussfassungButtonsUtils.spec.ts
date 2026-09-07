@@ -89,7 +89,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
     });
 
     it.each([teamNotDoneStates])(
-      "should_returnTrue_when_atLeastOneTeamIsNotDone'%s'",
+      "should_returnFalse_when_atLeastOneTeamIsNotDone'%s'",
       (notDoneStatus) => {
         const teamStatusEntry = prepareStimmzettelerfassungTeamStatusEntry()
           .status(notDoneStatus)
@@ -209,7 +209,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
     });
 
     it.each(teamNotDoneStates)(
-      "should_returnTrue_when_atTheOnlyRegisteredTeamIsNotDone'%s'",
+      "should_returnTrue_when_theTheOnlyRegisteredTeamIsNotDone'%s'",
       (notDoneStatus) => {
         const teamStatusEntry = prepareStimmzettelerfassungTeamStatusEntry()
           .status(notDoneStatus)

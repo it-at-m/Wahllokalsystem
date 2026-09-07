@@ -2,9 +2,9 @@ import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedSt
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
 
-import { useWahlvorschlagTools } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/wahlvorschlagTools.ts";
+import { useManagedStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelWahlvorschlagUtils.ts";
 
-describe("wahlvorschlagTools.ts", () => {
+describe("managedStimmzettelWahlvorschlagUtils.ts", () => {
   const {
     prepareManagedStimmzettelStimmzettel,
     prepareManagedStimmzettelWahlvorschlag,
@@ -22,9 +22,8 @@ describe("wahlvorschlagTools.ts", () => {
         .wahlvorschlaege([wv1, wv2])
         .build();
 
-      const { getWahlvorschlagByOrdnungszahl } = useWahlvorschlagTools(
-        ref(stimmzettel)
-      );
+      const { getWahlvorschlagByOrdnungszahl } =
+        useManagedStimmzettelWahlvorschlagUtils(ref(stimmzettel));
 
       expect(getWahlvorschlagByOrdnungszahl(1)).toStrictEqual(wv1);
       expect(getWahlvorschlagByOrdnungszahl(2)).toStrictEqual(wv2);

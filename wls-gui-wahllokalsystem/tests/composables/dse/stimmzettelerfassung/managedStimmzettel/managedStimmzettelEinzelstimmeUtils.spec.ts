@@ -1,20 +1,31 @@
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
-import { useEinzelstimmeTools } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/einzelstimmeTools.ts";
+import { useManagedStimmzettelEinzelstimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelEinzelstimmeUtils.ts";
 
-describe("einzelstimmeTools.ts", () => {
+describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
   const { prepareManagedStimmzettelKandidat } =
     useManagedStimmzettelTestDataFactory();
 
   describe("addVotesToKandidat", () => {
-    it("should_addVotes_when_called", () => {
+    it("should_addVotes_when_einzelstimmenNull", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .einzelstimmen(null)
         .build();
 
-      const { addVotesToKandidat } = useEinzelstimmeTools();
+      const { addVotesToKandidat } = useManagedStimmzettelEinzelstimmeUtils();
       addVotesToKandidat(kandidat, 3);
+
+      expect(kandidat.einzelstimmen).toBe(3);
+    });
+
+    it("should_addVotes_when_einzelstimmenAlreadyExists", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .einzelstimmen(1)
+        .build();
+
+      const { addVotesToKandidat } = useManagedStimmzettelEinzelstimmeUtils();
+      addVotesToKandidat(kandidat, 2);
 
       expect(kandidat.einzelstimmen).toBe(3);
     });
@@ -26,7 +37,8 @@ describe("einzelstimmeTools.ts", () => {
         .einzelstimmen(4)
         .build();
 
-      const { removeVotesFromKandidat } = useEinzelstimmeTools();
+      const { removeVotesFromKandidat } =
+        useManagedStimmzettelEinzelstimmeUtils();
       removeVotesFromKandidat(kandidat, 2);
 
       expect(kandidat.einzelstimmen).toBe(2);
@@ -37,7 +49,8 @@ describe("einzelstimmeTools.ts", () => {
         .einzelstimmen(4)
         .build();
 
-      const { removeVotesFromKandidat } = useEinzelstimmeTools();
+      const { removeVotesFromKandidat } =
+        useManagedStimmzettelEinzelstimmeUtils();
       removeVotesFromKandidat(kandidat, 4);
 
       expect(kandidat.einzelstimmen).toBe(null);

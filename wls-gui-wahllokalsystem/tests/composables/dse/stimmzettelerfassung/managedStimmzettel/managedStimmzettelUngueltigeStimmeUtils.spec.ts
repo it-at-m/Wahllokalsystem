@@ -1,9 +1,9 @@
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
-import { useUngueltigeStimmeTools } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/ungueltigeStimmeTools.ts";
+import { useManagedStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelUngueltigeStimmeUtils.ts";
 
-describe("ungueltigeStimmeTools.ts", () => {
+describe("managedStimmzettelUngueltigeStimmeUtils.ts", () => {
   const { prepareManagedStimmzettelKandidat } =
     useManagedStimmzettelTestDataFactory();
 
@@ -13,7 +13,8 @@ describe("ungueltigeStimmeTools.ts", () => {
         .ungueltigeStimmen(null)
         .build();
 
-      const { addInvalidVotesToKandidat } = useUngueltigeStimmeTools();
+      const { addInvalidVotesToKandidat } =
+        useManagedStimmzettelUngueltigeStimmeUtils();
       addInvalidVotesToKandidat(kandidat, 3);
 
       expect(kandidat.ungueltigeStimmen).toBe(3);
@@ -26,7 +27,8 @@ describe("ungueltigeStimmeTools.ts", () => {
         .ungueltigeStimmen(4)
         .build();
 
-      const { removeInvalidVotesFromKandidat } = useUngueltigeStimmeTools();
+      const { removeInvalidVotesFromKandidat } =
+        useManagedStimmzettelUngueltigeStimmeUtils();
       removeInvalidVotesFromKandidat(kandidat, 2);
 
       expect(kandidat.ungueltigeStimmen).toBe(2);

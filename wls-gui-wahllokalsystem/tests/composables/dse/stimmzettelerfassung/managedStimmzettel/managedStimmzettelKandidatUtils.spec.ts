@@ -2,9 +2,9 @@ import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedSt
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
 
-import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/kandidatTools.ts";
+import { useManagedStimmzettelKandidatUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelKandidatUtils.ts";
 
-describe("kandidatTools.ts", () => {
+describe("managedStimmzettelKandidatUtils.ts", () => {
   const {
     prepareManagedStimmzettelStimmzettel,
     prepareManagedStimmzettelWahlvorschlag,
@@ -38,7 +38,7 @@ describe("kandidatTools.ts", () => {
         ])
         .build();
 
-      const tools = useKandidatTools(ref(stimmzettel));
+      const tools = useManagedStimmzettelKandidatUtils(ref(stimmzettel));
       expect(tools.getKandidatToAddVotesByOrdnungszahl(101)).toStrictEqual(
         kWithVotes
       );
@@ -58,7 +58,10 @@ describe("kandidatTools.ts", () => {
 
   describe("getKandidatToAddVotesForRangeByOrdnungszahl", () => {
     it("should_returnAllKandidatenInRange_when_called", () => {
-      const k1 = prepareManagedStimmzettelKandidat().ordnungszahl(101).build();
+      const k1 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .nennung(2)
+        .build();
       const k2 = prepareManagedStimmzettelKandidat().ordnungszahl(102).build();
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([
@@ -68,7 +71,7 @@ describe("kandidatTools.ts", () => {
             .build(),
         ])
         .build();
-      const tools = useKandidatTools(ref(stimmzettel));
+      const tools = useManagedStimmzettelKandidatUtils(ref(stimmzettel));
 
       expect(tools.getKandidatToAddVotesForRangeByOrdnungszahl(101)).toEqual([
         k1,
@@ -109,7 +112,7 @@ describe("kandidatTools.ts", () => {
         ])
         .build();
 
-      const tools = useKandidatTools(ref(stimmzettel));
+      const tools = useManagedStimmzettelKandidatUtils(ref(stimmzettel));
       expect(tools.getKandidatForStreichungByOrdnungszahl(101)).toStrictEqual(
         kNoVotes
       );
@@ -141,7 +144,7 @@ describe("kandidatTools.ts", () => {
         ])
         .build();
 
-      const tools = useKandidatTools(ref(stimmzettel));
+      const tools = useManagedStimmzettelKandidatUtils(ref(stimmzettel));
       expect(
         tools.getKandidatToRemoveStreichungByOrdnungszahl(101)
       ).toStrictEqual(kStruck);

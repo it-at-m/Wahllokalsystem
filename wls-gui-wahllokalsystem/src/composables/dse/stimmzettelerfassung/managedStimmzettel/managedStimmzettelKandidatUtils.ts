@@ -4,7 +4,9 @@ import type { Ref } from "vue";
 
 import { computed } from "vue";
 
-export function useKandidatTools(stimmzettel: Ref<Stimmzettel>) {
+export function useManagedStimmzettelKandidatUtils(
+  stimmzettel: Ref<Stimmzettel>
+) {
   const kandidatenOfStimmzettel = computed(() =>
     stimmzettel.value.wahlvorschlaege
       .map((wahlvorschlag) => wahlvorschlag.kandidaten)

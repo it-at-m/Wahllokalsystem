@@ -3,11 +3,11 @@ import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { ref } from "vue";
 
-import { useReststimmeTools } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/reststimmeTools.ts";
+import { useManagedStimmzettelReststimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelReststimmeUtils.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
 
-describe("reststimmeTools.ts", () => {
+describe("managedStimmzettelReststimmeUtils.ts", () => {
   const {
     prepareManagedStimmzettelStimmzettel,
     prepareManagedStimmzettelWahlvorschlag,
@@ -64,7 +64,7 @@ describe("reststimmeTools.ts", () => {
         .wahlvorschlaege([wv])
         .build();
 
-      const { selectWahlvorschlag } = useReststimmeTools(
+      const { selectWahlvorschlag } = useManagedStimmzettelReststimmeUtils(
         wahlId,
         ref({
           einzelstimmen: 0,
@@ -95,7 +95,7 @@ describe("reststimmeTools.ts", () => {
         .wahlvorschlaege([wv])
         .build();
 
-      const { deselectWahlvorschlag } = useReststimmeTools(
+      const { deselectWahlvorschlag } = useManagedStimmzettelReststimmeUtils(
         wahlId,
         ref({
           einzelstimmen: 0,
@@ -132,11 +132,12 @@ describe("reststimmeTools.ts", () => {
         reststimmen: 2,
         streichungen: 0,
       });
-      const { updateReststimmenWhenVotesAdded } = useReststimmeTools(
-        wahlId,
-        stimmenSummary,
-        ref(stimmzettel)
-      );
+      const { updateReststimmenWhenVotesAdded } =
+        useManagedStimmzettelReststimmeUtils(
+          wahlId,
+          stimmenSummary,
+          ref(stimmzettel)
+        );
 
       updateReststimmenWhenVotesAdded();
 
@@ -173,11 +174,12 @@ describe("reststimmeTools.ts", () => {
         reststimmen: 0,
         streichungen: 0,
       });
-      const { updateReststimmenWhenVotesRemoved } = useReststimmeTools(
-        wahlId,
-        stimmenSummary,
-        ref(stimmzettel)
-      );
+      const { updateReststimmenWhenVotesRemoved } =
+        useManagedStimmzettelReststimmeUtils(
+          wahlId,
+          stimmenSummary,
+          ref(stimmzettel)
+        );
 
       updateReststimmenWhenVotesRemoved();
 

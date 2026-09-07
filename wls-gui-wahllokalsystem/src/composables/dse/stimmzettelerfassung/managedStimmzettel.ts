@@ -5,11 +5,11 @@ import type { Ref } from "vue";
 
 import { computed } from "vue";
 
-import { useEinzelstimmeTools } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/einzelstimmeTools.ts";
-import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/kandidatTools.ts";
-import { useReststimmeTools } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/reststimmeTools.ts";
-import { useUngueltigeStimmeTools } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/ungueltigeStimmeTools.ts";
-import { useWahlvorschlagTools } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/wahlvorschlagTools.ts";
+import { useManagedStimmzettelEinzelstimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelEinzelstimmeUtils.ts";
+import { useManagedStimmzettelKandidatUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelKandidatUtils.ts";
+import { useManagedStimmzettelReststimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelReststimmeUtils.ts";
+import { useManagedStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelUngueltigeStimmeUtils.ts";
+import { useManagedStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelWahlvorschlagUtils.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 
@@ -31,12 +31,13 @@ export function useManagedStimmzettel(
     getKandidatToAddVotesForRangeByOrdnungszahl,
     getKandidatForStreichungByOrdnungszahl,
     getKandidatToRemoveStreichungByOrdnungszahl,
-  } = useKandidatTools(stimmzettel);
-  const { getWahlvorschlagByOrdnungszahl } = useWahlvorschlagTools(stimmzettel);
+  } = useManagedStimmzettelKandidatUtils(stimmzettel);
+  const { getWahlvorschlagByOrdnungszahl } =
+    useManagedStimmzettelWahlvorschlagUtils(stimmzettel);
   const { addVotesToKandidat, removeVotesFromKandidat } =
-    useEinzelstimmeTools();
+    useManagedStimmzettelEinzelstimmeUtils();
   const { addInvalidVotesToKandidat, removeInvalidVotesFromKandidat } =
-    useUngueltigeStimmeTools();
+    useManagedStimmzettelUngueltigeStimmeUtils();
 
   const kandidatenWithValues = computed(() =>
     kandidatenOfStimmzettel.value.filter(_hasKandidatAnyStimmeOrStreichung)
@@ -66,7 +67,7 @@ export function useManagedStimmzettel(
     deselectWahlvorschlag,
     updateReststimmenWhenVotesAdded,
     updateReststimmenWhenVotesRemoved,
-  } = useReststimmeTools(wahlID, stimmenSummary, stimmzettel);
+  } = useManagedStimmzettelReststimmeUtils(wahlID, stimmenSummary, stimmzettel);
 
   function resetStimmzettel() {
     changeHistory.reset();

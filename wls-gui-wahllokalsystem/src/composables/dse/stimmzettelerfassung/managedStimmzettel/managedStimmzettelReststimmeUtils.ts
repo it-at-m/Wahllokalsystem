@@ -8,7 +8,7 @@ import { computed } from "vue";
 
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 
-export function useReststimmeTools(
+export function useManagedStimmzettelReststimmeUtils(
   wahlID: string,
   stimmenSummary: Ref<StimmenSummary>,
   stimmzettel: Ref<Stimmzettel>

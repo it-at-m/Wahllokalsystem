@@ -60,12 +60,14 @@
             tabindex="-1"
           >
             <base-kandidat-list-item-content :kandidat="kandidat" />
+            <v-divider
+              :variant="
+                isDividerZwischenGleichemKandidat(index + 1)
+                  ? 'dashed'
+                  : 'solid'
+              "
+            />
           </v-list-item>
-          <v-divider
-            :variant="
-              isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
-            "
-          />
         </template>
       </v-list>
     </v-card-text>

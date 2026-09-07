@@ -1,4 +1,4 @@
-import type { Beschlussgrund } from "@/types/dse/beschlussfassung/Beschlussgrund.ts";
+import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Meta, StoryFn } from "@storybook/vue3";
 
@@ -12,7 +12,8 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
@@ -20,7 +21,8 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
       wahlvorschlaege: [],
       invalideVotes: 1,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
@@ -28,11 +30,12 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [
+      wahlvorstandBeschlussvorschlag: [
         {
           text: "Stimmzettel zur Beschlussfassung vorgemerkt",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
       ],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
@@ -40,14 +43,15 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [
+      wahlvorstandBeschlussvorschlag: [
         {
           text: "Wählerwille nicht zweifelfrei erkennbar",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
         {
           text: "Kennzeichnung nicht eindeutig zuzuordnen",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
       ],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
@@ -55,7 +59,8 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
@@ -63,14 +68,15 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [
+      wahlvorstandBeschlussvorschlag: [
         {
           text: "Wählerwille nicht zweifelfrei erkennbar",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
         {
           text: "Kennzeichnung nicht eindeutig zuzuordnen",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
       ],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
@@ -78,7 +84,8 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
@@ -86,11 +93,12 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
       wahlvorschlaege: [],
       invalideVotes: 2,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [
+      wahlvorstandBeschlussvorschlag: [
         {
           text: "Ungültige Kennzeichnung",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
       ],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
@@ -98,7 +106,8 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
@@ -106,14 +115,15 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [
+      wahlvorstandBeschlussvorschlag: [
         {
           text: "Wählerwille nicht zweifelfrei erkennbar",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
         {
           text: "Sonstige Unklarheit",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
       ],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
@@ -121,7 +131,8 @@ function createDummyStimmzettelListe(): Stimmzettel[] {
       wahlvorschlaege: [],
       invalideVotes: 1,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
   ];

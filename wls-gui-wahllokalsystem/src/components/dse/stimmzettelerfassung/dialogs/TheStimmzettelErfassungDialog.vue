@@ -112,7 +112,10 @@
         >
         <v-spacer />
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
-        <base-wls-button-save @click="onSavedClicked" />
+        <base-save-button-with-action-menu
+          :model-value="currentAction"
+          :actions="actions"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -125,16 +128,17 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
+import BaseSaveButtonWithActionMenu from "@/components/common/buttons/BaseSaveButtonWithActionMenu.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
 import TheEingabehistorieCard from "@/components/dse/stimmzettelerfassung/TheEingabehistorieCard.vue";
 import TheStimmzettelCommandProcessingTextField from "@/components/dse/stimmzettelerfassung/TheStimmzettelCommandProcessingTextField.vue";
 import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStimmzettelContent.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
@@ -142,7 +146,7 @@ const isDialogVisibleModel = defineModel("modelValue", {
   required: false,
 });
 
-const props = defineProps({
+const properties = defineProps({
   stimmzettel: {
     type: Object as PropType<Stimmzettel>,
     required: true,
@@ -155,8 +159,31 @@ const props = defineProps({
 
 const emit = defineEmits<{
   cancel: [];
-  confirm: [stimmzettel: Stimmzettel];
+  confirmClose: [stimmzettel: Stimmzettel];
+  confirmNext: [stimmzettel: Stimmzettel];
 }>();
+
+const actions = [
+  {
+    title: SAVE_CONTINUE,
+    action: () => onSavedClickedAndNext(),
+  },
+  {
+    title: "Speichern und schließen",
+    action: () => onSavedClickedAndClose(),
+  },
+];
+
+const currentAction = ref(actions[0]);
+
+watch(
+  () => isDialogVisibleModel.value,
+  () => {
+    if (isDialogVisibleModel.value) {
+      currentAction.value = actions[0];
+    }
+  }
+);
 
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
@@ -185,8 +212,12 @@ function onCancelClicked() {
   emit("cancel");
 }
 
-function onSavedClicked() {
-  emit("confirm", stimmzettelManager.getStimmzettelSnapshot());
+function onSavedClickedAndClose() {
+  emit("confirmClose", stimmzettelManager.getStimmzettelSnapshot());
+}
+
+function onSavedClickedAndNext() {
+  emit("confirmNext", stimmzettelManager.getStimmzettelSnapshot());
 }
 
 function onResetClicked() {

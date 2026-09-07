@@ -191,8 +191,8 @@ const wahlID = route.params.wahlId as string;
 const { currentUserTeamName } = storeToRefs(useUserStore());
 
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
-  computed(() => props.stimmzettel.stimmzettelkennung),
-  props.wahlvorschlaege,
+  computed(() => properties.stimmzettel.stimmzettelkennung),
+  properties.wahlvorschlaege,
   wahlID,
   currentUserTeamName.value
 );

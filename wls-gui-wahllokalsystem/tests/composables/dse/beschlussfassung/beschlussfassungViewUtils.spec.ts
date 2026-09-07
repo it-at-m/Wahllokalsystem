@@ -1,9 +1,12 @@
+import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatus.ts";
+
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
 import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
@@ -46,11 +49,14 @@ vi.mock(
   })
 );
 
+let mockedWorkflowStatusRef: ReturnType<typeof ref> | undefined;
+
 vi.mock(
   "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts",
   () => ({
     useStimmzettelerfassungStatusState: () => ({
-      workflowStatus: ref([]),
+      workflowStatus: (mockedWorkflowStatusRef =
+        ref<StimmzettelerfassungStatus | null>(null)),
     }),
   })
 );
@@ -73,6 +79,10 @@ describe("beschlussfassungViewUtils.ts", () => {
     vi.clearAllMocks();
     vi.resetAllMocks();
     mockDefinitions.clearActivatedCallbacks();
+
+    if (mockedWorkflowStatusRef) {
+      mockedWorkflowStatusRef.value = null;
+    }
 
     unitUnderTest = useBeschlussfassungViewUtils(wahlID, wahlbezirkID);
   });
@@ -174,6 +184,109 @@ describe("beschlussfassungViewUtils.ts", () => {
       expect(unitUnderTest.isStimmzettelForBeschlussLoading.value).toBe(false);
       expect(spy.mock.calls).toStrictEqual([[true], [false]]);
       spy.mockReset();
+    });
+  });
+
+  describe("completedStimmzettelForBeschlussfassung", () => {
+    it("should_returnOnlyStimmzettelWithGueltigkeitNotBeschlussAusstehend_when_givenStimmzettelWithMixedGueltigkeiten", () => {
+      const stZettBeschlussAusstehend = preparePersistedStimmzettel()
+        .teamID("A")
+        .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
+        .build();
+
+      const stZettValid = preparePersistedStimmzettel()
+        .teamID("B")
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .build();
+
+      const stZettInvalid = preparePersistedStimmzettel()
+        .teamID("C")
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+        .build();
+
+      unitUnderTest.stimmzettelForBeschlussfassung.value = [
+        stZettBeschlussAusstehend,
+        stZettValid,
+        stZettInvalid,
+      ];
+
+      expect(
+        unitUnderTest.completedStimmzettelForBeschlussfassung.value
+      ).toEqual([stZettValid, stZettInvalid]);
+    });
+
+    it("should_returnEmptyList_when_allStimmzettelHaveGueltigkeitBeschlussAusstehend", () => {
+      const stZettA = preparePersistedStimmzettel()
+        .teamID("A")
+        .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
+        .build();
+
+      const stZettB = preparePersistedStimmzettel()
+        .teamID("B")
+        .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
+        .build();
+
+      unitUnderTest.stimmzettelForBeschlussfassung.value = [stZettA, stZettB];
+
+      expect(
+        unitUnderTest.completedStimmzettelForBeschlussfassung.value
+      ).toEqual([]);
+    });
+  });
+
+  describe("isBeschlussfassungBeendenButtonDisabled", () => {
+    it("should_returnTrue_when_notAllStimmzettelForBeschlussAreCompleted", () => {
+      const stZettBeschlussAusstehend = preparePersistedStimmzettel()
+        .teamID("A")
+        .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
+        .build();
+
+      const stZettCompleted = preparePersistedStimmzettel()
+        .teamID("B")
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .build();
+
+      unitUnderTest.stimmzettelForBeschlussfassung.value = [
+        stZettBeschlussAusstehend,
+        stZettCompleted,
+      ];
+
+      expect(unitUnderTest.isBeschlussfassungBeendenButtonDisabled.value).toBe(
+        true
+      );
+    });
+
+    it("should_returnFalse_when_allStimmzettelCompleted", () => {
+      const stZettCompleted1 = preparePersistedStimmzettel()
+        .teamID("A")
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .build();
+
+      const stZettCompleted2 = preparePersistedStimmzettel()
+        .teamID("B")
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+        .build();
+
+      unitUnderTest.stimmzettelForBeschlussfassung.value = [
+        stZettCompleted1,
+        stZettCompleted2,
+      ];
+
+      expect(unitUnderTest.isBeschlussfassungBeendenButtonDisabled.value).toBe(
+        false
+      );
+    });
+
+    it("should_returnTrue_when_workflowStatusIsBeAbgeschlossen", () => {
+      // @ts-expect-error: mockedWorkflowStatusRef is possibly unused
+      mockedWorkflowStatusRef.value = {
+        status: StimmzettelerfassungStatusEnum.BeAbgeschlossen,
+      };
+
+      unitUnderTest.stimmzettelForBeschlussfassung.value = [];
+      expect(unitUnderTest.isBeschlussfassungBeendenButtonDisabled.value).toBe(
+        true
+      );
     });
   });
 });

@@ -24,6 +24,7 @@ const mockDefinitions = vi.hoisted(() => ({
     registerKandidatUngueltigeStimmenAdded: vi.fn(),
     registerKandidatUngueltigeStimmenRemoved: vi.fn(),
     registerKandidatStreichungSet: vi.fn(),
+    registerKandidatStreichungUnset: vi.fn(),
     registerKandidatStreichungRangeUnset: vi.fn(),
     registerKandidatStreichungRangeSet: vi.fn(),
     registerWahlvorschlagSelected: vi.fn(),
@@ -238,179 +239,11 @@ describe("managedStimmzettel.ts", () => {
   });
 
   describe("kandidatAddEinzelstimmenOrThrow", () => {
-    it("should_useKandidatWithUserVotes_when_multipleCandidatesShareListenposition", () => {
-      const kandidatWithoutVotes = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const kandidatWithVotes = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(2)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([kandidatWithoutVotes, kandidatWithVotes])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      const countVotes = 1;
-      managed.kandidatAddEinzelstimmenOrThrow(101, countVotes);
-
-      expect(kandidatWithVotes.einzelstimmen).toBe(3);
-      expect(kandidatWithoutVotes.einzelstimmen).toBeNull();
-      expect(
-        mockDefinitions.changeHistory.registerKandidatEinzelstimmenAdded
-      ).toHaveBeenCalledExactlyOnceWith(kandidatWithVotes, countVotes);
-    });
-
-    it("should_useFirstNotDiscardedCandidate_when_noUserVotesPresent", () => {
-      const discardedKandidat = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(true)
-        .build();
-      const kandidatToUse = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([discardedKandidat, kandidatToUse])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      const countVotes = 1;
-      managed.kandidatAddEinzelstimmenOrThrow(101, countVotes);
-
-      expect(kandidatToUse.einzelstimmen).toBe(1);
-      expect(discardedKandidat.einzelstimmen).toBeNull();
-      expect(
-        mockDefinitions.changeHistory.registerKandidatEinzelstimmenAdded
-      ).toHaveBeenCalledExactlyOnceWith(kandidatToUse, countVotes);
-    });
-
-    it("should_useFirstCandidate_when_allCandidatesAreDiscarded", () => {
-      const firstDiscarded = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(true)
-        .build();
-      const secondDiscarded = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(true)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([firstDiscarded, secondDiscarded])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      const countVotes = 1;
-      managed.kandidatAddEinzelstimmenOrThrow(101, 1);
-
-      expect(firstDiscarded.einzelstimmen).toBe(1);
-      expect(secondDiscarded.einzelstimmen).toBeNull();
-      expect(
-        mockDefinitions.changeHistory.registerKandidatEinzelstimmenAdded
-      ).toHaveBeenCalledExactlyOnceWith(firstDiscarded, countVotes);
-    });
-
-    it("should_throwManagedStimmzettelError_when_noKandidatForGivenOrdnungszahl", () => {
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() => managed.kandidatAddEinzelstimmenOrThrow(101, 1)).toThrow(
-        ManagedStimmzettelError
-      );
-    });
-
-    it("should_throwManagedStimmzettelError_when_votesToAddIsNaN", () => {
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() =>
-        managed.kandidatAddEinzelstimmenOrThrow(101, Number.NaN)
-      ).toThrow(ManagedStimmzettelError);
-    });
-
-    it("should_throwManagedStimmzettelError_when_votesToAddIsNegativeInfinity", () => {
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() =>
-        managed.kandidatAddEinzelstimmenOrThrow(101, Number.NEGATIVE_INFINITY)
-      ).toThrow(ManagedStimmzettelError);
-    });
-
-    it("should_throwManagedStimmzettelError_when_votesToAddIsPositiveInfinity", () => {
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() =>
-        managed.kandidatAddEinzelstimmenOrThrow(101, Number.POSITIVE_INFINITY)
-      ).toThrow(ManagedStimmzettelError);
-    });
-
-    it("should_throwManagedStimmzettelError_when_votesToAddIsFractionalValue", () => {
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() => managed.kandidatAddEinzelstimmenOrThrow(101, 0.1)).toThrow(
-        ManagedStimmzettelError
-      );
-    });
-
-    it("should_incrementVotes_when_addVotesMultipleTimes", () => {
+    it("should_addVotes_when_kandidatIsPresent", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
         .ordnungszahl(101)
         .einzelstimmen(1)
-        .durchgestrichen(false)
         .build();
-
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([
           prepareManagedStimmzettelWahlvorschlag()
@@ -419,137 +252,56 @@ describe("managedStimmzettel.ts", () => {
             .build(),
         ])
         .build();
+      const votesToAdd = 2;
 
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.kandidatAddEinzelstimmenOrThrow(101, 2);
-      managed.kandidatAddEinzelstimmenOrThrow(101, 3);
-
-      expect(kandidat.einzelstimmen).toBe(6);
-      expect(
-        mockDefinitions.changeHistory.registerKandidatEinzelstimmenAdded.mock
-          .calls
-      ).toStrictEqual([
-        [kandidat, 2],
-        [kandidat, 3],
-      ]);
-    });
-
-    it("should_useKandidatFromSecondWahlvorschlag_when_ordnungszahlPointsToIt", () => {
-      const kandidatInFirstWahlvorschlag = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const kandidatInSecondWahlvorschlag = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(201)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([kandidatInFirstWahlvorschlag])
-            .build(),
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(2)
-            .kandidaten([kandidatInSecondWahlvorschlag])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      const countVotes = 1;
-      managed.kandidatAddEinzelstimmenOrThrow(201, countVotes);
-
-      expect(kandidatInSecondWahlvorschlag.einzelstimmen).toBe(1);
-      expect(kandidatInFirstWahlvorschlag.einzelstimmen).toBeNull();
+      managed.kandidatAddEinzelstimmenOrThrow(101, votesToAdd);
+      expect(kandidat.einzelstimmen).toBe(3);
       expect(
         mockDefinitions.changeHistory.registerKandidatEinzelstimmenAdded
-      ).toHaveBeenCalledExactlyOnceWith(
-        kandidatInSecondWahlvorschlag,
-        countVotes
-      );
+      ).toHaveBeenCalledExactlyOnceWith(kandidat, votesToAdd);
     });
 
-    it("should_throwManagedStimmzettelError_when_listenpositionHasNoCandidate", () => {
-      const kandidat = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-
+    it("should_throwError_when_kandidatNotFound", () => {
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([kandidat])
-            .build(),
-        ])
+        .wahlvorschlaege([])
         .build();
-
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() => managed.kandidatAddEinzelstimmenOrThrow(199, 1)).toThrow(
+      expect(() => managed.kandidatAddEinzelstimmenOrThrow(101, 1)).toThrow(
         ManagedStimmzettelError
       );
     });
   });
 
   describe("kandidatRemoveEinzelstimmenOrThrow", () => {
-    it("should_throwManagedStimmzettelError_when_noKandidatForGivenOrdnungszahl", () => {
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() => managed.kandidatRemoveEinzelstimmenOrThrow(101, 1)).toThrow(
-        ManagedStimmzettelError
-      );
-    });
-
-    it("should_throwManagedStimmzettelError_when_votesToRemoveIsNaNOrInfiniteOrFractional", () => {
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() =>
-        managed.kandidatRemoveEinzelstimmenOrThrow(101, Number.NaN)
-      ).toThrow(ManagedStimmzettelError);
-      expect(() =>
-        managed.kandidatRemoveEinzelstimmenOrThrow(
-          101,
-          Number.NEGATIVE_INFINITY
-        )
-      ).toThrow(ManagedStimmzettelError);
-      expect(() =>
-        managed.kandidatRemoveEinzelstimmenOrThrow(
-          101,
-          Number.POSITIVE_INFINITY
-        )
-      ).toThrow(ManagedStimmzettelError);
-      expect(() =>
-        managed.kandidatRemoveEinzelstimmenOrThrow(101, 0.1)
-      ).toThrow(ManagedStimmzettelError);
-    });
-
-    it("should_throwManagedStimmzettelError_when_votesToRemoveExceedsExistingEinzelstimmen", () => {
+    it("should_removeVotes_when_kandidatIsPresent", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
         .ordnungszahl(101)
-        .einzelstimmen(2)
-        .durchgestrichen(false)
+        .einzelstimmen(3)
         .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidat])
+            .build(),
+        ])
+        .build();
+      const votesToRemove = 2;
 
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      managed.kandidatRemoveEinzelstimmenOrThrow(101, votesToRemove);
+      expect(kandidat.einzelstimmen).toBe(1);
+      expect(
+        mockDefinitions.changeHistory.registerKandidatEinzelstimmenRemoved
+      ).toHaveBeenCalledExactlyOnceWith(kandidat, votesToRemove);
+    });
+
+    it("should_throwError_when_kandidatToRemoveVotesHasNotEnoughEinzelstimmen", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .einzelstimmen(1)
+        .build();
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([
           prepareManagedStimmzettelWahlvorschlag()
@@ -560,112 +312,51 @@ describe("managedStimmzettel.ts", () => {
         .build();
 
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() => managed.kandidatRemoveEinzelstimmenOrThrow(101, 3)).toThrow(
+      expect(() => managed.kandidatRemoveEinzelstimmenOrThrow(101, 2)).toThrow(
         ManagedStimmzettelError
       );
     });
 
-    it("should_decrementEinzelstimmenAndUpdateSummary_when_validRemoval", () => {
-      const kdStore = useKopfdatenStore();
-      kdStore.kopfdaten = [
-        {
-          wahlID: mockedWahlId,
-          wahlbezirkID: "wb-1",
-          gemeinde: "",
-          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
-          stimmzettelgebietsnummer: "",
-          stimmzettelgebietsname: "",
-          wahlname: "",
-          wahlbezirknummer: "",
-          maximalErlaubteStimmenProWaehler: 2,
-        },
-      ];
-
-      const kandidat = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(2)
-        .ungueltigeStimmen(0)
-        .reststimmen(0)
-        .durchgestrichen(false)
-        .build();
-      const wv = prepareManagedStimmzettelWahlvorschlag()
-        .ordnungszahl(1)
-        .selected(true)
-        .kandidaten([kandidat])
-        .build();
+    it("should_throwError_when_kandidatNotFound", () => {
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([wv])
+        .wahlvorschlaege([])
         .build();
-
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.kandidatRemoveEinzelstimmenOrThrow(101, 1);
-
-      expect(kandidat.einzelstimmen).toBe(1);
-      expect(managed.stimmenSummary.value.einzelstimmen).toBe(1);
-    });
-
-    it("should_reassignReststimmen_when_votesRemovedAndRemainingVotesBecomePositive", () => {
-      const kdStore = useKopfdatenStore();
-      kdStore.kopfdaten = [
-        {
-          wahlID: mockedWahlId,
-          wahlbezirkID: "wb-1",
-          gemeinde: "",
-          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
-          stimmzettelgebietsnummer: "",
-          stimmzettelgebietsname: "",
-          wahlname: "",
-          wahlbezirknummer: "",
-          maximalErlaubteStimmenProWaehler: 2,
-        },
-      ];
-
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(1)
-        .ungueltigeStimmen(0)
-        .reststimmen(0)
-        .durchgestrichen(false)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .einzelstimmen(1)
-        .ungueltigeStimmen(0)
-        .reststimmen(0)
-        .durchgestrichen(false)
-        .build();
-      const wv = prepareManagedStimmzettelWahlvorschlag()
-        .ordnungszahl(1)
-        .selected(true)
-        .kandidaten([k1, k2])
-        .build();
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([wv])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.kandidatRemoveEinzelstimmenOrThrow(101, 1);
-
-      expect(k1.einzelstimmen).toBe(null);
-      expect(k1.reststimmen).toBe(1);
-      expect(managed.stimmenSummary.value.reststimmen).toBe(1);
+      expect(() => managed.kandidatRemoveEinzelstimmenOrThrow(101, 1)).toThrow(
+        ManagedStimmzettelError
+      );
     });
   });
 
   describe("kandidatAddUngueltigeStimmenOrThrow", () => {
-    it("should_throwManagedStimmzettelError_when_noKandidatForGivenOrdnungszahl", () => {
+    it("should_addInvalidVotes_when_kandidatIsPresent", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .ungueltigeStimmen(1)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidat])
+            .build(),
+        ])
+        .build();
+      const invalidVotesToAdd = 2;
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      managed.kandidatAddUngueltigeStimmenOrThrow(101, invalidVotesToAdd);
+      expect(kandidat.ungueltigeStimmen).toBe(3);
+      expect(
+        mockDefinitions.changeHistory.registerKandidatUngueltigeStimmenAdded
+      ).toHaveBeenCalledExactlyOnceWith(kandidat, invalidVotesToAdd);
+    });
+
+    it("should_throwError_when_kandidatNotFound", () => {
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([])
         .build();
-
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
       expect(() => managed.kandidatAddUngueltigeStimmenOrThrow(101, 1)).toThrow(
         ManagedStimmzettelError
       );
@@ -673,448 +364,72 @@ describe("managedStimmzettel.ts", () => {
   });
 
   describe("kandidatRemoveUngueltigeStimmenOrThrow", () => {
-    it("should_throwManagedStimmzettelError_when_noKandidatForGivenOrdnungszahl", () => {
+    it("should_removeInvalidVotes_when_kandidatIsPresent", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .ungueltigeStimmen(3)
+        .build();
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([])
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidat])
+            .build(),
+        ])
+        .build();
+      const invalidVotesToRemove = 2;
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      managed.kandidatRemoveUngueltigeStimmenOrThrow(101, invalidVotesToRemove);
+      expect(kandidat.ungueltigeStimmen).toBe(1);
+      expect(
+        mockDefinitions.changeHistory.registerKandidatUngueltigeStimmenRemoved
+      ).toHaveBeenCalledExactlyOnceWith(kandidat, invalidVotesToRemove);
+    });
+
+    it("should_throwError_when_kandidatToRemoveInvalidVotesHasNotEnoughUngueltigeStimmen", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .ungueltigeStimmen(1)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidat])
+            .build(),
+        ])
         .build();
 
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      expect(() =>
+        managed.kandidatRemoveUngueltigeStimmenOrThrow(101, 2)
+      ).toThrow(ManagedStimmzettelError);
+    });
 
+    it("should_throwError_when_kandidatNotFound", () => {
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
       expect(() =>
         managed.kandidatRemoveUngueltigeStimmenOrThrow(101, 1)
       ).toThrow(ManagedStimmzettelError);
     });
-
-    it("should_decrementUngueltigeStimmen_when_validRemoval", () => {
-      const kandidat = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(0)
-        .ungueltigeStimmen(3)
-        .reststimmen(0)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([kandidat])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      const countInvalidVotesToRemove = 2;
-      managed.kandidatRemoveUngueltigeStimmenOrThrow(
-        101,
-        countInvalidVotesToRemove
-      );
-
-      expect(kandidat.ungueltigeStimmen).toBe(1);
-      expect(managed.stimmenSummary.value.ungueltigeStimmen).toBe(1);
-
-      expect(
-        mockDefinitions.changeHistory.registerKandidatUngueltigeStimmenRemoved
-      ).toHaveBeenCalledExactlyOnceWith(kandidat, countInvalidVotesToRemove);
-    });
   });
 
   describe("kandidatenAddStimmenInRangeOrThrow", () => {
-    it("should_addVotesToAllCandidatesInRange_when_rangeIsComplete", () => {
+    it("should_addVotesToKandidatenInRange_when_kandidatenArePresent", () => {
       const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
         .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(false)
         .build();
       const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
         .ordnungszahl(102)
         .einzelstimmen(null)
         .durchgestrichen(false)
         .build();
-      const k3 = prepareManagedStimmzettelKandidat()
-        .listenposition(3)
-        .ordnungszahl(103)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([k1, k2, k3])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      const countVotes = 2;
-      managed.kandidatenAddStimmenInRangeOrThrow(101, 103, countVotes);
-
-      expect(k1.einzelstimmen).toBe(2);
-      expect(k2.einzelstimmen).toBe(2);
-      expect(k3.einzelstimmen).toBe(2);
-      expect(
-        mockDefinitions.changeHistory.registerKandidatEinzelstimmenRangeAdded
-      ).toHaveBeenCalledExactlyOnceWith([k1, k2, k3], countVotes);
-    });
-
-    it("should_throwManagedStimmzettelError_when_anyOrdnungszahlInRangeIsMissing", () => {
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const k3 = prepareManagedStimmzettelKandidat()
-        .listenposition(3)
-        .ordnungszahl(103)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([k1, k3])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() =>
-        managed.kandidatenAddStimmenInRangeOrThrow(101, 103, 1)
-      ).toThrow(ManagedStimmzettelError);
-    });
-
-    it("should_throwManagedStimmzettelError_when_rangeContainsAnyStreichung", () => {
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .einzelstimmen(null)
-        .durchgestrichen(true)
-        .build();
-      const k3 = prepareManagedStimmzettelKandidat()
-        .listenposition(3)
-        .ordnungszahl(103)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([k1, k2, k3])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() =>
-        managed.kandidatenAddStimmenInRangeOrThrow(101, 103, 1)
-      ).toThrow(ManagedStimmzettelError);
-    });
-
-    it("should_addAllVotesAcrossRange_evenIfRequestedExceedsRemainingVotes", () => {
-      const kdStore = useKopfdatenStore();
-      kdStore.kopfdaten = [
-        {
-          wahlID: mockedWahlId,
-          wahlbezirkID: "wb-1",
-          gemeinde: "",
-          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
-          stimmzettelgebietsnummer: "",
-          stimmzettelgebietsname: "",
-          wahlname: "",
-          wahlbezirknummer: "",
-          maximalErlaubteStimmenProWaehler: 3,
-        },
-      ];
-
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(0)
-        .ungueltigeStimmen(0)
-        .reststimmen(0)
-        .durchgestrichen(false)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .einzelstimmen(0)
-        .ungueltigeStimmen(0)
-        .reststimmen(0)
-        .durchgestrichen(false)
-        .build();
-      const wv = prepareManagedStimmzettelWahlvorschlag()
-        .ordnungszahl(1)
-        .selected(false)
-        .kandidaten([k1, k2])
-        .build();
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([wv])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      const countVotes = 2;
-      managed.kandidatenAddStimmenInRangeOrThrow(101, 102, countVotes);
-
-      expect(k1.einzelstimmen).toBe(2);
-      expect(k2.einzelstimmen).toBe(2);
-      expect(managed.stimmenSummary.value.einzelstimmen).toBe(4);
-      expect(
-        mockDefinitions.changeHistory.registerKandidatEinzelstimmenRangeAdded
-      ).toHaveBeenCalledExactlyOnceWith([k1, k2], countVotes);
-    });
-
-    it("should_addAllVotesToSingleKandidat_evenIfRequestedExceedsRemainingVotes", () => {
-      const kdStore = useKopfdatenStore();
-      kdStore.kopfdaten = [
-        {
-          wahlID: mockedWahlId,
-          wahlbezirkID: "wb-1",
-          gemeinde: "",
-          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
-          stimmzettelgebietsnummer: "",
-          stimmzettelgebietsname: "",
-          wahlname: "",
-          wahlbezirknummer: "",
-          maximalErlaubteStimmenProWaehler: 3,
-        },
-      ];
-
-      const kandidat = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(0)
-        .ungueltigeStimmen(0)
-        .reststimmen(0)
-        .durchgestrichen(false)
-        .build();
-      const wv = prepareManagedStimmzettelWahlvorschlag()
-        .ordnungszahl(1)
-        .selected(false)
-        .kandidaten([kandidat])
-        .build();
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([wv])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-      managed.kandidatAddEinzelstimmenOrThrow(101, 1);
-      managed.kandidatAddEinzelstimmenOrThrow(101, 5);
-
-      expect(kandidat.einzelstimmen).toBe(6);
-      expect(managed.stimmenSummary.value.einzelstimmen).toBe(6);
-    });
-  });
-
-  describe("kandidatAddStreichungOrThrow", () => {
-    it("should_setDurchgestrichenToTrue_when_kandidatExistsForOrdnungszahl", () => {
-      const kandidat = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([kandidat])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.kandidatAddStreichungOrThrow(101);
-
-      expect(kandidat.durchgestrichen).toBe(true);
-      expect(
-        mockDefinitions.changeHistory.registerKandidatStreichungSet
-      ).toHaveBeenCalledExactlyOnceWith(kandidat);
-    });
-
-    it("should_throwManagedStimmzettelError_when_noKandidatForGivenOrdnungszahl", () => {
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() => managed.kandidatAddStreichungOrThrow(101)).toThrow(
-        ManagedStimmzettelError
-      );
-    });
-
-    it("should_preferKandidatWithoutEinzelstimmen_when_multipleCandidatesShareListenposition", () => {
-      const kandidatWithVotes = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(1)
-        .durchgestrichen(false)
-        .build();
-      const kandidatWithoutVotes = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([kandidatWithVotes, kandidatWithoutVotes])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-      managed.kandidatAddStreichungOrThrow(101);
-
-      expect(kandidatWithoutVotes.durchgestrichen).toBe(true);
-      expect(kandidatWithVotes.durchgestrichen).toBe(false);
-      expect(
-        mockDefinitions.changeHistory.registerKandidatStreichungSet
-      ).toHaveBeenCalledExactlyOnceWith(kandidatWithoutVotes);
-    });
-  });
-
-  describe("kandidatenStreichungenInRangeOrThrow", () => {
-    it("should_setDurchgestrichenTrueForAllKandidatenInRange_when_rangeIsComplete", () => {
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .durchgestrichen(false)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .durchgestrichen(false)
-        .build();
-      const k3 = prepareManagedStimmzettelKandidat()
-        .listenposition(3)
-        .ordnungszahl(103)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([k1, k2, k3])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.kandidatenStreichungenInRangeOrThrow(101, 103);
-
-      expect(k1.durchgestrichen).toBe(true);
-      expect(k2.durchgestrichen).toBe(true);
-      expect(k3.durchgestrichen).toBe(true);
-      expect(
-        mockDefinitions.changeHistory.registerKandidatStreichungRangeSet
-      ).toHaveBeenCalledExactlyOnceWith([k1, k2, k3]);
-    });
-
-    it("should_throwManagedStimmzettelError_when_anyOrdnungszahlInRangeIsMissing", () => {
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .durchgestrichen(false)
-        .build();
-      const k3 = prepareManagedStimmzettelKandidat()
-        .listenposition(3)
-        .ordnungszahl(103)
-        .durchgestrichen(false)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([k1, k3])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      expect(() =>
-        managed.kandidatenStreichungenInRangeOrThrow(101, 103)
-      ).toThrow(ManagedStimmzettelError);
-    });
-  });
-
-  describe("kandidatenRemoveStreichungenInRangeOrThrow", () => {
-    it("should_unsetDurchgestrichenForAllKandidatenInRange_when_anyIsDiscarded", () => {
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .durchgestrichen(true)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .durchgestrichen(false)
-        .build();
-      const k3 = prepareManagedStimmzettelKandidat()
-        .listenposition(3)
-        .ordnungszahl(103)
-        .durchgestrichen(true)
-        .build();
-
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([
-          prepareManagedStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([k1, k2, k3])
-            .build(),
-        ])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.kandidatenRemoveStreichungenInRangeOrThrow(101, 103);
-
-      expect(k1.durchgestrichen).toBe(false);
-      expect(k2.durchgestrichen).toBe(false);
-      expect(k3.durchgestrichen).toBe(false);
-    });
-
-    it("should_throwManagedStimmzettelError_when_allCandidatesInRangeAlreadyHaveNoStreichung", () => {
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .durchgestrichen(false)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .durchgestrichen(false)
-        .build();
-
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([
           prepareManagedStimmzettelWahlvorschlag()
@@ -1123,9 +438,297 @@ describe("managedStimmzettel.ts", () => {
             .build(),
         ])
         .build();
+      const votesToAdd = 1;
 
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      managed.kandidatenAddStimmenInRangeOrThrow(101, 102, votesToAdd);
+      expect(k1.einzelstimmen).toBe(1);
+      expect(k2.einzelstimmen).toBe(1);
+      expect(
+        mockDefinitions.changeHistory.registerKandidatEinzelstimmenRangeAdded
+      ).toHaveBeenCalledExactlyOnceWith([k1, k2], votesToAdd);
+    });
 
+    it("should_throwError_when_kandidatInRangeHasStreichung", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .einzelstimmen(null)
+        .durchgestrichen(true)
+        .build();
+      const k2 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(102)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([k1, k2])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      expect(() =>
+        managed.kandidatenAddStimmenInRangeOrThrow(101, 102, 1)
+      ).toThrow(ManagedStimmzettelError);
+    });
+
+    it("should_throwError_when_anyOrdnungszahlInRangeIsMissing", () => {
+      const k1 = prepareManagedStimmzettelKandidat().ordnungszahl(101).build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([k1])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      expect(() =>
+        managed.kandidatenAddStimmenInRangeOrThrow(101, 102, 1)
+      ).toThrow(ManagedStimmzettelError);
+    });
+  });
+
+  describe("kandidatAddStreichungOrThrow", () => {
+    it("should_setStreichung_when_KandidatIsPresent", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .durchgestrichen(false)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidat])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      managed.kandidatAddStreichungOrThrow(101);
+      expect(kandidat.durchgestrichen).toBe(true);
+      expect(
+        mockDefinitions.changeHistory.registerKandidatStreichungSet
+      ).toHaveBeenCalledExactlyOnceWith(kandidat);
+    });
+
+    it("should_throwError_when_kandidatHasStreichung", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .durchgestrichen(true)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidat])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      expect(() => managed.kandidatAddStreichungOrThrow(101)).toThrow(
+        ManagedStimmzettelError
+      );
+    });
+
+    it("should_throwError_when_kandidatNotFound", () => {
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      expect(() => managed.kandidatAddStreichungOrThrow(101)).toThrow(
+        ManagedStimmzettelError
+      );
+    });
+  });
+
+  describe("kandidatRemoveStreichungOrThrow", () => {
+    it("should_unsetStreichung_when_kandidatIsPresent", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .durchgestrichen(true)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidat])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      managed.kandidatRemoveStreichungOrThrow(101);
+      expect(kandidat.durchgestrichen).toBe(false);
+      expect(
+        mockDefinitions.changeHistory.registerKandidatStreichungUnset
+      ).toHaveBeenCalledExactlyOnceWith(kandidat);
+    });
+
+    it("should_throwError_when_kandidatHasNoStreichung", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .durchgestrichen(false)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidat])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      expect(() => managed.kandidatRemoveStreichungOrThrow(101)).toThrow(
+        ManagedStimmzettelError
+      );
+    });
+
+    it("should_throwError_when_kandidatNotFound", () => {
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      expect(() => managed.kandidatRemoveStreichungOrThrow(101)).toThrow(
+        ManagedStimmzettelError
+      );
+    });
+  });
+
+  describe("kandidatenStreichungenInRangeOrThrow", () => {
+    it("should_setStreichungenInRange_when_kandidatenArePresent", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .durchgestrichen(false)
+        .build();
+      const k2 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(102)
+        .durchgestrichen(false)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([k1, k2])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      managed.kandidatenStreichungenInRangeOrThrow(101, 102);
+      expect(k1.durchgestrichen).toBe(true);
+      expect(k2.durchgestrichen).toBe(true);
+      expect(
+        mockDefinitions.changeHistory.registerKandidatStreichungRangeSet
+      ).toHaveBeenCalledExactlyOnceWith([k1, k2]);
+    });
+
+    it("should_throwErro_when_kandidatenInRangeHaveStreichung", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .durchgestrichen(true)
+        .build();
+      const k2 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(102)
+        .durchgestrichen(true)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([k1, k2])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      expect(() =>
+        managed.kandidatenStreichungenInRangeOrThrow(101, 102)
+      ).toThrow(ManagedStimmzettelError);
+    });
+
+    it("should_throwError_when_kandidatInRangeNotFound", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .durchgestrichen(false)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([k1])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      expect(() =>
+        managed.kandidatenStreichungenInRangeOrThrow(101, 102)
+      ).toThrow(ManagedStimmzettelError);
+    });
+  });
+
+  describe("kandidatenRemoveStreichungenInRangeOrThrow", () => {
+    it("should_unsetStreichungenInRange_when_kandidatenArePresent", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .durchgestrichen(true)
+        .build();
+      const k2 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(102)
+        .durchgestrichen(true)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([k1, k2])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      managed.kandidatenRemoveStreichungenInRangeOrThrow(101, 102);
+      expect(k1.durchgestrichen).toBe(false);
+      expect(k2.durchgestrichen).toBe(false);
+      expect(
+        mockDefinitions.changeHistory.registerKandidatStreichungRangeUnset
+      ).toHaveBeenCalledExactlyOnceWith([k1, k2]);
+    });
+
+    it("should_throwError_whenRangeAlreadyHasNoStreichungen", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .durchgestrichen(false)
+        .build();
+      const k2 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(102)
+        .durchgestrichen(false)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([k1, k2])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      expect(() =>
+        managed.kandidatenRemoveStreichungenInRangeOrThrow(101, 102)
+      ).toThrow(ManagedStimmzettelError);
+    });
+
+    it("should_throwError_when_kandidatInRangeNotFound", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .durchgestrichen(false)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([k1])
+            .build(),
+        ])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
       expect(() =>
         managed.kandidatenRemoveStreichungenInRangeOrThrow(101, 102)
       ).toThrow(ManagedStimmzettelError);
@@ -1133,338 +736,117 @@ describe("managedStimmzettel.ts", () => {
   });
 
   describe("wahlvorschlagAddVotesOrThrow", () => {
-    it("should_throwManagedStimmzettelError_when_wahlvorschlagNotFound", () => {
+    it("should_selectWahlvorschlagAndAssignReststimmen_when_wahlvorschlagIsPresent", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .einzelstimmen(null)
+        .ungueltigeStimmen(0)
+        .reststimmen(null)
+        .durchgestrichen(false)
+        .build();
+      const k2 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(102)
+        .einzelstimmen(null)
+        .ungueltigeStimmen(0)
+        .reststimmen(null)
+        .durchgestrichen(false)
+        .build();
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .selected(false)
+        .kandidaten([k1, k2])
+        .build();
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([])
+        .wahlvorschlaege([wv])
         .build();
 
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      managed.wahlvorschlagAddVotesOrThrow(1);
+      expect(wv.selected).toBe(true);
+      expect(k1.reststimmen).toBe(1);
+      expect(k2.reststimmen).toBe(1);
+      expect(
+        mockDefinitions.changeHistory.registerWahlvorschlagSelected
+      ).toHaveBeenCalledExactlyOnceWith(wv);
+    });
 
+    it("should_throwError_when_wahlvorschlagAlreadySelected", () => {
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .selected(true)
+        .kandidaten([])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
       expect(() => managed.wahlvorschlagAddVotesOrThrow(1)).toThrow(
         ManagedStimmzettelError
       );
     });
 
-    it("should_assignReststimmen_toFirstEligibleCandidates_when_wahlvorschlagSelected", () => {
-      const kdStore = useKopfdatenStore();
-      kdStore.kopfdaten = [
-        {
-          wahlID: mockedWahlId,
-          wahlbezirkID: "wb-1",
-          gemeinde: "",
-          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
-          stimmzettelgebietsnummer: "",
-          stimmzettelgebietsname: "",
-          wahlname: "",
-          wahlbezirknummer: "",
-          maximalErlaubteStimmenProWaehler: 2,
-        },
-      ];
-
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .ungueltigeStimmen(0)
-        .reststimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .einzelstimmen(null)
-        .ungueltigeStimmen(0)
-        .reststimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const k3 = prepareManagedStimmzettelKandidat()
-        .listenposition(3)
-        .ordnungszahl(103)
-        .einzelstimmen(null)
-        .ungueltigeStimmen(0)
-        .reststimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const wv = prepareManagedStimmzettelWahlvorschlag()
-        .ordnungszahl(1)
-        .selected(false)
-        .kandidaten([k1, k2, k3])
-        .build();
+    it("should_throwError_when_wahlvorschlagNotFound", () => {
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([wv])
+        .wahlvorschlaege([])
         .build();
-
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-      managed.wahlvorschlagAddVotesOrThrow(1);
-
-      expect(k1.reststimmen).toBe(1);
-      expect(k2.reststimmen).toBe(1);
-      expect(k3.reststimmen).toBeNull();
-      expect(wv.selected).toBe(true);
-      expect(
-        mockDefinitions.changeHistory.registerWahlvorschlagSelected
-      ).toHaveBeenCalledExactlyOnceWith(wv);
-    });
-
-    it("should_removeLastAssignedReststimmen_when_directVotesExceedRemaining_onSingleCandidate", () => {
-      const kdStore = useKopfdatenStore();
-      kdStore.kopfdaten = [
-        {
-          wahlID: mockedWahlId,
-          wahlbezirkID: "wb-1",
-          gemeinde: "",
-          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
-          stimmzettelgebietsnummer: "",
-          stimmzettelgebietsname: "",
-          wahlname: "",
-          wahlbezirknummer: "",
-          maximalErlaubteStimmenProWaehler: 2,
-        },
-      ];
-
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .ungueltigeStimmen(0)
-        .reststimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .einzelstimmen(null)
-        .ungueltigeStimmen(0)
-        .reststimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const wv = prepareManagedStimmzettelWahlvorschlag()
-        .ordnungszahl(1)
-        .selected(false)
-        .kandidaten([k1, k2])
-        .build();
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([wv])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-      managed.wahlvorschlagAddVotesOrThrow(1);
-
-      managed.kandidatAddEinzelstimmenOrThrow(101, 1);
-
-      expect(k1.einzelstimmen).toBe(1);
-      expect(k1.reststimmen).toBe(1);
-      expect(k2.reststimmen).toBe(0);
-      expect(managed.stimmenSummary.value.einzelstimmen).toBe(1);
-      expect(managed.stimmenSummary.value.reststimmen).toBe(1);
-      expect(
-        mockDefinitions.changeHistory.registerWahlvorschlagSelected
-      ).toHaveBeenCalledExactlyOnceWith(wv);
-    });
-
-    it("should_removeAllAssignedReststimmen_when_rangeVotesExceedRemaining_onTwoCandidates", () => {
-      const kdStore = useKopfdatenStore();
-      kdStore.kopfdaten = [
-        {
-          wahlID: mockedWahlId,
-          wahlbezirkID: "wb-1",
-          gemeinde: "",
-          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
-          stimmzettelgebietsnummer: "",
-          stimmzettelgebietsname: "",
-          wahlname: "",
-          wahlbezirknummer: "",
-          maximalErlaubteStimmenProWaehler: 2,
-        },
-      ];
-
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .ungueltigeStimmen(0)
-        .reststimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .einzelstimmen(null)
-        .ungueltigeStimmen(0)
-        .reststimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const wv = prepareManagedStimmzettelWahlvorschlag()
-        .ordnungszahl(1)
-        .selected(false)
-        .kandidaten([k1, k2])
-        .build();
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([wv])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-      managed.wahlvorschlagAddVotesOrThrow(1);
-
-      managed.kandidatenAddStimmenInRangeOrThrow(101, 102, 1);
-
-      expect(k1.einzelstimmen).toBe(1);
-      expect(k2.einzelstimmen).toBe(1);
-      expect(k1.reststimmen).toBe(0);
-      expect(k2.reststimmen).toBe(0);
-      expect(managed.stimmenSummary.value.einzelstimmen).toBe(2);
-      expect(managed.stimmenSummary.value.reststimmen).toBe(0);
-      expect(
-        mockDefinitions.changeHistory.registerWahlvorschlagSelected
-      ).toHaveBeenCalledExactlyOnceWith(wv);
+      expect(() => managed.wahlvorschlagAddVotesOrThrow(1)).toThrow(
+        ManagedStimmzettelError
+      );
     });
   });
 
   describe("wahlvorschlagRemoveVotesOrThrow", () => {
-    it("should_throwManagedStimmzettelError_when_wahlvorschlagNotFound", () => {
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([])
+    it("should_deselectWahlvorschlagAndClearReststimmen_when_wahlvorschlagIsPresent", () => {
+      const k1 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(101)
+        .reststimmen(1)
         .build();
-
+      const k2 = prepareManagedStimmzettelKandidat()
+        .ordnungszahl(102)
+        .reststimmen(1)
+        .build();
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .selected(true)
+        .kandidaten([k1, k2])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+      managed.wahlvorschlagRemoveVotesOrThrow(1);
+      expect(wv.selected).toBe(false);
+      expect(k1.reststimmen).toBe(0);
+      expect(k2.reststimmen).toBe(0);
+      expect(
+        mockDefinitions.changeHistory.registerWahlvorschlagDeselected
+      ).toHaveBeenCalledExactlyOnceWith(wv);
+    });
 
+    it("should_throwError_when_wahlvorschlagAlreadyDeelected", () => {
+      const wv = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .selected(false)
+        .kandidaten([])
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([wv])
+        .build();
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
       expect(() => managed.wahlvorschlagRemoveVotesOrThrow(1)).toThrow(
         ManagedStimmzettelError
       );
     });
 
-    it("should_clearAllReststimmenAndDeselect_when_wahlvorschlagWasSelected", () => {
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .reststimmen(1)
-        .durchgestrichen(false)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .reststimmen(1)
-        .durchgestrichen(false)
-        .build();
-      const wv = prepareManagedStimmzettelWahlvorschlag()
-        .ordnungszahl(1)
-        .selected(true)
-        .kandidaten([k1, k2])
-        .build();
+    it("should_throwError_when_wahlvorschlagNotFound", () => {
       const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([wv])
+        .wahlvorschlaege([])
         .build();
-
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.wahlvorschlagRemoveVotesOrThrow(1);
-
-      expect(k1.reststimmen).toBe(0);
-      expect(k2.reststimmen).toBe(0);
-      expect(wv.selected).toBe(false);
-      expect(managed.stimmenSummary.value.reststimmen).toBe(0);
-
-      expect(
-        mockDefinitions.changeHistory.registerWahlvorschlagDeselected
-      ).toHaveBeenCalledExactlyOnceWith(wv);
-    });
-  });
-
-  describe("resetStimmzettel", () => {
-    it("should_clearHistoryAndResetAllKandidatenAndWahlvorschlaege_when_called", () => {
-      const kandidat = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(2)
-        .ungueltigeStimmen(3)
-        .reststimmen(1)
-        .durchgestrichen(true)
-        .build();
-
-      const wv = prepareManagedStimmzettelWahlvorschlag()
-        .ordnungszahl(1)
-        .selected(true)
-        .kandidaten([kandidat])
-        .build();
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([wv])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.kandidatAddUngueltigeStimmenOrThrow(101, 1);
-
-      managed.resetStimmzettel();
-
-      expect(kandidat.einzelstimmen).toBeNull();
-      expect(kandidat.ungueltigeStimmen).toBeNull();
-      expect(kandidat.reststimmen).toBeNull();
-      expect(kandidat.durchgestrichen).toBe(false);
-
-      expect(wv.selected).toBe(false);
-
-      expect(managed.stimmenSummary.value.einzelstimmen).toBe(0);
-      expect(managed.stimmenSummary.value.ungueltigeStimmen).toBe(0);
-      expect(managed.stimmenSummary.value.reststimmen).toBe(0);
-      expect(managed.stimmenSummary.value.streichungen).toBe(0);
-
-      expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledOnce();
-    });
-
-    it("should_resetAssignedReststimmenToNullAndDeselect_when_wahlvorschlagWasSelected", () => {
-      const kdStore = useKopfdatenStore();
-      kdStore.kopfdaten = [
-        {
-          wahlID: mockedWahlId,
-          wahlbezirkID: "wb-1",
-          gemeinde: "",
-          stimmzettelgebietsart: KopfdatenStimmzettelgebietsartEnum.Sb,
-          stimmzettelgebietsnummer: "",
-          stimmzettelgebietsname: "",
-          wahlname: "",
-          wahlbezirknummer: "",
-          maximalErlaubteStimmenProWaehler: 2,
-        },
-      ];
-
-      const k1 = prepareManagedStimmzettelKandidat()
-        .listenposition(1)
-        .ordnungszahl(101)
-        .einzelstimmen(null)
-        .ungueltigeStimmen(0)
-        .reststimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const k2 = prepareManagedStimmzettelKandidat()
-        .listenposition(2)
-        .ordnungszahl(102)
-        .einzelstimmen(null)
-        .ungueltigeStimmen(0)
-        .reststimmen(null)
-        .durchgestrichen(false)
-        .build();
-      const wv = prepareManagedStimmzettelWahlvorschlag()
-        .ordnungszahl(1)
-        .selected(false)
-        .kandidaten([k1, k2])
-        .build();
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
-        .wahlvorschlaege([wv])
-        .build();
-
-      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
-
-      managed.wahlvorschlagAddVotesOrThrow(1);
-
-      expect(wv.selected).toBe(true);
-      expect(k1.reststimmen).toBe(1);
-      expect(k2.reststimmen).toBe(1);
-
-      managed.resetStimmzettel();
-
-      expect(wv.selected).toBe(false);
-      expect(k1.reststimmen).toBeNull();
-      expect(k2.reststimmen).toBeNull();
+      expect(() => managed.wahlvorschlagRemoveVotesOrThrow(1)).toThrow(
+        ManagedStimmzettelError
+      );
     });
   });
 });

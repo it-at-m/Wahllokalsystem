@@ -29,6 +29,7 @@ export function useStimmzettelUtils() {
   ): PersistedStimmzettel {
     return {
       stimmzettelkennung: stimmzettelkennung,
+      teamID: "",
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
       invalideVotes: 0,
       beschlussfassung: null,

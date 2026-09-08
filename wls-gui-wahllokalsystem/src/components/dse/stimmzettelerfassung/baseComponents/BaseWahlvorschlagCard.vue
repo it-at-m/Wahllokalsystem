@@ -40,31 +40,35 @@
       </div>
     </v-card-title>
 
-    <v-card-text class="pa-0">
-      <div style="max-height: 600px; overflow-y: auto">
-        <v-list>
+    <v-card-text
+      class="pa-0 flex-1-1 d-flex"
+      style="min-height: 0"
+    >
+      <v-list style="flex: 1 1 auto; min-height: 0; overflow-y: auto">
+        <template
+          v-for="(kandidat, index) in kandidatenListe"
+          :key="index"
+        >
           <v-list-item
-            v-for="(kandidat, index) in kandidatenListe"
             :id="`kandidat-${index}`"
-            :key="index"
             ref="listItems"
             :class="{
-              activeKandidat:
+              'border-primary':
                 kandidat.kandidatId === activeKandidat?.kandidatId &&
                 kandidat.nennung === activeKandidat?.nennung,
             }"
             tabindex="-1"
           >
-            <v-divider
-              v-if="index !== 0"
-              :variant="
-                isDividerZwischenGleichemKandidat(index) ? 'dashed' : 'solid'
-              "
-            />
             <base-kandidat-list-item-content :kandidat="kandidat" />
           </v-list-item>
-        </v-list>
-      </div>
+          <v-divider
+            v-if="index < kandidatenListe.length - 1"
+            :variant="
+              isDividerZwischenGleichemKandidat(index + 1) ? 'dashed' : 'solid'
+            "
+          />
+        </template>
+      </v-list>
     </v-card-text>
   </v-card>
 </template>
@@ -136,10 +140,3 @@ onActivated(() => {
   focusActive();
 });
 </script>
-
-<style scoped>
-.activeKandidat {
-  border: solid 1px;
-  border-color: rgb(var(--v-theme-primary));
-}
-</style>

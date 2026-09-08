@@ -8,7 +8,7 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-export function useStimmzettelUtils() {
+export function _useStimmzettelUtils() {
   function createStimmzettelWithWahlvorschlaege(
     wahlvorschlaege: Wahlvorschlag[]
   ): Stimmzettel {
@@ -110,3 +110,10 @@ export function useStimmzettelUtils() {
     getVormerkungsgrund,
   };
 }
+
+/**
+ * @deprecated TODO is an tools composable. Does not serve any high level function
+ * maybe split into separate tools for different types
+ */
+export const useStimmzettelUtils = _useStimmzettelUtils;
+export const useStimmzettelTools = _useStimmzettelUtils;

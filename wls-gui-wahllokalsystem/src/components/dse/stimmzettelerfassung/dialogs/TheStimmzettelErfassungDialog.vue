@@ -27,24 +27,24 @@
           <base-stimmzettel-zusammenfassung-card
             class="mt-2 d-flex flex-column"
             :listenstimmen="
-              stimmzettelManager.managedStimmzettel
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils
                 .wahlvorschlaegeWithListenkreuz.value
             "
             :ungueltigestimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .ungueltigeStimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.ungueltigeStimmen
             "
             :direktstimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .einzelstimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.einzelstimmen
             "
             :reststimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .reststimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.reststimmen
             "
             :streichungen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .streichungen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.streichungen
             "
             :gueltigkeit="'VALID'"
           />
@@ -65,8 +65,8 @@
               :active-wahlvorschlag-id="latestChangedWahlvorschlagId"
               :active-kandidat="latestChangedKandidat"
               :wahlvorschlaege="
-                stimmzettelManager.managedStimmzettel.stimmzettel.value
-                  .wahlvorschlaege
+                stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                  .value.wahlvorschlaege
               "
               style="min-height: 0; overflow-y: auto; min-width: 0"
             />
@@ -83,24 +83,24 @@
           <base-stimmzettel-zusammenfassung-card
             class="mt-2 d-flex flex-column"
             :listenstimmen="
-              stimmzettelManager.managedStimmzettel
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils
                 .wahlvorschlaegeWithListenkreuz.value
             "
             :ungueltigestimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .ungueltigeStimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.ungueltigeStimmen
             "
             :direktstimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .einzelstimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.einzelstimmen
             "
             :reststimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .reststimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.reststimmen
             "
             :streichungen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .streichungen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.streichungen
             "
             :gueltigkeit="'VALID'"
           />
@@ -210,10 +210,11 @@ const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
 );
 
 const changeHistory = computed(
-  () => stimmzettelManager.managedStimmzettel.changeHistory
+  () => stimmzettelManager.bearbeitenDialogStimmzettelUtils.changeHistory
 );
 const isCancelButtonDisabled = computed(
-  () => stimmzettelManager.managedStimmzettel.hasAnyValuesSet.value
+  () =>
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
 );
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
@@ -247,6 +248,6 @@ function onSavedClickedAndNext() {
 }
 
 function onResetClicked() {
-  stimmzettelManager.managedStimmzettel.resetStimmzettel();
+  stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel();
 }
 </script>

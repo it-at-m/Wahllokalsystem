@@ -44,7 +44,7 @@ describe("managedStimmzettelReststimmeUtils.ts", () => {
 
   describe("resetError", () => {
     it.each([true, false])(
-      "should_setSystemErrorFalse_when_isCalled",
+      "should_setSystemErrorFalse_when_calledAndCurrentErrorStateIs'%s'",
       (isErrorSet) => {
         const unitUnderTest = useManagedStimmzettelReststimmeUtils(
           ref(prepareManagedStimmzettelStimmzettel().build()),

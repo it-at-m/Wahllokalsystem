@@ -230,7 +230,16 @@ const isCommandInputFieldDisabled = computed(
       StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag ||
     stimmzettelGueltigkeit.value === StimmzettelGueltigkeitEnum.Leer
 );
-const isSaveDisabled = computed(() => isBeschlussfassungValid.value === false);
+const isSaveDisabled = computed(
+  () =>
+    isBeschlussfassungValid.value === false ||
+    (!stimmzettelManager.managedStimmzettel.hasAnyValuesSet.value &&
+      stimmzettelGueltigkeit.value !== StimmzettelGueltigkeitEnum.Leer &&
+      stimmzettelGueltigkeit.value !==
+        StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag &&
+      stimmzettelGueltigkeit.value !==
+        StimmzettelGueltigkeitEnum.BeschlussAusstehend)
+);
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null

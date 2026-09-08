@@ -198,15 +198,15 @@ ist die Summe aus den vergebenen Einzelstimmen, sowie sonstiger ungültiger Stim
 > [!NOTE] Beispiel - Reststimmenmenge bei vorhandenen Einzelstimmen
 > Bei einer Wahl können bis zu 40 Stimmen vergeben werden. Der/die Wähler\*in hat 3 Kreuze bei unterschiedlichen
 > Kandidat\*innen gesetzt und bei einer/einem Weiteren eine 2 eingetragen.
-> 
+>
 > Somit sind 5 Stimmen vergeben und für die
 > Reststimmenvergabe stehen noch 35 Stimmen zur Verfügung.
 
-> [!NOTE] Beispiel - unerlaubterweise wurde ein/eine zusätzliche/r Kandidat\*in ergänzt 
+> [!NOTE] Beispiel - unerlaubterweise wurde ein/eine zusätzliche/r Kandidat\*in ergänzt
 > Bei einer Wahl können bis zu 40 Stimmen vergeben werden. Der/die Wähler\*in hat 3 Kreuze bei unterschiedlichen
 > Kandidat\*innen gesetzt. Zusätzlich wurde ein/eine weiter/e Kandidat\*in ergänzt mit der Zahl 3 davor.
 > Somit sind 6 Stimmen vergeben, wobei 3 gültig sind, und 3 ungültig sind.
-> 
+>
 > Für die Reststimmenvergabe
 > stehen noch 34 Stimmen zur Verfügung.
 
@@ -214,16 +214,16 @@ ist die Summe aus den vergebenen Einzelstimmen, sowie sonstiger ungültiger Stim
 > Bei einer Wahl können bis zu 40 Stimmen vergeben werden. Je Kandidat\*in dürfen maximal 3 Stimmen vergeben werden.
 > Der/die Wähler\*in hat bei einem/einer Kandidat\*in ein 5 eingetragen.
 > Somit sind 5 Stimmen vergeben, wobei 3 gültig sind, und 2 ungültig sind.
-> 
+>
 > Für die Reststimmenvergabe
 > stehen noch 35 Stimmen zur Verfügung.
 
 > [!NOTE] Beispiel - keine Reststimmenvergabe möglich
 > Bei einer Wahl können bis zu 40 Stimmen vergeben werden. Der/die Wähler\*in hat bei 2 Wahlvorschlägen jeweils das
 > Listenkreuz gesetzt. Je Wahlvorschlag gibt 40 Kandidat\*innen.
-> 
+>
 > Für eine Reststimmenvergabe wären 80 Stimmen notwendig.
-> Somit ist nicht eindeutig erkennbar wie die Aufteilung der 40 Stimmen auf die 80 Kandidat\*innen erfolgen soll. 
+> Somit ist nicht eindeutig erkennbar wie die Aufteilung der 40 Stimmen auf die 80 Kandidat\*innen erfolgen soll.
 
 Die Vergabe der Reststimmen erfolgt entsprechend der Listenposition innerhalb des Wahlvorschlages beginnend bei der ersten
 Position. Ein/eine Kandidat\*in kann nur Reststimmen bekommen, wenn er/sie noch keine Stimmen erhalten haben,
@@ -232,25 +232,24 @@ nur Reststimmen erhalten wie er/sie nicht bereits die maximal erlaubte Menge an 
 
 > [!NOTE] Beispiel - Reststimmenvergabe bei vorhandener Einzelstimmenvergabe
 > Es gibt die Listenpositionen 1 bis 10. Die Positionen 1 bis 3 und Position 6 haben bereits Einzelstimmen erhalten.
-> 
+>
 > Über die Reststimmenvergabe bekommen die Positionen 4, 7, 8, 9 und 10 jeweils eine Reststimme.
-
 
 > [!NOTE] Beispiel - Reststimmenvergabe bei vorhandener Einzelstimmenvergabe und Streichung
 > Es gibt die Listenpositionen 1 bis 10. Die Positionen 1 bis 3 haben bereits Einzelstimmen erhalten. Die Position 6
 > wurde gestrichen.
-> 
-> Über die Reststimmenvergabe bekommen die Positionen 4, 7, 8, 9 und 10 jeweils eine Reststimme. 
+>
+> Über die Reststimmenvergabe bekommen die Positionen 4, 7, 8, 9 und 10 jeweils eine Reststimme.
 
 > [!NOTE] Beispiel - Reststimmenvergabe bei vorhandener Mehrfachnennung
 > Es gibt die Listenpositionen 1 bis 10, jeweils in dreifacher Nennung. Je Kandidat\*in dürfen maximal 3 Stimmen
 > vergeben werden.
-> 
+>
 > Die Position 1 hat bei jeder der 3 Nennung ein Kreuz.  
 > Die Position 2 hat bei der ersten Nennung eine 2 stehen.  
 > Die Position 3 hat bei den ersten beiden Nennungen eine 2 stehen.  
 > Bei Position 4 wurde die erste Nennung gestrichen.
-> 
+>
 > Über die Reststimmenvergabe bekommen die Position 1 keine Stimmen, weil für den/die Kandidat\*in bereits die maximale
 > Menge an Stimmen erreicht ist.  
 > Die Position 2 bekommt noch eine Reststimme womit sie das Maximum an Stimmen erreicht.  

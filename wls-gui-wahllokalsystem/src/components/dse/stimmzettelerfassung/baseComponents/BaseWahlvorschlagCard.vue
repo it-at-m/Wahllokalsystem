@@ -53,7 +53,7 @@
             :id="`kandidat-${index}`"
             ref="listItems"
             :class="{
-              activeKandidat:
+              'border-primary':
                 kandidat.kandidatId === activeKandidat?.kandidatId &&
                 kandidat.nennung === activeKandidat?.nennung,
             }"
@@ -140,10 +140,3 @@ onActivated(() => {
   focusActive();
 });
 </script>
-
-<style scoped>
-.activeKandidat {
-  border: solid 1px;
-  border-color: rgb(var(--v-theme-primary));
-}
-</style>

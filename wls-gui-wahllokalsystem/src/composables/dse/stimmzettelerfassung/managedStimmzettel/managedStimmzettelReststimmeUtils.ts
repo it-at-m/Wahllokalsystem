@@ -32,8 +32,8 @@ export function useManagedStimmzettelReststimmeUtils(
       wahlvorschlag.kandidaten.forEach(
         (kandidat) => (kandidat.reststimmen = null)
       );
+      wahlvorschlag.selected = false;
     }
-    wahlvorschlag.selected = false;
   }
 
   function refreshWahlvorschlaegeVotes() {

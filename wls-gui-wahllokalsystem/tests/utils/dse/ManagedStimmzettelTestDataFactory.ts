@@ -58,6 +58,14 @@ export function useManagedStimmzettelTestDataFactory() {
     return proxyBuilder<Kandidat>(createManagedStimmzettelKandidat());
   }
 
+  function prepareManagedStimmzettelKandidatForWahlvorschlag(
+    owningWahlvorschlag: Wahlvorschlag
+  ): Builder<Kandidat> {
+    return proxyBuilder<Kandidat>(
+      _createManagedStimmzettelKandidatForWahlvorschlag(owningWahlvorschlag)
+    );
+  }
+
   function prepareManagedStimmzettelWahlvorschlag(): Builder<Wahlvorschlag> {
     return proxyBuilder<Wahlvorschlag>(createManagedStimmzettelWahlvorschlag());
   }
@@ -89,6 +97,7 @@ export function useManagedStimmzettelTestDataFactory() {
     createManagedStimmzettelWahlvorschlag,
     createManagedStimmzettelStimmzettel,
     prepareManagedStimmzettelKandidat,
+    prepareManagedStimmzettelKandidatForWahlvorschlag,
     prepareManagedStimmzettelWahlvorschlag,
     prepareManagedStimmzettelStimmzettel,
   };

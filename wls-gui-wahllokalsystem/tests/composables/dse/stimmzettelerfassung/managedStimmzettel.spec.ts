@@ -1,3 +1,5 @@
+import { mock } from "node:test";
+
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import {
@@ -12,6 +14,7 @@ import {
 import { ref } from "vue";
 
 import { useManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import { useManagedStimmzettelReststimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelReststimmeUtils.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
@@ -31,6 +34,11 @@ const mockDefinitions = vi.hoisted(() => ({
     registerWahlvorschlagDeselected: vi.fn(),
     reset: vi.fn(),
   },
+  reststimmeUtils: {
+    deselectWahlvorschlag: vi.fn(),
+    refreshWahlvorschlaegeVotes: vi.fn(),
+    selectWahlvorschlag: vi.fn(),
+  },
 }));
 
 vi.mock(
@@ -45,6 +53,21 @@ vi.mock(
       }),
     };
   }
+);
+
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelReststimmeUtils.ts"),
+  () => ({
+    useManagedStimmzettelReststimmeUtils: () => ({
+      hasSystemErrorToManyListenKreuze: ref(false),
+      refreshWahlvorschlaegeVotes:
+        mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes,
+      resetError: vi.fn(),
+      selectWahlvorschlag: mockDefinitions.reststimmeUtils.selectWahlvorschlag,
+      deselectWahlvorschlag:
+        mockDefinitions.reststimmeUtils.deselectWahlvorschlag,
+    }),
+  })
 );
 
 describe("managedStimmzettel.ts", () => {
@@ -762,9 +785,12 @@ describe("managedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
       managed.wahlvorschlagAddVotesOrThrow(1);
-      expect(wv.selected).toBe(true);
-      expect(k1.reststimmen).toBe(1);
-      expect(k2.reststimmen).toBe(1);
+      expect(
+        mockDefinitions.reststimmeUtils.selectWahlvorschlag.mock.calls
+      ).toStrictEqual([[wv]]);
+      expect(
+        mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes
+      ).toHaveBeenCalledOnce();
       expect(
         mockDefinitions.changeHistory.registerWahlvorschlagSelected
       ).toHaveBeenCalledExactlyOnceWith(wv);
@@ -816,9 +842,12 @@ describe("managedStimmzettel.ts", () => {
         .build();
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
       managed.wahlvorschlagRemoveVotesOrThrow(1);
-      expect(wv.selected).toBe(false);
-      expect(k1.reststimmen).toBe(0);
-      expect(k2.reststimmen).toBe(0);
+      expect(
+        mockDefinitions.reststimmeUtils.deselectWahlvorschlag.mock.calls
+      ).toStrictEqual([[wv]]);
+      expect(
+        mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes
+      ).toHaveBeenCalledOnce();
       expect(
         mockDefinitions.changeHistory.registerWahlvorschlagDeselected
       ).toHaveBeenCalledExactlyOnceWith(wv);

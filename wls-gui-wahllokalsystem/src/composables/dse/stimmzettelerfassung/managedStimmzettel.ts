@@ -62,7 +62,8 @@ export function useManagedStimmzettel(
     resetError: resetReststimmeError,
   } = useManagedStimmzettelReststimmeUtils(
     stimmzettel,
-    maximalErlaubteStimmenProWaehler
+    maximalErlaubteStimmenProWaehler,
+    maxEinzelstimmen
   );
 
   const countTotalVotes = computed(

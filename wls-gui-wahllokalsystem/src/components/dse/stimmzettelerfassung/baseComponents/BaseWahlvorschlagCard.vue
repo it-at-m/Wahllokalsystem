@@ -53,7 +53,7 @@
             :id="`kandidat-${index}`"
             ref="listItems"
             :class="{
-              'border-primary':
+              'primary-button-border':
                 kandidat.kandidatId === activeKandidat?.kandidatId &&
                 kandidat.nennung === activeKandidat?.nennung,
             }"

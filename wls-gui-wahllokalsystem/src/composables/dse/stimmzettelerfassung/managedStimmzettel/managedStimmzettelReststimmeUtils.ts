@@ -29,10 +29,17 @@ export function useManagedStimmzettelReststimmeUtils(
   }
 
   function deselectWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
+    if (wahlvorschlag.selected) {
+      wahlvorschlag.kandidaten.forEach(
+        (kandidat) => (kandidat.reststimmen = null)
+      );
+    }
     wahlvorschlag.selected = false;
   }
 
   function refreshWahlvorschlaegeVotes() {
+    hasSystemErrorToManyListenKreuze.value = false;
+
     const wahlvorschlaegeSelected = stimmzettel.value.wahlvorschlaege.filter(
       (wahlvorschlag) => wahlvorschlag.selected
     );
@@ -95,7 +102,6 @@ export function useManagedStimmzettelReststimmeUtils(
             (kandidat) => (kandidat.reststimmen = 0)
           );
         });
-        hasSystemErrorToManyListenKreuze.value = false;
 
         //set new wahlvorschlag votes
         const kandidatenThatCouldGetWahlvorschlagVote = wahlvorschlaegeSelected

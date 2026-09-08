@@ -78,7 +78,7 @@ describe("kandidatTools.ts", () => {
     }
   );
 
-  it("should_returnFalse_when_isDurchgestrichenAndAllStimmenAreNull", () => {
+  it("should_returnFalse_when_isNotDurchgestrichenAndAllStimmenAreNull", () => {
     const kandidat = prepareStimmzettelKandidat()
       .durchgestrichen(false)
       .einzelstimmen(null)
@@ -89,7 +89,7 @@ describe("kandidatTools.ts", () => {
     expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(false);
   });
 
-  it("should_returnFalse_when_isDurchgestrichenAndAllStimmenAre0", () => {
+  it("should_returnFalse_when_isNotDurchgestrichenAndAllStimmenAre0", () => {
     const kandidat = prepareStimmzettelKandidat()
       .durchgestrichen(false)
       .einzelstimmen(0)

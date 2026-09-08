@@ -10,6 +10,7 @@ import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/
 import { describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getStimmzettel: vi.fn(),
@@ -55,7 +56,7 @@ describe("stimmzettelUtils.ts", () => {
         wahlvorstandBeschlussvorschlag: [],
         systemBeschlussvorschlag: [],
         beschlussfassung: null,
-        gueltigkeit: null,
+        gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
         invalideVotes: 0,
         wahlvorschlaege: uiWahlvorschlaege.wahlvorschlaege.map((ui) => {
           const dseWahlvorschlag: DseWahlvorschlag = {
@@ -239,7 +240,7 @@ describe("stimmzettelUtils.ts", () => {
         wahlvorstandBeschlussvorschlag: [],
         systemBeschlussvorschlag: [],
         beschlussfassung: null,
-        gueltigkeit: null,
+        gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
         invalideVotes: 0,
         wahlvorschlaege: [],
       };

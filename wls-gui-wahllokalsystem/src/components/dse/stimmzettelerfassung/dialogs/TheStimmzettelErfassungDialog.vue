@@ -198,6 +198,7 @@ watch(
   () => isDialogVisibleModel.value,
   () => {
     if (isDialogVisibleModel.value) {
+      stimmzettelManager.startNewStimmzettel();
       currentAction.value = actions[0];
     }
   }
@@ -262,6 +263,7 @@ function onSavedClickedAndClose() {
 
 function onSavedClickedAndNext() {
   emit("confirmNext", stimmzettelManager.getStimmzettelSnapshot());
+  stimmzettelManager.startNewStimmzettel();
 }
 
 function onResetClicked() {

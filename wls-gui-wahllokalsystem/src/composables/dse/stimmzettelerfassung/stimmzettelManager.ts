@@ -36,6 +36,11 @@ export function useStimmzettelManager(
     );
   }
 
+  function startNewStimmzettel() {
+    stimmzettelToManage.value =
+      createStimmzettelWithWahlvorschlaege(wahlvorschlaege);
+  }
+
   /**
    *
    * @param commandString
@@ -58,6 +63,7 @@ export function useStimmzettelManager(
   return {
     getStimmzettelSnapshot,
     parseCommandOrThrowError,
+    startNewStimmzettel,
     managedStimmzettel,
   };
 }

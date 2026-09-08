@@ -5,6 +5,7 @@ import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/stimmzettele
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
+import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
@@ -93,7 +94,10 @@ export function useStimmzettelUtils() {
     if (!isVorgemerktFuerBeschluss(stimmzettel)) {
       return "";
     }
-    return stimmzettel.beschlussvorschlag.map((grund) => grund.text).join(", ");
+    const { mapSystemBeschlussgrundText } = useTextFormatter();
+    return stimmzettel.beschlussvorschlag
+      .map((grund) => mapSystemBeschlussgrundText(grund.text))
+      .join(", ");
   }
 
   return {

@@ -62,6 +62,7 @@ export function useManagedStimmzettel(
     refreshWahlvorschlaegeVotes,
     selectWahlvorschlag,
     deselectWahlvorschlag,
+    resetError: resetReststimmeError,
   } = useManagedStimmzettelReststimmeUtils(
     stimmzettel,
     maximalErlaubteStimmenProWaehler
@@ -180,6 +181,7 @@ export function useManagedStimmzettel(
     stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
     stimmzettel.value.invalideVotes = null;
     stimmzettel.value.wahlvorstandBeschlussvorschlag = [];
+    resetReststimmeError();
   }
 
   /**

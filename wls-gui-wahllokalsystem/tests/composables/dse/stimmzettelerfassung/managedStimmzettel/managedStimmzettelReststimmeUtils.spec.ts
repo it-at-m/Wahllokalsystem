@@ -41,4 +41,24 @@ describe("managedStimmzettelReststimmeUtils.ts", () => {
     const kdStore = useKopfdatenStore();
     kdStore.kopfdaten = [];
   });
+
+  describe("resetError", () => {
+    it.each([true, false])(
+      "should_setSystemErrorFalse_when_isCalled",
+      (isErrorSet) => {
+        const unitUnderTest = useManagedStimmzettelReststimmeUtils(
+          ref(prepareManagedStimmzettelStimmzettel().build()),
+          ref(3),
+          1
+        );
+        unitUnderTest.hasSystemErrorToManyListenKreuze.value = isErrorSet;
+
+        unitUnderTest.resetError();
+
+        expect(unitUnderTest.hasSystemErrorToManyListenKreuze.value).toBe(
+          false
+        );
+      }
+    );
+  });
 });

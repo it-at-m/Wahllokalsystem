@@ -38,7 +38,10 @@
           </div>
         </div>
         <div class="my-2">
-          <v-divider thickness="1" />
+          <v-divider
+            v-if="index < nextToFiveItems.length - 1"
+            thickness="1"
+          />
         </div>
       </template>
     </v-card-text>

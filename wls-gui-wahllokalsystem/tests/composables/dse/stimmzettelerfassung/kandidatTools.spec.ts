@@ -25,7 +25,7 @@ describe("kandidatTools.ts", () => {
     });
   });
 
-  it("should_returnTrue_when_isNotDurchgestrichenAndAllStimmenLargerThan0", () => {
+  it("should_returnTrue_when_isDurchgestrichenAndAllStimmenLargerThan0", () => {
     const kandidat = prepareStimmzettelKandidat()
       .durchgestrichen(true)
       .einzelstimmen(1)

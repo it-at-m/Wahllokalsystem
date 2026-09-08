@@ -66,7 +66,9 @@ export function useManagedStimmzettelReststimmeUtils(
 
       const votesLeftForReststimmen =
         maximalErlaubteStimmenProWaehler.value - totalVotesByUser;
-      logger.log(`wahlvorschlagVotesToSpent > ${votesLeftForReststimmen}`);
+      logger.log(
+        `maximalErlaubteStimmenProWaehler > ${maximalErlaubteStimmenProWaehler.value}; totalVotesByUser: ${totalVotesByUser}, wahlvorschlagVotesToSpent > ${votesLeftForReststimmen}`
+      );
 
       if (wahlvorschlaegeSelected.length === 1) {
         const wahlvorschlagToRefresh = selectedWahlvorschlaege.value[0];

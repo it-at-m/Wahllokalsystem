@@ -6,14 +6,16 @@ import { computed, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
 export function useManagedStimmzettelReststimmeUtils(
   stimmzettel: Ref<Stimmzettel>,
   maximalErlaubteStimmenProWaehler: Ref<number>,
   maxEinzelstimmen: number,
-  COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG = 1
+  countVotesGivenAsReststimme = 1
 ) {
   const logger = useLogging("mangeStimmzettelReststimmeUtils");
+  const { hasAnyKennzeichen } = useKandidatTools();
 
   const hasSystemErrorToManyListenKreuze = ref(false);
 
@@ -39,92 +41,68 @@ export function useManagedStimmzettelReststimmeUtils(
   function refreshWahlvorschlaegeVotes() {
     hasSystemErrorToManyListenKreuze.value = false;
 
-    const wahlvorschlaegeSelected = stimmzettel.value.wahlvorschlaege.filter(
-      (wahlvorschlag) => wahlvorschlag.selected
+    const votesKandidatenAlreadyGotTool = useStringNumberMapTools(
+      new Map<string, number>()
     );
-    logger.log(
-      `wahlvorschlaegeSelected.length > ${wahlvorschlaegeSelected.length}`
+    const kandidatenOfSelectedWahlvorschlaege =
+      stimmzettel.value.wahlvorschlaege.flatMap(
+        (wahlvorschlag) => wahlvorschlag.kandidaten
+      );
+    //count votes that any kandidat of wahlvorschlag already got
+    //we need to sum the votes of the nennungen cause sum of votes over all nennungen is limited
+    kandidatenOfSelectedWahlvorschlaege.forEach((kandidat) =>
+      votesKandidatenAlreadyGotTool.add(
+        kandidat.kandidatId,
+        (kandidat.ungueltigeStimmen ?? 0) + (kandidat.einzelstimmen ?? 0)
+      )
     );
 
-    if (wahlvorschlaegeSelected.length > 0) {
-      const votesKandidatenAlreadyGotTool = useStringNumberMapTools(
-        new Map<string, number>()
+    const countRequiredVotesLeftToFulfilReststimmenvergabe =
+      _getCountRequiredVotesForReststimmenvergabe(
+        votesKandidatenAlreadyGotTool
       );
+    const totalVotesAlreadyGiven =
+      votesKandidatenAlreadyGotTool.sum() +
+      (stimmzettel.value.invalideVotes ?? 0);
+    const totalVotesLeft =
+      maximalErlaubteStimmenProWaehler.value - totalVotesAlreadyGiven;
+    logger.logDebug(
+      `totalVotesAlreadyGiven > ${totalVotesAlreadyGiven}, totalVotesLeft > ${totalVotesLeft}, countRequiredVotesLeftToFulfilReststimmenvergabe > ${countRequiredVotesLeftToFulfilReststimmenvergabe}`
+    );
 
-      stimmzettel.value.wahlvorschlaege
-        .flatMap((wahlvorschlag) => wahlvorschlag.kandidaten)
-        .forEach((kandidat) =>
-          votesKandidatenAlreadyGotTool.add(
-            kandidat.kandidatId,
-            (kandidat.ungueltigeStimmen ?? 0) + (kandidat.einzelstimmen ?? 0)
-          )
-        );
-
-      const totalVotesByUser =
-        votesKandidatenAlreadyGotTool.sum() +
-        (stimmzettel.value.invalideVotes ?? 0);
-
-      const votesLeftForReststimmen =
-        maximalErlaubteStimmenProWaehler.value - totalVotesByUser;
-      logger.log(
-        `maximalErlaubteStimmenProWaehler > ${maximalErlaubteStimmenProWaehler.value}; totalVotesByUser: ${totalVotesByUser}, wahlvorschlagVotesToSpent > ${votesLeftForReststimmen}`
+    if (countRequiredVotesLeftToFulfilReststimmenvergabe === null) {
+      selectedWahlvorschlaege.value.forEach((wahlvorschlag) =>
+        _placeReststimmenOnWahlvorschlag(
+          wahlvorschlag,
+          totalVotesLeft,
+          votesKandidatenAlreadyGotTool
+        )
       );
+    } else if (
+      countRequiredVotesLeftToFulfilReststimmenvergabe <= totalVotesLeft
+    ) {
+      //Number.POSITIVE_INFINITY because with the condition we already ensured that are enough votes left
+      selectedWahlvorschlaege.value.forEach((wahlvorschlag) =>
+        _placeReststimmenOnWahlvorschlag(
+          wahlvorschlag,
+          Number.POSITIVE_INFINITY,
+          votesKandidatenAlreadyGotTool
+        )
+      );
+    } else {
+      kandidatenOfSelectedWahlvorschlaege.forEach(
+        (kandidat) => (kandidat.reststimmen = null)
+      );
+      hasSystemErrorToManyListenKreuze.value = true;
+    }
+  }
 
-      if (wahlvorschlaegeSelected.length === 1) {
-        const wahlvorschlagToRefresh = selectedWahlvorschlaege.value[0];
-        if (wahlvorschlagToRefresh) {
-          if (votesLeftForReststimmen > 0) {
-            let wahlvorschlagVotesSpend = 0;
-            wahlvorschlagToRefresh.kandidaten.forEach((kandidat) => {
-              logger.log(
-                `onEach - kandidat.einzelstimmen > ${kandidat.einzelstimmen}, kandidat.reststimmen > ${kandidat.reststimmen}, kandidat.ungueltigeStimmen > ${kandidat.ungueltigeStimmen}, wahlvorschlagVotesSpend > ${wahlvorschlagVotesSpend}, einzelStimmenKandidatAlreadyGot > ${votesKandidatenAlreadyGotTool.getOrDefault(kandidat.kandidatId)}`
-              );
-              if (
-                (kandidat.einzelstimmen ?? 0) > 0 ||
-                kandidat.durchgestrichen ||
-                (kandidat.ungueltigeStimmen ?? 0) > 0
-              ) {
-                kandidat.reststimmen = null;
-              } else {
-                if (
-                  wahlvorschlagVotesSpend <=
-                    votesLeftForReststimmen -
-                      COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG &&
-                  votesKandidatenAlreadyGotTool.getOrDefault(
-                    kandidat.kandidatId
-                  ) +
-                    COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG <=
-                    maxEinzelstimmen
-                ) {
-                  kandidat.reststimmen = COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG;
-                  wahlvorschlagVotesSpend += COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG;
-                  votesKandidatenAlreadyGotTool.add(
-                    kandidat.kandidatId,
-                    COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG
-                  );
-                } else {
-                  kandidat.reststimmen = null;
-                }
-              }
-            });
-          } else {
-            wahlvorschlaegeSelected.forEach((wahlvorschlag) => {
-              wahlvorschlag.kandidaten.forEach(
-                (kandidat) => (kandidat.reststimmen = 0)
-              );
-            });
-          }
-        }
-      } else {
-        //clear current wahlvorschlaege votes
-        wahlvorschlaegeSelected.forEach((wahlvorschlag) => {
-          wahlvorschlag.kandidaten.forEach(
-            (kandidat) => (kandidat.reststimmen = null)
-          );
-        });
-
-        //set new wahlvorschlag votes
-        const kandidatenThatCouldGetWahlvorschlagVote = wahlvorschlaegeSelected
+  function _getCountRequiredVotesForReststimmenvergabe(
+    votesKandidatenAlreadyGotTool: ReturnType<typeof useStringNumberMapTools>
+  ): number | null {
+    if (selectedWahlvorschlaege.value.length > 1) {
+      const kandidatenThatCouldGetWahlvorschlagVote =
+        selectedWahlvorschlaege.value
           .flatMap((wahlvorschlag) => wahlvorschlag.kandidaten)
           .filter(
             (kandidat) =>
@@ -134,37 +112,42 @@ export function useManagedStimmzettelReststimmeUtils(
               votesKandidatenAlreadyGotTool.getOrDefault(kandidat.kandidatId) <
                 maxEinzelstimmen
           );
-        const requiredVotesLeftToFulfilListenkreuze =
-          kandidatenThatCouldGetWahlvorschlagVote.length *
-          COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG;
-        logger.log(
-          `requiredVotesLeftToFulfilListenkreuze: ${requiredVotesLeftToFulfilListenkreuze}, wahlvorschlagVotesToSpent: ${votesLeftForReststimmen}`
-        );
-        if (requiredVotesLeftToFulfilListenkreuze > votesLeftForReststimmen) {
-          //reset all set wahlvorschlaege votes
-          wahlvorschlaegeSelected.forEach((wahlvorschlag) =>
-            wahlvorschlag.kandidaten.forEach(
-              (kandidat) => (kandidat.reststimmen = null)
-            )
-          );
-          hasSystemErrorToManyListenKreuze.value = true;
-        } else {
-          kandidatenThatCouldGetWahlvorschlagVote.forEach((kandidat) => {
-            if (
-              votesKandidatenAlreadyGotTool.getOrDefault(kandidat.kandidatId) +
-                COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG <=
-              maxEinzelstimmen
-            ) {
-              kandidat.reststimmen = COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG;
-              votesKandidatenAlreadyGotTool.add(
-                kandidat.kandidatId,
-                COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG
-              );
-            }
-          });
-        }
-      }
+
+      return (
+        kandidatenThatCouldGetWahlvorschlagVote.length *
+        countVotesGivenAsReststimme
+      );
+    } else {
+      return null;
     }
+  }
+
+  function _placeReststimmenOnWahlvorschlag(
+    wahlvorschlag: Wahlvorschlag,
+    votesLeftToPlace: number,
+    votesKandidatenAlreadyGotTool: ReturnType<typeof useStringNumberMapTools>
+  ) {
+    let restStimmenSpent = 0;
+    wahlvorschlag.kandidaten.forEach((kandidat) => {
+      //is kandidat allowed to get reststimmen
+      if (
+        !hasAnyKennzeichen(kandidat) &&
+        restStimmenSpent + countVotesGivenAsReststimme <= votesLeftToPlace &&
+        votesKandidatenAlreadyGotTool.getOrDefault(kandidat.kandidatId) +
+          countVotesGivenAsReststimme <=
+          maxEinzelstimmen
+      ) {
+        kandidat.reststimmen = countVotesGivenAsReststimme;
+
+        votesKandidatenAlreadyGotTool.add(
+          kandidat.kandidatId,
+          countVotesGivenAsReststimme
+        );
+        restStimmenSpent += countVotesGivenAsReststimme;
+      } else {
+        kandidat.reststimmen = null;
+      }
+    });
   }
 
   function resetError() {

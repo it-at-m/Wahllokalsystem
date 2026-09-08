@@ -441,6 +441,7 @@ describe("managedStimmzettelReststimmeUtils.ts", () => {
       wahlvorschlag2.kandidaten.forEach((kandidat) =>
         expect(kandidat.reststimmen).toStrictEqual(null)
       );
+      expect(unitUnderTest.hasSystemErrorToManyListenKreuze.value).toBe(true);
     });
 
     it("should_onlyGiveOneReststimmeToOneNennung_when_kandidatAlreadyGot2Einzelstimmen", () => {

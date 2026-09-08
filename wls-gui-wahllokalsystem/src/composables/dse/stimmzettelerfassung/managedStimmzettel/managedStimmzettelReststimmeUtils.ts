@@ -5,7 +5,7 @@ import type { Ref } from "vue";
 import { computed, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useStringNumberMapTools } from "@/composables/common/mapTools.ts";
+import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
 
 export function useManagedStimmzettelReststimmeUtils(
   stimmzettel: Ref<Stimmzettel>,

@@ -15,7 +15,8 @@ export function useStimmzettelUtils() {
     const initWahlvorschlaege = wahlvorschlaege.map(_toDSEWahlvorschlag);
     return {
       stimmzettelkennung: 0,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
       gueltigkeit: null,
       invalideVotes: 0,
@@ -28,6 +29,7 @@ export function useStimmzettelUtils() {
   ): PersistedStimmzettel {
     return {
       stimmzettelkennung: stimmzettelkennung,
+      teamID: "",
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
       invalideVotes: 0,
       beschlussfassung: null,

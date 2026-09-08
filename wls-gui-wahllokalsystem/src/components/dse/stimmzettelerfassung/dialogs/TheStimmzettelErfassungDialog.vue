@@ -4,46 +4,63 @@
     persistent
     fullscreen
   >
-    <v-card>
+    <v-card
+      class="h-screen"
+      style="min-height: 0; max-width: 100%"
+    >
       <v-card-title>
         Erfassung Stimmzettel Nummer {{ currentUserTeamName }}
         {{ stimmzettel.stimmzettelkennung }}
       </v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col cols="2">
-            <the-eingabehistorie-card
-              :change-history="changeHistory.changeHistoryInReverseOrder.value"
-            />
-            <base-stimmzettel-zusammenfassung-card
-              class="mt-2"
-              :listenstimmen="
-                stimmzettelManager.managedStimmzettel
-                  .wahlvorschlaegeWithListenkreuz.value
-              "
-              :ungueltigestimmen="
-                stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                  .ungueltigeStimmen
-              "
-              :direktstimmen="
-                stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                  .einzelstimmen
-              "
-              :reststimmen="
-                stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                  .reststimmen
-              "
-              :streichungen="
-                stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                  .streichungen
-              "
-              :gueltigkeit="'VALID'"
-            />
-          </v-col>
-          <v-col cols="10">
-            <the-stimmzettel-command-processing-text-field
-              :stimmzettel-manager="stimmzettelManager"
-            />
+      <v-card-text
+        style="min-height: 0"
+        class="ga-3 d-flex"
+      >
+        <div
+          class="d-flex flex-column"
+          style="flex: 0 0 200px"
+        >
+          <the-eingabehistorie-card
+            :change-history="changeHistory.changeHistoryInReverseOrder.value"
+            class="d-flex flex-column"
+          />
+          <base-stimmzettel-zusammenfassung-card
+            class="mt-2 d-flex flex-column"
+            :listenstimmen="
+              stimmzettelManager.managedStimmzettel
+                .wahlvorschlaegeWithListenkreuz.value
+            "
+            :ungueltigestimmen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .ungueltigeStimmen
+            "
+            :direktstimmen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .einzelstimmen
+            "
+            :reststimmen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .reststimmen
+            "
+            :streichungen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .streichungen
+            "
+            :gueltigkeit="'VALID'"
+          />
+        </div>
+        <div
+          class="flex-1-1 d-flex flex-column"
+          style="min-height: 0; min-width: 0"
+        >
+          <the-stimmzettel-command-processing-text-field
+            class="flex-0-0"
+            :stimmzettel-manager="stimmzettelManager"
+          />
+          <div
+            class="flex-1-1-0 d-flex"
+            style="min-height: 0; min-width: 0"
+          >
             <the-stimmzettel-content
               :active-wahlvorschlag-id="latestChangedWahlvorschlagId"
               :active-kandidat="latestChangedKandidat"
@@ -51,9 +68,43 @@
                 stimmzettelManager.managedStimmzettel.stimmzettel.value
                   .wahlvorschlaege
               "
+              style="min-height: 0; overflow-y: auto; min-width: 0"
             />
-          </v-col>
-        </v-row>
+          </div>
+        </div>
+        <div
+          class="d-flex flex-column"
+          style="flex: 0 0 300px"
+        >
+          <the-eingabehistorie-card
+            :change-history="changeHistory.changeHistoryInReverseOrder.value"
+            class="d-flex flex-column"
+          />
+          <base-stimmzettel-zusammenfassung-card
+            class="mt-2 d-flex flex-column"
+            :listenstimmen="
+              stimmzettelManager.managedStimmzettel
+                .wahlvorschlaegeWithListenkreuz.value
+            "
+            :ungueltigestimmen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .ungueltigeStimmen
+            "
+            :direktstimmen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .einzelstimmen
+            "
+            :reststimmen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .reststimmen
+            "
+            :streichungen="
+              stimmzettelManager.managedStimmzettel.stimmenSummary.value
+                .streichungen
+            "
+            :gueltigkeit="'VALID'"
+          />
+        </div>
       </v-card-text>
       <v-card-actions>
         <base-text-button @click="onResetClicked"
@@ -63,9 +114,11 @@
         <base-text-button
           :disabled="isCancelButtonDisabled"
           @click="onCancelClicked"
-          >Abbrechen</base-text-button
-        >
-        <base-wls-button-save @click="onSavedClicked" />
+        >Abbrechen</base-text-button>
+        <base-save-button-with-action-menu
+          :model-value="currentAction"
+          :actions="actions"
+        />
       </v-card-actions>
       <the-stimmzettel-erfassung-cancel-confirmation-dialog
         :visible="isCancelConfirmationDialogVisible"
@@ -85,17 +138,18 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
+import BaseSaveButtonWithActionMenu from "@/components/common/buttons/BaseSaveButtonWithActionMenu.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
 import TheStimmzettelErfassungCancelConfirmationDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungCancelConfirmationDialog.vue";
 import TheEingabehistorieCard from "@/components/dse/stimmzettelerfassung/TheEingabehistorieCard.vue";
 import TheStimmzettelCommandProcessingTextField from "@/components/dse/stimmzettelerfassung/TheStimmzettelCommandProcessingTextField.vue";
 import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStimmzettelContent.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
@@ -103,7 +157,7 @@ const isDialogVisibleModel = defineModel("modelValue", {
   required: false,
 });
 
-const props = defineProps({
+const properties = defineProps({
   stimmzettel: {
     type: Object as PropType<Stimmzettel>,
     required: true,
@@ -116,14 +170,37 @@ const props = defineProps({
 
 const emit = defineEmits<{
   cancel: [];
-  confirm: [stimmzettel: Stimmzettel];
+  confirmClose: [stimmzettel: Stimmzettel];
+  confirmNext: [stimmzettel: Stimmzettel];
 }>();
+
+const actions = [
+  {
+    title: SAVE_CONTINUE,
+    action: () => onSavedClickedAndNext(),
+  },
+  {
+    title: "Speichern und schließen",
+    action: () => onSavedClickedAndClose(),
+  },
+];
+
+const currentAction = ref(actions[0]);
+
+watch(
+  () => isDialogVisibleModel.value,
+  () => {
+    if (isDialogVisibleModel.value) {
+      currentAction.value = actions[0];
+    }
+  }
+);
 
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
 
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
-  props.wahlvorschlaege,
+  properties.wahlvorschlaege,
   wahlID
 );
 
@@ -158,8 +235,12 @@ function onCancelConfirmationDialogConfirmed() {
   emit("cancel");
 }
 
-function onSavedClicked() {
-  emit("confirm", props.stimmzettel);
+function onSavedClickedAndClose() {
+  emit("confirmClose", properties.stimmzettel);
+}
+
+function onSavedClickedAndNext() {
+  emit("confirmNext", properties.stimmzettel);
 }
 
 function onResetClicked() {

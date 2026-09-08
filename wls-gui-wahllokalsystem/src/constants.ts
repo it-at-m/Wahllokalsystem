@@ -77,6 +77,8 @@ export const SUBTITLE_WAEHLERANZAHL_ERFASST = "Wähleranzahl erfasst";
 export const SUBTITLE_AUSZAEHLUNG_IN_ARBEIT = "Auszählung in Arbeit";
 export const SUBTITLE_AUSZAEHLUNG_ERFASST = "Abgeschlossen";
 
+export const TITEL_SONDERFAELLE = "Ungültige Stimmzettel und Stimmen";
+
 export const SAVE_CONTINUE = "Speichern und Weiter";
 export const ITEMS_PER_PAGE_TITLE = "Stimmzettel pro Seite";
 export const TABLE_NO_DATA_TEXT_STIMMZETTEL = "Noch keine Stimmzettel erfasst";

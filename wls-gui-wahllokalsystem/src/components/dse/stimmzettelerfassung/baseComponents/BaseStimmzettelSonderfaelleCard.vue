@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Ungültige Stimmzettel und Stimmen</v-card-title>
+    <v-card-title>{{ TITEL_SONDERFAELLE }}</v-card-title>
     <v-card-text>
       <v-checkbox
         :model-value="isStimmzettelLeerSelected"
@@ -94,6 +94,7 @@ import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
+import { TITEL_SONDERFAELLE } from "@/constants.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE =

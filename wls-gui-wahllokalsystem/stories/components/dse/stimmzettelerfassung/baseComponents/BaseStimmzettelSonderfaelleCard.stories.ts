@@ -55,7 +55,10 @@ export const BWBWithSystemBeschluesse: Story = {
     gueltigkeit: null,
     systemBeschlussgruende: [
       { reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig },
-      { reason: SystemBeschlussgrundReasonEnum.NichtAmtlicherStimmzettel },
+      {
+        reason:
+          SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+      },
     ],
     wahlvorstandBeschlussvorschlag: [],
     stimmzettelkennung: 42,

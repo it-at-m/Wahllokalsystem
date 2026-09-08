@@ -206,12 +206,14 @@ watch(
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
 
-const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
-  properties.wahlvorschlaege,
-  wahlID
-);
-
 const { currentUserTeamName, isBWB } = storeToRefs(useUserStore());
+
+const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
+  computed(() => properties.stimmzettel.stimmzettelkennung),
+  properties.wahlvorschlaege,
+  wahlID,
+  currentUserTeamName.value
+);
 
 const isBeschlussfassungValid = ref(true);
 
@@ -255,11 +257,11 @@ function onCancelConfirmationDialogConfirmed() {
 }
 
 function onSavedClickedAndClose() {
-  emit("confirmClose", properties.stimmzettel);
+  emit("confirmClose", stimmzettelManager.getStimmzettelSnapshot());
 }
 
 function onSavedClickedAndNext() {
-  emit("confirmNext", properties.stimmzettel);
+  emit("confirmNext", stimmzettelManager.getStimmzettelSnapshot());
 }
 
 function onResetClicked() {

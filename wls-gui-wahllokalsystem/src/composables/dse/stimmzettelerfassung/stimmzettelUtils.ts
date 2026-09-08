@@ -14,7 +14,6 @@ export function useStimmzettelUtils() {
   ): Stimmzettel {
     const initWahlvorschlaege = wahlvorschlaege.map(_toDSEWahlvorschlag);
     return {
-      stimmzettelkennung: 0,
       wahlvorstandBeschlussvorschlag: [],
       systemBeschlussvorschlag: [],
       beschlussfassung: null,
@@ -33,7 +32,8 @@ export function useStimmzettelUtils() {
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
       invalideVotes: 0,
       beschlussfassung: null,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       wahlvorschlaege: [],
     };
   }
@@ -86,14 +86,21 @@ export function useStimmzettelUtils() {
   function isVorgemerktFuerBeschluss(
     stimmzettel: PersistedStimmzettel
   ): boolean {
-    return stimmzettel.beschlussvorschlag.length > 0;
+    return (
+      stimmzettel.systemBeschlussvorschlag.length > 0 ||
+      stimmzettel.wahlvorstandBeschlussvorschlag.length > 0
+    );
   }
 
   function getVormerkungsgrund(stimmzettel: PersistedStimmzettel): string {
-    if (!isVorgemerktFuerBeschluss(stimmzettel)) {
-      return "";
-    }
-    return stimmzettel.beschlussvorschlag.map((grund) => grund.text).join(", ");
+    const wahlvorstandVorschlaege =
+      stimmzettel.wahlvorstandBeschlussvorschlag.map(
+        (vorschlag) => vorschlag.text
+      );
+    const systemVorschlaege = stimmzettel.systemBeschlussvorschlag.map(
+      (vorschlag) => vorschlag.reason
+    );
+    return [...systemVorschlaege, ...wahlvorstandVorschlaege].join(", ");
   }
 
   return {

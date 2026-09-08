@@ -6,21 +6,28 @@ import type {
   WahlvorschlagDTO,
   WahlvorstandBeschlussgrundDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
+import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { Beschlussfassung } from "@/types/dse/persistedStimmzettel/Beschlussfassung.ts";
-import type { Beschlussgrund } from "@/types/dse/persistedStimmzettel/Beschlussgrund.ts";
 import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
+import type { Stimmzettel as ManageableStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
+
+const { hasAnyKennzeichen } = useKandidatTools();
 
 export function useStimmzettelMapper() {
   function toModel(dto: StimmzettelOfTeamDTO, teamID: string): Stimmzettel {
-    const userBeschlussgruende = (dto.wahlvorstandBeschlussvorschlag ?? []).map(
-      (beschlussgrundDTO: WahlvorstandBeschlussgrundDTO) =>
-        _beschlussgrundDtoToModel(beschlussgrundDTO)
+    const wahlvorstandBeschlussgruende = (
+      dto.wahlvorstandBeschlussvorschlag ?? []
+    ).map((beschlussgrundDTO: WahlvorstandBeschlussgrundDTO) =>
+      _wahlvorstandBeschlussgrundDtoToModel(beschlussgrundDTO)
     );
     const systemBeschlussgruende = (dto.systemBeschlussvorschlag ?? []).map(
       (systemBeschlussgrundDTO: SystemBeschlussgrundDTO) =>
-        _beschlussgrundDtoToModel(systemBeschlussgrundDTO)
+        _systemBeschlussgrundDtoToModel(systemBeschlussgrundDTO)
     );
     return {
       stimmzettelkennung: dto.stimmzettelkennung,
@@ -30,10 +37,59 @@ export function useStimmzettelMapper() {
       ),
       invalideVotes: dto.invalideVotes,
       gueltigkeit: dto.gueltigkeit,
-      beschlussvorschlag: [...userBeschlussgruende, ...systemBeschlussgruende],
+      wahlvorstandBeschlussvorschlag: wahlvorstandBeschlussgruende,
+      systemBeschlussvorschlag: systemBeschlussgruende,
       beschlussfassung: dto.beschlussfassung
         ? _beschlussfassungDtoToModel(dto.beschlussfassung)
         : null,
+    };
+  }
+
+  function toPersistedStimmzettel(
+    manageableStimmzettel: ManageableStimmzettel,
+    stimmzettelkennung: number,
+    teamID: string
+  ): Stimmzettel {
+    const mappedWahlvorschlaege: Wahlvorschlag[] =
+      manageableStimmzettel.wahlvorschlaege
+        .map((wahlvorschlag) => {
+          const mappedKandidaten: Kandidat[] = wahlvorschlag.kandidaten
+            .filter((kandidat) => hasAnyKennzeichen(kandidat))
+            .map((kandidat) => ({
+              kandidatId: kandidat.kandidatId,
+              nennung: kandidat.nennung,
+              votesByWahlvorschlag: kandidat.reststimmen ?? 0,
+              invalidVotes: kandidat.ungueltigeStimmen ?? 0,
+              votesByVoter: kandidat.einzelstimmen ?? 0,
+              isDiscarded: kandidat.durchgestrichen ?? false,
+            }));
+
+          return {
+            kandidaten: mappedKandidaten,
+            wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
+            selected: wahlvorschlag.selected,
+          };
+        })
+        .filter(
+          (wahlvorschlag) =>
+            wahlvorschlag.kandidaten.length > 0 || wahlvorschlag.selected
+        );
+
+    return {
+      teamID: teamID,
+      stimmzettelkennung: stimmzettelkennung,
+      gueltigkeit: manageableStimmzettel.gueltigkeit,
+      invalideVotes: manageableStimmzettel.invalideVotes ?? 0,
+      wahlvorschlaege: mappedWahlvorschlaege,
+      wahlvorstandBeschlussvorschlag:
+        manageableStimmzettel.wahlvorstandBeschlussvorschlag.map(
+          (vorschlag) => ({ text: vorschlag.text })
+        ),
+      systemBeschlussvorschlag:
+        manageableStimmzettel.systemBeschlussvorschlag.map((vorschlag) => ({
+          reason: vorschlag.reason,
+        })),
+      beschlussfassung: manageableStimmzettel.beschlussfassung,
     };
   }
 
@@ -52,9 +108,15 @@ export function useStimmzettelMapper() {
         ? _beschlussfassungModelToDto(model.beschlussfassung)
         : undefined,
       wahlvorstandBeschlussvorschlag:
-        model.beschlussvorschlag.length > 0
-          ? model.beschlussvorschlag.map((beschlussgrund) =>
-              _beschlussgrundModelToDto(beschlussgrund)
+        model.wahlvorstandBeschlussvorschlag.length > 0
+          ? model.wahlvorstandBeschlussvorschlag.map((beschlussgrund) =>
+              _wahlvorstandBeschlussgrundModelToDto(beschlussgrund)
+            )
+          : undefined,
+      systemBeschlussvorschlag:
+        model.systemBeschlussvorschlag.length > 0
+          ? model.systemBeschlussvorschlag.map((beschlussgrund) =>
+              _systemBeschlussgrundModelToDto(beschlussgrund)
             )
           : undefined,
     };
@@ -104,11 +166,19 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _beschlussgrundDtoToModel(
-    dto: WahlvorstandBeschlussgrundDTO | SystemBeschlussgrundDTO
-  ): Beschlussgrund {
+  function _systemBeschlussgrundDtoToModel(
+    dto: SystemBeschlussgrundDTO
+  ): SystemBeschlussgrund {
     return {
-      text: "text" in dto ? dto.text : dto.reason,
+      reason: dto.reason,
+    };
+  }
+
+  function _wahlvorstandBeschlussgrundDtoToModel(
+    dto: WahlvorstandBeschlussgrundDTO
+  ): WahlvorstandBeschlussgrund {
+    return {
+      text: dto.text,
     };
   }
 
@@ -122,8 +192,16 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _beschlussgrundModelToDto(
-    model: Beschlussgrund
+  function _systemBeschlussgrundModelToDto(
+    model: SystemBeschlussgrund
+  ): SystemBeschlussgrundDTO {
+    return {
+      reason: model.reason,
+    };
+  }
+
+  function _wahlvorstandBeschlussgrundModelToDto(
+    model: WahlvorstandBeschlussgrund
   ): WahlvorstandBeschlussgrundDTO {
     return {
       text: model.text,
@@ -154,6 +232,7 @@ export function useStimmzettelMapper() {
 
   return {
     toModel,
+    toPersistedStimmzettel,
     toDTO,
   };
 }

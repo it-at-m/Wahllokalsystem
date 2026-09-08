@@ -6,7 +6,7 @@ import type { Builder } from "@tests/utils/Builder.ts";
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 export function useManagedStimmzettelTestDataFactory() {
   const {
@@ -41,7 +41,6 @@ export function useManagedStimmzettelTestDataFactory() {
 
   function createManagedStimmzettelStimmzettel(): Stimmzettel {
     return {
-      stimmzettelkennung: generateRandomNumber(6),
       wahlvorschlaege: [
         createManagedStimmzettelWahlvorschlag(),
         createManagedStimmzettelWahlvorschlag(),

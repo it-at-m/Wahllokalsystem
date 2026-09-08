@@ -1,5 +1,3 @@
-import { mock } from "node:test";
-
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import {

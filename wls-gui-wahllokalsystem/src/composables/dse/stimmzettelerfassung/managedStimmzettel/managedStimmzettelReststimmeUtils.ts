@@ -1,13 +1,10 @@
-import type { StimmenSummary } from "@/types/dse/stimmzettelerfassung/StimmenSummary.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
-import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 
 export function useManagedStimmzettelReststimmeUtils(
   stimmzettel: Ref<Stimmzettel>,

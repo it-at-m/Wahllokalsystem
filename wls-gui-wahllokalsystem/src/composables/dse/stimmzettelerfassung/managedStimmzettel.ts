@@ -5,9 +5,8 @@ import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.t
 import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, watch } from "vue";
 
-import { useLogging } from "@/composables/common/logging.ts";
 import { useManagedStimmzettelEinzelstimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelEinzelstimmeUtils.ts";
 import { useManagedStimmzettelKandidatUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelKandidatUtils.ts";
 import { useManagedStimmzettelReststimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelReststimmeUtils.ts";
@@ -26,13 +25,11 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
  * @param stimmzettel
  * @param wahlID
  * @param maxEinzelstimmen
- * @param COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG
  */
 export function useManagedStimmzettel(
   stimmzettel: Ref<Stimmzettel>,
   wahlID: string,
-  maxEinzelstimmen = 3,
-  COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG = 1
+  maxEinzelstimmen = 3
 ) {
   const changeHistory = useStimmzettelChangeHistory();
   const {

@@ -14,7 +14,7 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 import type { Stimmzettel as ManageableStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 
-import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/KandidatTools.ts";
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
 const { hasAnyKennzeichen } = useKandidatTools();
 

@@ -1,11 +1,11 @@
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/KandidatTools.ts";
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
 const { prepareStimmzettelKandidat } = useStimmzettelTestDataFactory();
 
-describe("KandidatTools.ts", () => {
+describe("kandidatTools.ts", () => {
   let unitUnderTest: ReturnType<typeof useKandidatTools>;
 
   beforeEach(() => {

@@ -19,7 +19,7 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  import("@/composables/dse/stimmzettelerfassung/KandidatTools.ts"),
+  import("@/composables/dse/stimmzettelerfassung/kandidatTools.ts"),
   () => ({
     useKandidatTools: () => ({
       hasAnyKennzeichen: mockDefinitions.hasAnyKennzeichen,

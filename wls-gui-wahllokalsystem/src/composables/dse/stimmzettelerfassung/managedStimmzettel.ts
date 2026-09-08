@@ -154,10 +154,6 @@ export function useManagedStimmzettel(
     )
   );
 
-  const remainingVotes = computed(() => {
-    return maximalErlaubteStimmenProWaehler.value - countTotalVotes.value;
-  });
-
   watch(
     () => stimmzettel.value.invalideVotes,
     () => {

@@ -83,7 +83,7 @@ export function useManagedStimmzettel(
       return StimmzettelGueltigkeitEnum.BeschlussAusstehend;
     }
 
-    return stimmzettel.value.gueltigkeit;
+    return stimmzettel.value.gueltigkeit || StimmzettelGueltigkeitEnum.Valid;
   });
 
   const hasAnyValuesSet = computed(() => kandidatenWithValues.value.length > 0);

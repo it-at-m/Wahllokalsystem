@@ -21,6 +21,7 @@
     </div>
     <div class="text-warning">
       Ein fehlender oder leerer Stimmzettel muss als Sonderfall erfasst werden!
+      (Siehe rechts oben "{{ TITEL_SONDERFAELLE }}")
     </div>
   </base-dialog>
 </template>
@@ -28,6 +29,7 @@
 <script setup lang="ts">
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
+import { TITEL_SONDERFAELLE } from "@/constants.ts";
 
 defineProps({
   visible: Boolean,

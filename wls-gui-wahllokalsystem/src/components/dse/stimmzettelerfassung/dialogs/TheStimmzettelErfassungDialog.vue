@@ -114,7 +114,8 @@
         <base-text-button
           :disabled="isCancelButtonDisabled"
           @click="onCancelClicked"
-        >Abbrechen</base-text-button>
+          >Abbrechen</base-text-button
+        >
         <base-save-button-with-action-menu
           :model-value="currentAction"
           :actions="actions"

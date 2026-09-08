@@ -61,4 +61,25 @@ describe("managedStimmzettelReststimmeUtils.ts", () => {
       }
     );
   });
+
+  describe("selectWahlvorschlag", () => {
+    it.each([true, false])(
+      "should_setSelectedTrue_when_calledAndCurrentStateIs'%s'",
+      (currentWahlvorschlagSelectionState) => {
+        const unitUnderTest = useManagedStimmzettelReststimmeUtils(
+          ref(prepareManagedStimmzettelStimmzettel().build()),
+          ref(3),
+          1
+        );
+
+        const wahlvorschlag = prepareManagedStimmzettelWahlvorschlag()
+          .selected(currentWahlvorschlagSelectionState)
+          .build();
+
+        unitUnderTest.selectWahlvorschlag(wahlvorschlag);
+
+        expect(wahlvorschlag.selected).toStrictEqual(true);
+      }
+    );
+  });
 });

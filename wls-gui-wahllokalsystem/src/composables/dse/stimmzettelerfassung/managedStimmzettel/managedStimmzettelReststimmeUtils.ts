@@ -117,7 +117,7 @@ export function useManagedStimmzettelReststimmeUtils(
         //clear current wahlvorschlaege votes
         wahlvorschlaegeSelected.forEach((wahlvorschlag) => {
           wahlvorschlag.kandidaten.forEach(
-            (kandidat) => (kandidat.reststimmen = 0)
+            (kandidat) => (kandidat.reststimmen = null)
           );
         });
 

@@ -176,7 +176,7 @@ export function useManagedStimmzettel(
       });
     });
     stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
-    stimmzettel.value.invalideVotes = null;
+    stimmzettel.value.invalideVotes = 0;
     stimmzettel.value.wahlvorstandBeschlussvorschlag = [];
     resetReststimmeError();
   }

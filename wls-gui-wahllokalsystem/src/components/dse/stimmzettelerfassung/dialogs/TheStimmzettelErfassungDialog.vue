@@ -187,6 +187,7 @@ const actions = [
 ];
 
 const currentAction = ref(actions[0]);
+let beforeEditSnapshot: Stimmzettel;
 
 watch(
   () => isDialogVisibleModel.value,
@@ -197,6 +198,7 @@ watch(
       stimmzettelManager.setActiveStimmzettelWhenEditing(
         properties.stimmzettel
       );
+      beforeEditSnapshot = stimmzettelManager.getStimmzettelSnapshot();
     }
   }
 );
@@ -216,10 +218,7 @@ const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
 const changeHistory = computed(
   () => stimmzettelManager.bearbeitenDialogStimmzettelUtils.changeHistory
 );
-const isCancelButtonDisabled = computed(
-  () =>
-    stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
-);
+const isCancelButtonDisabled = computed(() => hasStimmzettelBeenEdited.value);
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
@@ -227,6 +226,10 @@ const latestChangedWahlvorschlagId = computed<string | null>(
 const latestChangedKandidat = computed<Kandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
 );
+const hasStimmzettelBeenEdited = computed(() => {
+  const current = stimmzettelManager.getStimmzettelSnapshot();
+  return JSON.stringify(beforeEditSnapshot) !== JSON.stringify(current);
+});
 
 const isCancelConfirmationDialogVisible = ref(false);
 

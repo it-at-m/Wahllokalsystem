@@ -19,8 +19,13 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
  *
  * @param stimmzettel
  * @param wahlID
+ * @param maxEinzelstimmen
  */
-function _useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>, wahlID: string) {
+function _useManagedStimmzettel(
+  stimmzettel: Ref<Stimmzettel>,
+  wahlID: string,
+  maxEinzelstimmen = 3
+) {
   const changeHistory = useStimmzettelChangeHistory();
   const {
     kandidatenOfStimmzettel,
@@ -32,7 +37,7 @@ function _useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>, wahlID: string) {
   const { getWahlvorschlagByOrdnungszahl } =
     useManagedStimmzettelWahlvorschlagUtils(stimmzettel);
   const { addVotesToKandidat, removeVotesFromKandidat } =
-    useManagedStimmzettelEinzelstimmeUtils();
+    useManagedStimmzettelEinzelstimmeUtils(maxEinzelstimmen);
   const { addInvalidVotesToKandidat, removeInvalidVotesFromKandidat } =
     useManagedStimmzettelUngueltigeStimmeUtils();
 
@@ -121,7 +126,9 @@ function _useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>, wahlID: string) {
         `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
       );
     }
-    if (!kandidat.einzelstimmen || kandidat.einzelstimmen < votesToRemove) {
+    const sumOfEinzelAndUngueltigeStimmen =
+      (kandidat.einzelstimmen ?? 0) + (kandidat.ungueltigeStimmen ?? 0);
+    if (sumOfEinzelAndUngueltigeStimmen < votesToRemove) {
       throw new ManagedStimmzettelError(
         `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${votesToRemove} Stimmen abgezogen werden.`
       );
@@ -217,7 +224,7 @@ function _useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>, wahlID: string) {
     if (kandidat.durchgestrichen) {
       throw new ManagedStimmzettelError(`Kandidat*in ist bereits gestrichen.`);
     }
-    kandidat.durchgestrichen = true;
+    _streicheKandidat(kandidat);
     changeHistory.registerKandidatStreichungSet(kandidat);
   }
 
@@ -248,7 +255,7 @@ function _useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>, wahlID: string) {
     if (kandidaten.every((kandidat) => kandidat.durchgestrichen)) {
       throw new ManagedStimmzettelError(`Der Bereich ist bereits gestrichen.`);
     }
-    kandidaten.map((kandidat) => (kandidat.durchgestrichen = true));
+    kandidaten.forEach(_streicheKandidat);
     changeHistory.registerKandidatStreichungRangeSet(kandidaten);
   }
 
@@ -358,6 +365,15 @@ function _useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>, wahlID: string) {
     if (!Number.isSafeInteger(value) || value <= 0) {
       throw new ManagedStimmzettelError(errorMessage);
     }
+  }
+
+  function _streicheKandidat(kandidat: Kandidat) {
+    kandidat.durchgestrichen = true;
+    const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
+    const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
+    kandidat.einzelstimmen = null;
+    kandidat.ungueltigeStimmen =
+      currentUngueltigeStimmen + currentEinzelstimmen;
   }
 
   return {

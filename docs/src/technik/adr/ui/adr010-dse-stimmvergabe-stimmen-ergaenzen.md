@@ -14,7 +14,8 @@ Damit das möglichst nachvollziehbar für die User\*innen ist, werden folgende R
 ### Einzelstimmenvergabe
 
 Bekommt ein\*e Kandidat\*in, der\*die bereits eine Einzelstimme hat, erneut eine Einzelstimme vergeben, so wird diese zur bestehenden
-Stimme dazuaddiert.
+Stimme dazuaddiert. Wird dabei die Maximalmenge an Einzelstimmen die ein/eine Kandidat\*in, über alle Nennungen hinweg,
+überschritten. Werden entsprechd viele Stimmen oberhalb der Maximalmenge als ungültige Stimmen vergeben.
 
 Hat ein\*e Kandidat\*in mehrere Nennungen und die zweite Nennung hat zum Beispiel bereits eine Stimme, so führt die Eingabe
 einer Einzelstimme bei dieser Person zu einer weiteren Stimme bei der zweiten Nennung.
@@ -31,10 +32,13 @@ bleibt dieses erhalten. Ist kein Listenkreuz gesetzt, wird ein Listenkreuz geset
 
 ### Streichungen von Kandidat\*innen
 
-Soll ein\*e Kandidat\*in über die Tastatur gestrichen werden, wird die erste freie Nennung ohne Einzelstimme oder Streichung gestrichen.
+Soll ein\*e Kandidat\*in über die Tastatur gestrichen werden, wird die erste freie Nennung ohne Einzelstimme,
+ungültige Stimme oder Streichung gestrichen.
 
 Hat ein\*e Kandidat\*in bereits Einzelstimmen erhalten, erfolgt die Streichung bei der ersten freien Nennung ohne Streichung.
 Haben alle Nennungen Einzelstimmen oder eine Streichung wird die erste Nennung ohne Streichung gestrichen.
+
+Erfolgt die Streichung bei einer Nennung mit Einzelstimmen, werden die Einzelstimmen zu ungültigen Stimmen.
 
 Bei ein\*er Kandidat\*in mit drei Nennungen, bei der die erste Nennung bereits eine Einzelstimme hat und die zweite Nennung
 gestrichen wurde, führt die Eingabe des Befehls zur Vergabe einer Streichung bei der dritten Nennung.

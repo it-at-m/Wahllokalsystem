@@ -85,7 +85,6 @@ const { getVormerkungsgrund } = useStimmzettelUtils();
 function getVormerkungsOrEntscheidungsgrundBasedOnBeschlussfassung(
   stimmzettel: Stimmzettel
 ) {
-  // todo: map enum values to strings #3421
   if (stimmzettel.beschlussfassung) {
     return stimmzettel.beschlussfassung.text;
   } else {

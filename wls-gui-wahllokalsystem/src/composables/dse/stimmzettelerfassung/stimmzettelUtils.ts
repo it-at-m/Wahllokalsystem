@@ -5,6 +5,7 @@ import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/stimmzettele
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
+import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
@@ -93,12 +94,14 @@ function _useStimmzettelUtils() {
   }
 
   function getVormerkungsgrund(stimmzettel: PersistedStimmzettel): string {
+    const { mapSystemBeschlussgrundReasonEnumToText } =
+      useSystemBeschlussgrundReasonEnumTools();
     const wahlvorstandVorschlaege =
       stimmzettel.wahlvorstandBeschlussvorschlag.map(
         (vorschlag) => vorschlag.text
       );
     const systemVorschlaege = stimmzettel.systemBeschlussvorschlag.map(
-      (vorschlag) => vorschlag.reason
+      (vorschlag) => mapSystemBeschlussgrundReasonEnumToText(vorschlag.reason)
     );
     return [...systemVorschlaege, ...wahlvorstandVorschlaege].join(", ");
   }

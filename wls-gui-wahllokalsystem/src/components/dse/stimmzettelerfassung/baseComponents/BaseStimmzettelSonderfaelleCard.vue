@@ -94,6 +94,7 @@ import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
+import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { TITEL_SONDERFAELLE } from "@/constants.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
@@ -103,6 +104,8 @@ const REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE =
 const { createBeschlussgrundWithText, getWahlvorstandBeschlussvorschlaege } =
   useBeschlussgrundTools();
 const { required } = useRules();
+const { mapSystemBeschlussgrundReasonEnumToText } =
+  useSystemBeschlussgrundReasonEnumTools();
 
 const modelValueInvalidVotes = defineModel("invalidVotes", {
   type: [Number, null] as PropType<number | null>,
@@ -230,7 +233,9 @@ const isInputOfInvalidVotesDisabled = computed(
 );
 
 const systemBeschlussgruendeAsText = computed(() =>
-  props.systemBeschlussgruende.map((grund) => grund.reason).join(", ")
+  props.systemBeschlussgruende
+    .map((grund) => mapSystemBeschlussgrundReasonEnumToText(grund.reason))
+    .join(", ")
 );
 
 const wahlvorstandBeschlussvorschlaegeItems = computed(() =>

@@ -56,7 +56,7 @@
     <v-card-text v-if="showBeschlussfassung">
       <v-checkbox
         :model-value="isCheckboxMarkForBeschlussfassungSelected"
-        label="für Beschlussfassung vormerken"
+        label="für Beschlussfassung vorgemerkt"
         readonly
         class="mb-4"
         density="compact"

@@ -121,13 +121,16 @@ export function useManagedStimmzettel(
       });
     }
 
-    if (
-      countTotalVotes.value > maximalErlaubteStimmenProWaehler.value ||
-      hasSystemErrorToManyListenKreuze.value
-    ) {
+    if (countTotalVotes.value > maximalErlaubteStimmenProWaehler.value) {
       result.push({
         reason:
           SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+      });
+    }
+
+    if (hasSystemErrorToManyListenKreuze.value) {
+      result.push({
+        reason: SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
       });
     }
 

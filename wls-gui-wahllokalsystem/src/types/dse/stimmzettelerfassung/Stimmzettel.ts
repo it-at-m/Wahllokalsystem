@@ -6,11 +6,10 @@ import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschl
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 export interface Stimmzettel {
-  stimmzettelkennung: number;
   wahlvorschlaege: Wahlvorschlag[];
 
   invalideVotes: number | null;
-  gueltigkeit: StimmzettelGueltigkeitEnum | null;
+  gueltigkeit: StimmzettelGueltigkeitEnum;
   wahlvorstandBeschlussvorschlag: WahlvorstandBeschlussgrund[];
   systemBeschlussvorschlag: SystemBeschlussgrund[];
   beschlussfassung: Beschlussfassung | null;

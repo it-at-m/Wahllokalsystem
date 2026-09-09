@@ -2,6 +2,7 @@ import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { computed } from "vue";
 
 import { useStimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
@@ -53,8 +54,10 @@ describe("stimmzettelManager.ts", () => {
       mockDefinitions.handlerTwoCanHandle.mockReturnValue(false);
 
       const { parseCommandOrThrowError } = useStimmzettelManager(
+        computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1"
+        "wahl-1",
+        "team A"
       );
 
       parseCommandOrThrowError(command);
@@ -82,8 +85,10 @@ describe("stimmzettelManager.ts", () => {
       mockDefinitions.handlerTwoCanHandle.mockReturnValue(false);
 
       const { parseCommandOrThrowError } = useStimmzettelManager(
+        computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1"
+        "wahl-1",
+        "team A"
       );
 
       expect(() => parseCommandOrThrowError(command)).toThrow(
@@ -104,8 +109,10 @@ describe("stimmzettelManager.ts", () => {
       });
 
       const { parseCommandOrThrowError } = useStimmzettelManager(
+        computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1"
+        "wahl-1",
+        "team A"
       );
 
       expect(() => parseCommandOrThrowError(command)).toThrow(

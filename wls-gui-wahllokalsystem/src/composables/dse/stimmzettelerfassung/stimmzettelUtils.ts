@@ -9,17 +9,16 @@ import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-export function useStimmzettelUtils() {
+function _useStimmzettelUtils() {
   function createStimmzettelWithWahlvorschlaege(
     wahlvorschlaege: Wahlvorschlag[]
   ): Stimmzettel {
     const initWahlvorschlaege = wahlvorschlaege.map(_toDSEWahlvorschlag);
     return {
-      stimmzettelkennung: 0,
       wahlvorstandBeschlussvorschlag: [],
       systemBeschlussvorschlag: [],
       beschlussfassung: null,
-      gueltigkeit: null,
+      gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
       invalideVotes: 0,
       wahlvorschlaege: initWahlvorschlaege,
     };
@@ -34,7 +33,8 @@ export function useStimmzettelUtils() {
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
       invalideVotes: 0,
       beschlussfassung: null,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       wahlvorschlaege: [],
     };
   }
@@ -87,17 +87,22 @@ export function useStimmzettelUtils() {
   function isVorgemerktFuerBeschluss(
     stimmzettel: PersistedStimmzettel
   ): boolean {
-    return stimmzettel.beschlussvorschlag.length > 0;
+    return (
+      stimmzettel.systemBeschlussvorschlag.length > 0 ||
+      stimmzettel.wahlvorstandBeschlussvorschlag.length > 0
+    );
   }
 
   function getVormerkungsgrund(stimmzettel: PersistedStimmzettel): string {
-    if (!isVorgemerktFuerBeschluss(stimmzettel)) {
-      return "";
-    }
     const { mapSystemBeschlussgrundText } = useTextFormatter();
-    return stimmzettel.beschlussvorschlag
-      .map((grund) => mapSystemBeschlussgrundText(grund.text))
-      .join(", ");
+    const wahlvorstandVorschlaege =
+      stimmzettel.wahlvorstandBeschlussvorschlag.map(
+        (vorschlag) => vorschlag.text
+      );
+    const systemVorschlaege = stimmzettel.systemBeschlussvorschlag.map(
+      (vorschlag) => mapSystemBeschlussgrundText(vorschlag.reason)
+    );
+    return [...systemVorschlaege, ...wahlvorstandVorschlaege].join(", ");
   }
 
   return {
@@ -107,3 +112,10 @@ export function useStimmzettelUtils() {
     getVormerkungsgrund,
   };
 }
+
+/**
+ * @deprecated TODO is an tools composable. Does not serve any high level function
+ * maybe split into separate tools for different types
+ */
+export const useStimmzettelUtils = _useStimmzettelUtils;
+export const useStimmzettelTools = _useStimmzettelUtils;

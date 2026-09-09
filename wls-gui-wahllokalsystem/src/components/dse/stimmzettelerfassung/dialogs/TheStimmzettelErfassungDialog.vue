@@ -235,7 +235,13 @@ const hasStimmzettelBeenEdited = computed(() => {
 const isCancelConfirmationDialogVisible = ref(false);
 
 function onCancelClicked() {
-  isCancelConfirmationDialogVisible.value = true;
+  if (
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
+  ) {
+    isDialogVisibleModel.value = false;
+  } else {
+    isCancelConfirmationDialogVisible.value = true;
+  }
 }
 
 function onCancelConfirmationDialogCancelled() {

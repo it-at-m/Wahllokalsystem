@@ -57,7 +57,7 @@
       <v-checkbox
         :model-value="isCheckboxMarkForBeschlussfassungSelected"
         label="für Beschlussfassung vormerken"
-        :disabled="isCheckboxMarkeForBeschlussfassungDisabled"
+        :readonly="isCheckboxMarkeForBeschlussfassungReadonly"
         class="mb-4"
         density="compact"
         :hint="systemBeschlussgruendeAsText"
@@ -183,7 +183,7 @@ const hasSystemBeschlussGrund = computed(
   () => props.systemBeschlussgruende.length > 0
 );
 
-const isCheckboxMarkeForBeschlussfassungDisabled = computed(
+const isCheckboxMarkeForBeschlussfassungReadonly = computed(
   () =>
     isStimmzettelLeerSelected.value ||
     isStimmzettelFehltSelected.value ||

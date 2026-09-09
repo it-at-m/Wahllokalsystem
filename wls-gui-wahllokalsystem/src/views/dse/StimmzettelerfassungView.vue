@@ -191,7 +191,7 @@ async function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
   ) {
     await sendStatusInBearbeitung();
   }
-  setActiveStimmzettel(stimmzettel.stimmzettelkennung);
+  setActiveStimmzettel(stimmzettel);
   isErfassungsDialogVisible.value = true;
 }
 

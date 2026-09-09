@@ -99,14 +99,8 @@ export function useStimmzettelErfassungViewUtils(
     await _loadTeamStatus();
   }
 
-  function setActiveStimmzettel(stimmzettelkennung: number) {
-    const stimmzettelWithKennung = savedStimmzettel.value.find(
-      (stimmzettel) => stimmzettel.stimmzettelkennung === stimmzettelkennung
-    );
-
-    if (stimmzettelWithKennung) {
-      activeStimmzettel.value = stimmzettelWithKennung;
-    }
+  function setActiveStimmzettel(stimmzettel: Stimmzettel) {
+    activeStimmzettel.value = stimmzettel;
   }
 
   //private functions

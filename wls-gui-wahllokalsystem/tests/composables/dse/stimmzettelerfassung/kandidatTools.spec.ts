@@ -23,80 +23,80 @@ describe("kandidatTools.ts", () => {
 
       expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
     });
-  });
 
-  it("should_returnTrue_when_isDurchgestrichenAndAllStimmenLargerThan0", () => {
-    const kandidat = prepareStimmzettelKandidat()
-      .durchgestrichen(true)
-      .einzelstimmen(1)
-      .reststimmen(1)
-      .ungueltigeStimmen(1)
-      .build();
+    it("should_returnTrue_when_isDurchgestrichenAndAllStimmenLargerThan0", () => {
+      const kandidat = prepareStimmzettelKandidat()
+        .durchgestrichen(true)
+        .einzelstimmen(1)
+        .reststimmen(1)
+        .ungueltigeStimmen(1)
+        .build();
 
-    expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
-  });
+      expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
+    });
 
-  it.each([1, 10])(
-    "should_returnTrue_when_einzelstimmenIsLargerThan0By'%d'",
-    (einzelstimmen) => {
+    it.each([1, 10])(
+      "should_returnTrue_when_einzelstimmenIsLargerThan0By'%d'",
+      (einzelstimmen) => {
+        const kandidat = prepareStimmzettelKandidat()
+          .durchgestrichen(false)
+          .einzelstimmen(einzelstimmen)
+          .reststimmen(null)
+          .ungueltigeStimmen(null)
+          .build();
+
+        expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
+      }
+    );
+
+    it.each([1, 10])(
+      "should_returnTrue_when_reststimmenIsLargerThan0By'%d'",
+      (reststimmen) => {
+        const kandidat = prepareStimmzettelKandidat()
+          .durchgestrichen(false)
+          .einzelstimmen(null)
+          .reststimmen(reststimmen)
+          .ungueltigeStimmen(null)
+          .build();
+
+        expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
+      }
+    );
+
+    it.each([1, 10])(
+      "should_returnTrue_when_ungueltigeStimmenIsLargerThan0By'%d'",
+      (listenstimmen) => {
+        const kandidat = prepareStimmzettelKandidat()
+          .durchgestrichen(false)
+          .einzelstimmen(null)
+          .reststimmen(null)
+          .ungueltigeStimmen(listenstimmen)
+          .build();
+
+        expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
+      }
+    );
+
+    it("should_returnFalse_when_isNotDurchgestrichenAndAllStimmenAreNull", () => {
       const kandidat = prepareStimmzettelKandidat()
         .durchgestrichen(false)
-        .einzelstimmen(einzelstimmen)
+        .einzelstimmen(null)
         .reststimmen(null)
         .ungueltigeStimmen(null)
         .build();
 
-      expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
-    }
-  );
+      expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(false);
+    });
 
-  it.each([1, 10])(
-    "should_returnTrue_when_reststimmenIsLargerThan0By'%d'",
-    (reststimmen) => {
+    it("should_returnFalse_when_isNotDurchgestrichenAndAllStimmenAre0", () => {
       const kandidat = prepareStimmzettelKandidat()
         .durchgestrichen(false)
-        .einzelstimmen(null)
-        .reststimmen(reststimmen)
-        .ungueltigeStimmen(null)
+        .einzelstimmen(0)
+        .reststimmen(0)
+        .ungueltigeStimmen(0)
         .build();
 
-      expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
-    }
-  );
-
-  it.each([1, 10])(
-    "should_returnTrue_when_ungueltigeStimmenIsLargerThan0By'%d'",
-    (listenstimmen) => {
-      const kandidat = prepareStimmzettelKandidat()
-        .durchgestrichen(false)
-        .einzelstimmen(null)
-        .reststimmen(null)
-        .ungueltigeStimmen(listenstimmen)
-        .build();
-
-      expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
-    }
-  );
-
-  it("should_returnFalse_when_isNotDurchgestrichenAndAllStimmenAreNull", () => {
-    const kandidat = prepareStimmzettelKandidat()
-      .durchgestrichen(false)
-      .einzelstimmen(null)
-      .reststimmen(null)
-      .ungueltigeStimmen(null)
-      .build();
-
-    expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(false);
-  });
-
-  it("should_returnFalse_when_isNotDurchgestrichenAndAllStimmenAre0", () => {
-    const kandidat = prepareStimmzettelKandidat()
-      .durchgestrichen(false)
-      .einzelstimmen(0)
-      .reststimmen(0)
-      .ungueltigeStimmen(0)
-      .build();
-
-    expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(false);
+      expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(false);
+    });
   });
 });

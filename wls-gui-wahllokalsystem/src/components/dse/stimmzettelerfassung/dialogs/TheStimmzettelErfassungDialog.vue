@@ -169,6 +169,18 @@ const properties = defineProps({
   },
 });
 
+const route = useRoute();
+const wahlID = route.params.wahlId as string;
+
+const { currentUserTeamName } = storeToRefs(useUserStore());
+
+const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
+  computed(() => properties.stimmzettel.stimmzettelkennung),
+  properties.wahlvorschlaege,
+  wahlID,
+  currentUserTeamName.value
+);
+
 const emit = defineEmits<{
   cancel: [];
   confirmClose: [stimmzettel: Stimmzettel];
@@ -187,7 +199,7 @@ const actions = [
 ];
 
 const currentAction = ref(actions[0]);
-let beforeEditSnapshot: Stimmzettel;
+const beforeEditSnapshot = ref<Stimmzettel | null>(null);
 
 watch(
   () => isDialogVisibleModel.value,
@@ -198,21 +210,10 @@ watch(
       stimmzettelManager.setActiveStimmzettelWhenEditing(
         properties.stimmzettel
       );
-      beforeEditSnapshot = stimmzettelManager.getStimmzettelSnapshot();
+      beforeEditSnapshot.value = stimmzettelManager.getStimmzettelSnapshot();
     }
-  }
-);
-
-const route = useRoute();
-const wahlID = route.params.wahlId as string;
-
-const { currentUserTeamName } = storeToRefs(useUserStore());
-
-const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
-  computed(() => properties.stimmzettel.stimmzettelkennung),
-  properties.wahlvorschlaege,
-  wahlID,
-  currentUserTeamName.value
+  },
+  { immediate: true }
 );
 
 const changeHistory = computed(
@@ -228,7 +229,7 @@ const latestChangedKandidat = computed<Kandidat | null>(
 );
 const hasStimmzettelBeenEdited = computed(() => {
   const current = stimmzettelManager.getStimmzettelSnapshot();
-  return JSON.stringify(beforeEditSnapshot) !== JSON.stringify(current);
+  return JSON.stringify(beforeEditSnapshot.value) !== JSON.stringify(current);
 });
 
 const isCancelConfirmationDialogVisible = ref(false);

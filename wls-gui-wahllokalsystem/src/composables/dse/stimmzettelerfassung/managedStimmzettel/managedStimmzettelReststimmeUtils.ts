@@ -15,7 +15,7 @@ export function useManagedStimmzettelReststimmeUtils(
   countVotesGivenAsReststimme = 1
 ) {
   const logger = useLogging("mangeStimmzettelReststimmeUtils");
-  const { hasAnyKennzeichenOrReststimme } = useKandidatTools();
+  const { hasAnyKennzeichen } = useKandidatTools();
 
   const hasSystemErrorToManyListenKreuze = ref(false);
 
@@ -134,7 +134,7 @@ export function useManagedStimmzettelReststimmeUtils(
     wahlvorschlag.kandidaten.forEach((kandidat) => {
       //is kandidat allowed to get reststimmen
       if (
-        !hasAnyKennzeichenOrReststimme(kandidat) &&
+        !hasAnyKennzeichen(kandidat) &&
         restStimmenSpent + countVotesGivenAsReststimme <= votesLeftToPlace &&
         votesKandidatenAlreadyGotTool.getOrDefault(kandidat.kandidatId) +
           countVotesGivenAsReststimme <=

@@ -44,13 +44,13 @@ export function useManagedStimmzettelReststimmeUtils(
     const votesKandidatenAlreadyGotTool = useStringNumberMapTools(
       new Map<string, number>()
     );
-    const kandidatenOfSelectedWahlvorschlaege =
+    const kandidatenOfWahlvorschlaege =
       stimmzettel.value.wahlvorschlaege.flatMap(
         (wahlvorschlag) => wahlvorschlag.kandidaten
       );
     //count votes that any kandidat of wahlvorschlag already got
     //we need to sum the votes of the nennungen cause sum of votes over all nennungen is limited
-    kandidatenOfSelectedWahlvorschlaege.forEach((kandidat) =>
+    kandidatenOfWahlvorschlaege.forEach((kandidat) =>
       votesKandidatenAlreadyGotTool.add(
         kandidat.kandidatId,
         (kandidat.ungueltigeStimmen ?? 0) + (kandidat.einzelstimmen ?? 0)
@@ -90,7 +90,7 @@ export function useManagedStimmzettelReststimmeUtils(
         )
       );
     } else {
-      kandidatenOfSelectedWahlvorschlaege.forEach(
+      kandidatenOfWahlvorschlaege.forEach(
         (kandidat) => (kandidat.reststimmen = null)
       );
       hasSystemErrorToManyListenKreuze.value = true;

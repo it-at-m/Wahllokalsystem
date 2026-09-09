@@ -1,3 +1,5 @@
+import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
+
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import {
@@ -13,6 +15,7 @@ import { ref } from "vue";
 
 import { useManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
+import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
 
@@ -75,6 +78,8 @@ describe("managedStimmzettel.ts", () => {
     prepareManagedStimmzettelKandidat,
   } = useManagedStimmzettelTestDataFactory();
 
+  const MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER = 999;
+
   beforeAll(() => {
     setActivePinia(createPinia());
   });
@@ -91,7 +96,7 @@ describe("managedStimmzettel.ts", () => {
         stimmzettelgebietsname: "",
         wahlname: "",
         wahlbezirknummer: "",
-        maximalErlaubteStimmenProWaehler: 999,
+        maximalErlaubteStimmenProWaehler: MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER,
       },
     ];
   });
@@ -753,6 +758,212 @@ describe("managedStimmzettel.ts", () => {
         managed.kandidatenRemoveStreichungenInRangeOrThrow(101, 102)
       ).toThrow(ManagedStimmzettelError);
     });
+  });
+
+  describe("stimmzettel", () => {
+    it("should_notHaveAnySystemBeschlussvorschlag_when_noDataIsChanged", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
+        .reststimmen(null)
+        .ungueltigeStimmen(null)
+        .build();
+
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidat])
+            .build(),
+        ])
+        .invalideVotes(0)
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+      expect(managed.stimmzettel.value.systemBeschlussvorschlag).toStrictEqual(
+        []
+      );
+    });
+
+    it.each([1, 10])(
+      "should_setSystemBeschlussvorschlagEinzelneStimmenUngueltig_when_anyKandidatHasAtLeastOneInvalidVoteWith'%d'",
+      (countInvalidVotes) => {
+        const kandidatWithInvalidVotes = prepareManagedStimmzettelKandidat()
+          .listenposition(1)
+          .ordnungszahl(101)
+          .einzelstimmen(null)
+          .durchgestrichen(false)
+          .reststimmen(null)
+          .ungueltigeStimmen(countInvalidVotes)
+          .build();
+
+        const stimmzettel = prepareManagedStimmzettelStimmzettel()
+          .wahlvorschlaege([
+            prepareManagedStimmzettelWahlvorschlag()
+              .ordnungszahl(1)
+              .kandidaten([kandidatWithInvalidVotes])
+              .build(),
+          ])
+          .invalideVotes(0)
+          .build();
+
+        const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+        expect(
+          managed.stimmzettel.value.systemBeschlussvorschlag
+        ).toStrictEqual([
+          {
+            reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+          } as SystemBeschlussgrund,
+        ]);
+      }
+    );
+
+    it.each([1, 10])(
+      "should_setSystemBeschlussvorschlagEinzelneStimmenUngueltig_when_stimmzettelHasAtLeastOneInvalidVoteWith'%d'",
+      (countInvalidVotes) => {
+        const stimmzettel = prepareManagedStimmzettelStimmzettel()
+          .wahlvorschlaege([
+            prepareManagedStimmzettelWahlvorschlag()
+              .ordnungszahl(1)
+              .kandidaten([])
+              .build(),
+          ])
+          .invalideVotes(countInvalidVotes)
+          .build();
+
+        const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+        expect(
+          managed.stimmzettel.value.systemBeschlussvorschlag
+        ).toStrictEqual([
+          {
+            reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+          } as SystemBeschlussgrund,
+        ]);
+      }
+    );
+
+    it.each([1, 10])(
+      "should_setSystemBeschlussvorschlagEinzelneStimmenUngueltig_when_stimmzettelAndAnyKandidatHasAtLeastOneInvalidVoteWith'%d'",
+      (countInvalidVotes) => {
+        const kandidatWithInvalidVotes = prepareManagedStimmzettelKandidat()
+          .listenposition(1)
+          .ordnungszahl(101)
+          .einzelstimmen(null)
+          .durchgestrichen(false)
+          .reststimmen(null)
+          .ungueltigeStimmen(countInvalidVotes)
+          .build();
+
+        const stimmzettel = prepareManagedStimmzettelStimmzettel()
+          .wahlvorschlaege([
+            prepareManagedStimmzettelWahlvorschlag()
+              .ordnungszahl(1)
+              .kandidaten([kandidatWithInvalidVotes])
+              .build(),
+          ])
+          .invalideVotes(countInvalidVotes)
+          .build();
+
+        const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+        expect(
+          managed.stimmzettel.value.systemBeschlussvorschlag
+        ).toStrictEqual([
+          {
+            reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+          } as SystemBeschlussgrund,
+        ]);
+      }
+    );
+
+    it.each([1, 10])(
+      "should_setSystemBeschlussvorschlagZuVieleEinzelstimmenAberImGesamtstimmenlimit_when_stimmzettelAndAnyKandidatHas'%d'MoreEinzelstimmenThanAllowed",
+      (numberOfVotesAboveLimit) => {
+        const maxEinzelstimmenJeKandidat = 3;
+        const kandidatWithToManyEinzelstimmen =
+          prepareManagedStimmzettelKandidat()
+            .listenposition(1)
+            .ordnungszahl(101)
+            .einzelstimmen(maxEinzelstimmenJeKandidat + numberOfVotesAboveLimit)
+            .durchgestrichen(false)
+            .reststimmen(null)
+            .ungueltigeStimmen(null)
+            .build();
+
+        const stimmzettel = prepareManagedStimmzettelStimmzettel()
+          .wahlvorschlaege([
+            prepareManagedStimmzettelWahlvorschlag()
+              .ordnungszahl(1)
+              .kandidaten([kandidatWithToManyEinzelstimmen])
+              .build(),
+          ])
+          .invalideVotes(null)
+          .build();
+
+        const managed = useManagedStimmzettel(
+          ref(stimmzettel),
+          mockedWahlId,
+          maxEinzelstimmenJeKandidat
+        );
+
+        expect(
+          managed.stimmzettel.value.systemBeschlussvorschlag
+        ).toStrictEqual([
+          {
+            reason:
+              SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+          } as SystemBeschlussgrund,
+        ]);
+      }
+    );
+
+    it.each([1, 10])(
+      "should_setSystemBeschlussvorschlagZuVieleEinzelstimmenOderListenkreuze_when_stimmzettelAndAnyKandidatHas'%d'MoreEinzelstimmenThanAllowedAndMoreThanAllowedInTotal",
+      (numberOfVotesAboveLimit) => {
+        const maxEinzelstimmenJeKandidat = 3;
+        const kandidatWithToManyEinzelstimmen =
+          prepareManagedStimmzettelKandidat()
+            .listenposition(1)
+            .ordnungszahl(101)
+            .einzelstimmen(
+              MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER + numberOfVotesAboveLimit
+            )
+            .durchgestrichen(false)
+            .reststimmen(null)
+            .ungueltigeStimmen(null)
+            .build();
+
+        const stimmzettel = prepareManagedStimmzettelStimmzettel()
+          .wahlvorschlaege([
+            prepareManagedStimmzettelWahlvorschlag()
+              .ordnungszahl(1)
+              .kandidaten([kandidatWithToManyEinzelstimmen])
+              .build(),
+          ])
+          .invalideVotes(null)
+          .build();
+
+        const managed = useManagedStimmzettel(
+          ref(stimmzettel),
+          mockedWahlId,
+          maxEinzelstimmenJeKandidat
+        );
+
+        expect(
+          managed.stimmzettel.value.systemBeschlussvorschlag
+        ).toStrictEqual([
+          {
+            reason:
+              SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+          } as SystemBeschlussgrund,
+        ]);
+      }
+    );
   });
 
   describe("wahlvorschlagAddVotesOrThrow", () => {

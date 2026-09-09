@@ -96,53 +96,11 @@ export function _useManagedStimmzettel(
   );
 
   watchEffect(() => {
-    const sysmtenBeschlussgruende: SystemBeschlussgrund[] = [];
-
-    if (
-      hasSystemErrorAnyKandidatWithInvalidVotes.value ||
-      (stimmzettel.value.invalideVotes ?? 0) > 0
-    ) {
-      sysmtenBeschlussgruende.push({
-        reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
-      });
-    }
-
-    if (
-      hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen.value &&
-      countTotalVotes.value <= maximalErlaubteStimmenProWaehler.value
-    ) {
-      sysmtenBeschlussgruende.push({
-        reason:
-          SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
-      });
-    }
-
-    if (countTotalVotes.value > maximalErlaubteStimmenProWaehler.value) {
-      sysmtenBeschlussgruende.push({
-        reason:
-          SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
-      });
-    }
-
-    if (hasSystemErrorToManyListenKreuze.value) {
-      sysmtenBeschlussgruende.push({
-        reason: SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
-      });
-    }
-
-    stimmzettel.value.systemBeschlussvorschlag = sysmtenBeschlussgruende;
+    _updateSystemBeschlussgruendeBasedOnDetectedErrors();
   });
 
   watchEffect(() => {
-    if (
-      stimmzettel.value.systemBeschlussvorschlag.length > 0 ||
-      stimmzettel.value.wahlvorstandBeschlussvorschlag.length > 0
-    ) {
-      stimmzettel.value.gueltigkeit =
-        StimmzettelGueltigkeitEnum.BeschlussAusstehend;
-    } else {
-      stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
-    }
+    _updateGueltigkeitWhenBeschlussvorschlaegeChanged();
   });
 
   const stimmenSummary = computed(() => {
@@ -472,6 +430,56 @@ export function _useManagedStimmzettel(
     if (!Number.isSafeInteger(value) || value <= 0) {
       throw new ManagedStimmzettelError(errorMessage);
     }
+  }
+
+  function _updateGueltigkeitWhenBeschlussvorschlaegeChanged() {
+    if (
+      stimmzettel.value.systemBeschlussvorschlag.length > 0 ||
+      stimmzettel.value.wahlvorstandBeschlussvorschlag.length > 0
+    ) {
+      stimmzettel.value.gueltigkeit =
+        StimmzettelGueltigkeitEnum.BeschlussAusstehend;
+    } else {
+      stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
+    }
+  }
+
+  function _updateSystemBeschlussgruendeBasedOnDetectedErrors() {
+    const sysmtenBeschlussgruende: SystemBeschlussgrund[] = [];
+
+    if (
+      hasSystemErrorAnyKandidatWithInvalidVotes.value ||
+      (stimmzettel.value.invalideVotes ?? 0) > 0
+    ) {
+      sysmtenBeschlussgruende.push({
+        reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+      });
+    }
+
+    if (
+      hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen.value &&
+      countTotalVotes.value <= maximalErlaubteStimmenProWaehler.value
+    ) {
+      sysmtenBeschlussgruende.push({
+        reason:
+          SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+      });
+    }
+
+    if (countTotalVotes.value > maximalErlaubteStimmenProWaehler.value) {
+      sysmtenBeschlussgruende.push({
+        reason:
+          SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+      });
+    }
+
+    if (hasSystemErrorToManyListenKreuze.value) {
+      sysmtenBeschlussgruende.push({
+        reason: SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+      });
+    }
+
+    stimmzettel.value.systemBeschlussvorschlag = sysmtenBeschlussgruende;
   }
 
   return {

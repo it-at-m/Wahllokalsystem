@@ -57,7 +57,7 @@
       <v-checkbox
         :model-value="isCheckboxMarkForBeschlussfassungSelected"
         label="für Beschlussfassung vormerken"
-        :readonly="isCheckboxMarkeForBeschlussfassungReadonly"
+        readonly
         class="mb-4"
         density="compact"
         :hint="systemBeschlussgruendeAsText"
@@ -183,13 +183,6 @@ const hasSystemBeschlussGrund = computed(
   () => props.systemBeschlussgruende.length > 0
 );
 
-const isCheckboxMarkeForBeschlussfassungReadonly = computed(
-  () =>
-    isStimmzettelLeerSelected.value ||
-    isStimmzettelFehltSelected.value ||
-    hasSystemBeschlussGrund.value
-);
-
 const isStimmzettelLeerSelected = computed(
   () => modelValueGueltigkeit.value === StimmzettelGueltigkeitEnum.Leer
 );
@@ -201,9 +194,8 @@ const isStimmzettelFehltSelected = computed(
 
 const isCheckboxMarkForBeschlussfassungSelected = computed(
   () =>
-    hasSystemBeschlussGrund.value ||
     modelValueGueltigkeit.value ===
-      StimmzettelGueltigkeitEnum.BeschlussAusstehend
+    StimmzettelGueltigkeitEnum.BeschlussAusstehend
 );
 
 const isCheckboxStimmzettelFehltDisabled = computed(
@@ -269,7 +261,7 @@ function onStimmzettelLeerChanged(newValue: boolean | null) {
   if (newValue) {
     modelValueGueltigkeit.value = StimmzettelGueltigkeitEnum.Leer;
   } else {
-    modelValueGueltigkeit.value = null;
+    modelValueGueltigkeit.value = StimmzettelGueltigkeitEnum.Valid;
   }
 }
 
@@ -279,7 +271,7 @@ function onStimmzettelFehltChanged(newValue: boolean | null) {
       StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag;
     isStimmzettelFehltInstructionDialogVisible.value = true;
   } else {
-    modelValueGueltigkeit.value = null;
+    modelValueGueltigkeit.value = StimmzettelGueltigkeitEnum.Valid;
   }
 }
 

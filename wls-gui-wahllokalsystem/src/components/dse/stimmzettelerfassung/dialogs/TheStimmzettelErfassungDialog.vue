@@ -47,8 +47,8 @@
                 .value.streichungen
             "
             :gueltigkeit="
-              stimmzettelManager.bearbeitenDialogStimmzettelUtils
-                .effectiveStimmzettelGueltigkeit.value
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                .value.gueltigkeit
             "
           />
         </div>
@@ -104,8 +104,8 @@
             "
             :team-id="currentUserTeamName"
             :system-beschlussgruende="
-              stimmzettelManager.bearbeitenDialogStimmzettelUtils.systemErrors
-                .value
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                .value.systemBeschlussvorschlag
             "
             :stimmzettelkennung="stimmzettel.stimmzettelkennung"
             :is-b-w-b="isBWB"

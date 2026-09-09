@@ -5,7 +5,7 @@ import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.t
 import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed, watch } from "vue";
+import { computed, watch, watchEffect } from "vue";
 
 import { useManagedStimmzettelEinzelstimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelEinzelstimmeUtils.ts";
 import { useManagedStimmzettelKandidatUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelKandidatUtils.ts";
@@ -66,6 +66,10 @@ export function _useManagedStimmzettel(
     maxEinzelstimmen
   );
 
+  const kandidatenWithValues = computed(() =>
+    kandidatenOfStimmzettel.value.filter(_hasKandidatAnyStimmeOrStreichung)
+  );
+
   const countTotalVotes = computed(
     () =>
       kandidatenWithValues.value.reduce(
@@ -77,14 +81,6 @@ export function _useManagedStimmzettel(
         0
       ) + (stimmzettel.value.invalideVotes ?? 0)
   );
-
-  const effectiveStimmzettelGueltigkeit = computed(() => {
-    if (systemErrors.value.length > 0) {
-      return StimmzettelGueltigkeitEnum.BeschlussAusstehend;
-    }
-
-    return stimmzettel.value.gueltigkeit || StimmzettelGueltigkeitEnum.Valid;
-  });
 
   const hasAnyValuesSet = computed(() => kandidatenWithValues.value.length > 0);
 
@@ -99,14 +95,14 @@ export function _useManagedStimmzettel(
     )
   );
 
-  const systemErrors = computed(() => {
-    const result: SystemBeschlussgrund[] = [];
+  watchEffect(() => {
+    const sysmtenBeschlussgruende: SystemBeschlussgrund[] = [];
 
     if (
       hasSystemErrorAnyKandidatWithInvalidVotes.value ||
       (stimmzettel.value.invalideVotes ?? 0) > 0
     ) {
-      result.push({
+      sysmtenBeschlussgruende.push({
         reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
       });
     }
@@ -115,31 +111,39 @@ export function _useManagedStimmzettel(
       hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen.value &&
       countTotalVotes.value <= maximalErlaubteStimmenProWaehler.value
     ) {
-      result.push({
+      sysmtenBeschlussgruende.push({
         reason:
           SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
       });
     }
 
     if (countTotalVotes.value > maximalErlaubteStimmenProWaehler.value) {
-      result.push({
+      sysmtenBeschlussgruende.push({
         reason:
           SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
       });
     }
 
     if (hasSystemErrorToManyListenKreuze.value) {
-      result.push({
+      sysmtenBeschlussgruende.push({
         reason: SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
       });
     }
 
-    return result;
+    stimmzettel.value.systemBeschlussvorschlag = sysmtenBeschlussgruende;
   });
 
-  const kandidatenWithValues = computed(() =>
-    kandidatenOfStimmzettel.value.filter(_hasKandidatAnyStimmeOrStreichung)
-  );
+  watchEffect(() => {
+    if (
+      stimmzettel.value.systemBeschlussvorschlag.length > 0 ||
+      stimmzettel.value.wahlvorstandBeschlussvorschlag.length > 0
+    ) {
+      stimmzettel.value.gueltigkeit =
+        StimmzettelGueltigkeitEnum.BeschlussAusstehend;
+    } else {
+      stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
+    }
+  });
 
   const stimmenSummary = computed(() => {
     const summary: StimmenSummary = {
@@ -472,11 +476,9 @@ export function _useManagedStimmzettel(
 
   return {
     changeHistory,
-    effectiveStimmzettelGueltigkeit,
     hasAnyValuesSet,
     hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen,
     hasSystemErrorAnyKandidatWithInvalidVotes,
-    systemErrors,
     resetStimmzettel,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,

@@ -244,8 +244,7 @@ const isSaveDisabled = computed(
         StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag &&
       stimmzettelGueltigkeit.value !==
         StimmzettelGueltigkeitEnum.BeschlussAusstehend &&
-      stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
-        .invalideVotes === 0)
+      !!stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value)
 );
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>

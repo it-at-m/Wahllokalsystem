@@ -1,15 +1,11 @@
 <template>
   <div>
     <v-card>
-      <v-card-title>Stimmzettelerfassung</v-card-title>
-      <v-card-text>
-        <base-stimmzettel-uebersicht-table
-          :team-id="teamID"
-          :stimmzettel-liste="savedStimmzettel"
-          :stimmzettel-loading="isStimmzettelLoading"
-          class="mt-3"
-        />
-      </v-card-text>
+        <base-stimmzettelerfassung-tabs
+            :team-id="teamID"
+            :stimmzettel-liste="savedStimmzettel"
+            :stimmzettel-loading="isStimmzettelLoading"
+         />
       <v-card-actions v-if="!isStatusLoading">
         <div
           v-if="!hasTeamFinishedErfassung"
@@ -89,13 +85,14 @@ import { useRoute } from "vue-router";
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
-import BaseStimmzettelUebersichtTable from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelUebersichtTable.vue";
 import TheStimmzettelerfassungBeendenDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelerfassungBeendenDialog.vue";
 import TheStimmzettelErfassungDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungDialog.vue";
 import TheStimmzettelkennungDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelkennungDialog.vue";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
+import BaseStimmzettelerfassungTabs
+  from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelerfassungTabs.vue";
 
 const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
 

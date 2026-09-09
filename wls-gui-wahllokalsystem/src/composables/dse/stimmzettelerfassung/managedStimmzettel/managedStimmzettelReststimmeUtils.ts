@@ -127,6 +127,9 @@ export function useManagedStimmzettelReststimmeUtils(
     votesLeftToPlace: number,
     votesKandidatenAlreadyGotTool: ReturnType<typeof useStringNumberMapTools>
   ) {
+    logger.logDebug(
+      `placing reststimmen on ${wahlvorschlag.kurzname}, votesLeftToPlace > ${votesLeftToPlace}`
+    );
     let restStimmenSpent = 0;
     wahlvorschlag.kandidaten.forEach((kandidat) => {
       //is kandidat allowed to get reststimmen

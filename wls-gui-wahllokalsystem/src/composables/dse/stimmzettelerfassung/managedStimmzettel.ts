@@ -102,7 +102,10 @@ export function useManagedStimmzettel(
   const systemErrors = computed(() => {
     const result: SystemBeschlussgrund[] = [];
 
-    if (hasSystemErrorAnyKandidatWithInvalidVotes.value) {
+    if (
+      hasSystemErrorAnyKandidatWithInvalidVotes.value ||
+      (stimmzettel.value.invalideVotes ?? 0) > 0
+    ) {
       result.push({
         reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
       });

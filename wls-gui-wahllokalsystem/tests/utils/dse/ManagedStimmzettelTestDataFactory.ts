@@ -17,7 +17,9 @@ export function useManagedStimmzettelTestDataFactory() {
   } = useCommonTestDataFactory();
 
   function createManagedStimmzettelKandidat(): Kandidat {
-    return createManagedStimmzettelWahlvorschlag().kandidaten[0];
+    const wahlvorschlag = createManagedStimmzettelWahlvorschlag();
+    wahlvorschlag.kandidaten = [wahlvorschlag.kandidaten[0]];
+    return wahlvorschlag.kandidaten[0];
   }
 
   function createManagedStimmzettelWahlvorschlag(): Wahlvorschlag {

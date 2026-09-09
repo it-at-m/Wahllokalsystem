@@ -24,6 +24,10 @@ vi.mock(
     useKandidatTools: () => ({
       hasAnyKennzeichenOrReststimme: mockDefinitions.hasAnyKennzeichen,
       hasAnyKennzeichen: vi.fn(),
+      getTotalEinzelAndUngueltigeStimmenOfKandidatenWithSameId: vi.fn(),
+      getEinzelstimmenOrZero: vi.fn(),
+      getTotalEinzelstimmenOfKandidatenWithSameId: vi.fn(),
+      getUngueltigeStimmenOrZero: vi.fn(),
     }),
   })
 );

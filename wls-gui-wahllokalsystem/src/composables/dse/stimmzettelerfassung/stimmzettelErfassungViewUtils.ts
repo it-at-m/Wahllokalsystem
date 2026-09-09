@@ -88,6 +88,16 @@ export function useStimmzettelErfassungViewUtils(
     await _loadTeamStatus();
   }
 
+  function setActiveStimmzettel(stimmzettelkennung: number) {
+    const stimmzettelWithKennung = savedStimmzettel.value.find(
+      (stimmzettel) => stimmzettel.stimmzettelkennung === stimmzettelkennung
+    );
+
+    if (stimmzettelWithKennung) {
+      activeStimmzettel.value = stimmzettelWithKennung;
+    }
+  }
+
   //private functions
   async function _loadTeamStatus() {
     isStatusLoading.value = true;
@@ -166,6 +176,7 @@ export function useStimmzettelErfassungViewUtils(
     saveNewStimmzettel,
     startNewEmptyStimmzettelWithStimmzettelkennung,
     reloadTeamStatus,
+    setActiveStimmzettel,
 
     //imported functions
     ...buttonUtils,

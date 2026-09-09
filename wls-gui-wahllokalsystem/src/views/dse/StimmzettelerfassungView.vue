@@ -8,6 +8,7 @@
           :stimmzettel-liste="savedStimmzettel"
           :stimmzettel-loading="isStimmzettelLoading"
           class="mt-3"
+          @stimmzettel-bearbeiten="onStimmzettelBearbeitenClicked"
         />
       </v-card-text>
       <v-card-actions v-if="!isStatusLoading">
@@ -127,6 +128,7 @@ const {
   sendStatusUnterbrochen,
   startNewEmptyStimmzettelWithStimmzettelkennung,
   reloadTeamStatus,
+  setActiveStimmzettel,
 } = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
 
 const startNewStimmzettelButtonText = computed(() =>
@@ -181,6 +183,10 @@ async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
   await saveNewStimmzettel(confirmedStimmzettel);
 
   isKennungsDialogVisible.value = true;
+}
+function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
+  setActiveStimmzettel(stimmzettel.stimmzettelkennung);
+  isErfassungsDialogVisible.value = true;
 }
 
 const hasTeamFinishedErfassung = computed(

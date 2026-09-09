@@ -445,13 +445,13 @@ function _useManagedStimmzettel(
   }
 
   function _updateSystemBeschlussgruendeBasedOnDetectedErrors() {
-    const sysmtenBeschlussgruende: SystemBeschlussgrund[] = [];
+    const systemBeschlussgruende: SystemBeschlussgrund[] = [];
 
     if (
       hasSystemErrorAnyKandidatWithInvalidVotes.value ||
       (stimmzettel.value.invalideVotes ?? 0) > 0
     ) {
-      sysmtenBeschlussgruende.push({
+      systemBeschlussgruende.push({
         reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
       });
     }
@@ -460,26 +460,26 @@ function _useManagedStimmzettel(
       hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen.value &&
       countTotalVotes.value <= maximalErlaubteStimmenProWaehler.value
     ) {
-      sysmtenBeschlussgruende.push({
+      systemBeschlussgruende.push({
         reason:
           SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
       });
     }
 
     if (countTotalVotes.value > maximalErlaubteStimmenProWaehler.value) {
-      sysmtenBeschlussgruende.push({
+      systemBeschlussgruende.push({
         reason:
           SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
       });
     }
 
     if (hasSystemErrorToManyListenKreuze.value) {
-      sysmtenBeschlussgruende.push({
+      systemBeschlussgruende.push({
         reason: SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
       });
     }
 
-    stimmzettel.value.systemBeschlussvorschlag = sysmtenBeschlussgruende;
+    stimmzettel.value.systemBeschlussvorschlag = systemBeschlussgruende;
   }
 
   return {

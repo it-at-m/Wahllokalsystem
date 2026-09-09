@@ -8,6 +8,7 @@ import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
@@ -445,14 +446,14 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
     });
   });
 
-  describe("saveNewStimmzettel", () => {
+  describe("saveOrUpdateStimmzettel", () => {
     it("should_appendStimmzettelAndPersist_when_initialCollectionIsEmpty", async () => {
       const mockedNewStimmzettel: Stimmzettel =
         preparePersistedStimmzettel().build();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 
-      await unitUnderTest.saveNewStimmzettel(mockedNewStimmzettel);
+      await unitUnderTest.saveOrUpdateStimmzettel(mockedNewStimmzettel);
 
       expect(mockDefinitions.saveStimmzettel).toHaveBeenCalledWith(
         mockedWahlId,
@@ -473,8 +474,8 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 
-      await unitUnderTest.saveNewStimmzettel(mockedExistingStimmzettel);
-      await unitUnderTest.saveNewStimmzettel(mockedNewStimmzettel);
+      await unitUnderTest.saveOrUpdateStimmzettel(mockedExistingStimmzettel);
+      await unitUnderTest.saveOrUpdateStimmzettel(mockedNewStimmzettel);
 
       const mockedLastSaveCall =
         mockDefinitions.saveStimmzettel.mock.calls.at(-1) ?? [];
@@ -487,6 +488,28 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
         mockedExistingStimmzettel,
         mockedNewStimmzettel,
+      ]);
+    });
+
+    it("should_replaceExistingStimmzettel_when_savingEditedStimmzettel", async () => {
+      const mockedExistingStimmzettel: Stimmzettel =
+        preparePersistedStimmzettel()
+          .stimmzettelkennung(1)
+          .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+          .build();
+      const mockedEditedStimmzettel = mockedExistingStimmzettel;
+      mockedEditedStimmzettel.gueltigkeit = StimmzettelGueltigkeitEnum.Invalid;
+
+      mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
+
+      await unitUnderTest.saveOrUpdateStimmzettel(mockedExistingStimmzettel);
+      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
+        mockedExistingStimmzettel,
+      ]);
+
+      await unitUnderTest.saveOrUpdateStimmzettel(mockedEditedStimmzettel);
+      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
+        mockedEditedStimmzettel,
       ]);
     });
   });

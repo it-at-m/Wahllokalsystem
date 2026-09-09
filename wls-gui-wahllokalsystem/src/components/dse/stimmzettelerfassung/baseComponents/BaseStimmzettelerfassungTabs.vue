@@ -7,24 +7,16 @@
       color="primary"
       class="rounded-t border-b"
     >
-      <v-tab
-        value="one"
-      >
-        Stimmzettelerfassung Übersicht
-      </v-tab>
-      <v-tab
-          value="two"
-      >
-        Zusammenfassung
-      </v-tab>
+      <v-tab value="one"> Stimmzettelerfassung Übersicht </v-tab>
+      <v-tab value="two"> Zusammenfassung </v-tab>
     </v-tabs>
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="one">
-        <base-stimmzettel-uebersicht-table
-            :team-id="teamId"
-            :stimmzettel-liste="stimmzettelListe"
-            :stimmzettel-loading="stimmzettelLoading"
-            class="mt-3"
+        <base-stimmzettel-uebersicht
+          :team-id="teamId"
+          :stimmzettel-liste="stimmzettelListe"
+          :stimmzettel-loading="stimmzettelLoading"
+          class="mt-3"
         />
       </v-tabs-window-item>
       <v-tabs-window-item value="two">
@@ -35,12 +27,12 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
-import BaseStimmzettelUebersichtTable
-  from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelUebersichtTable.vue";
-import type {Stimmzettel} from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import BaseStimmzettelZusammenfassung
-  from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassung.vue";
+import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+
+import { ref } from "vue";
+
+import BaseStimmzettelUebersicht from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelUebersicht.vue";
+import BaseStimmzettelZusammenfassung from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassung.vue";
 
 const tab = ref("one");
 

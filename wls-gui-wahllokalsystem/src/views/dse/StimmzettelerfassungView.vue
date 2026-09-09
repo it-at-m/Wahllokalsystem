@@ -184,7 +184,12 @@ async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
 
   isKennungsDialogVisible.value = true;
 }
-function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
+async function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
+  if (
+    teamStatus.value?.status === StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
+  ) {
+    await sendStatusInBearbeitung();
+  }
   setActiveStimmzettel(stimmzettel.stimmzettelkennung);
   isErfassungsDialogVisible.value = true;
 }

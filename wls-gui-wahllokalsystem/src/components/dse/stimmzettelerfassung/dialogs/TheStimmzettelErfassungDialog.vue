@@ -85,7 +85,6 @@
               stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
                 .value.invalideVotes
             "
-            v-model:beschlussfassung-valid="isBeschlussfassungValid"
             v-model:gueltigkeit="
               stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
                 .value.gueltigkeit
@@ -219,8 +218,6 @@ const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
   currentUserTeamName.value
 );
 
-const isBeschlussfassungValid = ref(true);
-
 const changeHistory = computed(
   () => stimmzettelManager.bearbeitenDialogStimmzettelUtils.changeHistory
 );
@@ -236,15 +233,14 @@ const isCommandInputFieldDisabled = computed(
 );
 const isSaveDisabled = computed(
   () =>
-    isBeschlussfassungValid.value === false ||
-    (!stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
+    !stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
       .value &&
-      stimmzettelGueltigkeit.value !== StimmzettelGueltigkeitEnum.Leer &&
-      stimmzettelGueltigkeit.value !==
-        StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag &&
-      stimmzettelGueltigkeit.value !==
-        StimmzettelGueltigkeitEnum.BeschlussAusstehend &&
-      !!stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value)
+    stimmzettelGueltigkeit.value !== StimmzettelGueltigkeitEnum.Leer &&
+    stimmzettelGueltigkeit.value !==
+      StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag &&
+    stimmzettelGueltigkeit.value !==
+      StimmzettelGueltigkeitEnum.BeschlussAusstehend &&
+    !!stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
 );
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>

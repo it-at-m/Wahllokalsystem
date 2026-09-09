@@ -1,4 +1,6 @@
+import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Wahlvorschlag as PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { ComputedRef } from "vue";
 
@@ -30,6 +32,56 @@ export function useStimmzettelManager(
     managedBearbeitenDialogStimmzettel,
     wahlID
   );
+
+  function setActiveStimmzettelWhenEditing(
+    stimmzettelToSet: PersistedStimmzettel
+  ) {
+    managedBearbeitenDialogStimmzettel.value.invalideVotes =
+      stimmzettelToSet.invalideVotes ?? 0;
+    managedBearbeitenDialogStimmzettel.value.beschlussfassung =
+      stimmzettelToSet.beschlussfassung;
+    managedBearbeitenDialogStimmzettel.value.wahlvorstandBeschlussvorschlag =
+      stimmzettelToSet.wahlvorstandBeschlussvorschlag ?? [];
+    managedBearbeitenDialogStimmzettel.value.systemBeschlussvorschlag =
+      stimmzettelToSet.systemBeschlussvorschlag ?? [];
+
+    stimmzettelToSet.wahlvorschlaege.forEach(
+      (wahlvorschlagOfStimmzettelToSet: PersistedWahlvorschlag) => {
+        const managedWahlvorschlag =
+          managedBearbeitenDialogStimmzettel.value.wahlvorschlaege.find(
+            (wahlvorschlag) =>
+              wahlvorschlag.wahlvorschlagID ===
+              wahlvorschlagOfStimmzettelToSet.wahlvorschlagID
+          );
+
+        if (!managedWahlvorschlag) return;
+
+        managedWahlvorschlag.selected =
+          wahlvorschlagOfStimmzettelToSet.selected;
+
+        (wahlvorschlagOfStimmzettelToSet.kandidaten || []).forEach(
+          (kandidatOfStimmzettelToSet: PersistedKandidat) => {
+            const managedKandidat = managedWahlvorschlag.kandidaten.find(
+              (kandidat) =>
+                kandidat.kandidatId === kandidatOfStimmzettelToSet.kandidatId &&
+                kandidat.nennung === kandidatOfStimmzettelToSet.nennung
+            );
+
+            if (!managedKandidat) return;
+
+            managedKandidat.einzelstimmen =
+              kandidatOfStimmzettelToSet.votesByVoter;
+            managedKandidat.ungueltigeStimmen =
+              kandidatOfStimmzettelToSet.invalidVotes;
+            managedKandidat.reststimmen =
+              kandidatOfStimmzettelToSet.votesByWahlvorschlag;
+            managedKandidat.durchgestrichen =
+              kandidatOfStimmzettelToSet.isDiscarded;
+          }
+        );
+      }
+    );
+  }
 
   function getStimmzettelSnapshot(): PersistedStimmzettel {
     return toPersistedStimmzettel(
@@ -65,6 +117,7 @@ export function useStimmzettelManager(
     getStimmzettelSnapshot,
     parseCommandOrThrowError,
     bearbeitenDialogStimmzettelUtils,
+    setActiveStimmzettelWhenEditing,
   };
 }
 

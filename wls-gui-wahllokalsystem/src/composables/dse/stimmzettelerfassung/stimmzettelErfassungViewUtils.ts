@@ -70,11 +70,22 @@ export function useStimmzettelErfassungViewUtils(
     );
   }
 
-  async function saveNewStimmzettel(stimmzettel: Stimmzettel) {
-    const newStimmzettelCollectionToSave = [
-      ...savedStimmzettel.value,
-      stimmzettel,
-    ];
+  async function saveOrUpdateStimmzettel(stimmzettelToSave: Stimmzettel) {
+    const stimmzettelExistsIndex = savedStimmzettel.value.findIndex(
+      (savedStimmzettel) =>
+        savedStimmzettel.stimmzettelkennung ===
+        stimmzettelToSave.stimmzettelkennung
+    );
+
+    const newStimmzettelCollectionToSave =
+      stimmzettelExistsIndex === -1
+        ? [...savedStimmzettel.value, stimmzettelToSave]
+        : savedStimmzettel.value.map((savedStimmzettel, index) =>
+            index === stimmzettelExistsIndex
+              ? stimmzettelToSave
+              : savedStimmzettel
+          );
+
     await saveStimmzettel(
       wahlID,
       wahlbezirkID,
@@ -173,7 +184,7 @@ export function useStimmzettelErfassungViewUtils(
     //actions
     sendStatusInBearbeitung,
     sendStatusUnterbrochen,
-    saveNewStimmzettel,
+    saveOrUpdateStimmzettel,
     startNewEmptyStimmzettelWithStimmzettelkennung,
     reloadTeamStatus,
     setActiveStimmzettel,

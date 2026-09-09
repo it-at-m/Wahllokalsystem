@@ -124,7 +124,7 @@ const {
   startenBtnActive,
   unterbrechenBtnIsDisabled,
   wahlvorschlaege,
-  saveNewStimmzettel,
+  saveOrUpdateStimmzettel,
   sendStatusInBearbeitung,
   sendStatusUnterbrochen,
   startNewEmptyStimmzettelWithStimmzettelkennung,
@@ -175,13 +175,13 @@ async function onStimmzettelErfassungCanceled() {
 async function onStimmzettelErfassungConfirmed(
   confirmedStimmzettel: Stimmzettel
 ) {
-  await saveNewStimmzettel(confirmedStimmzettel);
+  await saveOrUpdateStimmzettel(confirmedStimmzettel);
   isErfassungsDialogVisible.value = false;
 }
 async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
   confirmedStimmzettel: Stimmzettel
 ) {
-  await saveNewStimmzettel(confirmedStimmzettel);
+  await saveOrUpdateStimmzettel(confirmedStimmzettel);
 
   isKennungsDialogVisible.value = true;
 }

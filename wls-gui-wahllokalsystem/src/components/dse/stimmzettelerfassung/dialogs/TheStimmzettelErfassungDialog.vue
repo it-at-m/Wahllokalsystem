@@ -193,6 +193,10 @@ watch(
   () => {
     if (isDialogVisibleModel.value) {
       currentAction.value = actions[0];
+      stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel();
+      stimmzettelManager.setActiveStimmzettelWhenEditing(
+        properties.stimmzettel
+      );
     }
   }
 );

@@ -224,7 +224,7 @@ ist die Summe aus den vergebenen Einzelstimmen sowie sonstiger ungültiger Stimm
 
 Die Vergabe der Reststimmen erfolgt entsprechend der Listenposition innerhalb des Wahlvorschlags, beginnend bei der ersten
 Position. Ein/eine Kandidat\*in kann nur Reststimmen erhalten, wenn er/sie noch keine Stimmen erhalten hat
-oder er/sie gestrichen wurden. Gibt es für Kandidat\*innen mehrere Nennungen, kann ein/eine Kandidat\*in außerdem
+oder er/sie nicht gestrichen wurden. Gibt es für Kandidat\*innen mehrere Nennungen, kann ein/eine Kandidat\*in außerdem
 nur Reststimmen bekommen, wenn er/sie noch nicht die maximal erlaubte Menge an Stimmen erreicht hat.
 
 > [!NOTE] Beispiel - Reststimmenvergabe bei vorhandener Einzelstimmenvergabe

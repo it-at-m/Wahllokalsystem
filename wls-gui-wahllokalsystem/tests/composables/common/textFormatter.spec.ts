@@ -7,7 +7,6 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 describe("textFormatter.ts", () => {
@@ -17,7 +16,6 @@ describe("textFormatter.ts", () => {
     createTextWithCorrectNumberTermStimme,
     getStimmzettelTermForWahl,
     getStimmzettelTermForWahlID,
-    mapSystemBeschlussgrundText,
   } = useTextFormatter();
   const { generateRandomString } = useCommonTestDataFactory();
   const { prepareUser } = useUserTestDataFactory();
@@ -230,34 +228,6 @@ describe("textFormatter.ts", () => {
 
       const result = getStimmzettelTermForWahlID(wahlId);
       expect(result).toStrictEqual("Stimmzettel");
-    });
-  });
-
-  describe("mapSystemBeschlussgrundText", () => {
-    it.each([
-      [
-        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
-        "Zu viele Einzelstimmen, aber im Gesamtstimmenlimit",
-      ],
-      [
-        SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
-        "Keine Reststimmenvergabe möglich",
-      ],
-      [
-        SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
-        "Einzelne Stimmen ungültig",
-      ],
-      [
-        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
-        "Zu viele Einzelstimmen oder Listenkreuze",
-      ],
-    ])("should_map'%s'CorrectlyToString_when_enumGiven", (input, expected) => {
-      expect(mapSystemBeschlussgrundText(input)).toBe(expected);
-    });
-
-    it("should_returnText_when_noEnumToMapFound", () => {
-      const text = "text";
-      expect(mapSystemBeschlussgrundText(text)).toBe(text);
     });
   });
 });

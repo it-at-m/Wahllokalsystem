@@ -10,6 +10,7 @@ import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/
 import { describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
@@ -43,6 +44,9 @@ describe("stimmzettelUtils.ts", () => {
     getVormerkungsgrund,
     createStimmzettelWithWahlvorschlaege,
   } = useStimmzettelUtils();
+
+  const { mapSystemBeschlussgrundReasonEnumToText } =
+    useSystemBeschlussgrundReasonEnumTools();
 
   describe("createStimmzettelWithWahlvorschlaege", () => {
     it("should_createStimmzettelWithInitialValues_when_wahlvorschlaegeAreGiven", () => {
@@ -307,7 +311,7 @@ describe("stimmzettelUtils.ts", () => {
       const result = getVormerkungsgrund(stimmzettel);
 
       expect(result).toStrictEqual(
-        `${systemReason}, ${wahlvorstandBeschlussvorschlagText}`
+        `${mapSystemBeschlussgrundReasonEnumToText(systemReason)}, ${wahlvorstandBeschlussvorschlagText}`
       );
     });
 
@@ -328,7 +332,9 @@ describe("stimmzettelUtils.ts", () => {
 
       const result = getVormerkungsgrund(stimmzettel);
 
-      expect(result).toStrictEqual(`${systemReason1}, ${systemReason2}`);
+      expect(result).toStrictEqual(
+        `${mapSystemBeschlussgrundReasonEnumToText(systemReason1)}, ${mapSystemBeschlussgrundReasonEnumToText(systemReason2)}`
+      );
     });
 
     it("should_returnConcatString_when_multipleWahlvorstandBeschlussvorschlaegeAreGiven", () => {
@@ -360,7 +366,9 @@ describe("stimmzettelUtils.ts", () => {
 
       const result = getVormerkungsgrund(stimmzettel);
 
-      expect(result).toStrictEqual(`${systemReason}`);
+      expect(result).toStrictEqual(
+        `${mapSystemBeschlussgrundReasonEnumToText(systemReason)}`
+      );
     });
     it("should_returnStringWithoutSeparator_when_onlyOneSystemBeschlussvorschlagIsGiven", () => {
       const wahlvorstandBeschlussvorschlagText = generateRandomString(10);

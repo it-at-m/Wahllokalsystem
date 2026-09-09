@@ -4,7 +4,6 @@ import { storeToRefs } from "pinia";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 
 export function useTextFormatter() {
   function getStimmzettelTermForWahl(wahl: Wahl | undefined): string {
@@ -43,21 +42,6 @@ export function useTextFormatter() {
     return `${Math.abs(count) === 1 ? "Stimme" : "Stimmen"}`;
   }
 
-  function mapSystemBeschlussgrundText(text: string): string {
-    switch (text) {
-      case SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit:
-        return "Zu viele Einzelstimmen, aber im Gesamtstimmenlimit";
-      case SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich:
-        return "Keine Reststimmenvergabe möglich";
-      case SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig:
-        return "Einzelne Stimmen ungültig";
-      case SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze:
-        return "Zu viele Einzelstimmen oder Listenkreuze";
-      default:
-        return text;
-    }
-  }
-
   return {
     createTextVotes,
     createTextInvalidVotes,
@@ -65,6 +49,5 @@ export function useTextFormatter() {
     getStimmzettelTermForWahl,
     getStimmzettelTermForWahlID,
     getWahlscheineOrStimmabgabevermerkeTerm,
-    mapSystemBeschlussgrundText,
   };
 }

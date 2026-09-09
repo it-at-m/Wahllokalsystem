@@ -199,19 +199,19 @@ describe("managedStimmzettelReststimmeUtils.ts", () => {
         .selected(false)
         .build();
       wahlvorschlag2.kandidaten = [
-        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag1, "k2.1")
+        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag2, "k2.1")
           .nennung(1)
           .build(),
-        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag1, "k2.2")
+        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag2, "k2.2")
           .nennung(1)
           .build(),
-        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag1, "k2.3")
+        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag2, "k2.3")
           .nennung(1)
           .build(),
-        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag1, "k2.4")
+        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag2, "k2.4")
           .nennung(1)
           .build(),
-        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag1, "k2.5")
+        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag2, "k2.5")
           .nennung(1)
           .build(),
       ];

@@ -26,7 +26,7 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
  * @param wahlID
  * @param maxEinzelstimmen
  */
-export function _useManagedStimmzettel(
+function _useManagedStimmzettel(
   stimmzettel: Ref<Stimmzettel>,
   wahlID: string,
   maxEinzelstimmen = 3

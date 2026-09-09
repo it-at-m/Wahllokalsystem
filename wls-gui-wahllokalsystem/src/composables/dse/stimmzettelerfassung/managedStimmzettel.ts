@@ -36,8 +36,6 @@ function _useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>, wahlID: string) {
   const { addInvalidVotesToKandidat, removeInvalidVotesFromKandidat } =
     useManagedStimmzettelUngueltigeStimmeUtils();
 
-  const hasAnyValuesSet = computed(() => kandidatenWithValues.value.length > 0);
-
   const kandidatenWithValues = computed(() =>
     kandidatenOfStimmzettel.value.filter(_hasKandidatAnyStimmeOrStreichung)
   );
@@ -362,7 +360,6 @@ function _useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>, wahlID: string) {
 
   return {
     changeHistory,
-    hasAnyValuesSet,
     resetStimmzettel,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,

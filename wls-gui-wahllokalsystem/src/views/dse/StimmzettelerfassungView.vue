@@ -8,6 +8,7 @@
           :stimmzettel-liste="savedStimmzettel"
           :stimmzettel-loading="isStimmzettelLoading"
           class="mt-3"
+          :bearbeitung-disabled="hasTeamFinishedErfassung"
           @stimmzettel-bearbeiten="onStimmzettelBearbeitenClicked"
         />
       </v-card-text>

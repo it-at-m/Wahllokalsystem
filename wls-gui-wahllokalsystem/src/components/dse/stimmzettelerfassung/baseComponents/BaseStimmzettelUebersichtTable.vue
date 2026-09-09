@@ -29,7 +29,8 @@
         aria-label="Stimmzettel bearbeiten"
         icon="$edit"
         size="small"
-        variant="text"
+        variant="elevated"
+        :disabled="bearbeitungDisabled"
         @click="onStimmzettelBearbeitenClicked(item)"
       />
     </template>
@@ -53,6 +54,7 @@ const props = defineProps<{
   teamId: string;
   stimmzettelListe: Stimmzettel[];
   stimmzettelLoading: boolean;
+  bearbeitungDisabled: boolean;
 }>();
 const stimmzettelkennungKey = "stimmzettelkennung";
 

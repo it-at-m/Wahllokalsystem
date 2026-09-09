@@ -27,27 +27,27 @@
           <base-stimmzettel-zusammenfassung-card
             class="mt-2 d-flex flex-column"
             :listenstimmen="
-              stimmzettelManager.managedStimmzettel
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils
                 .wahlvorschlaegeWithListenkreuz.value
             "
             :ungueltigestimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .ungueltigeStimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.ungueltigeStimmen
             "
             :direktstimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .einzelstimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.einzelstimmen
             "
             :reststimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .reststimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.reststimmen
             "
             :streichungen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .streichungen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.streichungen
             "
             :gueltigkeit="
-              stimmzettelManager.managedStimmzettel
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils
                 .effectiveStimmzettelGueltigkeit.value
             "
           />
@@ -69,8 +69,8 @@
               :active-wahlvorschlag-id="latestChangedWahlvorschlagId"
               :active-kandidat="latestChangedKandidat"
               :wahlvorschlaege="
-                stimmzettelManager.managedStimmzettel.stimmzettel.value
-                  .wahlvorschlaege
+                stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                  .value.wahlvorschlaege
               "
               style="min-height: 0; overflow-y: auto; min-width: 0"
             />
@@ -82,27 +82,30 @@
         >
           <base-stimmzettel-sonderfaelle-card
             v-model:invalid-votes="
-              stimmzettelManager.managedStimmzettel.stimmzettel.value
-                .invalideVotes
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                .value.invalideVotes
             "
             v-model:beschlussfassung-valid="isBeschlussfassungValid"
             v-model:gueltigkeit="
-              stimmzettelManager.managedStimmzettel.stimmzettel.value
-                .gueltigkeit
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                .value.gueltigkeit
             "
             v-model:wahlvorstand-beschlussvorschlag="
-              stimmzettelManager.managedStimmzettel.stimmzettel.value
-                .wahlvorstandBeschlussvorschlag
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                .value.wahlvorstandBeschlussvorschlag
             "
             :deny-selection-of-stimmzettel-fehlt="
-              stimmzettelManager.managedStimmzettel.hasAnyValuesSet.value
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils
+                .hasAnyValuesSet.value
             "
             :deny-selection-of-stimmzettel-leer="
-              stimmzettelManager.managedStimmzettel.hasAnyValuesSet.value
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils
+                .hasAnyValuesSet.value
             "
             :team-id="currentUserTeamName"
             :system-beschlussgruende="
-              stimmzettelManager.managedStimmzettel.systemErrors.value
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.systemErrors
+                .value
             "
             :stimmzettelkennung="stimmzettel.stimmzettelkennung"
             :is-b-w-b="isBWB"
@@ -219,10 +222,11 @@ const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
 const isBeschlussfassungValid = ref(true);
 
 const changeHistory = computed(
-  () => stimmzettelManager.managedStimmzettel.changeHistory
+  () => stimmzettelManager.bearbeitenDialogStimmzettelUtils.changeHistory
 );
 const isCancelButtonDisabled = computed(
-  () => stimmzettelManager.managedStimmzettel.hasAnyValuesSet.value
+  () =>
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
 );
 const isCommandInputFieldDisabled = computed(
   () =>
@@ -233,14 +237,15 @@ const isCommandInputFieldDisabled = computed(
 const isSaveDisabled = computed(
   () =>
     isBeschlussfassungValid.value === false ||
-    (!stimmzettelManager.managedStimmzettel.hasAnyValuesSet.value &&
+    (!stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
+      .value &&
       stimmzettelGueltigkeit.value !== StimmzettelGueltigkeitEnum.Leer &&
       stimmzettelGueltigkeit.value !==
         StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag &&
       stimmzettelGueltigkeit.value !==
         StimmzettelGueltigkeitEnum.BeschlussAusstehend &&
-      stimmzettelManager.managedStimmzettel.stimmzettel.value.invalideVotes ===
-        0)
+      stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
+        .invalideVotes === 0)
 );
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
@@ -250,7 +255,9 @@ const latestChangedKandidat = computed<Kandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
 );
 const stimmzettelGueltigkeit = computed(
-  () => stimmzettelManager.managedStimmzettel.stimmzettel.value.gueltigkeit
+  () =>
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
+      .gueltigkeit
 );
 
 const isCancelConfirmationDialogVisible = ref(false);
@@ -278,6 +285,6 @@ function onSavedClickedAndNext() {
 }
 
 function onResetClicked() {
-  stimmzettelManager.managedStimmzettel.resetStimmzettel();
+  stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel();
 }
 </script>

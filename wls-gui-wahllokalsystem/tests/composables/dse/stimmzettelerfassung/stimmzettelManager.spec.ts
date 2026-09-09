@@ -35,7 +35,7 @@ vi.mock(
   }
 );
 vi.mock("@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts", () => ({
-  useManagedStimmzettel: () => ({
+  useBearbeitenDialogStimmzettelUtils: () => ({
     kandidatAddEinzelstimmenOrThrow:
       mockDefinitions.mangedStimmzettel.kandidatAddEinzelstimmenOrThrow,
   }),

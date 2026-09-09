@@ -23,6 +23,7 @@ vi.mock(
   () => ({
     useKandidatTools: () => ({
       hasAnyKennzeichenOrReststimme: mockDefinitions.hasAnyKennzeichen,
+      hasAnyKennzeichen: vi.fn(),
     }),
   })
 );

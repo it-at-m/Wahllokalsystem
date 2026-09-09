@@ -22,7 +22,7 @@ vi.mock(
   import("@/composables/dse/stimmzettelerfassung/kandidatTools.ts"),
   () => ({
     useKandidatTools: () => ({
-      hasAnyKennzeichen: mockDefinitions.hasAnyKennzeichen,
+      hasAnyKennzeichenOrReststimme: mockDefinitions.hasAnyKennzeichen,
     }),
   })
 );

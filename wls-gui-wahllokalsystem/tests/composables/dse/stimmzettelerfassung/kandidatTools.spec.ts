@@ -12,7 +12,7 @@ describe("kandidatTools.ts", () => {
     unitUnderTest = useKandidatTools();
   });
 
-  describe("hasAnyKennzeichen", () => {
+  describe("hasAnyKennzeichenOrReststimme", () => {
     it("should_returnTrue_when_durchgestrichenIsTrue", () => {
       const kandidat = prepareStimmzettelKandidat()
         .durchgestrichen(true)
@@ -21,7 +21,9 @@ describe("kandidatTools.ts", () => {
         .ungueltigeStimmen(null)
         .build();
 
-      expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
+      expect(
+        unitUnderTest.hasAnyKennzeichenOrReststimme(kandidat)
+      ).toStrictEqual(true);
     });
   });
 
@@ -33,7 +35,9 @@ describe("kandidatTools.ts", () => {
       .ungueltigeStimmen(1)
       .build();
 
-    expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
+    expect(unitUnderTest.hasAnyKennzeichenOrReststimme(kandidat)).toStrictEqual(
+      true
+    );
   });
 
   it.each([1, 10])(
@@ -46,7 +50,9 @@ describe("kandidatTools.ts", () => {
         .ungueltigeStimmen(null)
         .build();
 
-      expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
+      expect(
+        unitUnderTest.hasAnyKennzeichenOrReststimme(kandidat)
+      ).toStrictEqual(true);
     }
   );
 
@@ -60,7 +66,9 @@ describe("kandidatTools.ts", () => {
         .ungueltigeStimmen(null)
         .build();
 
-      expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
+      expect(
+        unitUnderTest.hasAnyKennzeichenOrReststimme(kandidat)
+      ).toStrictEqual(true);
     }
   );
 
@@ -74,7 +82,9 @@ describe("kandidatTools.ts", () => {
         .ungueltigeStimmen(listenstimmen)
         .build();
 
-      expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(true);
+      expect(
+        unitUnderTest.hasAnyKennzeichenOrReststimme(kandidat)
+      ).toStrictEqual(true);
     }
   );
 
@@ -86,7 +96,9 @@ describe("kandidatTools.ts", () => {
       .ungueltigeStimmen(null)
       .build();
 
-    expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(false);
+    expect(unitUnderTest.hasAnyKennzeichenOrReststimme(kandidat)).toStrictEqual(
+      false
+    );
   });
 
   it("should_returnFalse_when_isNotDurchgestrichenAndAllStimmenAre0", () => {
@@ -97,6 +109,8 @@ describe("kandidatTools.ts", () => {
       .ungueltigeStimmen(0)
       .build();
 
-    expect(unitUnderTest.hasAnyKennzeichen(kandidat)).toStrictEqual(false);
+    expect(unitUnderTest.hasAnyKennzeichenOrReststimme(kandidat)).toStrictEqual(
+      false
+    );
   });
 });

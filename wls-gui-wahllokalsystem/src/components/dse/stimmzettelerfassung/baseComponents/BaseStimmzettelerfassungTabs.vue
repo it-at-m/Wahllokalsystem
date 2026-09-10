@@ -19,7 +19,10 @@
           class="mt-3"
         />
       </v-tabs-window-item>
-      <v-tabs-window-item value="two">
+      <v-tabs-window-item
+        value="two"
+        eager
+      >
         <base-stimmzettel-zusammenfassung
           :stimmzettel-liste="stimmzettelListe"
         />
@@ -37,6 +40,8 @@ import BaseStimmzettelUebersicht from "@/components/dse/stimmzettelerfassung/bas
 import BaseStimmzettelZusammenfassung from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassung.vue";
 
 const tab = ref("one");
+
+//state
 
 defineProps<{
   teamId: string;

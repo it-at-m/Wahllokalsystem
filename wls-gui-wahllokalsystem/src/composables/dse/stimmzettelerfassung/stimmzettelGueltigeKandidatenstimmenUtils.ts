@@ -1,30 +1,32 @@
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnismeldung/common/WahlvorschlagWithKandidatenErgebnissen.ts";
+import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 
 export function useStimmzettelGueltigeKandidatenstimmenUtils(
   wahlbezirkID: string,
   wahlID: string,
-  stimmzettelListe: Stimmzettel[]
+  stimmzettelListe: Ref<Stimmzettel[]>
 ) {
   const { getWahlvorschlaege } = useWahlvorschlaegeService();
+  const wahlvorschlaege = ref<Wahlvorschlaege | null>(null);
 
-  const wahlvorschlaegeWithKandidatenErgebnissen: Ref<
-    WahlvorschlagWithKandidatenErgebnissen[]
-  > = ref([]);
-
-  async function loadWahlvorschlaegeAndErgebnisse() {
-    const wahlvorschlaege = await getWahlvorschlaege(wahlID, wahlbezirkID);
-    wahlvorschlaegeWithKandidatenErgebnissen.value = [
-      ...wahlvorschlaege.wahlvorschlaege,
-    ].map((wahlvorschlag) =>
+  const wahlvorschlaegeWithKandidatenErgebnissen = computed(() => {
+    if (!wahlvorschlaege.value) {
+      return [];
+    }
+    return [...wahlvorschlaege.value.wahlvorschlaege].map((wahlvorschlag) =>
       _stimmzettelListeToWahlvorschlagWithKandidatenErgebnissen(wahlvorschlag)
     );
+  });
+
+  async function loadWahlvorschlaegeAndErgebnisse() {
+    wahlvorschlaege.value = await getWahlvorschlaege(wahlID, wahlbezirkID);
   }
 
   function _stimmzettelListeToWahlvorschlagWithKandidatenErgebnissen(
@@ -60,7 +62,7 @@ export function useStimmzettelGueltigeKandidatenstimmenUtils(
     wahlvorschlagId: string,
     kandidatId: string
   ) {
-    return stimmzettelListe
+    return stimmzettelListe.value
       .map((stimmzettel) => {
         const wahlvorschlag = stimmzettel.wahlvorschlaege.find(
           (ws) => ws.wahlvorschlagID === wahlvorschlagId
@@ -75,7 +77,9 @@ export function useStimmzettelGueltigeKandidatenstimmenUtils(
         if (!kandidat) {
           return 0;
         }
-        return kandidat.votesByVoter ?? 0;
+        return (
+          (kandidat.votesByVoter ?? 0) + (kandidat.votesByWahlvorschlag ?? 0)
+        );
       })
       .reduce((sum, value) => sum + value, 0);
   }

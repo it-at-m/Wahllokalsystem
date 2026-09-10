@@ -1,24 +1,26 @@
 <template>
   <div>
-    <v-card-subtitle class="font-weight-bold mt-2 mb-2">
+    <v-card-subtitle class="font-weight-bold mt-2 mb-10">
       aktueller Stand der erfassten Stimmzettel
     </v-card-subtitle>
-    <the-m-b-w-wahlberechtigte-anzeigen-card
-      v-if="hasRoleSchriftfuehrung"
-      :wahlbezirk-id="wahlbezirkID"
-      :wahl-id="wahlID"
-    />
-    <the-m-b-w-waehler-anzeigen-card
-      v-if="hasRoleSchriftfuehrung"
-      :wahlbezirk-id="wahlbezirkID"
-      :wahl-id="wahlID"
-    />
-    <base-erfasste-stimmzettel-card :stimmzettel-liste="stimmzettelListe" />
-    <base-stimmzettel-gueltige-kandidatenstimmen-anzeigen-card
-      :wahlbezirk-id="wahlbezirkID"
-      :wahl-id="wahlID"
-      :stimmzettel-liste="stimmzettelListe"
-    />
+    <div class="d-flex flex-column ga-5 mx-4">
+      <the-m-b-w-wahlberechtigte-anzeigen-card
+        v-if="hasRoleSchriftfuehrung"
+        :wahlbezirk-id="wahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-m-b-w-waehler-anzeigen-card
+        v-if="hasRoleSchriftfuehrung"
+        :wahlbezirk-id="wahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <base-erfasste-stimmzettel-card :stimmzettel-liste="stimmzettelListe" />
+      <base-stimmzettel-gueltige-kandidatenstimmen-anzeigen-card
+        :wahlbezirk-id="wahlbezirkID"
+        :wahl-id="wahlID"
+        :stimmzettel-liste="stimmzettelListe"
+      />
+    </div>
   </div>
 </template>
 

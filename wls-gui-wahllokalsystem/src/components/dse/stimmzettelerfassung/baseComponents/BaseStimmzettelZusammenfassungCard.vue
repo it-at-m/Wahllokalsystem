@@ -1,7 +1,12 @@
 <template>
   <v-card>
-    <v-card-title>Zusammenfassung</v-card-title>
     <v-card-text class="overflow-y-auto">
+      <base-stimmzettel-gueltigkeit-icon :gueltigkeit="gueltigkeit" />
+      <span class="ml-2 font-weight-bold">{{ toText(gueltigkeit) }}</span>
+      <v-divider
+        class="my-2"
+        thickness="2"
+      />
       <div class="font-weight-bold mb-2">Listenstimmen</div>
       <div v-if="listenstimmen.length == 0">Keine Listenkreuze gesetzt</div>
       <div v-else>
@@ -17,20 +22,15 @@
         :thickness="2"
       />
       <div class="font-weight-bold mb-2">Einzelstimmen</div>
-      <v-row
+      <div
         v-for="item in einzelstimmen"
         :key="item.label"
-        dense
+        class="d-flex justify-space-between align-baseline ga-1"
       >
-        <v-col>{{ item.label }}</v-col>
-        <v-col>{{ item.value }}</v-col>
-      </v-row>
-      <v-divider
-        class="mb-2 mt-2"
-        :thickness="2"
-      />
-      <base-stimmzettel-gueltigkeit-icon :gueltigkeit="gueltigkeit" />
-      <span class="ml-2 font-weight-bold">{{ toText(gueltigkeit) }}</span>
+        <div>{{ item.label }}</div>
+        <div class="dots flex-grow-1" />
+        <div>{{ item.value }}</div>
+      </div>
     </v-card-text>
   </v-card>
 </template>
@@ -67,3 +67,12 @@ const einzelstimmen = computed(() => [
   { label: "Streichungen", value: props.streichungen },
 ]);
 </script>
+
+<style scoped>
+.dots {
+  text-align: center;
+  //background: linear-gradient(to right, transparent, black, transparent);
+  border-top: 1px black dotted;
+  height: 1px; /* Höhe der Punkte-Linie */
+}
+</style>

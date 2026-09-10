@@ -14,6 +14,8 @@ import { ref } from "vue";
 
 import { useManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
+import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
+import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
 
@@ -916,6 +918,17 @@ describe("managedStimmzettel.ts", () => {
       managedStimmzettel.wahlvorschlagAddVotesOrThrow(
         initialEmptyDseWahlvorschlag.ordnungszahl
       );
+      managedStimmzettel.stimmzettel.value.wahlvorstandBeschlussvorschlag = [
+        {
+          text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
+        },
+      ];
+      managedStimmzettel.stimmzettel.value.systemBeschlussvorschlag = [
+        {
+          reason:
+            SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+        },
+      ];
 
       expect(managedStimmzettel.stimmzettel.value).not.toStrictEqual(
         initialEmptyDseStimzettel
@@ -929,6 +942,13 @@ describe("managedStimmzettel.ts", () => {
       expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
 
       const stimmzettelAfterReset = managedStimmzettel.stimmzettel.value;
+      expect(
+        stimmzettelAfterReset.wahlvorstandBeschlussvorschlag
+      ).toStrictEqual([]);
+      expect(stimmzettelAfterReset.systemBeschlussvorschlag).toStrictEqual([]);
+      expect(stimmzettelAfterReset.gueltigkeit).toStrictEqual("VALID");
+      expect(stimmzettelAfterReset.beschlussfassung).toBeNull();
+      expect(stimmzettelAfterReset.invalideVotes).toBe(0);
       stimmzettelAfterReset.wahlvorschlaege.forEach((wahlvorschlag) => {
         expect(wahlvorschlag.selected).toBe(false);
         wahlvorschlag.kandidaten.forEach((k) => {
@@ -968,8 +988,17 @@ describe("managedStimmzettel.ts", () => {
             .kandidaten([persistedKandidat1])
             .build(),
         ])
-        .wahlvorstandBeschlussvorschlag([])
-        .systemBeschlussvorschlag([])
+        .wahlvorstandBeschlussvorschlag([
+          {
+            text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
+          },
+        ])
+        .systemBeschlussvorschlag([
+          {
+            reason:
+              SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+          },
+        ])
         .beschlussfassung(null)
         .build();
 
@@ -985,6 +1014,22 @@ describe("managedStimmzettel.ts", () => {
       expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
 
       const stimmzettelAfterReset = managedStimmzettel.stimmzettel.value;
+      expect(
+        stimmzettelAfterReset.wahlvorstandBeschlussvorschlag
+      ).toStrictEqual([
+        {
+          text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
+        },
+      ]);
+      expect(stimmzettelAfterReset.systemBeschlussvorschlag).toStrictEqual([
+        {
+          reason:
+            SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+        },
+      ]);
+      expect(stimmzettelAfterReset.gueltigkeit).toStrictEqual("INVALID");
+      expect(stimmzettelAfterReset.beschlussfassung).toBeNull();
+      expect(stimmzettelAfterReset.invalideVotes).toBe(0);
       stimmzettelAfterReset.wahlvorschlaege.forEach((wahlvorschlag) => {
         expect(wahlvorschlag.selected).toBe(true);
         wahlvorschlag.kandidaten.forEach((k) => {

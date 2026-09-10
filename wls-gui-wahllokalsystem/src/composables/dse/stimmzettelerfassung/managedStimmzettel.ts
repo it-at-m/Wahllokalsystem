@@ -13,6 +13,7 @@ import { useManagedStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/st
 import { useManagedStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelWahlvorschlagUtils.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 /**
  * Check UI/UX Adr to see the rules:
@@ -94,6 +95,14 @@ function _useManagedStimmzettel(
           kandidat.durchgestrichen = beforeEditKandidat?.isDiscarded ?? false;
         });
       });
+      stimmzettel.value.gueltigkeit = stimmzettelBeforeEdit.gueltigkeit;
+      stimmzettel.value.wahlvorstandBeschlussvorschlag =
+        stimmzettelBeforeEdit.wahlvorstandBeschlussvorschlag;
+      stimmzettel.value.systemBeschlussvorschlag =
+        stimmzettelBeforeEdit.systemBeschlussvorschlag;
+      stimmzettel.value.beschlussfassung =
+        stimmzettelBeforeEdit.beschlussfassung;
+      stimmzettel.value.invalideVotes = stimmzettelBeforeEdit.invalideVotes;
     } else {
       stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
         wahlvorschlag.selected = false;
@@ -104,6 +113,11 @@ function _useManagedStimmzettel(
           kandidat.durchgestrichen = false;
         });
       });
+      stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
+      stimmzettel.value.wahlvorstandBeschlussvorschlag = [];
+      stimmzettel.value.systemBeschlussvorschlag = [];
+      stimmzettel.value.beschlussfassung = null;
+      stimmzettel.value.invalideVotes = 0;
     }
   }
 

@@ -1,6 +1,7 @@
+import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { StimmenSummary } from "@/types/dse/stimmzettelerfassung/StimmenSummary.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { Stimmzettel as DseStimmzetel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Ref } from "vue";
 
 import { computed } from "vue";
@@ -20,7 +21,10 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
  * @param stimmzettel
  * @param wahlID
  */
-function _useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>, wahlID: string) {
+function _useManagedStimmzettel(
+  stimmzettel: Ref<DseStimmzetel>,
+  wahlID: string
+) {
   const changeHistory = useStimmzettelChangeHistory();
   const {
     kandidatenOfStimmzettel,
@@ -68,17 +72,37 @@ function _useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>, wahlID: string) {
     updateReststimmenWhenVotesRemoved,
   } = useManagedStimmzettelReststimmeUtils(wahlID, stimmenSummary, stimmzettel);
 
-  function resetStimmzettel() {
+  function resetStimmzettel(stimmzettelBeforeEdit?: PersistedStimmzettel) {
     changeHistory.reset();
-    stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
-      wahlvorschlag.selected = false;
-      wahlvorschlag.kandidaten.map((kandidat) => {
-        kandidat.einzelstimmen = null;
-        kandidat.ungueltigeStimmen = null;
-        kandidat.reststimmen = null;
-        kandidat.durchgestrichen = false;
+    if (stimmzettelBeforeEdit) {
+      stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
+        const beforeEditWahlvorschlag =
+          stimmzettelBeforeEdit.wahlvorschlaege.find(
+            (before) => wahlvorschlag.wahlvorschlagID == before.wahlvorschlagID
+          );
+        wahlvorschlag.selected = beforeEditWahlvorschlag?.selected ?? false;
+        wahlvorschlag.kandidaten.map((kandidat) => {
+          const beforeEditKandidat = beforeEditWahlvorschlag?.kandidaten.find(
+            (before) => kandidat.kandidatId == before.kandidatId
+          );
+          kandidat.einzelstimmen = beforeEditKandidat?.votesByVoter ?? null;
+          kandidat.ungueltigeStimmen = beforeEditKandidat?.invalidVotes ?? null;
+          kandidat.reststimmen =
+            beforeEditKandidat?.votesByWahlvorschlag ?? null;
+          kandidat.durchgestrichen = beforeEditKandidat?.isDiscarded ?? false;
+        });
       });
-    });
+    } else {
+      stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
+        wahlvorschlag.selected = false;
+        wahlvorschlag.kandidaten.map((kandidat) => {
+          kandidat.einzelstimmen = null;
+          kandidat.ungueltigeStimmen = null;
+          kandidat.reststimmen = null;
+          kandidat.durchgestrichen = false;
+        });
+      });
+    }
   }
 
   /**

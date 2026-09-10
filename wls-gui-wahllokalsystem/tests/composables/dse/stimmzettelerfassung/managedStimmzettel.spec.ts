@@ -1,4 +1,7 @@
+import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
+import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import {
   afterEach,
@@ -14,6 +17,7 @@ import { ref } from "vue";
 import { useManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -54,6 +58,13 @@ describe("managedStimmzettel.ts", () => {
     prepareManagedStimmzettelWahlvorschlag,
     prepareManagedStimmzettelKandidat,
   } = useManagedStimmzettelTestDataFactory();
+  const {
+    prepareStimmzettel,
+    prepareStimmzettelWahlvorschlag,
+    prepareStimmzettelKandidatOfWahlvorschlag,
+    preparePersistedStimmzettel,
+    preparePersistedStimmzettelWahlvorschlag,
+  } = useStimmzettelTestDataFactory();
 
   beforeAll(() => {
     setActivePinia(createPinia());
@@ -847,6 +858,145 @@ describe("managedStimmzettel.ts", () => {
       expect(() => managed.wahlvorschlagRemoveVotesOrThrow(1)).toThrow(
         ManagedStimmzettelError
       );
+    });
+  });
+
+  describe("resetStimmzettel", () => {
+    const initialEmptyDseWahlvorschlag = prepareStimmzettelWahlvorschlag()
+      .wahlvorschlagID("1")
+      .ordnungszahl(1)
+      .kandidaten([])
+      .selected(false)
+      .ungueltigeStimmen(0)
+      .gueltigeStimmen(0)
+      .erhaeltStimmen(true)
+      .kurzname("kurzname")
+      .build();
+
+    const initialEmptyDseKandidat = prepareStimmzettelKandidatOfWahlvorschlag(
+      initialEmptyDseWahlvorschlag
+    )
+      .ordnungszahl(101)
+      .einzelstimmen(null)
+      .ungueltigeStimmen(null)
+      .reststimmen(null)
+      .durchgestrichen(false)
+      .owningWahlvorschlag(initialEmptyDseWahlvorschlag)
+      .build();
+
+    const initialEmptyDseStimzettel = prepareStimmzettel()
+      .wahlvorstandBeschlussvorschlag([])
+      .systemBeschlussvorschlag([])
+      .beschlussfassung(null)
+      .gueltigkeit("VALID")
+      .invalideVotes(0)
+      .wahlvorschlaege([initialEmptyDseWahlvorschlag])
+      .build();
+
+    initialEmptyDseStimzettel.wahlvorschlaege[0].kandidaten = [
+      initialEmptyDseKandidat,
+    ];
+
+    it("should_resetStimmzettelToEmpty_when_calledWithoutReference", () => {
+      const managedStimmzettel = useManagedStimmzettel(
+        // structuredClone creates deep copy, so mutations are only applied to copy,
+        // not to "initialEmptyDseStimzettel"
+        ref(structuredClone(initialEmptyDseStimzettel)),
+        mockedWahlId
+      );
+
+      expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+
+      managedStimmzettel.kandidatAddStreichungOrThrow(
+        initialEmptyDseKandidat.ordnungszahl
+      );
+      managedStimmzettel.kandidatAddEinzelstimmenOrThrow(
+        initialEmptyDseKandidat.ordnungszahl,
+        5
+      );
+      managedStimmzettel.wahlvorschlagAddVotesOrThrow(
+        initialEmptyDseWahlvorschlag.ordnungszahl
+      );
+
+      expect(managedStimmzettel.stimmzettel.value).not.toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+
+      managedStimmzettel.resetStimmzettel();
+
+      expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+      expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
+
+      const stimmzettelAfterReset = managedStimmzettel.stimmzettel.value;
+      stimmzettelAfterReset.wahlvorschlaege.forEach((wahlvorschlag) => {
+        expect(wahlvorschlag.selected).toBe(false);
+        wahlvorschlag.kandidaten.forEach((k) => {
+          expect(k.einzelstimmen).toBeNull();
+          expect(k.ungueltigeStimmen).toBeNull();
+          expect(k.reststimmen).toBeNull();
+          expect(k.durchgestrichen).toBe(false);
+        });
+      });
+    });
+
+    it("should_resetStimmzettelToReference_when_calledWithReference", () => {
+      const managedStimmzettel = useManagedStimmzettel(
+        // structuredClone creates deep copy, so mutations are only applied to copy,
+        // not to "initialEmptyDseStimzettel"
+        ref(structuredClone(initialEmptyDseStimzettel)),
+        mockedWahlId
+      );
+
+      const persistedKandidat1 = {
+        kandidatId: initialEmptyDseKandidat.kandidatId,
+        nennung: initialEmptyDseKandidat.nennung,
+        isDiscarded: true,
+        votesByVoter: 5,
+        invalidVotes: 2,
+        votesByWahlvorschlag: 1,
+      };
+      const stimmzettelToResetTo = preparePersistedStimmzettel()
+        .stimmzettelkennung(1)
+        .teamID("team-1")
+        .gueltigkeit("INVALID")
+        .invalideVotes(0)
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .wahlvorschlagID(initialEmptyDseWahlvorschlag.wahlvorschlagID)
+            .selected(true)
+            .kandidaten([persistedKandidat1])
+            .build(),
+        ])
+        .wahlvorstandBeschlussvorschlag([])
+        .systemBeschlussvorschlag([])
+        .beschlussfassung(null)
+        .build();
+
+      expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+
+      managedStimmzettel.resetStimmzettel(stimmzettelToResetTo);
+
+      expect(managedStimmzettel.stimmzettel.value).not.toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+      expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
+
+      const stimmzettelAfterReset = managedStimmzettel.stimmzettel.value;
+      stimmzettelAfterReset.wahlvorschlaege.forEach((wahlvorschlag) => {
+        expect(wahlvorschlag.selected).toBe(true);
+        wahlvorschlag.kandidaten.forEach((k) => {
+          expect(k.einzelstimmen).toBe(5);
+          expect(k.ungueltigeStimmen).toBe(2);
+          expect(k.reststimmen).toBe(1);
+          expect(k.durchgestrichen).toBe(true);
+        });
+      });
     });
   });
 });

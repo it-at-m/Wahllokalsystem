@@ -217,7 +217,9 @@ watch(
 const changeHistory = computed(
   () => stimmzettelManager.bearbeitenDialogStimmzettelUtils.changeHistory
 );
-const isCancelButtonDisabled = computed(() => hasStimmzettelBeenEdited.value);
+const isCancelButtonDisabled = computed(
+  () => stimmzettelManager.hasStimmzettelBeenEdited.value
+);
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
@@ -225,9 +227,6 @@ const latestChangedWahlvorschlagId = computed<string | null>(
 const latestChangedKandidat = computed<Kandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
 );
-const hasStimmzettelBeenEdited = computed(() => {
-  return stimmzettelManager.hasStimmzettelBeenEdited.value;
-});
 
 const isCancelConfirmationDialogVisible = ref(false);
 
@@ -259,6 +258,15 @@ function onSavedClickedAndNext() {
 }
 
 function onResetClicked() {
-  stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel();
+  if (
+    stimmzettelManager.hasStimmzettelBeenEdited.value &&
+    stimmzettelManager.stimmzettelBeforeEdit.value !== null
+  ) {
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel(
+      stimmzettelManager.stimmzettelBeforeEdit.value
+    );
+  } else {
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel();
+  }
 }
 </script>

@@ -5,7 +5,7 @@ import type { Stimmzettel as DseStimmzettel } from "@/types/dse/stimmzettelerfas
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { ComputedRef, Ref } from "vue";
 
-import { computed, readonly, ref } from "vue";
+import { computed, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { COMMAND_HANDLERS } from "@/composables/dse/stimmzettelerfassung/command/commandHandlers.ts";
@@ -199,7 +199,7 @@ export function useStimmzettelManager(
     bearbeitenDialogStimmzettelUtils,
     setActiveStimmzettelWhenEditing,
     hasStimmzettelBeenEdited,
-    stimmzettelBeforeEdit: readonly(stimmzettelBeforeEdit),
+    stimmzettelBeforeEdit: stimmzettelBeforeEdit,
   };
 }
 

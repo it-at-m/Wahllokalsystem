@@ -1,0 +1,7 @@
+ALTER TABLE Wahlvorschlag
+ALTER
+COLUMN wahlvorschlagid VARCHAR(1024);
+
+ALTER TABLE Kandidat
+ALTER
+COLUMN kandidatid VARCHAR(1024);

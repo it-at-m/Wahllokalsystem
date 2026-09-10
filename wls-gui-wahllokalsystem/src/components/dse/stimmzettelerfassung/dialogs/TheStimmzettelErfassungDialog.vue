@@ -27,24 +27,24 @@
           <base-stimmzettel-zusammenfassung-card
             class="mt-2 d-flex flex-column"
             :listenstimmen="
-              stimmzettelManager.managedStimmzettel
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils
                 .wahlvorschlaegeWithListenkreuz.value
             "
             :ungueltigestimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .ungueltigeStimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.ungueltigeStimmen
             "
             :direktstimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .einzelstimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.einzelstimmen
             "
             :reststimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .reststimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.reststimmen
             "
             :streichungen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .streichungen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.streichungen
             "
             :gueltigkeit="'VALID'"
           />
@@ -65,8 +65,8 @@
               :active-wahlvorschlag-id="latestChangedWahlvorschlagId"
               :active-kandidat="latestChangedKandidat"
               :wahlvorschlaege="
-                stimmzettelManager.managedStimmzettel.stimmzettel.value
-                  .wahlvorschlaege
+                stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                  .value.wahlvorschlaege
               "
               style="min-height: 0; overflow-y: auto; min-width: 0"
             />
@@ -83,24 +83,24 @@
           <base-stimmzettel-zusammenfassung-card
             class="mt-2 d-flex flex-column"
             :listenstimmen="
-              stimmzettelManager.managedStimmzettel
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils
                 .wahlvorschlaegeWithListenkreuz.value
             "
             :ungueltigestimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .ungueltigeStimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.ungueltigeStimmen
             "
             :direktstimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .einzelstimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.einzelstimmen
             "
             :reststimmen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .reststimmen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.reststimmen
             "
             :streichungen="
-              stimmzettelManager.managedStimmzettel.stimmenSummary.value
-                .streichungen
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
+                .value.streichungen
             "
             :gueltigkeit="'VALID'"
           />
@@ -181,7 +181,7 @@ const actions = [
     action: () => onSavedClickedAndNext(),
   },
   {
-    title: "Speichern und schließen",
+    title: "Speichern und Schließen",
     action: () => onSavedClickedAndClose(),
   },
 ];
@@ -200,18 +200,21 @@ watch(
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
 
-const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
-  properties.wahlvorschlaege,
-  wahlID
-);
-
 const { currentUserTeamName } = storeToRefs(useUserStore());
 
+const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
+  computed(() => properties.stimmzettel.stimmzettelkennung),
+  properties.wahlvorschlaege,
+  wahlID,
+  currentUserTeamName.value
+);
+
 const changeHistory = computed(
-  () => stimmzettelManager.managedStimmzettel.changeHistory
+  () => stimmzettelManager.bearbeitenDialogStimmzettelUtils.changeHistory
 );
 const isCancelButtonDisabled = computed(
-  () => stimmzettelManager.managedStimmzettel.hasAnyValuesSet.value
+  () =>
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
 );
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
@@ -237,14 +240,14 @@ function onCancelConfirmationDialogConfirmed() {
 }
 
 function onSavedClickedAndClose() {
-  emit("confirmClose", properties.stimmzettel);
+  emit("confirmClose", stimmzettelManager.getStimmzettelSnapshot());
 }
 
 function onSavedClickedAndNext() {
-  emit("confirmNext", properties.stimmzettel);
+  emit("confirmNext", stimmzettelManager.getStimmzettelSnapshot());
 }
 
 function onResetClicked() {
-  stimmzettelManager.managedStimmzettel.resetStimmzettel();
+  stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel();
 }
 </script>

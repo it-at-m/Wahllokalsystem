@@ -10,6 +10,9 @@ import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/
 import { describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
+import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getStimmzettel: vi.fn(),
@@ -27,7 +30,7 @@ vi.mock(
 );
 
 const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
-const { generateRandomString } = useCommonTestDataFactory();
+const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
 const {
   createWahlvorschlaege,
   createWahlvorschlag,
@@ -42,6 +45,9 @@ describe("stimmzettelUtils.ts", () => {
     createStimmzettelWithWahlvorschlaege,
   } = useStimmzettelUtils();
 
+  const { mapSystemBeschlussgrundReasonEnumToText } =
+    useSystemBeschlussgrundReasonEnumTools();
+
   describe("createStimmzettelWithWahlvorschlaege", () => {
     it("should_createStimmzettelWithInitialValues_when_wahlvorschlaegeAreGiven", () => {
       const uiWahlvorschlaege: Wahlvorschlaege = createWahlvorschlaege();
@@ -51,11 +57,10 @@ describe("stimmzettelUtils.ts", () => {
       );
 
       const expected: Stimmzettel = {
-        stimmzettelkennung: 0,
         wahlvorstandBeschlussvorschlag: [],
         systemBeschlussvorschlag: [],
         beschlussfassung: null,
-        gueltigkeit: null,
+        gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
         invalideVotes: 0,
         wahlvorschlaege: uiWahlvorschlaege.wahlvorschlaege.map((ui) => {
           const dseWahlvorschlag: DseWahlvorschlag = {
@@ -235,11 +240,10 @@ describe("stimmzettelUtils.ts", () => {
       const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([]);
 
       const expected: Stimmzettel = {
-        stimmzettelkennung: 0,
         wahlvorstandBeschlussvorschlag: [],
         systemBeschlussvorschlag: [],
         beschlussfassung: null,
-        gueltigkeit: null,
+        gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
         invalideVotes: 0,
         wahlvorschlaege: [],
       };
@@ -251,7 +255,8 @@ describe("stimmzettelUtils.ts", () => {
   describe("isVorgemerktFuerBeschluss", () => {
     it("should_returnFalse_when_noBeschlussvorschlagPresent", () => {
       const stimmzettel = preparePersistedStimmzettel()
-        .beschlussvorschlag([])
+        .systemBeschlussvorschlag([])
+        .wahlvorstandBeschlussvorschlag([])
         .build();
 
       const vorgemerkt = isVorgemerktFuerBeschluss(stimmzettel);
@@ -259,12 +264,29 @@ describe("stimmzettelUtils.ts", () => {
       expect(vorgemerkt).toBe(false);
     });
 
-    it("should_returnTrue_when_beschlussvorschlagPresent", () => {
+    it("should_returnTrue_when_wahlvorstandBeschlussvorschlagPresent", () => {
       const text1 = generateRandomString(8);
       const text2 = generateRandomString(10);
 
       const stimmzettel = preparePersistedStimmzettel()
-        .beschlussvorschlag([{ text: text1 }, { text: text2 }])
+        .wahlvorstandBeschlussvorschlag([{ text: text1 }, { text: text2 }])
+        .build();
+
+      const vorgemerkt = isVorgemerktFuerBeschluss(stimmzettel);
+
+      expect(vorgemerkt).toBe(true);
+    });
+
+    it("should_returnTrue_when_systemBeschlussvorschlagPresent", () => {
+      const reason1 = getRandomItem(
+        Object.values(SystemBeschlussgrundReasonEnum)
+      );
+      const reason2 = getRandomItem(
+        Object.values(SystemBeschlussgrundReasonEnum)
+      );
+
+      const stimmzettel = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag([{ reason: reason1 }, { reason: reason2 }])
         .build();
 
       const vorgemerkt = isVorgemerktFuerBeschluss(stimmzettel);
@@ -274,27 +296,102 @@ describe("stimmzettelUtils.ts", () => {
   });
 
   describe("getVormerkungsgrund", () => {
-    it("should_returnEmptyString_when_noBeschlussvorschlagPresent", () => {
+    it("should_returnConcatString_when_wahlvorstandAndSystemBeschlussvorschlaegeAreGiven", () => {
+      const systemReason = getRandomItem(
+        Object.values(SystemBeschlussgrundReasonEnum)
+      );
+      const wahlvorstandBeschlussvorschlagText = generateRandomString(10);
       const stimmzettel = preparePersistedStimmzettel()
-        .beschlussvorschlag([])
+        .systemBeschlussvorschlag([{ reason: systemReason }])
+        .wahlvorstandBeschlussvorschlag([
+          { text: wahlvorstandBeschlussvorschlagText },
+        ])
         .build();
 
-      const grund = getVormerkungsgrund(stimmzettel);
+      const result = getVormerkungsgrund(stimmzettel);
 
-      expect(grund).toBe("");
+      expect(result).toStrictEqual(
+        `${mapSystemBeschlussgrundReasonEnumToText(systemReason)}, ${wahlvorstandBeschlussvorschlagText}`
+      );
     });
 
-    it("should_returnConcatenatedVormerkungsgrund_when_beschlussvorschlagPresent", () => {
-      const text1 = generateRandomString(8);
-      const text2 = generateRandomString(10);
-
+    it("should_returnConcatString_when_multipleSystemBeschlussvorschlaegeAreGiven", () => {
+      const systemReason1 = getRandomItem(
+        Object.values(SystemBeschlussgrundReasonEnum)
+      );
+      const systemReason2 = getRandomItem(
+        Object.values(SystemBeschlussgrundReasonEnum)
+      );
       const stimmzettel = preparePersistedStimmzettel()
-        .beschlussvorschlag([{ text: text1 }, { text: text2 }])
+        .systemBeschlussvorschlag([
+          { reason: systemReason1 },
+          { reason: systemReason2 },
+        ])
+        .wahlvorstandBeschlussvorschlag([])
         .build();
 
-      const grund = getVormerkungsgrund(stimmzettel);
+      const result = getVormerkungsgrund(stimmzettel);
 
-      expect(grund).toBe(`${text1}, ${text2}`);
+      expect(result).toStrictEqual(
+        `${mapSystemBeschlussgrundReasonEnumToText(systemReason1)}, ${mapSystemBeschlussgrundReasonEnumToText(systemReason2)}`
+      );
+    });
+
+    it("should_returnConcatString_when_multipleWahlvorstandBeschlussvorschlaegeAreGiven", () => {
+      const wahlvorstandBeschlussvorschlagText1 = generateRandomString(10);
+      const wahlvorstandBeschlussvorschlagText2 = generateRandomString(10);
+      const stimmzettel = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag([])
+        .wahlvorstandBeschlussvorschlag([
+          { text: wahlvorstandBeschlussvorschlagText1 },
+          { text: wahlvorstandBeschlussvorschlagText2 },
+        ])
+        .build();
+
+      const result = getVormerkungsgrund(stimmzettel);
+
+      expect(result).toStrictEqual(
+        `${wahlvorstandBeschlussvorschlagText1}, ${wahlvorstandBeschlussvorschlagText2}`
+      );
+    });
+
+    it("should_returnStringWithoutSeparator_when_onlyOneWahlvorstandBeschlussvorschlagIsGiven", () => {
+      const systemReason = getRandomItem(
+        Object.values(SystemBeschlussgrundReasonEnum)
+      );
+      const stimmzettel = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag([{ reason: systemReason }])
+        .wahlvorstandBeschlussvorschlag([])
+        .build();
+
+      const result = getVormerkungsgrund(stimmzettel);
+
+      expect(result).toStrictEqual(
+        `${mapSystemBeschlussgrundReasonEnumToText(systemReason)}`
+      );
+    });
+    it("should_returnStringWithoutSeparator_when_onlyOneSystemBeschlussvorschlagIsGiven", () => {
+      const wahlvorstandBeschlussvorschlagText = generateRandomString(10);
+      const stimmzettel = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag([])
+        .wahlvorstandBeschlussvorschlag([
+          { text: wahlvorstandBeschlussvorschlagText },
+        ])
+        .build();
+
+      const result = getVormerkungsgrund(stimmzettel);
+
+      expect(result).toStrictEqual(`${wahlvorstandBeschlussvorschlagText}`);
+    });
+    it("should_returnEmptyString_when_noBeschlussvorschlaegeAreGiven", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag([])
+        .wahlvorstandBeschlussvorschlag([])
+        .build();
+
+      const result = getVormerkungsgrund(stimmzettel);
+
+      expect(result).toStrictEqual("");
     });
   });
 });

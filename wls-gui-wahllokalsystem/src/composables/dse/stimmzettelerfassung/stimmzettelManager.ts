@@ -1,25 +1,43 @@
+import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+import type { ComputedRef } from "vue";
 
 import { ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { COMMAND_HANDLERS } from "@/composables/dse/stimmzettelerfassung/command/commandHandlers.ts";
-import { useManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useBearbeitenDialogStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
 import { UnsupportedCommandError } from "@/types/dse/error/UnsupportedCommandError.ts";
 
 const { logDebug } = useLogging("stimmzettelManager");
 
 export function useStimmzettelManager(
+  stimmzettelkennung: ComputedRef<number>,
   wahlvorschlaege: Wahlvorschlag[],
-  wahlID: string
+  wahlID: string,
+  teamID: string
 ) {
-  const { createStimmzettelWithWahlvorschlaege } = useStimmzettelUtils();
+  const { createStimmzettelWithWahlvorschlaege } = useStimmzettelTools();
+  const { toPersistedStimmzettel } = useStimmzettelMapper();
 
-  const managedStimmzettel = useManagedStimmzettel(
-    ref(createStimmzettelWithWahlvorschlaege(wahlvorschlaege)),
+  const managedBearbeitenDialogStimmzettel = ref(
+    createStimmzettelWithWahlvorschlaege(wahlvorschlaege)
+  );
+
+  const bearbeitenDialogStimmzettelUtils = useBearbeitenDialogStimmzettelUtils(
+    managedBearbeitenDialogStimmzettel,
     wahlID
   );
+
+  function getStimmzettelSnapshot(): PersistedStimmzettel {
+    return toPersistedStimmzettel(
+      managedBearbeitenDialogStimmzettel.value,
+      stimmzettelkennung.value,
+      teamID
+    );
+  }
 
   /**
    *
@@ -37,10 +55,17 @@ export function useStimmzettelManager(
       throw new UnsupportedCommandError(commandString);
     }
 
-    handlerForCommand.handleOrThrow(commandString, managedStimmzettel);
+    handlerForCommand.handleOrThrow(
+      commandString,
+      bearbeitenDialogStimmzettelUtils
+    );
   }
 
-  return { parseCommandOrThrowError, managedStimmzettel };
+  return {
+    getStimmzettelSnapshot,
+    parseCommandOrThrowError,
+    bearbeitenDialogStimmzettelUtils,
+  };
 }
 
 export type StimmzettelManager = ReturnType<typeof useStimmzettelManager>;

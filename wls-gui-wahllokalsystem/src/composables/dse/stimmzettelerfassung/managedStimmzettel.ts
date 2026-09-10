@@ -20,10 +20,7 @@ import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelErr
  * @param stimmzettel
  * @param wahlID
  */
-export function useManagedStimmzettel(
-  stimmzettel: Ref<Stimmzettel>,
-  wahlID: string
-) {
+function _useManagedStimmzettel(stimmzettel: Ref<Stimmzettel>, wahlID: string) {
   const changeHistory = useStimmzettelChangeHistory();
   const {
     kandidatenOfStimmzettel,
@@ -384,3 +381,12 @@ export function useManagedStimmzettel(
   };
 }
 export type ManagedStimmzettel = ReturnType<typeof useManagedStimmzettel>;
+/**
+ *
+ * @deprecated TODO name does not match naming convention
+ * BearbeitenDialogStimmzettelUtils might better cause the stimmzettel
+ * that is handled inside is the stimmzettel for the bearbeiten dialog
+ * (currently erfassung dialog; with the edit option the name will change)
+ */
+export const useManagedStimmzettel = _useManagedStimmzettel;
+export const useBearbeitenDialogStimmzettelUtils = _useManagedStimmzettel;

@@ -54,7 +54,7 @@
     <the-stimmzettelkennung-dialog
       :visible="isKennungsDialogVisible"
       :team-name="teamID"
-      :existing-stimmzettel="savedStimmzettel"
+      :existing-stimmzettel="stimmzettelListe"
       @confirm="onStimmzettelkennungConfirmed"
       @cancel="onStimmzettelkennungCanceled"
     />
@@ -78,6 +78,7 @@
 
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
@@ -93,10 +94,16 @@ import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettele
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
-defineProps<{
+const props = defineProps<{
   teamId: string;
   stimmzettelListe: Stimmzettel[];
   stimmzettelLoading: boolean;
+  hasStimmzettel: boolean;
+  wahlvorschlaege: Wahlvorschlag[];
+}>();
+
+const emit = defineEmits<{
+  save: [stimmzettel: Stimmzettel];
 }>();
 
 const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
@@ -115,15 +122,11 @@ const {
   teamStatus,
   activeStimmzettel,
   beendenBtnActive,
-  hasStimmzettel,
   isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
-  savedStimmzettel,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
-  wahlvorschlaege,
-  saveNewStimmzettel,
   sendStatusInBearbeitung,
   sendStatusUnterbrochen,
   startNewEmptyStimmzettelWithStimmzettelkennung,
@@ -131,7 +134,7 @@ const {
 } = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
 
 const startNewStimmzettelButtonText = computed(() =>
-  hasStimmzettel.value ||
+  props.hasStimmzettel ||
   teamStatus.value?.status ===
     StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN ||
   teamStatus.value?.status === StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
@@ -173,14 +176,13 @@ async function onStimmzettelErfassungCanceled() {
 async function onStimmzettelErfassungConfirmed(
   confirmedStimmzettel: Stimmzettel
 ) {
-  await saveNewStimmzettel(confirmedStimmzettel);
+  emit("save", confirmedStimmzettel);
   isErfassungsDialogVisible.value = false;
 }
 async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
   confirmedStimmzettel: Stimmzettel
 ) {
-  await saveNewStimmzettel(confirmedStimmzettel);
-
+  emit("save", confirmedStimmzettel);
   isKennungsDialogVisible.value = true;
 }
 

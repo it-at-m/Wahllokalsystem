@@ -16,9 +16,8 @@
       />
       <base-erfasste-stimmzettel-card :stimmzettel-liste="stimmzettelListe" />
       <base-stimmzettel-gueltige-kandidatenstimmen-anzeigen-card
-        :wahlbezirk-id="wahlbezirkID"
-        :wahl-id="wahlID"
         :stimmzettel-liste="stimmzettelListe"
+        :wahlvorschlaege="wahlvorschlaege"
       />
     </div>
   </div>
@@ -26,6 +25,7 @@
 
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
@@ -44,5 +44,6 @@ const wahlID = route.params.wahlId as string;
 
 defineProps<{
   stimmzettelListe: Stimmzettel[];
+  wahlvorschlaege: Wahlvorschlag[];
 }>();
 </script>

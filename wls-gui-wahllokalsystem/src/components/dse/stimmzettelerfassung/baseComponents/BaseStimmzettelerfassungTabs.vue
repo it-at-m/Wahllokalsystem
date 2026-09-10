@@ -13,10 +13,13 @@
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="one">
         <base-stimmzettel-uebersicht
-          :team-id="teamId"
-          :stimmzettel-liste="stimmzettelListe"
-          :stimmzettel-loading="stimmzettelLoading"
+          :team-id="teamID"
+          :stimmzettel-liste="savedStimmzettel"
+          :stimmzettel-loading="isStimmzettelLoading"
+          :wahlvorschlaege="wahlvorschlaege"
+          :has-stimmzettel="hasStimmzettel"
           class="mt-3"
+          @save="saveStimmzettel"
         />
       </v-tabs-window-item>
       <v-tabs-window-item
@@ -24,7 +27,8 @@
         eager
       >
         <base-stimmzettel-zusammenfassung
-          :stimmzettel-liste="stimmzettelListe"
+          :stimmzettel-liste="savedStimmzettel"
+          :wahlvorschlaege="wahlvorschlaege"
         />
       </v-tabs-window-item>
     </v-tabs-window>
@@ -35,17 +39,33 @@
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
 import { ref } from "vue";
+import { useRoute } from "vue-router";
 
 import BaseStimmzettelUebersicht from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelUebersicht.vue";
 import BaseStimmzettelZusammenfassung from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassung.vue";
+import { useStimmzettelState } from "@/composables/dse/stimmzettelerfassung/stimmzettelState.ts";
+import { useWahlvorschlaegeState } from "@/composables/dse/stimmzettelerfassung/wahlvorschlaegeState.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+
+const route = useRoute();
+const userStore = useUserStore();
+
+const teamID = userStore.currentUserTeamName || "";
+const wahlID = (route.params.wahlId as string) || "";
+const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
+
+const {
+  isStimmzettelLoading,
+  savedStimmzettel,
+  hasStimmzettel,
+  saveNewStimmzettel,
+} = useStimmzettelState(wahlID, wahlbezirkID, teamID);
+
+const { wahlvorschlaege } = useWahlvorschlaegeState(wahlID, wahlbezirkID);
 
 const tab = ref("one");
 
-//state
-
-defineProps<{
-  teamId: string;
-  stimmzettelListe: Stimmzettel[];
-  stimmzettelLoading: boolean;
-}>();
+async function saveStimmzettel(stimmzettel: Stimmzettel) {
+  await saveNewStimmzettel(stimmzettel);
+}
 </script>

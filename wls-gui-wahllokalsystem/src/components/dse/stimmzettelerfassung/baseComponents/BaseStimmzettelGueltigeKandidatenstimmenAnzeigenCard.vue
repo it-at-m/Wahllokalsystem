@@ -25,26 +25,21 @@
 
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
-import { computed, onActivated } from "vue";
+import { computed } from "vue";
 
 import BaseCardKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/MBW/stapelBC/BaseCardKandidatenstimmenAnzeigen.vue";
 import { useStimmzettelGueltigeKandidatenstimmenUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelGueltigeKandidatenstimmenUtils.ts";
 
 const props = defineProps<{
-  wahlbezirkId: string;
-  wahlId: string;
   stimmzettelListe: Stimmzettel[];
+  wahlvorschlaege: Wahlvorschlag[];
 }>();
 
-const {
-  wahlvorschlaegeWithKandidatenErgebnissen,
-  loadWahlvorschlaegeAndErgebnisse,
-} = useStimmzettelGueltigeKandidatenstimmenUtils(
-  props.wahlbezirkId,
-  props.wahlId,
-  computed(() => props.stimmzettelListe)
-);
-
-onActivated(loadWahlvorschlaegeAndErgebnisse);
+const { wahlvorschlaegeWithKandidatenErgebnissen } =
+  useStimmzettelGueltigeKandidatenstimmenUtils(
+    computed(() => props.stimmzettelListe),
+    computed(() => props.wahlvorschlaege)
+  );
 </script>

@@ -1,33 +1,19 @@
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnismeldung/common/WahlvorschlagWithKandidatenErgebnissen.ts";
-import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
-import { computed, ref } from "vue";
-
-import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
+import { computed } from "vue";
 
 export function useStimmzettelGueltigeKandidatenstimmenUtils(
-  wahlbezirkID: string,
-  wahlID: string,
-  stimmzettelListe: Ref<Stimmzettel[]>
+  stimmzettelListe: Ref<Stimmzettel[]>,
+  wahlvorschlaege: Ref<Wahlvorschlag[]>
 ) {
-  const { getWahlvorschlaege } = useWahlvorschlaegeService();
-  const wahlvorschlaege = ref<Wahlvorschlaege | null>(null);
-
   const wahlvorschlaegeWithKandidatenErgebnissen = computed(() => {
-    if (!wahlvorschlaege.value) {
-      return [];
-    }
-    return [...wahlvorschlaege.value.wahlvorschlaege].map((wahlvorschlag) =>
+    return [...wahlvorschlaege.value].map((wahlvorschlag) =>
       _stimmzettelListeToWahlvorschlagWithKandidatenErgebnissen(wahlvorschlag)
     );
   });
-
-  async function loadWahlvorschlaegeAndErgebnisse() {
-    wahlvorschlaege.value = await getWahlvorschlaege(wahlID, wahlbezirkID);
-  }
 
   function _stimmzettelListeToWahlvorschlagWithKandidatenErgebnissen(
     wahlvorschlag: Wahlvorschlag
@@ -97,6 +83,5 @@ export function useStimmzettelGueltigeKandidatenstimmenUtils(
 
   return {
     wahlvorschlaegeWithKandidatenErgebnissen,
-    loadWahlvorschlaegeAndErgebnisse,
   };
 }

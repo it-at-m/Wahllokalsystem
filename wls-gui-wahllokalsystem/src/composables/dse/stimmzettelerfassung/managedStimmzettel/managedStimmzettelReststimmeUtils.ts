@@ -67,7 +67,7 @@ export function useManagedStimmzettelReststimmeUtils(
     const totalVotesLeft =
       maximalErlaubteStimmenProWaehler.value - totalVotesAlreadyGiven;
     logger.logDebug(
-      `totalVotesAlreadyGiven > ${totalVotesAlreadyGiven}, totalVotesLeft > ${totalVotesLeft}, countRequiredVotesLeftToFulfilReststimmenvergabe > ${countRequiredVotesLeftToFulfillReststimmenvergabe}`
+      `totalVotesAlreadyGiven > ${totalVotesAlreadyGiven}, totalVotesLeft > ${totalVotesLeft}, countRequiredVotesLeftToFulfillReststimmenvergabe > ${countRequiredVotesLeftToFulfillReststimmenvergabe}`
     );
 
     if (countRequiredVotesLeftToFulfillReststimmenvergabe === null) {

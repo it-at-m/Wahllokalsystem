@@ -20,7 +20,9 @@
         />
       </v-tabs-window-item>
       <v-tabs-window-item value="two">
-        <base-stimmzettel-zusammenfassung />
+        <base-stimmzettel-zusammenfassung
+          :stimmzettel-liste="stimmzettelListe"
+        />
       </v-tabs-window-item>
     </v-tabs-window>
   </div>

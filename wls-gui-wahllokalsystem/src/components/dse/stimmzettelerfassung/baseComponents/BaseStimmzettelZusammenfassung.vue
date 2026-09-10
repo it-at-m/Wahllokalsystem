@@ -13,22 +13,25 @@
       :wahlbezirk-id="wahlbezirkID"
       :wahl-id="wahlID"
     />
-    <base-erfasste-stimmzettel-card />
-    <the-m-b-w-gueltige-kandidatenstimmen-anzeigen-card
+    <base-erfasste-stimmzettel-card :stimmzettel-liste="stimmzettelListe" />
+    <base-stimmzettel-gueltige-kandidatenstimmen-anzeigen-card
       :wahlbezirk-id="wahlbezirkID"
       :wahl-id="wahlID"
+      :stimmzettel-liste="stimmzettelListe"
     />
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 
 import BaseErfassteStimmzettelCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseErfassteStimmzettelCard.vue";
+import BaseStimmzettelGueltigeKandidatenstimmenAnzeigenCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
-import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
@@ -36,4 +39,8 @@ const route = useRoute();
 
 const wahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
+
+defineProps<{
+  stimmzettelListe: Stimmzettel[];
+}>();
 </script>

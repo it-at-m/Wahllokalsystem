@@ -54,15 +54,34 @@
     </v-card-text>
     <v-card-title v-if="showBeschlussfassung">Beschlussfassung</v-card-title>
     <v-card-text v-if="showBeschlussfassung">
-      <v-checkbox
-        :model-value="isCheckboxMarkForBeschlussfassungSelected"
-        label="für Beschlussfassung vorgemerkt"
-        readonly
-        class="mb-4"
-        density="compact"
-        :hint="systemBeschlussgruendeAsText"
-        :persistent-hint="!!systemBeschlussgruendeAsText"
-      />
+      <div
+        v-if="
+          isCheckboxMarkForBeschlussfassungSelected && modelValueGueltigkeit
+        "
+      >
+        <base-stimmzettel-gueltigkeit-icon
+          :gueltigkeit="modelValueGueltigkeit"
+        />
+        <span class="ms-2 font-weight-bold">{{
+          toText(modelValueGueltigkeit)
+        }}</span>
+      </div>
+      <div v-if="systemBeschlussgruende.length > 0">
+        <ul class="ms-4 mt-2">
+          <li
+            v-for="(systemgrund, index) in systemBeschlussgruende"
+            :key="index"
+          >
+            <span class="label">{{
+              mapSystemBeschlussgrundReasonEnumToText(systemgrund.reason)
+            }}</span>
+          </li>
+        </ul>
+        <v-divider
+          class="my-2"
+          thickness="2"
+        />
+      </div>
       Begründung auswählen oder eingeben (abweichende Gründe mit Enter
       bestätigen)
       <v-combobox
@@ -87,9 +106,11 @@ import { computed, ref } from "vue";
 import { VCombobox } from "vuetify/components";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
+import { useStimmzettelGueltigkeitEnumTools } from "@/composables/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnumTools.ts";
 import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { TITEL_SONDERFAELLE } from "@/constants.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
@@ -99,6 +120,8 @@ const { createBeschlussgrundWithText, getWahlvorstandBeschlussvorschlaege } =
 const { required } = useRules();
 const { mapSystemBeschlussgrundReasonEnumToText } =
   useSystemBeschlussgrundReasonEnumTools();
+
+const { toText } = useStimmzettelGueltigkeitEnumTools();
 
 const modelValueInvalidVotes = defineModel("invalidVotes", {
   type: [Number, null] as PropType<number | null>,
@@ -210,12 +233,6 @@ const isInputOfInvalidVotesDisabled = computed(
     props.denyInputForInvalidVotes ||
     isStimmzettelFehltSelected.value ||
     isStimmzettelLeerSelected.value
-);
-
-const systemBeschlussgruendeAsText = computed(() =>
-  props.systemBeschlussgruende
-    .map((grund) => mapSystemBeschlussgrundReasonEnumToText(grund.reason))
-    .join(", ")
 );
 
 const wahlvorstandBeschlussvorschlaegeItems = computed(() =>

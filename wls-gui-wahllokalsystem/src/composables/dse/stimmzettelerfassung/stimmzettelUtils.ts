@@ -6,6 +6,7 @@ import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 function _useStimmzettelUtils() {
@@ -28,7 +29,7 @@ function _useStimmzettelUtils() {
   ): PersistedStimmzettel {
     return {
       stimmzettelkennung: stimmzettelkennung,
-      teamID: "",
+      teamID: useUserStore().currentUserTeamName,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
       invalideVotes: 0,
       beschlussfassung: null,

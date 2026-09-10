@@ -66,9 +66,9 @@
       @cancel="onStimmzettelkennungCanceled"
     />
     <the-stimmzettel-erfassung-dialog
-      v-if="activeStimmzettel"
+      v-if="stimmzettelToShow"
       v-model="isErfassungsDialogVisible"
-      :stimmzettel="activeStimmzettel"
+      :stimmzettel="stimmzettelToShow"
       :wahlvorschlaege="wahlvorschlaege"
       @cancel="onStimmzettelErfassungCanceled"
       @confirm-close="onStimmzettelErfassungConfirmed"
@@ -85,7 +85,7 @@
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
-import { computed, useTemplateRef } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
@@ -113,7 +113,6 @@ const templateRefStimmzettelBeendenDialog = useTemplateRef<
 
 const {
   teamStatus,
-  activeStimmzettel,
   beendenBtnActive,
   hasStimmzettel,
   isErfassungsDialogVisible,
@@ -129,7 +128,6 @@ const {
   sendStatusUnterbrochen,
   startNewEmptyStimmzettelWithStimmzettelkennung,
   reloadTeamStatus,
-  setActiveStimmzettel,
 } = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
 
 const startNewStimmzettelButtonText = computed(() =>
@@ -141,6 +139,8 @@ const startNewStimmzettelButtonText = computed(() =>
     : "Starten"
 );
 
+const stimmzettelToShow = ref<Stimmzettel | null>(null);
+
 function onErfassungStartenClicked() {
   isKennungsDialogVisible.value = true;
 }
@@ -148,7 +148,8 @@ function onErfassungStartenClicked() {
 async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
   await sendStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
-  startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
+  stimmzettelToShow.value =
+    startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
   isErfassungsDialogVisible.value = true;
 }
 
@@ -191,7 +192,7 @@ async function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
   ) {
     await sendStatusInBearbeitung();
   }
-  setActiveStimmzettel(stimmzettel);
+  stimmzettelToShow.value = stimmzettel;
   isErfassungsDialogVisible.value = true;
 }
 

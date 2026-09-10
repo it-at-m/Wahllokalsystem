@@ -1,10 +1,11 @@
 import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag as PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
+import type { Stimmzettel as DseStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
-import type { ComputedRef } from "vue";
+import type { ComputedRef, Ref } from "vue";
 
-import { ref } from "vue";
+import { computed, readonly, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { COMMAND_HANDLERS } from "@/composables/dse/stimmzettelerfassung/command/commandHandlers.ts";
@@ -23,6 +24,7 @@ export function useStimmzettelManager(
 ) {
   const { createStimmzettelWithWahlvorschlaege } = useStimmzettelTools();
   const { toPersistedStimmzettel } = useStimmzettelMapper();
+  const stimmzettelBeforeEdit: Ref<PersistedStimmzettel | null> = ref(null);
 
   const managedBearbeitenDialogStimmzettel = ref(
     createStimmzettelWithWahlvorschlaege(wahlvorschlaege)
@@ -33,9 +35,19 @@ export function useStimmzettelManager(
     wahlID
   );
 
+  const hasStimmzettelBeenEdited = computed<boolean>(() => {
+    if (!stimmzettelBeforeEdit.value) return false;
+    return !_isDeepEqual(
+      stimmzettelBeforeEdit.value,
+      managedBearbeitenDialogStimmzettel.value
+    );
+  });
+
   function setActiveStimmzettelWhenEditing(
     stimmzettelToSet: PersistedStimmzettel
   ) {
+    stimmzettelBeforeEdit.value = stimmzettelToSet;
+
     managedBearbeitenDialogStimmzettel.value.invalideVotes =
       stimmzettelToSet.invalideVotes ?? 0;
     managedBearbeitenDialogStimmzettel.value.beschlussfassung =
@@ -113,11 +125,81 @@ export function useStimmzettelManager(
     );
   }
 
+  function _isDeepEqual(
+    persistedStimmzettel: PersistedStimmzettel,
+    dseStimmzettel: DseStimmzettel
+  ): boolean {
+    const mappedFromDse: PersistedStimmzettel = toPersistedStimmzettel(
+      dseStimmzettel,
+      stimmzettelkennung.value,
+      teamID
+    );
+
+    const normA = _normalizePersistedStimmzettel(persistedStimmzettel);
+    const normB = _normalizePersistedStimmzettel(mappedFromDse);
+
+    return JSON.stringify(normA) === JSON.stringify(normB);
+  }
+
+  function _normalizePersistedStimmzettel(
+    stimmzettel: PersistedStimmzettel
+  ): PersistedStimmzettel {
+    const systemBeschluss = (stimmzettel.systemBeschlussvorschlag ?? [])
+      .slice()
+      .sort((x, y) => String(x.reason).localeCompare(String(y.reason)));
+    const wvBeschluss = (stimmzettel.wahlvorstandBeschlussvorschlag ?? [])
+      .slice()
+      .sort((x, y) => x.text.localeCompare(y.text));
+
+    const wvSorted = (stimmzettel.wahlvorschlaege ?? [])
+      .slice()
+      .sort((x, y) => x.wahlvorschlagID.localeCompare(y.wahlvorschlagID))
+      .map(
+        (wv) =>
+          ({
+            wahlvorschlagID: wv.wahlvorschlagID,
+            selected: wv.selected,
+            kandidaten: (wv.kandidaten ?? [])
+              .slice()
+              .sort((a, b) => {
+                const idCmp = a.kandidatId.localeCompare(b.kandidatId);
+                return idCmp !== 0 ? idCmp : a.nennung - b.nennung;
+              })
+              .map(
+                (k) =>
+                  ({
+                    kandidatId: k.kandidatId,
+                    nennung: k.nennung,
+                    isDiscarded: k.isDiscarded,
+                    votesByVoter: k.votesByVoter ?? null,
+                    invalidVotes: k.invalidVotes ?? null,
+                    votesByWahlvorschlag: k.votesByWahlvorschlag ?? null,
+                  }) as PersistedKandidat
+              ),
+          }) as PersistedWahlvorschlag
+      );
+
+    return {
+      stimmzettelkennung: stimmzettel.stimmzettelkennung,
+      teamID: stimmzettel.teamID,
+      wahlvorschlaege: wvSorted,
+      invalideVotes: stimmzettel.invalideVotes ?? 0,
+      gueltigkeit: stimmzettel.gueltigkeit,
+      wahlvorstandBeschlussvorschlag: wvBeschluss,
+      systemBeschlussvorschlag: systemBeschluss,
+      beschlussfassung: stimmzettel.beschlussfassung
+        ? { ...stimmzettel.beschlussfassung }
+        : null,
+    };
+  }
+
   return {
     getStimmzettelSnapshot,
     parseCommandOrThrowError,
     bearbeitenDialogStimmzettelUtils,
     setActiveStimmzettelWhenEditing,
+    hasStimmzettelBeenEdited,
+    stimmzettelBeforeEdit: readonly(stimmzettelBeforeEdit),
   };
 }
 

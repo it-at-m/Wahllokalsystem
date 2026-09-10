@@ -199,7 +199,6 @@ const actions = [
 ];
 
 const currentAction = ref(actions[0]);
-const beforeEditSnapshot = ref<Stimmzettel | null>(null);
 
 watch(
   () => isDialogVisibleModel.value,
@@ -210,7 +209,6 @@ watch(
       stimmzettelManager.setActiveStimmzettelWhenEditing(
         properties.stimmzettel
       );
-      beforeEditSnapshot.value = stimmzettelManager.getStimmzettelSnapshot();
     }
   },
   { immediate: true }
@@ -228,8 +226,7 @@ const latestChangedKandidat = computed<Kandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
 );
 const hasStimmzettelBeenEdited = computed(() => {
-  const current = stimmzettelManager.getStimmzettelSnapshot();
-  return JSON.stringify(beforeEditSnapshot.value) !== JSON.stringify(current);
+  return stimmzettelManager.hasStimmzettelBeenEdited.value;
 });
 
 const isCancelConfirmationDialogVisible = ref(false);

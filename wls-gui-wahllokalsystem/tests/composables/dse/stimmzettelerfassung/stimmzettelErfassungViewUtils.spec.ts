@@ -331,7 +331,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
   });
 
   describe("startNewEmptyStimmzettelWithStimmzettelkennung", () => {
-    it("should_setActiveStimmzettel_when_calledWithKennung", () => {
+    it("should_returnStimmzettel_when_calledWithKennung", () => {
       const mockedKennung = generateRandomNumber(3);
       const mockedEmptyStimmzettel: Stimmzettel = preparePersistedStimmzettel()
         .stimmzettelkennung(mockedKennung)
@@ -341,16 +341,15 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         mockedEmptyStimmzettel
       );
 
-      unitUnderTest.startNewEmptyStimmzettelWithStimmzettelkennung(
-        mockedKennung
-      );
+      const result =
+        unitUnderTest.startNewEmptyStimmzettelWithStimmzettelkennung(
+          mockedKennung
+        );
 
       expect(
         mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung
       ).toHaveBeenCalledWith(mockedKennung);
-      expect(unitUnderTest.activeStimmzettel.value).toStrictEqual(
-        mockedEmptyStimmzettel
-      );
+      expect(result).toStrictEqual(mockedEmptyStimmzettel);
     });
   });
 

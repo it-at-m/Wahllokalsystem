@@ -496,8 +496,10 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
           .stimmzettelkennung(1)
           .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
           .build();
-      const mockedEditedStimmzettel = mockedExistingStimmzettel;
-      mockedEditedStimmzettel.gueltigkeit = StimmzettelGueltigkeitEnum.Invalid;
+      const mockedEditedStimmzettel = preparePersistedStimmzettel()
+        .stimmzettelkennung(mockedExistingStimmzettel.stimmzettelkennung)
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+        .build();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 

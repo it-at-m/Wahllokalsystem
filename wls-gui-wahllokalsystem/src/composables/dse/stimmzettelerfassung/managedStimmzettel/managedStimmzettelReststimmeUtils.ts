@@ -57,7 +57,7 @@ export function useManagedStimmzettelReststimmeUtils(
       )
     );
 
-    const countRequiredVotesLeftToFulfilReststimmenvergabe =
+    const countRequiredVotesLeftToFulfillReststimmenvergabe =
       _getCountRequiredVotesForReststimmenvergabe(
         votesKandidatenAlreadyGotTool
       );
@@ -67,10 +67,10 @@ export function useManagedStimmzettelReststimmeUtils(
     const totalVotesLeft =
       maximalErlaubteStimmenProWaehler.value - totalVotesAlreadyGiven;
     logger.logDebug(
-      `totalVotesAlreadyGiven > ${totalVotesAlreadyGiven}, totalVotesLeft > ${totalVotesLeft}, countRequiredVotesLeftToFulfilReststimmenvergabe > ${countRequiredVotesLeftToFulfilReststimmenvergabe}`
+      `totalVotesAlreadyGiven > ${totalVotesAlreadyGiven}, totalVotesLeft > ${totalVotesLeft}, countRequiredVotesLeftToFulfilReststimmenvergabe > ${countRequiredVotesLeftToFulfillReststimmenvergabe}`
     );
 
-    if (countRequiredVotesLeftToFulfilReststimmenvergabe === null) {
+    if (countRequiredVotesLeftToFulfillReststimmenvergabe === null) {
       selectedWahlvorschlaege.value.forEach((wahlvorschlag) =>
         _placeReststimmenOnWahlvorschlag(
           wahlvorschlag,
@@ -79,7 +79,7 @@ export function useManagedStimmzettelReststimmeUtils(
         )
       );
     } else if (
-      countRequiredVotesLeftToFulfilReststimmenvergabe <= totalVotesLeft
+      countRequiredVotesLeftToFulfillReststimmenvergabe <= totalVotesLeft
     ) {
       //Number.POSITIVE_INFINITY because with the condition we already ensured that are enough votes left
       selectedWahlvorschlaege.value.forEach((wahlvorschlag) =>

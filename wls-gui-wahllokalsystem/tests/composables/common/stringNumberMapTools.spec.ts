@@ -1,6 +1,9 @@
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
+
+const { generateRandomNumber } = useCommonTestDataFactory();
 
 describe("stringNumberMapTools", () => {
   let container: Map<string, number>;
@@ -37,9 +40,10 @@ describe("stringNumberMapTools", () => {
 
   describe("getOrDefault", () => {
     it("should_returnValue_when_keyExists", () => {
-      container.set("key", 0);
+      const valueToSet = generateRandomNumber(2);
+      container.set("key", valueToSet);
 
-      expect(unitUnderTest.getOrDefault("key")).toStrictEqual(0);
+      expect(unitUnderTest.getOrDefault("key")).toStrictEqual(valueToSet);
     });
 
     it("should_returnZero_when_keyDoesNotExistAndNoDefaultValueIsGiven", () => {

@@ -58,6 +58,7 @@
         v-if="
           isCheckboxMarkForBeschlussfassungSelected && modelValueGueltigkeit
         "
+        class="mb-2"
       >
         <base-stimmzettel-gueltigkeit-icon
           :gueltigkeit="modelValueGueltigkeit"
@@ -67,7 +68,7 @@
         }}</span>
       </div>
       <div v-if="systemBeschlussgruende.length > 0">
-        <ul class="ms-4 mt-2">
+        <ul class="ms-4">
           <li
             v-for="(systemgrund, index) in systemBeschlussgruende"
             :key="index"

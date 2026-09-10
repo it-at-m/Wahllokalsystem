@@ -83,7 +83,9 @@ function _useManagedStimmzettel(
         wahlvorschlag.selected = beforeEditWahlvorschlag?.selected ?? false;
         wahlvorschlag.kandidaten.map((kandidat) => {
           const beforeEditKandidat = beforeEditWahlvorschlag?.kandidaten.find(
-            (before) => kandidat.kandidatId == before.kandidatId
+            (before) =>
+              kandidat.kandidatId === before.kandidatId &&
+              kandidat.nennung === before.nennung
           );
           kandidat.einzelstimmen = beforeEditKandidat?.votesByVoter ?? null;
           kandidat.ungueltigeStimmen = beforeEditKandidat?.invalidVotes ?? null;

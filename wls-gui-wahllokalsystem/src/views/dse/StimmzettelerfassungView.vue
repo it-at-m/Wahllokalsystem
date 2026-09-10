@@ -123,7 +123,7 @@ const {
   unterbrechenBtnIsDisabled,
   wahlvorschlaege,
   saveNewStimmzettel,
-  sendStatusInBearbeitung,
+  ensureStatusInBearbeitung,
   sendStatusUnterbrochen,
   startNewEmptyStimmzettelWithStimmzettelkennung,
   reloadTeamStatus,
@@ -143,7 +143,7 @@ function onErfassungStartenClicked() {
 }
 
 async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
-  await sendStatusInBearbeitung();
+  await ensureStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
   startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
   isErfassungsDialogVisible.value = true;

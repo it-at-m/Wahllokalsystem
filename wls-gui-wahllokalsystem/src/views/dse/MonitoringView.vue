@@ -160,13 +160,13 @@ async function onAktualisierenClicked() {
 }
 
 async function onOpenStimmzettelerfassungClicked(teamID: string) {
-  const { sendStatusInBearbeitung } = useStimmzettelErfassungViewUtils(
+  const { ensureStatusInBearbeitung } = useStimmzettelErfassungViewUtils(
     wahlID,
     wahlbezirkID,
     teamID
   );
 
-  await sendStatusInBearbeitung(true);
+  await ensureStatusInBearbeitung(true);
   await onMonitoringSynchronisierenClicked();
 }
 </script>

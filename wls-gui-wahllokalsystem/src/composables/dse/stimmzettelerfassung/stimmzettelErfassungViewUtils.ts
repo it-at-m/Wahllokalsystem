@@ -56,11 +56,16 @@ export function useStimmzettelErfassungViewUtils(
       getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung);
   }
 
-  async function sendStatusInBearbeitung(sendNotification = false) {
-    await _postTeamStatus(
-      StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
-      sendNotification
-    );
+  async function ensureStatusInBearbeitung(sendNotification = false) {
+    if (
+      teamStatus.value?.status !==
+      StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+    ) {
+      await _postTeamStatus(
+        StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+        sendNotification
+      );
+    }
   }
 
   async function sendStatusUnterbrochen(sendNotification = false) {
@@ -161,7 +166,7 @@ export function useStimmzettelErfassungViewUtils(
     wahlvorschlaege: computed(() => wahlvorschlaege.value),
 
     //actions
-    sendStatusInBearbeitung,
+    ensureStatusInBearbeitung,
     sendStatusUnterbrochen,
     saveNewStimmzettel,
     startNewEmptyStimmzettelWithStimmzettelkennung,

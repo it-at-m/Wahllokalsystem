@@ -181,7 +181,7 @@ const actions = [
     action: () => onSavedClickedAndNext(),
   },
   {
-    title: "Speichern und schließen",
+    title: "Speichern und Schließen",
     action: () => onSavedClickedAndClose(),
   },
 ];

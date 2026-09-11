@@ -19,6 +19,7 @@ import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -116,7 +117,7 @@ describe("managedStimmzettel.ts", () => {
   });
 
   describe("hasAnyValuesSet", () => {
-    it("should_returnFalse_when_stimmzettelHasNoVotesOrStreichungSet", () => {
+    it("should_returnFalse_when_stimmzettelHasNoVotesOrStreichungSetAndGueltigkeitIsValid", () => {
       const kandidatWithoutVotes = prepareManagedStimmzettelKandidat()
         .listenposition(1)
         .ordnungszahl(101)
@@ -133,11 +134,43 @@ describe("managedStimmzettel.ts", () => {
             .kandidaten([kandidatWithoutVotes])
             .build(),
         ])
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .invalideVotes(0)
+        .wahlvorstandBeschlussvorschlag([])
+        .systemBeschlussvorschlag([])
+        .beschlussfassung(null)
         .build();
 
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
 
       expect(managed.hasAnyValuesSet.value).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_stimmzettelHasNoVotesOrStreichungSetAndGueltigkeitIsNotValid", () => {
+      const kandidatWithoutVotes = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
+        .reststimmen(null)
+        .ungueltigeStimmen(null)
+        .build();
+
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidatWithoutVotes])
+            .build(),
+        ])
+        .gueltigkeit(
+          StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag
+        )
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+      expect(managed.hasAnyValuesSet.value).toStrictEqual(true);
     });
 
     it("should_returnTrue_when_stimmzettelHasOneKandidatWithStreichung", () => {

@@ -224,8 +224,6 @@ watch(
   () => isDialogVisibleModel.value,
   () => {
     if (isDialogVisibleModel.value) {
-      stimmzettelManager.startNewStimmzettel();
-      stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory();
       stimmzettelManager.setActiveStimmzettelWhenEditing(
         properties.stimmzettel
       );

@@ -69,20 +69,19 @@ export function useStimmzettelErfassungViewUtils(
   }
 
   async function saveOrUpdateStimmzettel(stimmzettelToSave: Stimmzettel) {
-    const stimmzettelExistsIndex = savedStimmzettel.value.findIndex(
+    const newStimmzettelCollectionToSave = [...savedStimmzettel.value];
+    const stimmzettelExistsIndex = newStimmzettelCollectionToSave.findIndex(
       (savedStimmzettel) =>
         savedStimmzettel.stimmzettelkennung ===
         stimmzettelToSave.stimmzettelkennung
     );
 
-    const newStimmzettelCollectionToSave =
-      stimmzettelExistsIndex === -1
-        ? [...savedStimmzettel.value, stimmzettelToSave]
-        : savedStimmzettel.value.map((savedStimmzettel, index) =>
-            index === stimmzettelExistsIndex
-              ? stimmzettelToSave
-              : savedStimmzettel
-          );
+    if (stimmzettelExistsIndex !== -1) {
+      newStimmzettelCollectionToSave[stimmzettelExistsIndex] =
+        stimmzettelToSave;
+    } else {
+      newStimmzettelCollectionToSave.push(stimmzettelToSave);
+    }
 
     await saveStimmzettel(
       wahlID,

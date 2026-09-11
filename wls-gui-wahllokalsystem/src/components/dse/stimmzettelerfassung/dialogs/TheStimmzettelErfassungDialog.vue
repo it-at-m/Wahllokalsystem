@@ -112,9 +112,12 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <base-text-button @click="onResetClicked"
-          >Zurücksetzen</base-text-button
+        <base-text-button
+          :disabled="!stimmzettelManager.hasStimmzettelBeenEdited.value"
+          @click="onResetClicked"
         >
+          Zurücksetzen
+        </base-text-button>
         <v-spacer />
         <base-text-button
           :disabled="isCancelButtonDisabled"

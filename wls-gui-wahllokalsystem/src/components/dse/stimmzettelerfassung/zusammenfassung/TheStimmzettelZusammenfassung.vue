@@ -14,8 +14,8 @@
         :wahlbezirk-id="wahlbezirkID"
         :wahl-id="wahlID"
       />
-      <base-erfasste-stimmzettel-card :stimmzettel-liste="stimmzettelListe" />
-      <base-stimmzettel-gueltige-kandidatenstimmen-anzeigen-card
+      <the-erfasste-stimmzettel-card :stimmzettel-liste="stimmzettelListe" />
+      <the-stimmzettel-gueltige-kandidatenstimmen-anzeigen-card
         :stimmzettel-liste="stimmzettelListe"
         :wahlvorschlaege="wahlvorschlaege"
       />
@@ -30,8 +30,8 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 
-import BaseErfassteStimmzettelCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseErfassteStimmzettelCard.vue";
-import BaseStimmzettelGueltigeKandidatenstimmenAnzeigenCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelGueltigeKandidatenstimmenAnzeigenCard.vue";
+import TheErfassteStimmzettelCard from "@/components/dse/stimmzettelerfassung/zusammenfassung/TheErfassteStimmzettelCard.vue";
+import TheStimmzettelGueltigeKandidatenstimmenAnzeigenCard from "@/components/dse/stimmzettelerfassung/zusammenfassung/TheStimmzettelGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 import { useUserStore } from "@/stores/userStore.ts";

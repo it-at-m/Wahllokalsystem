@@ -12,7 +12,7 @@
     </v-tabs>
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="one">
-        <base-stimmzettel-uebersicht
+        <the-stimmzettel-uebersicht
           :team-id="teamID"
           :stimmzettel-liste="savedStimmzettel"
           :stimmzettel-loading="isStimmzettelLoading"
@@ -26,7 +26,7 @@
         value="two"
         eager
       >
-        <base-stimmzettel-zusammenfassung
+        <the-stimmzettel-zusammenfassung
           :stimmzettel-liste="savedStimmzettel"
           :wahlvorschlaege="wahlvorschlaege"
         />
@@ -41,8 +41,8 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
-import BaseStimmzettelUebersicht from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelUebersicht.vue";
-import BaseStimmzettelZusammenfassung from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassung.vue";
+import TheStimmzettelUebersicht from "@/components/dse/stimmzettelerfassung/zusammenfassung/TheStimmzettelUebersicht.vue";
+import TheStimmzettelZusammenfassung from "@/components/dse/stimmzettelerfassung/zusammenfassung/TheStimmzettelZusammenfassung.vue";
 import { useStimmzettelState } from "@/composables/dse/stimmzettelerfassung/stimmzettelState.ts";
 import { useWahlvorschlaegeState } from "@/composables/dse/stimmzettelerfassung/wahlvorschlaegeState.ts";
 import { useUserStore } from "@/stores/userStore.ts";

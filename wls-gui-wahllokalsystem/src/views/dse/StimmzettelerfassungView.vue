@@ -1,8 +1,8 @@
 <template>
   <v-card>
-    <base-stimmzettelerfassung-tabs />
+    <the-stimmzettelerfassung-tabs />
   </v-card>
 </template>
 <script setup lang="ts">
-import BaseStimmzettelerfassungTabs from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelerfassungTabs.vue";
+import TheStimmzettelerfassungTabs from "@/components/dse/stimmzettelerfassung/zusammenfassung/TheStimmzettelerfassungTabs.vue";
 </script>

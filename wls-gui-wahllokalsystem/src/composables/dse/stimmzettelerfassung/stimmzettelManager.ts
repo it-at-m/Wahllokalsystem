@@ -106,9 +106,10 @@ export function useStimmzettelManager(
   }
 
   function startNewStimmzettel() {
+    stimmzettelBeforeEdit.value = null;
     managedBearbeitenDialogStimmzettel.value =
       createStimmzettelWithWahlvorschlaege(wahlvorschlaege);
-    bearbeitenDialogStimmzettelUtils.changeHistory.reset();
+    bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory();
   }
 
   /**

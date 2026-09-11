@@ -21,8 +21,8 @@ const mockDefinitions = vi.hoisted(() => ({
   handlerTwoHandleOrThrow: vi.fn(),
   mangedStimmzettel: {
     kandidatAddEinzelstimmenOrThrow: vi.fn(),
-    resetChangeHistory: vi.fn(),
   },
+  resetStimmzettelAndHistory: vi.fn(),
 }));
 
 vi.mock(
@@ -49,9 +49,7 @@ vi.mock("@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts", () => ({
     return {
       kandidatAddEinzelstimmenOrThrow:
         mockDefinitions.mangedStimmzettel.kandidatAddEinzelstimmenOrThrow,
-      changeHistory: {
-        reset: mockDefinitions.mangedStimmzettel.resetChangeHistory,
-      },
+      resetStimmzettelAndHistory: mockDefinitions.resetStimmzettelAndHistory,
       stimmzettel,
       wahlID,
     };
@@ -61,6 +59,7 @@ vi.mock("@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts", () => ({
 const { prepareWahlvorschlag, prepareKandidat } =
   useWahlvorschlaegeTestDataFactory();
 const {
+  createPersistedStimmzettel,
   preparePersistedStimmzettel,
   preparePersistedStimmzettelWahlvorschlag,
   preparePersistedStimmzettelKandidat,
@@ -171,18 +170,25 @@ describe("stimmzettelManager.ts", () => {
       const stimmzettelBeforeStartNewOne =
         unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value;
       stimmzettelBeforeStartNewOne.invalideVotes = 20;
+      unitUnderTest.stimmzettelBeforeEdit.value = createPersistedStimmzettel();
+
+      expect(unitUnderTest.stimmzettelBeforeEdit.value).not.toBeNull();
+      expect(
+        unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value
+      ).not.toBeNull();
 
       unitUnderTest.startNewStimmzettel();
 
+      expect(unitUnderTest.stimmzettelBeforeEdit.value).toBeNull();
       expect(
         unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value
       ).not.toStrictEqual(stimmzettelBeforeStartNewOne);
       expect(
         unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value
       ).not.toBe(stimmzettelBeforeStartNewOne);
-      expect(
-        mockDefinitions.mangedStimmzettel.resetChangeHistory
-      ).toHaveBeenCalledTimes(1);
+      expect(mockDefinitions.resetStimmzettelAndHistory).toHaveBeenCalledTimes(
+        1
+      );
     });
   });
 

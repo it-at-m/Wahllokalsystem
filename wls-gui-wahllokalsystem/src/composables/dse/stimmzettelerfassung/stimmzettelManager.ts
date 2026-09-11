@@ -48,6 +48,8 @@ export function useStimmzettelManager(
   ) {
     stimmzettelBeforeEdit.value = stimmzettelToSet;
 
+    managedBearbeitenDialogStimmzettel.value.gueltigkeit =
+      stimmzettelToSet.gueltigkeit;
     managedBearbeitenDialogStimmzettel.value.invalideVotes =
       stimmzettelToSet.invalideVotes ?? 0;
     managedBearbeitenDialogStimmzettel.value.beschlussfassung =

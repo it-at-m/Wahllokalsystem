@@ -83,7 +83,11 @@ function _useManagedStimmzettel(
       ) + (stimmzettel.value.invalideVotes ?? 0)
   );
 
-  const hasAnyValuesSet = computed(() => kandidatenWithValues.value.length > 0);
+  const hasAnyValuesSet = computed(
+    () =>
+      kandidatenWithValues.value.length > 0 ||
+      stimmzettel.value.gueltigkeit !== StimmzettelGueltigkeitEnum.Valid
+  );
 
   const hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen = computed(() =>
     kandidatenWithValues.value.some(

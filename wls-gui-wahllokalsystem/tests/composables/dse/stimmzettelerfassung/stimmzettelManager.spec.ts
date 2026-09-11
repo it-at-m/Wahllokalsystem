@@ -350,7 +350,7 @@ describe("stimmzettelManager.ts", () => {
       expect(hasStimmzettelBeenEdited.value).toBe(false);
     });
 
-    it("should_returnFalse_whenStimmzettelToCompareIsNull", () => {
+    it("should_returnFalse_when_stimmzettelToCompareIsNull", () => {
       const { hasStimmzettelBeenEdited, stimmzettelBeforeEdit } =
         useStimmzettelManager(
           computed(() => stimmzettelKennung),

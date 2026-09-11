@@ -65,6 +65,7 @@
     />
     <the-stimmzettel-erfassung-dialog
       v-if="activeStimmzettel"
+      :ref="STIMMZETTEL_ERFASSUNG_DIALOG_TEMPLATE_REF_NAME"
       v-model="isErfassungsDialogVisible"
       :stimmzettel="activeStimmzettel"
       :wahlvorschlaege="wahlvorschlaege"
@@ -98,6 +99,8 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
+const STIMMZETTEL_ERFASSUNG_DIALOG_TEMPLATE_REF_NAME =
+  "stimmzettelErfassenDialog";
 
 const route = useRoute();
 const userStore = useUserStore();
@@ -108,6 +111,9 @@ const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 const templateRefStimmzettelBeendenDialog = useTemplateRef<
   InstanceType<typeof TheStimmzettelerfassungBeendenDialog>
 >(STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME);
+const templateRefStimmzettelErfassenDialog = useTemplateRef<
+  InstanceType<typeof TheStimmzettelErfassungDialog>
+>(STIMMZETTEL_ERFASSUNG_DIALOG_TEMPLATE_REF_NAME);
 
 const {
   teamStatus,
@@ -146,7 +152,11 @@ async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
   await sendStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
   startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
-  isErfassungsDialogVisible.value = true;
+  if (isErfassungsDialogVisible.value) {
+    templateRefStimmzettelErfassenDialog.value?.focusCommandProcessingTextField();
+  } else {
+    isErfassungsDialogVisible.value = true;
+  }
 }
 
 function onStimmzettelkennungCanceled() {

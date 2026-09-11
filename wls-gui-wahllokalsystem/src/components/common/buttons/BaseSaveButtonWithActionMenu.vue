@@ -4,6 +4,7 @@
     density="compact"
   >
     <base-wls-button-save
+      :disabled="disabled"
       :save-text="currentAction.title"
       @click="executeSelectedAction"
     />
@@ -52,6 +53,11 @@ defineProps({
   actions: {
     type: Object as PropType<Action[]>,
     required: true,
+  },
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 

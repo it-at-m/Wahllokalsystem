@@ -71,8 +71,7 @@ const einzelstimmen = computed(() => [
 <style scoped>
 .dots {
   text-align: center;
-  //background: linear-gradient(to right, transparent, black, transparent);
   border-top: 1px black dotted;
-  height: 1px; /* Höhe der Punkte-Linie */
+  height: 1px;
 }
 </style>

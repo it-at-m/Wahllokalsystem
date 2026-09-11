@@ -224,7 +224,7 @@ function _useManagedStimmzettel(
     if (kandidat.durchgestrichen) {
       throw new ManagedStimmzettelError(`Kandidat*in ist bereits gestrichen.`);
     }
-    _streicheKandidat(kandidat);
+    _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige(kandidat);
     changeHistory.registerKandidatStreichungSet(kandidat);
   }
 
@@ -255,7 +255,9 @@ function _useManagedStimmzettel(
     if (kandidaten.every((kandidat) => kandidat.durchgestrichen)) {
       throw new ManagedStimmzettelError(`Der Bereich ist bereits gestrichen.`);
     }
-    kandidaten.forEach(_streicheKandidat);
+    kandidaten.forEach(
+      _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige
+    );
     changeHistory.registerKandidatStreichungRangeSet(kandidaten);
   }
 
@@ -367,7 +369,9 @@ function _useManagedStimmzettel(
     }
   }
 
-  function _streicheKandidat(kandidat: Kandidat) {
+  function _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige(
+    kandidat: Kandidat
+  ) {
     kandidat.durchgestrichen = true;
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
     const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;

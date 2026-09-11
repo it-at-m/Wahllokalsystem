@@ -31,6 +31,7 @@ import { computed } from "vue";
 
 import BaseCardKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/MBW/stapelBC/BaseCardKandidatenstimmenAnzeigen.vue";
 import { useStimmzettelGueltigeKandidatenstimmenUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelGueltigeKandidatenstimmenUtils.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
   stimmzettelListe: Stimmzettel[];
@@ -39,7 +40,12 @@ const props = defineProps<{
 
 const { wahlvorschlaegeWithKandidatenErgebnissen } =
   useStimmzettelGueltigeKandidatenstimmenUtils(
-    computed(() => props.stimmzettelListe),
+    computed(() =>
+      props.stimmzettelListe.filter(
+        (stimmzettel) =>
+          stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Valid
+      )
+    ),
     computed(() => props.wahlvorschlaege)
   );
 </script>

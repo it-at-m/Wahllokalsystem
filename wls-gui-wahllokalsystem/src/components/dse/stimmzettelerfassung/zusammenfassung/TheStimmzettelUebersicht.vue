@@ -100,10 +100,7 @@ const props = defineProps<{
   stimmzettelLoading: boolean;
   hasStimmzettel: boolean;
   wahlvorschlaege: Wahlvorschlag[];
-}>();
-
-const emit = defineEmits<{
-  save: [stimmzettel: Stimmzettel];
+  saveStimmzettel: (stimmzettel: Stimmzettel) => Promise<void>;
 }>();
 
 const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
@@ -176,13 +173,13 @@ async function onStimmzettelErfassungCanceled() {
 async function onStimmzettelErfassungConfirmed(
   confirmedStimmzettel: Stimmzettel
 ) {
-  emit("save", confirmedStimmzettel);
+  await props.saveStimmzettel(confirmedStimmzettel);
   isErfassungsDialogVisible.value = false;
 }
 async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
   confirmedStimmzettel: Stimmzettel
 ) {
-  emit("save", confirmedStimmzettel);
+  await props.saveStimmzettel(confirmedStimmzettel);
   isKennungsDialogVisible.value = true;
 }
 

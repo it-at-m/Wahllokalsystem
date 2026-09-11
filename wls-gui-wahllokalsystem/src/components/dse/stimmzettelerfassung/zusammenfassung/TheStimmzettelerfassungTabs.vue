@@ -18,8 +18,8 @@
           :stimmzettel-loading="isStimmzettelLoading"
           :wahlvorschlaege="wahlvorschlaege"
           :has-stimmzettel="hasStimmzettel"
+          :save-stimmzettel="saveNewStimmzettel"
           class="mt-3"
-          @save="saveStimmzettel"
         />
       </v-tabs-window-item>
       <v-tabs-window-item
@@ -36,8 +36,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -64,8 +62,4 @@ const {
 const { wahlvorschlaege } = useWahlvorschlaegeState(wahlID, wahlbezirkID);
 
 const tab = ref("one");
-
-async function saveStimmzettel(stimmzettel: Stimmzettel) {
-  await saveNewStimmzettel(stimmzettel);
-}
 </script>

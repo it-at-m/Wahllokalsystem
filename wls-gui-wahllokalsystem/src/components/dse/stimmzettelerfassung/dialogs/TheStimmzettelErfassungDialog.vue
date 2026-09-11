@@ -225,7 +225,7 @@ watch(
   () => {
     if (isDialogVisibleModel.value) {
       stimmzettelManager.startNewStimmzettel();
-      stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel();
+      stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory();
       stimmzettelManager.setActiveStimmzettelWhenEditing(
         properties.stimmzettel
       );
@@ -318,11 +318,11 @@ function onResetClicked() {
     stimmzettelManager.hasStimmzettelBeenEdited.value &&
     stimmzettelManager.stimmzettelBeforeEdit.value !== null
   ) {
-    stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel(
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
       stimmzettelManager.stimmzettelBeforeEdit.value
     );
   } else {
-    stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel();
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory();
   }
 }
 </script>

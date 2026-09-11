@@ -14,6 +14,7 @@ import { useManagedStimmzettelReststimmeUtils } from "@/composables/dse/stimmzet
 import { useManagedStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelUngueltigeStimmeUtils.ts";
 import { useManagedStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelWahlvorschlagUtils.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
+import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
@@ -46,6 +47,7 @@ function _useManagedStimmzettel(
     useManagedStimmzettelEinzelstimmeUtils();
   const { addInvalidVotesToKandidat, removeInvalidVotesFromKandidat } =
     useManagedStimmzettelUngueltigeStimmeUtils();
+  const { resetStimmzettel } = useStimmzettelMapper();
 
   const { kopfdaten } = storeToRefs(useKopfdatenStore());
 
@@ -134,53 +136,13 @@ function _useManagedStimmzettel(
     }
   );
 
-  function resetStimmzettel(stimmzettelBeforeEdit?: PersistedStimmzettel) {
+  function resetStimmzettelAndHistory(
+    stimmzettelBeforeEdit?: PersistedStimmzettel
+  ) {
     changeHistory.reset();
-    if (stimmzettelBeforeEdit) {
-      stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
-        const beforeEditWahlvorschlag =
-          stimmzettelBeforeEdit.wahlvorschlaege.find(
-            (before) => wahlvorschlag.wahlvorschlagID == before.wahlvorschlagID
-          );
-        wahlvorschlag.selected = beforeEditWahlvorschlag?.selected ?? false;
-        wahlvorschlag.kandidaten.map((kandidat) => {
-          const beforeEditKandidat = beforeEditWahlvorschlag?.kandidaten.find(
-            (before) =>
-              kandidat.kandidatId === before.kandidatId &&
-              kandidat.nennung === before.nennung
-          );
-          kandidat.einzelstimmen = beforeEditKandidat?.votesByVoter ?? null;
-          kandidat.ungueltigeStimmen = beforeEditKandidat?.invalidVotes ?? null;
-          kandidat.reststimmen =
-            beforeEditKandidat?.votesByWahlvorschlag ?? null;
-          kandidat.durchgestrichen = beforeEditKandidat?.isDiscarded ?? false;
-        });
-      });
-      stimmzettel.value.gueltigkeit = stimmzettelBeforeEdit.gueltigkeit;
-      stimmzettel.value.wahlvorstandBeschlussvorschlag =
-        stimmzettelBeforeEdit.wahlvorstandBeschlussvorschlag;
-      stimmzettel.value.systemBeschlussvorschlag =
-        stimmzettelBeforeEdit.systemBeschlussvorschlag;
-      stimmzettel.value.beschlussfassung =
-        stimmzettelBeforeEdit.beschlussfassung;
-      stimmzettel.value.invalideVotes = stimmzettelBeforeEdit.invalideVotes;
-    } else {
-      stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
-        wahlvorschlag.selected = false;
-        wahlvorschlag.kandidaten.map((kandidat) => {
-          kandidat.einzelstimmen = null;
-          kandidat.ungueltigeStimmen = null;
-          kandidat.reststimmen = null;
-          kandidat.durchgestrichen = false;
-        });
-      });
-      stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
-      stimmzettel.value.wahlvorstandBeschlussvorschlag = [];
-      stimmzettel.value.systemBeschlussvorschlag = [];
-      stimmzettel.value.beschlussfassung = null;
-      stimmzettel.value.invalideVotes = 0;
-      resetReststimmeError();
-    }
+    const resetResult = resetStimmzettel(stimmzettel, stimmzettelBeforeEdit);
+    stimmzettel.value = resetResult.value;
+    resetReststimmeError();
   }
 
   /**
@@ -530,7 +492,7 @@ function _useManagedStimmzettel(
     hasAnyValuesSet,
     hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen,
     hasSystemErrorAnyKandidatWithInvalidVotes,
-    resetStimmzettel,
+    resetStimmzettelAndHistory,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,
     kandidatAddUngueltigeStimmenOrThrow,

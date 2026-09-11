@@ -42,6 +42,8 @@ const mockDefinitions = vi.hoisted(() => ({
     refreshWahlvorschlaegeVotes: vi.fn(),
     selectWahlvorschlag: vi.fn(),
   },
+  resetStimmzettel: vi.fn(),
+  resetError: vi.fn(),
 }));
 
 vi.mock(
@@ -65,12 +67,25 @@ vi.mock(
       hasSystemErrorToManyListenKreuze: ref(false),
       refreshWahlvorschlaegeVotes:
         mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes,
-      resetError: vi.fn(),
+      resetError: mockDefinitions.resetError,
       selectWahlvorschlag: mockDefinitions.reststimmeUtils.selectWahlvorschlag,
       deselectWahlvorschlag:
         mockDefinitions.reststimmeUtils.deselectWahlvorschlag,
     }),
   })
+);
+
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useStimmzettelMapper: () => ({
+        ...original.useStimmzettelMapper(),
+        resetStimmzettel: mockDefinitions.resetStimmzettel,
+      }),
+    };
+  }
 );
 
 describe("managedStimmzettel.ts", () => {
@@ -81,6 +96,7 @@ describe("managedStimmzettel.ts", () => {
     prepareManagedStimmzettelKandidat,
   } = useManagedStimmzettelTestDataFactory();
   const {
+    preparePersistedStimmzettelKandidat,
     prepareStimmzettel,
     prepareStimmzettelWahlvorschlag,
     prepareStimmzettelKandidatOfWahlvorschlag,
@@ -1129,7 +1145,7 @@ describe("managedStimmzettel.ts", () => {
     });
   });
 
-  describe("resetStimmzettel", () => {
+  describe("resetStimmzettelAndHistory", () => {
     const initialEmptyDseWahlvorschlag = prepareStimmzettelWahlvorschlag()
       .wahlvorschlagID("1")
       .ordnungszahl(1)
@@ -1165,12 +1181,37 @@ describe("managedStimmzettel.ts", () => {
       initialEmptyDseKandidat,
     ];
 
-    it("should_resetStimmzettelToEmpty_when_calledWithoutReference", () => {
+    it("should_resetStimmzettelChangeHistoryAndReststimmenError_when_CalledWithReference", () => {
       const managedStimmzettel = useManagedStimmzettel(
         // structuredClone creates deep copy, so mutations are only applied to copy,
         // not to "initialEmptyDseStimzettel"
         ref(structuredClone(initialEmptyDseStimzettel)),
         mockedWahlId
+      );
+
+      const stimmzettelToResetTo = preparePersistedStimmzettel()
+        .invalideVotes(3)
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .selected(true)
+            .kandidaten([
+              preparePersistedStimmzettelKandidat()
+                .nennung(1)
+                .votesByVoter(5)
+                .invalidVotes(1)
+                .votesByWahlvorschlag(2)
+                .isDiscarded(true)
+                .build(),
+            ])
+            .build(),
+        ])
+        .build();
+
+      const resetResultRefWithReference = ref(
+        structuredClone(initialEmptyDseStimzettel)
+      );
+      mockDefinitions.resetStimmzettel.mockReturnValue(
+        resetResultRefWithReference
       );
 
       expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
@@ -1203,33 +1244,16 @@ describe("managedStimmzettel.ts", () => {
         initialEmptyDseStimzettel
       );
 
-      managedStimmzettel.resetStimmzettel();
+      managedStimmzettel.resetStimmzettelAndHistory(stimmzettelToResetTo);
 
       expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
         initialEmptyDseStimzettel
       );
       expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
-
-      const stimmzettelAfterReset = managedStimmzettel.stimmzettel.value;
-      expect(
-        stimmzettelAfterReset.wahlvorstandBeschlussvorschlag
-      ).toStrictEqual([]);
-      expect(stimmzettelAfterReset.systemBeschlussvorschlag).toStrictEqual([]);
-      expect(stimmzettelAfterReset.gueltigkeit).toStrictEqual("VALID");
-      expect(stimmzettelAfterReset.beschlussfassung).toBeNull();
-      expect(stimmzettelAfterReset.invalideVotes).toBe(0);
-      stimmzettelAfterReset.wahlvorschlaege.forEach((wahlvorschlag) => {
-        expect(wahlvorschlag.selected).toBe(false);
-        wahlvorschlag.kandidaten.forEach((k) => {
-          expect(k.einzelstimmen).toBeNull();
-          expect(k.ungueltigeStimmen).toBeNull();
-          expect(k.reststimmen).toBeNull();
-          expect(k.durchgestrichen).toBe(false);
-        });
-      });
+      expect(mockDefinitions.resetError).toHaveBeenCalledTimes(1);
     });
 
-    it("should_resetStimmzettelToReference_when_calledWithReference", () => {
+    it("should_resetStimmzettelChangeHistoryAndReststimmenError_when_calledWithoutReference", () => {
       const managedStimmzettel = useManagedStimmzettel(
         // structuredClone creates deep copy, so mutations are only applied to copy,
         // not to "initialEmptyDseStimzettel"
@@ -1237,77 +1261,36 @@ describe("managedStimmzettel.ts", () => {
         mockedWahlId
       );
 
-      const persistedKandidat1 = {
-        kandidatId: initialEmptyDseKandidat.kandidatId,
-        nennung: initialEmptyDseKandidat.nennung,
-        isDiscarded: true,
-        votesByVoter: 5,
-        invalidVotes: 2,
-        votesByWahlvorschlag: 1,
-      };
-      const stimmzettelToResetTo = preparePersistedStimmzettel()
-        .stimmzettelkennung(1)
-        .teamID("team-1")
-        .gueltigkeit("INVALID")
-        .invalideVotes(0)
-        .wahlvorschlaege([
-          preparePersistedStimmzettelWahlvorschlag()
-            .wahlvorschlagID(initialEmptyDseWahlvorschlag.wahlvorschlagID)
-            .selected(true)
-            .kandidaten([persistedKandidat1])
-            .build(),
-        ])
-        .wahlvorstandBeschlussvorschlag([
-          {
-            text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
-          },
-        ])
-        .systemBeschlussvorschlag([
-          {
-            reason:
-              SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
-          },
-        ])
-        .beschlussfassung(null)
-        .build();
-
       expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
         initialEmptyDseStimzettel
       );
 
-      managedStimmzettel.resetStimmzettel(stimmzettelToResetTo);
+      managedStimmzettel.kandidatAddStreichungOrThrow(
+        initialEmptyDseKandidat.ordnungszahl
+      );
+      managedStimmzettel.kandidatAddEinzelstimmenOrThrow(
+        initialEmptyDseKandidat.ordnungszahl,
+        2
+      );
+      managedStimmzettel.wahlvorschlagAddVotesOrThrow(
+        initialEmptyDseWahlvorschlag.ordnungszahl
+      );
 
       expect(managedStimmzettel.stimmzettel.value).not.toStrictEqual(
         initialEmptyDseStimzettel
       );
-      expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
 
-      const stimmzettelAfterReset = managedStimmzettel.stimmzettel.value;
-      expect(
-        stimmzettelAfterReset.wahlvorstandBeschlussvorschlag
-      ).toStrictEqual([
-        {
-          text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
-        },
-      ]);
-      expect(stimmzettelAfterReset.systemBeschlussvorschlag).toStrictEqual([
-        {
-          reason:
-            SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
-        },
-      ]);
-      expect(stimmzettelAfterReset.gueltigkeit).toStrictEqual("INVALID");
-      expect(stimmzettelAfterReset.beschlussfassung).toBeNull();
-      expect(stimmzettelAfterReset.invalideVotes).toBe(0);
-      stimmzettelAfterReset.wahlvorschlaege.forEach((wahlvorschlag) => {
-        expect(wahlvorschlag.selected).toBe(true);
-        wahlvorschlag.kandidaten.forEach((k) => {
-          expect(k.einzelstimmen).toBe(5);
-          expect(k.ungueltigeStimmen).toBe(2);
-          expect(k.reststimmen).toBe(1);
-          expect(k.durchgestrichen).toBe(true);
-        });
-      });
+      mockDefinitions.resetStimmzettel.mockReturnValue(
+        ref(structuredClone(initialEmptyDseStimzettel))
+      );
+
+      managedStimmzettel.resetStimmzettelAndHistory();
+
+      expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+      expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
+      expect(mockDefinitions.resetError).toHaveBeenCalledTimes(1);
     });
   });
 });

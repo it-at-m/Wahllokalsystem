@@ -2,6 +2,7 @@
   <v-form>
     <v-text-field
       :model-value="commandString"
+      :disabled="disabled"
       :error-messages="errorMessage"
       label="Kurzbefehl"
       @update:model-value="onModelValueChanged"
@@ -20,6 +21,11 @@ import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.t
 import { UnsupportedCommandError } from "@/types/dse/error/UnsupportedCommandError.ts";
 
 const props = defineProps({
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   stimmzettelManager: {
     type: Object as PropType<StimmzettelManager>,
     required: true,

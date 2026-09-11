@@ -57,6 +57,7 @@
           style="min-height: 0; min-width: 0"
         >
           <the-stimmzettel-command-processing-text-field
+            :ref="COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME"
             class="flex-0-0"
             :stimmzettel-manager="stimmzettelManager"
             :disabled="isCommandInputFieldDisabled"
@@ -145,7 +146,7 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, useTemplateRef, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseSaveButtonWithActionMenu from "@/components/common/buttons/BaseSaveButtonWithActionMenu.vue";
@@ -183,6 +184,8 @@ const emit = defineEmits<{
   confirmNext: [stimmzettel: Stimmzettel];
 }>();
 
+defineExpose({ focusCommandProcessingTextField });
+
 const actions = [
   {
     title: SAVE_CONTINUE,
@@ -194,17 +197,13 @@ const actions = [
   },
 ];
 
-const currentAction = ref(actions[0]);
+const COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME =
+  "commandProcessingTextField";
 
-watch(
-  () => isDialogVisibleModel.value,
-  () => {
-    if (isDialogVisibleModel.value) {
-      stimmzettelManager.startNewStimmzettel();
-      currentAction.value = actions[0];
-    }
-  }
-);
+const currentAction = ref(actions[0]);
+const commandProcessingTextField = useTemplateRef<
+  InstanceType<typeof TheStimmzettelCommandProcessingTextField>
+>(COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME);
 
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
@@ -255,7 +254,26 @@ const stimmzettelGueltigkeit = computed(
       .gueltigkeit
 );
 
+watch(
+  () => isDialogVisibleModel.value,
+  (isVisible) => {
+    if (isVisible) {
+      stimmzettelManager.startNewStimmzettel();
+      currentAction.value = actions[0];
+      void focusCommandProcessingTextField();
+    }
+  },
+  {
+    immediate: true,
+  }
+);
+
 const isCancelConfirmationDialogVisible = ref(false);
+
+async function focusCommandProcessingTextField() {
+  await nextTick();
+  commandProcessingTextField.value?.focus();
+}
 
 function onCancelClicked() {
   isCancelConfirmationDialogVisible.value = true;
@@ -263,6 +281,7 @@ function onCancelClicked() {
 
 function onCancelConfirmationDialogCancelled() {
   isCancelConfirmationDialogVisible.value = false;
+  focusCommandProcessingTextField();
 }
 
 function onCancelConfirmationDialogConfirmed() {
@@ -277,6 +296,7 @@ function onSavedClickedAndClose() {
 function onSavedClickedAndNext() {
   emit("confirmNext", stimmzettelManager.getStimmzettelSnapshot());
   stimmzettelManager.startNewStimmzettel();
+  void focusCommandProcessingTextField();
 }
 
 function onResetClicked() {

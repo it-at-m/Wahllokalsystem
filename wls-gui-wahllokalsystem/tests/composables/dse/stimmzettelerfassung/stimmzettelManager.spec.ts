@@ -300,7 +300,7 @@ describe("stimmzettelManager.ts", () => {
         .beschlussfassung(null)
         .build();
 
-    it("should_returnTrue_whenStimmzettelToCompareHaveDifferentValues", () => {
+    it("should_returnTrue_when_stimmzettelToCompareHaveDifferentValues", () => {
       const {
         bearbeitenDialogStimmzettelUtils,
         setActiveStimmzettelWhenEditing,

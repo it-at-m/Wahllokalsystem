@@ -3,7 +3,7 @@ import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
 
-import { useStimmzettelGueltigeKandidatenstimmenUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelGueltigeKandidatenstimmenUtils.ts";
+import { useStimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils.ts";
 
 const { prepareWahlvorschlag, prepareKandidat } =
   useWahlvorschlaegeTestDataFactory();
@@ -94,7 +94,7 @@ describe("stimmzettelGueltigeKandidatenstimmenUtils", () => {
     const wahlvorschlaege = [wv1, wv2];
 
     const { wahlvorschlaegeWithKandidatenErgebnissen } =
-      useStimmzettelGueltigeKandidatenstimmenUtils(
+      useStimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils(
         ref(stimmzettelListe),
         ref(wahlvorschlaege)
       );
@@ -188,7 +188,7 @@ describe("stimmzettelGueltigeKandidatenstimmenUtils", () => {
       .build();
 
     const { wahlvorschlaegeWithKandidatenErgebnissen } =
-      useStimmzettelGueltigeKandidatenstimmenUtils(
+      useStimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils(
         ref([stimmzettel]),
         ref([wv])
       );

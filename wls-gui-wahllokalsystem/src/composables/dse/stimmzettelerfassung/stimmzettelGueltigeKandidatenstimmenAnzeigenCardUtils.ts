@@ -5,7 +5,7 @@ import type { Ref } from "vue";
 
 import { computed } from "vue";
 
-export function useStimmzettelGueltigeKandidatenstimmenUtils(
+export function useStimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils(
   stimmzettelListe: Ref<Stimmzettel[]>,
   wahlvorschlaege: Ref<Wahlvorschlag[]>
 ) {

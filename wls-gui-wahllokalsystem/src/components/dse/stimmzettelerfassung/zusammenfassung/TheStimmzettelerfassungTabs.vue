@@ -15,7 +15,7 @@
         <the-stimmzettel-uebersicht
           :team-id="teamID"
           :stimmzettel-liste="savedStimmzettel"
-          :stimmzettel-loading="isStimmzettelLoading"
+          :is-stimmzettel-loading="isStimmzettelLoading"
           :wahlvorschlaege="wahlvorschlaege"
           :has-stimmzettel="hasStimmzettel"
           :save-stimmzettel="saveNewStimmzettel"

@@ -3,7 +3,7 @@
     <base-stimmzettel-uebersicht-table
       :team-id="teamId"
       :stimmzettel-liste="stimmzettelListe"
-      :stimmzettel-loading="stimmzettelLoading"
+      :stimmzettel-loading="isStimmzettelLoading"
       class="mt-3"
     />
     <v-card-actions v-if="!isStatusLoading">
@@ -98,7 +98,7 @@ import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfas
 const props = defineProps<{
   teamId: string;
   stimmzettelListe: Stimmzettel[];
-  stimmzettelLoading: boolean;
+  isStimmzettelLoading: boolean;
   hasStimmzettel: boolean;
   wahlvorschlaege: Wahlvorschlag[];
   saveStimmzettel: (stimmzettel: Stimmzettel) => Promise<void>;

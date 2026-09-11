@@ -159,6 +159,8 @@ function _useManagedStimmzettel(
       stimmzettel.value.gueltigkeit = stimmzettelBeforeEdit.gueltigkeit;
       stimmzettel.value.wahlvorstandBeschlussvorschlag =
         stimmzettelBeforeEdit.wahlvorstandBeschlussvorschlag;
+      stimmzettel.value.systemBeschlussvorschlag =
+        stimmzettelBeforeEdit.systemBeschlussvorschlag;
       stimmzettel.value.beschlussfassung =
         stimmzettelBeforeEdit.beschlussfassung;
       stimmzettel.value.invalideVotes = stimmzettelBeforeEdit.invalideVotes;
@@ -174,6 +176,7 @@ function _useManagedStimmzettel(
       });
       stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
       stimmzettel.value.wahlvorstandBeschlussvorschlag = [];
+      stimmzettel.value.systemBeschlussvorschlag = [];
       stimmzettel.value.beschlussfassung = null;
       stimmzettel.value.invalideVotes = 0;
       resetReststimmeError();

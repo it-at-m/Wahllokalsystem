@@ -110,8 +110,8 @@ export default createVuetify({
       stimmzettelCommandVoteRange: mdiAccountMultiplePlusOutline,
       asc: mdiSortAscending,
       desc: mdiSortDescending,
-      prev: mdiArrowLeftDropCircle,
-      next: mdiArrowRightDropCircle,
+      slideLeft: mdiArrowLeftDropCircle,
+      slideRight: mdiArrowRightDropCircle,
     },
     sets: {
       mdi,

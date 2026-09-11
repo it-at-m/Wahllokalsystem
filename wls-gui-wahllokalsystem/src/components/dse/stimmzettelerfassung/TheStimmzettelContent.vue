@@ -9,7 +9,7 @@
     <template #prev="{ prev }">
       <v-icon
         color="primary"
-        icon="$prev"
+        icon="$slideLeft"
         size="x-large"
         variant="outlined"
         @click="prev()"
@@ -18,7 +18,7 @@
     <template #next="{ next }">
       <v-icon
         color="primary"
-        icon="$next"
+        icon="$slideRight"
         size="x-large"
         variant="outlined"
         @click="next()"

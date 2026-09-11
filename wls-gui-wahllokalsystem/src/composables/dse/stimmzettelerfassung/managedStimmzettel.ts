@@ -477,6 +477,12 @@ function _useManagedStimmzettel(
       stimmzettel.value.gueltigkeit =
         StimmzettelGueltigkeitEnum.BeschlussAusstehend;
     } else {
+      if (
+        stimmzettel.value.gueltigkeit ===
+          StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag ||
+        stimmzettel.value.gueltigkeit === StimmzettelGueltigkeitEnum.Leer
+      )
+        return;
       stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
     }
   }

@@ -15,14 +15,16 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  hasAnyKennzeichen: vi.fn(),
+  hasAnyKennzeichenOrReststimme: vi.fn(),
 }));
 
 vi.mock(
   import("@/composables/dse/stimmzettelerfassung/kandidatTools.ts"),
   () => ({
     useKandidatTools: () => ({
-      hasAnyKennzeichen: mockDefinitions.hasAnyKennzeichen,
+      hasAnyKennzeichenOrReststimme:
+        mockDefinitions.hasAnyKennzeichenOrReststimme,
+      hasAnyKennzeichen: vi.fn(),
       getTotalEinzelAndUngueltigeStimmenOfKandidatenWithSameId: vi.fn(),
       getEinzelstimmenOrZero: vi.fn(),
       getTotalEinzelstimmenOfKandidatenWithSameId: vi.fn(),
@@ -440,7 +442,7 @@ describe("stimmzettelMapper.ts", () => {
       const teamID = generateRandomString(10);
       const dseStimmzettel = createStimmzettel();
 
-      mockDefinitions.hasAnyKennzeichen.mockReturnValue(true);
+      mockDefinitions.hasAnyKennzeichenOrReststimme.mockReturnValue(true);
 
       const result = toPersistedStimmzettel(
         dseStimmzettel,
@@ -489,7 +491,7 @@ describe("stimmzettelMapper.ts", () => {
         ])
         .build();
 
-      mockDefinitions.hasAnyKennzeichen.mockReturnValue(false);
+      mockDefinitions.hasAnyKennzeichenOrReststimme.mockReturnValue(false);
 
       expect(
         dseStimmzettel.wahlvorschlaege[0].kandidaten.length > 0
@@ -514,7 +516,7 @@ describe("stimmzettelMapper.ts", () => {
         ])
         .build();
 
-      mockDefinitions.hasAnyKennzeichen.mockReturnValue(false);
+      mockDefinitions.hasAnyKennzeichenOrReststimme.mockReturnValue(false);
 
       expect(
         dseStimmzettel.wahlvorschlaege[0].kandidaten.length > 0
@@ -552,7 +554,7 @@ describe("stimmzettelMapper.ts", () => {
         .wahlvorschlaege([wahlvorschlag])
         .build();
 
-      mockDefinitions.hasAnyKennzeichen.mockImplementation(
+      mockDefinitions.hasAnyKennzeichenOrReststimme.mockImplementation(
         (kandidat: Kandidat) =>
           kandidat.kandidatId === kandidatWithKennzeichen.kandidatId
       );

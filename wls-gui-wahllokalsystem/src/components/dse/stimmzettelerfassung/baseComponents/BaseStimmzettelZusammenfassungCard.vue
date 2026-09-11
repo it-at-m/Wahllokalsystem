@@ -30,9 +30,7 @@
         :thickness="2"
       />
       <base-stimmzettel-gueltigkeit-icon :gueltigkeit="gueltigkeit" />
-      <span class="ml-2 font-weight-bold">{{
-        gueltigkeitTextMap[gueltigkeit]
-      }}</span>
+      <span class="ml-2 font-weight-bold">{{ toText(gueltigkeit) }}</span>
     </v-card-text>
   </v-card>
 </template>
@@ -43,6 +41,7 @@ import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschl
 import { computed } from "vue";
 
 import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
+import { useStimmzettelGueltigkeitEnumTools } from "@/composables/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnumTools.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
@@ -53,6 +52,8 @@ const props = defineProps<{
   streichungen: number;
   gueltigkeit: StimmzettelGueltigkeitEnum;
 }>();
+
+const { toText } = useStimmzettelGueltigkeitEnumTools();
 
 const gesamtstimmen = computed(
   () => props.ungueltigestimmen + props.direktstimmen + props.reststimmen
@@ -65,14 +66,4 @@ const einzelstimmen = computed(() => [
   { label: "Reststimmen", value: props.reststimmen },
   { label: "Streichungen", value: props.streichungen },
 ]);
-
-const gueltigkeitTextMap = {
-  [StimmzettelGueltigkeitEnum.Valid]: "Stimmzettel ist gültig",
-  [StimmzettelGueltigkeitEnum.Invalid]: "Stimmzettel ist ungültig",
-  [StimmzettelGueltigkeitEnum.BeschlussAusstehend]:
-    "Stimmzettel ist für Beschluss vorgemerkt",
-  [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]:
-    "Stimmzettel ist ungültig",
-  [StimmzettelGueltigkeitEnum.Leer]: "Stimmzettel ist ungültig",
-};
 </script>

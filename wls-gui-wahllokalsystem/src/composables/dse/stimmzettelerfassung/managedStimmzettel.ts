@@ -1,9 +1,11 @@
+import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { StimmenSummary } from "@/types/dse/stimmzettelerfassung/StimmenSummary.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Ref } from "vue";
 
-import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import { computed, watch, watchEffect } from "vue";
 
 import { useManagedStimmzettelEinzelstimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelEinzelstimmeUtils.ts";
 import { useManagedStimmzettelKandidatUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelKandidatUtils.ts";
@@ -11,7 +13,10 @@ import { useManagedStimmzettelReststimmeUtils } from "@/composables/dse/stimmzet
 import { useManagedStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelUngueltigeStimmeUtils.ts";
 import { useManagedStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelWahlvorschlagUtils.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
+import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
+import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 /**
  * Check UI/UX Adr to see the rules:
@@ -41,11 +46,62 @@ function _useManagedStimmzettel(
   const { addInvalidVotesToKandidat, removeInvalidVotesFromKandidat } =
     useManagedStimmzettelUngueltigeStimmeUtils();
 
-  const hasAnyValuesSet = computed(() => kandidatenWithValues.value.length > 0);
+  const { kopfdaten } = storeToRefs(useKopfdatenStore());
+
+  const maximalErlaubteStimmenProWaehler = computed(
+    () =>
+      kopfdaten.value.find((kd) => kd.wahlID === wahlID)
+        ?.maximalErlaubteStimmenProWaehler ?? 0
+  );
+
+  const {
+    hasSystemErrorToManyListenKreuze,
+    refreshWahlvorschlaegeVotes,
+    selectWahlvorschlag,
+    deselectWahlvorschlag,
+    resetError: resetReststimmeError,
+  } = useManagedStimmzettelReststimmeUtils(
+    stimmzettel,
+    maximalErlaubteStimmenProWaehler,
+    maxEinzelstimmen
+  );
 
   const kandidatenWithValues = computed(() =>
     kandidatenOfStimmzettel.value.filter(_hasKandidatAnyStimmeOrStreichung)
   );
+
+  const countTotalVotes = computed(
+    () =>
+      kandidatenWithValues.value.reduce(
+        (total, kandidat) =>
+          total +
+          (kandidat.einzelstimmen ?? 0) +
+          (kandidat.ungueltigeStimmen ?? 0) +
+          (kandidat.reststimmen ?? 0),
+        0
+      ) + (stimmzettel.value.invalideVotes ?? 0)
+  );
+
+  const hasAnyValuesSet = computed(() => kandidatenWithValues.value.length > 0);
+
+  const hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen = computed(() =>
+    kandidatenWithValues.value.some(
+      (kandidat) => (kandidat.einzelstimmen ?? 0) > maxEinzelstimmen
+    )
+  );
+  const hasSystemErrorAnyKandidatWithInvalidVotes = computed(() =>
+    kandidatenWithValues.value.some(
+      (kandidat) => (kandidat.ungueltigeStimmen ?? 0) > 0
+    )
+  );
+
+  watchEffect(() => {
+    _updateSystemBeschlussgruendeBasedOnDetectedErrors();
+  });
+
+  watchEffect(() => {
+    _updateGueltigkeitWhenBeschlussvorschlaegeChanged();
+  });
 
   const stimmenSummary = computed(() => {
     const summary: StimmenSummary = {
@@ -66,12 +122,12 @@ function _useManagedStimmzettel(
     )
   );
 
-  const {
-    selectWahlvorschlag,
-    deselectWahlvorschlag,
-    updateReststimmenWhenVotesAdded,
-    updateReststimmenWhenVotesRemoved,
-  } = useManagedStimmzettelReststimmeUtils(wahlID, stimmenSummary, stimmzettel);
+  watch(
+    () => stimmzettel.value.invalideVotes,
+    () => {
+      refreshWahlvorschlaegeVotes();
+    }
+  );
 
   function resetStimmzettel() {
     changeHistory.reset();
@@ -84,6 +140,10 @@ function _useManagedStimmzettel(
         kandidat.durchgestrichen = false;
       });
     });
+    stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
+    stimmzettel.value.invalideVotes = 0;
+    stimmzettel.value.wahlvorstandBeschlussvorschlag = [];
+    resetReststimmeError();
   }
 
   /**
@@ -108,8 +168,8 @@ function _useManagedStimmzettel(
       );
     }
     addVotesToKandidat(kandidat, votesToAdd);
-    updateReststimmenWhenVotesAdded();
     changeHistory.registerKandidatEinzelstimmenAdded(kandidat, votesToAdd);
+    refreshWahlvorschlaegeVotes();
   }
 
   function kandidatRemoveEinzelstimmenOrThrow(
@@ -134,8 +194,8 @@ function _useManagedStimmzettel(
       );
     }
     removeVotesFromKandidat(kandidat, votesToRemove);
-    updateReststimmenWhenVotesRemoved();
     changeHistory.registerKandidatEinzelstimmenRemoved(kandidat, votesToRemove);
+    refreshWahlvorschlaegeVotes();
   }
 
   function kandidatAddUngueltigeStimmenOrThrow(
@@ -157,6 +217,7 @@ function _useManagedStimmzettel(
       kandidat,
       invalidVotesToAdd
     );
+    refreshWahlvorschlaegeVotes();
   }
 
   function kandidatRemoveUngueltigeStimmenOrThrow(
@@ -186,6 +247,7 @@ function _useManagedStimmzettel(
       kandidat,
       invalidVotesToRemove
     );
+    refreshWahlvorschlaegeVotes();
   }
 
   function kandidatenAddStimmenInRangeOrThrow(
@@ -207,7 +269,7 @@ function _useManagedStimmzettel(
       );
     }
     kandidaten.map((kandidat) => addVotesToKandidat(kandidat, votesToAdd));
-    updateReststimmenWhenVotesAdded();
+    refreshWahlvorschlaegeVotes();
     changeHistory.registerKandidatEinzelstimmenRangeAdded(
       kandidaten,
       votesToAdd
@@ -225,6 +287,7 @@ function _useManagedStimmzettel(
       throw new ManagedStimmzettelError(`Kandidat*in ist bereits gestrichen.`);
     }
     _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige(kandidat);
+    refreshWahlvorschlaegeVotes();
     changeHistory.registerKandidatStreichungSet(kandidat);
   }
 
@@ -241,6 +304,7 @@ function _useManagedStimmzettel(
       );
     }
     kandidat.durchgestrichen = false;
+    refreshWahlvorschlaegeVotes();
     changeHistory.registerKandidatStreichungUnset(kandidat);
   }
 
@@ -258,6 +322,7 @@ function _useManagedStimmzettel(
     kandidaten.forEach(
       _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige
     );
+    refreshWahlvorschlaegeVotes();
     changeHistory.registerKandidatStreichungRangeSet(kandidaten);
   }
 
@@ -275,6 +340,7 @@ function _useManagedStimmzettel(
       );
     }
     kandidaten.map((kandidat) => (kandidat.durchgestrichen = false));
+    refreshWahlvorschlaegeVotes();
     changeHistory.registerKandidatStreichungRangeUnset(kandidaten);
   }
 
@@ -293,6 +359,7 @@ function _useManagedStimmzettel(
       );
     }
     selectWahlvorschlag(wahlvorschlag);
+    refreshWahlvorschlaegeVotes();
     changeHistory.registerWahlvorschlagSelected(wahlvorschlag);
   }
 
@@ -309,7 +376,7 @@ function _useManagedStimmzettel(
       throw new ManagedStimmzettelError(`Wahlvorschlag ist bereits abgewählt.`);
     }
     deselectWahlvorschlag(wahlvorschlag);
-    updateReststimmenWhenVotesRemoved();
+    refreshWahlvorschlaegeVotes();
     changeHistory.registerWahlvorschlagDeselected(wahlvorschlag);
   }
 
@@ -380,9 +447,61 @@ function _useManagedStimmzettel(
       currentUngueltigeStimmen + currentEinzelstimmen;
   }
 
+  function _updateGueltigkeitWhenBeschlussvorschlaegeChanged() {
+    if (
+      stimmzettel.value.systemBeschlussvorschlag.length > 0 ||
+      stimmzettel.value.wahlvorstandBeschlussvorschlag.length > 0
+    ) {
+      stimmzettel.value.gueltigkeit =
+        StimmzettelGueltigkeitEnum.BeschlussAusstehend;
+    } else {
+      stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
+    }
+  }
+
+  function _updateSystemBeschlussgruendeBasedOnDetectedErrors() {
+    const systemBeschlussgruende: SystemBeschlussgrund[] = [];
+
+    if (
+      hasSystemErrorAnyKandidatWithInvalidVotes.value ||
+      (stimmzettel.value.invalideVotes ?? 0) > 0
+    ) {
+      systemBeschlussgruende.push({
+        reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+      });
+    }
+
+    if (
+      hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen.value &&
+      countTotalVotes.value <= maximalErlaubteStimmenProWaehler.value
+    ) {
+      systemBeschlussgruende.push({
+        reason:
+          SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+      });
+    }
+
+    if (countTotalVotes.value > maximalErlaubteStimmenProWaehler.value) {
+      systemBeschlussgruende.push({
+        reason:
+          SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+      });
+    }
+
+    if (hasSystemErrorToManyListenKreuze.value) {
+      systemBeschlussgruende.push({
+        reason: SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+      });
+    }
+
+    stimmzettel.value.systemBeschlussvorschlag = systemBeschlussgruende;
+  }
+
   return {
     changeHistory,
     hasAnyValuesSet,
+    hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen,
+    hasSystemErrorAnyKandidatWithInvalidVotes,
     resetStimmzettel,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,

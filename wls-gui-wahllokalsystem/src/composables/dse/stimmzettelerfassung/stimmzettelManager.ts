@@ -47,6 +47,9 @@ export function useStimmzettelManager(
     stimmzettelToSet: PersistedStimmzettel
   ) {
     stimmzettelBeforeEdit.value = stimmzettelToSet;
+    bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
+      stimmzettelToSet
+    );
 
     managedBearbeitenDialogStimmzettel.value.gueltigkeit =
       stimmzettelToSet.gueltigkeit;

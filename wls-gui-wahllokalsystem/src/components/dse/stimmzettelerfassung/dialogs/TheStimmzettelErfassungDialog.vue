@@ -213,11 +213,15 @@ watch(
   () => {
     if (isDialogVisibleModel.value) {
       stimmzettelManager.startNewStimmzettel();
-      currentAction.value = actions[0];
       stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel();
       stimmzettelManager.setActiveStimmzettelWhenEditing(
         properties.stimmzettel
       );
+
+      currentAction.value = stimmzettelManager.bearbeitenDialogStimmzettelUtils
+        .hasAnyValuesSet.value
+        ? actions[1]
+        : actions[0];
     }
   },
   { immediate: true }

@@ -114,7 +114,7 @@
       </v-card-text>
       <v-card-actions>
         <base-text-button
-          :disabled="!stimmzettelManager.hasStimmzettelBeenEdited.value"
+          :disabled="isResetDisabled"
           @click="onResetClicked"
         >
           Zurücksetzen
@@ -268,6 +268,13 @@ const isSaveDisabled = computed(() => {
       StimmzettelGueltigkeitEnum.BeschlussAusstehend &&
     !!stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
   );
+});
+const isResetDisabled = computed(() => {
+  if (stimmzettelManager.stimmzettelBeforeEdit.value !== null) {
+    return !stimmzettelManager.hasStimmzettelBeenEdited.value;
+  }
+  return !stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
+    .value;
 });
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>

@@ -39,6 +39,12 @@ export function useStimmzettelManager(
     );
   }
 
+  function startNewStimmzettel() {
+    managedBearbeitenDialogStimmzettel.value =
+      createStimmzettelWithWahlvorschlaege(wahlvorschlaege);
+    bearbeitenDialogStimmzettelUtils.changeHistory.reset();
+  }
+
   /**
    *
    * @param commandString
@@ -64,6 +70,7 @@ export function useStimmzettelManager(
   return {
     getStimmzettelSnapshot,
     parseCommandOrThrowError,
+    startNewStimmzettel,
     bearbeitenDialogStimmzettelUtils,
   };
 }

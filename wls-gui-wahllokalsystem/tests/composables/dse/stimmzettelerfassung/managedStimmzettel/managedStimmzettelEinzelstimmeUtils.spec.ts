@@ -207,7 +207,7 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
       expect(kandidat.ungueltigeStimmen).toBe(2);
     });
 
-    it("should_reduceUngueltigeAndEinzeilstimmen_when_ungueltigeStimmenAreGivenButNotLargerThanVotesToRemove", () => {
+    it("should_reduceUngueltigeAndEinzelstimmen_when_ungueltigeStimmenAreGivenButNotLargerThanVotesToRemove", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .einzelstimmen(4)
         .ungueltigeStimmen(4)

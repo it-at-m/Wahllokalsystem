@@ -29,7 +29,8 @@
         aria-label="Stimmzettel bearbeiten"
         icon="$edit"
         size="small"
-        variant="text"
+        variant="elevated"
+        :disabled="bearbeitungDisabled"
         @click="onStimmzettelBearbeitenClicked(item)"
       />
     </template>
@@ -53,6 +54,7 @@ const props = defineProps<{
   teamId: string;
   stimmzettelListe: Stimmzettel[];
   stimmzettelLoading: boolean;
+  bearbeitungDisabled: boolean;
 }>();
 const stimmzettelkennungKey = "stimmzettelkennung";
 
@@ -69,8 +71,11 @@ const sortBy = ref([{ key: stimmzettelkennungKey, order: "desc" }] as const);
 const { isVorgemerktFuerBeschluss, getVormerkungsgrund } =
   useStimmzettelUtils();
 
+const emit = defineEmits<{
+  stimmzettelBearbeiten: [newValue: Stimmzettel];
+}>();
+
 function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
-  // TODO Bearbeiten-Funktionalität Platzhalter. #3384
-  console.debug(JSON.stringify(stimmzettel));
+  emit("stimmzettelBearbeiten", stimmzettel);
 }
 </script>

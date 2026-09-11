@@ -5,6 +5,8 @@
       :stimmzettel-liste="stimmzettelListe"
       :stimmzettel-loading="isStimmzettelLoading"
       class="mt-3"
+      :bearbeitung-disabled="isStatusLoading || hasTeamFinishedErfassung"
+      @stimmzettel-bearbeiten="onStimmzettelBearbeitenClicked"
     />
     <v-card-actions v-if="!isStatusLoading">
       <div
@@ -192,6 +194,16 @@ async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
 ) {
   await props.saveStimmzettel(confirmedStimmzettel);
   isKennungsDialogVisible.value = true;
+}
+async function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
+  if (
+    teamStatus.value?.status === StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
+  ) {
+    await sendStatusInBearbeitung();
+  }
+
+  activeStimmzettel.value = stimmzettel;
+  isErfassungsDialogVisible.value = true;
 }
 
 const hasTeamFinishedErfassung = computed(

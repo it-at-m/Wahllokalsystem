@@ -113,9 +113,12 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <base-text-button @click="onResetClicked"
-          >Zurücksetzen</base-text-button
+        <base-text-button
+          :disabled="isResetDisabled"
+          @click="onResetClicked"
         >
+          Zurücksetzen
+        </base-text-button>
         <v-spacer />
         <base-text-button
           :disabled="isCancelButtonDisabled"
@@ -178,6 +181,18 @@ const properties = defineProps({
   },
 });
 
+const route = useRoute();
+const wahlID = route.params.wahlId as string;
+
+const { currentUserTeamName, isBWB } = storeToRefs(useUserStore());
+
+const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
+  computed(() => properties.stimmzettel.stimmzettelkennung),
+  properties.wahlvorschlaege,
+  wahlID,
+  currentUserTeamName.value
+);
+
 const emit = defineEmits<{
   cancel: [];
   confirmClose: [stimmzettel: Stimmzettel];
@@ -199,30 +214,35 @@ const actions = [
 
 const COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME =
   "commandProcessingTextField";
-
-const currentAction = ref(actions[0]);
 const commandProcessingTextField = useTemplateRef<
   InstanceType<typeof TheStimmzettelCommandProcessingTextField>
 >(COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME);
 
-const route = useRoute();
-const wahlID = route.params.wahlId as string;
+const currentAction = ref(actions[0]);
 
-const { currentUserTeamName, isBWB } = storeToRefs(useUserStore());
+watch(
+  () => isDialogVisibleModel.value,
+  () => {
+    if (isDialogVisibleModel.value) {
+      stimmzettelManager.setActiveStimmzettelWhenEditing(
+        properties.stimmzettel
+      );
 
-const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
-  computed(() => properties.stimmzettel.stimmzettelkennung),
-  properties.wahlvorschlaege,
-  wahlID,
-  currentUserTeamName.value
+      currentAction.value = stimmzettelManager.bearbeitenDialogStimmzettelUtils
+        .hasAnyValuesSet.value
+        ? actions[1]
+        : actions[0];
+    }
+    void focusCommandProcessingTextField();
+  },
+  { immediate: true }
 );
 
 const changeHistory = computed(
   () => stimmzettelManager.bearbeitenDialogStimmzettelUtils.changeHistory
 );
 const isCancelButtonDisabled = computed(
-  () =>
-    stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
+  () => stimmzettelManager.hasStimmzettelBeenEdited.value
 );
 const isCommandInputFieldDisabled = computed(
   () =>
@@ -230,8 +250,15 @@ const isCommandInputFieldDisabled = computed(
       StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag ||
     stimmzettelGueltigkeit.value === StimmzettelGueltigkeitEnum.Leer
 );
-const isSaveDisabled = computed(
-  () =>
+const isSaveDisabled = computed(() => {
+  if (
+    stimmzettelManager.stimmzettelBeforeEdit.value !== null &&
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value &&
+    !stimmzettelManager.hasStimmzettelBeenEdited.value
+  )
+    return true;
+
+  return (
     !stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
       .value &&
     stimmzettelGueltigkeit.value !== StimmzettelGueltigkeitEnum.Leer &&
@@ -240,7 +267,15 @@ const isSaveDisabled = computed(
     stimmzettelGueltigkeit.value !==
       StimmzettelGueltigkeitEnum.BeschlussAusstehend &&
     !!stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
-);
+  );
+});
+const isResetDisabled = computed(() => {
+  if (stimmzettelManager.stimmzettelBeforeEdit.value !== null) {
+    return !stimmzettelManager.hasStimmzettelBeenEdited.value;
+  }
+  return !stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
+    .value;
+});
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
@@ -254,20 +289,6 @@ const stimmzettelGueltigkeit = computed(
       .gueltigkeit
 );
 
-watch(
-  () => isDialogVisibleModel.value,
-  (isVisible) => {
-    if (isVisible) {
-      stimmzettelManager.startNewStimmzettel();
-      currentAction.value = actions[0];
-      void focusCommandProcessingTextField();
-    }
-  },
-  {
-    immediate: true,
-  }
-);
-
 const isCancelConfirmationDialogVisible = ref(false);
 
 async function focusCommandProcessingTextField() {
@@ -276,7 +297,13 @@ async function focusCommandProcessingTextField() {
 }
 
 function onCancelClicked() {
-  isCancelConfirmationDialogVisible.value = true;
+  if (
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
+  ) {
+    isDialogVisibleModel.value = false;
+  } else {
+    isCancelConfirmationDialogVisible.value = true;
+  }
 }
 
 function onCancelConfirmationDialogCancelled() {
@@ -300,6 +327,15 @@ function onSavedClickedAndNext() {
 }
 
 function onResetClicked() {
-  stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettel();
+  if (
+    stimmzettelManager.hasStimmzettelBeenEdited.value &&
+    stimmzettelManager.stimmzettelBeforeEdit.value !== null
+  ) {
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
+      stimmzettelManager.stimmzettelBeforeEdit.value
+    );
+  } else {
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory();
+  }
 }
 </script>

@@ -1,6 +1,7 @@
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
+import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import {
   afterEach,
@@ -16,7 +17,9 @@ import { ref } from "vue";
 import { useManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
+import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -39,6 +42,8 @@ const mockDefinitions = vi.hoisted(() => ({
     refreshWahlvorschlaegeVotes: vi.fn(),
     selectWahlvorschlag: vi.fn(),
   },
+  resetStimmzettel: vi.fn(),
+  resetError: vi.fn(),
 }));
 
 vi.mock(
@@ -62,12 +67,25 @@ vi.mock(
       hasSystemErrorToManyListenKreuze: ref(false),
       refreshWahlvorschlaegeVotes:
         mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes,
-      resetError: vi.fn(),
+      resetError: mockDefinitions.resetError,
       selectWahlvorschlag: mockDefinitions.reststimmeUtils.selectWahlvorschlag,
       deselectWahlvorschlag:
         mockDefinitions.reststimmeUtils.deselectWahlvorschlag,
     }),
   })
+);
+
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useStimmzettelMapper: () => ({
+        ...original.useStimmzettelMapper(),
+        resetStimmzettel: mockDefinitions.resetStimmzettel,
+      }),
+    };
+  }
 );
 
 describe("managedStimmzettel.ts", () => {
@@ -77,6 +95,14 @@ describe("managedStimmzettel.ts", () => {
     prepareManagedStimmzettelWahlvorschlag,
     prepareManagedStimmzettelKandidat,
   } = useManagedStimmzettelTestDataFactory();
+  const {
+    preparePersistedStimmzettelKandidat,
+    prepareStimmzettel,
+    prepareStimmzettelWahlvorschlag,
+    prepareStimmzettelKandidatOfWahlvorschlag,
+    preparePersistedStimmzettel,
+    preparePersistedStimmzettelWahlvorschlag,
+  } = useStimmzettelTestDataFactory();
 
   const MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER = 999;
 
@@ -107,7 +133,7 @@ describe("managedStimmzettel.ts", () => {
   });
 
   describe("hasAnyValuesSet", () => {
-    it("should_returnFalse_when_stimmzettelHasNoVotesOrStreichungSet", () => {
+    it("should_returnFalse_when_stimmzettelHasNoVotesOrStreichungSetAndGueltigkeitIsValid", () => {
       const kandidatWithoutVotes = prepareManagedStimmzettelKandidat()
         .listenposition(1)
         .ordnungszahl(101)
@@ -124,11 +150,43 @@ describe("managedStimmzettel.ts", () => {
             .kandidaten([kandidatWithoutVotes])
             .build(),
         ])
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .invalideVotes(0)
+        .wahlvorstandBeschlussvorschlag([])
+        .systemBeschlussvorschlag([])
+        .beschlussfassung(null)
         .build();
 
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
 
       expect(managed.hasAnyValuesSet.value).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_stimmzettelHasNoVotesOrStreichungSetAndGueltigkeitIsNotValid", () => {
+      const kandidatWithoutVotes = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
+        .reststimmen(null)
+        .ungueltigeStimmen(null)
+        .build();
+
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidatWithoutVotes])
+            .build(),
+        ])
+        .gueltigkeit(
+          StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag
+        )
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+      expect(managed.hasAnyValuesSet.value).toStrictEqual(true);
     });
 
     it("should_returnTrue_when_stimmzettelHasOneKandidatWithStreichung", () => {
@@ -1095,6 +1153,165 @@ describe("managedStimmzettel.ts", () => {
       expect(() => managed.wahlvorschlagRemoveVotesOrThrow(1)).toThrow(
         ManagedStimmzettelError
       );
+    });
+  });
+
+  describe("resetStimmzettelAndHistory", () => {
+    const initialEmptyDseWahlvorschlag = prepareStimmzettelWahlvorschlag()
+      .wahlvorschlagID("1")
+      .ordnungszahl(1)
+      .kandidaten([])
+      .selected(false)
+      .ungueltigeStimmen(0)
+      .gueltigeStimmen(0)
+      .erhaeltStimmen(true)
+      .kurzname("kurzname")
+      .build();
+
+    const initialEmptyDseKandidat = prepareStimmzettelKandidatOfWahlvorschlag(
+      initialEmptyDseWahlvorschlag
+    )
+      .ordnungszahl(101)
+      .einzelstimmen(null)
+      .ungueltigeStimmen(null)
+      .reststimmen(null)
+      .durchgestrichen(false)
+      .owningWahlvorschlag(initialEmptyDseWahlvorschlag)
+      .build();
+
+    const initialEmptyDseStimzettel = prepareStimmzettel()
+      .wahlvorstandBeschlussvorschlag([])
+      .systemBeschlussvorschlag([])
+      .beschlussfassung(null)
+      .gueltigkeit("VALID")
+      .invalideVotes(0)
+      .wahlvorschlaege([initialEmptyDseWahlvorschlag])
+      .build();
+
+    initialEmptyDseStimzettel.wahlvorschlaege[0].kandidaten = [
+      initialEmptyDseKandidat,
+    ];
+
+    it("should_resetStimmzettelChangeHistoryAndReststimmenError_when_CalledWithReference", () => {
+      const managedStimmzettel = useManagedStimmzettel(
+        // structuredClone creates deep copy, so mutations are only applied to copy,
+        // not to "initialEmptyDseStimzettel"
+        ref(structuredClone(initialEmptyDseStimzettel)),
+        mockedWahlId
+      );
+
+      const stimmzettelToResetTo = preparePersistedStimmzettel()
+        .invalideVotes(3)
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .selected(true)
+            .kandidaten([
+              preparePersistedStimmzettelKandidat()
+                .nennung(1)
+                .votesByVoter(5)
+                .invalidVotes(1)
+                .votesByWahlvorschlag(2)
+                .isDiscarded(true)
+                .build(),
+            ])
+            .build(),
+        ])
+        .build();
+
+      const resetResultRefWithReference = ref(
+        structuredClone(initialEmptyDseStimzettel)
+      );
+      mockDefinitions.resetStimmzettel.mockReturnValue(
+        resetResultRefWithReference
+      );
+
+      expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+
+      managedStimmzettel.kandidatAddStreichungOrThrow(
+        initialEmptyDseKandidat.ordnungszahl
+      );
+      managedStimmzettel.kandidatAddEinzelstimmenOrThrow(
+        initialEmptyDseKandidat.ordnungszahl,
+        5
+      );
+      managedStimmzettel.wahlvorschlagAddVotesOrThrow(
+        initialEmptyDseWahlvorschlag.ordnungszahl
+      );
+      managedStimmzettel.stimmzettel.value.wahlvorstandBeschlussvorschlag = [
+        {
+          text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
+        },
+      ];
+      managedStimmzettel.stimmzettel.value.systemBeschlussvorschlag = [
+        {
+          reason:
+            SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+        },
+      ];
+
+      expect(managedStimmzettel.stimmzettel.value).not.toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+
+      mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes.mockClear();
+
+      managedStimmzettel.resetStimmzettelAndHistory(stimmzettelToResetTo);
+
+      expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+      expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
+      expect(mockDefinitions.resetError).toHaveBeenCalledTimes(1);
+      expect(
+        mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes
+      ).toHaveBeenCalledTimes(1);
+    });
+
+    it("should_resetStimmzettelChangeHistoryAndReststimmenError_when_calledWithoutReference", () => {
+      const managedStimmzettel = useManagedStimmzettel(
+        // structuredClone creates deep copy, so mutations are only applied to copy,
+        // not to "initialEmptyDseStimzettel"
+        ref(structuredClone(initialEmptyDseStimzettel)),
+        mockedWahlId
+      );
+
+      expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+
+      managedStimmzettel.kandidatAddStreichungOrThrow(
+        initialEmptyDseKandidat.ordnungszahl
+      );
+      managedStimmzettel.kandidatAddEinzelstimmenOrThrow(
+        initialEmptyDseKandidat.ordnungszahl,
+        2
+      );
+      managedStimmzettel.wahlvorschlagAddVotesOrThrow(
+        initialEmptyDseWahlvorschlag.ordnungszahl
+      );
+
+      expect(managedStimmzettel.stimmzettel.value).not.toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+
+      mockDefinitions.resetStimmzettel.mockReturnValue(
+        ref(structuredClone(initialEmptyDseStimzettel))
+      );
+
+      mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes.mockClear();
+
+      managedStimmzettel.resetStimmzettelAndHistory();
+
+      expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
+        initialEmptyDseStimzettel
+      );
+      expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
+      expect(mockDefinitions.resetError).toHaveBeenCalledTimes(1);
+      expect(
+        mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes
+      ).toHaveBeenCalledTimes(1);
     });
   });
 });

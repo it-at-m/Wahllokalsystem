@@ -21,11 +21,21 @@ export function useStimmzettelState(
     await _loadStimmzettel();
   });
 
-  async function saveNewStimmzettel(stimmzettel: Stimmzettel) {
-    const newStimmzettelCollectionToSave = [
-      ...savedStimmzettel.value,
-      stimmzettel,
-    ];
+  async function saveOrUpdateStimmzettel(stimmzettelToSave: Stimmzettel) {
+    const newStimmzettelCollectionToSave = [...savedStimmzettel.value];
+    const stimmzettelExistsIndex = newStimmzettelCollectionToSave.findIndex(
+      (savedStimmzettel) =>
+        savedStimmzettel.stimmzettelkennung ===
+        stimmzettelToSave.stimmzettelkennung
+    );
+
+    if (stimmzettelExistsIndex !== -1) {
+      newStimmzettelCollectionToSave[stimmzettelExistsIndex] =
+        stimmzettelToSave;
+    } else {
+      newStimmzettelCollectionToSave.push(stimmzettelToSave);
+    }
+
     await saveStimmzettel(
       wahlID,
       wahlbezirkID,
@@ -52,6 +62,6 @@ export function useStimmzettelState(
     isStimmzettelLoading: readonly(isStimmzettelLoading),
     savedStimmzettel: computed(() => savedStimmzettel.value),
     hasStimmzettel,
-    saveNewStimmzettel,
+    saveOrUpdateStimmzettel,
   };
 }

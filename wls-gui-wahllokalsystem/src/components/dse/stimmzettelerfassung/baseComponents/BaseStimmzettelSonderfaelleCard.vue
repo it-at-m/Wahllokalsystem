@@ -1,85 +1,116 @@
 <template>
-  <v-card>
-    <v-card-title>{{ TITEL_SONDERFAELLE }}</v-card-title>
-    <v-card-text>
-      <v-checkbox
-        :model-value="isStimmzettelLeerSelected"
-        label="Stimmzettel ist leer"
-        :disabled="isCheckboxStimmzettelLeerDisabled"
-        density="compact"
-        hide-details
-        @update:model-value="onStimmzettelLeerChanged"
-      />
-      <v-checkbox
-        v-if="isBWB"
-        :model-value="isStimmzettelFehltSelected"
-        label="Stimmzettel fehlt"
-        :disabled="isCheckboxStimmzettelFehltDisabled"
-        density="compact"
-        hide-details
-        @update:model-value="onStimmzettelFehltChanged"
-      />
-      <div class="d-flex justify-space-between align-center ga-1">
-        <div>ungültige Stimmen die nicht zugeordnet werden können</div>
-        <div style="flex: 0 1 130px">
-          <v-number-input
-            v-model="modelValueInvalidVotes"
-            :disabled="isInputOfInvalidVotesDisabled"
-            control-variant="stacked"
-            density="compact"
-            hide-details
-            :clearable="false"
-            :min="0"
+  <div>
+    <v-card>
+      <v-card-title>{{ TITEL_SONDERFAELLE }}</v-card-title>
+      <v-card-text class="overflow-y-auto">
+        <v-checkbox
+          :model-value="isStimmzettelLeerSelected"
+          label="Stimmzettel ist leer"
+          :disabled="isCheckboxStimmzettelLeerDisabled"
+          density="compact"
+          hide-details
+          @update:model-value="onStimmzettelLeerChanged"
+        />
+        <v-checkbox
+          v-if="isBWB"
+          :model-value="isStimmzettelFehltSelected"
+          label="Stimmzettel fehlt"
+          :disabled="isCheckboxStimmzettelFehltDisabled"
+          density="compact"
+          hide-details
+          @update:model-value="onStimmzettelFehltChanged"
+        />
+        <div class="d-flex justify-space-between align-center ga-1">
+          <div class="flex-grow-1">
+            ungültige Stimmen die nicht zugeordnet werden können
+          </div>
+          <div style="flex: 1 0 5rem">
+            <v-number-input
+              v-model="modelValueInvalidVotes"
+              :disabled="isInputOfInvalidVotesDisabled"
+              control-variant="stacked"
+              density="compact"
+              hide-details
+              :clearable="false"
+              :min="0"
+            />
+          </div>
+        </div>
+
+        <base-dialog
+          :visible="isStimmzettelFehltInstructionDialogVisible"
+          dialogtitle="Bitte Kennung anbringen"
+          confirmtext="Bestätigen"
+          icon="$information"
+          @confirm="onStimmzettelFehlInstructionDialogConfirm"
+        >
+          <div>
+            Bitte notieren Sie die Stimmzettelkennung des fehlenden Stimmzettels
+            auf dem Umschlag oder auf dem Hilfsblatt.
+          </div>
+
+          <base-stimmzettelkennung-strong-text
+            :stimmzettelkennung="stimmzettelkennung"
+            :team-name="teamId"
+          />
+        </base-dialog>
+      </v-card-text>
+    </v-card>
+    <v-card class="mt-2">
+      <v-card-title v-if="showBeschlussfassung">Beschlussfassung</v-card-title>
+      <v-card-text
+        v-if="showBeschlussfassung"
+        class="overflow-y-auto"
+      >
+        <div
+          v-if="
+            isCheckboxMarkForBeschlussfassungSelected && modelValueGueltigkeit
+          "
+          class="mb-2"
+        >
+          <base-stimmzettel-gueltigkeit-icon
+            :gueltigkeit="modelValueGueltigkeit"
+          />
+          <span class="ms-2 font-weight-bold">{{
+            toText(modelValueGueltigkeit)
+          }}</span>
+          <v-divider
+            class="mt-2"
+            thickness="2"
           />
         </div>
-      </div>
-
-      <base-dialog
-        :visible="isStimmzettelFehltInstructionDialogVisible"
-        dialogtitle="Bitte Kennung anbringen"
-        confirmtext="Bestätigen"
-        icon="$information"
-        @confirm="onStimmzettelFehlInstructionDialogConfirm"
-      >
-        <div>
-          Bitte notieren Sie die Stimmzettelkennung des fehlenden Stimmzettels
-          auf dem Umschlag oder auf dem Hilfsblatt.
+        <div v-if="systemBeschlussgruende.length > 0">
+          <ul class="ms-4">
+            <li
+              v-for="(systemgrund, index) in systemBeschlussgruende"
+              :key="index"
+            >
+              <span class="label">{{
+                mapSystemBeschlussgrundReasonEnumToText(systemgrund.reason)
+              }}</span>
+            </li>
+          </ul>
+          <v-divider
+            class="my-2"
+            thickness="2"
+          />
         </div>
-
-        <base-stimmzettelkennung-strong-text
-          :stimmzettelkennung="stimmzettelkennung"
-          :team-name="teamId"
-        />
-      </base-dialog>
-    </v-card-text>
-    <v-card-title v-if="showBeschlussfassung">Beschlussfassung</v-card-title>
-    <v-card-text v-if="showBeschlussfassung">
-      <v-checkbox
-        :model-value="isCheckboxMarkForBeschlussfassungSelected"
-        label="für Beschlussfassung vormerken"
-        :disabled="isCheckboxMarkeForBeschlussfassungDisabled"
-        class="mb-4"
-        density="compact"
-        :hint="systemBeschlussgruendeAsText"
-        :persistent-hint="!!systemBeschlussgruendeAsText"
-        @update:model-value="onMarkForBeschlussfassungModelUpdated"
-      />
-      Begründung auswählen oder eingeben (abweichende Gründe mit Enter
-      bestätigen)
-      <v-form v-model="modelValueIsBeschlussfassungValid">
+        Begründung auswählen oder eingeben (abweichende Gründe mit Enter
+        bestätigen)
         <v-combobox
-          :ref="REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE"
           v-model="stimmzettelWahlvorstandBeschlussgruende"
           :items="wahlvorstandBeschlussvorschlaegeItems"
           class="combobox-as-textarea mt-1"
           multiple
           chips
           closable-chips
+          density="compact"
+          :menu-props="{ location: 'start' }"
           :rules="wahlvorstandBeschlussvorschlaegeRules"
         />
-      </v-form>
-    </v-card-text>
-  </v-card>
+      </v-card-text>
+    </v-card>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -87,19 +118,18 @@ import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBe
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { PropType } from "vue";
 
-import { computed, nextTick, ref, useTemplateRef } from "vue";
+import { computed, ref } from "vue";
 import { VCombobox } from "vuetify/components";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
+import { useStimmzettelGueltigkeitEnumTools } from "@/composables/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnumTools.ts";
 import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { TITEL_SONDERFAELLE } from "@/constants.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
-
-const REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE =
-  "comboBoxWahlvorstandBeschlussgruende";
 
 const { createBeschlussgrundWithText, getWahlvorstandBeschlussvorschlaege } =
   useBeschlussgrundTools();
@@ -107,14 +137,11 @@ const { required } = useRules();
 const { mapSystemBeschlussgrundReasonEnumToText } =
   useSystemBeschlussgrundReasonEnumTools();
 
+const { toText } = useStimmzettelGueltigkeitEnumTools();
+
 const modelValueInvalidVotes = defineModel("invalidVotes", {
   type: [Number, null] as PropType<number | null>,
   required: true,
-});
-const modelValueIsBeschlussfassungValid = defineModel("beschlussfassungValid", {
-  type: Boolean,
-  required: false,
-  default: true,
 });
 const modelValueGueltigkeit = defineModel("gueltigkeit", {
   type: [String, null] as PropType<StimmzettelGueltigkeitEnum | null>,
@@ -186,13 +213,6 @@ const hasSystemBeschlussGrund = computed(
   () => props.systemBeschlussgruende.length > 0
 );
 
-const isCheckboxMarkeForBeschlussfassungDisabled = computed(
-  () =>
-    isStimmzettelLeerSelected.value ||
-    isStimmzettelFehltSelected.value ||
-    hasSystemBeschlussGrund.value
-);
-
 const isStimmzettelLeerSelected = computed(
   () => modelValueGueltigkeit.value === StimmzettelGueltigkeitEnum.Leer
 );
@@ -204,38 +224,37 @@ const isStimmzettelFehltSelected = computed(
 
 const isCheckboxMarkForBeschlussfassungSelected = computed(
   () =>
-    hasSystemBeschlussGrund.value ||
     modelValueGueltigkeit.value ===
-      StimmzettelGueltigkeitEnum.BeschlussAusstehend
+    StimmzettelGueltigkeitEnum.BeschlussAusstehend
 );
 
-const isCheckboxStimmzettelFehltDisabled = computed(
-  () =>
-    props.denySelectionOfStimmzettelFehlt ||
-    isStimmzettelLeerSelected.value ||
-    isCheckboxMarkForBeschlussfassungSelected.value ||
-    hasInvalidVotes.value
-);
+const isCheckboxStimmzettelFehltDisabled = computed(() => {
+  if (isStimmzettelFehltSelected.value) return false;
+  else
+    return (
+      props.denySelectionOfStimmzettelFehlt ||
+      isStimmzettelLeerSelected.value ||
+      isCheckboxMarkForBeschlussfassungSelected.value ||
+      hasInvalidVotes.value
+    );
+});
 
-const isCheckboxStimmzettelLeerDisabled = computed(
-  () =>
-    props.denySelectionOfStimmzettelLeer ||
-    isStimmzettelFehltSelected.value ||
-    isCheckboxMarkForBeschlussfassungSelected.value ||
-    hasInvalidVotes.value
-);
+const isCheckboxStimmzettelLeerDisabled = computed(() => {
+  if (isStimmzettelLeerSelected.value) return false;
+  else
+    return (
+      props.denySelectionOfStimmzettelLeer ||
+      isStimmzettelFehltSelected.value ||
+      isCheckboxMarkForBeschlussfassungSelected.value ||
+      hasInvalidVotes.value
+    );
+});
 
 const isInputOfInvalidVotesDisabled = computed(
   () =>
     props.denyInputForInvalidVotes ||
     isStimmzettelFehltSelected.value ||
     isStimmzettelLeerSelected.value
-);
-
-const systemBeschlussgruendeAsText = computed(() =>
-  props.systemBeschlussgruende
-    .map((grund) => mapSystemBeschlussgrundReasonEnumToText(grund.reason))
-    .join(", ")
 );
 
 const wahlvorstandBeschlussvorschlaegeItems = computed(() =>
@@ -253,28 +272,12 @@ const wahlvorstandBeschlussvorschlaegeRules = computed(() => {
 });
 
 const isStimmzettelFehltInstructionDialogVisible = ref(false);
-const templateRefComboxBoxWahlvorstandBeschlussgruende = useTemplateRef<
-  typeof VCombobox
->(REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE);
-
-function onMarkForBeschlussfassungModelUpdated(newValue: boolean | null) {
-  if (newValue) {
-    modelValueGueltigkeit.value =
-      StimmzettelGueltigkeitEnum.BeschlussAusstehend;
-  } else {
-    modelValueGueltigkeit.value = null;
-  }
-
-  nextTick(() => {
-    templateRefComboxBoxWahlvorstandBeschlussgruende.value?.validate();
-  });
-}
 
 function onStimmzettelLeerChanged(newValue: boolean | null) {
   if (newValue) {
     modelValueGueltigkeit.value = StimmzettelGueltigkeitEnum.Leer;
   } else {
-    modelValueGueltigkeit.value = null;
+    modelValueGueltigkeit.value = StimmzettelGueltigkeitEnum.Valid;
   }
 }
 
@@ -284,7 +287,7 @@ function onStimmzettelFehltChanged(newValue: boolean | null) {
       StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag;
     isStimmzettelFehltInstructionDialogVisible.value = true;
   } else {
-    modelValueGueltigkeit.value = null;
+    modelValueGueltigkeit.value = StimmzettelGueltigkeitEnum.Valid;
   }
 }
 

@@ -4,6 +4,7 @@
     density="compact"
   >
     <base-wls-button-save
+      :disabled="disabled"
       :save-text="currentAction.title"
       @click="executeSelectedAction"
     />
@@ -12,6 +13,7 @@
       <template #activator="{ props }">
         <base-button-folding
           v-bind="props"
+          :disabled="disabled"
           class="border-primary"
           active
         />
@@ -52,6 +54,11 @@ defineProps({
   actions: {
     type: Object as PropType<Action[]>,
     required: true,
+  },
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 

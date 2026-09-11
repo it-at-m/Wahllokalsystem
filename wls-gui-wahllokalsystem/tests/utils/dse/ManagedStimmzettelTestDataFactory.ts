@@ -12,12 +12,14 @@ export function useManagedStimmzettelTestDataFactory() {
   const {
     generateRandomNumber,
     generateRandomBoolean,
-    getRandomItem,
     generateRandomString,
+    getRandomItem,
   } = useCommonTestDataFactory();
 
   function createManagedStimmzettelKandidat(): Kandidat {
-    return createManagedStimmzettelWahlvorschlag().kandidaten[0];
+    const wahlvorschlag = createManagedStimmzettelWahlvorschlag();
+    wahlvorschlag.kandidaten = [wahlvorschlag.kandidaten[0]];
+    return wahlvorschlag.kandidaten[0];
   }
 
   function createManagedStimmzettelWahlvorschlag(): Wahlvorschlag {
@@ -58,6 +60,14 @@ export function useManagedStimmzettelTestDataFactory() {
     return proxyBuilder<Kandidat>(createManagedStimmzettelKandidat());
   }
 
+  function prepareManagedStimmzettelKandidatForWahlvorschlag(
+    owningWahlvorschlag: Wahlvorschlag
+  ): Builder<Kandidat> {
+    return proxyBuilder<Kandidat>(
+      _createManagedStimmzettelKandidatForWahlvorschlag(owningWahlvorschlag)
+    );
+  }
+
   function prepareManagedStimmzettelWahlvorschlag(): Builder<Wahlvorschlag> {
     return proxyBuilder<Wahlvorschlag>(createManagedStimmzettelWahlvorschlag());
   }
@@ -89,6 +99,7 @@ export function useManagedStimmzettelTestDataFactory() {
     createManagedStimmzettelWahlvorschlag,
     createManagedStimmzettelStimmzettel,
     prepareManagedStimmzettelKandidat,
+    prepareManagedStimmzettelKandidatForWahlvorschlag,
     prepareManagedStimmzettelWahlvorschlag,
     prepareManagedStimmzettelStimmzettel,
   };

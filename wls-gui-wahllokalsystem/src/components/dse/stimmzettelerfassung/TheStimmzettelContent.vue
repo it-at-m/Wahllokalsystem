@@ -6,6 +6,24 @@
     class="flex-1-1-0"
     style="min-width: 0"
   >
+    <template #prev="{ prev }">
+      <v-icon
+        color="primary"
+        icon="$slideLeft"
+        size="x-large"
+        variant="outlined"
+        @click="prev()"
+      />
+    </template>
+    <template #next="{ next }">
+      <v-icon
+        color="primary"
+        icon="$slideRight"
+        size="x-large"
+        variant="outlined"
+        @click="next()"
+      />
+    </template>
     <v-slide-group-item
       v-for="wv in wahlvorschlaege"
       :key="wv.wahlvorschlagID"

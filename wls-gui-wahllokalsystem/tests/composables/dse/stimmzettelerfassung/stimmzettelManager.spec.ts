@@ -1,6 +1,8 @@
 import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+import type { Ref } from "vue";
 
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
@@ -17,6 +19,10 @@ const mockDefinitions = vi.hoisted(() => ({
   handlerTwoCanHandle: vi.fn(),
   handlerOneHandleOrThrow: vi.fn(),
   handlerTwoHandleOrThrow: vi.fn(),
+  mangedStimmzettel: {
+    kandidatAddEinzelstimmenOrThrow: vi.fn(),
+    resetChangeHistory: vi.fn(),
+  },
 }));
 
 vi.mock(
@@ -35,6 +41,22 @@ vi.mock(
     return { COMMAND_HANDLERS: handlers };
   }
 );
+vi.mock("@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts", () => ({
+  useBearbeitenDialogStimmzettelUtils: (
+    stimmzettel: Ref<Stimmzettel>,
+    wahlID: string
+  ) => {
+    return {
+      kandidatAddEinzelstimmenOrThrow:
+        mockDefinitions.mangedStimmzettel.kandidatAddEinzelstimmenOrThrow,
+      changeHistory: {
+        reset: mockDefinitions.mangedStimmzettel.resetChangeHistory,
+      },
+      stimmzettel,
+      wahlID,
+    };
+  },
+}));
 
 const { prepareWahlvorschlag, prepareKandidat } =
   useWahlvorschlaegeTestDataFactory();
@@ -134,6 +156,33 @@ describe("stimmzettelManager.ts", () => {
       expect(mockDefinitions.handlerOneCanHandle).toHaveBeenCalledTimes(1);
       expect(mockDefinitions.handlerOneHandleOrThrow).toHaveBeenCalledTimes(1);
       expect(mockDefinitions.handlerTwoHandleOrThrow).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("startNewStimmzettel", () => {
+    it("should_setNewStimmzettelAndResetHistory_when_called", () => {
+      const unitUnderTest = useStimmzettelManager(
+        computed(() => 1),
+        [dummyWahlvorschlag],
+        "wahl-1",
+        "team A"
+      );
+
+      const stimmzettelBeforeStartNewOne =
+        unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value;
+      stimmzettelBeforeStartNewOne.invalideVotes = 20;
+
+      unitUnderTest.startNewStimmzettel();
+
+      expect(
+        unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value
+      ).not.toStrictEqual(stimmzettelBeforeStartNewOne);
+      expect(
+        unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value
+      ).not.toBe(stimmzettelBeforeStartNewOne);
+      expect(
+        mockDefinitions.mangedStimmzettel.resetChangeHistory
+      ).toHaveBeenCalledTimes(1);
     });
   });
 

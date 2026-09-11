@@ -1,3 +1,5 @@
+import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
+
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
@@ -34,6 +36,11 @@ const mockDefinitions = vi.hoisted(() => ({
     registerWahlvorschlagDeselected: vi.fn(),
     reset: vi.fn(),
   },
+  reststimmeUtils: {
+    deselectWahlvorschlag: vi.fn(),
+    refreshWahlvorschlaegeVotes: vi.fn(),
+    selectWahlvorschlag: vi.fn(),
+  },
 }));
 
 vi.mock(
@@ -48,6 +55,21 @@ vi.mock(
       }),
     };
   }
+);
+
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelReststimmeUtils.ts"),
+  () => ({
+    useManagedStimmzettelReststimmeUtils: () => ({
+      hasSystemErrorToManyListenKreuze: ref(false),
+      refreshWahlvorschlaegeVotes:
+        mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes,
+      resetError: vi.fn(),
+      selectWahlvorschlag: mockDefinitions.reststimmeUtils.selectWahlvorschlag,
+      deselectWahlvorschlag:
+        mockDefinitions.reststimmeUtils.deselectWahlvorschlag,
+    }),
+  })
 );
 
 describe("managedStimmzettel.ts", () => {
@@ -65,6 +87,8 @@ describe("managedStimmzettel.ts", () => {
     preparePersistedStimmzettelWahlvorschlag,
   } = useStimmzettelTestDataFactory();
 
+  const MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER = 999;
+
   beforeAll(() => {
     setActivePinia(createPinia());
   });
@@ -81,7 +105,7 @@ describe("managedStimmzettel.ts", () => {
         stimmzettelgebietsname: "",
         wahlname: "",
         wahlbezirknummer: "",
-        maximalErlaubteStimmenProWaehler: 999,
+        maximalErlaubteStimmenProWaehler: MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER,
       },
     ];
   });
@@ -745,6 +769,212 @@ describe("managedStimmzettel.ts", () => {
     });
   });
 
+  describe("stimmzettel", () => {
+    it("should_notHaveAnySystemBeschlussvorschlag_when_noDataIsChanged", () => {
+      const kandidat = prepareManagedStimmzettelKandidat()
+        .listenposition(1)
+        .ordnungszahl(101)
+        .einzelstimmen(null)
+        .durchgestrichen(false)
+        .reststimmen(null)
+        .ungueltigeStimmen(null)
+        .build();
+
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+        .wahlvorschlaege([
+          prepareManagedStimmzettelWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidat])
+            .build(),
+        ])
+        .invalideVotes(0)
+        .build();
+
+      const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+      expect(managed.stimmzettel.value.systemBeschlussvorschlag).toStrictEqual(
+        []
+      );
+    });
+
+    it.each([1, 10])(
+      "should_setSystemBeschlussvorschlagEinzelneStimmenUngueltig_when_anyKandidatHasAtLeastOneInvalidVoteWith'%d'",
+      (countInvalidVotes) => {
+        const kandidatWithInvalidVotes = prepareManagedStimmzettelKandidat()
+          .listenposition(1)
+          .ordnungszahl(101)
+          .einzelstimmen(null)
+          .durchgestrichen(false)
+          .reststimmen(null)
+          .ungueltigeStimmen(countInvalidVotes)
+          .build();
+
+        const stimmzettel = prepareManagedStimmzettelStimmzettel()
+          .wahlvorschlaege([
+            prepareManagedStimmzettelWahlvorschlag()
+              .ordnungszahl(1)
+              .kandidaten([kandidatWithInvalidVotes])
+              .build(),
+          ])
+          .invalideVotes(0)
+          .build();
+
+        const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+        expect(
+          managed.stimmzettel.value.systemBeschlussvorschlag
+        ).toStrictEqual([
+          {
+            reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+          } as SystemBeschlussgrund,
+        ]);
+      }
+    );
+
+    it.each([1, 10])(
+      "should_setSystemBeschlussvorschlagEinzelneStimmenUngueltig_when_stimmzettelHasAtLeastOneInvalidVoteWith'%d'",
+      (countInvalidVotes) => {
+        const stimmzettel = prepareManagedStimmzettelStimmzettel()
+          .wahlvorschlaege([
+            prepareManagedStimmzettelWahlvorschlag()
+              .ordnungszahl(1)
+              .kandidaten([])
+              .build(),
+          ])
+          .invalideVotes(countInvalidVotes)
+          .build();
+
+        const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+        expect(
+          managed.stimmzettel.value.systemBeschlussvorschlag
+        ).toStrictEqual([
+          {
+            reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+          } as SystemBeschlussgrund,
+        ]);
+      }
+    );
+
+    it.each([1, 10])(
+      "should_setSystemBeschlussvorschlagEinzelneStimmenUngueltig_when_stimmzettelAndAnyKandidatHasAtLeastOneInvalidVoteWith'%d'",
+      (countInvalidVotes) => {
+        const kandidatWithInvalidVotes = prepareManagedStimmzettelKandidat()
+          .listenposition(1)
+          .ordnungszahl(101)
+          .einzelstimmen(null)
+          .durchgestrichen(false)
+          .reststimmen(null)
+          .ungueltigeStimmen(countInvalidVotes)
+          .build();
+
+        const stimmzettel = prepareManagedStimmzettelStimmzettel()
+          .wahlvorschlaege([
+            prepareManagedStimmzettelWahlvorschlag()
+              .ordnungszahl(1)
+              .kandidaten([kandidatWithInvalidVotes])
+              .build(),
+          ])
+          .invalideVotes(countInvalidVotes)
+          .build();
+
+        const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
+
+        expect(
+          managed.stimmzettel.value.systemBeschlussvorschlag
+        ).toStrictEqual([
+          {
+            reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+          } as SystemBeschlussgrund,
+        ]);
+      }
+    );
+
+    it.each([1, 10])(
+      "should_setSystemBeschlussvorschlagZuVieleEinzelstimmenAberImGesamtstimmenlimit_when_stimmzettelAndAnyKandidatHas'%d'MoreEinzelstimmenThanAllowed",
+      (numberOfVotesAboveLimit) => {
+        const maxEinzelstimmenJeKandidat = 3;
+        const kandidatWithToManyEinzelstimmen =
+          prepareManagedStimmzettelKandidat()
+            .listenposition(1)
+            .ordnungszahl(101)
+            .einzelstimmen(maxEinzelstimmenJeKandidat + numberOfVotesAboveLimit)
+            .durchgestrichen(false)
+            .reststimmen(null)
+            .ungueltigeStimmen(null)
+            .build();
+
+        const stimmzettel = prepareManagedStimmzettelStimmzettel()
+          .wahlvorschlaege([
+            prepareManagedStimmzettelWahlvorschlag()
+              .ordnungszahl(1)
+              .kandidaten([kandidatWithToManyEinzelstimmen])
+              .build(),
+          ])
+          .invalideVotes(null)
+          .build();
+
+        const managed = useManagedStimmzettel(
+          ref(stimmzettel),
+          mockedWahlId,
+          maxEinzelstimmenJeKandidat
+        );
+
+        expect(
+          managed.stimmzettel.value.systemBeschlussvorschlag
+        ).toStrictEqual([
+          {
+            reason:
+              SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+          } as SystemBeschlussgrund,
+        ]);
+      }
+    );
+
+    it.each([1, 10])(
+      "should_setSystemBeschlussvorschlagZuVieleEinzelstimmenOderListenkreuze_when_stimmzettelAndAnyKandidatHas'%d'MoreEinzelstimmenThanAllowedAndMoreThanAllowedInTotal",
+      (numberOfVotesAboveLimit) => {
+        const maxEinzelstimmenJeKandidat = 3;
+        const kandidatWithToManyEinzelstimmen =
+          prepareManagedStimmzettelKandidat()
+            .listenposition(1)
+            .ordnungszahl(101)
+            .einzelstimmen(
+              MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER + numberOfVotesAboveLimit
+            )
+            .durchgestrichen(false)
+            .reststimmen(null)
+            .ungueltigeStimmen(null)
+            .build();
+
+        const stimmzettel = prepareManagedStimmzettelStimmzettel()
+          .wahlvorschlaege([
+            prepareManagedStimmzettelWahlvorschlag()
+              .ordnungszahl(1)
+              .kandidaten([kandidatWithToManyEinzelstimmen])
+              .build(),
+          ])
+          .invalideVotes(null)
+          .build();
+
+        const managed = useManagedStimmzettel(
+          ref(stimmzettel),
+          mockedWahlId,
+          maxEinzelstimmenJeKandidat
+        );
+
+        expect(
+          managed.stimmzettel.value.systemBeschlussvorschlag
+        ).toStrictEqual([
+          {
+            reason:
+              SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+          } as SystemBeschlussgrund,
+        ]);
+      }
+    );
+  });
+
   describe("wahlvorschlagAddVotesOrThrow", () => {
     it("should_selectWahlvorschlagAndAssignReststimmen_when_wahlvorschlagIsPresent", () => {
       const k1 = prepareManagedStimmzettelKandidat()
@@ -772,9 +1002,12 @@ describe("managedStimmzettel.ts", () => {
 
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
       managed.wahlvorschlagAddVotesOrThrow(1);
-      expect(wv.selected).toBe(true);
-      expect(k1.reststimmen).toBe(1);
-      expect(k2.reststimmen).toBe(1);
+      expect(
+        mockDefinitions.reststimmeUtils.selectWahlvorschlag.mock.calls
+      ).toStrictEqual([[wv]]);
+      expect(
+        mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes
+      ).toHaveBeenCalledOnce();
       expect(
         mockDefinitions.changeHistory.registerWahlvorschlagSelected
       ).toHaveBeenCalledExactlyOnceWith(wv);
@@ -826,9 +1059,12 @@ describe("managedStimmzettel.ts", () => {
         .build();
       const managed = useManagedStimmzettel(ref(stimmzettel), mockedWahlId);
       managed.wahlvorschlagRemoveVotesOrThrow(1);
-      expect(wv.selected).toBe(false);
-      expect(k1.reststimmen).toBe(0);
-      expect(k2.reststimmen).toBe(0);
+      expect(
+        mockDefinitions.reststimmeUtils.deselectWahlvorschlag.mock.calls
+      ).toStrictEqual([[wv]]);
+      expect(
+        mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes
+      ).toHaveBeenCalledOnce();
       expect(
         mockDefinitions.changeHistory.registerWahlvorschlagDeselected
       ).toHaveBeenCalledExactlyOnceWith(wv);

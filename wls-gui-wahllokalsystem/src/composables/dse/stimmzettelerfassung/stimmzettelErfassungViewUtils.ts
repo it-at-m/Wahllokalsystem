@@ -28,6 +28,7 @@ export function useStimmzettelErfassungViewUtils(
   const isStimmzettelLoading = ref(false);
   const isWahlvorschlaegeLoading = ref(false);
   const savedStimmzettel: Ref<Stimmzettel[]> = ref([]);
+  const activeStimmzettel: Ref<Stimmzettel | null> = ref(null);
   const wahlvorschlaege = ref<Wahlvorschlag[]>([]);
 
   //DialogVisibilityState
@@ -51,7 +52,8 @@ export function useStimmzettelErfassungViewUtils(
   function startNewEmptyStimmzettelWithStimmzettelkennung(
     stimmzettelkennung: number
   ) {
-    return getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung);
+    activeStimmzettel.value =
+      getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung);
   }
 
   async function sendStatusInBearbeitung(sendNotification = false) {
@@ -158,6 +160,7 @@ export function useStimmzettelErfassungViewUtils(
 
   return {
     //Props
+    activeStimmzettel,
     teamStatus: readonly(teamStatus),
     hasStimmzettel,
     isErfassungsDialogVisible,

@@ -341,15 +341,16 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         mockedEmptyStimmzettel
       );
 
-      const result =
-        unitUnderTest.startNewEmptyStimmzettelWithStimmzettelkennung(
-          mockedKennung
-        );
+      unitUnderTest.startNewEmptyStimmzettelWithStimmzettelkennung(
+        mockedKennung
+      );
 
       expect(
         mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung
       ).toHaveBeenCalledWith(mockedKennung);
-      expect(result).toStrictEqual(mockedEmptyStimmzettel);
+      expect(unitUnderTest.activeStimmzettel.value).toStrictEqual(
+        mockedEmptyStimmzettel
+      );
     });
   });
 

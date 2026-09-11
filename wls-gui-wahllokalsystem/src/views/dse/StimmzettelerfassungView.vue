@@ -66,10 +66,10 @@
       @cancel="onStimmzettelkennungCanceled"
     />
     <the-stimmzettel-erfassung-dialog
-      v-if="stimmzettelToShow"
+      v-if="activeStimmzettel"
       :ref="STIMMZETTEL_ERFASSUNG_DIALOG_TEMPLATE_REF_NAME"
       v-model="isErfassungsDialogVisible"
-      :stimmzettel="stimmzettelToShow"
+      :stimmzettel="activeStimmzettel"
       :wahlvorschlaege="wahlvorschlaege"
       @cancel="onStimmzettelErfassungCanceled"
       @confirm-close="onStimmzettelErfassungConfirmed"
@@ -86,7 +86,7 @@
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
-import { computed, ref, useTemplateRef } from "vue";
+import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
@@ -119,6 +119,7 @@ const templateRefStimmzettelErfassenDialog = useTemplateRef<
 
 const {
   teamStatus,
+  activeStimmzettel,
   beendenBtnActive,
   hasStimmzettel,
   isErfassungsDialogVisible,
@@ -145,8 +146,6 @@ const startNewStimmzettelButtonText = computed(() =>
     : "Starten"
 );
 
-const stimmzettelToShow = ref<Stimmzettel | null>(null);
-
 function onErfassungStartenClicked() {
   isKennungsDialogVisible.value = true;
 }
@@ -154,8 +153,7 @@ function onErfassungStartenClicked() {
 async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
   await sendStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
-  stimmzettelToShow.value =
-    startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
+  startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
   if (isErfassungsDialogVisible.value) {
     templateRefStimmzettelErfassenDialog.value?.focusCommandProcessingTextField();
   } else {
@@ -202,7 +200,7 @@ async function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
   ) {
     await sendStatusInBearbeitung();
   }
-  stimmzettelToShow.value = stimmzettel;
+  activeStimmzettel.value = stimmzettel;
   isErfassungsDialogVisible.value = true;
 }
 

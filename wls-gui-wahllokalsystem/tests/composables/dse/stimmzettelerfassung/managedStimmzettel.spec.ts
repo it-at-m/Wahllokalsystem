@@ -1255,6 +1255,8 @@ describe("managedStimmzettel.ts", () => {
         initialEmptyDseStimzettel
       );
 
+      mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes.mockClear();
+
       managedStimmzettel.resetStimmzettelAndHistory(stimmzettelToResetTo);
 
       expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
@@ -1262,6 +1264,9 @@ describe("managedStimmzettel.ts", () => {
       );
       expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
       expect(mockDefinitions.resetError).toHaveBeenCalledTimes(1);
+      expect(
+        mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes
+      ).toHaveBeenCalledTimes(1);
     });
 
     it("should_resetStimmzettelChangeHistoryAndReststimmenError_when_calledWithoutReference", () => {
@@ -1295,6 +1300,8 @@ describe("managedStimmzettel.ts", () => {
         ref(structuredClone(initialEmptyDseStimzettel))
       );
 
+      mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes.mockClear();
+
       managedStimmzettel.resetStimmzettelAndHistory();
 
       expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
@@ -1302,6 +1309,9 @@ describe("managedStimmzettel.ts", () => {
       );
       expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
       expect(mockDefinitions.resetError).toHaveBeenCalledTimes(1);
+      expect(
+        mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes
+      ).toHaveBeenCalledTimes(1);
     });
   });
 });

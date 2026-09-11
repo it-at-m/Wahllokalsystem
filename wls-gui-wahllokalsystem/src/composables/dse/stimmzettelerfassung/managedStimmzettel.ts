@@ -143,6 +143,7 @@ function _useManagedStimmzettel(
     const resetResult = resetStimmzettel(stimmzettel, stimmzettelBeforeEdit);
     stimmzettel.value = resetResult.value;
     resetReststimmeError();
+    refreshWahlvorschlaegeVotes();
   }
 
   /**

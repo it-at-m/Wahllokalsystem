@@ -154,7 +154,8 @@ function onErfassungStartenClicked() {
 async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
   await sendStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
-  stimmzettelToShow.value = startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
+  stimmzettelToShow.value =
+    startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
   if (isErfassungsDialogVisible.value) {
     templateRefStimmzettelErfassenDialog.value?.focusCommandProcessingTextField();
   } else {

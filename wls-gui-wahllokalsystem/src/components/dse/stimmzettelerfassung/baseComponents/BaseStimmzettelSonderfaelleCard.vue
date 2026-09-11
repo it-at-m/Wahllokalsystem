@@ -54,30 +54,46 @@
     </v-card-text>
     <v-card-title v-if="showBeschlussfassung">Beschlussfassung</v-card-title>
     <v-card-text v-if="showBeschlussfassung">
-      <v-checkbox
-        :model-value="isCheckboxMarkForBeschlussfassungSelected"
-        label="für Beschlussfassung vormerken"
-        :disabled="isCheckboxMarkeForBeschlussfassungDisabled"
-        class="mb-4"
-        density="compact"
-        :hint="systemBeschlussgruendeAsText"
-        :persistent-hint="!!systemBeschlussgruendeAsText"
-        @update:model-value="onMarkForBeschlussfassungModelUpdated"
-      />
+      <div
+        v-if="
+          isCheckboxMarkForBeschlussfassungSelected && modelValueGueltigkeit
+        "
+        class="mb-2"
+      >
+        <base-stimmzettel-gueltigkeit-icon
+          :gueltigkeit="modelValueGueltigkeit"
+        />
+        <span class="ms-2 font-weight-bold">{{
+          toText(modelValueGueltigkeit)
+        }}</span>
+      </div>
+      <div v-if="systemBeschlussgruende.length > 0">
+        <ul class="ms-4">
+          <li
+            v-for="(systemgrund, index) in systemBeschlussgruende"
+            :key="index"
+          >
+            <span class="label">{{
+              mapSystemBeschlussgrundReasonEnumToText(systemgrund.reason)
+            }}</span>
+          </li>
+        </ul>
+        <v-divider
+          class="my-2"
+          thickness="2"
+        />
+      </div>
       Begründung auswählen oder eingeben (abweichende Gründe mit Enter
       bestätigen)
-      <v-form v-model="modelValueIsBeschlussfassungValid">
-        <v-combobox
-          :ref="REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE"
-          v-model="stimmzettelWahlvorstandBeschlussgruende"
-          :items="wahlvorstandBeschlussvorschlaegeItems"
-          class="combobox-as-textarea mt-1"
-          multiple
-          chips
-          closable-chips
-          :rules="wahlvorstandBeschlussvorschlaegeRules"
-        />
-      </v-form>
+      <v-combobox
+        v-model="stimmzettelWahlvorstandBeschlussgruende"
+        :items="wahlvorstandBeschlussvorschlaegeItems"
+        class="combobox-as-textarea mt-1"
+        multiple
+        chips
+        closable-chips
+        :rules="wahlvorstandBeschlussvorschlaegeRules"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -87,19 +103,18 @@ import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBe
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { PropType } from "vue";
 
-import { computed, nextTick, ref, useTemplateRef } from "vue";
+import { computed, ref } from "vue";
 import { VCombobox } from "vuetify/components";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
+import { useStimmzettelGueltigkeitEnumTools } from "@/composables/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnumTools.ts";
 import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { TITEL_SONDERFAELLE } from "@/constants.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
-
-const REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE =
-  "comboBoxWahlvorstandBeschlussgruende";
 
 const { createBeschlussgrundWithText, getWahlvorstandBeschlussvorschlaege } =
   useBeschlussgrundTools();
@@ -107,14 +122,11 @@ const { required } = useRules();
 const { mapSystemBeschlussgrundReasonEnumToText } =
   useSystemBeschlussgrundReasonEnumTools();
 
+const { toText } = useStimmzettelGueltigkeitEnumTools();
+
 const modelValueInvalidVotes = defineModel("invalidVotes", {
   type: [Number, null] as PropType<number | null>,
   required: true,
-});
-const modelValueIsBeschlussfassungValid = defineModel("beschlussfassungValid", {
-  type: Boolean,
-  required: false,
-  default: true,
 });
 const modelValueGueltigkeit = defineModel("gueltigkeit", {
   type: [String, null] as PropType<StimmzettelGueltigkeitEnum | null>,
@@ -186,13 +198,6 @@ const hasSystemBeschlussGrund = computed(
   () => props.systemBeschlussgruende.length > 0
 );
 
-const isCheckboxMarkeForBeschlussfassungDisabled = computed(
-  () =>
-    isStimmzettelLeerSelected.value ||
-    isStimmzettelFehltSelected.value ||
-    hasSystemBeschlussGrund.value
-);
-
 const isStimmzettelLeerSelected = computed(
   () => modelValueGueltigkeit.value === StimmzettelGueltigkeitEnum.Leer
 );
@@ -204,9 +209,8 @@ const isStimmzettelFehltSelected = computed(
 
 const isCheckboxMarkForBeschlussfassungSelected = computed(
   () =>
-    hasSystemBeschlussGrund.value ||
     modelValueGueltigkeit.value ===
-      StimmzettelGueltigkeitEnum.BeschlussAusstehend
+    StimmzettelGueltigkeitEnum.BeschlussAusstehend
 );
 
 const isCheckboxStimmzettelFehltDisabled = computed(
@@ -232,12 +236,6 @@ const isInputOfInvalidVotesDisabled = computed(
     isStimmzettelLeerSelected.value
 );
 
-const systemBeschlussgruendeAsText = computed(() =>
-  props.systemBeschlussgruende
-    .map((grund) => mapSystemBeschlussgrundReasonEnumToText(grund.reason))
-    .join(", ")
-);
-
 const wahlvorstandBeschlussvorschlaegeItems = computed(() =>
   getWahlvorstandBeschlussvorschlaege(props.isBWB)
 );
@@ -253,28 +251,12 @@ const wahlvorstandBeschlussvorschlaegeRules = computed(() => {
 });
 
 const isStimmzettelFehltInstructionDialogVisible = ref(false);
-const templateRefComboxBoxWahlvorstandBeschlussgruende = useTemplateRef<
-  typeof VCombobox
->(REF_COMBOBOX_WAHLVORSTAND_BESCHLUSSVORSCHLAEGE);
-
-function onMarkForBeschlussfassungModelUpdated(newValue: boolean | null) {
-  if (newValue) {
-    modelValueGueltigkeit.value =
-      StimmzettelGueltigkeitEnum.BeschlussAusstehend;
-  } else {
-    modelValueGueltigkeit.value = null;
-  }
-
-  nextTick(() => {
-    templateRefComboxBoxWahlvorstandBeschlussgruende.value?.validate();
-  });
-}
 
 function onStimmzettelLeerChanged(newValue: boolean | null) {
   if (newValue) {
     modelValueGueltigkeit.value = StimmzettelGueltigkeitEnum.Leer;
   } else {
-    modelValueGueltigkeit.value = null;
+    modelValueGueltigkeit.value = StimmzettelGueltigkeitEnum.Valid;
   }
 }
 
@@ -284,7 +266,7 @@ function onStimmzettelFehltChanged(newValue: boolean | null) {
       StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag;
     isStimmzettelFehltInstructionDialogVisible.value = true;
   } else {
-    modelValueGueltigkeit.value = null;
+    modelValueGueltigkeit.value = StimmzettelGueltigkeitEnum.Valid;
   }
 }
 

@@ -1,111 +1,167 @@
-import type { StimmenSummary } from "@/types/dse/stimmzettelerfassung/StimmenSummary.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
-import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
-import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
+import { useLogging } from "@/composables/common/logging.ts";
+import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
 export function useManagedStimmzettelReststimmeUtils(
-  wahlID: string,
-  stimmenSummary: Ref<StimmenSummary>,
-  stimmzettel: Ref<Stimmzettel>
+  stimmzettel: Ref<Stimmzettel>,
+  maximalErlaubteStimmenProWaehler: Ref<number>,
+  maxEinzelstimmen: number,
+  countVotesGivenAsReststimme = 1
 ) {
-  const remainingVotes = computed(() => {
-    const kopfdatenStore = useKopfdatenStore();
-    const { kopfdaten } = storeToRefs(kopfdatenStore);
-    const maximalErlaubteStimmenProWaehler =
-      kopfdaten.value.find((kd) => kd.wahlID === wahlID)
-        ?.maximalErlaubteStimmenProWaehler ?? 0;
+  const logger = useLogging("mangeStimmzettelReststimmeUtils");
+  const { hasAnyKennzeichen } = useKandidatTools();
 
-    const currentGesamtStimmen =
-      stimmenSummary.value.ungueltigeStimmen +
-      stimmenSummary.value.einzelstimmen +
-      stimmenSummary.value.reststimmen;
-    return maximalErlaubteStimmenProWaehler - currentGesamtStimmen;
-  });
+  const hasSystemErrorToManyListenKreuze = ref(false);
+
+  const selectedWahlvorschlaege = computed(() =>
+    stimmzettel.value.wahlvorschlaege.filter(
+      (wahlvorschlag) => wahlvorschlag.selected
+    )
+  );
 
   function selectWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
-    let remainingVotesForWahlvorschlag = remainingVotes.value;
-    let index = 0;
-    while (
-      index < remainingVotesForWahlvorschlag &&
-      index < wahlvorschlag.kandidaten.length
-    ) {
-      const kandidat = wahlvorschlag.kandidaten[index];
-      if (
-        !kandidat.durchgestrichen &&
-        !kandidat.einzelstimmen &&
-        !kandidat.ungueltigeStimmen
-      ) {
-        kandidat.reststimmen = 1;
-      } else {
-        remainingVotesForWahlvorschlag++;
-      }
-      index++;
-    }
     wahlvorschlag.selected = true;
   }
 
   function deselectWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
-    wahlvorschlag.kandidaten.map((kandidat) => (kandidat.reststimmen = 0));
-    wahlvorschlag.selected = false;
-  }
-
-  function updateReststimmenWhenVotesAdded() {
-    if (remainingVotes.value < 0) {
-      const wahlvorschlagToUpdate = stimmzettel.value.wahlvorschlaege.find(
-        (wahlvorschlag) =>
-          wahlvorschlag.kandidaten.some(
-            (kandidat) =>
-              kandidat.reststimmen !== null && kandidat.reststimmen > 0
-          )
+    if (wahlvorschlag.selected) {
+      wahlvorschlag.kandidaten.forEach(
+        (kandidat) => (kandidat.reststimmen = null)
       );
-      if (wahlvorschlagToUpdate) {
-        for (let i = remainingVotes.value; i < 0; i++) {
-          const kandidatToUpdate = wahlvorschlagToUpdate?.kandidaten
-            .slice()
-            .reverse()
-            .find(
-              (kandidat) =>
-                kandidat.reststimmen !== null && kandidat.reststimmen > 0
-            );
-          if (kandidatToUpdate) {
-            kandidatToUpdate.reststimmen = 0;
-          }
-        }
-      }
+      wahlvorschlag.selected = false;
     }
   }
 
-  function updateReststimmenWhenVotesRemoved() {
-    if (remainingVotes.value > 0) {
-      const wahlvorschlagToUpdate = stimmzettel.value.wahlvorschlaege.find(
-        (wahlvorschlag) => wahlvorschlag.selected
+  function refreshWahlvorschlaegeVotes() {
+    hasSystemErrorToManyListenKreuze.value = false;
+
+    const votesKandidatenAlreadyGotTool = useStringNumberMapTools(
+      new Map<string, number>()
+    );
+    const kandidatenOfWahlvorschlaege =
+      stimmzettel.value.wahlvorschlaege.flatMap(
+        (wahlvorschlag) => wahlvorschlag.kandidaten
       );
-      if (wahlvorschlagToUpdate) {
-        for (let i = remainingVotes.value; i > 0; i--) {
-          const kandidatToUpdate = wahlvorschlagToUpdate.kandidaten.find(
+    //count votes that any kandidat of wahlvorschlag already got
+    //we need to sum the votes of the nennungen cause sum of votes over all nennungen is limited
+    kandidatenOfWahlvorschlaege.forEach((kandidat) =>
+      votesKandidatenAlreadyGotTool.add(
+        kandidat.kandidatId,
+        (kandidat.ungueltigeStimmen ?? 0) + (kandidat.einzelstimmen ?? 0)
+      )
+    );
+
+    const countRequiredVotesLeftToFulfillReststimmenvergabe =
+      _getCountRequiredVotesForReststimmenvergabe(
+        votesKandidatenAlreadyGotTool
+      );
+    const totalVotesAlreadyGiven =
+      votesKandidatenAlreadyGotTool.sum() +
+      (stimmzettel.value.invalideVotes ?? 0);
+    const totalVotesLeft =
+      maximalErlaubteStimmenProWaehler.value - totalVotesAlreadyGiven;
+    logger.logDebug(
+      `totalVotesAlreadyGiven > ${totalVotesAlreadyGiven}, totalVotesLeft > ${totalVotesLeft}, countRequiredVotesLeftToFulfillReststimmenvergabe > ${countRequiredVotesLeftToFulfillReststimmenvergabe}`
+    );
+
+    if (countRequiredVotesLeftToFulfillReststimmenvergabe === null) {
+      selectedWahlvorschlaege.value.forEach((wahlvorschlag) =>
+        _placeReststimmenOnWahlvorschlag(
+          wahlvorschlag,
+          totalVotesLeft,
+          votesKandidatenAlreadyGotTool
+        )
+      );
+    } else if (
+      countRequiredVotesLeftToFulfillReststimmenvergabe <= totalVotesLeft
+    ) {
+      //Number.POSITIVE_INFINITY because with the condition we already ensured that are enough votes left
+      selectedWahlvorschlaege.value.forEach((wahlvorschlag) =>
+        _placeReststimmenOnWahlvorschlag(
+          wahlvorschlag,
+          Number.POSITIVE_INFINITY,
+          votesKandidatenAlreadyGotTool
+        )
+      );
+    } else {
+      kandidatenOfWahlvorschlaege.forEach(
+        (kandidat) => (kandidat.reststimmen = null)
+      );
+      hasSystemErrorToManyListenKreuze.value = true;
+    }
+  }
+
+  function _getCountRequiredVotesForReststimmenvergabe(
+    votesKandidatenAlreadyGotTool: ReturnType<typeof useStringNumberMapTools>
+  ): number | null {
+    if (selectedWahlvorschlaege.value.length > 1) {
+      const kandidatenThatCouldGetWahlvorschlagVote =
+        selectedWahlvorschlaege.value
+          .flatMap((wahlvorschlag) => wahlvorschlag.kandidaten)
+          .filter(
             (kandidat) =>
               !kandidat.durchgestrichen &&
-              !kandidat.einzelstimmen &&
-              !kandidat.ungueltigeStimmen &&
-              !kandidat.reststimmen
+              (kandidat.einzelstimmen ?? 0) === 0 &&
+              (kandidat.ungueltigeStimmen ?? 0) === 0 &&
+              votesKandidatenAlreadyGotTool.getOrDefault(kandidat.kandidatId) <
+                maxEinzelstimmen
           );
-          if (kandidatToUpdate) {
-            kandidatToUpdate.reststimmen = 1;
-          }
-        }
-      }
+
+      return (
+        kandidatenThatCouldGetWahlvorschlagVote.length *
+        countVotesGivenAsReststimme
+      );
+    } else {
+      return null;
     }
+  }
+
+  function _placeReststimmenOnWahlvorschlag(
+    wahlvorschlag: Wahlvorschlag,
+    votesLeftToPlace: number,
+    votesKandidatenAlreadyGotTool: ReturnType<typeof useStringNumberMapTools>
+  ) {
+    logger.logDebug(
+      `placing reststimmen on ${wahlvorschlag.kurzname}, votesLeftToPlace > ${votesLeftToPlace}`
+    );
+    let restStimmenSpent = 0;
+    wahlvorschlag.kandidaten.forEach((kandidat) => {
+      //is kandidat allowed to get reststimmen
+      if (
+        !hasAnyKennzeichen(kandidat) &&
+        restStimmenSpent + countVotesGivenAsReststimme <= votesLeftToPlace &&
+        votesKandidatenAlreadyGotTool.getOrDefault(kandidat.kandidatId) +
+          countVotesGivenAsReststimme <=
+          maxEinzelstimmen
+      ) {
+        kandidat.reststimmen = countVotesGivenAsReststimme;
+
+        votesKandidatenAlreadyGotTool.add(
+          kandidat.kandidatId,
+          countVotesGivenAsReststimme
+        );
+        restStimmenSpent += countVotesGivenAsReststimme;
+      } else {
+        kandidat.reststimmen = null;
+      }
+    });
+  }
+
+  function resetError() {
+    hasSystemErrorToManyListenKreuze.value = false;
   }
 
   return {
+    hasSystemErrorToManyListenKreuze,
+    refreshWahlvorschlaegeVotes,
+    resetError,
     selectWahlvorschlag,
     deselectWahlvorschlag,
-    updateReststimmenWhenVotesAdded,
-    updateReststimmenWhenVotesRemoved,
   };
 }

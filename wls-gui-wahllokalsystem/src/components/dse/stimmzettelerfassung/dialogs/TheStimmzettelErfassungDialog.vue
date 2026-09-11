@@ -46,7 +46,10 @@
               stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
                 .value.streichungen
             "
-            :gueltigkeit="'VALID'"
+            :gueltigkeit="
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                .value.gueltigkeit
+            "
           />
         </div>
         <div
@@ -57,6 +60,7 @@
             :ref="COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME"
             class="flex-0-0"
             :stimmzettel-manager="stimmzettelManager"
+            :disabled="isCommandInputFieldDisabled"
           />
           <div
             class="flex-1-1-0 d-flex"
@@ -77,33 +81,34 @@
           class="d-flex flex-column"
           style="flex: 0 0 300px"
         >
-          <the-eingabehistorie-card
-            :change-history="changeHistory.changeHistoryInReverseOrder.value"
-            class="d-flex flex-column"
-          />
-          <base-stimmzettel-zusammenfassung-card
-            class="mt-2 d-flex flex-column"
-            :listenstimmen="
+          <base-stimmzettel-sonderfaelle-card
+            v-model:invalid-votes="
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                .value.invalideVotes
+            "
+            v-model:gueltigkeit="
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                .value.gueltigkeit
+            "
+            v-model:wahlvorstand-beschlussvorschlag="
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                .value.wahlvorstandBeschlussvorschlag
+            "
+            :deny-selection-of-stimmzettel-fehlt="
               stimmzettelManager.bearbeitenDialogStimmzettelUtils
-                .wahlvorschlaegeWithListenkreuz.value
+                .hasAnyValuesSet.value
             "
-            :ungueltigestimmen="
-              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
-                .value.ungueltigeStimmen
+            :deny-selection-of-stimmzettel-leer="
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils
+                .hasAnyValuesSet.value
             "
-            :direktstimmen="
-              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
-                .value.einzelstimmen
+            :team-id="currentUserTeamName"
+            :system-beschlussgruende="
+              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel
+                .value.systemBeschlussvorschlag
             "
-            :reststimmen="
-              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
-                .value.reststimmen
-            "
-            :streichungen="
-              stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmenSummary
-                .value.streichungen
-            "
-            :gueltigkeit="'VALID'"
+            :stimmzettelkennung="stimmzettel.stimmzettelkennung"
+            :is-b-w-b="isBWB"
           />
         </div>
       </v-card-text>
@@ -118,6 +123,7 @@
           >Abbrechen</base-text-button
         >
         <base-save-button-with-action-menu
+          :disabled="isSaveDisabled"
           :model-value="currentAction"
           :actions="actions"
         />
@@ -145,6 +151,7 @@ import { useRoute } from "vue-router";
 
 import BaseSaveButtonWithActionMenu from "@/components/common/buttons/BaseSaveButtonWithActionMenu.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseStimmzettelSonderfaelleCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelSonderfaelleCard.vue";
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
 import TheStimmzettelErfassungCancelConfirmationDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungCancelConfirmationDialog.vue";
 import TheEingabehistorieCard from "@/components/dse/stimmzettelerfassung/TheEingabehistorieCard.vue";
@@ -153,6 +160,7 @@ import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStim
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
@@ -184,7 +192,7 @@ const actions = [
     action: () => onSavedClickedAndNext(),
   },
   {
-    title: "Speichern und schließen",
+    title: "Speichern und Schließen",
     action: () => onSavedClickedAndClose(),
   },
 ];
@@ -197,23 +205,10 @@ const commandProcessingTextField = useTemplateRef<
   InstanceType<typeof TheStimmzettelCommandProcessingTextField>
 >(COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME);
 
-watch(
-  () => isDialogVisibleModel.value,
-  (isVisible) => {
-    if (isVisible) {
-      currentAction.value = actions[0];
-      void focusCommandProcessingTextField();
-    }
-  },
-  {
-    immediate: true,
-  }
-);
-
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
 
-const { currentUserTeamName } = storeToRefs(useUserStore());
+const { currentUserTeamName, isBWB } = storeToRefs(useUserStore());
 
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
   computed(() => properties.stimmzettel.stimmzettelkennung),
@@ -229,12 +224,48 @@ const isCancelButtonDisabled = computed(
   () =>
     stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
 );
+const isCommandInputFieldDisabled = computed(
+  () =>
+    stimmzettelGueltigkeit.value ===
+      StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag ||
+    stimmzettelGueltigkeit.value === StimmzettelGueltigkeitEnum.Leer
+);
+const isSaveDisabled = computed(
+  () =>
+    !stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
+      .value &&
+    stimmzettelGueltigkeit.value !== StimmzettelGueltigkeitEnum.Leer &&
+    stimmzettelGueltigkeit.value !==
+      StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag &&
+    stimmzettelGueltigkeit.value !==
+      StimmzettelGueltigkeitEnum.BeschlussAusstehend &&
+    !!stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
+);
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
 );
 const latestChangedKandidat = computed<Kandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
+);
+const stimmzettelGueltigkeit = computed(
+  () =>
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
+      .gueltigkeit
+);
+
+watch(
+  () => isDialogVisibleModel.value,
+  (isVisible) => {
+    if (isVisible) {
+      stimmzettelManager.startNewStimmzettel();
+      currentAction.value = actions[0];
+      void focusCommandProcessingTextField();
+    }
+  },
+  {
+    immediate: true,
+  }
 );
 
 const isCancelConfirmationDialogVisible = ref(false);
@@ -264,6 +295,7 @@ function onSavedClickedAndClose() {
 
 function onSavedClickedAndNext() {
   emit("confirmNext", stimmzettelManager.getStimmzettelSnapshot());
+  stimmzettelManager.startNewStimmzettel();
   void focusCommandProcessingTextField();
 }
 

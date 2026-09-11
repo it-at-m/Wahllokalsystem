@@ -16,7 +16,7 @@ import type { Stimmzettel as ManageableStimmzettel } from "@/types/dse/stimmzett
 
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
-const { hasAnyKennzeichen } = useKandidatTools();
+const { hasAnyKennzeichenOrReststimme } = useKandidatTools();
 
 export function useStimmzettelMapper() {
   function toModel(dto: StimmzettelOfTeamDTO, teamID: string): Stimmzettel {
@@ -54,7 +54,7 @@ export function useStimmzettelMapper() {
       manageableStimmzettel.wahlvorschlaege
         .map((wahlvorschlag) => {
           const mappedKandidaten: Kandidat[] = wahlvorschlag.kandidaten
-            .filter((kandidat) => hasAnyKennzeichen(kandidat))
+            .filter((kandidat) => hasAnyKennzeichenOrReststimme(kandidat))
             .map((kandidat) => ({
               kandidatId: kandidat.kandidatId,
               nennung: kandidat.nennung,

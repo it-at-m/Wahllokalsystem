@@ -6,6 +6,7 @@
       :disabled="disabled"
       :error-messages="errorMessage"
       label="Kurzbefehl"
+      density="comfortable"
       @update:model-value="onModelValueChanged"
       @keydown.enter.prevent="onEnterPressed"
     />

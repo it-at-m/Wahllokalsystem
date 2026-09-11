@@ -44,7 +44,7 @@ function _useManagedStimmzettel(
   const { getWahlvorschlagByOrdnungszahl } =
     useManagedStimmzettelWahlvorschlagUtils(stimmzettel);
   const { addVotesToKandidat, removeVotesFromKandidat } =
-    useManagedStimmzettelEinzelstimmeUtils();
+    useManagedStimmzettelEinzelstimmeUtils(maxEinzelstimmen);
   const { addInvalidVotesToKandidat, removeInvalidVotesFromKandidat } =
     useManagedStimmzettelUngueltigeStimmeUtils();
   const { resetStimmzettel } = useStimmzettelMapper();
@@ -185,7 +185,9 @@ function _useManagedStimmzettel(
         `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
       );
     }
-    if (!kandidat.einzelstimmen || kandidat.einzelstimmen < votesToRemove) {
+    const sumOfEinzelAndUngueltigeStimmen =
+      (kandidat.einzelstimmen ?? 0) + (kandidat.ungueltigeStimmen ?? 0);
+    if (sumOfEinzelAndUngueltigeStimmen < votesToRemove) {
       throw new ManagedStimmzettelError(
         `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${votesToRemove} Stimmen abgezogen werden.`
       );
@@ -283,7 +285,7 @@ function _useManagedStimmzettel(
     if (kandidat.durchgestrichen) {
       throw new ManagedStimmzettelError(`Kandidat*in ist bereits gestrichen.`);
     }
-    kandidat.durchgestrichen = true;
+    _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige(kandidat);
     refreshWahlvorschlaegeVotes();
     changeHistory.registerKandidatStreichungSet(kandidat);
   }
@@ -316,7 +318,9 @@ function _useManagedStimmzettel(
     if (kandidaten.every((kandidat) => kandidat.durchgestrichen)) {
       throw new ManagedStimmzettelError(`Der Bereich ist bereits gestrichen.`);
     }
-    kandidaten.map((kandidat) => (kandidat.durchgestrichen = true));
+    kandidaten.forEach(
+      _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige
+    );
     refreshWahlvorschlaegeVotes();
     changeHistory.registerKandidatStreichungRangeSet(kandidaten);
   }
@@ -429,6 +433,17 @@ function _useManagedStimmzettel(
     if (!Number.isSafeInteger(value) || value <= 0) {
       throw new ManagedStimmzettelError(errorMessage);
     }
+  }
+
+  function _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige(
+    kandidat: Kandidat
+  ) {
+    kandidat.durchgestrichen = true;
+    const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
+    const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
+    kandidat.einzelstimmen = null;
+    kandidat.ungueltigeStimmen =
+      currentUngueltigeStimmen + currentEinzelstimmen;
   }
 
   function _updateGueltigkeitWhenBeschlussvorschlaegeChanged() {

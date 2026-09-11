@@ -1,101 +1,116 @@
 <template>
-  <v-card>
-    <v-card-title>{{ TITEL_SONDERFAELLE }}</v-card-title>
-    <v-card-text>
-      <v-checkbox
-        :model-value="isStimmzettelLeerSelected"
-        label="Stimmzettel ist leer"
-        :disabled="isCheckboxStimmzettelLeerDisabled"
-        density="compact"
-        hide-details
-        @update:model-value="onStimmzettelLeerChanged"
-      />
-      <v-checkbox
-        v-if="isBWB"
-        :model-value="isStimmzettelFehltSelected"
-        label="Stimmzettel fehlt"
-        :disabled="isCheckboxStimmzettelFehltDisabled"
-        density="compact"
-        hide-details
-        @update:model-value="onStimmzettelFehltChanged"
-      />
-      <div class="d-flex justify-space-between align-center ga-1">
-        <div>ungültige Stimmen die nicht zugeordnet werden können</div>
-        <div style="flex: 0 1 130px">
-          <v-number-input
-            v-model="modelValueInvalidVotes"
-            :disabled="isInputOfInvalidVotesDisabled"
-            control-variant="stacked"
-            density="compact"
-            hide-details
-            :clearable="false"
-            :min="0"
+  <div>
+    <v-card>
+      <v-card-title>{{ TITEL_SONDERFAELLE }}</v-card-title>
+      <v-card-text class="overflow-y-auto">
+        <v-checkbox
+          :model-value="isStimmzettelLeerSelected"
+          label="Stimmzettel ist leer"
+          :disabled="isCheckboxStimmzettelLeerDisabled"
+          density="compact"
+          hide-details
+          @update:model-value="onStimmzettelLeerChanged"
+        />
+        <v-checkbox
+          v-if="isBWB"
+          :model-value="isStimmzettelFehltSelected"
+          label="Stimmzettel fehlt"
+          :disabled="isCheckboxStimmzettelFehltDisabled"
+          density="compact"
+          hide-details
+          @update:model-value="onStimmzettelFehltChanged"
+        />
+        <div class="d-flex justify-space-between align-center ga-1">
+          <div class="flex-grow-1">
+            ungültige Stimmen die nicht zugeordnet werden können
+          </div>
+          <div style="flex: 1 0 5rem">
+            <v-number-input
+              v-model="modelValueInvalidVotes"
+              :disabled="isInputOfInvalidVotesDisabled"
+              control-variant="stacked"
+              density="compact"
+              hide-details
+              :clearable="false"
+              :min="0"
+            />
+          </div>
+        </div>
+
+        <base-dialog
+          :visible="isStimmzettelFehltInstructionDialogVisible"
+          dialogtitle="Bitte Kennung anbringen"
+          confirmtext="Bestätigen"
+          icon="$information"
+          @confirm="onStimmzettelFehlInstructionDialogConfirm"
+        >
+          <div>
+            Bitte notieren Sie die Stimmzettelkennung des fehlenden Stimmzettels
+            auf dem Umschlag oder auf dem Hilfsblatt.
+          </div>
+
+          <base-stimmzettelkennung-strong-text
+            :stimmzettelkennung="stimmzettelkennung"
+            :team-name="teamId"
+          />
+        </base-dialog>
+      </v-card-text>
+    </v-card>
+    <v-card class="mt-2">
+      <v-card-title v-if="showBeschlussfassung">Beschlussfassung</v-card-title>
+      <v-card-text
+        v-if="showBeschlussfassung"
+        class="overflow-y-auto"
+      >
+        <div
+          v-if="
+            isCheckboxMarkForBeschlussfassungSelected && modelValueGueltigkeit
+          "
+          class="mb-2"
+        >
+          <base-stimmzettel-gueltigkeit-icon
+            :gueltigkeit="modelValueGueltigkeit"
+          />
+          <span class="ms-2 font-weight-bold">{{
+            toText(modelValueGueltigkeit)
+          }}</span>
+          <v-divider
+            class="mt-2"
+            thickness="2"
           />
         </div>
-      </div>
-
-      <base-dialog
-        :visible="isStimmzettelFehltInstructionDialogVisible"
-        dialogtitle="Bitte Kennung anbringen"
-        confirmtext="Bestätigen"
-        icon="$information"
-        @confirm="onStimmzettelFehlInstructionDialogConfirm"
-      >
-        <div>
-          Bitte notieren Sie die Stimmzettelkennung des fehlenden Stimmzettels
-          auf dem Umschlag oder auf dem Hilfsblatt.
+        <div v-if="systemBeschlussgruende.length > 0">
+          <ul class="ms-4">
+            <li
+              v-for="(systemgrund, index) in systemBeschlussgruende"
+              :key="index"
+            >
+              <span class="label">{{
+                mapSystemBeschlussgrundReasonEnumToText(systemgrund.reason)
+              }}</span>
+            </li>
+          </ul>
+          <v-divider
+            class="my-2"
+            thickness="2"
+          />
         </div>
-
-        <base-stimmzettelkennung-strong-text
-          :stimmzettelkennung="stimmzettelkennung"
-          :team-name="teamId"
+        Begründung auswählen oder eingeben (abweichende Gründe mit Enter
+        bestätigen)
+        <v-combobox
+          v-model="stimmzettelWahlvorstandBeschlussgruende"
+          :items="wahlvorstandBeschlussvorschlaegeItems"
+          class="combobox-as-textarea mt-1"
+          multiple
+          chips
+          closable-chips
+          density="compact"
+          :menu-props="{ location: 'start' }"
+          :rules="wahlvorstandBeschlussvorschlaegeRules"
         />
-      </base-dialog>
-    </v-card-text>
-    <v-card-title v-if="showBeschlussfassung">Beschlussfassung</v-card-title>
-    <v-card-text v-if="showBeschlussfassung">
-      <div
-        v-if="
-          isCheckboxMarkForBeschlussfassungSelected && modelValueGueltigkeit
-        "
-        class="mb-2"
-      >
-        <base-stimmzettel-gueltigkeit-icon
-          :gueltigkeit="modelValueGueltigkeit"
-        />
-        <span class="ms-2 font-weight-bold">{{
-          toText(modelValueGueltigkeit)
-        }}</span>
-      </div>
-      <div v-if="systemBeschlussgruende.length > 0">
-        <ul class="ms-4">
-          <li
-            v-for="(systemgrund, index) in systemBeschlussgruende"
-            :key="index"
-          >
-            <span class="label">{{
-              mapSystemBeschlussgrundReasonEnumToText(systemgrund.reason)
-            }}</span>
-          </li>
-        </ul>
-        <v-divider
-          class="my-2"
-          thickness="2"
-        />
-      </div>
-      Begründung auswählen oder eingeben (abweichende Gründe mit Enter
-      bestätigen)
-      <v-combobox
-        v-model="stimmzettelWahlvorstandBeschlussgruende"
-        :items="wahlvorstandBeschlussvorschlaegeItems"
-        class="combobox-as-textarea mt-1"
-        multiple
-        chips
-        closable-chips
-        :rules="wahlvorstandBeschlussvorschlaegeRules"
-      />
-    </v-card-text>
-  </v-card>
+      </v-card-text>
+    </v-card>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -4,11 +4,9 @@ import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfa
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
-import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
@@ -17,12 +15,9 @@ const mockDefinitions = await vi.hoisted(async () => {
   return {
     loadErfassungTeamStatus: vi.fn(),
     postErfassungTeamStatus: vi.fn(),
-    getStimmzettel: vi.fn(),
-    saveStimmzettel: vi.fn(),
     getEmptyStimmzettelWithStimmzettelkennung: vi.fn(),
     logError: vi.fn(),
     onActivated: vi.fn(),
-    loadWahlvorschlaege: vi.fn(),
 
     registerActivated: (cb: () => Promise<void> | void) => {
       activatedCallbacks.length = 0;
@@ -61,20 +56,6 @@ vi.mock(
 );
 
 vi.mock(
-  import("@/composables/dse/stimmzettelerfassung/stimmzettelService.ts"),
-  async (importOriginal) => {
-    const mod = await importOriginal();
-    return {
-      useStimmzettelService: () => ({
-        ...mod.useStimmzettelService(),
-        getStimmzettel: mockDefinitions.getStimmzettel,
-        saveStimmzettel: mockDefinitions.saveStimmzettel,
-      }),
-    };
-  }
-);
-
-vi.mock(
   import("@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
@@ -98,23 +79,12 @@ vi.mock(import("@/composables/common/logging.ts"), async (importOriginal) => {
   };
 });
 
-vi.mock(
-  import("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts"),
-  () => ({
-    useWahlvorschlaegeService: () => ({
-      getWahlvorschlaege: mockDefinitions.loadWahlvorschlaege,
-    }),
-  })
-);
-
 describe("stimmzettelErfassungViewUtils.ts", () => {
   const { generateRandomString, generateRandomNumber } =
     useCommonTestDataFactory();
   const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
   const { createStimmzettelerfassungTeamStatusModel } =
     useStimmzettelerfassungTeamStatusTestDataFactory();
-  const { prepareWahlvorschlaege, createWahlvorschlag } =
-    useWahlvorschlaegeTestDataFactory();
 
   const mockedWahlId = generateRandomString(10);
   const mockedWahlbezirkId = generateRandomString(10);
@@ -144,10 +114,6 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
     it("should_haveInitialTeamStatusAndStatusLoading_when_initialized", () => {
       expect(unitUnderTest.teamStatus.value).toBeNull();
       expect(unitUnderTest.isStatusLoading.value).toBe(false);
-    });
-
-    it("should_haveInitialSavedStimmzettelEmpty_when_initialized", () => {
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([]);
     });
   });
 
@@ -197,7 +163,9 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       expect(unitUnderTest.isStatusLoading.value).toStrictEqual(false);
       expect(unitUnderTest.teamStatus.value).toStrictEqual(null);
 
-      await mockDefinitions.runActivatedCallbacks();
+      await expect(
+        mockDefinitions.runActivatedCallbacks()
+      ).rejects.toThrowError("mocked service error");
 
       expect(mockDefinitions.loadErfassungTeamStatus.mock.calls).toStrictEqual([
         [mockedWahlId, mockedWahlbezirkId, mockedTeamId, NO_NOTIFICATION],
@@ -211,308 +179,121 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       spyOnIsStatusLoadingSetter.mockRestore();
     });
 
-    it("should_loadStimmzettel_when_activatedAndLoadingIsSuccessful", async () => {
-      const spyOnIsStimmzettelLoadingSetter = vi.spyOn(
-        unitUnderTest.isStimmzettelLoading,
-        "value",
-        "set"
-      );
+    describe("startNewEmptyStimmzettelWithStimmzettelkennung", () => {
+      it("should_setActiveStimmzettel_when_calledWithKennung", () => {
+        const mockedKennung = generateRandomNumber(3);
+        const mockedEmptyStimmzettel: Stimmzettel =
+          preparePersistedStimmzettel()
+            .stimmzettelkennung(mockedKennung)
+            .build();
 
-      const mockedLoadedStimmzettel = [
-        preparePersistedStimmzettel().build(),
-        preparePersistedStimmzettel().build(),
-      ];
-      mockDefinitions.getStimmzettel.mockReturnValue(mockedLoadedStimmzettel);
+        mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung.mockReturnValue(
+          mockedEmptyStimmzettel
+        );
 
-      expect(unitUnderTest.savedStimmzettel.value).not.toStrictEqual(
-        mockedLoadedStimmzettel
-      );
-      expect(unitUnderTest.hasStimmzettel.value).toStrictEqual(false);
+        unitUnderTest.startNewEmptyStimmzettelWithStimmzettelkennung(
+          mockedKennung
+        );
 
-      await mockDefinitions.runActivatedCallbacks();
-
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual(
-        mockedLoadedStimmzettel
-      );
-      expect(mockDefinitions.getStimmzettel.mock.calls).toStrictEqual([
-        [mockedWahlId, mockedWahlbezirkId, mockedTeamId],
-      ]);
-      expect(spyOnIsStimmzettelLoadingSetter.mock.calls).toStrictEqual([
-        [true],
-        [false],
-      ]);
-      expect(unitUnderTest.hasStimmzettel.value).toStrictEqual(true);
-
-      spyOnIsStimmzettelLoadingSetter.mockRestore();
+        expect(
+          mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung
+        ).toHaveBeenCalledWith(mockedKennung);
+        expect(unitUnderTest.activeStimmzettel.value).toStrictEqual(
+          mockedEmptyStimmzettel
+        );
+      });
     });
 
-    it("should_loadStimmzettel_when_activatedAndLoadingFailed", async () => {
-      const spyOnIsStimmzettelLoadingSetter = vi.spyOn(
-        unitUnderTest.isStimmzettelLoading,
-        "value",
-        "set"
-      );
+    describe("sendStatusInBearbeitung", () => {
+      it("should_sendStatusInBearbeitungAndUpdateInternalState_when_sendingWasSuccessful", async () => {
+        mockDefinitions.postErfassungTeamStatus.mockResolvedValue(undefined);
 
-      mockDefinitions.getStimmzettel.mockRejectedValue(
-        new Error("mocked service error")
-      );
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([]);
+        await unitUnderTest.sendStatusInBearbeitung();
 
-      await mockDefinitions.runActivatedCallbacks();
+        const expectedStatusToSend =
+          StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG;
+        expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalledWith(
+          mockedWahlId,
+          mockedWahlbezirkId,
+          mockedTeamId,
+          { status: expectedStatusToSend },
+          false
+        );
 
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([]);
-      expect(mockDefinitions.getStimmzettel.mock.calls).toStrictEqual([
-        [mockedWahlId, mockedWahlbezirkId, mockedTeamId],
-      ]);
-      expect(spyOnIsStimmzettelLoadingSetter.mock.calls).toStrictEqual([
-        [true],
-        [false],
-      ]);
+        const mockedExpectedTeamStatusModel: StimmzettelerfassungTeamStatus =
+          createStimmzettelerfassungTeamStatusModel(expectedStatusToSend);
+        expect(unitUnderTest.teamStatus.value).toStrictEqual(
+          mockedExpectedTeamStatusModel
+        );
+      });
 
-      spyOnIsStimmzettelLoadingSetter.mockRestore();
+      it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
+        const mockedPostApiError = new Error("mocked post error");
+        mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
+          mockedPostApiError
+        );
+
+        await expect(
+          unitUnderTest.sendStatusInBearbeitung()
+        ).rejects.toThrowError(mockedPostApiError);
+
+        const expectedStatusToSend =
+          StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG;
+        expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalledWith(
+          mockedWahlId,
+          mockedWahlbezirkId,
+          mockedTeamId,
+          { status: expectedStatusToSend },
+          false
+        );
+        expect(unitUnderTest.teamStatus.value).toBeNull();
+      });
     });
 
-    it("should_loadWahlvorschlaege_when_activatedAndLoadingIsSuccessful", async () => {
-      const spyOnIsWahlvorschlaegeLoading = vi.spyOn(
-        unitUnderTest.isWahlvorschlaegeLoading,
-        "value",
-        "set"
-      );
+    describe("sendStatusUnterbrochen", () => {
+      it("should_sendStatusUnterbrochenAndUpdateInternalState_when_sendingWasSuccessful", async () => {
+        mockDefinitions.postErfassungTeamStatus.mockResolvedValue(undefined);
 
-      const mockedLoadedWahlvorschlaege = prepareWahlvorschlaege()
-        .wahlvorschlaege([createWahlvorschlag(), createWahlvorschlag()])
-        .build();
-      mockDefinitions.loadWahlvorschlaege.mockReturnValue(
-        mockedLoadedWahlvorschlaege
-      );
-      expect(unitUnderTest.wahlvorschlaege.value).toStrictEqual([]);
+        await unitUnderTest.sendStatusUnterbrochen();
 
-      await mockDefinitions.runActivatedCallbacks();
+        const expectedStatusToSend =
+          StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN;
+        expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalledWith(
+          mockedWahlId,
+          mockedWahlbezirkId,
+          mockedTeamId,
+          { status: expectedStatusToSend },
+          false
+        );
 
-      expect(unitUnderTest.wahlvorschlaege.value).toStrictEqual(
-        mockedLoadedWahlvorschlaege.wahlvorschlaege
-      );
-      expect(mockDefinitions.loadWahlvorschlaege.mock.calls).toStrictEqual([
-        [mockedWahlId, mockedWahlbezirkId],
-      ]);
-      expect(spyOnIsWahlvorschlaegeLoading.mock.calls).toStrictEqual([
-        [true],
-        [false],
-      ]);
+        const mockedExpectedTeamStatusModel: StimmzettelerfassungTeamStatus =
+          createStimmzettelerfassungTeamStatusModel(expectedStatusToSend);
+        expect(unitUnderTest.teamStatus.value).toStrictEqual(
+          mockedExpectedTeamStatusModel
+        );
+      });
 
-      spyOnIsWahlvorschlaegeLoading.mockRestore();
-    });
+      it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
+        const mockedPostApiError = new Error("mocked post error");
+        mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
+          mockedPostApiError
+        );
 
-    it("should_loadWahlvorschlaege_when_activatedAndLoadingFailed", async () => {
-      const spyOnIsWahlvorschlaegeLoading = vi.spyOn(
-        unitUnderTest.isWahlvorschlaegeLoading,
-        "value",
-        "set"
-      );
+        await expect(
+          unitUnderTest.sendStatusUnterbrochen()
+        ).rejects.toThrowError(mockedPostApiError);
 
-      mockDefinitions.loadWahlvorschlaege.mockRejectedValue(
-        new Error("mocked service error")
-      );
-      expect(unitUnderTest.wahlvorschlaege.value).toStrictEqual([]);
-
-      await mockDefinitions.runActivatedCallbacks();
-
-      expect(unitUnderTest.wahlvorschlaege.value).toStrictEqual([]);
-      expect(mockDefinitions.loadWahlvorschlaege.mock.calls).toStrictEqual([
-        [mockedWahlId, mockedWahlbezirkId],
-      ]);
-      expect(spyOnIsWahlvorschlaegeLoading.mock.calls).toStrictEqual([
-        [true],
-        [false],
-      ]);
-
-      spyOnIsWahlvorschlaegeLoading.mockRestore();
-    });
-  });
-
-  describe("startNewEmptyStimmzettelWithStimmzettelkennung", () => {
-    it("should_returnStimmzettel_when_calledWithKennung", () => {
-      const mockedKennung = generateRandomNumber(3);
-      const mockedEmptyStimmzettel: Stimmzettel = preparePersistedStimmzettel()
-        .stimmzettelkennung(mockedKennung)
-        .build();
-
-      mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung.mockReturnValue(
-        mockedEmptyStimmzettel
-      );
-
-      unitUnderTest.startNewEmptyStimmzettelWithStimmzettelkennung(
-        mockedKennung
-      );
-
-      expect(
-        mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung
-      ).toHaveBeenCalledWith(mockedKennung);
-      expect(unitUnderTest.activeStimmzettel.value).toStrictEqual(
-        mockedEmptyStimmzettel
-      );
-    });
-  });
-
-  describe("sendStatusInBearbeitung", () => {
-    it("should_sendStatusInBearbeitungAndUpdateInternalState_when_sendingWasSuccessful", async () => {
-      mockDefinitions.postErfassungTeamStatus.mockResolvedValue(undefined);
-
-      await unitUnderTest.sendStatusInBearbeitung();
-
-      const expectedStatusToSend =
-        StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG;
-      expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalledWith(
-        mockedWahlId,
-        mockedWahlbezirkId,
-        mockedTeamId,
-        { status: expectedStatusToSend },
-        false
-      );
-
-      const mockedExpectedTeamStatusModel: StimmzettelerfassungTeamStatus =
-        createStimmzettelerfassungTeamStatusModel(expectedStatusToSend);
-      expect(unitUnderTest.teamStatus.value).toStrictEqual(
-        mockedExpectedTeamStatusModel
-      );
-    });
-
-    it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
-      const mockedPostApiError = new Error("mocked post error");
-      mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
-        mockedPostApiError
-      );
-
-      await expect(
-        unitUnderTest.sendStatusInBearbeitung()
-      ).rejects.toThrowError(mockedPostApiError);
-
-      const expectedStatusToSend =
-        StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG;
-      expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalledWith(
-        mockedWahlId,
-        mockedWahlbezirkId,
-        mockedTeamId,
-        { status: expectedStatusToSend },
-        false
-      );
-      expect(unitUnderTest.teamStatus.value).toBeNull();
-    });
-  });
-
-  describe("sendStatusUnterbrochen", () => {
-    it("should_sendStatusUnterbrochenAndUpdateInternalState_when_sendingWasSuccessful", async () => {
-      mockDefinitions.postErfassungTeamStatus.mockResolvedValue(undefined);
-
-      await unitUnderTest.sendStatusUnterbrochen();
-
-      const expectedStatusToSend =
-        StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN;
-      expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalledWith(
-        mockedWahlId,
-        mockedWahlbezirkId,
-        mockedTeamId,
-        { status: expectedStatusToSend },
-        false
-      );
-
-      const mockedExpectedTeamStatusModel: StimmzettelerfassungTeamStatus =
-        createStimmzettelerfassungTeamStatusModel(expectedStatusToSend);
-      expect(unitUnderTest.teamStatus.value).toStrictEqual(
-        mockedExpectedTeamStatusModel
-      );
-    });
-
-    it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
-      const mockedPostApiError = new Error("mocked post error");
-      mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
-        mockedPostApiError
-      );
-
-      await expect(unitUnderTest.sendStatusUnterbrochen()).rejects.toThrowError(
-        mockedPostApiError
-      );
-
-      const expectedStatusToSend =
-        StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN;
-      expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalledWith(
-        mockedWahlId,
-        mockedWahlbezirkId,
-        mockedTeamId,
-        { status: expectedStatusToSend },
-        false
-      );
-      expect(unitUnderTest.teamStatus.value).toBeNull();
-    });
-  });
-
-  describe("saveOrUpdateStimmzettel", () => {
-    it("should_appendStimmzettelAndPersist_when_initialCollectionIsEmpty", async () => {
-      const mockedNewStimmzettel: Stimmzettel =
-        preparePersistedStimmzettel().build();
-
-      mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
-
-      await unitUnderTest.saveOrUpdateStimmzettel(mockedNewStimmzettel);
-
-      expect(mockDefinitions.saveStimmzettel).toHaveBeenCalledWith(
-        mockedWahlId,
-        mockedWahlbezirkId,
-        mockedTeamId,
-        [mockedNewStimmzettel]
-      );
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
-        mockedNewStimmzettel,
-      ]);
-    });
-
-    it("should_appendStimmzettelToExistingCollectionAndPersist_when_collectionAlreadyContainsItems", async () => {
-      const mockedExistingStimmzettel: Stimmzettel =
-        preparePersistedStimmzettel().build();
-      const mockedNewStimmzettel: Stimmzettel =
-        preparePersistedStimmzettel().build();
-
-      mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
-
-      await unitUnderTest.saveOrUpdateStimmzettel(mockedExistingStimmzettel);
-      await unitUnderTest.saveOrUpdateStimmzettel(mockedNewStimmzettel);
-
-      const mockedLastSaveCall =
-        mockDefinitions.saveStimmzettel.mock.calls.at(-1) ?? [];
-      const mockedSavedCollection = mockedLastSaveCall[3] as Stimmzettel[];
-
-      expect(mockedSavedCollection).toStrictEqual([
-        mockedExistingStimmzettel,
-        mockedNewStimmzettel,
-      ]);
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
-        mockedExistingStimmzettel,
-        mockedNewStimmzettel,
-      ]);
-    });
-
-    it("should_replaceExistingStimmzettel_when_savingEditedStimmzettel", async () => {
-      const mockedExistingStimmzettel: Stimmzettel =
-        preparePersistedStimmzettel()
-          .stimmzettelkennung(1)
-          .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
-          .build();
-      const mockedEditedStimmzettel = preparePersistedStimmzettel()
-        .stimmzettelkennung(mockedExistingStimmzettel.stimmzettelkennung)
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
-        .build();
-
-      mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
-
-      await unitUnderTest.saveOrUpdateStimmzettel(mockedExistingStimmzettel);
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
-        mockedExistingStimmzettel,
-      ]);
-
-      await unitUnderTest.saveOrUpdateStimmzettel(mockedEditedStimmzettel);
-      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
-        mockedEditedStimmzettel,
-      ]);
+        const expectedStatusToSend =
+          StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN;
+        expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalledWith(
+          mockedWahlId,
+          mockedWahlbezirkId,
+          mockedTeamId,
+          { status: expectedStatusToSend },
+          false
+        );
+        expect(unitUnderTest.teamStatus.value).toBeNull();
+      });
     });
   });
 });

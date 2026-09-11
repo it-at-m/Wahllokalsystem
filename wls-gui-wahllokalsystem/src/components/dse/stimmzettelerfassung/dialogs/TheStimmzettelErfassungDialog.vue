@@ -18,7 +18,7 @@
       >
         <div
           class="d-flex flex-column"
-          style="flex: 0 0 200px"
+          style="flex: 0 0 250px; min-width: 0"
         >
           <the-eingabehistorie-card
             :change-history="changeHistory.changeHistoryInReverseOrder.value"
@@ -79,7 +79,7 @@
         </div>
         <div
           class="d-flex flex-column"
-          style="flex: 0 0 300px"
+          style="flex: 0 0 250px; min-width: 0"
         >
           <base-stimmzettel-sonderfaelle-card
             v-model:invalid-votes="

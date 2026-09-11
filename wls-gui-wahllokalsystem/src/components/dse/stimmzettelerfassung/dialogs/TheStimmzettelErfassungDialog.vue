@@ -252,6 +252,7 @@ const isCommandInputFieldDisabled = computed(
 );
 const isSaveDisabled = computed(() => {
   if (
+    stimmzettelManager.stimmzettelBeforeEdit.value !== null &&
     stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value &&
     !stimmzettelManager.hasStimmzettelBeenEdited.value
   )

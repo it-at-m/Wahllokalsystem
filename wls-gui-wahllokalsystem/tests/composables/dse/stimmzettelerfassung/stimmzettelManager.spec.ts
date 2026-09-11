@@ -328,7 +328,7 @@ describe("stimmzettelManager.ts", () => {
       expect(hasStimmzettelBeenEdited.value).toBe(true);
     });
 
-    it("should_returnFalse_whenStimmzettelToCompareHaveSameValues", () => {
+    it("should_returnFalse_when_stimmzettelToCompareHaveSameValues", () => {
       const {
         setActiveStimmzettelWhenEditing,
         hasStimmzettelBeenEdited,

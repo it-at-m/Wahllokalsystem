@@ -15,7 +15,7 @@ Damit das möglichst nachvollziehbar für die User\*innen ist, werden folgende R
 
 Bekommt ein\*e Kandidat\*in, der\*die bereits eine Einzelstimme hat, erneut eine Einzelstimme vergeben, so wird diese zur bestehenden
 Stimme dazuaddiert. Wird dabei die Maximalmenge an Einzelstimmen die ein/eine Kandidat\*in, über alle Nennungen hinweg,
-überschritten. Werden entsprechd viele Stimmen oberhalb der Maximalmenge als ungültige Stimmen vergeben.
+überschritten, werden entsprechend viele Stimmen oberhalb der Maximalmenge als ungültige Stimmen vergeben.
 
 Hat ein\*e Kandidat\*in mehrere Nennungen und die zweite Nennung hat zum Beispiel bereits eine Stimme, so führt die Eingabe
 einer Einzelstimme bei dieser Person zu einer weiteren Stimme bei der zweiten Nennung.

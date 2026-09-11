@@ -47,7 +47,8 @@ function _useManagedStimmzettel(
     useManagedStimmzettelEinzelstimmeUtils(maxEinzelstimmen);
   const { addInvalidVotesToKandidat, removeInvalidVotesFromKandidat } =
     useManagedStimmzettelUngueltigeStimmeUtils();
-  const { resetStimmzettel } = useStimmzettelMapper();
+  const { mapPersistedStimmzettelValuesToExistingDseStimmzettel } =
+    useStimmzettelMapper();
 
   const { kopfdaten } = storeToRefs(useKopfdatenStore());
 
@@ -140,8 +141,27 @@ function _useManagedStimmzettel(
     stimmzettelBeforeEdit?: PersistedStimmzettel
   ) {
     changeHistory.reset();
-    const resetResult = resetStimmzettel(stimmzettel, stimmzettelBeforeEdit);
-    stimmzettel.value = resetResult.value;
+    if (stimmzettelBeforeEdit) {
+      stimmzettel.value = mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+        stimmzettel.value,
+        stimmzettelBeforeEdit
+      );
+    } else {
+      stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
+        wahlvorschlag.selected = false;
+        wahlvorschlag.kandidaten.map((kandidat) => {
+          kandidat.einzelstimmen = null;
+          kandidat.ungueltigeStimmen = null;
+          kandidat.reststimmen = null;
+          kandidat.durchgestrichen = false;
+        });
+      });
+      stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
+      stimmzettel.value.wahlvorstandBeschlussvorschlag = [];
+      stimmzettel.value.systemBeschlussvorschlag = [];
+      stimmzettel.value.beschlussfassung = null;
+      stimmzettel.value.invalideVotes = 0;
+    }
     resetReststimmeError();
     refreshWahlvorschlaegeVotes();
   }

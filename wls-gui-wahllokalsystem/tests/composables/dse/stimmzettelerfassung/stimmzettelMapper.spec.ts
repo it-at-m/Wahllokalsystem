@@ -11,7 +11,6 @@ import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschl
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { ref } from "vue";
 
 import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
@@ -62,8 +61,12 @@ const { generateRandomNumber, generateRandomString } =
   useCommonTestDataFactory();
 
 describe("stimmzettelMapper.ts", () => {
-  const { toModel, toPersistedStimmzettel, toDTO, resetStimmzettel } =
-    useStimmzettelMapper();
+  const {
+    toModel,
+    toPersistedStimmzettel,
+    toDTO,
+    mapPersistedStimmzettelValuesToExistingDseStimmzettel,
+  } = useStimmzettelMapper();
   const teamID = "teamID";
 
   afterEach(() => {
@@ -589,28 +592,7 @@ describe("stimmzettelMapper.ts", () => {
     });
   });
 
-  describe("resetStimmzettel", () => {
-    it("should_resetStimmzettelToEmpty_when_calledWithoutReference", () => {
-      const stimmzettelToMapTo = ref(createStimmzettel());
-
-      const result = resetStimmzettel(stimmzettelToMapTo);
-
-      expect(result.value.wahlvorstandBeschlussvorschlag).toStrictEqual([]);
-      expect(result.value.systemBeschlussvorschlag).toStrictEqual([]);
-      expect(result.value.gueltigkeit).toStrictEqual("VALID");
-      expect(result.value.beschlussfassung).toBeNull();
-      expect(result.value.invalideVotes).toBe(0);
-      result.value.wahlvorschlaege.forEach((wahlvorschlag) => {
-        expect(wahlvorschlag.selected).toBe(false);
-        wahlvorschlag.kandidaten.forEach((k) => {
-          expect(k.einzelstimmen).toBeNull();
-          expect(k.ungueltigeStimmen).toBeNull();
-          expect(k.reststimmen).toBeNull();
-          expect(k.durchgestrichen).toBe(false);
-        });
-      });
-    });
-
+  describe("mapPersistedStimmzettelValuesToExistingDseStimmzettel", () => {
     it("should_resetStimmzettelToReference_when_calledWithReference", () => {
       const stimmzettelToMapToWahlvorschlag = prepareStimmzettelWahlvorschlag()
         .wahlvorschlagID("1")
@@ -633,23 +615,21 @@ describe("stimmzettelMapper.ts", () => {
           .durchgestrichen(true)
           .owningWahlvorschlag(stimmzettelToMapToWahlvorschlag)
           .build();
-      const stimmzettelToMapTo = ref(
-        prepareStimmzettel()
-          .wahlvorstandBeschlussvorschlag([])
-          .systemBeschlussvorschlag([])
-          .beschlussfassung(null)
-          .gueltigkeit("VALID")
-          .invalideVotes(0)
-          .wahlvorschlaege([stimmzettelToMapToWahlvorschlag])
-          .build()
-      );
-      stimmzettelToMapTo.value.wahlvorschlaege[0].kandidaten = [
+      const stimmzettelToMapTo = prepareStimmzettel()
+        .wahlvorstandBeschlussvorschlag([])
+        .systemBeschlussvorschlag([])
+        .beschlussfassung(null)
+        .gueltigkeit("VALID")
+        .invalideVotes(0)
+        .wahlvorschlaege([stimmzettelToMapToWahlvorschlag])
+        .build();
+      stimmzettelToMapTo.wahlvorschlaege[0].kandidaten = [
         stimmzettelToMapToKandidat,
       ];
 
       const stimmzettelToResetToKandidat = {
         kandidatId:
-          stimmzettelToMapTo.value.wahlvorschlaege[0].kandidaten[0].kandidatId,
+          stimmzettelToMapTo.wahlvorschlaege[0].kandidaten[0].kandidatId,
         nennung: stimmzettelToMapToKandidat.nennung,
         isDiscarded: true,
         votesByVoter: 5,
@@ -682,23 +662,26 @@ describe("stimmzettelMapper.ts", () => {
         .beschlussfassung(null)
         .build();
 
-      const result = resetStimmzettel(stimmzettelToMapTo, stimmzettelToResetTo);
+      const result = mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+        stimmzettelToMapTo,
+        stimmzettelToResetTo
+      );
 
-      expect(result.value.wahlvorstandBeschlussvorschlag).toStrictEqual([
+      expect(result.wahlvorstandBeschlussvorschlag).toStrictEqual([
         {
           text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
         },
       ]);
-      expect(result.value.systemBeschlussvorschlag).toStrictEqual([
+      expect(result.systemBeschlussvorschlag).toStrictEqual([
         {
           reason:
             SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
         },
       ]);
-      expect(result.value.gueltigkeit).toStrictEqual("INVALID");
-      expect(result.value.beschlussfassung).toBeNull();
-      expect(result.value.invalideVotes).toBe(0);
-      result.value.wahlvorschlaege.forEach((wahlvorschlag) => {
+      expect(result.gueltigkeit).toStrictEqual("INVALID");
+      expect(result.beschlussfassung).toBeNull();
+      expect(result.invalideVotes).toBe(0);
+      result.wahlvorschlaege.forEach((wahlvorschlag) => {
         expect(wahlvorschlag.selected).toBe(true);
         wahlvorschlag.kandidaten.forEach((k) => {
           expect(k.einzelstimmen).toBe(5);

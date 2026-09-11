@@ -75,7 +75,9 @@ export function useManagedStimmzettelKandidatUtils(
     const kandidatWithoutEinzelstimmenAndDurchstreichung =
       kandidatenForListenPosition.find(
         (kandidat) =>
-          kandidat.einzelstimmen === null && !kandidat.durchgestrichen
+          kandidat.einzelstimmen === null &&
+          !kandidat.durchgestrichen &&
+          kandidat.ungueltigeStimmen === null
       );
     if (kandidatWithoutEinzelstimmenAndDurchstreichung) {
       return kandidatWithoutEinzelstimmenAndDurchstreichung;

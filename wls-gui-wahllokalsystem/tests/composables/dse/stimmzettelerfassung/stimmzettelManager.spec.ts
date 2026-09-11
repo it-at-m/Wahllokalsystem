@@ -300,7 +300,7 @@ describe("stimmzettelManager.ts", () => {
         .beschlussfassung(null)
         .build();
 
-    it("should_returnTrue_whenStimmzettelToCompareHaveDifferentValues", () => {
+    it("should_returnTrue_when_stimmzettelToCompareHaveDifferentValues", () => {
       const {
         bearbeitenDialogStimmzettelUtils,
         setActiveStimmzettelWhenEditing,
@@ -328,7 +328,7 @@ describe("stimmzettelManager.ts", () => {
       expect(hasStimmzettelBeenEdited.value).toBe(true);
     });
 
-    it("should_returnFalse_whenStimmzettelToCompareHaveSameValues", () => {
+    it("should_returnFalse_when_stimmzettelToCompareHaveSameValues", () => {
       const {
         setActiveStimmzettelWhenEditing,
         hasStimmzettelBeenEdited,
@@ -350,7 +350,7 @@ describe("stimmzettelManager.ts", () => {
       expect(hasStimmzettelBeenEdited.value).toBe(false);
     });
 
-    it("should_returnFalse_whenStimmzettelToCompareIsNull", () => {
+    it("should_returnFalse_when_stimmzettelToCompareIsNull", () => {
       const { hasStimmzettelBeenEdited, stimmzettelBeforeEdit } =
         useStimmzettelManager(
           computed(() => stimmzettelKennung),

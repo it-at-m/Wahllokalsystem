@@ -1229,12 +1229,6 @@ describe("managedStimmzettel.ts", () => {
             text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
           },
         ])
-        .systemBeschlussvorschlag([
-          {
-            reason:
-              SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
-          },
-        ])
         .beschlussfassung(null)
         .build();
 
@@ -1255,12 +1249,6 @@ describe("managedStimmzettel.ts", () => {
       ).toStrictEqual([
         {
           text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
-        },
-      ]);
-      expect(stimmzettelAfterReset.systemBeschlussvorschlag).toStrictEqual([
-        {
-          reason:
-            SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
         },
       ]);
       expect(stimmzettelAfterReset.gueltigkeit).toStrictEqual("INVALID");

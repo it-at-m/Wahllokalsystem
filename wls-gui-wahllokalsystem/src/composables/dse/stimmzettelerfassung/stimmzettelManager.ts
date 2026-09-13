@@ -43,9 +43,7 @@ export function useStimmzettelManager(
     );
   });
 
-  function setActiveStimmzettelWhenEditing(
-    stimmzettelToSet: PersistedStimmzettel
-  ) {
+  function startEditStimmzettel(stimmzettelToSet: PersistedStimmzettel) {
     stimmzettelBeforeEdit.value = stimmzettelToSet;
     bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
       stimmzettelToSet
@@ -208,9 +206,9 @@ export function useStimmzettelManager(
   return {
     getStimmzettelSnapshot,
     parseCommandOrThrowError,
+    startEditStimmzettel,
     startNewStimmzettel,
     bearbeitenDialogStimmzettelUtils,
-    setActiveStimmzettelWhenEditing,
     hasStimmzettelBeenEdited,
     stimmzettelBeforeEdit: stimmzettelBeforeEdit,
   };

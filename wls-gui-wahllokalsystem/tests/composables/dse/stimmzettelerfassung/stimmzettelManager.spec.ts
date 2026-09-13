@@ -213,7 +213,7 @@ describe("stimmzettelManager.ts", () => {
 
       const {
         bearbeitenDialogStimmzettelUtils,
-        setActiveStimmzettelWhenEditing,
+        startEditStimmzettel,
         stimmzettelBeforeEdit,
       } = useStimmzettelManager(
         computed(() => stimmzettelKennung),
@@ -257,7 +257,7 @@ describe("stimmzettelManager.ts", () => {
           .build();
 
       expect(stimmzettelBeforeEdit.value).toBeNull();
-      setActiveStimmzettelWhenEditing(activeStimmzettelToBeSet);
+      startEditStimmzettel(activeStimmzettelToBeSet);
 
       expect(stimmzettelBeforeEdit.value).toStrictEqual(
         activeStimmzettelToBeSet
@@ -309,7 +309,7 @@ describe("stimmzettelManager.ts", () => {
     it("should_returnTrue_when_stimmzettelToCompareHaveDifferentValues", () => {
       const {
         bearbeitenDialogStimmzettelUtils,
-        setActiveStimmzettelWhenEditing,
+        startEditStimmzettel,
         hasStimmzettelBeenEdited,
         stimmzettelBeforeEdit,
       } = useStimmzettelManager(
@@ -321,7 +321,7 @@ describe("stimmzettelManager.ts", () => {
 
       expect(stimmzettelBeforeEdit.value).toBeNull();
 
-      setActiveStimmzettelWhenEditing(persistedStimmzettelBeforeEdit);
+      startEditStimmzettel(persistedStimmzettelBeforeEdit);
 
       expect(stimmzettelBeforeEdit.value).toStrictEqual(
         persistedStimmzettelBeforeEdit
@@ -336,7 +336,7 @@ describe("stimmzettelManager.ts", () => {
 
     it("should_returnFalse_when_stimmzettelToCompareHaveSameValues", () => {
       const {
-        setActiveStimmzettelWhenEditing,
+        startEditStimmzettel,
         hasStimmzettelBeenEdited,
         stimmzettelBeforeEdit,
       } = useStimmzettelManager(
@@ -348,7 +348,7 @@ describe("stimmzettelManager.ts", () => {
 
       expect(stimmzettelBeforeEdit.value).toBeNull();
 
-      setActiveStimmzettelWhenEditing(persistedStimmzettelBeforeEdit);
+      startEditStimmzettel(persistedStimmzettelBeforeEdit);
 
       expect(stimmzettelBeforeEdit.value).toStrictEqual(
         persistedStimmzettelBeforeEdit

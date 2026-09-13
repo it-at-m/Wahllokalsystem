@@ -73,6 +73,16 @@ function _useManagedStimmzettel(
     kandidatenOfStimmzettel.value.filter(_hasKandidatAnyStimmeOrStreichung)
   );
 
+  const wahlvorschlaegeWithKennzeichen = computed(() =>
+    stimmzettel.value.wahlvorschlaege.filter(
+      (wahlvorschlag) =>
+        wahlvorschlag.selected ||
+        wahlvorschlag.kandidaten.some((k) =>
+          _hasKandidatAnyStimmeOrStreichung(k)
+        )
+    )
+  );
+
   const countTotalVotes = computed(
     () =>
       kandidatenWithValues.value.reduce(
@@ -508,6 +518,7 @@ function _useManagedStimmzettel(
     hasAnyValuesSet,
     hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen,
     hasSystemErrorAnyKandidatWithInvalidVotes,
+    wahlvorschlaegeWithKennzeichen,
     resetStimmzettelAndHistory,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,

@@ -61,12 +61,10 @@
       @cancel="onStimmzettelkennungCanceled"
     />
     <the-stimmzettel-erfassung-dialog
-      v-if="activeStimmzettel"
+      v-if="wahlvorschlaege.length > 0"
       :ref="STIMMZETTEL_ERFASSUNG_DIALOG_TEMPLATE_REF_NAME"
-      v-model="isErfassungsDialogVisible"
-      :stimmzettel="activeStimmzettel"
+      eager
       :wahlvorschlaege="wahlvorschlaege"
-      @cancel="onStimmzettelErfassungCanceled"
       @confirm-close="onStimmzettelErfassungConfirmed"
       @confirm-next="onStimmzettelErfassungConfirmedAndOpenNextStimmzettel"
     />
@@ -126,16 +124,13 @@ const templateRefStimmzettelErfassenDialog = useTemplateRef<
 
 const {
   teamStatus,
-  activeStimmzettel,
   beendenBtnActive,
-  isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
   sendStatusInBearbeitung,
   sendStatusUnterbrochen,
-  startNewEmptyStimmzettelWithStimmzettelkennung,
   reloadTeamStatus,
 } = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
 
@@ -155,17 +150,12 @@ function onErfassungStartenClicked() {
 async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
   await sendStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
-  startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
-  if (isErfassungsDialogVisible.value) {
-    templateRefStimmzettelErfassenDialog.value?.focusCommandProcessingTextField();
-  } else {
-    isErfassungsDialogVisible.value = true;
-  }
+  templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettelKennung);
 }
 
 function onStimmzettelkennungCanceled() {
   isKennungsDialogVisible.value = false;
-  isErfassungsDialogVisible.value = false;
+  templateRefStimmzettelErfassenDialog.value?.closeDialog();
 }
 
 async function onErfassungUnterbrechenClicked() {
@@ -180,14 +170,10 @@ async function onErfassungAktualisierenClicked() {
   await reloadTeamStatus();
 }
 
-async function onStimmzettelErfassungCanceled() {
-  isErfassungsDialogVisible.value = false;
-}
 async function onStimmzettelErfassungConfirmed(
   confirmedStimmzettel: Stimmzettel
 ) {
   await props.saveStimmzettel(confirmedStimmzettel);
-  isErfassungsDialogVisible.value = false;
 }
 async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
   confirmedStimmzettel: Stimmzettel
@@ -196,14 +182,7 @@ async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
   isKennungsDialogVisible.value = true;
 }
 async function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
-  if (
-    teamStatus.value?.status === StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
-  ) {
-    await sendStatusInBearbeitung();
-  }
-
-  activeStimmzettel.value = stimmzettel;
-  isErfassungsDialogVisible.value = true;
+  templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettel);
 }
 
 const hasTeamFinishedErfassung = computed(

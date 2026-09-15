@@ -43,7 +43,7 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import { ref } from "vue";
 
 import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import {
   ITEMS_PER_PAGE_TITLE,
   TABLE_LOADING_DATA_STIMMZETTEL,
@@ -69,7 +69,7 @@ const itemsPerPage = ref(10);
 const sortBy = ref([{ key: stimmzettelkennungKey, order: "desc" }] as const);
 
 const { isVorgemerktFuerBeschluss, getVormerkungsgrund } =
-  useStimmzettelUtils();
+  useStimmzettelTools();
 
 const emit = defineEmits<{
   stimmzettelBearbeiten: [newValue: Stimmzettel];

@@ -51,7 +51,7 @@ import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.t
 import { ref } from "vue";
 
 import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import {
   ITEMS_PER_PAGE_TITLE,
   TABLE_LOADING_DATA_STIMMZETTEL,
@@ -80,7 +80,7 @@ const sortBy = ref([
   { key: "stimmzettelkennung", order: "asc" },
 ] as const);
 
-const { getVormerkungsgrund } = useStimmzettelUtils();
+const { getVormerkungsgrund } = useStimmzettelTools();
 
 function getVormerkungsOrEntscheidungsgrundBasedOnBeschlussfassung(
   stimmzettel: Stimmzettel

@@ -56,12 +56,12 @@ vi.mock(
 );
 
 vi.mock(
-  import("@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts"),
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
     return {
-      useStimmzettelUtils: () => ({
-        ...mod.useStimmzettelUtils(),
+      useStimmzettelTools: () => ({
+        ...mod.useStimmzettelTools(),
         getEmptyStimmzettelWithStimmzettelkennung:
           mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung,
       }),

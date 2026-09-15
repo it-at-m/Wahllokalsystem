@@ -18,7 +18,7 @@
           :is-stimmzettel-loading="isStimmzettelLoading"
           :wahlvorschlaege="wahlvorschlaege"
           :has-stimmzettel="hasStimmzettel"
-          :save-stimmzettel="saveNewStimmzettel"
+          :save-stimmzettel="saveOrUpdateStimmzettel"
           class="mt-3"
         />
       </v-tabs-window-item>
@@ -56,7 +56,7 @@ const {
   isStimmzettelLoading,
   savedStimmzettel,
   hasStimmzettel,
-  saveNewStimmzettel,
+  saveOrUpdateStimmzettel,
 } = useStimmzettelState(wahlID, wahlbezirkID, teamID);
 
 const { wahlvorschlaege } = useWahlvorschlaegeState(wahlID, wahlbezirkID);

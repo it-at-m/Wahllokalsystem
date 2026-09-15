@@ -1,7 +1,8 @@
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
+import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { StimmenSummary } from "@/types/dse/stimmzettelerfassung/StimmenSummary.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { Stimmzettel as DseStimmzetel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
@@ -13,6 +14,7 @@ import { useManagedStimmzettelReststimmeUtils } from "@/composables/dse/stimmzet
 import { useManagedStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelUngueltigeStimmeUtils.ts";
 import { useManagedStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelWahlvorschlagUtils.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
+import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
@@ -27,7 +29,7 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
  * @param maxEinzelstimmen
  */
 function _useManagedStimmzettel(
-  stimmzettel: Ref<Stimmzettel>,
+  stimmzettel: Ref<DseStimmzetel>,
   wahlID: string,
   maxEinzelstimmen = 3
 ) {
@@ -42,9 +44,10 @@ function _useManagedStimmzettel(
   const { getWahlvorschlagByOrdnungszahl } =
     useManagedStimmzettelWahlvorschlagUtils(stimmzettel);
   const { addVotesToKandidat, removeVotesFromKandidat } =
-    useManagedStimmzettelEinzelstimmeUtils();
+    useManagedStimmzettelEinzelstimmeUtils(maxEinzelstimmen);
   const { addInvalidVotesToKandidat, removeInvalidVotesFromKandidat } =
     useManagedStimmzettelUngueltigeStimmeUtils();
+  const { resetStimmzettel } = useStimmzettelMapper();
 
   const { kopfdaten } = storeToRefs(useKopfdatenStore());
 
@@ -82,7 +85,11 @@ function _useManagedStimmzettel(
       ) + (stimmzettel.value.invalideVotes ?? 0)
   );
 
-  const hasAnyValuesSet = computed(() => kandidatenWithValues.value.length > 0);
+  const hasAnyValuesSet = computed(
+    () =>
+      kandidatenWithValues.value.length > 0 ||
+      stimmzettel.value.gueltigkeit !== StimmzettelGueltigkeitEnum.Valid
+  );
 
   const hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen = computed(() =>
     kandidatenWithValues.value.some(
@@ -129,21 +136,14 @@ function _useManagedStimmzettel(
     }
   );
 
-  function resetStimmzettel() {
+  function resetStimmzettelAndHistory(
+    stimmzettelBeforeEdit?: PersistedStimmzettel
+  ) {
     changeHistory.reset();
-    stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
-      wahlvorschlag.selected = false;
-      wahlvorschlag.kandidaten.map((kandidat) => {
-        kandidat.einzelstimmen = null;
-        kandidat.ungueltigeStimmen = null;
-        kandidat.reststimmen = null;
-        kandidat.durchgestrichen = false;
-      });
-    });
-    stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
-    stimmzettel.value.invalideVotes = 0;
-    stimmzettel.value.wahlvorstandBeschlussvorschlag = [];
+    const resetResult = resetStimmzettel(stimmzettel, stimmzettelBeforeEdit);
+    stimmzettel.value = resetResult.value;
     resetReststimmeError();
+    refreshWahlvorschlaegeVotes();
   }
 
   /**
@@ -186,7 +186,9 @@ function _useManagedStimmzettel(
         `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
       );
     }
-    if (!kandidat.einzelstimmen || kandidat.einzelstimmen < votesToRemove) {
+    const sumOfEinzelAndUngueltigeStimmen =
+      (kandidat.einzelstimmen ?? 0) + (kandidat.ungueltigeStimmen ?? 0);
+    if (sumOfEinzelAndUngueltigeStimmen < votesToRemove) {
       throw new ManagedStimmzettelError(
         `Von Kandidat*in mit Ordnungszahl ${ordnungszahl} können keine ${votesToRemove} Stimmen abgezogen werden.`
       );
@@ -284,7 +286,7 @@ function _useManagedStimmzettel(
     if (kandidat.durchgestrichen) {
       throw new ManagedStimmzettelError(`Kandidat*in ist bereits gestrichen.`);
     }
-    kandidat.durchgestrichen = true;
+    _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige(kandidat);
     refreshWahlvorschlaegeVotes();
     changeHistory.registerKandidatStreichungSet(kandidat);
   }
@@ -317,7 +319,9 @@ function _useManagedStimmzettel(
     if (kandidaten.every((kandidat) => kandidat.durchgestrichen)) {
       throw new ManagedStimmzettelError(`Der Bereich ist bereits gestrichen.`);
     }
-    kandidaten.map((kandidat) => (kandidat.durchgestrichen = true));
+    kandidaten.forEach(
+      _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige
+    );
     refreshWahlvorschlaegeVotes();
     changeHistory.registerKandidatStreichungRangeSet(kandidaten);
   }
@@ -432,6 +436,17 @@ function _useManagedStimmzettel(
     }
   }
 
+  function _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige(
+    kandidat: Kandidat
+  ) {
+    kandidat.durchgestrichen = true;
+    const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
+    const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
+    kandidat.einzelstimmen = null;
+    kandidat.ungueltigeStimmen =
+      currentUngueltigeStimmen + currentEinzelstimmen;
+  }
+
   function _updateGueltigkeitWhenBeschlussvorschlaegeChanged() {
     if (
       stimmzettel.value.systemBeschlussvorschlag.length > 0 ||
@@ -440,6 +455,12 @@ function _useManagedStimmzettel(
       stimmzettel.value.gueltigkeit =
         StimmzettelGueltigkeitEnum.BeschlussAusstehend;
     } else {
+      if (
+        stimmzettel.value.gueltigkeit ===
+          StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag ||
+        stimmzettel.value.gueltigkeit === StimmzettelGueltigkeitEnum.Leer
+      )
+        return;
       stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
     }
   }
@@ -487,7 +508,7 @@ function _useManagedStimmzettel(
     hasAnyValuesSet,
     hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen,
     hasSystemErrorAnyKandidatWithInvalidVotes,
-    resetStimmzettel,
+    resetStimmzettelAndHistory,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,
     kandidatAddUngueltigeStimmenOrThrow,

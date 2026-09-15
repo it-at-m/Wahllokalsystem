@@ -95,6 +95,7 @@ describe("managedStimmzettelKandidatUtils.ts", () => {
       const kNoVotes = prepareManagedStimmzettelKandidat()
         .ordnungszahl(101)
         .einzelstimmen(null)
+        .ungueltigeStimmen(null)
         .durchgestrichen(false)
         .build();
       const kFallback = prepareManagedStimmzettelKandidat()

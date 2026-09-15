@@ -40,6 +40,7 @@ vi.mock(
       toModel: mockDefinitions.mapDtoToModel,
       toDTO: mockDefinitions.mapModelToDto,
       toPersistedStimmzettel: vi.fn(),
+      resetStimmzettel: vi.fn(),
     }),
   })
 );

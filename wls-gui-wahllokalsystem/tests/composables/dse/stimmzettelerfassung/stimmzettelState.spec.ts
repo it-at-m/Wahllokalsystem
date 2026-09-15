@@ -5,6 +5,7 @@ import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestD
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelState } from "@/composables/dse/stimmzettelerfassung/stimmzettelState.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
@@ -143,14 +144,14 @@ describe("stimmzettelState", () => {
     });
   });
 
-  describe("saveNewStimmzettel", () => {
+  describe("saveOrUpdateStimmzettel", () => {
     it("should_appendStimmzettelAndPersist_when_initialCollectionIsEmpty", async () => {
       const mockedNewStimmzettel: Stimmzettel =
         preparePersistedStimmzettel().build();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 
-      await unitUnderTest.saveNewStimmzettel(mockedNewStimmzettel);
+      await unitUnderTest.saveOrUpdateStimmzettel(mockedNewStimmzettel);
 
       expect(mockDefinitions.saveStimmzettel).toHaveBeenCalledWith(
         mockedWahlId,
@@ -171,8 +172,8 @@ describe("stimmzettelState", () => {
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 
-      await unitUnderTest.saveNewStimmzettel(mockedExistingStimmzettel);
-      await unitUnderTest.saveNewStimmzettel(mockedNewStimmzettel);
+      await unitUnderTest.saveOrUpdateStimmzettel(mockedExistingStimmzettel);
+      await unitUnderTest.saveOrUpdateStimmzettel(mockedNewStimmzettel);
 
       const mockedLastSaveCall =
         mockDefinitions.saveStimmzettel.mock.calls.at(-1) ?? [];
@@ -185,6 +186,30 @@ describe("stimmzettelState", () => {
       expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
         mockedExistingStimmzettel,
         mockedNewStimmzettel,
+      ]);
+    });
+
+    it("should_replaceExistingStimmzettel_when_savingEditedStimmzettel", async () => {
+      const mockedExistingStimmzettel: Stimmzettel =
+        preparePersistedStimmzettel()
+          .stimmzettelkennung(1)
+          .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+          .build();
+      const mockedEditedStimmzettel = preparePersistedStimmzettel()
+        .stimmzettelkennung(mockedExistingStimmzettel.stimmzettelkennung)
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+        .build();
+
+      mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
+
+      await unitUnderTest.saveOrUpdateStimmzettel(mockedExistingStimmzettel);
+      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
+        mockedExistingStimmzettel,
+      ]);
+
+      await unitUnderTest.saveOrUpdateStimmzettel(mockedEditedStimmzettel);
+      expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([
+        mockedEditedStimmzettel,
       ]);
     });
   });

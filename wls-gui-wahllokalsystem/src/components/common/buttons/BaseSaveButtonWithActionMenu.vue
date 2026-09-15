@@ -13,6 +13,7 @@
       <template #activator="{ props }">
         <base-button-folding
           v-bind="props"
+          :disabled="disabled"
           class="border-primary"
           active
         />

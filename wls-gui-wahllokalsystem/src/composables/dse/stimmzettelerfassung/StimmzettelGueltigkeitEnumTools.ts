@@ -2,13 +2,11 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/Sti
 
 export function useStimmzettelGueltigkeitEnumTools() {
   const gueltigkeitTextMap = {
-    [StimmzettelGueltigkeitEnum.Valid]: "Stimmzettel ist gültig",
-    [StimmzettelGueltigkeitEnum.Invalid]: "Stimmzettel ist ungültig",
-    [StimmzettelGueltigkeitEnum.BeschlussAusstehend]:
-      "Stimmzettel ist für Beschluss vorgemerkt",
-    [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]:
-      "Stimmzettel ist ungültig",
-    [StimmzettelGueltigkeitEnum.Leer]: "Stimmzettel ist ungültig",
+    [StimmzettelGueltigkeitEnum.Valid]: "gültig",
+    [StimmzettelGueltigkeitEnum.Invalid]: "ungültig",
+    [StimmzettelGueltigkeitEnum.BeschlussAusstehend]: "Beschluss notwendig",
+    [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]: "ungültig",
+    [StimmzettelGueltigkeitEnum.Leer]: "ungültig",
   };
 
   function toText(value: StimmzettelGueltigkeitEnum): string {

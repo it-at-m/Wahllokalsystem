@@ -8,7 +8,9 @@ import {
   mdiAccountOutline,
   mdiAccountPlusOutline,
   mdiAlert,
+  mdiArrowLeftDropCircle,
   mdiArrowRightBold,
+  mdiArrowRightDropCircle,
   mdiCheckboxMarkedCircleOutline,
   mdiCheckCircle,
   mdiCircleOffOutline,
@@ -108,6 +110,8 @@ export default createVuetify({
       stimmzettelCommandVoteRange: mdiAccountMultiplePlusOutline,
       asc: mdiSortAscending,
       desc: mdiSortDescending,
+      slideLeft: mdiArrowLeftDropCircle,
+      slideRight: mdiArrowRightDropCircle,
     },
     sets: {
       mdi,

@@ -36,11 +36,14 @@ export function useStimmzettelManager(
   );
 
   const hasStimmzettelBeenEdited = computed<boolean>(() => {
-    if (!stimmzettelBeforeEdit.value) return false;
-    return !_isDeepEqual(
-      stimmzettelBeforeEdit.value,
-      managedBearbeitenDialogStimmzettel.value
-    );
+    if (stimmzettelBeforeEdit.value) {
+      return !_isDeepEqual(
+        stimmzettelBeforeEdit.value,
+        managedBearbeitenDialogStimmzettel.value
+      );
+    } else {
+      return bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value;
+    }
   });
 
   function setActiveStimmzettelWhenEditing(

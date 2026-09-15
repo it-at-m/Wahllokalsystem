@@ -5,10 +5,16 @@ import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/stimmzettele
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
+import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
+import { useWahlvorschlagTools } from "@/composables/dse/stimmzettelerfassung/wahlvorschlagTools.ts";
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
+
+const { sortWahlvorstandBeschlussgruende, sortSystemBeschlussgruende } =
+  useBeschlussgrundTools();
+const { sortWahlvorschlaege } = useWahlvorschlagTools();
 
 function _useStimmzettelUtils() {
   function createStimmzettelWithWahlvorschlaege(
@@ -62,6 +68,31 @@ function _useStimmzettelUtils() {
     return [...systemVorschlaege, ...wahlvorstandVorschlaege].join(", ");
   }
 
+  function normalizePersistedStimmzettel(
+    stimmzettel: PersistedStimmzettel
+  ): PersistedStimmzettel {
+    const systemBeschluss = sortSystemBeschlussgruende(
+      stimmzettel.systemBeschlussvorschlag ?? []
+    );
+    const wvBeschluss = sortWahlvorstandBeschlussgruende(
+      stimmzettel.wahlvorstandBeschlussvorschlag ?? []
+    );
+    const wvSorted = sortWahlvorschlaege(stimmzettel.wahlvorschlaege ?? []);
+
+    return {
+      stimmzettelkennung: stimmzettel.stimmzettelkennung,
+      teamID: stimmzettel.teamID,
+      wahlvorschlaege: wvSorted,
+      invalideVotes: stimmzettel.invalideVotes ?? 0,
+      gueltigkeit: stimmzettel.gueltigkeit,
+      wahlvorstandBeschlussvorschlag: wvBeschluss,
+      systemBeschlussvorschlag: systemBeschluss,
+      beschlussfassung: stimmzettel.beschlussfassung
+        ? { ...stimmzettel.beschlussfassung }
+        : null,
+    };
+  }
+
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DSEWahlvorschlag {
     const dseWahlvorschlag: DSEWahlvorschlag = {
       wahlvorschlagID: wahlvorschlag.identifikator,
@@ -112,6 +143,7 @@ function _useStimmzettelUtils() {
     getEmptyStimmzettelWithStimmzettelkennung,
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
+    normalizePersistedStimmzettel,
   };
 }
 

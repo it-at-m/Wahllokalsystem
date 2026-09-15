@@ -22,17 +22,16 @@ const mockDefinitions = vi.hoisted(() => ({
 
 vi.mock(
   import("@/composables/dse/stimmzettelerfassung/kandidatTools.ts"),
-  () => ({
-    useKandidatTools: () => ({
-      hasAnyKennzeichenOrReststimme:
-        mockDefinitions.hasAnyKennzeichenOrReststimme,
-      hasAnyKennzeichen: vi.fn(),
-      getTotalEinzelAndUngueltigeStimmenOfKandidatenWithSameId: vi.fn(),
-      getEinzelstimmenOrZero: vi.fn(),
-      getTotalEinzelstimmenOfKandidatenWithSameId: vi.fn(),
-      getUngueltigeStimmenOrZero: vi.fn(),
-    }),
-  })
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useKandidatTools: () => ({
+        ...original.useKandidatTools(),
+        hasAnyKennzeichenOrReststimme:
+          mockDefinitions.hasAnyKennzeichenOrReststimme,
+      }),
+    };
+  }
 );
 
 const {

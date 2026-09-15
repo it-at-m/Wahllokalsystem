@@ -6,7 +6,7 @@ import type { Ref } from "vue";
 
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { computed } from "vue";
 
 import { useStimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
@@ -24,6 +24,7 @@ const mockDefinitions = vi.hoisted(() => ({
   },
   resetStimmzettelAndHistory: vi.fn(),
   mapPersistedStimmzettelValuesToExistingDseStimmzettel: vi.fn(),
+  normalizePersistedStimmzettel: vi.fn(),
 }));
 
 vi.mock(
@@ -322,6 +323,14 @@ describe("stimmzettelManager.ts", () => {
   });
 
   describe("hasStimmzettelBeenEdited", () => {
+    beforeEach(() => {
+      mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockImplementation(
+        (dseStimmzettel) => dseStimmzettel
+      );
+      mockDefinitions.normalizePersistedStimmzettel.mockImplementation(
+        (persistedStimmzettel) => persistedStimmzettel
+      );
+    });
     const stimmzettelKennung = 101;
     const teamID = "team-x";
     const wahlvorschlagID = "wv-x";

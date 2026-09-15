@@ -5,12 +5,18 @@ import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/stimmzettele
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
+import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
+import { useWahlvorschlagTools } from "@/composables/dse/stimmzettelerfassung/wahlvorschlagTools.ts";
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-function _useStimmzettelUtils() {
+const { sortWahlvorstandBeschlussgruende, sortSystemBeschlussgruende } =
+  useBeschlussgrundTools();
+const { sortWahlvorschlaege } = useWahlvorschlagTools();
+
+export function useStimmzettelTools() {
   function createStimmzettelWithWahlvorschlaege(
     wahlvorschlaege: Wahlvorschlag[]
   ): Stimmzettel {
@@ -37,6 +43,53 @@ function _useStimmzettelUtils() {
       wahlvorstandBeschlussvorschlag: [],
       systemBeschlussvorschlag: [],
       wahlvorschlaege: [],
+    };
+  }
+
+  function isVorgemerktFuerBeschluss(
+    stimmzettel: PersistedStimmzettel
+  ): boolean {
+    return (
+      stimmzettel.systemBeschlussvorschlag.length > 0 ||
+      stimmzettel.wahlvorstandBeschlussvorschlag.length > 0
+    );
+  }
+
+  function getVormerkungsgrund(stimmzettel: PersistedStimmzettel): string {
+    const { mapSystemBeschlussgrundReasonEnumToText } =
+      useSystemBeschlussgrundReasonEnumTools();
+    const wahlvorstandVorschlaege =
+      stimmzettel.wahlvorstandBeschlussvorschlag.map(
+        (vorschlag) => vorschlag.text
+      );
+    const systemVorschlaege = stimmzettel.systemBeschlussvorschlag.map(
+      (vorschlag) => mapSystemBeschlussgrundReasonEnumToText(vorschlag.reason)
+    );
+    return [...systemVorschlaege, ...wahlvorstandVorschlaege].join(", ");
+  }
+
+  function normalizePersistedStimmzettel(
+    stimmzettel: PersistedStimmzettel
+  ): PersistedStimmzettel {
+    const systemBeschluss = sortSystemBeschlussgruende(
+      stimmzettel.systemBeschlussvorschlag ?? []
+    );
+    const wvBeschluss = sortWahlvorstandBeschlussgruende(
+      stimmzettel.wahlvorstandBeschlussvorschlag ?? []
+    );
+    const wvSorted = sortWahlvorschlaege(stimmzettel.wahlvorschlaege ?? []);
+
+    return {
+      stimmzettelkennung: stimmzettel.stimmzettelkennung,
+      teamID: stimmzettel.teamID,
+      wahlvorschlaege: wvSorted,
+      invalideVotes: stimmzettel.invalideVotes ?? 0,
+      gueltigkeit: stimmzettel.gueltigkeit,
+      wahlvorstandBeschlussvorschlag: wvBeschluss,
+      systemBeschlussvorschlag: systemBeschluss,
+      beschlussfassung: stimmzettel.beschlussfassung
+        ? { ...stimmzettel.beschlussfassung }
+        : null,
     };
   }
 
@@ -85,39 +138,11 @@ function _useStimmzettelUtils() {
     return result;
   }
 
-  function isVorgemerktFuerBeschluss(
-    stimmzettel: PersistedStimmzettel
-  ): boolean {
-    return (
-      stimmzettel.systemBeschlussvorschlag.length > 0 ||
-      stimmzettel.wahlvorstandBeschlussvorschlag.length > 0
-    );
-  }
-
-  function getVormerkungsgrund(stimmzettel: PersistedStimmzettel): string {
-    const { mapSystemBeschlussgrundReasonEnumToText } =
-      useSystemBeschlussgrundReasonEnumTools();
-    const wahlvorstandVorschlaege =
-      stimmzettel.wahlvorstandBeschlussvorschlag.map(
-        (vorschlag) => vorschlag.text
-      );
-    const systemVorschlaege = stimmzettel.systemBeschlussvorschlag.map(
-      (vorschlag) => mapSystemBeschlussgrundReasonEnumToText(vorschlag.reason)
-    );
-    return [...systemVorschlaege, ...wahlvorstandVorschlaege].join(", ");
-  }
-
   return {
     createStimmzettelWithWahlvorschlaege,
     getEmptyStimmzettelWithStimmzettelkennung,
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
+    normalizePersistedStimmzettel,
   };
 }
-
-/**
- * @deprecated TODO is an tools composable. Does not serve any high level function
- * maybe split into separate tools for different types
- */
-export const useStimmzettelUtils = _useStimmzettelUtils;
-export const useStimmzettelTools = _useStimmzettelUtils;

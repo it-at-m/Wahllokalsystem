@@ -8,11 +8,11 @@ import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { computed, watch, watchEffect } from "vue";
 
-import { useManagedStimmzettelEinzelstimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelEinzelstimmeUtils.ts";
-import { useManagedStimmzettelKandidatUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelKandidatUtils.ts";
-import { useManagedStimmzettelReststimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelReststimmeUtils.ts";
-import { useManagedStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelUngueltigeStimmeUtils.ts";
-import { useManagedStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelWahlvorschlagUtils.ts";
+import { useBearbeitenDialogStimmzettelEinzelstimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelEinzelstimmeUtils.ts";
+import { useBearbeitenDialogStimmzettelKandidatUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelKandidatUtils.ts";
+import { useBearbeitenDialogStimmzettelReststimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelReststimmeUtils.ts";
+import { useBearbeitenDialogStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts";
+import { useBearbeitenDialogStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelWahlvorschlagUtils.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
@@ -28,7 +28,7 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
  * @param wahlID
  * @param maxEinzelstimmen
  */
-function _useManagedStimmzettel(
+export function useBearbeitenDialogStimmzettelUtils(
   stimmzettel: Ref<DseStimmzetel>,
   wahlID: string,
   maxEinzelstimmen = 3
@@ -40,14 +40,15 @@ function _useManagedStimmzettel(
     getKandidatToAddVotesForRangeByOrdnungszahl,
     getKandidatForStreichungByOrdnungszahl,
     getKandidatToRemoveStreichungByOrdnungszahl,
-  } = useManagedStimmzettelKandidatUtils(stimmzettel);
+  } = useBearbeitenDialogStimmzettelKandidatUtils(stimmzettel);
   const { getWahlvorschlagByOrdnungszahl } =
-    useManagedStimmzettelWahlvorschlagUtils(stimmzettel);
+    useBearbeitenDialogStimmzettelWahlvorschlagUtils(stimmzettel);
   const { addVotesToKandidat, removeVotesFromKandidat } =
-    useManagedStimmzettelEinzelstimmeUtils(maxEinzelstimmen);
+    useBearbeitenDialogStimmzettelEinzelstimmeUtils(maxEinzelstimmen);
   const { addInvalidVotesToKandidat, removeInvalidVotesFromKandidat } =
-    useManagedStimmzettelUngueltigeStimmeUtils();
-  const { resetStimmzettel } = useStimmzettelMapper();
+    useBearbeitenDialogStimmzettelUngueltigeStimmeUtils();
+  const { mapPersistedStimmzettelValuesToExistingDseStimmzettel } =
+    useStimmzettelMapper();
 
   const { kopfdaten } = storeToRefs(useKopfdatenStore());
 
@@ -63,7 +64,7 @@ function _useManagedStimmzettel(
     selectWahlvorschlag,
     deselectWahlvorschlag,
     resetError: resetReststimmeError,
-  } = useManagedStimmzettelReststimmeUtils(
+  } = useBearbeitenDialogStimmzettelReststimmeUtils(
     stimmzettel,
     maximalErlaubteStimmenProWaehler,
     maxEinzelstimmen
@@ -140,8 +141,27 @@ function _useManagedStimmzettel(
     stimmzettelBeforeEdit?: PersistedStimmzettel
   ) {
     changeHistory.reset();
-    const resetResult = resetStimmzettel(stimmzettel, stimmzettelBeforeEdit);
-    stimmzettel.value = resetResult.value;
+    if (stimmzettelBeforeEdit) {
+      stimmzettel.value = mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+        stimmzettel.value,
+        stimmzettelBeforeEdit
+      );
+    } else {
+      stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
+        wahlvorschlag.selected = false;
+        wahlvorschlag.kandidaten.map((kandidat) => {
+          kandidat.einzelstimmen = null;
+          kandidat.ungueltigeStimmen = null;
+          kandidat.reststimmen = null;
+          kandidat.durchgestrichen = false;
+        });
+      });
+      stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
+      stimmzettel.value.wahlvorstandBeschlussvorschlag = [];
+      stimmzettel.value.systemBeschlussvorschlag = [];
+      stimmzettel.value.beschlussfassung = null;
+      stimmzettel.value.invalideVotes = 0;
+    }
     resetReststimmeError();
     refreshWahlvorschlaegeVotes();
   }
@@ -525,13 +545,6 @@ function _useManagedStimmzettel(
     wahlvorschlaegeWithListenkreuz,
   };
 }
-export type ManagedStimmzettel = ReturnType<typeof useManagedStimmzettel>;
-/**
- *
- * @deprecated TODO name does not match naming convention
- * BearbeitenDialogStimmzettelUtils might better cause the stimmzettel
- * that is handled inside is the stimmzettel for the bearbeiten dialog
- * (currently erfassung dialog; with the edit option the name will change)
- */
-export const useManagedStimmzettel = _useManagedStimmzettel;
-export const useBearbeitenDialogStimmzettelUtils = _useManagedStimmzettel;
+export type BearbeitenDialogStimmzettel = ReturnType<
+  typeof useBearbeitenDialogStimmzettelUtils
+>;

@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 
 import {
   invalidKandidatOrdnungszahlenCommand,
@@ -42,13 +42,13 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
   });
 
   describe("handleOrThrow", () => {
-    let mockManagedStimmzettel: ManagedStimmzettel;
+    let mockManagedStimmzettel: BearbeitenDialogStimmzettel;
 
     beforeEach(() => {
       mockManagedStimmzettel = {
         kandidatAddEinzelstimmenOrThrow:
           mockDefinitions.kandidatAddVotesOrThrow,
-      } as unknown as ManagedStimmzettel;
+      } as unknown as BearbeitenDialogStimmzettel;
     });
 
     afterEach(() => {

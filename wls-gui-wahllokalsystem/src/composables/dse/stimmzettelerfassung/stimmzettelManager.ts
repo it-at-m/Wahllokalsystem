@@ -23,7 +23,10 @@ export function useStimmzettelManager(
   teamID: string
 ) {
   const { createStimmzettelWithWahlvorschlaege } = useStimmzettelTools();
-  const { toPersistedStimmzettel } = useStimmzettelMapper();
+  const {
+    toPersistedStimmzettel,
+    mapPersistedStimmzettelValuesToExistingDseStimmzettel,
+  } = useStimmzettelMapper();
   const stimmzettelBeforeEdit: Ref<PersistedStimmzettel | null> = ref(null);
 
   const managedBearbeitenDialogStimmzettel = ref(
@@ -51,53 +54,11 @@ export function useStimmzettelManager(
       stimmzettelToSet
     );
 
-    managedBearbeitenDialogStimmzettel.value.gueltigkeit =
-      stimmzettelToSet.gueltigkeit;
-    managedBearbeitenDialogStimmzettel.value.invalideVotes =
-      stimmzettelToSet.invalideVotes ?? 0;
-    managedBearbeitenDialogStimmzettel.value.beschlussfassung =
-      stimmzettelToSet.beschlussfassung;
-    managedBearbeitenDialogStimmzettel.value.wahlvorstandBeschlussvorschlag =
-      stimmzettelToSet.wahlvorstandBeschlussvorschlag ?? [];
-    managedBearbeitenDialogStimmzettel.value.systemBeschlussvorschlag =
-      stimmzettelToSet.systemBeschlussvorschlag ?? [];
-
-    stimmzettelToSet.wahlvorschlaege.forEach(
-      (wahlvorschlagOfStimmzettelToSet: PersistedWahlvorschlag) => {
-        const managedWahlvorschlag =
-          managedBearbeitenDialogStimmzettel.value.wahlvorschlaege.find(
-            (wahlvorschlag) =>
-              wahlvorschlag.wahlvorschlagID ===
-              wahlvorschlagOfStimmzettelToSet.wahlvorschlagID
-          );
-
-        if (!managedWahlvorschlag) return;
-
-        managedWahlvorschlag.selected =
-          wahlvorschlagOfStimmzettelToSet.selected;
-
-        (wahlvorschlagOfStimmzettelToSet.kandidaten || []).forEach(
-          (kandidatOfStimmzettelToSet: PersistedKandidat) => {
-            const managedKandidat = managedWahlvorschlag.kandidaten.find(
-              (kandidat) =>
-                kandidat.kandidatId === kandidatOfStimmzettelToSet.kandidatId &&
-                kandidat.nennung === kandidatOfStimmzettelToSet.nennung
-            );
-
-            if (!managedKandidat) return;
-
-            managedKandidat.einzelstimmen =
-              kandidatOfStimmzettelToSet.votesByVoter;
-            managedKandidat.ungueltigeStimmen =
-              kandidatOfStimmzettelToSet.invalidVotes;
-            managedKandidat.reststimmen =
-              kandidatOfStimmzettelToSet.votesByWahlvorschlag;
-            managedKandidat.durchgestrichen =
-              kandidatOfStimmzettelToSet.isDiscarded;
-          }
-        );
-      }
-    );
+    managedBearbeitenDialogStimmzettel.value =
+      mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+        managedBearbeitenDialogStimmzettel.value,
+        stimmzettelToSet
+      );
   }
 
   function getStimmzettelSnapshot(): PersistedStimmzettel {

@@ -23,6 +23,7 @@ const mockDefinitions = vi.hoisted(() => ({
     kandidatAddEinzelstimmenOrThrow: vi.fn(),
   },
   resetStimmzettelAndHistory: vi.fn(),
+  mapPersistedStimmzettelValuesToExistingDseStimmzettel: vi.fn(),
 }));
 
 vi.mock(
@@ -56,6 +57,20 @@ vi.mock("@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts", () => ({
   },
 }));
 
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useStimmzettelMapper: () => ({
+        ...original.useStimmzettelMapper(),
+        mapPersistedStimmzettelValuesToExistingDseStimmzettel:
+          mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel,
+      }),
+    };
+  }
+);
+
 const { prepareWahlvorschlag, prepareKandidat } =
   useWahlvorschlaegeTestDataFactory();
 const {
@@ -63,6 +78,9 @@ const {
   preparePersistedStimmzettel,
   preparePersistedStimmzettelWahlvorschlag,
   preparePersistedStimmzettelKandidat,
+  prepareStimmzettel,
+  prepareStimmzettelWahlvorschlag,
+  prepareStimmzettelKandidat,
 } = useStimmzettelTestDataFactory();
 
 describe("stimmzettelManager.ts", () => {
@@ -256,6 +274,30 @@ describe("stimmzettelManager.ts", () => {
           ])
           .build();
 
+      mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockReturnValue(
+        structuredClone(
+          prepareStimmzettel()
+            .invalideVotes(3)
+            .wahlvorschlaege([
+              prepareStimmzettelWahlvorschlag()
+                .wahlvorschlagID(wahlvorschlagID)
+                .selected(true)
+                .kandidaten([
+                  prepareStimmzettelKandidat()
+                    .kandidatId(kandidatID)
+                    .nennung(1)
+                    .einzelstimmen(5)
+                    .ungueltigeStimmen(1)
+                    .reststimmen(2)
+                    .durchgestrichen(true)
+                    .build(),
+                ])
+                .build(),
+            ])
+            .build()
+        )
+      );
+
       expect(stimmzettelBeforeEdit.value).toBeNull();
       setActiveStimmzettelWhenEditing(activeStimmzettelToBeSet);
 
@@ -272,6 +314,10 @@ describe("stimmzettelManager.ts", () => {
       expect(managedAfterKandidat.ungueltigeStimmen).toBe(1);
       expect(managedAfterKandidat.reststimmen).toBe(2);
       expect(managedAfterKandidat.durchgestrichen).toBe(true);
+
+      expect(mockDefinitions.resetStimmzettelAndHistory).toHaveBeenCalledTimes(
+        1
+      );
     });
   });
 

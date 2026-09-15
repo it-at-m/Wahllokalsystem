@@ -19,25 +19,14 @@ public class DefaultStapelErgebnisseMapper implements ErgebnismeldungsErgebnisse
   private final WahlartPredicateHolder wahlartPredicateHolder;
 
   @Override
-  public Collection<ErgebnisseModel> getGueltigeErgebnisse(
-      final String wahlID,
-      final String wahlbezirkID,
-      final WahlartModel wahlart,
-      final MeldungsartModel meldungsart) {
+  public ErgebnismeldungsErgebnisseModel getErgebnismeldungErgebnisse(
+      String wahlID, String wahlbezirkID, WahlartModel wahlart, MeldungsartModel meldungsart) {
     val ergebnisse = ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID);
 
-    return getErgebnisse(wahlart, ergebnisse, true);
-  }
+    val gueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, true);
+    val ungueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, false);
 
-  @Override
-  public Collection<ErgebnisseModel> getUngueltigeErgebnisse(
-      final String wahlID,
-      final String wahlbezirkID,
-      final WahlartModel wahlart,
-      final MeldungsartModel meldungsart) {
-    val ergebnisse = ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID);
-
-    return getErgebnisse(wahlart, ergebnisse, false);
+    return new ErgebnismeldungsErgebnisseModel(gueltigeErgebnisse, ungueltigeErgebnisse);
   }
 
   @Override

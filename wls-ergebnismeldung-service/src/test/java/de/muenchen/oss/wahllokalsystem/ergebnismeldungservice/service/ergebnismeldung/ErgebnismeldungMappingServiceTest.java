@@ -23,6 +23,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -116,13 +117,11 @@ class ErgebnismeldungMappingServiceTest {
         Mockito.when(mapping.toDtoSet(List.of(mockedInvalidErgebnisse)))
             .thenReturn(mockedInvalidErgebnisseMappedToUngueltigeStimmzettel);
         Mockito.when(
-                ergebnismeldungsErgebnisseMapper.getGueltigeErgebnisse(
+                ergebnismeldungsErgebnisseMapper.getErgebnismeldungErgebnisse(
                     wahlID, wahlbezirkID, wahlart, meldungsart))
-            .thenReturn(List.of(mockedValidErgebnisse));
-        Mockito.when(
-                ergebnismeldungsErgebnisseMapper.getUngueltigeErgebnisse(
-                    wahlID, wahlbezirkID, wahlart, meldungsart))
-            .thenReturn(List.of(mockedInvalidErgebnisse));
+            .thenReturn(
+                new ErgebnismeldungsErgebnisseModel(
+                    List.of(mockedValidErgebnisse), List.of(mockedInvalidErgebnisse)));
         Mockito.when(
                 mbwBedenklicheStimmzettelService.getAnzahlUngueltigeBedenklicheStimmzettel(
                     new BezirkUndWahlID(wahlID, wahlbezirkID)))
@@ -178,6 +177,12 @@ class ErgebnismeldungMappingServiceTest {
             .thenReturn(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT);
         Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
             .thenReturn(mockedUserWahlbezirkart);
+        Mockito.when(
+                ergebnismeldungsErgebnisseMapper.getErgebnismeldungErgebnisse(
+                    wahlID, wahlbezirkID, wahlart, meldungsart))
+            .thenReturn(
+                new ErgebnismeldungsErgebnisseModel(
+                    Collections.emptyList(), Collections.emptyList()));
         Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
             .thenReturn(Optional.empty());
         Mockito.when(stimmzettelumschlaegeRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
@@ -218,6 +223,12 @@ class ErgebnismeldungMappingServiceTest {
             .thenReturn(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT);
         Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
             .thenReturn(mockedUserWahlbezirkart);
+        Mockito.when(
+                ergebnismeldungsErgebnisseMapper.getErgebnismeldungErgebnisse(
+                    wahlID, wahlbezirkID, wahlart, meldungsart))
+            .thenReturn(
+                new ErgebnismeldungsErgebnisseModel(
+                    Collections.emptyList(), Collections.emptyList()));
         Mockito.when(stimmzettelumschlaegeRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
             .thenReturn(Optional.of(mockedStimmzettelumschlaege));
 
@@ -276,9 +287,11 @@ class ErgebnismeldungMappingServiceTest {
         Mockito.when(mapping.toDtoErgebnisseSet((List.of(mockedValidErgebnisse))))
             .thenReturn(mockedValidErgebniseMappedToDTO);
         Mockito.when(
-                ergebnismeldungsErgebnisseMapper.getGueltigeErgebnisse(
+                ergebnismeldungsErgebnisseMapper.getErgebnismeldungErgebnisse(
                     wahlID, wahlbezirkID, wahlart, meldungsart))
-            .thenReturn(List.of(mockedValidErgebnisse));
+            .thenReturn(
+                new ErgebnismeldungsErgebnisseModel(
+                    List.of(mockedValidErgebnisse), Collections.emptyList()));
         Mockito.when(
                 mbwBedenklicheStimmzettelService.getAnzahlUngueltigeBedenklicheStimmzettel(
                     new BezirkUndWahlID(wahlID, wahlbezirkID)))
@@ -336,13 +349,11 @@ class ErgebnismeldungMappingServiceTest {
             mockedUngueltigeBedenklicheStimzettel);
 
         Mockito.when(
-                ergebnismeldungsErgebnisseMapper.getGueltigeErgebnisse(
+                ergebnismeldungsErgebnisseMapper.getErgebnismeldungErgebnisse(
                     wahlID, wahlbezirkID, wahlart, meldungsart))
-            .thenReturn(List.of(mockedValidErgebnisse));
-        Mockito.when(
-                ergebnismeldungsErgebnisseMapper.getUngueltigeErgebnisse(
-                    wahlID, wahlbezirkID, wahlart, meldungsart))
-            .thenReturn(List.of(mockedInvalidErgebnisse));
+            .thenReturn(
+                new ErgebnismeldungsErgebnisseModel(
+                    List.of(mockedValidErgebnisse), List.of(mockedInvalidErgebnisse)));
         Mockito.when(mapping.toWahlartDTO(wahlart)).thenReturn(mockedMappedWahlart);
         if (meldungsart.equals(MeldungsartModel.V1)) {
           Mockito.when(mapping.toDTO(MeldungsartModel.V1))

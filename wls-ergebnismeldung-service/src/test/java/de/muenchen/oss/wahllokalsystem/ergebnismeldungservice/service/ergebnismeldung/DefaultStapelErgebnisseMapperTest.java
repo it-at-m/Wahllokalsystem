@@ -1,12 +1,14 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
 
 import static org.instancio.Select.field;
+import static org.mockito.Mockito.times;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.WahlartPredicateHolder;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import lombok.val;
@@ -35,16 +37,21 @@ class DefaultStapelErgebnisseMapperTest {
   @InjectMocks DefaultStapelErgebnisseMapper unitUnderTest;
 
   @Nested
-  class GetGueltigeErgebnisse {
+  class getErgebnismeldungErgebnisse {
 
     @Test
-    void should_returnOnlyErgebnisseWithoutInvalidStapelart_when_getGueltigeErgebnisseIsCalled() {
+    void should_returnErgebnisse_when_getGueltigeAndUngueltigeErgebnisseAreGiven() {
       val gueltigesErgebnisA = ergebnisWithStapelart(StapelartModel.LTW_BZW_A);
-      val ungueltigesErgebnis = ergebnisWithStapelart(StapelartModel.LTW_BZW_C_UNGUELTIG);
+      val ungueltigesErgebnisC = ergebnisWithStapelart(StapelartModel.LTW_BZW_C_UNGUELTIG);
+      val ungueltigesErgebnisF = ergebnisWithStapelart(StapelartModel.LTW_BZW_F_UNGUELTIG);
       val gueltigesErgebnisC = ergebnisWithStapelart(StapelartModel.LTW_BZW_C_GUELTIG);
-      val ergebnisse = List.of(gueltigesErgebnisA, ungueltigesErgebnis, gueltigesErgebnisC);
+      val ergebnisse =
+          List.of(
+              gueltigesErgebnisA, ungueltigesErgebnisC, gueltigesErgebnisC, ungueltigesErgebnisF);
       final Predicate<StapelartModel> predicateForInvalidErgebnisse =
-          Predicate.isEqual(StapelartModel.LTW_BZW_C_UNGUELTIG);
+          (stapelart) ->
+              StapelartModel.LTW_BZW_C_UNGUELTIG.equals(stapelart)
+                  || StapelartModel.LTW_BZW_F_UNGUELTIG.equals(stapelart);
 
       Mockito.when(ergebnisseService.getAllErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
           .thenReturn(ergebnisse);
@@ -53,12 +60,19 @@ class DefaultStapelErgebnisseMapperTest {
           .thenReturn(predicateForInvalidErgebnisse);
 
       val result =
-          unitUnderTest.getGueltigeErgebnisse(
+          unitUnderTest.getErgebnismeldungErgebnisse(
               WAHL_ID, WAHLBEZIRK_ID, WahlartModel.LTW, MeldungsartModel.V1);
 
-      Assertions.assertThat(result).containsExactly(gueltigesErgebnisA, gueltigesErgebnisC);
+      val expectedResult =
+          new ErgebnismeldungsErgebnisseModel(
+              List.of(gueltigesErgebnisA, gueltigesErgebnisC),
+              List.of(ungueltigesErgebnisC, ungueltigesErgebnisF));
+      Assertions.assertThat(result)
+          .usingRecursiveComparison()
+          .ignoringCollectionOrder()
+          .isEqualTo(expectedResult);
       Mockito.verify(ergebnisseService).getAllErgebnisse(WAHL_ID, WAHLBEZIRK_ID);
-      Mockito.verify(wahlartPredicateHolder)
+      Mockito.verify(wahlartPredicateHolder, times(2))
           .getPredicateForStapelWithInvalidErgebnisse(WahlartModel.LTW);
     }
 
@@ -71,12 +85,15 @@ class DefaultStapelErgebnisseMapperTest {
           .thenReturn(stapelart -> false);
 
       val result =
-          unitUnderTest.getGueltigeErgebnisse(
+          unitUnderTest.getErgebnismeldungErgebnisse(
               WAHL_ID, WAHLBEZIRK_ID, WahlartModel.EUW, MeldungsartModel.V1);
 
-      Assertions.assertThat(result).isEmpty();
+      Assertions.assertThat(result)
+          .isEqualTo(
+              new ErgebnismeldungsErgebnisseModel(
+                  Collections.emptyList(), Collections.emptyList()));
       Mockito.verify(ergebnisseService).getAllErgebnisse(WAHL_ID, WAHLBEZIRK_ID);
-      Mockito.verify(wahlartPredicateHolder)
+      Mockito.verify(wahlartPredicateHolder, times(2))
           .getPredicateForStapelWithInvalidErgebnisse(WahlartModel.EUW);
     }
 
@@ -91,78 +108,12 @@ class DefaultStapelErgebnisseMapperTest {
 
       Assertions.assertThatThrownBy(
               () ->
-                  unitUnderTest.getGueltigeErgebnisse(
+                  unitUnderTest.getErgebnismeldungErgebnisse(
                       WAHL_ID, WAHLBEZIRK_ID, WahlartModel.SVW, MeldungsartModel.V1))
           .isSameAs(exception);
       Mockito.verify(ergebnisseService).getAllErgebnisse(WAHL_ID, WAHLBEZIRK_ID);
       Mockito.verify(wahlartPredicateHolder)
           .getPredicateForStapelWithInvalidErgebnisse(WahlartModel.SVW);
-    }
-  }
-
-  @Nested
-  class GetUngueltigeErgebnisse {
-
-    @Test
-    void should_returnOnlyErgebnisseWithInvalidStapelart_when_getUngueltigeErgebnisseIsCalled() {
-      val gueltigesErgebnisA = ergebnisWithStapelart(StapelartModel.LTW_BZW_A);
-      val ungueltigesErgebnis = ergebnisWithStapelart(StapelartModel.LTW_BZW_C_UNGUELTIG);
-      val gueltigesErgebnisC = ergebnisWithStapelart(StapelartModel.LTW_BZW_C_GUELTIG);
-      val ergebnisse = List.of(gueltigesErgebnisA, ungueltigesErgebnis, gueltigesErgebnisC);
-      final Predicate<StapelartModel> predicateForInvalidErgebnisse =
-          Predicate.isEqual(StapelartModel.LTW_BZW_C_UNGUELTIG);
-
-      Mockito.when(ergebnisseService.getAllErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
-          .thenReturn(ergebnisse);
-      Mockito.when(
-              wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(WahlartModel.LTW))
-          .thenReturn(predicateForInvalidErgebnisse);
-
-      val result =
-          unitUnderTest.getUngueltigeErgebnisse(
-              WAHL_ID, WAHLBEZIRK_ID, WahlartModel.LTW, MeldungsartModel.V1);
-
-      Assertions.assertThat(result).containsExactly(ungueltigesErgebnis);
-      Mockito.verify(ergebnisseService).getAllErgebnisse(WAHL_ID, WAHLBEZIRK_ID);
-      Mockito.verify(wahlartPredicateHolder)
-          .getPredicateForStapelWithInvalidErgebnisse(WahlartModel.LTW);
-    }
-
-    @Test
-    void should_propagateIllegalArgumentException_when_wahlartIsNotSupported() {
-      val exception = new IllegalArgumentException("Wahlart wird nicht unterstuetzt");
-      Mockito.when(ergebnisseService.getAllErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
-          .thenReturn(List.of());
-      Mockito.when(
-              wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(WahlartModel.SVW))
-          .thenThrow(exception);
-
-      Assertions.assertThatThrownBy(
-              () ->
-                  unitUnderTest.getUngueltigeErgebnisse(
-                      WAHL_ID, WAHLBEZIRK_ID, WahlartModel.SVW, MeldungsartModel.V1))
-          .isSameAs(exception);
-      Mockito.verify(ergebnisseService).getAllErgebnisse(WAHL_ID, WAHLBEZIRK_ID);
-      Mockito.verify(wahlartPredicateHolder)
-          .getPredicateForStapelWithInvalidErgebnisse(WahlartModel.SVW);
-    }
-
-    @Test
-    void should_returnEmptyCollection_when_noErgebnisseAreAvailable() {
-      Mockito.when(ergebnisseService.getAllErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
-          .thenReturn(List.of());
-      Mockito.when(
-              wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(WahlartModel.EUW))
-          .thenReturn(stapelart -> false);
-
-      val result =
-          unitUnderTest.getUngueltigeErgebnisse(
-              WAHL_ID, WAHLBEZIRK_ID, WahlartModel.EUW, MeldungsartModel.V1);
-
-      Assertions.assertThat(result).isEmpty();
-      Mockito.verify(ergebnisseService).getAllErgebnisse(WAHL_ID, WAHLBEZIRK_ID);
-      Mockito.verify(wahlartPredicateHolder)
-          .getPredicateForStapelWithInvalidErgebnisse(WahlartModel.EUW);
     }
   }
 

@@ -70,19 +70,19 @@ public class ErgebnismeldungMappingService {
         "SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  a createErgebnismeldung wahlart {}",
         wahlart);
 
-    val gueltigeErgebnisse =
-        ergebnismeldungsErgebnisseMapper.getGueltigeErgebnisse(
+    val ergebnismeldungErgebnisse =
+        ergebnismeldungsErgebnisseMapper.getErgebnismeldungErgebnisse(
             wahlID, wahlbezirkID, wahlart, meldungsart);
-    ergebnismeldung.setErgebnisse(mapping.toDtoErgebnisseSet(gueltigeErgebnisse));
+    ergebnismeldung.setErgebnisse(
+        mapping.toDtoErgebnisseSet(ergebnismeldungErgebnisse.gueltigeErgebnisse()));
     val eaiMeldungsart = mapping.toDTO(meldungsart);
     ergebnismeldung.meldungsart(eaiMeldungsart);
     log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  b createErgebnismeldung");
 
-    val ungueltigeErgebnisse =
-        ergebnismeldungsErgebnisseMapper.getUngueltigeErgebnisse(
-            wahlID, wahlbezirkID, wahlart, meldungsart);
-    ergebnismeldung.setUngueltigeStimmzettels(mapping.toDtoSet(ungueltigeErgebnisse));
-    ergebnismeldung.setUngueltigeStimmzettelAnzahl((long) ungueltigeErgebnisse.size());
+    ergebnismeldung.setUngueltigeStimmzettels(
+        mapping.toDtoSet(ergebnismeldungErgebnisse.ungueltigeErgebnisse()));
+    ergebnismeldung.setUngueltigeStimmzettelAnzahl(
+        (long) ergebnismeldungErgebnisse.ungueltigeErgebnisse().size());
     ergebnismeldung.setWahlart(mapping.toWahlartDTO(wahlart));
 
     if (ergebnismeldung.getUngueltigeStimmzettels() == null) {

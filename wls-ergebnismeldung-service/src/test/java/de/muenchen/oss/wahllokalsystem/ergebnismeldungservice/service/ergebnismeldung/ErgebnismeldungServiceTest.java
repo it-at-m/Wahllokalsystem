@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnism
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai.Mapping;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;

@@ -40,8 +40,7 @@ vi.mock(
     return {
       useBeschlussgrundTools: () => ({
         ...original.useBeschlussgrundTools(),
-        sortSystemBeschlussgruende:
-          mockDefinitions.sortWahlvorstandBeschlussgruende,
+        sortSystemBeschlussgruende: mockDefinitions.sortSystemBeschlussgruende,
         sortWahlvorstandBeschlussgruende:
           mockDefinitions.sortWahlvorstandBeschlussgruende,
       }),
@@ -445,7 +444,7 @@ describe("stimmzettelUtils.ts", () => {
 
       const wahlvorschlaegeSorted = [wvA, wvB];
 
-      mockDefinitions.sortWahlvorstandBeschlussgruende.mockReturnValueOnce(
+      mockDefinitions.sortSystemBeschlussgruende.mockReturnValueOnce(
         sysBeschlussvorschlag
       );
       mockDefinitions.sortWahlvorstandBeschlussgruende.mockReturnValueOnce(
@@ -479,7 +478,8 @@ describe("stimmzettelUtils.ts", () => {
       expect(result).toStrictEqual(expectedNormalizedStimmzettel);
       expect(
         mockDefinitions.sortWahlvorstandBeschlussgruende
-      ).toHaveBeenCalledTimes(2);
+      ).toHaveBeenCalledOnce();
+      expect(mockDefinitions.sortSystemBeschlussgruende).toHaveBeenCalledOnce();
       expect(mockDefinitions.sortWahlvorschlaege).toHaveBeenCalledOnce();
     });
   });

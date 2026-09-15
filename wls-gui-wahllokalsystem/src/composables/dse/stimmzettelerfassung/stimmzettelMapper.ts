@@ -146,11 +146,16 @@ export function useStimmzettelMapper() {
     });
     stimmzettelToMapTo.gueltigkeit = stimmzettelBeforeEdit.gueltigkeit;
     stimmzettelToMapTo.wahlvorstandBeschlussvorschlag =
-      stimmzettelBeforeEdit.wahlvorstandBeschlussvorschlag;
+      stimmzettelBeforeEdit.wahlvorstandBeschlussvorschlag.map(({ text }) => ({
+        text,
+      }));
     stimmzettelToMapTo.systemBeschlussvorschlag =
-      stimmzettelBeforeEdit.systemBeschlussvorschlag;
-    stimmzettelToMapTo.beschlussfassung =
-      stimmzettelBeforeEdit.beschlussfassung;
+      stimmzettelBeforeEdit.systemBeschlussvorschlag.map(({ reason }) => ({
+        reason,
+      }));
+    stimmzettelToMapTo.beschlussfassung = stimmzettelBeforeEdit.beschlussfassung
+      ? { ...stimmzettelBeforeEdit.beschlussfassung }
+      : null;
     stimmzettelToMapTo.invalideVotes = stimmzettelBeforeEdit.invalideVotes;
 
     return stimmzettelToMapTo;

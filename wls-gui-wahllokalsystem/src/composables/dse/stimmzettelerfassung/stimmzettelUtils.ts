@@ -40,6 +40,28 @@ function _useStimmzettelUtils() {
     };
   }
 
+  function isVorgemerktFuerBeschluss(
+    stimmzettel: PersistedStimmzettel
+  ): boolean {
+    return (
+      stimmzettel.systemBeschlussvorschlag.length > 0 ||
+      stimmzettel.wahlvorstandBeschlussvorschlag.length > 0
+    );
+  }
+
+  function getVormerkungsgrund(stimmzettel: PersistedStimmzettel): string {
+    const { mapSystemBeschlussgrundReasonEnumToText } =
+      useSystemBeschlussgrundReasonEnumTools();
+    const wahlvorstandVorschlaege =
+      stimmzettel.wahlvorstandBeschlussvorschlag.map(
+        (vorschlag) => vorschlag.text
+      );
+    const systemVorschlaege = stimmzettel.systemBeschlussvorschlag.map(
+      (vorschlag) => mapSystemBeschlussgrundReasonEnumToText(vorschlag.reason)
+    );
+    return [...systemVorschlaege, ...wahlvorstandVorschlaege].join(", ");
+  }
+
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DSEWahlvorschlag {
     const dseWahlvorschlag: DSEWahlvorschlag = {
       wahlvorschlagID: wahlvorschlag.identifikator,
@@ -83,28 +105,6 @@ function _useStimmzettelUtils() {
     }
 
     return result;
-  }
-
-  function isVorgemerktFuerBeschluss(
-    stimmzettel: PersistedStimmzettel
-  ): boolean {
-    return (
-      stimmzettel.systemBeschlussvorschlag.length > 0 ||
-      stimmzettel.wahlvorstandBeschlussvorschlag.length > 0
-    );
-  }
-
-  function getVormerkungsgrund(stimmzettel: PersistedStimmzettel): string {
-    const { mapSystemBeschlussgrundReasonEnumToText } =
-      useSystemBeschlussgrundReasonEnumTools();
-    const wahlvorstandVorschlaege =
-      stimmzettel.wahlvorstandBeschlussvorschlag.map(
-        (vorschlag) => vorschlag.text
-      );
-    const systemVorschlaege = stimmzettel.systemBeschlussvorschlag.map(
-      (vorschlag) => mapSystemBeschlussgrundReasonEnumToText(vorschlag.reason)
-    );
-    return [...systemVorschlaege, ...wahlvorstandVorschlaege].join(", ");
   }
 
   return {

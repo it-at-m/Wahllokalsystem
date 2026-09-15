@@ -4,7 +4,7 @@ import type { Ref } from "vue";
 
 import { computed } from "vue";
 
-export function useManagedStimmzettelKandidatUtils(
+export function useBearbeitenDialogStimmzettelKandidatUtils(
   stimmzettel: Ref<Stimmzettel>
 ) {
   const kandidatenOfStimmzettel = computed(() =>

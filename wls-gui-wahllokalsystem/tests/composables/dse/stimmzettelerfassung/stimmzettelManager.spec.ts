@@ -14,18 +14,22 @@ import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.t
 import { UnsupportedCommandError } from "@/types/dse/error/UnsupportedCommandError.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
-const mockDefinitions = vi.hoisted(() => ({
-  handlerOneCanHandle: vi.fn(),
-  handlerTwoCanHandle: vi.fn(),
-  handlerOneHandleOrThrow: vi.fn(),
-  handlerTwoHandleOrThrow: vi.fn(),
-  mangedStimmzettel: {
-    kandidatAddEinzelstimmenOrThrow: vi.fn(),
-  },
-  resetStimmzettelAndHistory: vi.fn(),
-  mapPersistedStimmzettelValuesToExistingDseStimmzettel: vi.fn(),
-  normalizePersistedStimmzettel: vi.fn(),
-}));
+const mockDefinitions = await vi.hoisted(async () => {
+  const { ref } = await import("vue");
+  return {
+    handlerOneCanHandle: vi.fn(),
+    handlerTwoCanHandle: vi.fn(),
+    handlerOneHandleOrThrow: vi.fn(),
+    handlerTwoHandleOrThrow: vi.fn(),
+    mangedStimmzettel: {
+      kandidatAddEinzelstimmenOrThrow: vi.fn(),
+      hasAnyValuesSet: ref(false),
+    },
+    resetStimmzettelAndHistory: vi.fn(),
+    mapPersistedStimmzettelValuesToExistingDseStimmzettel: vi.fn(),
+    normalizePersistedStimmzettel: vi.fn(),
+  };
+});
 
 vi.mock(
   "@/composables/dse/stimmzettelerfassung/command/commandHandlers.ts",
@@ -52,6 +56,7 @@ vi.mock("@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts", () => ({
       kandidatAddEinzelstimmenOrThrow:
         mockDefinitions.mangedStimmzettel.kandidatAddEinzelstimmenOrThrow,
       resetStimmzettelAndHistory: mockDefinitions.resetStimmzettelAndHistory,
+      hasAnyValuesSet: mockDefinitions.mangedStimmzettel.hasAnyValuesSet,
       stimmzettel,
       wahlID,
     };
@@ -411,7 +416,8 @@ describe("stimmzettelManager.ts", () => {
       expect(hasStimmzettelBeenEdited.value).toBe(false);
     });
 
-    it("should_returnFalse_when_stimmzettelToCompareIsNull", () => {
+    it("should_returnFalse_when_stimmzettelToCompareIsNullAndStimmzettelHasNoValuesSet", () => {
+      mockDefinitions.mangedStimmzettel.hasAnyValuesSet.value = false;
       const { hasStimmzettelBeenEdited, stimmzettelBeforeEdit } =
         useStimmzettelManager(
           computed(() => stimmzettelKennung),
@@ -422,6 +428,20 @@ describe("stimmzettelManager.ts", () => {
 
       expect(stimmzettelBeforeEdit.value).toBeNull();
       expect(hasStimmzettelBeenEdited.value).toBe(false);
+    });
+
+    it("should_returnTrue_when_stimmzettelToCompareIsNullButStimmzettelHasValuesSet", () => {
+      mockDefinitions.mangedStimmzettel.hasAnyValuesSet.value = true;
+      const { hasStimmzettelBeenEdited, stimmzettelBeforeEdit } =
+        useStimmzettelManager(
+          computed(() => stimmzettelKennung),
+          wahlvorschlaege,
+          wahlID,
+          teamID
+        );
+
+      expect(stimmzettelBeforeEdit.value).toBeNull();
+      expect(hasStimmzettelBeenEdited.value).toBe(true);
     });
   });
 });

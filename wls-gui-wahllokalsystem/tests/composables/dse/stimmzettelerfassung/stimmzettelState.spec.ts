@@ -54,7 +54,8 @@ vi.mock(
 
 describe("stimmzettelState", () => {
   const { generateRandomString } = useCommonTestDataFactory();
-  const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
+  const { preparePersistedStimmzettel, createPersistedStimmzettel } =
+    useStimmzettelTestDataFactory();
 
   const mockedWahlId = generateRandomString(10);
   const mockedWahlbezirkId = generateRandomString(10);
@@ -88,8 +89,8 @@ describe("stimmzettelState", () => {
       );
 
       const mockedLoadedStimmzettel = [
-        preparePersistedStimmzettel().build(),
-        preparePersistedStimmzettel().build(),
+        createPersistedStimmzettel(),
+        createPersistedStimmzettel(),
       ];
       mockDefinitions.getStimmzettel.mockReturnValue(mockedLoadedStimmzettel);
 
@@ -146,8 +147,7 @@ describe("stimmzettelState", () => {
 
   describe("saveOrUpdateStimmzettel", () => {
     it("should_appendStimmzettelAndPersist_when_initialCollectionIsEmpty", async () => {
-      const mockedNewStimmzettel: Stimmzettel =
-        preparePersistedStimmzettel().build();
+      const mockedNewStimmzettel: Stimmzettel = createPersistedStimmzettel();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 
@@ -164,11 +164,13 @@ describe("stimmzettelState", () => {
       ]);
     });
 
-    it("should_appendStimmzettelToExistingCollectionAndPersist_when_collectionAlreadyContainsItems", async () => {
+    it("should_appendStimmzettelToExistingCollectionAndPersist_when_collectionAlreadyContainsItemsAndKennungIsTheSameButTeamIdIsNot", async () => {
       const mockedExistingStimmzettel: Stimmzettel =
-        preparePersistedStimmzettel().build();
-      const mockedNewStimmzettel: Stimmzettel =
-        preparePersistedStimmzettel().build();
+        preparePersistedStimmzettel().stimmzettelkennung(1).teamID("A").build();
+      const mockedNewStimmzettel: Stimmzettel = preparePersistedStimmzettel()
+        .stimmzettelkennung(1)
+        .teamID("B")
+        .build();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 
@@ -193,10 +195,12 @@ describe("stimmzettelState", () => {
       const mockedExistingStimmzettel: Stimmzettel =
         preparePersistedStimmzettel()
           .stimmzettelkennung(1)
+          .teamID("A")
           .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
           .build();
       const mockedEditedStimmzettel = preparePersistedStimmzettel()
         .stimmzettelkennung(mockedExistingStimmzettel.stimmzettelkennung)
+        .teamID("A")
         .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
         .build();
 

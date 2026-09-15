@@ -26,7 +26,8 @@ export function useStimmzettelState(
     const stimmzettelExistsIndex = newStimmzettelCollectionToSave.findIndex(
       (savedStimmzettel) =>
         savedStimmzettel.stimmzettelkennung ===
-        stimmzettelToSave.stimmzettelkennung
+          stimmzettelToSave.stimmzettelkennung &&
+        savedStimmzettel.teamID == stimmzettelToSave.teamID
     );
 
     if (stimmzettelExistsIndex !== -1) {

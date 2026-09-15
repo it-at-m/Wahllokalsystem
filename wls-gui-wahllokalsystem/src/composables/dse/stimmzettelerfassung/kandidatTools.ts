@@ -1,3 +1,4 @@
+import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 
 export function useKandidatTools() {
@@ -55,6 +56,26 @@ export function useKandidatTools() {
     );
   }
 
+  function sortKandidaten(kandidaten: PersistedKandidat[]) {
+    return kandidaten
+      .slice()
+      .sort((a, b) => {
+        const idCmp = a.kandidatId.localeCompare(b.kandidatId);
+        return idCmp !== 0 ? idCmp : a.nennung - b.nennung;
+      })
+      .map(
+        (k) =>
+          ({
+            kandidatId: k.kandidatId,
+            nennung: k.nennung,
+            isDiscarded: k.isDiscarded,
+            votesByVoter: k.votesByVoter ?? null,
+            invalidVotes: k.invalidVotes ?? null,
+            votesByWahlvorschlag: k.votesByWahlvorschlag ?? null,
+          }) as PersistedKandidat
+      );
+  }
+
   return {
     getEinzelstimmenOrZero,
     getTotalEinzelAndUngueltigeStimmenOfKandidatenWithSameId,
@@ -62,5 +83,6 @@ export function useKandidatTools() {
     getUngueltigeStimmenOrZero,
     hasAnyKennzeichen,
     hasAnyKennzeichenOrReststimme,
+    sortKandidaten,
   };
 }

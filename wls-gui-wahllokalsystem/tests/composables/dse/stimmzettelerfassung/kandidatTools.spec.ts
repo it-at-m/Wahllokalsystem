@@ -7,6 +7,7 @@ const {
   createStimmzettelWahlvorschlag,
   prepareStimmzettelKandidat,
   prepareStimmzettelKandidatOfWahlvorschlag,
+  preparePersistedStimmzettelKandidat,
 } = useStimmzettelTestDataFactory();
 
 describe("kandidatTools.ts", () => {
@@ -305,6 +306,41 @@ describe("kandidatTools.ts", () => {
           firstKandidat
         )
       ).toStrictEqual(10);
+    });
+  });
+
+  describe("sortKandidaten", () => {
+    const kdA1 = preparePersistedStimmzettelKandidat()
+      .kandidatId("a")
+      .nennung(1)
+      .build();
+    const kdA2 = preparePersistedStimmzettelKandidat()
+      .kandidatId("a")
+      .nennung(2)
+      .build();
+    const kdB = preparePersistedStimmzettelKandidat()
+      .kandidatId("b")
+      .nennung(1)
+      .build();
+
+    it.each([
+      { text: "NotSorted", kandidaten: [kdB, kdA2, kdA1] },
+      { text: "Sorted", kandidaten: [kdA1, kdA2, kdB] },
+    ])(
+      `should_returnSortedKandidaten_when_givenListOfKandidatenThatIs'$text'`,
+      ({ kandidaten }) => {
+        const expectedResult = [kdA1, kdA2, kdB];
+
+        const result = unitUnderTest.sortKandidaten(kandidaten);
+
+        expect(result).toStrictEqual(expectedResult);
+      }
+    );
+
+    it("should_returnEmptyList_when_givenEmptyList", () => {
+      const result = unitUnderTest.sortKandidaten([]);
+
+      expect(result).toStrictEqual([]);
     });
   });
 });

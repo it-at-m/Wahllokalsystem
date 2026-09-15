@@ -107,7 +107,7 @@ import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressL
 import TheBeschlussfassungStartenDialog from "@/components/dse/beschlussfassung/TheBeschlussfassungStartenDialog.vue";
 import BaseTeamStatusListItem from "@/components/dse/monitoring/BaseTeamStatusListItem.vue";
 import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
-import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import router from "@/plugins/router.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
@@ -133,6 +133,7 @@ const {
   onMonitoringSynchronisierenClicked,
   loadWorkflowStatus,
 } = useMonitoringViewUtils(wahlID, wahlbezirkID);
+const { postErfassungTeamStatus } = useStimmzettelerfassungTeamStatusService();
 
 const isRefreshBtnActive = computed(() => !isBeschlussfassungBtnActive.value);
 
@@ -160,13 +161,13 @@ async function onAktualisierenClicked() {
 }
 
 async function onOpenStimmzettelerfassungClicked(teamID: string) {
-  const { ensureStatusInBearbeitung } = useStimmzettelErfassungViewUtils(
+  await postErfassungTeamStatus(
     wahlID,
     wahlbezirkID,
-    teamID
+    teamID,
+    { status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG },
+    true
   );
-
-  await ensureStatusInBearbeitung(true);
   await onMonitoringSynchronisierenClicked();
 }
 </script>

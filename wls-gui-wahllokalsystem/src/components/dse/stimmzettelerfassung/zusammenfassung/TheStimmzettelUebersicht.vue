@@ -196,11 +196,7 @@ async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
   isKennungsDialogVisible.value = true;
 }
 async function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
-  if (
-    teamStatus.value?.status === StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
-  ) {
-    await sendStatusInBearbeitung();
-  }
+  await ensureStatusInBearbeitung();
 
   activeStimmzettel.value = stimmzettel;
   isErfassungsDialogVisible.value = true;

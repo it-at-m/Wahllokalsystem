@@ -18,7 +18,7 @@ describe("useBeschlussgrundTools.ts", () => {
   describe("sortWahlvorstandBeschlussgruende", () => {
     const wvGrund1 = {
       ...createStimmzettelSystemBeschlussgrund(),
-      text: WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagIdentischGekennzeichnet,
+      text: "kaffee ausgeschüttet",
     };
     const wvGrund2 = {
       ...createStimmzettelSystemBeschlussgrund(),

@@ -204,11 +204,11 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       });
     });
 
-    describe("sendStatusInBearbeitung", () => {
+    describe("ensureStatusInBearbeitung", () => {
       it("should_sendStatusInBearbeitungAndUpdateInternalState_when_sendingWasSuccessful", async () => {
         mockDefinitions.postErfassungTeamStatus.mockResolvedValue(undefined);
 
-        await unitUnderTest.sendStatusInBearbeitung();
+        await unitUnderTest.ensureStatusInBearbeitung();
 
         const expectedStatusToSend =
           StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG;
@@ -227,6 +227,16 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         );
       });
 
+      it("should_notSendStatus_when_teamsStatusIsCurrentlyInBearbeitung", async () => {
+        mockDefinitions.postErfassungTeamStatus.mockResolvedValue(undefined);
+
+        await unitUnderTest.ensureStatusInBearbeitung();
+        //second call that should not result in post-Call on service
+        await unitUnderTest.ensureStatusInBearbeitung();
+
+        expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalledOnce();
+      });
+
       it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
         const mockedPostApiError = new Error("mocked post error");
         mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
@@ -234,7 +244,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         );
 
         await expect(
-          unitUnderTest.sendStatusInBearbeitung()
+          unitUnderTest.ensureStatusInBearbeitung()
         ).rejects.toThrowError(mockedPostApiError);
 
         const expectedStatusToSend =

@@ -14,7 +14,7 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
 
 const { sortWahlvorstandBeschlussgruende, sortSystemBeschlussgruende } =
   useBeschlussgrundTools();
-const { sortWahlvorschlaege } = useWahlvorschlagTools();
+const { sortAndDeepCloneWahlvorschlaege } = useWahlvorschlagTools();
 
 function _useStimmzettelUtils() {
   function createStimmzettelWithWahlvorschlaege(
@@ -77,7 +77,9 @@ function _useStimmzettelUtils() {
     const wvBeschluss = sortWahlvorstandBeschlussgruende(
       stimmzettel.wahlvorstandBeschlussvorschlag ?? []
     );
-    const wvSorted = sortWahlvorschlaege(stimmzettel.wahlvorschlaege ?? []);
+    const wvSorted = sortAndDeepCloneWahlvorschlaege(
+      stimmzettel.wahlvorschlaege ?? []
+    );
 
     return {
       stimmzettelkennung: stimmzettel.stimmzettelkennung,

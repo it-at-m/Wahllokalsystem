@@ -34,7 +34,7 @@ describe("useWahlvorschlagTools.ts", () => {
     vi.clearAllMocks();
   });
 
-  describe("sortWahlvorschlaege", () => {
+  describe("sortAndDeepCloneWahlvorschlaege", () => {
     const wvA = preparePersistedStimmzettelWahlvorschlag()
       .wahlvorschlagID("a")
       .selected(true)
@@ -100,7 +100,8 @@ describe("useWahlvorschlagTools.ts", () => {
           },
         ];
 
-        const result = unitUnderTest.sortWahlvorschlaege(wahlvorschlaege);
+        const result =
+          unitUnderTest.sortAndDeepCloneWahlvorschlaege(wahlvorschlaege);
 
         expect(result).toStrictEqual(expectedResult);
         expect(
@@ -110,7 +111,7 @@ describe("useWahlvorschlagTools.ts", () => {
     );
 
     it("should_returnEmptyList_when_givenEmptyList", () => {
-      const result = unitUnderTest.sortWahlvorschlaege([]);
+      const result = unitUnderTest.sortAndDeepCloneWahlvorschlaege([]);
 
       expect(result).toStrictEqual([]);
       expect(mockDefinitions.sortAndDeepCloneKandidaten).not.toHaveBeenCalled();

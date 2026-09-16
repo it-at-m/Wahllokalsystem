@@ -19,7 +19,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getStimmzettel: vi.fn(),
   sortSystemBeschlussgruende: vi.fn(),
   sortWahlvorstandBeschlussgruende: vi.fn(),
-  sortWahlvorschlaege: vi.fn(),
+  sortAndDeepCloneWahlvorschlaege: vi.fn(),
 }));
 
 vi.mock(
@@ -52,7 +52,8 @@ vi.mock(
   import("@/composables/dse/stimmzettelerfassung/wahlvorschlagTools.ts"),
   () => ({
     useWahlvorschlagTools: () => ({
-      sortWahlvorschlaege: mockDefinitions.sortWahlvorschlaege,
+      sortAndDeepCloneWahlvorschlaege:
+        mockDefinitions.sortAndDeepCloneWahlvorschlaege,
     }),
   })
 );
@@ -450,7 +451,7 @@ describe("stimmzettelUtils.ts", () => {
       mockDefinitions.sortWahlvorstandBeschlussgruende.mockReturnValueOnce(
         wvBeschlussvorschlag
       );
-      mockDefinitions.sortWahlvorschlaege.mockReturnValue(
+      mockDefinitions.sortAndDeepCloneWahlvorschlaege.mockReturnValue(
         wahlvorschlaegeSorted
       );
 
@@ -480,7 +481,9 @@ describe("stimmzettelUtils.ts", () => {
         mockDefinitions.sortWahlvorstandBeschlussgruende
       ).toHaveBeenCalledOnce();
       expect(mockDefinitions.sortSystemBeschlussgruende).toHaveBeenCalledOnce();
-      expect(mockDefinitions.sortWahlvorschlaege).toHaveBeenCalledOnce();
+      expect(
+        mockDefinitions.sortAndDeepCloneWahlvorschlaege
+      ).toHaveBeenCalledOnce();
     });
   });
 });

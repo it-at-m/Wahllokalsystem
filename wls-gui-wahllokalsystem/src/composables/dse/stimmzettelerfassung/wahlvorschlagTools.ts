@@ -5,7 +5,9 @@ import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandida
 const { sortAndDeepCloneKandidaten } = useKandidatTools();
 
 export function useWahlvorschlagTools() {
-  function sortWahlvorschlaege(wahlvorschlaege: PersistedWahlvorschlag[]) {
+  function sortAndDeepCloneWahlvorschlaege(
+    wahlvorschlaege: PersistedWahlvorschlag[]
+  ) {
     return wahlvorschlaege
       .slice()
       .sort((wahlvorschlag1, wahlvorschlag2) =>
@@ -26,6 +28,6 @@ export function useWahlvorschlagTools() {
   }
 
   return {
-    sortWahlvorschlaege,
+    sortAndDeepCloneWahlvorschlaege,
   };
 }

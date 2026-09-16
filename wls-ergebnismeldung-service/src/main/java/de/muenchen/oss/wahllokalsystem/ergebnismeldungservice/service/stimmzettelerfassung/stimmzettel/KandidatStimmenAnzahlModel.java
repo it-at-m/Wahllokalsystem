@@ -3,5 +3,5 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 public record KandidatStimmenAnzahlModel(
     String wahlvorschlagID,
     String kandidatID,
-    Long getAnzahl) {
+    Long anzahl) {
 }

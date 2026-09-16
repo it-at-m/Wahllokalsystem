@@ -70,12 +70,10 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                       AND stimmzettel.id.wahlbezirkID = :wahlbezirkID
                       AND stimmzettel.gueltigkeit = de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit.VALID
                       AND stimmzettel.invalideVotes = 0
-                      AND selectedWahlvorschlag.selected = true
                       AND (
                         SELECT COUNT(wahlvorschlag)
                         FROM Wahlvorschlag wahlvorschlag
                         WHERE wahlvorschlag.stimmzettel = stimmzettel
-                          AND wahlvorschlag.selected = true
                       ) = 1
                       AND EXISTS (
                         SELECT kandidat
@@ -121,7 +119,6 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
           """
                     SELECT wahlvorschlag.wahlvorschlagID AS wahlvorschlagID,
                            kandidat.kandidatID.kandidatID AS kandidatID,
-                           kandidat.kandidatID.nennungsNummer AS nennungsNummer,
                            SUM(COALESCE(kandidat.votesByVoter, 0) + COALESCE(kandidat.votesByWahlvorschlag, 0)) AS anzahl
                     FROM Stimmzettel stimmzettel
                     JOIN stimmzettel.wahlvorschlaege wahlvorschlag
@@ -134,7 +131,7 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                           FROM Wahlvorschlag wahlvorschlagWithDiscardedKandidat
                           JOIN wahlvorschlagWithDiscardedKandidat.kandidaten discardedKandidat
                           WHERE wahlvorschlagWithDiscardedKandidat.stimmzettel = stimmzettel
-                            AND discardedKandidat.discarded = true
+                            AND (discardedKandidat.discarded = true OR discardedKandidat.invalidVotes > 0)
                         )
                         OR EXISTS (
                           SELECT votedKandidat
@@ -151,8 +148,7 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                         ) >= 2
                       )
                     GROUP BY wahlvorschlag.wahlvorschlagID,
-                             kandidat.kandidatID.kandidatID,
-                             kandidat.kandidatID.nennungsNummer
+                             kandidat.kandidatID.kandidatID
                     """)
   List<KandidatStimmenAnzahl> countKandidatStimmenForStimmzettelWithCandidateVotesOrMultipleSelectedWahlvorschlaege(
           @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);

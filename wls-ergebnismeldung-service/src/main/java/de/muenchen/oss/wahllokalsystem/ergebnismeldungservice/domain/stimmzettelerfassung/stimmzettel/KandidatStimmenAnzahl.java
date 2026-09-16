@@ -5,7 +5,5 @@ public interface KandidatStimmenAnzahl {
 
     String getKandidatID();
 
-    Integer getNennungsNummer();
-
     Long getAnzahl();
 }

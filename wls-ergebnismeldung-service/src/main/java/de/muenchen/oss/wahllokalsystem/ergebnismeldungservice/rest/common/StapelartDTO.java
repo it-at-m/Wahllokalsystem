@@ -46,6 +46,7 @@ public enum StapelartDTO {
   MBW_A_B,
   MBW_D,
   MBW_D_UNGUELTIG,
+  MBW_E_UNGUELTIG,
   MBW_B_C,
   // Allgemeine Stapel
   STIMMZETTEL_UMSCHLAEGE,

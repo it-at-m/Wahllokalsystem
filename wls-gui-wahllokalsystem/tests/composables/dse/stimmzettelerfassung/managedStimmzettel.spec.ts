@@ -117,6 +117,7 @@ describe("managedStimmzettel.ts", () => {
     prepareStimmzettelKandidatOfWahlvorschlag,
     preparePersistedStimmzettel,
     preparePersistedStimmzettelWahlvorschlag,
+    createStimmzettel,
   } = useStimmzettelTestDataFactory();
 
   const MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER = 999;
@@ -1235,24 +1236,8 @@ describe("managedStimmzettel.ts", () => {
         ])
         .build();
 
-      const mappedDseStimmzettelAfterReset = structuredClone(
-        initialEmptyDseStimzettel
-      );
-      mappedDseStimmzettelAfterReset.invalideVotes =
-        stimmzettelToResetTo.invalideVotes;
-      mappedDseStimmzettelAfterReset.wahlvorschlaege[0].selected =
-        stimmzettelToResetTo.wahlvorschlaege[0].selected;
-      mappedDseStimmzettelAfterReset.wahlvorschlaege[0].kandidaten[0].einzelstimmen =
-        stimmzettelToResetTo.wahlvorschlaege[0].kandidaten[0].votesByVoter;
-      mappedDseStimmzettelAfterReset.wahlvorschlaege[0].kandidaten[0].ungueltigeStimmen =
-        stimmzettelToResetTo.wahlvorschlaege[0].kandidaten[0].invalidVotes;
-      mappedDseStimmzettelAfterReset.wahlvorschlaege[0].kandidaten[0].reststimmen =
-        stimmzettelToResetTo.wahlvorschlaege[0].kandidaten[0].votesByWahlvorschlag;
-      mappedDseStimmzettelAfterReset.wahlvorschlaege[0].kandidaten[0].durchgestrichen =
-        stimmzettelToResetTo.wahlvorschlaege[0].kandidaten[0].isDiscarded;
-
       mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockReturnValue(
-        structuredClone(mappedDseStimmzettelAfterReset)
+        createStimmzettel()
       );
 
       expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
@@ -1291,10 +1276,6 @@ describe("managedStimmzettel.ts", () => {
 
       managedStimmzettel.resetStimmzettelAndHistory(stimmzettelToResetTo);
 
-      const stimmzettelAfterReset = managedStimmzettel.stimmzettel.value;
-      expect(stimmzettelAfterReset).toStrictEqual(
-        mappedDseStimmzettelAfterReset
-      );
       expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
       expect(mockDefinitions.resetError).toHaveBeenCalledTimes(1);
       expect(

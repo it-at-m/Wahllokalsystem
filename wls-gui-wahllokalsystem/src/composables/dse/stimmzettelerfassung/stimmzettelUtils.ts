@@ -159,6 +159,16 @@ function _useStimmzettelUtils() {
     return result;
   }
 
+  function isSamePersistedStimmzettel(
+    stimmzettel1: PersistedStimmzettel,
+    stimmzettel2: PersistedStimmzettel
+  ): boolean {
+    return (
+      stimmzettel1.stimmzettelkennung === stimmzettel2.stimmzettelkennung &&
+      stimmzettel1.teamID == stimmzettel2.teamID
+    );
+  }
+
   return {
     createStimmzettelWithWahlvorschlaege,
     getEmptyStimmzettelWithStimmzettelkennung,
@@ -166,6 +176,7 @@ function _useStimmzettelUtils() {
     getVormerkungsgrund,
     normalizePersistedStimmzettel,
     resetDseStimmzettel,
+    isSamePersistedStimmzettel,
   };
 }
 

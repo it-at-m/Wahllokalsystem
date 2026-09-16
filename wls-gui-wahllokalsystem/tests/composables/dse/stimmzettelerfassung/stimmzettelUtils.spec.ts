@@ -78,6 +78,7 @@ describe("stimmzettelUtils.ts", () => {
     createStimmzettelWithWahlvorschlaege,
     normalizePersistedStimmzettel,
     resetDseStimmzettel,
+    isSamePersistedStimmzettel,
   } = useStimmzettelUtils();
 
   const { mapSystemBeschlussgrundReasonEnumToText } =
@@ -515,5 +516,48 @@ describe("stimmzettelUtils.ts", () => {
 
       expect(result).toStrictEqual(expectedResetStimmzettel);
     });
+  });
+
+  describe("isSamePersistedStimmzettel", () => {
+    it.each([
+      {
+        stimmzettelkennungMatches: false,
+        teamIdMatches: false,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: true,
+        teamIdMatches: false,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: false,
+        teamIdMatches: true,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: true,
+        teamIdMatches: true,
+        expected: true,
+      },
+    ])(
+      "should_return'$expected'_whenStimmzettelkennungMatchesIs'$stimmzettelkennungMatches'AndTeamIdMatchesIs'$teamIdMatches'",
+      ({ stimmzettelkennungMatches, teamIdMatches, expected }) => {
+        const stimmzettel1 = preparePersistedStimmzettel()
+          .stimmzettelkennung(1)
+          .teamID("A")
+          .build();
+        const stimmzettel2 = preparePersistedStimmzettel()
+          .stimmzettelkennung(
+            stimmzettelkennungMatches ? stimmzettel1.stimmzettelkennung : 2
+          )
+          .teamID(teamIdMatches ? stimmzettel1.teamID : "B")
+          .build();
+
+        expect(isSamePersistedStimmzettel(stimmzettel1, stimmzettel2)).toBe(
+          expected
+        );
+      }
+    );
   });
 });

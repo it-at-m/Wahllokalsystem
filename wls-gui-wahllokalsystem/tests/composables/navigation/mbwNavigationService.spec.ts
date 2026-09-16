@@ -232,26 +232,28 @@ describe("mbwNavigationService.ts", () => {
         expectedRoute: MbwStepsEnum.MBW_NIEDERSCHRIFT,
       },
     ])(
-        "should_correctlyHandleNavigationAndNextRoute_forWorkflowState",
-        ({ stepsDone, enabledSteps, expectedRoute }) => {
-          setDseWorkflow(stepsDone);
+      "should_correctlyHandleNavigationAndNextRoute_forWorkflowState",
+      ({ stepsDone, enabledSteps, expectedRoute }) => {
+        setDseWorkflow(stepsDone);
 
-          const service = useMbwNavigationService(wahlID, wahlbezirkID);
+        const service = useMbwNavigationService(wahlID, wahlbezirkID);
 
-          // 1. Navigation State prüfen
-          service.navigation.value.forEach((navigationItem) => {
-            expect(navigationItem.disabled).toBe(
-                !(enabledSteps as string[]).includes(navigationItem.targetRoute.name)
-            );
-          });
+        // 1. Navigation State prüfen
+        service.navigation.value.forEach((navigationItem) => {
+          expect(navigationItem.disabled).toBe(
+            !(enabledSteps as string[]).includes(
+              navigationItem.targetRoute.name
+            )
+          );
+        });
 
-          // 2. Nächste Route prüfen
-          const nextRoute = service.getNextRouteOrNull();
-          expect(nextRoute).toStrictEqual({
-            name: expectedRoute,
-            params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
-          });
-        }
+        // 2. Nächste Route prüfen
+        const nextRoute = service.getNextRouteOrNull();
+        expect(nextRoute).toStrictEqual({
+          name: expectedRoute,
+          params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
+        });
+      }
     );
 
     it("should_returnStimmzettelerfassung_when_dseIsActiveAndUserIsErfassungsteam", () => {

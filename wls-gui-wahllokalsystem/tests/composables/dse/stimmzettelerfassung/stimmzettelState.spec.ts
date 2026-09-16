@@ -202,7 +202,7 @@ describe("stimmzettelState", () => {
       ]);
     });
 
-    it("should_replaceExistingStimmzettel_when_collectionAlreadyContainsItemsAndIsSamePersistedStimmzettelIsFalse", async () => {
+    it("should_replaceExistingStimmzettel_when_collectionAlreadyContainsItemsAndIsSamePersistedStimmzettelIsTrue", async () => {
       const mockedExistingStimmzettel = preparePersistedStimmzettel()
         .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
         .build();

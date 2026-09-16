@@ -20,6 +20,7 @@ import {
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import {
   MBWNextStepImpl,
   NullNextStepImpl,
@@ -74,6 +75,19 @@ export function useNavigationService() {
     );
 
     if (!metaDataOfFirstUnfinishedElection) {
+      return routeWithName(ROUTE_FINISHED);
+    }
+    //DSE Erfassungsteam
+    if (
+      userStore.hasRoleErfassungsteam &&
+      userStore.user.wahlMetaData.find((wahlMetaData) =>
+        workflowStore.isStepDone(
+          wahlMetaData.wahlID,
+          wahlMetaData.wahlbezirkID,
+          MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
+        )
+      )
+    ) {
       return routeWithName(ROUTE_FINISHED);
     }
 

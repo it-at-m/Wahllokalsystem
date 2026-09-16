@@ -114,6 +114,16 @@ function _useStimmzettelUtils() {
     return stimmzettel;
   }
 
+  function isSamePersistedStimmzettel(
+    stimmzettel1: PersistedStimmzettel,
+    stimmzettel2: PersistedStimmzettel
+  ): boolean {
+    return (
+      stimmzettel1.stimmzettelkennung === stimmzettel2.stimmzettelkennung &&
+      stimmzettel1.teamID == stimmzettel2.teamID
+    );
+  }
+
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DSEWahlvorschlag {
     const dseWahlvorschlag: DSEWahlvorschlag = {
       wahlvorschlagID: wahlvorschlag.identifikator,
@@ -157,16 +167,6 @@ function _useStimmzettelUtils() {
     }
 
     return result;
-  }
-
-  function isSamePersistedStimmzettel(
-    stimmzettel1: PersistedStimmzettel,
-    stimmzettel2: PersistedStimmzettel
-  ): boolean {
-    return (
-      stimmzettel1.stimmzettelkennung === stimmzettel2.stimmzettelkennung &&
-      stimmzettel1.teamID == stimmzettel2.teamID
-    );
   }
 
   return {

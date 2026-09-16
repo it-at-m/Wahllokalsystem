@@ -22,11 +22,11 @@
       </v-tabs>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
-          <the-beschluss-fassen-tab />
+          <the-beschluss-fassen-tab :stimmzettel="stimmzettel" />
         </v-tabs-window-item>
-        <v-tabs-window-item value="two"/>
+        <v-tabs-window-item value="two" />
       </v-tabs-window>
-      <v-card-actions>
+      <v-card-actions v-if="tab === 'one'">
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
         <base-wls-button-save
           save-text="Beschluss speichern"
@@ -52,13 +52,12 @@ const isDialogVisibleModel = defineModel("modelValue", {
 });
 
 const props = defineProps<{
-  stimmzettel: Stimmzettel;
+  stimmzettel: Stimmzettel | null;
 }>();
 
 const emit = defineEmits<{
   cancel: [];
-  confirmClose: [stimmzettel: Stimmzettel];
-  confirmNext: [stimmzettel: Stimmzettel];
+  save: [];
 }>();
 
 const tab = ref("one");
@@ -67,5 +66,7 @@ function onCancelClicked() {
   emit("cancel");
 }
 
-function onSaveClicked() {}
+function onSaveClicked() {
+  emit("save");
+}
 </script>

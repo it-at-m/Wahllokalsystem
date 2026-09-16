@@ -30,6 +30,7 @@
       v-model="isBearbeitenDialogVisible"
       :stimmzettel="activeStimmzettelForBeschluss"
       @cancel="onBeschlussBearbeitenCanceled"
+      @save="onBeschlussBearbeitenSaved"
     />
   </div>
 </template>
@@ -78,7 +79,6 @@ async function onBeschlussfassungBeendenClicked() {
 }
 
 function onBeschlussBearbeitenClicked(stimmzettelToEdit: Stimmzettel) {
-  // TODO Bearbeiten-Funktionalität Platzhalter. #3270
   isBearbeitenDialogVisible.value = true;
   activeStimmzettelForBeschluss.value = stimmzettelToEdit;
 
@@ -86,6 +86,10 @@ function onBeschlussBearbeitenClicked(stimmzettelToEdit: Stimmzettel) {
 }
 
 function onBeschlussBearbeitenCanceled() {
+  isBearbeitenDialogVisible.value = false;
+}
+
+function onBeschlussBearbeitenSaved() {
   isBearbeitenDialogVisible.value = false;
 }
 </script>

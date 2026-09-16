@@ -145,4 +145,143 @@ describe("mbwNavigationService.ts", () => {
       );
     });
   });
+
+  describe("dse workflow", () => {
+    const dseStepsForSchriftfuehrung = [
+      MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+      MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+      MbwStepsEnum.MBW_DSE_MONITORING,
+      MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
+      MbwStepsEnum.MBW_SCHNELLMELDUNG,
+      MbwStepsEnum.MBW_NIEDERSCHRIFT,
+    ];
+
+    beforeEach(() => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleSchriftfuehrung = true;
+      useInfomanagementStore().konfigurationsparameter = [
+        { schluessel: "DSE_AKTIV", wert: "true" },
+      ];
+    });
+
+    it.each([
+      {
+        stepsDone: {},
+        enabledSteps: [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL],
+        expectedRoute: MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+      },
+      {
+        stepsDone: { [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true },
+        enabledSteps: [
+          MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+          MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+        ],
+        expectedRoute: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+      },
+      {
+        stepsDone: {
+          [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
+          [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
+        },
+        enabledSteps: [
+          MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+          MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+          MbwStepsEnum.MBW_DSE_MONITORING,
+        ],
+        expectedRoute: MbwStepsEnum.MBW_DSE_MONITORING,
+      },
+      {
+        stepsDone: {
+          [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
+          [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
+          [MbwStepsEnum.MBW_DSE_MONITORING]: true,
+        },
+        enabledSteps: [
+          MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+          MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+          MbwStepsEnum.MBW_DSE_MONITORING,
+          MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
+        ],
+        expectedRoute: MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
+      },
+      {
+        stepsDone: {
+          [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
+          [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
+          [MbwStepsEnum.MBW_DSE_MONITORING]: true,
+          [MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG]: true,
+        },
+        enabledSteps: [
+          MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+          MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+          MbwStepsEnum.MBW_DSE_MONITORING,
+          MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
+          MbwStepsEnum.MBW_SCHNELLMELDUNG,
+        ],
+        expectedRoute: MbwStepsEnum.MBW_SCHNELLMELDUNG,
+      },
+      {
+        stepsDone: {
+          [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
+          [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
+          [MbwStepsEnum.MBW_DSE_MONITORING]: true,
+          [MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG]: true,
+          [MbwStepsEnum.MBW_SCHNELLMELDUNG]: true,
+        },
+        enabledSteps: dseStepsForSchriftfuehrung,
+        expectedRoute: MbwStepsEnum.MBW_NIEDERSCHRIFT,
+      },
+    ])(
+        "should_correctlyHandleNavigationAndNextRoute_forWorkflowState",
+        ({ stepsDone, enabledSteps, expectedRoute }) => {
+          setDseWorkflow(stepsDone);
+
+          const service = useMbwNavigationService(wahlID, wahlbezirkID);
+
+          // 1. Navigation State prüfen
+          service.navigation.value.forEach((navigationItem) => {
+            expect(navigationItem.disabled).toBe(
+                !(enabledSteps as string[]).includes(navigationItem.targetRoute.name)
+            );
+          });
+
+          // 2. Nächste Route prüfen
+          const nextRoute = service.getNextRouteOrNull();
+          expect(nextRoute).toStrictEqual({
+            name: expectedRoute,
+            params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
+          });
+        }
+    );
+
+    it("should_returnStimmzettelerfassung_when_dseIsActiveAndUserIsErfassungsteam", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleSchriftfuehrung = false;
+      setDseWorkflow({});
+
+      const result = useMbwNavigationService(
+        wahlID,
+        wahlbezirkID
+      ).getNextRouteOrNull();
+
+      expect(result).toStrictEqual({
+        name: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+        params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
+      });
+    });
+
+    function setDseWorkflow(stepsDone: Partial<Record<string, boolean>>) {
+      useWorkflowStore().electionWorkflowsStates = [
+        prepareElectionWorkflow()
+          .bezirkUndWahlID(
+            prepareBezirkUndWahlID()
+              .wahlID(wahlID)
+              .wahlbezirkID(wahlbezirkID)
+              .build()
+          )
+          .stepsDone(stepsDone as Record<string, boolean>)
+          .build(),
+      ];
+    }
+  });
 });

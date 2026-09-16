@@ -18,7 +18,12 @@
         </v-tab>
         <v-tab value="two"> Stimmzettel anzeigen und bearbeiten </v-tab>
         <v-spacer />
-        {{ stimmzettel.teamID }}{{ stimmzettel.stimmzettelkennung }}
+        <div
+          v-if="stimmzettel"
+          class="stimmzettelkennung-container pr-4 text-no-wrap font-weight-bold"
+        >
+          {{ stimmzettel.teamID }}{{ stimmzettel.stimmzettelkennung }}
+        </div>
       </v-tabs>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
@@ -51,7 +56,7 @@ const isDialogVisibleModel = defineModel("modelValue", {
   required: false,
 });
 
-const props = defineProps<{
+defineProps<{
   stimmzettel: Stimmzettel | null;
 }>();
 
@@ -70,3 +75,12 @@ function onSaveClicked() {
   emit("save");
 }
 </script>
+
+<style scoped>
+.stimmzettelkennung-container {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  font-size: clamp(0.95rem, 6vh, 1.5rem);
+}
+</style>

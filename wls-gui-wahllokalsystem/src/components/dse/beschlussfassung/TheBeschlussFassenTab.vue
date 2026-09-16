@@ -54,21 +54,26 @@
       <v-card-title class="mb-4"> Abstimmungsergebnis </v-card-title>
       <v-card-text>
         <v-form v-model="isAbstimmungsergebnisValid">
-          <v-row size="5">
-            <v-col cols="2">
+          <v-row style="align-items: stretch">
+            <v-col cols="5">
               <base-number-input
                 :model-value="stimmenDafuer"
                 :rules="[required]"
                 label="Stimmen dafür"
               />
             </v-col>
-            <v-col cols="1">
-              <v-icon
-                icon="$beschlussAbstimmung"
-                size="large"
-              />
+            <v-col
+              cols="2"
+              style="display: flex"
+            >
+              <div class="icon-wrapper">
+                <v-icon
+                  icon="$beschlussAbstimmung"
+                  size="large"
+                />
+              </div>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="5">
               <base-number-input
                 :model-value="stimmenDagegen"
                 :rules="[required]"
@@ -98,7 +103,7 @@ const isAbstimmungsergebnisValid = ref<boolean | null>(null);
 
 const beschlussgruende = [{ grund: "xxx", selected: false }];
 
-const props = defineProps<{
+defineProps<{
   stimmzettel: Stimmzettel;
 }>();
 
@@ -106,3 +111,12 @@ const isGueltig = computed(() => {
   return false;
 });
 </script>
+
+<style scoped>
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+</style>

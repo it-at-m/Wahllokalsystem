@@ -63,17 +63,14 @@ export function useKandidatTools() {
         const idCmp = a.kandidatId.localeCompare(b.kandidatId);
         return idCmp !== 0 ? idCmp : a.nennung - b.nennung;
       })
-      .map(
-        (k) =>
-          ({
-            kandidatId: k.kandidatId,
-            nennung: k.nennung,
-            isDiscarded: k.isDiscarded,
-            votesByVoter: k.votesByVoter ?? null,
-            invalidVotes: k.invalidVotes ?? null,
-            votesByWahlvorschlag: k.votesByWahlvorschlag ?? null,
-          }) as PersistedKandidat
-      );
+      .map((k) => ({
+        kandidatId: k.kandidatId,
+        nennung: k.nennung,
+        isDiscarded: k.isDiscarded,
+        votesByVoter: k.votesByVoter ?? null,
+        invalidVotes: k.invalidVotes ?? null,
+        votesByWahlvorschlag: k.votesByWahlvorschlag ?? null,
+      }));
   }
 
   return {

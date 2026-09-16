@@ -44,11 +44,13 @@ describe("useBeschlussgrundTools.ts", () => {
       `should_returnSortedWahlvorstandBeschlussgruende_when_givenListOfWahlvorstandBeschlussgruendeThatIs'$text'`,
       ({ wvBeschlussgruende }) => {
         const expectedResult = [wvGrund1, wvGrund2, wvGrund3];
+        const arrayBeforeSort = wvBeschlussgruende.slice();
 
         const result =
           unitUnderTest.sortWahlvorstandBeschlussgruende(wvBeschlussgruende);
 
         expect(result).toStrictEqual(expectedResult);
+        expect(wvBeschlussgruende).toStrictEqual(arrayBeforeSort);
       }
     );
 
@@ -87,12 +89,14 @@ describe("useBeschlussgrundTools.ts", () => {
       `should_returnSortedSystemBeschlussgruende_when_givenListOfSystemBeschlussgruendeThatIs'$text'`,
       ({ systemBeschlussgruende }) => {
         const expectedResult = [systemGrund1, systemGrund2, systemGrund3];
+        const arrayBeforeSort = systemBeschlussgruende.slice();
 
         const result = unitUnderTest.sortSystemBeschlussgruende(
           systemBeschlussgruende
         );
 
         expect(result).toStrictEqual(expectedResult);
+        expect(systemBeschlussgruende).toStrictEqual(arrayBeforeSort);
       }
     );
 

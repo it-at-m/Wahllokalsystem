@@ -330,10 +330,12 @@ describe("kandidatTools.ts", () => {
       `should_returnSortedKandidaten_when_givenListOfKandidatenThatIs'$text'`,
       ({ kandidaten }) => {
         const expectedResult = [kdA1, kdA2, kdB];
+        const arrayBeforeSort = kandidaten.slice();
 
         const result = unitUnderTest.sortKandidaten(kandidaten);
 
         expect(result).toStrictEqual(expectedResult);
+        expect(kandidaten).toStrictEqual(arrayBeforeSort);
       }
     );
 

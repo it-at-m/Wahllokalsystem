@@ -85,9 +85,18 @@ public class StimmzettelService {
   public Collection<WahlvorschlagStimmzettelAnzahlModel> getStimmzettelWithExactlyOneWahlvorschlagSelectedAndNoCandidateVotes(final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
-    return stimmzettelRepository.countValidStimmzettelWithExactlyOneSelectedWahlvorschlagAndNoCandidateVotesGroupedByWahlvorschlagID(
+    return stimmzettelRepository.countValidStimmzettelWithExactlyOneSelectedWahlvorschlagAndCandidateVotesGroupedByWahlvorschlagID(
             bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()
     ).stream().map(stimmzettelModelMapper::toModel).toList();
+  }
+
+  //Stapel BC
+  public List<KandidatStimmenAnzahlModel> getStapelBC(BezirkUndWahlID bezirkUndWahlID) {
+    stimmzettelValidator.validOrThrow(bezirkUndWahlID);
+
+    return stimmzettelRepository.countKandidatStimmenForStimmzettelWithCandidateVotesOrMultipleSelectedWahlvorschlaege(bezirkUndWahlID.getWahlID(),
+            bezirkUndWahlID.getWahlbezirkID())
+            .stream().map(stimmzettelModelMapper::toModel).toList();
   }
 
 

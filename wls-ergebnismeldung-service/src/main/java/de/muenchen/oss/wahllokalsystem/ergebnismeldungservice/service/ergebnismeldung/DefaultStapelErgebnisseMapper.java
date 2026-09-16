@@ -31,7 +31,7 @@ public class DefaultStapelErgebnisseMapper implements ErgebnismeldungsErgebnisse
 
   @Override
   public boolean canHandleWahlart(WahlartModel wahlart) {
-    return WahlartModel.MBW.equals(wahlart);
+    return !WahlartModel.MBW.equals(wahlart);
   }
 
   private Collection<ErgebnisseModel> getErgebnisse(

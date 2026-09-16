@@ -2,7 +2,7 @@ import type { Wahlvorschlag as PersistedWahlvorschlag } from "@/types/dse/persis
 
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
-const { sortKandidaten } = useKandidatTools();
+const { sortAndDeepCloneKandidaten } = useKandidatTools();
 
 export function useWahlvorschlagTools() {
   function sortWahlvorschlaege(wahlvorschlaege: PersistedWahlvorschlag[]) {
@@ -14,7 +14,7 @@ export function useWahlvorschlagTools() {
       .map((wv) => ({
         wahlvorschlagID: wv.wahlvorschlagID,
         selected: wv.selected,
-        kandidaten: sortKandidaten(wv.kandidaten ?? []),
+        kandidaten: sortAndDeepCloneKandidaten(wv.kandidaten ?? []),
       }));
   }
 

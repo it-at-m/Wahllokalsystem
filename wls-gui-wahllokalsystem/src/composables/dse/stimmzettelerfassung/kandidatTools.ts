@@ -56,7 +56,7 @@ export function useKandidatTools() {
     );
   }
 
-  function sortKandidaten(kandidaten: PersistedKandidat[]) {
+  function sortAndDeepCloneKandidaten(kandidaten: PersistedKandidat[]) {
     return kandidaten
       .slice()
       .sort((kandidat1, kandidat2) => {
@@ -95,6 +95,6 @@ export function useKandidatTools() {
     getUngueltigeStimmenOrZero,
     hasAnyKennzeichen,
     hasAnyKennzeichenOrReststimme,
-    sortKandidaten,
+    sortAndDeepCloneKandidaten,
   };
 }

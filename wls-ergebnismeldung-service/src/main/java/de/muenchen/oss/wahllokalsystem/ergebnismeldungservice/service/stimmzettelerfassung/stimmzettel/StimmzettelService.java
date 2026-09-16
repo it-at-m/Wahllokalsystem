@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -68,5 +69,42 @@ public class StimmzettelService {
 
     return stimmzettelRepository.countByIdWahlbezirkIDAndIdWahlID(
         bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID());
+  }
+
+
+  //Stapel A
+  public Collection<WahlvorschlagStimmzettelAnzahlModel> getStimmzettelWithExactlyOneWahlvorschlagSelected(final BezirkUndWahlID bezirkUndWahlID) {
+    stimmzettelValidator.validOrThrow(bezirkUndWahlID);
+
+    return stimmzettelRepository.countValidStimmzettelWithExactlyOneSelectedWahlvorschlagAndNoCandidateVotesGroupedByWahlvorschlagID(
+            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()
+    ).stream().map(stimmzettelModelMapper::toModel).toList();
+  }
+
+  //Stapel B
+  public Collection<WahlvorschlagStimmzettelAnzahlModel> getStimmzettelWithExactlyOneWahlvorschlagSelectedAndNoCandidateVotes(final BezirkUndWahlID bezirkUndWahlID) {
+    stimmzettelValidator.validOrThrow(bezirkUndWahlID);
+
+    return stimmzettelRepository.countValidStimmzettelWithExactlyOneSelectedWahlvorschlagAndNoCandidateVotesGroupedByWahlvorschlagID(
+            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()
+    ).stream().map(stimmzettelModelMapper::toModel).toList();
+  }
+
+
+  //Stapel D Ungueltig
+  public long getCountStapelDUngueltig(final BezirkUndWahlID bezirkUndWahlID) {
+    stimmzettelValidator.validOrThrow(bezirkUndWahlID);
+
+    return stimmzettelRepository.countInvalidStimmzettelWithoutWahlvorschlaege(
+            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID());
+  }
+
+
+  //Stapel E Ungueltig
+  public long getCountStapelEUngueltig(final BezirkUndWahlID bezirkUndWahlID) {
+    stimmzettelValidator.validOrThrow(bezirkUndWahlID);
+
+    return stimmzettelRepository.countInvalidStimmzettelWithWahlvorschlaege(
+            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID());
   }
 }

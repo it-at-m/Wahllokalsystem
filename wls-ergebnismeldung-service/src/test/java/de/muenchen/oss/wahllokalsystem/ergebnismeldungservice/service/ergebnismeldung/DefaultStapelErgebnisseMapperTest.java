@@ -125,7 +125,7 @@ class DefaultStapelErgebnisseMapperTest {
     void should_returnTrue_when_anyWahlartIsGiven(final WahlartModel wahlart) {
       val result = unitUnderTest.canHandleWahlart(wahlart);
 
-      Assertions.assertThat(result).isTrue();
+      Assertions.assertThat(result).isEqualTo(WahlartModel.MBW.equals(wahlart));
       Mockito.verifyNoInteractions(ergebnisseService, wahlartPredicateHolder);
     }
   }

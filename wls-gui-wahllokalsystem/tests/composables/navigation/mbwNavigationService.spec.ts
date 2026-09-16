@@ -7,6 +7,7 @@ import { flushPromises } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMbwNavigationService } from "@/composables/navigation/mbwNavigationService.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
@@ -20,6 +21,26 @@ vi.mock(import("@/plugins/router.ts"), () => {
 });
 
 describe("mbwNavigationService.ts", () => {
+  const mbwStepsStapelerfassung = {
+    MBW_AUSZAEHLUNG_STIMMZETTEL: MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+    MBW_STAPEL_E: MbwStepsEnum.MBW_STAPEL_E,
+    MBW_STAPEL_D_UNGUELTIG: MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG,
+    MBW_STAPEL_A_AND_B: MbwStepsEnum.MBW_STAPEL_A_AND_B,
+    MBW_SCHNELLMELDUNG: MbwStepsEnum.MBW_SCHNELLMELDUNG,
+    MBW_STAPEL_BC: MbwStepsEnum.MBW_STAPEL_BC,
+    MBW_NIEDERSCHRIFT: MbwStepsEnum.MBW_NIEDERSCHRIFT,
+  };
+  const mbwStepsWithDseForSchriftfuehrung = {
+    MBW_AUSZAEHLUNG_STIMMZETTEL: MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+    MBW_DSE_STIMMZETTELERFASSUNG: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+    MBW_DSE_MONITORING: MbwStepsEnum.MBW_DSE_MONITORING,
+    MBW_DSE_BESCHLUSSFASSUNG: MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
+    MBW_SCHNELLMELDUNG: MbwStepsEnum.MBW_SCHNELLMELDUNG,
+    MBW_NIEDERSCHRIFT: MbwStepsEnum.MBW_NIEDERSCHRIFT,
+  };
+  const mbwStepsWithDseForErfassungsteam = {
+    MBW_DSE_STIMMZETTELERFASSUNG: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+  };
   const wahlID = generateRandomString(10);
   const wahlbezirkID = generateRandomString(10);
 
@@ -37,7 +58,7 @@ describe("mbwNavigationService.ts", () => {
       expect(navigation.value).toStrictEqual([]);
     });
 
-    it("should_returnNavigation_when_statusExists", () => {
+    it("should_returnNavigationForStapelerfassung_when_statusExistsAndDseIsInactive", () => {
       useWorkflowStore().electionWorkflowsStates = [
         prepareElectionWorkflow()
           .bezirkUndWahlID(
@@ -50,6 +71,9 @@ describe("mbwNavigationService.ts", () => {
       ];
       // @ts-expect-error: cannot set readonly
       useUserStore().hasRoleSchriftfuehrung = true;
+      useInfomanagementStore().konfigurationsparameter = [
+        { schluessel: "DSE_AKTIV", wert: "false" },
+      ];
 
       const unitUnderTest = useMbwNavigationService(wahlID, wahlbezirkID);
 
@@ -59,13 +83,16 @@ describe("mbwNavigationService.ts", () => {
         navigation,
         wahlID,
         wahlbezirkID,
-        MbwStepsEnum
+        mbwStepsStapelerfassung
       );
     });
 
-    it("should_returnNavigation_when_statusIsSetAfterInit", async () => {
+    it("should_returnNavigationWithAllDseSteps_when_statusIsSetAfterInitAndUserIsSchriftfuehrung", async () => {
       // @ts-expect-error: cannot set readonly
       useUserStore().hasRoleSchriftfuehrung = true;
+      useInfomanagementStore().konfigurationsparameter = [
+        { schluessel: "DSE_AKTIV", wert: "true" },
+      ];
       const unitUnderTest = useMbwNavigationService(wahlID, wahlbezirkID);
       const navigation = unitUnderTest.navigation;
 
@@ -87,7 +114,34 @@ describe("mbwNavigationService.ts", () => {
         navigation,
         wahlID,
         wahlbezirkID,
-        MbwStepsEnum
+        mbwStepsWithDseForSchriftfuehrung
+      );
+    });
+
+    it("should_returnOnlyStimmzettelerfassungNavigation_when_dseIsActiveAndUserIsErfassungsteam", () => {
+      useWorkflowStore().electionWorkflowsStates = [
+        prepareElectionWorkflow()
+          .bezirkUndWahlID(
+            prepareBezirkUndWahlID()
+              .wahlID(wahlID)
+              .wahlbezirkID(wahlbezirkID)
+              .build()
+          )
+          .build(),
+      ];
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleSchriftfuehrung = false;
+      useInfomanagementStore().konfigurationsparameter = [
+        { schluessel: "DSE_AKTIV", wert: "true" },
+      ];
+
+      const unitUnderTest = useMbwNavigationService(wahlID, wahlbezirkID);
+
+      assertThatRequiredRoutesAreReturned(
+        unitUnderTest.navigation,
+        wahlID,
+        wahlbezirkID,
+        mbwStepsWithDseForErfassungsteam
       );
     });
   });

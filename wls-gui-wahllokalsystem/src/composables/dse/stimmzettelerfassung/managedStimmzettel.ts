@@ -15,6 +15,7 @@ import { useManagedStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/st
 import { useManagedStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelWahlvorschlagUtils.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
@@ -49,6 +50,7 @@ function _useManagedStimmzettel(
     useManagedStimmzettelUngueltigeStimmeUtils();
   const { mapPersistedStimmzettelValuesToExistingDseStimmzettel } =
     useStimmzettelMapper();
+  const { resetDseStimmzettel } = useStimmzettelTools();
 
   const { kopfdaten } = storeToRefs(useKopfdatenStore());
 
@@ -147,20 +149,7 @@ function _useManagedStimmzettel(
         stimmzettelBeforeEdit
       );
     } else {
-      stimmzettel.value.wahlvorschlaege.map((wahlvorschlag) => {
-        wahlvorschlag.selected = false;
-        wahlvorschlag.kandidaten.map((kandidat) => {
-          kandidat.einzelstimmen = null;
-          kandidat.ungueltigeStimmen = null;
-          kandidat.reststimmen = null;
-          kandidat.durchgestrichen = false;
-        });
-      });
-      stimmzettel.value.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
-      stimmzettel.value.wahlvorstandBeschlussvorschlag = [];
-      stimmzettel.value.systemBeschlussvorschlag = [];
-      stimmzettel.value.beschlussfassung = null;
-      stimmzettel.value.invalideVotes = 0;
+      stimmzettel.value = resetDseStimmzettel(stimmzettel.value);
     }
     resetReststimmeError();
     refreshWahlvorschlaegeVotes();

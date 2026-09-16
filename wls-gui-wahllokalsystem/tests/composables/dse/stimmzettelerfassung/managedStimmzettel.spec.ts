@@ -44,6 +44,7 @@ const mockDefinitions = vi.hoisted(() => ({
   },
   mapPersistedStimmzettelValuesToExistingDseStimmzettel: vi.fn(),
   resetError: vi.fn(),
+  resetDseStimmzettel: vi.fn(),
 }));
 
 vi.mock(
@@ -84,6 +85,19 @@ vi.mock(
         ...original.useStimmzettelMapper(),
         mapPersistedStimmzettelValuesToExistingDseStimmzettel:
           mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel,
+      }),
+    };
+  }
+);
+
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useStimmzettelTools: () => ({
+        ...original.useStimmzettelTools(),
+        resetDseStimmzettel: mockDefinitions.resetDseStimmzettel,
       }),
     };
   }
@@ -1318,8 +1332,7 @@ describe("managedStimmzettel.ts", () => {
       // clear refreshWahlvorschlaegeVotes, because it`s not only called on reset but additionally after every
       // manipulation
       mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes.mockClear();
-
-      mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockReturnValue(
+      mockDefinitions.resetDseStimmzettel.mockReturnValue(
         structuredClone(initialEmptyDseStimzettel)
       );
 

@@ -60,6 +60,8 @@ vi.mock(
 const {
   preparePersistedStimmzettel,
   preparePersistedStimmzettelWahlvorschlag,
+  createStimmzettel,
+  prepareStimmzettel,
 } = useStimmzettelTestDataFactory();
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
 const {
@@ -75,6 +77,7 @@ describe("stimmzettelUtils.ts", () => {
     getVormerkungsgrund,
     createStimmzettelWithWahlvorschlaege,
     normalizePersistedStimmzettel,
+    resetDseStimmzettel,
   } = useStimmzettelUtils();
 
   const { mapSystemBeschlussgrundReasonEnumToText } =
@@ -484,6 +487,33 @@ describe("stimmzettelUtils.ts", () => {
       expect(
         mockDefinitions.sortAndDeepCloneWahlvorschlaege
       ).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe("resetDseStimmzettel", () => {
+    it("should_returnDseStimmzettelWithoutAnyValuesSet_when_called", () => {
+      const dseStimmzettel = createStimmzettel();
+
+      const expectedResetStimmzettel = prepareStimmzettel()
+        .invalideVotes(0)
+        .gueltigkeit("VALID")
+        .wahlvorstandBeschlussvorschlag([])
+        .systemBeschlussvorschlag([])
+        .beschlussfassung(null)
+        .wahlvorschlaege(dseStimmzettel.wahlvorschlaege)
+        .build();
+      const expectedWahlvorschlaege =
+        expectedResetStimmzettel.wahlvorschlaege[0];
+      expectedWahlvorschlaege.selected = false;
+      const expectedKandidaten = expectedWahlvorschlaege.kandidaten[0];
+      expectedKandidaten.einzelstimmen = null;
+      expectedKandidaten.ungueltigeStimmen = null;
+      expectedKandidaten.reststimmen = null;
+      expectedKandidaten.durchgestrichen = false;
+
+      const result = resetDseStimmzettel(dseStimmzettel);
+
+      expect(result).toStrictEqual(expectedResetStimmzettel);
     });
   });
 });

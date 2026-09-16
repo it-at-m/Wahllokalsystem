@@ -95,6 +95,25 @@ function _useStimmzettelUtils() {
     };
   }
 
+  function resetDseStimmzettel(stimmzettel: Stimmzettel): Stimmzettel {
+    stimmzettel.wahlvorschlaege.map((wahlvorschlag) => {
+      wahlvorschlag.selected = false;
+      wahlvorschlag.kandidaten.map((kandidat) => {
+        kandidat.einzelstimmen = null;
+        kandidat.ungueltigeStimmen = null;
+        kandidat.reststimmen = null;
+        kandidat.durchgestrichen = false;
+      });
+    });
+    stimmzettel.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
+    stimmzettel.wahlvorstandBeschlussvorschlag = [];
+    stimmzettel.systemBeschlussvorschlag = [];
+    stimmzettel.beschlussfassung = null;
+    stimmzettel.invalideVotes = 0;
+
+    return stimmzettel;
+  }
+
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DSEWahlvorschlag {
     const dseWahlvorschlag: DSEWahlvorschlag = {
       wahlvorschlagID: wahlvorschlag.identifikator,
@@ -146,6 +165,7 @@ function _useStimmzettelUtils() {
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
     normalizePersistedStimmzettel,
+    resetDseStimmzettel,
   };
 }
 

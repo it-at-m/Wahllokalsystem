@@ -123,14 +123,13 @@ export function useStimmzettelMapper() {
   }
 
   function mapPersistedStimmzettelValuesToExistingDseStimmzettel(
-    stimmzettelToMapTo: ManageableStimmzettel,
-    stimmzettelBeforeEdit: Stimmzettel
+    target: ManageableStimmzettel,
+    source: Stimmzettel
   ) {
-    stimmzettelToMapTo.wahlvorschlaege.map((wahlvorschlag) => {
-      const beforeEditWahlvorschlag =
-        stimmzettelBeforeEdit.wahlvorschlaege.find(
-          (before) => wahlvorschlag.wahlvorschlagID == before.wahlvorschlagID
-        );
+    target.wahlvorschlaege.map((wahlvorschlag) => {
+      const beforeEditWahlvorschlag = source.wahlvorschlaege.find(
+        (before) => wahlvorschlag.wahlvorschlagID == before.wahlvorschlagID
+      );
       wahlvorschlag.selected = beforeEditWahlvorschlag?.selected ?? false;
       wahlvorschlag.kandidaten.map((kandidat) => {
         const beforeEditKandidat = beforeEditWahlvorschlag?.kandidaten.find(
@@ -144,21 +143,22 @@ export function useStimmzettelMapper() {
         kandidat.durchgestrichen = beforeEditKandidat?.isDiscarded ?? false;
       });
     });
-    stimmzettelToMapTo.gueltigkeit = stimmzettelBeforeEdit.gueltigkeit;
-    stimmzettelToMapTo.wahlvorstandBeschlussvorschlag =
-      stimmzettelBeforeEdit.wahlvorstandBeschlussvorschlag.map(({ text }) => ({
+    target.gueltigkeit = source.gueltigkeit;
+    target.wahlvorstandBeschlussvorschlag =
+      source.wahlvorstandBeschlussvorschlag.map(({ text }) => ({
         text,
       }));
-    stimmzettelToMapTo.systemBeschlussvorschlag =
-      stimmzettelBeforeEdit.systemBeschlussvorschlag.map(({ reason }) => ({
+    target.systemBeschlussvorschlag = source.systemBeschlussvorschlag.map(
+      ({ reason }) => ({
         reason,
-      }));
-    stimmzettelToMapTo.beschlussfassung = stimmzettelBeforeEdit.beschlussfassung
-      ? { ...stimmzettelBeforeEdit.beschlussfassung }
+      })
+    );
+    target.beschlussfassung = source.beschlussfassung
+      ? { ...source.beschlussfassung }
       : null;
-    stimmzettelToMapTo.invalideVotes = stimmzettelBeforeEdit.invalideVotes;
+    target.invalideVotes = source.invalideVotes;
 
-    return stimmzettelToMapTo;
+    return target;
   }
 
   function _kandidatDtoToModel(dto: KandidatDTO): Kandidat {

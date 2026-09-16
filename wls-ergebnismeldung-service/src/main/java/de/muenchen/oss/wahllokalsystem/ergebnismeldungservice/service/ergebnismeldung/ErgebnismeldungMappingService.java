@@ -50,11 +50,12 @@ public class ErgebnismeldungMappingService {
       final Long waehlerverzeichnisNummer,
       final MeldungsartModel meldungsart,
       final String hauptwahlbezirkID) {
-    val ergebnismeldungsMapper = ergebnismeldungsErgebnisseMapper.stream()
-        .filter(erm -> erm.canHandleWahlart(wahlart))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("No mapper found for wahlart " + wahlart));
-
+    val ergebnismeldungsMapper =
+        ergebnismeldungsErgebnisseMapper.stream()
+            .filter(erm -> erm.canHandleWahlart(wahlart))
+            .findFirst()
+            .orElseThrow(
+                () -> new IllegalArgumentException("No mapper found for wahlart " + wahlart));
 
     val ergebnismeldung = new ErgebnismeldungDTO();
     ergebnismeldung.setWahlID(wahlID);
@@ -78,7 +79,7 @@ public class ErgebnismeldungMappingService {
         wahlart);
 
     val ergebnismeldungErgebnisse =
-            ergebnismeldungsMapper.getErgebnismeldungErgebnisse(
+        ergebnismeldungsMapper.getErgebnismeldungErgebnisse(
             wahlID, wahlbezirkID, wahlart, meldungsart);
     ergebnismeldung.setErgebnisse(
         mapping.toDtoErgebnisseSet(ergebnismeldungErgebnisse.gueltigeErgebnisse()));

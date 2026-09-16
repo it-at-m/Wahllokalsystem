@@ -71,49 +71,50 @@ public class StimmzettelService {
         bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID());
   }
 
-
-  //Stapel A
-  public Collection<WahlvorschlagStimmzettelAnzahlModel> getStimmzettelWithExactlyOneWahlvorschlagSelected(final BezirkUndWahlID bezirkUndWahlID) {
+  // Stapel A
+  public Collection<WahlvorschlagStimmzettelAnzahlModel>
+      getStimmzettelWithExactlyOneWahlvorschlagSelected(final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
-    return stimmzettelRepository.countValidStimmzettelWithExactlyOneSelectedWahlvorschlagAndNoCandidateVotesGroupedByWahlvorschlagID(
-            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()
-    ).stream().map(stimmzettelModelMapper::toModel).toList();
+    return stimmzettelRepository
+        .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneSelectedWahlvorschlagAndNoOtherKennzeichen(
+            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
+        .stream()
+        .map(stimmzettelModelMapper::toModel)
+        .toList();
   }
 
-  //Stapel B
-  public Collection<WahlvorschlagStimmzettelAnzahlModel> getStimmzettelWithExactlyOneWahlvorschlagSelectedAndNoCandidateVotes(final BezirkUndWahlID bezirkUndWahlID) {
+  // Stapel B
+  public Collection<WahlvorschlagStimmzettelAnzahlModel>
+      getStimmzettelWithExactlyOneWahlvorschlagSelectedAndNoCandidateVotes(
+          final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
-    return stimmzettelRepository.countValidStimmzettelWithExactlyOneSelectedWahlvorschlagAndCandidateVotesGroupedByWahlvorschlagID(
-            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()
-    ).stream().map(stimmzettelModelMapper::toModel).toList();
+    return stimmzettelRepository
+        .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneWahlvorschlagAndAtLeastOneOtherKennzeichen(
+            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
+        .stream()
+        .map(stimmzettelModelMapper::toModel)
+        .toList();
   }
 
-  //Stapel BC
+  // Stapel BC
   public List<KandidatStimmenAnzahlModel> getStapelBC(BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
-    return stimmzettelRepository.countKandidatStimmenForStimmzettelWithCandidateVotesOrMultipleSelectedWahlvorschlaege(bezirkUndWahlID.getWahlID(),
-            bezirkUndWahlID.getWahlbezirkID())
-            .stream().map(stimmzettelModelMapper::toModel).toList();
+    return stimmzettelRepository
+        .getValidKandidatenVotesPerWahlvorschlagWhereAtLeast2WahlvorschlaegeAreSelectedOrAtLeastOneKandidatHasNotOnlyReststimmen(
+            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
+        .stream()
+        .map(stimmzettelModelMapper::toModel)
+        .toList();
   }
 
-
-  //Stapel D Ungueltig
-  public long getCountStapelDUngueltig(final BezirkUndWahlID bezirkUndWahlID) {
+  // Stapel D Ungueltig
+  public long getCountUngueltige(final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
-    return stimmzettelRepository.countInvalidStimmzettelWithoutWahlvorschlaege(
-            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID());
-  }
-
-
-  //Stapel E Ungueltig
-  public long getCountStapelEUngueltig(final BezirkUndWahlID bezirkUndWahlID) {
-    stimmzettelValidator.validOrThrow(bezirkUndWahlID);
-
-    return stimmzettelRepository.countInvalidStimmzettelWithWahlvorschlaege(
-            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID());
+    return stimmzettelRepository.countInvalidStimmzettel(
+        bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID());
   }
 }

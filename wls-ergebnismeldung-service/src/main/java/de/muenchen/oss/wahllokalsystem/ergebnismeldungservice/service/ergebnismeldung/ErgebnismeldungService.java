@@ -76,15 +76,14 @@ public class ErgebnismeldungService {
     val wahlbezirkArt = authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow();
 
     log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 1");
-    val valid =
-            true;
-//        ergebnismeldungValidator.checkValidation(
-//            wahlart,
-//            wahlbezirkArt,
-//            ergebnisseToSendCriteria.wahlbezirkID(),
-//            ergebnisseToSendCriteria.wahlID(),
-//            ergebnisseToSendCriteria.waehlerverzeichnisNummer(),
-//            ergebnisseToSendCriteria.meldungsart());
+    val valid = true;
+    //        ergebnismeldungValidator.checkValidation(
+    //            wahlart,
+    //            wahlbezirkArt,
+    //            ergebnisseToSendCriteria.wahlbezirkID(),
+    //            ergebnisseToSendCriteria.wahlID(),
+    //            ergebnisseToSendCriteria.waehlerverzeichnisNummer(),
+    //            ergebnisseToSendCriteria.meldungsart());
     log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 2");
 
     if (valid) {

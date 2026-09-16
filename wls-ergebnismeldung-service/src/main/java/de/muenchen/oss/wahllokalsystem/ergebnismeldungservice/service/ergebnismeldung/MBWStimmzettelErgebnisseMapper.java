@@ -14,27 +14,45 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MBWStimmzettelErgebnisseMapper implements MBWStapelErgebnisCollector {
 
-    private final StimmzettelService stimmzettelService;
+  private final StimmzettelService stimmzettelService;
 
-    @Override
-    @Transactional(readOnly = true)
-    public MBWErgebnisseModel getErgebnisse(String wahlID, String wahlbezirkID) {
-        val stapelA = stimmzettelService.getStimmzettelWithExactlyOneWahlvorschlagSelected(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
-                .collect(Collectors.groupingBy(WahlvorschlagStimmzettelAnzahlModel::wahlvorschlagID, Collectors.summingLong(WahlvorschlagStimmzettelAnzahlModel::anzahl)));
-
-        val stapelB = stimmzettelService.getStimmzettelWithExactlyOneWahlvorschlagSelectedAndNoCandidateVotes(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
-                .collect(Collectors.groupingBy(WahlvorschlagStimmzettelAnzahlModel::wahlvorschlagID, Collectors.summingLong(WahlvorschlagStimmzettelAnzahlModel::anzahl)));
-
-        val stapelBC = stimmzettelService.getStapelBC(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
-                .collect(Collectors.groupingBy(
-                        KandidatStimmenAnzahlModel::wahlvorschlagID,
+  @Override
+  @Transactional(readOnly = true)
+  public MBWErgebnisseModel getErgebnisse(String wahlID, String wahlbezirkID) {
+    val stapelA =
+        stimmzettelService
+            .getStimmzettelWithExactlyOneWahlvorschlagSelected(
+                new BezirkUndWahlID(wahlID, wahlbezirkID))
+            .stream()
+            .collect(
                 Collectors.groupingBy(
+                    WahlvorschlagStimmzettelAnzahlModel::wahlvorschlagID,
+                    Collectors.summingLong(WahlvorschlagStimmzettelAnzahlModel::anzahl)));
+
+    val stapelB =
+        stimmzettelService
+            .getStimmzettelWithExactlyOneWahlvorschlagSelectedAndNoCandidateVotes(
+                new BezirkUndWahlID(wahlID, wahlbezirkID))
+            .stream()
+            .collect(
+                Collectors.groupingBy(
+                    WahlvorschlagStimmzettelAnzahlModel::wahlvorschlagID,
+                    Collectors.summingLong(WahlvorschlagStimmzettelAnzahlModel::anzahl)));
+
+    val stapelBC =
+        stimmzettelService.getStapelBC(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
+            .collect(
+                Collectors.groupingBy(
+                    KandidatStimmenAnzahlModel::wahlvorschlagID,
+                    Collectors.groupingBy(
                         KandidatStimmenAnzahlModel::kandidatID,
                         Collectors.summingLong(KandidatStimmenAnzahlModel::anzahl))));
 
-        val countStapelDUngueltig = stimmzettelService.getCountStapelDUngueltig(new BezirkUndWahlID(wahlID, wahlbezirkID));
-        val countStapelEUngueltig = stimmzettelService.getCountStapelEUngueltig(new BezirkUndWahlID(wahlID, wahlbezirkID));
+    val countStapelDUngueltig =
+        stimmzettelService.getCountUngueltige(new BezirkUndWahlID(wahlID, wahlbezirkID));
+    val countStapelEUngueltig = 0;
 
-        return new MBWErgebnisseModel(stapelA, stapelB, countStapelDUngueltig, countStapelEUngueltig, stapelBC);
-    }
+    return new MBWErgebnisseModel(
+        stapelA, stapelB, countStapelDUngueltig, countStapelEUngueltig, stapelBC);
+  }
 }

@@ -40,7 +40,8 @@ public interface StimmzettelModelMapper {
   @Mapping(target = "systemBeschlussvorschlag.stimmzettel", ignore = true)
   Stimmzettel toEntity(TeamBezirkUndWahlIDModel owner, StimmzettelOfTeamModel stimmzettelModel);
 
-  WahlvorschlagStimmzettelAnzahlModel toModel(WahlvorschlagStimmzettelAnzahl wahlvorschlagStimmzettelAnzahl);
-  KandidatStimmenAnzahlModel toModel(KandidatStimmenAnzahl wahlvorschlagStimmzettelAnzahl);
+  WahlvorschlagStimmzettelAnzahlModel toModel(
+      WahlvorschlagStimmzettelAnzahl wahlvorschlagStimmzettelAnzahl);
 
+  KandidatStimmenAnzahlModel toModel(KandidatStimmenAnzahl wahlvorschlagStimmzettelAnzahl);
 }

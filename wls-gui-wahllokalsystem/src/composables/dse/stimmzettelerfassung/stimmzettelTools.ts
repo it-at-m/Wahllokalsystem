@@ -1,5 +1,5 @@
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { Kandidat as DSEKandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
@@ -146,8 +146,8 @@ export function useStimmzettelTools() {
   function _toDSEKandidat(
     kandidat: Kandidat,
     wahlvorschlagOfKandiat: DSEWahlvorschlag
-  ): DSEKandidat[] {
-    const result: DSEKandidat[] = [];
+  ): DseKandidat[] {
+    const result: DseKandidat[] = [];
     for (let nennung = 1; nennung <= kandidat.anzahlNennungen; nennung++) {
       result.push({
         kandidatId: kandidat.identifikator,

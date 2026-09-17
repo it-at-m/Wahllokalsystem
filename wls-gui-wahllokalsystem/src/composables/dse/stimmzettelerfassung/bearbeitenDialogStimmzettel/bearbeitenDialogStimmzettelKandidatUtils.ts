@@ -1,4 +1,4 @@
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Ref } from "vue";
 
@@ -52,7 +52,7 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
   }
 
   function _findKandidatToAddEinzelstimme(
-    kandidatenForListenPosition: Kandidat[]
+    kandidatenForListenPosition: DseKandidat[]
   ) {
     //has any kandidat already uservotes?
     const kandidatWithEinzelstimmen = kandidatenForListenPosition.find(
@@ -70,7 +70,7 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
   }
 
   function _findKandidatToAddStreichung(
-    kandidatenForListenPosition: Kandidat[]
+    kandidatenForListenPosition: DseKandidat[]
   ) {
     const kandidatWithoutEinzelstimmenAndDurchstreichung =
       kandidatenForListenPosition.find(
@@ -90,7 +90,7 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
   }
 
   function _findKandidatToRemoveStreichung(
-    kandidatenForListenPosition: Kandidat[]
+    kandidatenForListenPosition: DseKandidat[]
   ) {
     const kandidatWithDurchstreichung = kandidatenForListenPosition.find(
       (kandidat) => kandidat.durchgestrichen

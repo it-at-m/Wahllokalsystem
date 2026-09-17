@@ -13,7 +13,7 @@ import type { Beschlussfassung as PersistedBeschlussfassung } from "@/types/dse/
 import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag as PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
@@ -61,7 +61,7 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelKandidat(): Kandidat {
+  function createStimmzettelKandidat(): DseKandidat {
     const wahlvorschlag = _createStimmzettelWahlvorschlagWithoutKandidaten();
     const result = {
       reststimmen: generateRandomNumber(2),
@@ -82,7 +82,7 @@ export function useStimmzettelTestDataFactory() {
 
   function createStimmzettelKandidatOfWahlvorschlag(
     owningWahlvorschlag: Wahlvorschlag
-  ): Kandidat {
+  ): DseKandidat {
     return {
       reststimmen: generateRandomNumber(2),
       ungueltigeStimmen: generateRandomNumber(2),
@@ -282,14 +282,14 @@ export function useStimmzettelTestDataFactory() {
     );
   }
 
-  function prepareStimmzettelKandidat(): Builder<Kandidat> {
-    return proxyBuilder<Kandidat>(createStimmzettelKandidat());
+  function prepareStimmzettelKandidat(): Builder<DseKandidat> {
+    return proxyBuilder<DseKandidat>(createStimmzettelKandidat());
   }
 
   function prepareStimmzettelKandidatOfWahlvorschlag(
     owningWahlvorschlag: Wahlvorschlag
-  ): Builder<Kandidat> {
-    return proxyBuilder<Kandidat>(
+  ): Builder<DseKandidat> {
+    return proxyBuilder<DseKandidat>(
       createStimmzettelKandidatOfWahlvorschlag(owningWahlvorschlag)
     );
   }

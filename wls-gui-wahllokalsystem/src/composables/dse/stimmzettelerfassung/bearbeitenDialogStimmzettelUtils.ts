@@ -1,6 +1,6 @@
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { StimmenSummary } from "@/types/dse/stimmzettelerfassung/StimmenSummary.ts";
 import type { Stimmzettel as DseStimmzetel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Ref } from "vue";
@@ -389,7 +389,7 @@ export function useBearbeitenDialogStimmzettelUtils(
     changeHistory.registerWahlvorschlagDeselected(wahlvorschlag);
   }
 
-  function _hasKandidatAnyStimmeOrStreichung(kandidat: Kandidat) {
+  function _hasKandidatAnyStimmeOrStreichung(kandidat: DseKandidat) {
     return (
       kandidat.einzelstimmen !== null ||
       kandidat.ungueltigeStimmen ||
@@ -400,7 +400,7 @@ export function useBearbeitenDialogStimmzettelUtils(
 
   function _updateSummaryByKandidat(
     stimmenSummary: StimmenSummary,
-    kandidat: Kandidat
+    kandidat: DseKandidat
   ) {
     if (kandidat.ungueltigeStimmen) {
       stimmenSummary.ungueltigeStimmen += kandidat.ungueltigeStimmen;
@@ -420,8 +420,8 @@ export function useBearbeitenDialogStimmzettelUtils(
   function _getKandidatenInRangeOrThrow(
     lowerOrdnungszahl: number,
     upperOrdnungszahl: number
-  ): Kandidat[] {
-    const kandidaten: Kandidat[] = [];
+  ): DseKandidat[] {
+    const kandidaten: DseKandidat[] = [];
     for (
       let ordnungszahl = lowerOrdnungszahl;
       ordnungszahl <= upperOrdnungszahl;
@@ -446,7 +446,7 @@ export function useBearbeitenDialogStimmzettelUtils(
   }
 
   function _setKandidatGestrichenAndConvertEinzelstimmenToUngueltige(
-    kandidat: Kandidat
+    kandidat: DseKandidat
   ) {
     kandidat.durchgestrichen = true;
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;

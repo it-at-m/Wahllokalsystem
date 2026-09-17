@@ -1,4 +1,4 @@
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 
 export interface Wahlvorschlag {
   wahlvorschlagID: string;
@@ -8,5 +8,5 @@ export interface Wahlvorschlag {
   erhaeltStimmen: boolean;
   gueltigeStimmen: number;
   ungueltigeStimmen: number;
-  kandidaten: Kandidat[];
+  kandidaten: DseKandidat[];
 }

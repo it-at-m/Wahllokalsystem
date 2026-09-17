@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { ComponentPublicInstance } from "vue";
 
@@ -87,7 +87,7 @@ import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts
 
 const props = defineProps<{
   wahlvorschlag: Wahlvorschlag;
-  activeKandidat?: Kandidat | null;
+  activeKandidat?: DseKandidat | null;
 }>();
 
 const kandidatenListe = computed(() => props.wahlvorschlag.kandidaten);

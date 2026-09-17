@@ -144,7 +144,7 @@
 
 <script setup lang="ts">
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
@@ -280,7 +280,7 @@ const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
 );
-const latestChangedKandidat = computed<Kandidat | null>(
+const latestChangedKandidat = computed<DseKandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
 );
 const stimmzettelGueltigkeit = computed(

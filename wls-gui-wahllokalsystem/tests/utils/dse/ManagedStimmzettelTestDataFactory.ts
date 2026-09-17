@@ -1,4 +1,4 @@
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
@@ -16,7 +16,7 @@ export function useManagedStimmzettelTestDataFactory() {
     getRandomItem,
   } = useCommonTestDataFactory();
 
-  function createManagedStimmzettelKandidat(): Kandidat {
+  function createManagedStimmzettelKandidat(): DseKandidat {
     const wahlvorschlag = createManagedStimmzettelWahlvorschlag();
     wahlvorschlag.kandidaten = [wahlvorschlag.kandidaten[0]];
     return wahlvorschlag.kandidaten[0];
@@ -56,14 +56,14 @@ export function useManagedStimmzettelTestDataFactory() {
     };
   }
 
-  function prepareManagedStimmzettelKandidat(): Builder<Kandidat> {
-    return proxyBuilder<Kandidat>(createManagedStimmzettelKandidat());
+  function prepareManagedStimmzettelKandidat(): Builder<DseKandidat> {
+    return proxyBuilder<DseKandidat>(createManagedStimmzettelKandidat());
   }
 
   function prepareManagedStimmzettelKandidatForWahlvorschlag(
     owningWahlvorschlag: Wahlvorschlag
-  ): Builder<Kandidat> {
-    return proxyBuilder<Kandidat>(
+  ): Builder<DseKandidat> {
+    return proxyBuilder<DseKandidat>(
       _createManagedStimmzettelKandidatForWahlvorschlag(owningWahlvorschlag)
     );
   }
@@ -78,7 +78,7 @@ export function useManagedStimmzettelTestDataFactory() {
 
   function _createManagedStimmzettelKandidatForWahlvorschlag(
     wahlvorschlag: Wahlvorschlag
-  ): Kandidat {
+  ): DseKandidat {
     const listenposition = generateRandomNumber(2);
     return {
       kandidatId: generateRandomString(10),

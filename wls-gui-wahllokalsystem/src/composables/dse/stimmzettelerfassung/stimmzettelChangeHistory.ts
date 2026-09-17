@@ -1,5 +1,5 @@
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { InputHistoryItem } from "@/types/dse/stimmzettelerfassung/InputHistoryItem.ts";
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 
 import { computed, nextTick, ref } from "vue";
@@ -10,12 +10,12 @@ import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHist
 export function useStimmzettelChangeHistory() {
   const changeHistory = ref<InputHistoryItem[]>([]);
   const lastUsedWahlvorschlag = ref<Wahlvorschlag | null>(null);
-  const lastUsedKandidat = ref<Kandidat | null>(null);
+  const lastUsedKandidat = ref<DseKandidat | null>(null);
 
   const { createTextVotes, createTextInvalidVotes } = useTextFormatter();
 
   function registerKandidatEinzelstimmenAdded(
-    kandidat: Kandidat,
+    kandidat: DseKandidat,
     count: number
   ) {
     changeHistory.value.push({
@@ -27,7 +27,7 @@ export function useStimmzettelChangeHistory() {
   }
 
   function registerKandidatEinzelstimmenRemoved(
-    kandidat: Kandidat,
+    kandidat: DseKandidat,
     count: number
   ) {
     changeHistory.value.push({
@@ -39,7 +39,7 @@ export function useStimmzettelChangeHistory() {
   }
 
   function registerKandidatEinzelstimmenRangeAdded(
-    kandidaten: Kandidat[],
+    kandidaten: DseKandidat[],
     count: number
   ) {
     const firstKandidat = kandidaten[0];
@@ -55,7 +55,7 @@ export function useStimmzettelChangeHistory() {
   }
 
   function registerKandidatUngueltigeStimmenAdded(
-    kandidat: Kandidat,
+    kandidat: DseKandidat,
     count: number
   ) {
     changeHistory.value.push({
@@ -67,7 +67,7 @@ export function useStimmzettelChangeHistory() {
   }
 
   function registerKandidatUngueltigeStimmenRemoved(
-    kandidat: Kandidat,
+    kandidat: DseKandidat,
     count: number
   ) {
     changeHistory.value.push({
@@ -78,7 +78,7 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(kandidat);
   }
 
-  function registerKandidatStreichungSet(kandidat: Kandidat) {
+  function registerKandidatStreichungSet(kandidat: DseKandidat) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.DISCARD_KANDIDAT,
       text: [`${kandidat.ordnungszahl} gestrichen`],
@@ -87,7 +87,7 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(kandidat);
   }
 
-  function registerKandidatStreichungUnset(kandidat: Kandidat) {
+  function registerKandidatStreichungUnset(kandidat: DseKandidat) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
       text: [`${kandidat.ordnungszahl} Streichung entfernt`],
@@ -96,7 +96,7 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(kandidat);
   }
 
-  function registerKandidatStreichungRangeSet(kandidaten: Kandidat[]) {
+  function registerKandidatStreichungRangeSet(kandidaten: DseKandidat[]) {
     const firstKandidat = kandidaten[0];
     const lastKandidat = kandidaten[kandidaten.length - 1];
     changeHistory.value.push({
@@ -109,7 +109,7 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(lastKandidat);
   }
 
-  function registerKandidatStreichungRangeUnset(kandidaten: Kandidat[]) {
+  function registerKandidatStreichungRangeUnset(kandidaten: DseKandidat[]) {
     const firstKandidat = kandidaten[0];
     const lastKandidat = kandidaten[kandidaten.length - 1];
 
@@ -148,7 +148,7 @@ export function useStimmzettelChangeHistory() {
   }
 
   async function _updateLatestUsedData(
-    latestUsedData: Kandidat | Wahlvorschlag
+    latestUsedData: DseKandidat | Wahlvorschlag
   ): Promise<void> {
     lastUsedKandidat.value = null;
     lastUsedWahlvorschlag.value = null;

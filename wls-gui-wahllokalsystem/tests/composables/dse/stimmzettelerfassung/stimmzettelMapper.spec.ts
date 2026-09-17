@@ -4,7 +4,7 @@ import type {
   KandidatDTO,
   StimmzettelOfTeamDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
+import type { PersistedKandidat } from "@/types/dse/persistedStimmzettel/PersistedKandidat.ts";
 import type { PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/PersistedWahlvorschlag.ts";
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
@@ -415,7 +415,7 @@ describe("stimmzettelMapper.ts", () => {
     });
 
     it("should_mapNullVoteFieldsToUndefined_when_kandidatVotesAreNull", () => {
-      const kandidatWithoutVotes: Kandidat =
+      const kandidatWithoutVotes: PersistedKandidat =
         preparePersistedStimmzettelKandidat()
           .votesByVoter(null)
           .invalidVotes(null)
@@ -459,7 +459,7 @@ describe("stimmzettelMapper.ts", () => {
 
       const expectedWahlvorschlaege: PersistedWahlvorschlag[] =
         dseStimmzettel.wahlvorschlaege.map((wahlvorschlag) => {
-          const kandidaten: Kandidat[] = wahlvorschlag.kandidaten.map(
+          const kandidaten: PersistedKandidat[] = wahlvorschlag.kandidaten.map(
             (kandidat) => ({
               votesByWahlvorschlag: kandidat.reststimmen,
               invalidVotes: kandidat.ungueltigeStimmen,
@@ -562,7 +562,7 @@ describe("stimmzettelMapper.ts", () => {
         .build();
 
       mockDefinitions.hasAnyKennzeichenOrReststimme.mockImplementation(
-        (kandidat: Kandidat) =>
+        (kandidat: PersistedKandidat) =>
           kandidat.kandidatId === kandidatWithKennzeichen.kandidatId
       );
 
@@ -576,7 +576,7 @@ describe("stimmzettelMapper.ts", () => {
         teamID
       );
 
-      const expectedKandidat: Kandidat = {
+      const expectedKandidat: PersistedKandidat = {
         kandidatId: kandidatWithKennzeichen.kandidatId,
         nennung: kandidatWithKennzeichen.nennung,
         votesByWahlvorschlag: kandidatWithKennzeichen.reststimmen,

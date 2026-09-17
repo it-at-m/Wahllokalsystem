@@ -1,4 +1,4 @@
-import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
+import type { PersistedKandidat } from "@/types/dse/persistedStimmzettel/PersistedKandidat.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 
 export function useKandidatTools() {

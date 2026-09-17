@@ -8,8 +8,8 @@ import type {
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
-import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { PersistedBeschlussfassung } from "@/types/dse/persistedStimmzettel/PersistedBeschlussfassung.ts";
+import type { PersistedKandidat } from "@/types/dse/persistedStimmzettel/PersistedKandidat.ts";
 import type { PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/PersistedWahlvorschlag.ts";
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Stimmzettel as ManageableStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
@@ -53,7 +53,7 @@ export function useStimmzettelMapper() {
     const mappedWahlvorschlaege: PersistedWahlvorschlag[] =
       manageableStimmzettel.wahlvorschlaege
         .map((wahlvorschlag) => {
-          const mappedKandidaten: Kandidat[] = wahlvorschlag.kandidaten
+          const mappedKandidaten: PersistedKandidat[] = wahlvorschlag.kandidaten
             .filter((kandidat) => hasAnyKennzeichenOrReststimme(kandidat))
             .map((kandidat) => ({
               kandidatId: kandidat.kandidatId,
@@ -159,7 +159,7 @@ export function useStimmzettelMapper() {
     target.invalideVotes = source.invalideVotes;
   }
 
-  function _kandidatDtoToModel(dto: KandidatDTO): Kandidat {
+  function _kandidatDtoToModel(dto: KandidatDTO): PersistedKandidat {
     return {
       kandidatId: dto.id.kandidatID,
       nennung: dto.id.nennungsNummer,
@@ -172,7 +172,7 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _kandidatModelToDto(model: Kandidat): KandidatDTO {
+  function _kandidatModelToDto(model: PersistedKandidat): KandidatDTO {
     return {
       id: {
         kandidatID: model.kandidatId,

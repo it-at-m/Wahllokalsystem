@@ -1,6 +1,6 @@
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 
-export interface Wahlvorschlag {
+export interface DseWahlvorschlag {
   wahlvorschlagID: string;
   ordnungszahl: number;
   kurzname: string;

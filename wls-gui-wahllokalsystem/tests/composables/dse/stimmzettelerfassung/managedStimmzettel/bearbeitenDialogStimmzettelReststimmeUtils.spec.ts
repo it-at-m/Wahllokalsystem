@@ -1,4 +1,4 @@
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
@@ -456,7 +456,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
     });
 
     function _prepareKandidatWithoutAnyKennzeichen(
-      owningWahlvorschlag: Wahlvorschlag,
+      owningWahlvorschlag: DseWahlvorschlag,
       kandidatID: string,
       nennung = 1
     ) {

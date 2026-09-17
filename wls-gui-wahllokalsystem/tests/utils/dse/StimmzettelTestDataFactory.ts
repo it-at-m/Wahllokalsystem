@@ -14,8 +14,8 @@ import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmze
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag as PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
@@ -81,7 +81,7 @@ export function useStimmzettelTestDataFactory() {
   }
 
   function createStimmzettelKandidatOfWahlvorschlag(
-    owningWahlvorschlag: Wahlvorschlag
+    owningWahlvorschlag: DseWahlvorschlag
   ): DseKandidat {
     return {
       reststimmen: generateRandomNumber(2),
@@ -172,7 +172,7 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelWahlvorschlag(): Wahlvorschlag {
+  function createStimmzettelWahlvorschlag(): DseWahlvorschlag {
     const result = _createStimmzettelWahlvorschlagWithoutKandidaten();
     result.kandidaten = [
       createStimmzettelKandidatOfWahlvorschlag(result),
@@ -287,7 +287,7 @@ export function useStimmzettelTestDataFactory() {
   }
 
   function prepareStimmzettelKandidatOfWahlvorschlag(
-    owningWahlvorschlag: Wahlvorschlag
+    owningWahlvorschlag: DseWahlvorschlag
   ): Builder<DseKandidat> {
     return proxyBuilder<DseKandidat>(
       createStimmzettelKandidatOfWahlvorschlag(owningWahlvorschlag)
@@ -312,11 +312,11 @@ export function useStimmzettelTestDataFactory() {
     );
   }
 
-  function prepareStimmzettelWahlvorschlag(): Builder<Wahlvorschlag> {
-    return proxyBuilder<Wahlvorschlag>(createStimmzettelWahlvorschlag());
+  function prepareStimmzettelWahlvorschlag(): Builder<DseWahlvorschlag> {
+    return proxyBuilder<DseWahlvorschlag>(createStimmzettelWahlvorschlag());
   }
 
-  function _createStimmzettelWahlvorschlagWithoutKandidaten(): Wahlvorschlag {
+  function _createStimmzettelWahlvorschlagWithoutKandidaten(): DseWahlvorschlag {
     return {
       ordnungszahl: generateRandomNumber(2),
       kandidaten: [],

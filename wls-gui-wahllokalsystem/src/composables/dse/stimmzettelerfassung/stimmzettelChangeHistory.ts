@@ -1,6 +1,6 @@
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 import type { InputHistoryItem } from "@/types/dse/stimmzettelerfassung/InputHistoryItem.ts";
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 
 import { computed, nextTick, ref } from "vue";
 
@@ -9,7 +9,7 @@ import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHist
 
 export function useStimmzettelChangeHistory() {
   const changeHistory = ref<InputHistoryItem[]>([]);
-  const lastUsedWahlvorschlag = ref<Wahlvorschlag | null>(null);
+  const lastUsedWahlvorschlag = ref<DseWahlvorschlag | null>(null);
   const lastUsedKandidat = ref<DseKandidat | null>(null);
 
   const { createTextVotes, createTextInvalidVotes } = useTextFormatter();
@@ -123,7 +123,7 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(lastKandidat);
   }
 
-  function registerWahlvorschlagSelected(wahlvorschlag: Wahlvorschlag) {
+  function registerWahlvorschlagSelected(wahlvorschlag: DseWahlvorschlag) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
       text: [`${wahlvorschlag.ordnungszahl} - ${wahlvorschlag.kurzname}`],
@@ -132,7 +132,7 @@ export function useStimmzettelChangeHistory() {
     _updateLatestUsedData(wahlvorschlag);
   }
 
-  function registerWahlvorschlagDeselected(wahlvorschlag: Wahlvorschlag) {
+  function registerWahlvorschlagDeselected(wahlvorschlag: DseWahlvorschlag) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REVOKE_WAHLVORSCHLAG,
       text: [`${wahlvorschlag.ordnungszahl} - ${wahlvorschlag.kurzname}`],
@@ -148,7 +148,7 @@ export function useStimmzettelChangeHistory() {
   }
 
   async function _updateLatestUsedData(
-    latestUsedData: DseKandidat | Wahlvorschlag
+    latestUsedData: DseKandidat | DseWahlvorschlag
   ): Promise<void> {
     lastUsedKandidat.value = null;
     lastUsedWahlvorschlag.value = null;

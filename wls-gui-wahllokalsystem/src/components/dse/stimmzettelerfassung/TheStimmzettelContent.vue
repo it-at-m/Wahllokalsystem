@@ -40,13 +40,13 @@
 
 <script setup lang="ts">
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 
 import BaseWahlvorschlagCard from "./baseComponents/BaseWahlvorschlagCard.vue";
 
 defineProps<{
   activeWahlvorschlagId: string | null;
   activeKandidat: DseKandidat | null;
-  wahlvorschlaege: Wahlvorschlag[];
+  wahlvorschlaege: DseWahlvorschlag[];
 }>();
 </script>

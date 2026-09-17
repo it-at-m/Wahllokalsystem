@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 import type { ComponentPublicInstance } from "vue";
 
 import { mdiCloseBoxOutline } from "@mdi/js";
@@ -86,7 +86,7 @@ import BaseKandidatListItemContent from "@/components/dse/stimmzettelerfassung/b
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 
 const props = defineProps<{
-  wahlvorschlag: Wahlvorschlag;
+  wahlvorschlag: DseWahlvorschlag;
   activeKandidat?: DseKandidat | null;
 }>();
 

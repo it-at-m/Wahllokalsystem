@@ -1,6 +1,6 @@
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
@@ -22,8 +22,8 @@ export function useManagedStimmzettelTestDataFactory() {
     return wahlvorschlag.kandidaten[0];
   }
 
-  function createManagedStimmzettelWahlvorschlag(): Wahlvorschlag {
-    const result: Wahlvorschlag = {
+  function createManagedStimmzettelWahlvorschlag(): DseWahlvorschlag {
+    const result: DseWahlvorschlag = {
       wahlvorschlagID: generateRandomString(10),
       ordnungszahl: generateRandomNumber(2),
       selected: generateRandomBoolean(),
@@ -61,15 +61,17 @@ export function useManagedStimmzettelTestDataFactory() {
   }
 
   function prepareManagedStimmzettelKandidatForWahlvorschlag(
-    owningWahlvorschlag: Wahlvorschlag
+    owningWahlvorschlag: DseWahlvorschlag
   ): Builder<DseKandidat> {
     return proxyBuilder<DseKandidat>(
       _createManagedStimmzettelKandidatForWahlvorschlag(owningWahlvorschlag)
     );
   }
 
-  function prepareManagedStimmzettelWahlvorschlag(): Builder<Wahlvorschlag> {
-    return proxyBuilder<Wahlvorschlag>(createManagedStimmzettelWahlvorschlag());
+  function prepareManagedStimmzettelWahlvorschlag(): Builder<DseWahlvorschlag> {
+    return proxyBuilder<DseWahlvorschlag>(
+      createManagedStimmzettelWahlvorschlag()
+    );
   }
 
   function prepareManagedStimmzettelStimmzettel(): Builder<Stimmzettel> {
@@ -77,7 +79,7 @@ export function useManagedStimmzettelTestDataFactory() {
   }
 
   function _createManagedStimmzettelKandidatForWahlvorschlag(
-    wahlvorschlag: Wahlvorschlag
+    wahlvorschlag: DseWahlvorschlag
   ): DseKandidat {
     const listenposition = generateRandomNumber(2);
     return {

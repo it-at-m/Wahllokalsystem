@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 
 import { computed } from "vue";
 
@@ -45,7 +45,7 @@ import { useStimmzettelGueltigkeitEnumTools } from "@/composables/dse/stimmzette
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
-  listenstimmen: Wahlvorschlag[];
+  listenstimmen: DseWahlvorschlag[];
   ungueltigestimmen: number;
   direktstimmen: number;
   reststimmen: number;

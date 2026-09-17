@@ -1,7 +1,7 @@
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
-import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
@@ -124,8 +124,8 @@ export function useStimmzettelTools() {
     );
   }
 
-  function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DSEWahlvorschlag {
-    const dseWahlvorschlag: DSEWahlvorschlag = {
+  function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DseWahlvorschlag {
+    const dseWahlvorschlag: DseWahlvorschlag = {
       wahlvorschlagID: wahlvorschlag.identifikator,
       ordnungszahl: wahlvorschlag.ordnungszahl,
       kandidaten: [],
@@ -145,7 +145,7 @@ export function useStimmzettelTools() {
 
   function _toDSEKandidat(
     kandidat: Kandidat,
-    wahlvorschlagOfKandiat: DSEWahlvorschlag
+    wahlvorschlagOfKandiat: DseWahlvorschlag
   ): DseKandidat[] {
     const result: DseKandidat[] = [];
     for (let nennung = 1; nennung <= kandidat.anzahlNennungen; nennung++) {

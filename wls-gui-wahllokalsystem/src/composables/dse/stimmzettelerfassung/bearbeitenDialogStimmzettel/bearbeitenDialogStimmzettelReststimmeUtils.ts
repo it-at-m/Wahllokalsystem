@@ -1,5 +1,5 @@
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
 import { computed, ref } from "vue";
@@ -25,11 +25,11 @@ export function useBearbeitenDialogStimmzettelReststimmeUtils(
     )
   );
 
-  function selectWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
+  function selectWahlvorschlag(wahlvorschlag: DseWahlvorschlag) {
     wahlvorschlag.selected = true;
   }
 
-  function deselectWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
+  function deselectWahlvorschlag(wahlvorschlag: DseWahlvorschlag) {
     if (wahlvorschlag.selected) {
       wahlvorschlag.kandidaten.forEach(
         (kandidat) => (kandidat.reststimmen = null)
@@ -123,7 +123,7 @@ export function useBearbeitenDialogStimmzettelReststimmeUtils(
   }
 
   function _placeReststimmenOnWahlvorschlag(
-    wahlvorschlag: Wahlvorschlag,
+    wahlvorschlag: DseWahlvorschlag,
     votesLeftToPlace: number,
     votesKandidatenAlreadyGotTool: ReturnType<typeof useStringNumberMapTools>
   ) {

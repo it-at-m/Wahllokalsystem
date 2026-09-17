@@ -51,18 +51,17 @@ export function useStimmzettelManager(
   });
 
   function setActiveStimmzettelWhenEditing(
-    stimmzettelToSet: PersistedStimmzettel
+    sourceStimmzettel: PersistedStimmzettel
   ) {
-    stimmzettelBeforeEdit.value = stimmzettelToSet;
+    stimmzettelBeforeEdit.value = sourceStimmzettel;
     bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
-      stimmzettelToSet
+      sourceStimmzettel
     );
 
-    managedBearbeitenDialogStimmzettel.value =
-      mapPersistedStimmzettelValuesToExistingDseStimmzettel(
-        managedBearbeitenDialogStimmzettel.value,
-        stimmzettelToSet
-      );
+    mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+      managedBearbeitenDialogStimmzettel.value,
+      sourceStimmzettel
+    );
   }
 
   function getStimmzettelSnapshot(): PersistedStimmzettel {

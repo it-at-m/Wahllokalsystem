@@ -14,9 +14,9 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
 
 const { sortWahlvorstandBeschlussgruende, sortSystemBeschlussgruende } =
   useBeschlussgrundTools();
-const { sortWahlvorschlaege } = useWahlvorschlagTools();
+const { sortAndDeepCloneWahlvorschlaege } = useWahlvorschlagTools();
 
-export function useStimmzettelTools() {
+function useStimmzettelTools() {
   function createStimmzettelWithWahlvorschlaege(
     wahlvorschlaege: Wahlvorschlag[]
   ): Stimmzettel {
@@ -77,7 +77,9 @@ export function useStimmzettelTools() {
     const wvBeschluss = sortWahlvorstandBeschlussgruende(
       stimmzettel.wahlvorstandBeschlussvorschlag ?? []
     );
-    const wvSorted = sortWahlvorschlaege(stimmzettel.wahlvorschlaege ?? []);
+    const wvSorted = sortAndDeepCloneWahlvorschlaege(
+      stimmzettel.wahlvorschlaege ?? []
+    );
 
     return {
       stimmzettelkennung: stimmzettel.stimmzettelkennung,
@@ -91,6 +93,35 @@ export function useStimmzettelTools() {
         ? { ...stimmzettel.beschlussfassung }
         : null,
     };
+  }
+
+  function resetDseStimmzettel(stimmzettel: Stimmzettel): Stimmzettel {
+    stimmzettel.wahlvorschlaege.map((wahlvorschlag) => {
+      wahlvorschlag.selected = false;
+      wahlvorschlag.kandidaten.map((kandidat) => {
+        kandidat.einzelstimmen = null;
+        kandidat.ungueltigeStimmen = null;
+        kandidat.reststimmen = null;
+        kandidat.durchgestrichen = false;
+      });
+    });
+    stimmzettel.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
+    stimmzettel.wahlvorstandBeschlussvorschlag = [];
+    stimmzettel.systemBeschlussvorschlag = [];
+    stimmzettel.beschlussfassung = null;
+    stimmzettel.invalideVotes = 0;
+
+    return stimmzettel;
+  }
+
+  function isSamePersistedStimmzettel(
+    stimmzettel1: PersistedStimmzettel,
+    stimmzettel2: PersistedStimmzettel
+  ): boolean {
+    return (
+      stimmzettel1.stimmzettelkennung === stimmzettel2.stimmzettelkennung &&
+      stimmzettel1.teamID == stimmzettel2.teamID
+    );
   }
 
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DSEWahlvorschlag {
@@ -144,5 +175,7 @@ export function useStimmzettelTools() {
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
     normalizePersistedStimmzettel,
+    resetDseStimmzettel,
+    isSamePersistedStimmzettel,
   };
 }

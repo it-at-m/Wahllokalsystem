@@ -5,8 +5,10 @@ import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/besch
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 
-const { createStimmzettelSystemBeschlussgrund } =
-  useStimmzettelTestDataFactory();
+const {
+  createStimmzettelSystemBeschlussgrund,
+  createStimmzettelWahlvorstandBeschlussgrund,
+} = useStimmzettelTestDataFactory();
 
 describe("useBeschlussgrundTools.ts", () => {
   let unitUnderTest: ReturnType<typeof useBeschlussgrundTools>;
@@ -17,15 +19,15 @@ describe("useBeschlussgrundTools.ts", () => {
 
   describe("sortWahlvorstandBeschlussgruende", () => {
     const wvGrund1 = {
-      ...createStimmzettelSystemBeschlussgrund(),
+      ...createStimmzettelWahlvorstandBeschlussgrund(),
       text: "kaffee ausgeschüttet",
     };
     const wvGrund2 = {
-      ...createStimmzettelSystemBeschlussgrund(),
+      ...createStimmzettelWahlvorstandBeschlussgrund(),
       text: WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
     };
     const wvGrund3 = {
-      ...createStimmzettelSystemBeschlussgrund(),
+      ...createStimmzettelWahlvorstandBeschlussgrund(),
       text: WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
     };
 
@@ -39,14 +41,16 @@ describe("useBeschlussgrundTools.ts", () => {
         wvBeschlussgruende: [wvGrund1, wvGrund2, wvGrund3],
       },
     ])(
-      `should_returnSortedSystemBeschlussgruende_when_givenListOfSystemBeschlussgruendeThatIs'$text'`,
+      `should_returnSortedWahlvorstandBeschlussgruende_when_givenListOfWahlvorstandBeschlussgruendeThatIs'$text'`,
       ({ wvBeschlussgruende }) => {
         const expectedResult = [wvGrund1, wvGrund2, wvGrund3];
+        const arrayBeforeSort = wvBeschlussgruende.slice();
 
         const result =
           unitUnderTest.sortWahlvorstandBeschlussgruende(wvBeschlussgruende);
 
         expect(result).toStrictEqual(expectedResult);
+        expect(wvBeschlussgruende).toStrictEqual(arrayBeforeSort);
       }
     );
 
@@ -85,12 +89,14 @@ describe("useBeschlussgrundTools.ts", () => {
       `should_returnSortedSystemBeschlussgruende_when_givenListOfSystemBeschlussgruendeThatIs'$text'`,
       ({ systemBeschlussgruende }) => {
         const expectedResult = [systemGrund1, systemGrund2, systemGrund3];
+        const arrayBeforeSort = systemBeschlussgruende.slice();
 
         const result = unitUnderTest.sortSystemBeschlussgruende(
           systemBeschlussgruende
         );
 
         expect(result).toStrictEqual(expectedResult);
+        expect(systemBeschlussgruende).toStrictEqual(arrayBeforeSort);
       }
     );
 

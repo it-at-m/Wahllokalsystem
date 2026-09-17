@@ -15,6 +15,7 @@ const mockDefinitions = await vi.hoisted(async () => {
     saveStimmzettel: vi.fn(),
     logError: vi.fn(),
     onActivated: vi.fn(),
+    isSamePersistedStimmzettel: vi.fn(),
 
     registerActivated: (cb: () => Promise<void> | void) => {
       activatedCallbacks.length = 0;
@@ -47,6 +48,19 @@ vi.mock(
         ...mod.useStimmzettelService(),
         getStimmzettel: mockDefinitions.getStimmzettel,
         saveStimmzettel: mockDefinitions.saveStimmzettel,
+      }),
+    };
+  }
+);
+
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useStimmzettelTools: () => ({
+        ...mod.useStimmzettelTools(),
+        isSamePersistedStimmzettel: mockDefinitions.isSamePersistedStimmzettel,
       }),
     };
   }
@@ -164,15 +178,12 @@ describe("stimmzettelState", () => {
       ]);
     });
 
-    it("should_appendStimmzettelToExistingCollectionAndPersist_when_collectionAlreadyContainsItemsAndKennungIsTheSameButTeamIdIsNot", async () => {
-      const mockedExistingStimmzettel: Stimmzettel =
-        preparePersistedStimmzettel().stimmzettelkennung(1).teamID("A").build();
-      const mockedNewStimmzettel: Stimmzettel = preparePersistedStimmzettel()
-        .stimmzettelkennung(1)
-        .teamID("B")
-        .build();
+    it("should_appendStimmzettelToExistingCollectionAndPersist_when_collectionAlreadyContainsItemsAndIsSamePersistedStimmzettelIsFalse", async () => {
+      const mockedExistingStimmzettel = createPersistedStimmzettel();
+      const mockedNewStimmzettel = createPersistedStimmzettel();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
+      mockDefinitions.isSamePersistedStimmzettel.mockReturnValue(false);
 
       await unitUnderTest.saveOrUpdateStimmzettel(mockedExistingStimmzettel);
       await unitUnderTest.saveOrUpdateStimmzettel(mockedNewStimmzettel);
@@ -191,20 +202,16 @@ describe("stimmzettelState", () => {
       ]);
     });
 
-    it("should_replaceExistingStimmzettel_when_savingEditedStimmzettel", async () => {
-      const mockedExistingStimmzettel: Stimmzettel =
-        preparePersistedStimmzettel()
-          .stimmzettelkennung(1)
-          .teamID("A")
-          .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
-          .build();
+    it("should_replaceExistingStimmzettel_when_collectionAlreadyContainsItemsAndIsSamePersistedStimmzettelIsTrue", async () => {
+      const mockedExistingStimmzettel = preparePersistedStimmzettel()
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .build();
       const mockedEditedStimmzettel = preparePersistedStimmzettel()
-        .stimmzettelkennung(mockedExistingStimmzettel.stimmzettelkennung)
-        .teamID("A")
         .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
         .build();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
+      mockDefinitions.isSamePersistedStimmzettel.mockReturnValue(true);
 
       await unitUnderTest.saveOrUpdateStimmzettel(mockedExistingStimmzettel);
       expect(unitUnderTest.savedStimmzettel.value).toStrictEqual([

@@ -56,24 +56,36 @@ export function useKandidatTools() {
     );
   }
 
-  function sortKandidaten(kandidaten: PersistedKandidat[]) {
+  function sortAndDeepCloneKandidaten(kandidaten: PersistedKandidat[]) {
     return kandidaten
       .slice()
-      .sort((a, b) => {
-        const idCmp = a.kandidatId.localeCompare(b.kandidatId);
-        return idCmp !== 0 ? idCmp : a.nennung - b.nennung;
+      .sort((kandidat1, kandidat2) => {
+        return (
+          _compareKandidatenById(kandidat1, kandidat2) ||
+          _compareKandidatenByNennung(kandidat1, kandidat2)
+        );
       })
-      .map(
-        (k) =>
-          ({
-            kandidatId: k.kandidatId,
-            nennung: k.nennung,
-            isDiscarded: k.isDiscarded,
-            votesByVoter: k.votesByVoter ?? null,
-            invalidVotes: k.invalidVotes ?? null,
-            votesByWahlvorschlag: k.votesByWahlvorschlag ?? null,
-          }) as PersistedKandidat
-      );
+      .map((k) => ({
+        kandidatId: k.kandidatId,
+        nennung: k.nennung,
+        isDiscarded: k.isDiscarded,
+        votesByVoter: k.votesByVoter ?? null,
+        invalidVotes: k.invalidVotes ?? null,
+        votesByWahlvorschlag: k.votesByWahlvorschlag ?? null,
+      }));
+  }
+
+  function _compareKandidatenById(
+    kandidat1: PersistedKandidat,
+    kandidat2: PersistedKandidat
+  ) {
+    return kandidat1.kandidatId.localeCompare(kandidat2.kandidatId);
+  }
+  function _compareKandidatenByNennung(
+    kandidat1: PersistedKandidat,
+    kandidat2: PersistedKandidat
+  ) {
+    return kandidat1.nennung - kandidat2.nennung;
   }
 
   return {
@@ -83,6 +95,6 @@ export function useKandidatTools() {
     getUngueltigeStimmenOrZero,
     hasAnyKennzeichen,
     hasAnyKennzeichenOrReststimme,
-    sortKandidaten,
+    sortAndDeepCloneKandidaten,
   };
 }

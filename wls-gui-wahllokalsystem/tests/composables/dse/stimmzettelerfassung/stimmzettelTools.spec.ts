@@ -19,7 +19,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getStimmzettel: vi.fn(),
   sortSystemBeschlussgruende: vi.fn(),
   sortWahlvorstandBeschlussgruende: vi.fn(),
-  sortWahlvorschlaege: vi.fn(),
+  sortAndDeepCloneWahlvorschlaege: vi.fn(),
 }));
 
 vi.mock(
@@ -52,13 +52,16 @@ vi.mock(
   import("@/composables/dse/stimmzettelerfassung/wahlvorschlagTools.ts"),
   () => ({
     useWahlvorschlagTools: () => ({
-      sortWahlvorschlaege: mockDefinitions.sortWahlvorschlaege,
+      sortAndDeepCloneWahlvorschlaege:
+        mockDefinitions.sortAndDeepCloneWahlvorschlaege,
     }),
   })
 );
 const {
   preparePersistedStimmzettel,
   preparePersistedStimmzettelWahlvorschlag,
+  createStimmzettel,
+  prepareStimmzettel,
 } = useStimmzettelTestDataFactory();
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
 const {
@@ -74,6 +77,8 @@ describe("stimmzettelTools.ts", () => {
     getVormerkungsgrund,
     createStimmzettelWithWahlvorschlaege,
     normalizePersistedStimmzettel,
+    resetDseStimmzettel,
+    isSamePersistedStimmzettel,
   } = useStimmzettelTools();
 
   const { mapSystemBeschlussgrundReasonEnumToText } =
@@ -450,7 +455,7 @@ describe("stimmzettelTools.ts", () => {
       mockDefinitions.sortWahlvorstandBeschlussgruende.mockReturnValueOnce(
         wvBeschlussvorschlag
       );
-      mockDefinitions.sortWahlvorschlaege.mockReturnValue(
+      mockDefinitions.sortAndDeepCloneWahlvorschlaege.mockReturnValue(
         wahlvorschlaegeSorted
       );
 
@@ -480,7 +485,79 @@ describe("stimmzettelTools.ts", () => {
         mockDefinitions.sortWahlvorstandBeschlussgruende
       ).toHaveBeenCalledOnce();
       expect(mockDefinitions.sortSystemBeschlussgruende).toHaveBeenCalledOnce();
-      expect(mockDefinitions.sortWahlvorschlaege).toHaveBeenCalledOnce();
+      expect(
+        mockDefinitions.sortAndDeepCloneWahlvorschlaege
+      ).toHaveBeenCalledOnce();
     });
+  });
+
+  describe("resetDseStimmzettel", () => {
+    it("should_returnDseStimmzettelWithoutAnyValuesSet_when_called", () => {
+      const dseStimmzettel = createStimmzettel();
+
+      const expectedResetStimmzettel = prepareStimmzettel()
+        .invalideVotes(0)
+        .gueltigkeit("VALID")
+        .wahlvorstandBeschlussvorschlag([])
+        .systemBeschlussvorschlag([])
+        .beschlussfassung(null)
+        .wahlvorschlaege(dseStimmzettel.wahlvorschlaege)
+        .build();
+      const expectedWahlvorschlaege =
+        expectedResetStimmzettel.wahlvorschlaege[0];
+      expectedWahlvorschlaege.selected = false;
+      const expectedKandidaten = expectedWahlvorschlaege.kandidaten[0];
+      expectedKandidaten.einzelstimmen = null;
+      expectedKandidaten.ungueltigeStimmen = null;
+      expectedKandidaten.reststimmen = null;
+      expectedKandidaten.durchgestrichen = false;
+
+      const result = resetDseStimmzettel(dseStimmzettel);
+
+      expect(result).toStrictEqual(expectedResetStimmzettel);
+    });
+  });
+
+  describe("isSamePersistedStimmzettel", () => {
+    it.each([
+      {
+        stimmzettelkennungMatches: false,
+        teamIdMatches: false,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: true,
+        teamIdMatches: false,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: false,
+        teamIdMatches: true,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: true,
+        teamIdMatches: true,
+        expected: true,
+      },
+    ])(
+      "should_return'$expected'_whenStimmzettelkennungMatchesIs'$stimmzettelkennungMatches'AndTeamIdMatchesIs'$teamIdMatches'",
+      ({ stimmzettelkennungMatches, teamIdMatches, expected }) => {
+        const stimmzettel1 = preparePersistedStimmzettel()
+          .stimmzettelkennung(1)
+          .teamID("A")
+          .build();
+        const stimmzettel2 = preparePersistedStimmzettel()
+          .stimmzettelkennung(
+            stimmzettelkennungMatches ? stimmzettel1.stimmzettelkennung : 2
+          )
+          .teamID(teamIdMatches ? stimmzettel1.teamID : "B")
+          .build();
+
+        expect(isSamePersistedStimmzettel(stimmzettel1, stimmzettel2)).toBe(
+          expected
+        );
+      }
+    );
   });
 });

@@ -45,6 +45,7 @@ const mockDefinitions = vi.hoisted(() => ({
   },
   mapPersistedStimmzettelValuesToExistingDseStimmzettel: vi.fn(),
   resetError: vi.fn(),
+  resetDseStimmzettel: vi.fn(),
 }));
 
 vi.mock(
@@ -90,6 +91,19 @@ vi.mock(
   }
 );
 
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useStimmzettelTools: () => ({
+        ...original.useStimmzettelTools(),
+        resetDseStimmzettel: mockDefinitions.resetDseStimmzettel,
+      }),
+    };
+  }
+);
+
 describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   const mockedWahlId = "wahl-1";
   const {
@@ -104,6 +118,7 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
     prepareStimmzettelKandidatOfWahlvorschlag,
     preparePersistedStimmzettel,
     preparePersistedStimmzettelWahlvorschlag,
+    createStimmzettel,
   } = useStimmzettelTestDataFactory();
 
   const MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER = 999;
@@ -1123,6 +1138,9 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
       // clear refreshWahlvorschlaegeVotes, because it`s not only called on reset but additionally after every
       // manipulation
       mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes.mockClear();
+      mockDefinitions.resetDseStimmzettel.mockReturnValue(
+        structuredClone(initialEmptyDseStimzettel)
+      );
 
       mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockReturnValue(
         structuredClone(initialEmptyDseStimzettel)

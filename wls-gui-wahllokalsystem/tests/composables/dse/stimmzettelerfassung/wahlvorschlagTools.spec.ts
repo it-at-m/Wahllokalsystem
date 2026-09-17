@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useWahlvorschlagTools } from "@/composables/dse/stimmzettelerfassung/wahlvorschlagTools.ts";
 
 const mockDefinitions = await vi.hoisted(async () => ({
-  sortKandidaten: vi.fn(),
+  sortAndDeepCloneKandidaten: vi.fn(),
 }));
 
 vi.mock(
@@ -15,7 +15,7 @@ vi.mock(
     return {
       useKandidatTools: () => ({
         ...original.useKandidatTools(),
-        sortKandidaten: mockDefinitions.sortKandidaten,
+        sortAndDeepCloneKandidaten: mockDefinitions.sortAndDeepCloneKandidaten,
       }),
     };
   }
@@ -34,7 +34,7 @@ describe("useWahlvorschlagTools.ts", () => {
     vi.clearAllMocks();
   });
 
-  describe("sortWahlvorschlaege", () => {
+  describe("sortAndDeepCloneWahlvorschlaege", () => {
     const wvA = preparePersistedStimmzettelWahlvorschlag()
       .wahlvorschlagID("a")
       .selected(true)
@@ -75,7 +75,7 @@ describe("useWahlvorschlagTools.ts", () => {
           typeof createPersistedStimmzettelKandidat
         >[] = [];
 
-        mockDefinitions.sortKandidaten.mockImplementation((arr) => {
+        mockDefinitions.sortAndDeepCloneKandidaten.mockImplementation((arr) => {
           if (arr === wvA.kandidaten) return sortedKandidatenA;
           if (arr === wvB.kandidaten) return sortedKandidatenB;
           if (arr === wvC.kandidaten) return sortedKandidatenC;
@@ -100,18 +100,21 @@ describe("useWahlvorschlagTools.ts", () => {
           },
         ];
 
-        const result = unitUnderTest.sortWahlvorschlaege(wahlvorschlaege);
+        const result =
+          unitUnderTest.sortAndDeepCloneWahlvorschlaege(wahlvorschlaege);
 
         expect(result).toStrictEqual(expectedResult);
-        expect(mockDefinitions.sortKandidaten).toHaveBeenCalledTimes(3);
+        expect(
+          mockDefinitions.sortAndDeepCloneKandidaten
+        ).toHaveBeenCalledTimes(3);
       }
     );
 
     it("should_returnEmptyList_when_givenEmptyList", () => {
-      const result = unitUnderTest.sortWahlvorschlaege([]);
+      const result = unitUnderTest.sortAndDeepCloneWahlvorschlaege([]);
 
       expect(result).toStrictEqual([]);
-      expect(mockDefinitions.sortKandidaten).not.toHaveBeenCalled();
+      expect(mockDefinitions.sortAndDeepCloneKandidaten).not.toHaveBeenCalled();
     });
   });
 });

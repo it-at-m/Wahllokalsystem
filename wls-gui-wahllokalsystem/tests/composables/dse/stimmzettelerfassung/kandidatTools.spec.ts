@@ -309,7 +309,7 @@ describe("kandidatTools.ts", () => {
     });
   });
 
-  describe("sortKandidaten", () => {
+  describe("sortAndDeepCloneKandidaten", () => {
     const kdA1 = preparePersistedStimmzettelKandidat()
       .kandidatId("a")
       .nennung(1)
@@ -327,18 +327,21 @@ describe("kandidatTools.ts", () => {
       { text: "NotSorted", kandidaten: [kdB, kdA2, kdA1] },
       { text: "Sorted", kandidaten: [kdA1, kdA2, kdB] },
     ])(
-      `should_returnSortedKandidaten_when_givenListOfKandidatenThatIs'$text'`,
+      `should_returnSortedAndClonedKandidaten_when_givenListOfKandidatenThatIs'$text'`,
       ({ kandidaten }) => {
         const expectedResult = [kdA1, kdA2, kdB];
+        const arrayBeforeSort = kandidaten.slice();
 
-        const result = unitUnderTest.sortKandidaten(kandidaten);
+        const result = unitUnderTest.sortAndDeepCloneKandidaten(kandidaten);
 
+        expect(result).not.toBe(kandidaten);
         expect(result).toStrictEqual(expectedResult);
+        expect(kandidaten).toStrictEqual(arrayBeforeSort);
       }
     );
 
     it("should_returnEmptyList_when_givenEmptyList", () => {
-      const result = unitUnderTest.sortKandidaten([]);
+      const result = unitUnderTest.sortAndDeepCloneKandidaten([]);
 
       expect(result).toStrictEqual([]);
     });

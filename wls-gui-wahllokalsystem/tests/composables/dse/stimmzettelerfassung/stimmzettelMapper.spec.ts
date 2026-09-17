@@ -5,8 +5,8 @@ import type {
   StimmzettelOfTeamDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
+import type { PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/PersistedWahlvorschlag.ts";
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
@@ -457,7 +457,7 @@ describe("stimmzettelMapper.ts", () => {
         teamID
       );
 
-      const expectedWahlvorschlaege: Wahlvorschlag[] =
+      const expectedWahlvorschlaege: PersistedWahlvorschlag[] =
         dseStimmzettel.wahlvorschlaege.map((wahlvorschlag) => {
           const kandidaten: Kandidat[] = wahlvorschlag.kandidaten.map(
             (kandidat) => ({

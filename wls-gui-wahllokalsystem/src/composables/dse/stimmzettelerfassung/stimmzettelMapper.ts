@@ -10,8 +10,8 @@ import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBe
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { PersistedBeschlussfassung } from "@/types/dse/persistedStimmzettel/PersistedBeschlussfassung.ts";
+import type { PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/PersistedWahlvorschlag.ts";
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 import type { Stimmzettel as ManageableStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
@@ -50,7 +50,7 @@ export function useStimmzettelMapper() {
     stimmzettelkennung: number,
     teamID: string
   ): Stimmzettel {
-    const mappedWahlvorschlaege: Wahlvorschlag[] =
+    const mappedWahlvorschlaege: PersistedWahlvorschlag[] =
       manageableStimmzettel.wahlvorschlaege
         .map((wahlvorschlag) => {
           const mappedKandidaten: Kandidat[] = wahlvorschlag.kandidaten
@@ -187,7 +187,9 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _wahlvorschlagDtoToModel(dto: WahlvorschlagDTO): Wahlvorschlag {
+  function _wahlvorschlagDtoToModel(
+    dto: WahlvorschlagDTO
+  ): PersistedWahlvorschlag {
     return {
       wahlvorschlagID: dto.wahlvorschlagID,
       selected: dto.selected,
@@ -195,7 +197,9 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _wahlvorschlagModelToDto(model: Wahlvorschlag): WahlvorschlagDTO {
+  function _wahlvorschlagModelToDto(
+    model: PersistedWahlvorschlag
+  ): WahlvorschlagDTO {
     return {
       wahlvorschlagID: model.wahlvorschlagID,
       selected: model.selected,

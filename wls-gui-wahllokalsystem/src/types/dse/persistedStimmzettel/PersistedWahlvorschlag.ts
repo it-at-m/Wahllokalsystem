@@ -1,6 +1,6 @@
 import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 
-export interface Wahlvorschlag {
+export interface PersistedWahlvorschlag {
   wahlvorschlagID: string;
   selected: boolean;
   kandidaten: Kandidat[];

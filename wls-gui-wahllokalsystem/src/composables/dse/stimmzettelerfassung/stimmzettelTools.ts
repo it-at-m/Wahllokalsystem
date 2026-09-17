@@ -16,7 +16,7 @@ const { sortWahlvorstandBeschlussgruende, sortSystemBeschlussgruende } =
   useBeschlussgrundTools();
 const { sortAndDeepCloneWahlvorschlaege } = useWahlvorschlagTools();
 
-function useStimmzettelTools() {
+export function useStimmzettelTools() {
   function createStimmzettelWithWahlvorschlaege(
     wahlvorschlaege: Wahlvorschlag[]
   ): Stimmzettel {

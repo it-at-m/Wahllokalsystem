@@ -15,7 +15,7 @@ import { useBearbeitenDialogStimmzettelUngueltigeStimmeUtils } from "@/composabl
 import { useBearbeitenDialogStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelWahlvorschlagUtils.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
-import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
@@ -144,7 +144,7 @@ export function useBearbeitenDialogStimmzettelUtils(
   ) {
     changeHistory.reset();
     if (stimmzettelBeforeEdit) {
-      stimmzettel.value = mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+      mapPersistedStimmzettelValuesToExistingDseStimmzettel(
         stimmzettel.value,
         stimmzettelBeforeEdit
       );

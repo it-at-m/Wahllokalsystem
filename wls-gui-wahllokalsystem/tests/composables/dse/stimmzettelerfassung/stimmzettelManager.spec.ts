@@ -74,7 +74,7 @@ vi.mock(
       useStimmzettelMapper: () => ({
         ...original.useStimmzettelMapper(),
         mapPersistedStimmzettelValuesToExistingDseStimmzettel:
-        mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel,
+          mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel,
       }),
     };
   }
@@ -87,9 +87,6 @@ const {
   preparePersistedStimmzettel,
   preparePersistedStimmzettelWahlvorschlag,
   preparePersistedStimmzettelKandidat,
-  prepareStimmzettel,
-  prepareStimmzettelWahlvorschlag,
-  prepareStimmzettelKandidat,
 } = useStimmzettelTestDataFactory();
 
 describe("stimmzettelManager.ts", () => {

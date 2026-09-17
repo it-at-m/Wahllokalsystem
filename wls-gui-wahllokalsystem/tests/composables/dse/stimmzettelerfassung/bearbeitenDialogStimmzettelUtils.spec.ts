@@ -13,12 +13,11 @@ import {
   it,
   vi,
 } from "vitest";
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 
 import { useBearbeitenDialogStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
-import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
@@ -118,7 +117,6 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
     prepareStimmzettelKandidatOfWahlvorschlag,
     preparePersistedStimmzettel,
     preparePersistedStimmzettelWahlvorschlag,
-    createStimmzettel,
   } = useStimmzettelTestDataFactory();
 
   const MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER = 999;
@@ -1023,6 +1021,9 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
 
       const stimmzettelToResetTo = preparePersistedStimmzettel()
         .invalideVotes(3)
+        .wahlvorstandBeschlussvorschlag([])
+        .systemBeschlussvorschlag([])
+        .beschlussfassung(null)
         .wahlvorschlaege([
           preparePersistedStimmzettelWahlvorschlag()
             .wahlvorschlagID(initialEmptyDseWahlvorschlag.wahlvorschlagID)
@@ -1041,65 +1042,87 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
         ])
         .build();
 
-      const mappedDseStimmzettelAfterReset = structuredClone(
+      const expectedMappedDseStimmzettelAfterReset = structuredClone(
         initialEmptyDseStimzettel
       );
-      mappedDseStimmzettelAfterReset.invalideVotes =
-        stimmzettelToResetTo.invalideVotes;
-      mappedDseStimmzettelAfterReset.wahlvorschlaege[0].selected =
-        stimmzettelToResetTo.wahlvorschlaege[0].selected;
-      mappedDseStimmzettelAfterReset.wahlvorschlaege[0].kandidaten[0].einzelstimmen =
-        stimmzettelToResetTo.wahlvorschlaege[0].kandidaten[0].votesByVoter;
-      mappedDseStimmzettelAfterReset.wahlvorschlaege[0].kandidaten[0].ungueltigeStimmen =
-        stimmzettelToResetTo.wahlvorschlaege[0].kandidaten[0].invalidVotes;
-      mappedDseStimmzettelAfterReset.wahlvorschlaege[0].kandidaten[0].reststimmen =
-        stimmzettelToResetTo.wahlvorschlaege[0].kandidaten[0].votesByWahlvorschlag;
-      mappedDseStimmzettelAfterReset.wahlvorschlaege[0].kandidaten[0].durchgestrichen =
-        stimmzettelToResetTo.wahlvorschlaege[0].kandidaten[0].isDiscarded;
+      expectedMappedDseStimmzettelAfterReset.invalideVotes = 3;
+      expectedMappedDseStimmzettelAfterReset.wahlvorschlaege[0].selected = true;
+      const expectedK =
+        expectedMappedDseStimmzettelAfterReset.wahlvorschlaege[0].kandidaten[0];
+      expectedK.einzelstimmen = 5;
+      expectedK.ungueltigeStimmen = 1;
+      expectedK.reststimmen = 2;
+      expectedK.durchgestrichen = true;
+      expectedMappedDseStimmzettelAfterReset.systemBeschlussvorschlag = [
+        { reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig },
+        {
+          reason:
+            SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+        },
+      ];
+      expectedMappedDseStimmzettelAfterReset.wahlvorstandBeschlussvorschlag =
+        [];
+      expectedMappedDseStimmzettelAfterReset.beschlussfassung = null;
+      expectedMappedDseStimmzettelAfterReset.gueltigkeit =
+        StimmzettelGueltigkeitEnum.BeschlussAusstehend;
 
-      mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockReturnValue(
-        structuredClone(mappedDseStimmzettelAfterReset)
+      // mock the mapper to apply the persisted values onto the existing DSE object
+      mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockImplementation(
+        (target: Stimmzettel, source: any) => {
+          const srcWv = source.wahlvorschlaege[0];
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const tgtWv = target.wahlvorschlaege.find(
+            (w) => w.wahlvorschlagID === srcWv.wahlvorschlagID
+          )!;
+          tgtWv.selected = srcWv.selected;
+          const srcK = srcWv.kandidaten[0];
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const tgtK = tgtWv.kandidaten.find(
+            (k) =>
+              k.kandidatId === srcK.kandidatId && k.nennung === srcK.nennung
+          )!;
+          tgtK.einzelstimmen = srcK.votesByVoter ?? null;
+          tgtK.ungueltigeStimmen = srcK.invalidVotes ?? null;
+          tgtK.reststimmen = srcK.votesByWahlvorschlag ?? null;
+          tgtK.durchgestrichen = srcK.isDiscarded ?? false;
+          if (target.invalideVotes !== source.invalideVotes) {
+            target.invalideVotes = source.invalideVotes;
+          }
+        }
       );
 
       expect(managedStimmzettel.stimmzettel.value).toStrictEqual(
         initialEmptyDseStimzettel
       );
 
+      // mutate managedStimmzettel so reset has an effect
       managedStimmzettel.kandidatAddStreichungOrThrow(
         initialEmptyDseKandidat.ordnungszahl
       );
       managedStimmzettel.kandidatAddEinzelstimmenOrThrow(
         initialEmptyDseKandidat.ordnungszahl,
-        5
+        2
       );
       managedStimmzettel.wahlvorschlagAddVotesOrThrow(
         initialEmptyDseWahlvorschlag.ordnungszahl
       );
-      managedStimmzettel.stimmzettel.value.wahlvorstandBeschlussvorschlag = [
-        {
-          text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
-        },
-      ];
-      managedStimmzettel.stimmzettel.value.systemBeschlussvorschlag = [
-        {
-          reason:
-            SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
-        },
-      ];
+      managedStimmzettel.stimmzettel.value.invalideVotes = 3;
 
       expect(managedStimmzettel.stimmzettel.value).not.toStrictEqual(
         initialEmptyDseStimzettel
       );
 
       // clear refreshWahlvorschlaegeVotes, because it`s not only called on reset but additionally after every
-      // manipulation
+      // manipulation. Flush pending watchers first to avoid counting their calls after clear.
+      await nextTick();
       mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes.mockClear();
 
       managedStimmzettel.resetStimmzettelAndHistory(stimmzettelToResetTo);
+      await nextTick();
 
       const stimmzettelAfterReset = managedStimmzettel.stimmzettel.value;
       expect(stimmzettelAfterReset).toStrictEqual(
-        mappedDseStimmzettelAfterReset
+        expectedMappedDseStimmzettelAfterReset
       );
       expect(mockDefinitions.changeHistory.reset).toHaveBeenCalledTimes(1);
       expect(mockDefinitions.resetError).toHaveBeenCalledTimes(1);
@@ -1139,10 +1162,6 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
       // manipulation
       mockDefinitions.reststimmeUtils.refreshWahlvorschlaegeVotes.mockClear();
       mockDefinitions.resetDseStimmzettel.mockReturnValue(
-        structuredClone(initialEmptyDseStimzettel)
-      );
-
-      mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockReturnValue(
         structuredClone(initialEmptyDseStimzettel)
       );
 

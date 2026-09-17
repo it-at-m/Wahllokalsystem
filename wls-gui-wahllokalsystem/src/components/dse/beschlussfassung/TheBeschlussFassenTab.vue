@@ -49,10 +49,14 @@
           />
         </v-row>
         <v-row>
-          <v-checkbox-btn label="Anderer Grund:" />
+          <v-checkbox-btn
+            v-model="andererGrundChecked"
+            label="Anderer Grund:"
+          />
           <v-text-field
-            :v-model="andererGrund"
+            v-model="andererGrund"
             label="Grund"
+            :disabled="!andererGrundChecked"
           />
         </v-row>
       </v-col>
@@ -98,19 +102,25 @@
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, onActivated, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const { required } = useRules();
 const { isBWB } = storeToRefs(useUserStore());
 
-const isGueltig = ref(false);
+const { mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText } =
+  useSystemBeschlussgrundReasonEnumTools();
+
+const isGueltig = ref<boolean | null>(null);
 const andererGrund = ref("");
-const stimmenDafuer = ref(0);
-const stimmenDagegen = ref(0);
+const andererGrundChecked = ref(false);
+const stimmenDafuer = ref<number | null>(null);
+const stimmenDagegen = ref<number | null>(null);
 const isAbstimmungsergebnisValid = ref<boolean | null>(null);
 
 const gruende = {
@@ -135,19 +145,64 @@ const props = defineProps<{
   stimmzettel: Stimmzettel | undefined;
 }>();
 
-const beschlussgruende = computed(() => {
-  const liste = isGueltig.value ? gruende.gueltig : gruende.ungueltig;
-  if (isBWB.value) {
-    return liste.map((element) => {
-      return { grund: element, selected: false };
-    });
+interface BeschlussgrundOption {
+  grund: string;
+  selected: boolean;
+}
+const beschlussgruende = ref<BeschlussgrundOption[]>([]);
+
+function rebuildBeschlussgruende() {
+  const gruendeList = (
+    isGueltig.value ? gruende.gueltig : gruende.ungueltig
+  ).filter((grund) => (isBWB.value ? true : !grund.includes("Briefwahl:")));
+  const beschlussgrundOptions: BeschlussgrundOption[] = gruendeList.map(
+    (element) => ({
+      grund: element,
+      selected: false,
+    })
+  );
+
+  const systemBeschlussvorschlaege =
+    props.stimmzettel?.systemBeschlussvorschlag ?? [];
+  for (const beschlussvorschlag of systemBeschlussvorschlaege) {
+    const reasonAsGrund =
+      mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
+        beschlussvorschlag.reason
+      );
+    if (reasonAsGrund) {
+      const entry = beschlussgrundOptions.find(
+        (beschlussgrundOption) => beschlussgrundOption.grund === reasonAsGrund
+      );
+      if (entry) {
+        entry.selected = true;
+      }
+    }
   }
-  return liste
-    .filter((grund) => !grund.includes("Briefwahl:"))
-    .map((element) => {
-      return { grund: element, selected: false };
-    });
-});
+  beschlussgruende.value = beschlussgrundOptions;
+}
+
+watch(
+  () => props.stimmzettel,
+  (stimmzettel) => {
+    if (!stimmzettel) return;
+    isGueltig.value =
+      stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Valid;
+
+    const texts = (stimmzettel.wahlvorstandBeschlussvorschlag ?? []).map(
+      (w) => w.text
+    );
+    andererGrund.value = texts.join(", ");
+    andererGrundChecked.value = texts.length > 0;
+
+    rebuildBeschlussgruende();
+  },
+  { immediate: true }
+);
+
+watch(
+  () => isGueltig.value,
+  () => rebuildBeschlussgruende()
+);
 </script>
 
 <style scoped>

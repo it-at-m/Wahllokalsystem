@@ -304,9 +304,7 @@ class StimmzettelRepositoryTest {
               .create());
 
       transactionTemplate.executeWithoutResult(
-          status -> {
-            stimmzettelRepository.saveAll(stimmzettelToFind);
-          });
+          status -> stimmzettelRepository.saveAll(stimmzettelToFind));
 
       val result =
           unitUnderTest
@@ -479,9 +477,7 @@ class StimmzettelRepositoryTest {
                 .create());
 
         transactionTemplate.executeWithoutResult(
-            status -> {
-              stimmzettelRepository.saveAll(stimmzettelToFind);
-            });
+            status -> stimmzettelRepository.saveAll(stimmzettelToFind));
 
         val result =
             unitUnderTest
@@ -513,9 +509,7 @@ class StimmzettelRepositoryTest {
         stimmzettelToFind.add(
             Instancio.create(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
 
-        val nonMatchingStimmzettel = new LinkedList<Stimmzettel>();
-        nonMatchingStimmzettel.addAll(
-            createNonValidVariants(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
+          val nonMatchingStimmzettel = new LinkedList<Stimmzettel>(createNonValidVariants(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
 
         transactionTemplate.executeWithoutResult(
             status -> {
@@ -585,9 +579,7 @@ class StimmzettelRepositoryTest {
                 .create());
 
         transactionTemplate.executeWithoutResult(
-            status -> {
-              stimmzettelRepository.saveAll(stimmzettelToFind);
-            });
+            status -> stimmzettelRepository.saveAll(stimmzettelToFind));
 
         val result =
             unitUnderTest
@@ -719,9 +711,7 @@ class StimmzettelRepositoryTest {
                 .create());
 
         transactionTemplate.executeWithoutResult(
-            status -> {
-              stimmzettelRepository.saveAll(stimmzettelToFind);
-            });
+            status -> stimmzettelRepository.saveAll(stimmzettelToFind));
 
         val result =
             unitUnderTest
@@ -872,9 +862,7 @@ class StimmzettelRepositoryTest {
           createNonValidVariants(stimmzettelWithSingleWahlvorschlagWithoutAnyKandidatenModel));
 
       transactionTemplate.executeWithoutResult(
-          status -> {
-            stimmzettelRepository.saveAll(nonMatchingStimmzettel);
-          });
+          status -> stimmzettelRepository.saveAll(nonMatchingStimmzettel));
 
       val result =
           unitUnderTest

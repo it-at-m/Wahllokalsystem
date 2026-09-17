@@ -29,6 +29,7 @@ import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Stimm
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithOnlyReststimmenKandidaten;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithReststimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithReststimmeAndEinzelstimme;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithSingleInvalideVote;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithSingleStreichungen;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithStreichungAndEinzelStimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithStreichungAndReststimme;
@@ -512,6 +513,14 @@ class StimmzettelRepositoryTest {
         val nonMatchingStimmzettel =
             new LinkedList<>(
                 createNonValidVariants(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
+        nonMatchingStimmzettel.add(
+            Instancio.of(
+                    createBlankValidStimmzettelModel(
+                        wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+                .setModel(
+                    field(Stimmzettel::getWahlvorschlaege),
+                    singleWahlvorschlagModelWithSingleInvalideVote)
+                .create());
 
         transactionTemplate.executeWithoutResult(
             status -> {

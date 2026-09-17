@@ -72,4 +72,42 @@ public class StimmzettelRepositoryTestModels {
                           createEmptyDiscardedKandidat("k1", 1),
                           createEmptyKandidatWithSingleVoteByWahlvorschlag("k2", 1)))
               .toModel();
+
+  public static final Model<List<Wahlvorschlag>> singleWahlvorschlagWithReststimmeModel =
+      Instancio.ofList(createEmptyWahlvorschlag("wvReststimme"))
+          .size(1)
+          .supply(
+              field(Wahlvorschlag::getKandidaten),
+              () -> List.of(createEmptyKandidatWithSingleVoteByWahlvorschlag("k2", 1)))
+          .toModel();
+
+  public static Model<List<Wahlvorschlag>>
+      createSingleWahlvorschlagWithReststimmeAndEinzelstimmeModel(final String wahlvorschlagID) {
+    return Instancio.ofList(createEmptyWahlvorschlag(wahlvorschlagID))
+        .size(1)
+        .supply(
+            field(Wahlvorschlag::getKandidaten),
+            () ->
+                List.of(
+                    createEmptyKandidatWithSingleVoteByWahlvorschlag("k1", 1),
+                    createEmptyKandidatWithSingleVoteByVoter("k2", 1)))
+        .toModel();
+  }
+
+  public static final Model<List<Wahlvorschlag>>
+      singleWahlvorschlagWithReststimmeAndEinzelstimmeModel =
+          createSingleWahlvorschlagWithReststimmeAndEinzelstimmeModel("wvReststimme+Einzelstimme");
+
+  public static Model<List<Wahlvorschlag>> createSingleWahlvorschlagWithEinzelstimmeModel(
+      final String wahlvorschlagID) {
+    return Instancio.ofList(createEmptyWahlvorschlag(wahlvorschlagID))
+        .size(1)
+        .supply(
+            field(Wahlvorschlag::getKandidaten),
+            () -> List.of(createEmptyKandidatWithSingleVoteByVoter("k1", 1)))
+        .toModel();
+  }
+
+  public static final Model<List<Wahlvorschlag>> singleWahlvorschlagWithEinzelstimmeModel =
+      createSingleWahlvorschlagWithEinzelstimmeModel("wvEinzelstimme");
 }

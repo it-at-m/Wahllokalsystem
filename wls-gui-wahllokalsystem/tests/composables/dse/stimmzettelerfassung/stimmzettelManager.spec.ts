@@ -12,7 +12,7 @@ import { computed } from "vue";
 import { useStimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
 import { UnsupportedCommandError } from "@/types/dse/error/UnsupportedCommandError.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/PersistedStimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const { ref } = await import("vue");
@@ -354,7 +354,7 @@ describe("stimmzettelManager.ts", () => {
       preparePersistedStimmzettel()
         .stimmzettelkennung(stimmzettelKennung)
         .teamID(teamID)
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.Valid)
         .invalideVotes(0)
         .wahlvorschlaege([])
         .wahlvorstandBeschlussvorschlag([])

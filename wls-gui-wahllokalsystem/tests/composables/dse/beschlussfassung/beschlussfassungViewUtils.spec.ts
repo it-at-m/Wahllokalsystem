@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
 import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/PersistedStimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
@@ -102,7 +102,7 @@ describe("beschlussfassungViewUtils.ts", () => {
     it("should_loadTeamStatusListeAndStimmzettel_when_onActivatedSuccess", async () => {
       const stimmzettelForBeschlussfassungTeamA = preparePersistedStimmzettel()
         .teamID("A")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.BeschlussAusstehend)
         .build();
       const stimmzettelForBeschlussfassungTeamB = preparePersistedStimmzettel()
         .teamID("B")
@@ -114,12 +114,12 @@ describe("beschlussfassungViewUtils.ts", () => {
         .build();
       const validStimmzettelTeamA = preparePersistedStimmzettel()
         .teamID("A")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.Valid)
         .beschlussfassung(null)
         .build();
       const inValidStimmzettelTeamB = preparePersistedStimmzettel()
         .teamID("B")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.Invalid)
         .beschlussfassung(null)
         .build();
 
@@ -191,17 +191,17 @@ describe("beschlussfassungViewUtils.ts", () => {
     it("should_returnOnlyStimmzettelWithGueltigkeitNotBeschlussAusstehend_when_givenStimmzettelWithMixedGueltigkeiten", () => {
       const stZettBeschlussAusstehend = preparePersistedStimmzettel()
         .teamID("A")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.BeschlussAusstehend)
         .build();
 
       const stZettValid = preparePersistedStimmzettel()
         .teamID("B")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.Valid)
         .build();
 
       const stZettInvalid = preparePersistedStimmzettel()
         .teamID("C")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.Invalid)
         .build();
 
       unitUnderTest.stimmzettelForBeschlussfassung.value = [
@@ -218,12 +218,12 @@ describe("beschlussfassungViewUtils.ts", () => {
     it("should_returnEmptyList_when_allStimmzettelHaveGueltigkeitBeschlussAusstehend", () => {
       const stZettA = preparePersistedStimmzettel()
         .teamID("A")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.BeschlussAusstehend)
         .build();
 
       const stZettB = preparePersistedStimmzettel()
         .teamID("B")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.BeschlussAusstehend)
         .build();
 
       unitUnderTest.stimmzettelForBeschlussfassung.value = [stZettA, stZettB];
@@ -238,12 +238,12 @@ describe("beschlussfassungViewUtils.ts", () => {
     it("should_returnTrue_when_notAllStimmzettelForBeschlussAreCompleted", () => {
       const stZettBeschlussAusstehend = preparePersistedStimmzettel()
         .teamID("A")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.BeschlussAusstehend)
         .build();
 
       const stZettCompleted = preparePersistedStimmzettel()
         .teamID("B")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.Valid)
         .build();
 
       unitUnderTest.stimmzettelForBeschlussfassung.value = [
@@ -259,12 +259,12 @@ describe("beschlussfassungViewUtils.ts", () => {
     it("should_returnFalse_when_allStimmzettelCompleted", () => {
       const stZettCompleted1 = preparePersistedStimmzettel()
         .teamID("A")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.Valid)
         .build();
 
       const stZettCompleted2 = preparePersistedStimmzettel()
         .teamID("B")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.Invalid)
         .build();
 
       unitUnderTest.stimmzettelForBeschlussfassung.value = [

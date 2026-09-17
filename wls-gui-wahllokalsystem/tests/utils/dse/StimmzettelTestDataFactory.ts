@@ -26,7 +26,8 @@ import {
   SystemBeschlussgrundDTOReasonEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/PersistedStimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const {
   generateRandomNumber,
@@ -236,7 +237,9 @@ export function useStimmzettelTestDataFactory() {
       ],
       beschlussfassung: createStimmzettelBeschlussfassung(),
       invalideVotes: generateRandomNumber(2),
-      gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),
+      gueltigkeit: getRandomItem(
+        Object.values(PersistedStimmzettelGueltigkeitEnum)
+      ),
     };
   }
 

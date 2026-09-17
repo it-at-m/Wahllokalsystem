@@ -4,7 +4,7 @@ import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.t
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { computed } from "vue";
@@ -87,7 +87,7 @@ const {
   preparePersistedStimmzettel,
   preparePersistedStimmzettelWahlvorschlag,
   preparePersistedStimmzettelKandidat,
-} = useStimmzettelTestDataFactory();
+} = usePersistedStimmzettelTestDataFactory();
 
 describe("stimmzettelManager.ts", () => {
   const dummyWahlvorschlag: Wahlvorschlag = {

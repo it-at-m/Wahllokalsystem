@@ -9,6 +9,7 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/PersistedWahlvorschlag.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
@@ -41,22 +42,25 @@ const {
   createStimmzettelOfTeamDTO,
   prepareStimmzettelOfTeamDTO,
   createStimmzettelKandidatDTO,
+  prepareStimmzettel,
+  prepareStimmzettelBeschlussfassungDTO,
+  prepareStimmzettelBeschlussgrundDTO,
+  prepareStimmzettelKandidatOfWahlvorschlag,
+  prepareStimmzettelKandidatDTO,
+  prepareStimmzettelKandidatIdDTO,
+  prepareStimmzettelWahlvorschlag,
+  prepareStimmzettelWahlvorschlagDTO,
+} = useStimmzettelTestDataFactory();
+
+const {
   createPersistedStimmzettel,
   preparePersistedStimmzettel,
   createPersistedStimmzettelKandidat,
   preparePersistedStimmzettelBeschlussfassung,
-  prepareStimmzettel,
-  prepareStimmzettelBeschlussfassungDTO,
   preparePersistedStimmzettelBeschlussgrund,
-  prepareStimmzettelBeschlussgrundDTO,
   preparePersistedStimmzettelKandidat,
-  prepareStimmzettelKandidatOfWahlvorschlag,
-  prepareStimmzettelKandidatDTO,
-  prepareStimmzettelKandidatIdDTO,
   preparePersistedStimmzettelWahlvorschlag,
-  prepareStimmzettelWahlvorschlag,
-  prepareStimmzettelWahlvorschlagDTO,
-} = useStimmzettelTestDataFactory();
+} = usePersistedStimmzettelTestDataFactory();
 const { generateRandomNumber, generateRandomString } =
   useCommonTestDataFactory();
 

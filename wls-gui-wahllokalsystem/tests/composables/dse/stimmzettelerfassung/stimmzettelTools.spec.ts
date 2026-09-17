@@ -6,6 +6,7 @@ import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts
 import type { Wahlvorschlag as UiWahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { describe, expect, it, vi } from "vitest";
@@ -57,12 +58,12 @@ vi.mock(
     }),
   })
 );
+const { createStimmzettel, prepareStimmzettel } =
+  useStimmzettelTestDataFactory();
 const {
   preparePersistedStimmzettel,
   preparePersistedStimmzettelWahlvorschlag,
-  createStimmzettel,
-  prepareStimmzettel,
-} = useStimmzettelTestDataFactory();
+} = usePersistedStimmzettelTestDataFactory();
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
 const {
   createWahlvorschlaege,

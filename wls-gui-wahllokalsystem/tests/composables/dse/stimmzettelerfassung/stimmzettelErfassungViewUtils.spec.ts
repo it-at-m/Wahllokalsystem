@@ -2,8 +2,8 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
@@ -82,7 +82,8 @@ vi.mock(import("@/composables/common/logging.ts"), async (importOriginal) => {
 describe("stimmzettelErfassungViewUtils.ts", () => {
   const { generateRandomString, generateRandomNumber } =
     useCommonTestDataFactory();
-  const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
+  const { preparePersistedStimmzettel } =
+    usePersistedStimmzettelTestDataFactory();
   const { createStimmzettelerfassungTeamStatusModel } =
     useStimmzettelerfassungTeamStatusTestDataFactory();
 

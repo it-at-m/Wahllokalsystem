@@ -7,13 +7,10 @@ import type {
   WahlvorschlagDTO,
   WahlvorstandBeschlussgrundDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { PersistedBeschlussfassung } from "@/types/dse/beschlussfassung/PersistedBeschlussfassung.ts";
+import type { Beschlussfassung } from "@/types/dse/beschlussfassung/Beschlussfassung.ts";
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
-import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
-import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
-import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/PersistedWahlvorschlag.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
@@ -26,7 +23,6 @@ import {
   SystemBeschlussgrundDTOReasonEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const {
@@ -106,7 +102,7 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelBeschlussfassung(): PersistedBeschlussfassung {
+  function createStimmzettelBeschlussfassung(): Beschlussfassung {
     return {
       text: generateRandomString(20),
       pro: generateRandomNumber(2),
@@ -138,17 +134,6 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createPersistedStimmzettelKandidat(): PersistedKandidat {
-    return {
-      kandidatId: generateRandomString(10),
-      nennung: generateRandomNumber(1),
-      isDiscarded: generateRandomBoolean(),
-      votesByVoter: generateRandomNumber(2),
-      invalidVotes: generateRandomNumber(2),
-      votesByWahlvorschlag: generateRandomNumber(2),
-    };
-  }
-
   function createStimmzettelWahlvorschlagDTO(): WahlvorschlagDTO {
     return {
       wahlvorschlagID: generateRandomString(10),
@@ -158,18 +143,6 @@ export function useStimmzettelTestDataFactory() {
         createStimmzettelKandidatDTO(),
       ],
       selected: generateRandomBoolean(),
-    };
-  }
-
-  function createPersistedStimmzettelWahlvorschlag(): PersistedWahlvorschlag {
-    return {
-      kandidaten: [
-        createPersistedStimmzettelKandidat(),
-        createPersistedStimmzettelKandidat(),
-        createPersistedStimmzettelKandidat(),
-      ],
-      selected: generateRandomBoolean(),
-      wahlvorschlagID: generateRandomString(10),
     };
   }
 
@@ -216,33 +189,6 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createPersistedStimmzettel(): PersistedStimmzettel {
-    return {
-      stimmzettelkennung: generateRandomNumber(6),
-      teamID: generateRandomString(1),
-      wahlvorschlaege: [
-        createPersistedStimmzettelWahlvorschlag(),
-        createPersistedStimmzettelWahlvorschlag(),
-        createPersistedStimmzettelWahlvorschlag(),
-      ],
-      systemBeschlussvorschlag: [
-        createStimmzettelSystemBeschlussgrund(),
-        createStimmzettelSystemBeschlussgrund(),
-        createStimmzettelSystemBeschlussgrund(),
-      ],
-      wahlvorstandBeschlussvorschlag: [
-        createStimmzettelWahlvorstandBeschlussgrund(),
-        createStimmzettelWahlvorstandBeschlussgrund(),
-        createStimmzettelWahlvorstandBeschlussgrund(),
-      ],
-      beschlussfassung: createStimmzettelBeschlussfassung(),
-      invalideVotes: generateRandomNumber(2),
-      gueltigkeit: getRandomItem(
-        Object.values(PersistedStimmzettelGueltigkeitEnum)
-      ),
-    };
-  }
-
   function prepareStimmzettel(): Builder<Stimmzettel> {
     return proxyBuilder<Stimmzettel>(createStimmzettel());
   }
@@ -251,37 +197,15 @@ export function useStimmzettelTestDataFactory() {
     return proxyBuilder<StimmzettelOfTeamDTO>(createStimmzettelOfTeamDTO());
   }
 
-  function preparePersistedStimmzettel(): Builder<PersistedStimmzettel> {
-    return proxyBuilder<PersistedStimmzettel>(createPersistedStimmzettel());
-  }
-
-  function preparePersistedStimmzettelBeschlussfassung(): Builder<PersistedBeschlussfassung> {
-    return proxyBuilder<PersistedBeschlussfassung>(
-      createStimmzettelBeschlussfassung()
-    );
-  }
-
   function prepareStimmzettelBeschlussfassungDTO(): Builder<BeschlussfassungDTO> {
     return proxyBuilder<BeschlussfassungDTO>(
       createStimmzettelBeschlussfassungDTO()
     );
   }
 
-  function preparePersistedStimmzettelBeschlussgrund(): Builder<WahlvorstandBeschlussgrund> {
-    return proxyBuilder<WahlvorstandBeschlussgrund>(
-      createStimmzettelWahlvorstandBeschlussgrund()
-    );
-  }
-
   function prepareStimmzettelBeschlussgrundDTO(): Builder<WahlvorstandBeschlussgrundDTO> {
     return proxyBuilder<WahlvorstandBeschlussgrundDTO>(
       createStimmzettelWahlvorstandBeschlussgrundDTO()
-    );
-  }
-
-  function preparePersistedStimmzettelKandidat(): Builder<PersistedKandidat> {
-    return proxyBuilder<PersistedKandidat>(
-      createPersistedStimmzettelKandidat()
     );
   }
 
@@ -309,12 +233,6 @@ export function useStimmzettelTestDataFactory() {
     return proxyBuilder<WahlvorschlagDTO>(createStimmzettelWahlvorschlagDTO());
   }
 
-  function preparePersistedStimmzettelWahlvorschlag(): Builder<PersistedWahlvorschlag> {
-    return proxyBuilder<PersistedWahlvorschlag>(
-      createPersistedStimmzettelWahlvorschlag()
-    );
-  }
-
   function prepareStimmzettelWahlvorschlag(): Builder<Wahlvorschlag> {
     return proxyBuilder<Wahlvorschlag>(createStimmzettelWahlvorschlag());
   }
@@ -333,20 +251,12 @@ export function useStimmzettelTestDataFactory() {
   }
 
   return {
-    createPersistedStimmzettelKandidat,
-    createPersistedStimmzettelWahlvorschlag,
-    createPersistedStimmzettel,
     createStimmzettel,
     createStimmzettelOfTeamDTO,
     createStimmzettelKandidat,
     createStimmzettelKandidatOfWahlvorschlag,
     createStimmzettelKandidatDTO,
     createStimmzettelWahlvorschlag,
-    preparePersistedStimmzettel,
-    preparePersistedStimmzettelBeschlussfassung,
-    preparePersistedStimmzettelBeschlussgrund,
-    preparePersistedStimmzettelKandidat,
-    preparePersistedStimmzettelWahlvorschlag,
     prepareStimmzettel,
     prepareStimmzettelOfTeamDTO,
     prepareStimmzettelBeschlussfassungDTO,

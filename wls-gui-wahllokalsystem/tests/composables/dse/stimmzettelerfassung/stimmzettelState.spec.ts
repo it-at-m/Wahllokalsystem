@@ -1,7 +1,7 @@
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelState } from "@/composables/dse/stimmzettelerfassung/stimmzettelState.ts";
@@ -69,7 +69,7 @@ vi.mock(
 describe("stimmzettelState", () => {
   const { generateRandomString } = useCommonTestDataFactory();
   const { preparePersistedStimmzettel, createPersistedStimmzettel } =
-    useStimmzettelTestDataFactory();
+    usePersistedStimmzettelTestDataFactory();
 
   const mockedWahlId = generateRandomString(10);
   const mockedWahlbezirkId = generateRandomString(10);

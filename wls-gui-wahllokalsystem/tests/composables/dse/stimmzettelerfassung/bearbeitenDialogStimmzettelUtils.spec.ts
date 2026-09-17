@@ -1,5 +1,6 @@
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { Stimmzettel as DseStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
@@ -121,8 +122,8 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
 
   const MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER = 999;
 
-  let mockedStimmzettelWithoutWahlvorschlaege: Stimmzettel;
-  let stimmzettelWithoutValuesSet: Stimmzettel;
+  let mockedStimmzettelWithoutWahlvorschlaege: DseStimmzettel;
+  let stimmzettelWithoutValuesSet: DseStimmzettel;
 
   beforeAll(() => {
     setActivePinia(createPinia());
@@ -1068,7 +1069,7 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
 
       // mock the mapper to apply the persisted values onto the existing DSE object
       mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockImplementation(
-        (target: Stimmzettel, source: any) => {
+        (target: DseStimmzettel, source: PersistedStimmzettel) => {
           const srcWv = source.wahlvorschlaege[0];
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const tgtWv = target.wahlvorschlaege.find(

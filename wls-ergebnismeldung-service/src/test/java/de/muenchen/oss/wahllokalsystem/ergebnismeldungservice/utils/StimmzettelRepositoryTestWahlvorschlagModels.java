@@ -12,7 +12,7 @@ import java.util.List;
 import org.instancio.Instancio;
 import org.instancio.Model;
 
-public class StimmzettelRepositoryTestModels {
+public class StimmzettelRepositoryTestWahlvorschlagModels {
 
   public static final Model<List<Wahlvorschlag>>
       singleWahlvorschlagModelWithOnlyReststimmenKandidaten =

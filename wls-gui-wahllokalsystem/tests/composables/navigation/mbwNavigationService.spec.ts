@@ -232,7 +232,7 @@ describe("mbwNavigationService.ts", () => {
         expectedRoute: MbwStepsEnum.MBW_NIEDERSCHRIFT,
       },
     ])(
-      "should_correctlyHandleNavigationAndNextRoute_forWorkflowState",
+      "should_correctlyHandleNavigationAndNextRoute_when_navigateToNextStep",
       ({ stepsDone, enabledSteps, expectedRoute }) => {
         setDseWorkflow(stepsDone);
 

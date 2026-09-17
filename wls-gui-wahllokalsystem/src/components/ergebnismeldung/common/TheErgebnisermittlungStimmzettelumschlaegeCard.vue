@@ -148,7 +148,6 @@ async function continueInWorkflow() {
     props.wahlbezirkId,
     MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
   );
-
   if (isBWB.value) {
     resetAllAnwesenheiten();
   }

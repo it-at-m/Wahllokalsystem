@@ -2,7 +2,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { useManagedStimmzettelEinzelstimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelEinzelstimmeUtils.ts";
+import { useBearbeitenDialogStimmzettelEinzelstimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelEinzelstimmeUtils.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getTotalEinzelstimmenOfKandidatenWithSameId: vi.fn(),
@@ -24,7 +24,7 @@ vi.mock(
 
 const { generateRandomNumber } = useCommonTestDataFactory();
 
-describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
+describe("bearbeitenDialogStimmzettelEinzelstimmeUtils.ts", () => {
   const MAX_EINZELSTIMMEN = 3;
   const { prepareManagedStimmzettelKandidat } =
     useManagedStimmzettelTestDataFactory();
@@ -35,6 +35,9 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
   });
 
   describe("addVotesToKandidat", () => {
+    const { addVotesToKandidat } =
+      useBearbeitenDialogStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
+
     it("should_addVotes_when_einzelstimmenNull", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .einzelstimmen(null)
@@ -45,8 +48,6 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
         0
       );
 
-      const { addVotesToKandidat } =
-        useManagedStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
       addVotesToKandidat(kandidat, 3);
 
       expect(kandidat.einzelstimmen).toBe(3);
@@ -62,8 +63,6 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
         1
       );
 
-      const { addVotesToKandidat } =
-        useManagedStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
       addVotesToKandidat(kandidat, 2);
 
       expect(kandidat.einzelstimmen).toBe(3);
@@ -82,8 +81,6 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
           1
         );
 
-        const { addVotesToKandidat } =
-          useManagedStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
         addVotesToKandidat(kandidat, MAX_EINZELSTIMMEN + 1);
 
         expect(kandidat.einzelstimmen).toBe(MAX_EINZELSTIMMEN);
@@ -106,8 +103,6 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
           MAX_EINZELSTIMMEN
         );
 
-        const { addVotesToKandidat } =
-          useManagedStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
         addVotesToKandidat(kandidat, MAX_EINZELSTIMMEN + 1);
 
         expect(kandidat.einzelstimmen).toBe(null);
@@ -130,8 +125,6 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
           MAX_EINZELSTIMMEN - 1
         );
 
-        const { addVotesToKandidat } =
-          useManagedStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
         addVotesToKandidat(kandidat, MAX_EINZELSTIMMEN + 1);
 
         expect(kandidat.einzelstimmen).toBe(1);
@@ -155,8 +148,6 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
         initalUngueltigeStimmen + MAX_EINZELSTIMMEN + votesToAdd
       );
 
-      const { addVotesToKandidat } =
-        useManagedStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
       addVotesToKandidat(kandidat, votesToAdd);
 
       expect(kandidat.einzelstimmen).toBe(null);
@@ -167,14 +158,15 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
   });
 
   describe("removeVotesFromKandidat", () => {
+    const { removeVotesFromKandidat } =
+      useBearbeitenDialogStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
+
     it("should_removeEinzelstimmenVotes_when_noUngueltigeStimmenAreGiven", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .einzelstimmen(4)
         .ungueltigeStimmen(null)
         .build();
 
-      const { removeVotesFromKandidat } =
-        useManagedStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
       removeVotesFromKandidat(kandidat, 2);
 
       expect(kandidat.einzelstimmen).toBe(2);
@@ -186,8 +178,6 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
         .ungueltigeStimmen(null)
         .build();
 
-      const { removeVotesFromKandidat } =
-        useManagedStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
       removeVotesFromKandidat(kandidat, 4);
 
       expect(kandidat.einzelstimmen).toBe(null);
@@ -199,8 +189,6 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
         .ungueltigeStimmen(4)
         .build();
 
-      const { removeVotesFromKandidat } =
-        useManagedStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
       removeVotesFromKandidat(kandidat, 2);
 
       expect(kandidat.einzelstimmen).toBe(4);
@@ -213,8 +201,6 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
         .ungueltigeStimmen(4)
         .build();
 
-      const { removeVotesFromKandidat } =
-        useManagedStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
       removeVotesFromKandidat(kandidat, 6);
 
       expect(kandidat.einzelstimmen).toBe(2);
@@ -227,8 +213,6 @@ describe("managedStimmzettelEinzelstimmeUtils.ts", () => {
         .ungueltigeStimmen(4)
         .build();
 
-      const { removeVotesFromKandidat } =
-        useManagedStimmzettelEinzelstimmeUtils(MAX_EINZELSTIMMEN);
       removeVotesFromKandidat(kandidat, 8);
 
       expect(kandidat.einzelstimmen).toBe(null);

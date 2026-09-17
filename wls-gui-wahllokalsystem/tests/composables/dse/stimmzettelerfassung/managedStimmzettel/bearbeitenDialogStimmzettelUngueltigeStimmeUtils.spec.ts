@@ -1,9 +1,9 @@
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
-import { useManagedStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelUngueltigeStimmeUtils.ts";
+import { useBearbeitenDialogStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts";
 
-describe("managedStimmzettelUngueltigeStimmeUtils.ts", () => {
+describe("bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts", () => {
   const { prepareManagedStimmzettelKandidat } =
     useManagedStimmzettelTestDataFactory();
 
@@ -14,7 +14,7 @@ describe("managedStimmzettelUngueltigeStimmeUtils.ts", () => {
         .build();
 
       const { addInvalidVotesToKandidat } =
-        useManagedStimmzettelUngueltigeStimmeUtils();
+        useBearbeitenDialogStimmzettelUngueltigeStimmeUtils();
       addInvalidVotesToKandidat(kandidat, 3);
 
       expect(kandidat.ungueltigeStimmen).toBe(3);
@@ -22,13 +22,14 @@ describe("managedStimmzettelUngueltigeStimmeUtils.ts", () => {
   });
 
   describe("removeInvalidVotesFromKandidat", () => {
+    const { removeInvalidVotesFromKandidat } =
+      useBearbeitenDialogStimmzettelUngueltigeStimmeUtils();
+
     it("should_removeInvalidVotes_when_called", () => {
       const kandidat = prepareManagedStimmzettelKandidat()
         .ungueltigeStimmen(4)
         .build();
 
-      const { removeInvalidVotesFromKandidat } =
-        useManagedStimmzettelUngueltigeStimmeUtils();
       removeInvalidVotesFromKandidat(kandidat, 2);
 
       expect(kandidat.ungueltigeStimmen).toBe(2);
@@ -39,8 +40,6 @@ describe("managedStimmzettelUngueltigeStimmeUtils.ts", () => {
         .ungueltigeStimmen(4)
         .build();
 
-      const { removeInvalidVotesFromKandidat } =
-        useManagedStimmzettelUngueltigeStimmeUtils();
       removeInvalidVotesFromKandidat(kandidat, 4);
 
       expect(kandidat.ungueltigeStimmen).toBe(null);
@@ -51,8 +50,6 @@ describe("managedStimmzettelUngueltigeStimmeUtils.ts", () => {
         .ungueltigeStimmen(4)
         .build();
 
-      const { removeInvalidVotesFromKandidat } =
-        useManagedStimmzettelUngueltigeStimmeUtils();
       removeInvalidVotesFromKandidat(kandidat, 5);
 
       expect(kandidat.ungueltigeStimmen).toBe(null);

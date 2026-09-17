@@ -1,5 +1,5 @@
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Ref } from "vue";
 
 import { computed, ref } from "vue";
@@ -9,7 +9,7 @@ import { useStringNumberMapTools } from "@/composables/common/stringNumberMapToo
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
 export function useBearbeitenDialogStimmzettelReststimmeUtils(
-  stimmzettel: Ref<Stimmzettel>,
+  stimmzettel: Ref<DseStimmzettel>,
   maximalErlaubteStimmenProWaehler: Ref<number>,
   maxEinzelstimmen: number,
   countVotesGivenAsReststimme = 1

@@ -14,8 +14,8 @@ import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmze
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag as PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
@@ -36,7 +36,7 @@ const {
 } = useCommonTestDataFactory();
 
 export function useStimmzettelTestDataFactory() {
-  function createStimmzettel(): Stimmzettel {
+  function createStimmzettel(): DseStimmzettel {
     return {
       gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),
       wahlvorschlaege: [
@@ -240,8 +240,8 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function prepareStimmzettel(): Builder<Stimmzettel> {
-    return proxyBuilder<Stimmzettel>(createStimmzettel());
+  function prepareStimmzettel(): Builder<DseStimmzettel> {
+    return proxyBuilder<DseStimmzettel>(createStimmzettel());
   }
 
   function prepareStimmzettelOfTeamDTO(): Builder<StimmzettelOfTeamDTO> {

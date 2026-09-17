@@ -1,8 +1,8 @@
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { StimmenSummary } from "@/types/dse/stimmzettelerfassung/StimmenSummary.ts";
-import type { Stimmzettel as DseStimmzetel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
@@ -30,7 +30,7 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
  * @param maxEinzelstimmen
  */
 export function useBearbeitenDialogStimmzettelUtils(
-  stimmzettel: Ref<DseStimmzetel>,
+  stimmzettel: Ref<DseStimmzettel>,
   wahlID: string,
   maxEinzelstimmen = 3
 ) {

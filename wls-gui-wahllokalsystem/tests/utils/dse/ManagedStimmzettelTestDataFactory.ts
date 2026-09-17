@@ -1,6 +1,6 @@
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
@@ -41,7 +41,7 @@ export function useManagedStimmzettelTestDataFactory() {
     return result;
   }
 
-  function createManagedStimmzettelStimmzettel(): Stimmzettel {
+  function createManagedStimmzettelStimmzettel(): DseStimmzettel {
     return {
       wahlvorschlaege: [
         createManagedStimmzettelWahlvorschlag(),
@@ -74,8 +74,8 @@ export function useManagedStimmzettelTestDataFactory() {
     );
   }
 
-  function prepareManagedStimmzettelStimmzettel(): Builder<Stimmzettel> {
-    return proxyBuilder<Stimmzettel>(createManagedStimmzettelStimmzettel());
+  function prepareManagedStimmzettelStimmzettel(): Builder<DseStimmzettel> {
+    return proxyBuilder<DseStimmzettel>(createManagedStimmzettelStimmzettel());
   }
 
   function _createManagedStimmzettelKandidatForWahlvorschlag(

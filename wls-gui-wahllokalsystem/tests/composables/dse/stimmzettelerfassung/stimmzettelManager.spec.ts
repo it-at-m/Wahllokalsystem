@@ -1,6 +1,6 @@
 import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
@@ -51,7 +51,7 @@ vi.mock(
   "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts",
   () => ({
     useBearbeitenDialogStimmzettelUtils: (
-      stimmzettel: Ref<Stimmzettel>,
+      stimmzettel: Ref<DseStimmzettel>,
       wahlID: string
     ) => {
       return {

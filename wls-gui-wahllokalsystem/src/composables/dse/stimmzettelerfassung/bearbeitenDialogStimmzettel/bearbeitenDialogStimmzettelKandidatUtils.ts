@@ -1,11 +1,11 @@
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { Ref } from "vue";
 
 import { computed } from "vue";
 
 export function useBearbeitenDialogStimmzettelKandidatUtils(
-  stimmzettel: Ref<Stimmzettel>
+  stimmzettel: Ref<DseStimmzettel>
 ) {
   const kandidatenOfStimmzettel = computed(() =>
     stimmzettel.value.wahlvorschlaege

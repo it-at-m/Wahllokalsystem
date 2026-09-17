@@ -1,7 +1,7 @@
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
@@ -19,7 +19,7 @@ const { sortAndDeepCloneWahlvorschlaege } = useWahlvorschlagTools();
 export function useStimmzettelTools() {
   function createStimmzettelWithWahlvorschlaege(
     wahlvorschlaege: Wahlvorschlag[]
-  ): Stimmzettel {
+  ): DseStimmzettel {
     const initWahlvorschlaege = wahlvorschlaege.map(_toDSEWahlvorschlag);
     return {
       wahlvorstandBeschlussvorschlag: [],
@@ -95,7 +95,7 @@ export function useStimmzettelTools() {
     };
   }
 
-  function resetDseStimmzettel(stimmzettel: Stimmzettel): Stimmzettel {
+  function resetDseStimmzettel(stimmzettel: DseStimmzettel): DseStimmzettel {
     stimmzettel.wahlvorschlaege.map((wahlvorschlag) => {
       wahlvorschlag.selected = false;
       wahlvorschlag.kandidaten.map((kandidat) => {

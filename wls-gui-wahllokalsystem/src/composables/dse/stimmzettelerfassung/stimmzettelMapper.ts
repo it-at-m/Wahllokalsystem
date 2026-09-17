@@ -12,7 +12,7 @@ import type { Beschlussfassung } from "@/types/dse/persistedStimmzettel/Beschlus
 import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
-import type { Stimmzettel as ManageableStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
@@ -46,7 +46,7 @@ export function useStimmzettelMapper() {
   }
 
   function toPersistedStimmzettel(
-    manageableStimmzettel: ManageableStimmzettel,
+    manageableStimmzettel: DseStimmzettel,
     stimmzettelkennung: number,
     teamID: string
   ): Stimmzettel {
@@ -123,7 +123,7 @@ export function useStimmzettelMapper() {
   }
 
   function mapPersistedStimmzettelValuesToExistingDseStimmzettel(
-    target: ManageableStimmzettel,
+    target: DseStimmzettel,
     source: Stimmzettel
   ) {
     target.wahlvorschlaege.map((wahlvorschlag) => {

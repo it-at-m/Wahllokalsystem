@@ -5,7 +5,7 @@ import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlv
 
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-export interface Stimmzettel {
+export interface DseStimmzettel {
   wahlvorschlaege: DseWahlvorschlag[];
 
   invalideVotes: number | null;

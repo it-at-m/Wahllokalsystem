@@ -95,7 +95,6 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                 WHERE stimmzettel.id.wahlID = :wahlID
                   AND stimmzettel.id.wahlbezirkID = :wahlbezirkID
                   AND stimmzettel.gueltigkeit = de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit.INVALID
-                  AND stimmzettel.wahlvorschlaege IS EMPTY
                 """)
   long countInvalidStimmzettel(
       @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);

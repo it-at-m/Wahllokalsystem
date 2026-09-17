@@ -75,18 +75,18 @@ public class StimmzettelRepositoryTestModels {
               .toModel();
 
   public static Model<List<Wahlvorschlag>> createSingleWahlvorschlagWithReststimmeModel(
-          final String wahlvorschlagID) {
+      final String wahlvorschlagID) {
     return Instancio.ofList(createEmptyWahlvorschlag(wahlvorschlagID))
-            .size(1)
-            .set(field(Wahlvorschlag::isSelected), true)
-            .supply(
-                    field(Wahlvorschlag::getKandidaten),
-                    () -> List.of(createEmptyKandidatWithSingleVoteByWahlvorschlag("k2", 1)))
-            .toModel();
+        .size(1)
+        .set(field(Wahlvorschlag::isSelected), true)
+        .supply(
+            field(Wahlvorschlag::getKandidaten),
+            () -> List.of(createEmptyKandidatWithSingleVoteByWahlvorschlag("k2", 1)))
+        .toModel();
   }
 
   public static final Model<List<Wahlvorschlag>> singleWahlvorschlagWithReststimmeModel =
-          createSingleWahlvorschlagWithReststimmeModel("wvReststimme");
+      createSingleWahlvorschlagWithReststimmeModel("wvReststimme");
 
   public static Model<List<Wahlvorschlag>>
       createSingleWahlvorschlagWithReststimmeAndEinzelstimmeModel(final String wahlvorschlagID) {

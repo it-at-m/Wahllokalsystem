@@ -61,6 +61,17 @@ public class InstancioModels {
         .toModel();
   }
 
+  public static Model<Stimmzettel> createEmptyInvalidStimmzettelModel(
+      String wahlID, String wahlbezirkID, String teamID, int stimmzettelkennung) {
+    return Instancio.ofBlank(Stimmzettel.class)
+        .set(
+            field(Stimmzettel::getId),
+            new StimmzettelID(wahlbezirkID, wahlID, teamID, stimmzettelkennung))
+        .set(field(Stimmzettel::getGueltigkeit), StimmzettelGueltigkeit.INVALID)
+        .onComplete(all(Stimmzettel.class), LINK_PARENT_STIMMZETTEL_ON_WAHLVORSCHLAEGEN)
+        .toModel();
+  }
+
   public static Model<Wahlvorschlag> createEmptyWahlvorschlag(String wahlvorschlagID) {
     return Instancio.ofBlank(Wahlvorschlag.class)
         .set(field(Wahlvorschlag::getWahlvorschlagID), wahlvorschlagID)

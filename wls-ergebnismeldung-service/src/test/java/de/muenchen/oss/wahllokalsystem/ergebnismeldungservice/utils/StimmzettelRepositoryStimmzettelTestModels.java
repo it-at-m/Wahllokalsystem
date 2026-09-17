@@ -3,8 +3,8 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankInvalidStimmzettelModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankKandidatWithSingleVoteByVoter;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankKandidatWithSingleVoteByWahlvorschlag;
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankValidStimmzettelModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankNonSelectedWahlvorschlagModel;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankValidStimmzettelModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestModels.singleWahlvorschlagModelWithEinzelstimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestModels.singleWahlvorschlagModelWithMultipleStreichungen;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestModels.singleWahlvorschlagModelWithOnlyReststimmenKandidaten;
@@ -31,7 +31,7 @@ public class StimmzettelRepositoryStimmzettelTestModels {
             createBlankInvalidStimmzettelModel(wahlID, wahlbezirkID, teamID, stimzettelkennung))
         .setModel(
             field(Stimmzettel::getWahlvorschlaege),
-                singleWahlvorschlagModelWithOnlyReststimmenKandidaten)
+            singleWahlvorschlagModelWithOnlyReststimmenKandidaten)
         .toModel();
   }
 
@@ -69,7 +69,7 @@ public class StimmzettelRepositoryStimmzettelTestModels {
             createBlankInvalidStimmzettelModel(wahlID, wahlbezirkID, teamID, stimzettelkennung))
         .setModel(
             field(Stimmzettel::getWahlvorschlaege),
-                singleWahlvorschlagModelWithMultipleStreichungen)
+            singleWahlvorschlagModelWithMultipleStreichungen)
         .toModel();
   }
 
@@ -83,7 +83,7 @@ public class StimmzettelRepositoryStimmzettelTestModels {
             createBlankValidStimmzettelModel(wahlID, wahlbezirkID, teamID, stimzettelkennung))
         .setModel(
             field(Stimmzettel::getWahlvorschlaege),
-                singleWahlvorschlagModelWithMultipleStreichungen)
+            singleWahlvorschlagModelWithMultipleStreichungen)
         .toModel();
   }
 
@@ -110,7 +110,7 @@ public class StimmzettelRepositoryStimmzettelTestModels {
             createBlankInvalidStimmzettelModel(wahlID, wahlbezirkID, teamID, stimzettelkennung))
         .setModel(
             field(Stimmzettel::getWahlvorschlaege),
-                singleWahlvorschlagModelWithStreichungAndEinzelStimme)
+            singleWahlvorschlagModelWithStreichungAndEinzelStimme)
         .toModel();
   }
 
@@ -124,7 +124,7 @@ public class StimmzettelRepositoryStimmzettelTestModels {
             createBlankValidStimmzettelModel(wahlID, wahlbezirkID, teamID, stimzettelkennung))
         .setModel(
             field(Stimmzettel::getWahlvorschlaege),
-                singleWahlvorschlagModelWithStreichungAndEinzelStimme)
+            singleWahlvorschlagModelWithStreichungAndEinzelStimme)
         .toModel();
   }
 
@@ -138,7 +138,7 @@ public class StimmzettelRepositoryStimmzettelTestModels {
             createBlankValidStimmzettelModel(wahlID, wahlbezirkID, teamID, stimzettelkennung))
         .setModel(
             field(Stimmzettel::getWahlvorschlaege),
-                singleWahlvorschlagModelWithReststimmeAndEinzelstimme)
+            singleWahlvorschlagModelWithReststimmeAndEinzelstimme)
         .toModel();
   }
 

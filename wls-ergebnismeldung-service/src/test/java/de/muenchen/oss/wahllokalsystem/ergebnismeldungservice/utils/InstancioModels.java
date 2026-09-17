@@ -70,7 +70,8 @@ public class InstancioModels {
         .toModel();
   }
 
-  public static Model<Wahlvorschlag> createBlankNonSelectedWahlvorschlagModel(String wahlvorschlagID) {
+  public static Model<Wahlvorschlag> createBlankNonSelectedWahlvorschlagModel(
+      String wahlvorschlagID) {
     return Instancio.ofBlank(Wahlvorschlag.class)
         .set(field(Wahlvorschlag::getWahlvorschlagID), wahlvorschlagID)
         .set(field(Wahlvorschlag::isSelected), false)

@@ -3,8 +3,8 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankDiscardedKandidat;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankKandidatWithSingleVoteByVoter;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankKandidatWithSingleVoteByWahlvorschlag;
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankSelectedWahlvorschlagModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankNonSelectedWahlvorschlagModel;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankSelectedWahlvorschlagModel;
 import static org.instancio.Select.field;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Wahlvorschlag;
@@ -15,7 +15,7 @@ import org.instancio.Model;
 public class StimmzettelRepositoryTestModels {
 
   public static final Model<List<Wahlvorschlag>>
-          singleWahlvorschlagModelWithOnlyReststimmenKandidaten =
+      singleWahlvorschlagModelWithOnlyReststimmenKandidaten =
           Instancio.ofList(createBlankSelectedWahlvorschlagModel("onlyReststimmen"))
               .size(1)
               .set(field(Wahlvorschlag::isSelected), true)
@@ -46,7 +46,7 @@ public class StimmzettelRepositoryTestModels {
           .toModel();
 
   public static Model<List<Wahlvorschlag>>
-  createSingleWahlvorschlagModelWithStreichungAndEinzelStimme(final String wahlvorschlagID) {
+      createSingleWahlvorschlagModelWithStreichungAndEinzelStimme(final String wahlvorschlagID) {
     return Instancio.ofList(createBlankNonSelectedWahlvorschlagModel(wahlvorschlagID))
         .size(1)
         .supply(
@@ -59,11 +59,11 @@ public class StimmzettelRepositoryTestModels {
   }
 
   public static final Model<List<Wahlvorschlag>>
-          singleWahlvorschlagModelWithStreichungAndEinzelStimme =
+      singleWahlvorschlagModelWithStreichungAndEinzelStimme =
           createSingleWahlvorschlagModelWithStreichungAndEinzelStimme("wvStreichung+Einzelstimme");
 
   public static final Model<List<Wahlvorschlag>>
-          singleWahlvorschlagModelWithStreichungAndReststimme =
+      singleWahlvorschlagModelWithStreichungAndReststimme =
           Instancio.ofList(createBlankNonSelectedWahlvorschlagModel("wvStreichung+Reststimme"))
               .size(1)
               .supply(
@@ -89,7 +89,7 @@ public class StimmzettelRepositoryTestModels {
       createSingleWahlvorschlagModelWithReststimme("wvReststimme");
 
   public static Model<List<Wahlvorschlag>>
-  createSingleWahlvorschlagModelWithReststimmeAndEinzelstimme(final String wahlvorschlagID) {
+      createSingleWahlvorschlagModelWithReststimmeAndEinzelstimme(final String wahlvorschlagID) {
     return Instancio.ofList(createBlankNonSelectedWahlvorschlagModel(wahlvorschlagID))
         .size(1)
         .set(field(Wahlvorschlag::isSelected), true)
@@ -103,7 +103,7 @@ public class StimmzettelRepositoryTestModels {
   }
 
   public static final Model<List<Wahlvorschlag>>
-          singleWahlvorschlagModelWithReststimmeAndEinzelstimme =
+      singleWahlvorschlagModelWithReststimmeAndEinzelstimme =
           createSingleWahlvorschlagModelWithReststimmeAndEinzelstimme("wvReststimme+Einzelstimme");
 
   public static Model<List<Wahlvorschlag>> createSingleWahlvorschlagModelWithEinzelstimme(

@@ -19,7 +19,7 @@ import java.util.List;
 import org.instancio.Instancio;
 import org.instancio.Model;
 
-public class StimmzettelRepositoryStimmzettelTestModels {
+public class StimmzettelRepositoryTestStimmzettelModels {
 
   public static Model<Stimmzettel>
       createValidStimmzettelModelWithSingleWahlvorschlagWithOnlyReststimmen(

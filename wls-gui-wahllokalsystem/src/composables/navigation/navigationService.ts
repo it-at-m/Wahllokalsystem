@@ -66,28 +66,33 @@ export function useNavigationService() {
 
   function getNextRoute(): RouteLocationAsRelativeGeneric {
     // check all elections in their order
-    const metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
-      (wahlMetaData) =>
-        !workflowStore.isElectionFinished(
-          wahlMetaData.wahlID,
-          wahlMetaData.wahlbezirkID
-        )
-    );
+    let metaDataOfFirstUnfinishedElection;
 
-    if (!metaDataOfFirstUnfinishedElection) {
-      return routeWithName(ROUTE_FINISHED);
+    // DSE Erfassungsteam
+    if (userStore.hasRoleErfassungsteam) {
+      metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
+        (wahlMetaData) =>
+          !workflowStore.isStepDone(
+            wahlMetaData.wahlID,
+            wahlMetaData.wahlbezirkID,
+            MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
+          )
+      );
     }
-    //DSE Erfassungsteam
-    if (
-      userStore.hasRoleErfassungsteam &&
-      userStore.user.wahlMetaData.find((wahlMetaData) =>
-        workflowStore.isStepDone(
-          wahlMetaData.wahlID,
-          wahlMetaData.wahlbezirkID,
-          MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
-        )
-      )
-    ) {
+    // Schriftführung (DSE & Stapelbearbeitung)
+    else if (userStore.hasRoleSchriftfuehrung) {
+      metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
+        (wahlMetaData) =>
+          !workflowStore.isElectionFinished(
+            wahlMetaData.wahlID,
+            wahlMetaData.wahlbezirkID
+          )
+      );
+    } else {
+      return routeWithName(ROUTES_HOME);
+    }
+    //no not-finished election found
+    if (!metaDataOfFirstUnfinishedElection) {
       return routeWithName(ROUTE_FINISHED);
     }
 

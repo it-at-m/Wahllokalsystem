@@ -1,6 +1,6 @@
 import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 
-import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
+import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { ref } from "vue";
@@ -11,10 +11,10 @@ import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenS
 
 describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
   const {
-    prepareManagedStimmzettelStimmzettel,
-    prepareManagedStimmzettelWahlvorschlag,
-    prepareManagedStimmzettelKandidatForWahlvorschlag,
-  } = useManagedStimmzettelTestDataFactory();
+    prepareStimmzettelKandidatOfWahlvorschlag,
+    prepareStimmzettel,
+    prepareStimmzettelWahlvorschlag,
+  } = useStimmzettelTestDataFactory();
 
   const wahlId = "wahl-1";
 
@@ -43,7 +43,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
     ];
 
     unitUnderTest = useBearbeitenDialogStimmzettelReststimmeUtils(
-      ref(prepareManagedStimmzettelStimmzettel().build()),
+      ref(prepareStimmzettel().build()),
       ref(3),
       1
     );
@@ -73,7 +73,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
     it.each([true, false])(
       "should_setSelectedTrue_when_calledAndCurrentStateIs'%s'",
       (currentWahlvorschlagSelectionState) => {
-        const wahlvorschlag = prepareManagedStimmzettelWahlvorschlag()
+        const wahlvorschlag = prepareStimmzettelWahlvorschlag()
           .selected(currentWahlvorschlagSelectionState)
           .build();
 
@@ -86,7 +86,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
 
   describe("deselectWahlvorschlag", () => {
     it("should_setSelectedFalseAndRemoveAnyReststimmen_when_wahlvorschlagIsSelected", () => {
-      const wahlvorschlag = prepareManagedStimmzettelWahlvorschlag()
+      const wahlvorschlag = prepareStimmzettelWahlvorschlag()
         .selected(true)
         .build();
 
@@ -100,7 +100,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
   });
 
   describe("refreshWahlvorschlaegeVotes", () => {
-    const wahlvorschlag1 = prepareManagedStimmzettelWahlvorschlag()
+    const wahlvorschlag1 = prepareStimmzettelWahlvorschlag()
       .selected(true)
       .build();
     wahlvorschlag1.kandidaten = [
@@ -121,7 +121,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
         .build(),
     ];
 
-    const wahlvorschlag2 = prepareManagedStimmzettelWahlvorschlag()
+    const wahlvorschlag2 = prepareStimmzettelWahlvorschlag()
       .selected(false)
       .build();
     wahlvorschlag2.kandidaten = [
@@ -141,7 +141,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
         .nennung(1)
         .build(),
     ];
-    const stimmzettel = prepareManagedStimmzettelStimmzettel()
+    const stimmzettel = prepareStimmzettel()
       .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2])
       .invalideVotes(0)
       .build();
@@ -164,7 +164,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
     });
 
     it("should_giveOnlySomeReststimmenInOrderToKandidaten_when_oneWahlvorschlagIsSelectedButAvailableReststimmenIsLessThanNumberOfRemainingKandidatenInList", () => {
-      const wahlvorschlag1 = prepareManagedStimmzettelWahlvorschlag()
+      const wahlvorschlag1 = prepareStimmzettelWahlvorschlag()
         .selected(true)
         .build();
       wahlvorschlag1.kandidaten = [
@@ -187,7 +187,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
           .nennung(1)
           .build(),
       ];
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+      const stimmzettel = prepareStimmzettel()
         .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2])
         .invalideVotes(0)
         .build();
@@ -213,7 +213,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
     });
 
     it("should_ignoreKandidatWithKennzeichen_when_givingReststimmenOfSingleWahlvorschlag", () => {
-      const wahlvorschlag = prepareManagedStimmzettelWahlvorschlag()
+      const wahlvorschlag = prepareStimmzettelWahlvorschlag()
         .selected(true)
         .build();
       wahlvorschlag.kandidaten = [
@@ -232,7 +232,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
 
       const unitUnderTest = useBearbeitenDialogStimmzettelReststimmeUtils(
         ref(
-          prepareManagedStimmzettelStimmzettel()
+          prepareStimmzettel()
             .wahlvorschlaege([wahlvorschlag])
             .invalideVotes(0)
             .build()
@@ -250,7 +250,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
     });
 
     it("should_ignoreKandidatWithKennzeichen_when_givingReststimmenOfMultipleWahlvorschlaege", () => {
-      const wahlvorschlag1 = prepareManagedStimmzettelWahlvorschlag()
+      const wahlvorschlag1 = prepareStimmzettelWahlvorschlag()
         .selected(true)
         .build();
       wahlvorschlag1.kandidaten = [
@@ -266,7 +266,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
           .build(),
         _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag1, "k1.5").build(),
       ];
-      const wahlvorschlag2 = prepareManagedStimmzettelWahlvorschlag()
+      const wahlvorschlag2 = prepareStimmzettelWahlvorschlag()
         .selected(true)
         .build();
       wahlvorschlag2.kandidaten = [
@@ -285,7 +285,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
 
       const unitUnderTest = useBearbeitenDialogStimmzettelReststimmeUtils(
         ref(
-          prepareManagedStimmzettelStimmzettel()
+          prepareStimmzettel()
             .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2])
             .invalideVotes(0)
             .build()
@@ -309,7 +309,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
     });
 
     it("should_giveEveryKandidatOfWahlvorschlagOneReststimme_when_twoWahlvorschlaegeAreSelectedAndTotalNumberOfVotesIsLargeEnough", () => {
-      const wahlvorschlag2 = prepareManagedStimmzettelWahlvorschlag()
+      const wahlvorschlag2 = prepareStimmzettelWahlvorschlag()
         .selected(true)
         .build();
       wahlvorschlag2.kandidaten = [
@@ -329,7 +329,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
           .nennung(1)
           .build(),
       ];
-      const stimmzettel = prepareManagedStimmzettelStimmzettel()
+      const stimmzettel = prepareStimmzettel()
         .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2])
         .invalideVotes(0)
         .build();
@@ -351,7 +351,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
     });
 
     it("should_removeGivenReststimmen_when_secondWahlvorschlagIsSelectedButNotEnoughReststimmenAreGiven", () => {
-      const wahlvorschlag1 = prepareManagedStimmzettelWahlvorschlag()
+      const wahlvorschlag1 = prepareStimmzettelWahlvorschlag()
         .selected(true)
         .build();
       wahlvorschlag1.kandidaten = [
@@ -363,7 +363,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
           .build(),
       ];
 
-      const wahlvorschlag2 = prepareManagedStimmzettelWahlvorschlag()
+      const wahlvorschlag2 = prepareStimmzettelWahlvorschlag()
         .selected(true)
         .build();
       wahlvorschlag2.kandidaten = [
@@ -375,7 +375,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
 
       const unitUnderTest = useBearbeitenDialogStimmzettelReststimmeUtils(
         ref(
-          prepareManagedStimmzettelStimmzettel()
+          prepareStimmzettel()
             .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2])
             .invalideVotes(2)
             .build()
@@ -396,7 +396,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
     });
 
     it("should_onlyGiveOneReststimmeToOneNennung_when_kandidatAlreadyGot2Einzelstimmen", () => {
-      const wahlvorschlag = prepareManagedStimmzettelWahlvorschlag()
+      const wahlvorschlag = prepareStimmzettelWahlvorschlag()
         .selected(true)
         .build();
       wahlvorschlag.kandidaten = [
@@ -427,7 +427,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
 
       const unitUnderTest = useBearbeitenDialogStimmzettelReststimmeUtils(
         ref(
-          prepareManagedStimmzettelStimmzettel()
+          prepareStimmzettel()
             .wahlvorschlaege([wahlvorschlag])
             .invalideVotes(0)
             .build()
@@ -460,9 +460,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
       kandidatID: string,
       nennung = 1
     ) {
-      return prepareManagedStimmzettelKandidatForWahlvorschlag(
-        owningWahlvorschlag
-      )
+      return prepareStimmzettelKandidatOfWahlvorschlag(owningWahlvorschlag)
         .kandidatId(kandidatID)
         .nennung(nennung)
         .durchgestrichen(false)

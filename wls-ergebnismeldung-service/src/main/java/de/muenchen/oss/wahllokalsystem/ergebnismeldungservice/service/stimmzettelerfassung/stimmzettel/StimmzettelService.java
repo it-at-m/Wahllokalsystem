@@ -103,7 +103,7 @@ public class StimmzettelService {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
     return stimmzettelRepository
-        .getValidKandidatenVotesPerWahlvorschlagWhereAtLeast2WahlvorschlaegeAreSelectedOrAtLeastOneKandidatHasNotOnlyReststimmen(
+        .getSumValidKandidatenVotesPerWahlvorschlagWhenNotOnlyOneListenkreuzReststimmeAreGiven(
             bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
         .stream()
         .map(stimmzettelModelMapper::toModel)

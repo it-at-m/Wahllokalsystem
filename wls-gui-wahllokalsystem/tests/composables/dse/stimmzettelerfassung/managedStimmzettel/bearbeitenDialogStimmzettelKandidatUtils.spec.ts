@@ -1,4 +1,4 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
 
@@ -6,32 +6,32 @@ import { useBearbeitenDialogStimmzettelKandidatUtils } from "@/composables/dse/s
 
 describe("bearbeitenDialogStimmzettelKandidatUtils.ts", () => {
   const {
-    prepareStimmzettelKandidat,
-    prepareStimmzettel,
-    prepareStimmzettelWahlvorschlag,
-  } = useStimmzettelTestDataFactory();
+    prepareManagedStimmzettelStimmzettel,
+    prepareManagedStimmzettelWahlvorschlag,
+    prepareManagedStimmzettelKandidat,
+  } = useManagedStimmzettelTestDataFactory();
 
   describe("getKandidatToAddVotesByOrdnungszahl", () => {
     it("should_findKandidatByOrdnungszahl_when_called", () => {
-      const kWithVotes = prepareStimmzettelKandidat()
+      const kWithVotes = prepareManagedStimmzettelKandidat()
         .ordnungszahl(101)
         .einzelstimmen(2)
         .durchgestrichen(false)
         .build();
-      const kNotStruck = prepareStimmzettelKandidat()
+      const kNotStruck = prepareManagedStimmzettelKandidat()
         .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(false)
         .build();
-      const kStruck = prepareStimmzettelKandidat()
+      const kStruck = prepareManagedStimmzettelKandidat()
         .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(true)
         .build();
 
-      const stimmzettel = prepareStimmzettel()
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag()
+          prepareManagedStimmzettelWahlvorschlag()
             .ordnungszahl(1)
             .kandidaten([kStruck, kNotStruck, kWithVotes])
             .build(),
@@ -60,14 +60,14 @@ describe("bearbeitenDialogStimmzettelKandidatUtils.ts", () => {
 
   describe("getKandidatToAddVotesForRangeByOrdnungszahl", () => {
     it("should_returnAllKandidatenInRange_when_called", () => {
-      const k1 = prepareStimmzettelKandidat()
+      const k1 = prepareManagedStimmzettelKandidat()
         .ordnungszahl(101)
         .nennung(2)
         .build();
-      const k2 = prepareStimmzettelKandidat().ordnungszahl(102).build();
-      const stimmzettel = prepareStimmzettel()
+      const k2 = prepareManagedStimmzettelKandidat().ordnungszahl(102).build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag()
+          prepareManagedStimmzettelWahlvorschlag()
             .ordnungszahl(1)
             .kandidaten([k1, k2])
             .build(),
@@ -91,26 +91,26 @@ describe("bearbeitenDialogStimmzettelKandidatUtils.ts", () => {
 
   describe("getKandidatForStreichungByOrdnungszahl", () => {
     it("should_findKandidatForStreichung_when_called", () => {
-      const kWithVotes = prepareStimmzettelKandidat()
+      const kWithVotes = prepareManagedStimmzettelKandidat()
         .ordnungszahl(101)
         .einzelstimmen(1)
         .durchgestrichen(false)
         .build();
-      const kNoVotes = prepareStimmzettelKandidat()
+      const kNoVotes = prepareManagedStimmzettelKandidat()
         .ordnungszahl(101)
         .einzelstimmen(null)
         .ungueltigeStimmen(null)
         .durchgestrichen(false)
         .build();
-      const kFallback = prepareStimmzettelKandidat()
+      const kFallback = prepareManagedStimmzettelKandidat()
         .ordnungszahl(101)
         .einzelstimmen(null)
         .durchgestrichen(true)
         .build();
 
-      const stimmzettel = prepareStimmzettel()
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag()
+          prepareManagedStimmzettelWahlvorschlag()
             .ordnungszahl(1)
             .kandidaten([kFallback, kWithVotes, kNoVotes])
             .build(),
@@ -133,18 +133,18 @@ describe("bearbeitenDialogStimmzettelKandidatUtils.ts", () => {
 
   describe("getKandidatToRemoveStreichungByOrdnungszahl", () => {
     it("should_findKandidatToRemoveStreichung_when_called", () => {
-      const kStruck = prepareStimmzettelKandidat()
+      const kStruck = prepareManagedStimmzettelKandidat()
         .ordnungszahl(101)
         .durchgestrichen(true)
         .build();
-      const kOther = prepareStimmzettelKandidat()
+      const kOther = prepareManagedStimmzettelKandidat()
         .ordnungszahl(101)
         .durchgestrichen(false)
         .build();
 
-      const stimmzettel = prepareStimmzettel()
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag()
+          prepareManagedStimmzettelWahlvorschlag()
             .ordnungszahl(1)
             .kandidaten([kOther, kStruck])
             .build(),

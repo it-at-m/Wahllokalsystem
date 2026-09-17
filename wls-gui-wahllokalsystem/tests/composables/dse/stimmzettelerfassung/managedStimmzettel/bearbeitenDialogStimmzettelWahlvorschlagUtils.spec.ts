@@ -1,18 +1,24 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
 
 import { useBearbeitenDialogStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelWahlvorschlagUtils.ts";
 
 describe("bearbeitenDialogStimmzettelWahlvorschlagUtils.ts", () => {
-  const { prepareStimmzettel, prepareStimmzettelWahlvorschlag } =
-    useStimmzettelTestDataFactory();
+  const {
+    prepareManagedStimmzettelStimmzettel,
+    prepareManagedStimmzettelWahlvorschlag,
+  } = useManagedStimmzettelTestDataFactory();
 
   describe("getWahlvorschlagByOrdnungszahl", () => {
     it("should_findWahlvorschlagByOrdnungszahl_when_called", () => {
-      const wv1 = prepareStimmzettelWahlvorschlag().ordnungszahl(1).build();
-      const wv2 = prepareStimmzettelWahlvorschlag().ordnungszahl(2).build();
-      const stimmzettel = prepareStimmzettel()
+      const wv1 = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(1)
+        .build();
+      const wv2 = prepareManagedStimmzettelWahlvorschlag()
+        .ordnungszahl(2)
+        .build();
+      const stimmzettel = prepareManagedStimmzettelStimmzettel()
         .wahlvorschlaege([wv1, wv2])
         .build();
 

@@ -1,14 +1,15 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import { useBearbeitenDialogStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts";
 
 describe("bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts", () => {
-  const { prepareStimmzettelKandidat } = useStimmzettelTestDataFactory();
+  const { prepareManagedStimmzettelKandidat } =
+    useManagedStimmzettelTestDataFactory();
 
   describe("addInvalidVotesToKandidat", () => {
     it("should_addInvalidVotes_when_called", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareManagedStimmzettelKandidat()
         .ungueltigeStimmen(null)
         .build();
 
@@ -25,7 +26,7 @@ describe("bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts", () => {
       useBearbeitenDialogStimmzettelUngueltigeStimmeUtils();
 
     it("should_removeInvalidVotes_when_called", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareManagedStimmzettelKandidat()
         .ungueltigeStimmen(4)
         .build();
 
@@ -35,7 +36,7 @@ describe("bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts", () => {
     });
 
     it("should_setInvalidVotesToNull_when_newValueIsZero", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareManagedStimmzettelKandidat()
         .ungueltigeStimmen(4)
         .build();
 
@@ -45,7 +46,7 @@ describe("bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts", () => {
     });
 
     it("should_setInvalidVotesToNull_when_newValueIsLowerThanZero", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareManagedStimmzettelKandidat()
         .ungueltigeStimmen(4)
         .build();
 

@@ -51,16 +51,16 @@ export function useStimmzettelManager(
   });
 
   function setActiveStimmzettelWhenEditing(
-    stimmzettelToSet: PersistedStimmzettel
+    sourceStimmzettel: PersistedStimmzettel
   ) {
-    stimmzettelBeforeEdit.value = stimmzettelToSet;
+    stimmzettelBeforeEdit.value = sourceStimmzettel;
     bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
-      stimmzettelToSet
+      sourceStimmzettel
     );
 
     mapPersistedStimmzettelValuesToExistingDseStimmzettel(
       managedBearbeitenDialogStimmzettel.value,
-      stimmzettelToSet
+      sourceStimmzettel
     );
   }
 

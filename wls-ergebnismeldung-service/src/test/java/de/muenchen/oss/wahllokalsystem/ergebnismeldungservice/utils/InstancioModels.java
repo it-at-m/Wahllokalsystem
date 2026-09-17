@@ -10,9 +10,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Wahlvorschlag;
-import java.util.List;
 import java.util.UUID;
-import lombok.val;
 import org.instancio.Instancio;
 import org.instancio.Model;
 import org.instancio.OnCompleteCallback;
@@ -50,7 +48,7 @@ public class InstancioModels {
         .toModel();
   }
 
-  public static Model<Stimmzettel> createEmptyValidStimmzettelModel(
+  public static Model<Stimmzettel> createBlankValidStimmzettelModel(
       String wahlID, String wahlbezirkID, String teamID, int stimmzettelkennung) {
     return Instancio.ofBlank(Stimmzettel.class)
         .set(
@@ -61,7 +59,7 @@ public class InstancioModels {
         .toModel();
   }
 
-  public static Model<Stimmzettel> createEmptyInvalidStimmzettelModel(
+  public static Model<Stimmzettel> createBlankInvalidStimmzettelModel(
       String wahlID, String wahlbezirkID, String teamID, int stimmzettelkennung) {
     return Instancio.ofBlank(Stimmzettel.class)
         .set(
@@ -72,14 +70,15 @@ public class InstancioModels {
         .toModel();
   }
 
-  public static Model<Wahlvorschlag> createEmptyWahlvorschlag(String wahlvorschlagID) {
+  public static Model<Wahlvorschlag> createBlankNonSelectedWahlvorschlagModel(String wahlvorschlagID) {
     return Instancio.ofBlank(Wahlvorschlag.class)
         .set(field(Wahlvorschlag::getWahlvorschlagID), wahlvorschlagID)
+        .set(field(Wahlvorschlag::isSelected), false)
         .onComplete(all(Wahlvorschlag.class), LINK_PARENT_WAHLVORSCHLAG_ON_KANDIDATEN)
         .toModel();
   }
 
-  public static Model<Wahlvorschlag> createEmptySelectedWahlvorschlag(String wahlvorschlagID) {
+  public static Model<Wahlvorschlag> createBlankSelectedWahlvorschlagModel(String wahlvorschlagID) {
     return Instancio.ofBlank(Wahlvorschlag.class)
         .set(field(Wahlvorschlag::getWahlvorschlagID), wahlvorschlagID)
         .set(field(Wahlvorschlag::isSelected), true)
@@ -87,27 +86,27 @@ public class InstancioModels {
         .toModel();
   }
 
-  public static Kandidat createEmptyKandidatWithSingleVoteByWahlvorschlag(
+  public static Kandidat createBlankKandidatWithSingleVoteByWahlvorschlag(
       final String kandidatID, final int nennung) {
-    return Instancio.of(createEmptyKandidatModel(kandidatID, nennung))
+    return Instancio.of(createBlankKandidatModel(kandidatID, nennung))
         .set(field(Kandidat::getVotesByWahlvorschlag), 1)
         .create();
   }
 
-  public static Kandidat createEmptyKandidatWithSingleVoteByVoter(
+  public static Kandidat createBlankKandidatWithSingleVoteByVoter(
       final String kandidatID, final int nennung) {
-    return Instancio.of(createEmptyKandidatModel(kandidatID, nennung))
+    return Instancio.of(createBlankKandidatModel(kandidatID, nennung))
         .set(field(Kandidat::getVotesByVoter), 1)
         .create();
   }
 
-  public static Kandidat createEmptyDiscardedKandidat(final String kandidatID, final int nennung) {
-    return Instancio.of(createEmptyKandidatModel(kandidatID, nennung))
+  public static Kandidat createBlankDiscardedKandidat(final String kandidatID, final int nennung) {
+    return Instancio.of(createBlankKandidatModel(kandidatID, nennung))
         .set(field(Kandidat::isDiscarded), true)
         .create();
   }
 
-  public static Model<Kandidat> createEmptyKandidatModel(String kandidatID, int nennung) {
+  public static Model<Kandidat> createBlankKandidatModel(String kandidatID, int nennung) {
     return Instancio.ofBlank(Kandidat.class)
         .set(field(Kandidat::getKandidatID), new KandidatId(kandidatID, nennung))
         .set(field(Kandidat::isDiscarded), false)

@@ -10,8 +10,11 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.Wah
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.validation.DefaultElectionTypeValidator;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.ErfassungStatusModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -35,6 +38,8 @@ class MbwValidationImplTest {
   @Mock DefaultElectionTypeValidator defaultElectionTypeValidator;
 
   @Mock MBWBedenklicheStimmzettelService mbwBedenklicheStimmzettelService;
+
+  @Mock StimmzettelerfassungService stimmzettelerfassungService;
 
   @InjectMocks MbwValidationImpl unitUnderTest;
 
@@ -193,6 +198,54 @@ class MbwValidationImplTest {
           Arguments.of(true, false, false),
           Arguments.of(false, true, false),
           Arguments.of(false, false, false));
+    }
+  }
+
+  @Nested
+  class IsValidDse {
+
+    @ParameterizedTest
+    @MethodSource("validationParameters")
+    void should_returnDseValidationResult_when_stapelValidationIsInvalid(
+        final MeldungsartModel meldungsart,
+        final Optional<ErfassungStatusModel> erfassungStatus,
+        final boolean expectedResult) {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+
+      Mockito.when(
+              defaultElectionTypeValidator.checkValidation(
+                  any(), anyString(), anyString(), any(), any()))
+          .thenReturn(false);
+      Mockito.when(stimmzettelerfassungService.getStimmzettelerfassungStatus(any()))
+          .thenReturn(erfassungStatus);
+
+      val uwbResult =
+          unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+      val bwbResult =
+          unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(uwbResult).isEqualTo(expectedResult);
+      Assertions.assertThat(bwbResult).isEqualTo(expectedResult);
+    }
+
+    private static Stream<Arguments> validationParameters() {
+      return Stream.of(
+          Arguments.of(MeldungsartModel.V3, Optional.empty(), false),
+          Arguments.of(
+              MeldungsartModel.V3, Optional.of(ErfassungStatusModel.STE_BEARBEITUNG), false),
+          Arguments.of(
+              MeldungsartModel.V3, Optional.of(ErfassungStatusModel.STE_ABGESCHLOSSEN), true),
+          Arguments.of(
+              MeldungsartModel.V3, Optional.of(ErfassungStatusModel.BE_ABGESCHLOSSEN), true),
+          Arguments.of(MeldungsartModel.V1, Optional.empty(), false),
+          Arguments.of(
+              MeldungsartModel.V1, Optional.of(ErfassungStatusModel.STE_BEARBEITUNG), false),
+          Arguments.of(
+              MeldungsartModel.V1, Optional.of(ErfassungStatusModel.STE_ABGESCHLOSSEN), false),
+          Arguments.of(
+              MeldungsartModel.V1, Optional.of(ErfassungStatusModel.BE_ABGESCHLOSSEN), true));
     }
   }
 }

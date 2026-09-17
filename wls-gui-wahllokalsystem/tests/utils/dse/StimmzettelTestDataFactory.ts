@@ -331,6 +331,7 @@ export function useStimmzettelTestDataFactory() {
 
   return {
     createPersistedStimmzettelKandidat,
+    createPersistedStimmzettelWahlvorschlag,
     createPersistedStimmzettel,
     createStimmzettel,
     createStimmzettelOfTeamDTO,
@@ -353,5 +354,7 @@ export function useStimmzettelTestDataFactory() {
     prepareStimmzettelKandidatIdDTO,
     prepareStimmzettelWahlvorschlag,
     prepareStimmzettelWahlvorschlagDTO,
+    createStimmzettelSystemBeschlussgrund,
+    createStimmzettelWahlvorstandBeschlussgrund,
   };
 }

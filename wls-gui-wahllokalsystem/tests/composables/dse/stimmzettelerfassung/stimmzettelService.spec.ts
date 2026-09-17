@@ -35,14 +35,16 @@ vi.mock(
 
 vi.mock(
   import("@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts"),
-  () => ({
-    useStimmzettelMapper: () => ({
-      toModel: mockDefinitions.mapDtoToModel,
-      toDTO: mockDefinitions.mapModelToDto,
-      toPersistedStimmzettel: vi.fn(),
-      resetStimmzettel: vi.fn(),
-    }),
-  })
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useStimmzettelMapper: () => ({
+        ...original.useStimmzettelMapper(),
+        toModel: mockDefinitions.mapDtoToModel,
+        toDTO: mockDefinitions.mapModelToDto,
+      }),
+    };
+  }
 );
 
 vi.mock(

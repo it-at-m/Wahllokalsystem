@@ -15,6 +15,7 @@ import { useManagedStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/st
 import { useManagedStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelWahlvorschlagUtils.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
@@ -47,7 +48,9 @@ function _useManagedStimmzettel(
     useManagedStimmzettelEinzelstimmeUtils(maxEinzelstimmen);
   const { addInvalidVotesToKandidat, removeInvalidVotesFromKandidat } =
     useManagedStimmzettelUngueltigeStimmeUtils();
-  const { resetStimmzettel } = useStimmzettelMapper();
+  const { mapPersistedStimmzettelValuesToExistingDseStimmzettel } =
+    useStimmzettelMapper();
+  const { resetDseStimmzettel } = useStimmzettelTools();
 
   const { kopfdaten } = storeToRefs(useKopfdatenStore());
 
@@ -140,8 +143,14 @@ function _useManagedStimmzettel(
     stimmzettelBeforeEdit?: PersistedStimmzettel
   ) {
     changeHistory.reset();
-    const resetResult = resetStimmzettel(stimmzettel, stimmzettelBeforeEdit);
-    stimmzettel.value = resetResult.value;
+    if (stimmzettelBeforeEdit) {
+      mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+        stimmzettel.value,
+        stimmzettelBeforeEdit
+      );
+    } else {
+      stimmzettel.value = resetDseStimmzettel(stimmzettel.value);
+    }
     resetReststimmeError();
     refreshWahlvorschlaegeVotes();
   }

@@ -2,12 +2,13 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzette
 
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createEmptyKandidatWithSingleVoteByVoter;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createEmptyKandidatWithSingleVoteByWahlvorschlag;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createEmptySelectedWahlvorschlag;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createEmptyValidStimmzettelModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createEmptyWahlvorschlag;
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createNonMatchingStimmzettelIDModel;
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createStimmzettelWithOnlyOneWahlvorschlagSelectedModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestModels.createSingleWahlvorschlagWithEinzelstimmeModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestModels.createSingleWahlvorschlagWithReststimmeAndEinzelstimmeModel;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestModels.createSingleWahlvorschlagWithReststimmeModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestModels.createSingleWahlvorschlagWithStreichungAndEinzelStimmeModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestModels.singleWahlvorschlagWithEinzelstimmeModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestModels.singleWahlvorschlagWithMultipleStreichungenModel;
@@ -21,9 +22,9 @@ import static org.instancio.Select.field;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -43,6 +44,10 @@ import org.springframework.transaction.support.TransactionTemplate;
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class StimmzettelRepositoryTest {
+  private final String wahlID = Instancio.create(String.class);
+  private final String wahlbezirkID = Instancio.create(String.class);
+  private final String teamA = "A";
+  private final String teamB = "B";
 
   @Autowired StimmzettelRepository unitUnderTest;
 
@@ -235,83 +240,162 @@ class StimmzettelRepositoryTest {
   class GetWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneSelectedWahlvorschlagAndNoOtherKennzeichen {
 
     @Test
-    void should_findTheMatchingStimmzettel_when_called() {
-      val wahlID = Instancio.create(String.class);
-      val wahlbezirkID = Instancio.create(String.class);
-      val teamA = "A";
-      val teamB = "B";
+    void should_countByWahlvorschlag_when_foundWahlvorschlaege() {
+      val stimmzettelToFind = new ArrayList<Stimmzettel>();
+      stimmzettelToFind.add(
+              Instancio.of(
+                              createEmptyValidStimmzettelModel(
+                                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+                      .setModel(
+                              field(Stimmzettel::getWahlvorschlaege),
+                              createSingleWahlvorschlagWithReststimmeModel("wv1"))
+                      .create()
+      );
+      stimmzettelToFind.add(
+              Instancio.of(
+                              createEmptyValidStimmzettelModel(
+                                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+                      .setModel(
+                              field(Stimmzettel::getWahlvorschlaege),
+                              createSingleWahlvorschlagWithReststimmeModel("wv2"))
+                      .create()
+      );
+      stimmzettelToFind.add(
+              Instancio.of(
+                              createEmptyValidStimmzettelModel(
+                                      wahlID, wahlbezirkID, teamB, stimmzettelkennungSequenz.getAndIncrement()))
+                      .setModel(
+                              field(Stimmzettel::getWahlvorschlaege),
+                              createSingleWahlvorschlagWithReststimmeModel("wv1"))
+                      .create()
+      );
+      stimmzettelToFind.add(
+              Instancio.of(
+                              createEmptyValidStimmzettelModel(
+                                      wahlID, wahlbezirkID, teamB, stimmzettelkennungSequenz.getAndIncrement()))
+                      .setModel(
+                              field(Stimmzettel::getWahlvorschlaege),
+                              createSingleWahlvorschlagWithReststimmeModel("wv2"))
+                      .create()
+      );
+      stimmzettelToFind.add(
+              Instancio.of(
+                              createEmptyValidStimmzettelModel(
+                                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+                      .setModel(
+                              field(Stimmzettel::getWahlvorschlaege),
+                              createSingleWahlvorschlagWithReststimmeModel("wv1"))
+                      .create()
+      );
 
-      // TODO Struktur anpassen
-      // 2 Testsuits: 1x verify summing; 1x verify matching
-      // add non Matching: 2 Wahlvorschlaege, aber nur einer mit selected
-      // check non Matching: 2 Wahlvorschläge, beide selected
-      val wahlvorschlagID1 = UUID.randomUUID().toString();
-      val findOnlyWahlvorschlag1IsSelected_A1 =
-          Instancio.create(
-              createStimmzettelWithOnlyOneWahlvorschlagSelectedModel(
-                  wahlID, wahlbezirkID, teamA, 1, wahlvorschlagID1));
-      val findOnlyWahlvorschlag1IsSelected_A2 =
-          Instancio.create(
-              createStimmzettelWithOnlyOneWahlvorschlagSelectedModel(
-                  wahlID, wahlbezirkID, teamA, 2, wahlvorschlagID1));
-      val findOnlyWahlvorschlag1IsSelected_A3 =
-          Instancio.create(
-              createStimmzettelWithOnlyOneWahlvorschlagSelectedModel(
-                  wahlID, wahlbezirkID, teamA, 3, wahlvorschlagID1));
-      val findOnlyWahlvorschlag1IsSelected_B1 =
-          Instancio.create(
-              createStimmzettelWithOnlyOneWahlvorschlagSelectedModel(
-                  wahlID, wahlbezirkID, teamB, 1, wahlvorschlagID1));
-      val findOnlyWahlvorschlag1IsSelected_B2 =
-          Instancio.create(
-              createStimmzettelWithOnlyOneWahlvorschlagSelectedModel(
-                  wahlID, wahlbezirkID, teamB, 2, wahlvorschlagID1));
+      transactionTemplate.executeWithoutResult(status -> {
+        stimmzettelRepository.saveAll(stimmzettelToFind);
+      });
 
-      val wahlvorschlagID2 = UUID.randomUUID().toString();
-      val findOnlyWahlvorschlag2IsSelected_A4 =
-          Instancio.create(
-              createStimmzettelWithOnlyOneWahlvorschlagSelectedModel(
-                  wahlID, wahlbezirkID, teamA, 4, wahlvorschlagID2));
-      val findOnlyWahlvorschlag2IsSelected_A5 =
-          Instancio.create(
-              createStimmzettelWithOnlyOneWahlvorschlagSelectedModel(
-                  wahlID, wahlbezirkID, teamA, 5, wahlvorschlagID2));
-      val findOnlyWahlvorschlag2IsSelected_B3 =
-          Instancio.create(
-              createStimmzettelWithOnlyOneWahlvorschlagSelectedModel(
-                  wahlID, wahlbezirkID, teamB, 3, wahlvorschlagID2));
+      val result = unitUnderTest.getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneSelectedWahlvorschlagAndNoOtherKennzeichen(
+              wahlID, wahlbezirkID
+      );
 
-      val nonMatching1 =
+      val expectedResult = List.of(
+              new WahlvorschlagStimmzettelAnzahl("wv1", 3L),
+              new WahlvorschlagStimmzettelAnzahl("wv2", 2L)
+      );
+      Assertions.assertThat(result).usingRecursiveComparison().ignoringCollectionOrder().isEqualTo(expectedResult);
+    }
+
+    @Test
+    void should_findMatchingStimmzettel_when_matchingAndNonMatchingStimmzettelAreGiven() {
+      val stimmzettelWithSingleWahlvorschlagWithOnlyReststimmenModel =
           Instancio.of(
-                  createStimmzettelWithOnlyOneWahlvorschlagSelectedModel(
-                      wahlID, wahlbezirkID, teamA, 1, wahlvorschlagID1))
-              .set(
-                  field(Stimmzettel::getId),
-                  Instancio.create(createNonMatchingStimmzettelIDModel(wahlID, wahlbezirkID, 1)))
-              .create();
-      val nonMatching2 =
+                  createEmptyValidStimmzettelModel(
+                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+              .setModel(
+                  field(Stimmzettel::getWahlvorschlaege),
+                  singleWahlvorschlagWithOnlyReststimmenKandidatenModel)
+              .toModel();
+
+      val stimmzettelWithSingleWahlvorschlagWithEinzelstimmeModel =
           Instancio.of(
-                  createStimmzettelWithOnlyOneWahlvorschlagSelectedModel(
-                      wahlID, wahlbezirkID, teamA, 1, wahlvorschlagID2))
-              .set(
-                  field(Stimmzettel::getId),
-                  Instancio.create(createNonMatchingStimmzettelIDModel(wahlID, wahlbezirkID, 1)))
-              .create();
+                  createEmptyValidStimmzettelModel(
+                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+              .setModel(
+                  field(Stimmzettel::getWahlvorschlaege), singleWahlvorschlagWithEinzelstimmeModel)
+              .toModel();
+      val stimmzettelWithSingleWahlvorschlagWithOnlyStreichungModel =
+          Instancio.of(
+                  createEmptyValidStimmzettelModel(
+                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+              .setModel(
+                  field(Stimmzettel::getWahlvorschlaege),
+                  singleWahlvorschlagWithSingleStreichungenModel)
+              .toModel();
+      val stimmzettelWithSingleWahlvorschlagWithReststimmeAndStreichungModel =
+          Instancio.of(
+                  createEmptyValidStimmzettelModel(
+                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+              .setModel(
+                  field(Stimmzettel::getWahlvorschlaege),
+                  singleWahlvorschlagWithStreichungAndReststimmeModel)
+              .toModel();
+      val stimmzettelWithSingleWahlvorschlagWithReststimmeAndEinzelstimmeModel =
+          Instancio.of(
+                  createEmptyValidStimmzettelModel(
+                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+              .setModel(
+                  field(Stimmzettel::getWahlvorschlaege),
+                  singleWahlvorschlagWithReststimmeAndEinzelstimmeModel)
+              .toModel();
+      val stimmzettelWith2SelectedWahlvorschlaegenModel =
+          Instancio.of(
+                  createEmptyValidStimmzettelModel(
+                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+              .supply(
+                  field(Stimmzettel::getWahlvorschlaege),
+                  () ->
+                      List.of(
+                          Instancio.of(createEmptySelectedWahlvorschlag("wv1"))
+                              .supply(
+                                  field(Wahlvorschlag::getKandidaten),
+                                  () ->
+                                      List.of(
+                                          createEmptyKandidatWithSingleVoteByWahlvorschlag(
+                                              "k11", 1)))
+                              .create(),
+                          Instancio.of(createEmptySelectedWahlvorschlag("wv2"))
+                              .supply(
+                                  field(Wahlvorschlag::getKandidaten),
+                                  () ->
+                                      List.of(
+                                          createEmptyKandidatWithSingleVoteByWahlvorschlag(
+                                              "k21", 1)))
+                              .create()))
+              .toModel();
+
+      val stimmzettelToFind = new ArrayList<Stimmzettel>();
+      stimmzettelToFind.add(
+          Instancio.create(stimmzettelWithSingleWahlvorschlagWithOnlyReststimmenModel));
+
+      val nonMatchingStimmzettel = new ArrayList<Stimmzettel>();
+      nonMatchingStimmzettel.add(
+          Instancio.create(stimmzettelWithSingleWahlvorschlagWithEinzelstimmeModel));
+      nonMatchingStimmzettel.add(
+          Instancio.create(stimmzettelWithSingleWahlvorschlagWithOnlyStreichungModel));
+      nonMatchingStimmzettel.add(
+          Instancio.create(stimmzettelWithSingleWahlvorschlagWithReststimmeAndStreichungModel));
+      nonMatchingStimmzettel.add(
+          Instancio.create(stimmzettelWithSingleWahlvorschlagWithReststimmeAndEinzelstimmeModel));
+      nonMatchingStimmzettel.add(Instancio.create(stimmzettelWith2SelectedWahlvorschlaegenModel));
+      nonMatchingStimmzettel.add(
+          createStimmzettelWithGueltigkeitInvalid(
+              stimmzettelWithSingleWahlvorschlagWithOnlyReststimmenModel));
+      nonMatchingStimmzettel.addAll(
+          createStimmzettelWithNonMatchingStimmzettelIDs(
+              stimmzettelWithSingleWahlvorschlagWithOnlyReststimmenModel));
 
       transactionTemplate.executeWithoutResult(
           status -> {
-            unitUnderTest.saveAll(
-                List.of(
-                    findOnlyWahlvorschlag1IsSelected_A1,
-                    findOnlyWahlvorschlag1IsSelected_A2,
-                    findOnlyWahlvorschlag1IsSelected_A3,
-                    findOnlyWahlvorschlag1IsSelected_B1,
-                    findOnlyWahlvorschlag1IsSelected_B2,
-                    findOnlyWahlvorschlag2IsSelected_A4,
-                    findOnlyWahlvorschlag2IsSelected_A5,
-                    findOnlyWahlvorschlag2IsSelected_B3,
-                    nonMatching1,
-                    nonMatching2));
+            stimmzettelRepository.saveAll(stimmzettelToFind);
+            stimmzettelRepository.saveAll(nonMatchingStimmzettel);
           });
 
       val result =
@@ -319,10 +403,7 @@ class StimmzettelRepositoryTest {
               .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneSelectedWahlvorschlagAndNoOtherKennzeichen(
                   wahlID, wahlbezirkID);
 
-      val expectedResult =
-          List.of(
-              new WahlvorschlagStimmzettelAnzahl(wahlvorschlagID1, 5L),
-              new WahlvorschlagStimmzettelAnzahl(wahlvorschlagID2, 3L));
+      val expectedResult = List.of(new WahlvorschlagStimmzettelAnzahl("onlyReststimmen", 1L));
       Assertions.assertThat(result)
           .usingRecursiveComparison()
           .ignoringCollectionOrder()
@@ -332,10 +413,6 @@ class StimmzettelRepositoryTest {
 
   @Nested
   class GetWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneWahlvorschlagAndAtLeastOneOtherKennzeichen {
-    private final String wahlID = Instancio.create(String.class);
-    private final String wahlbezirkID = Instancio.create(String.class);
-    private final String teamA = "A";
-    private final String teamB = "B";
 
     @Nested
     class OnlyOneWahlvorschlagThatHasEinzelstimmen {
@@ -758,7 +835,6 @@ class StimmzettelRepositoryTest {
 
     @Test
     void should_returnEmptyList_when_noStimmzettelIsMatching() {
-
       val stimmzettelWith2WahlvorschlaegenModel =
           Instancio.of(
                   createEmptyValidStimmzettelModel(
@@ -783,6 +859,14 @@ class StimmzettelRepositoryTest {
                   createEmptyValidStimmzettelModel(
                       wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
               .toModel();
+      val stimmzettelWithSingleWahlvorschlagWithoutAnyKandidatenModel =
+          Instancio.of(
+                  createEmptyValidStimmzettelModel(
+                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+              .supply(
+                  field(Stimmzettel::getWahlvorschlaege),
+                  () -> List.of(Instancio.create(createEmptyWahlvorschlag("wv1"))))
+              .toModel();
 
       val nonMatchingStimmzettel = new LinkedList<Stimmzettel>();
       nonMatchingStimmzettel.add(Instancio.create(stimmzettelWith2WahlvorschlaegenModel));
@@ -798,6 +882,15 @@ class StimmzettelRepositoryTest {
       nonMatchingStimmzettel.add(
           createStimmzettelWithGueltigkeitInvalid(stimmzettelWithoutAnyWahlvorschlaegeModel));
 
+      nonMatchingStimmzettel.add(
+          Instancio.create(stimmzettelWithSingleWahlvorschlagWithoutAnyKandidatenModel));
+      nonMatchingStimmzettel.addAll(
+          createStimmzettelWithNonMatchingStimmzettelIDs(
+              stimmzettelWithSingleWahlvorschlagWithoutAnyKandidatenModel));
+      nonMatchingStimmzettel.add(
+          createStimmzettelWithGueltigkeitInvalid(
+              stimmzettelWithSingleWahlvorschlagWithoutAnyKandidatenModel));
+
       transactionTemplate.executeWithoutResult(
           status -> {
             stimmzettelRepository.saveAll(nonMatchingStimmzettel);
@@ -809,63 +902,62 @@ class StimmzettelRepositoryTest {
                   wahlID, wahlbezirkID);
       Assertions.assertThat(result).isEmpty();
     }
+  }
 
-    private List<Stimmzettel> createStimmzettelWithNonMatchingStimmzettelIDs(
-        Model<Stimmzettel> stimmzettelModel) {
-      val wrongWahlbezirkID =
-          Instancio.of(stimmzettelModel)
-              .set(
-                  field(Stimmzettel::getId),
-                  new StimmzettelID(
-                      wahlbezirkID + "sth",
-                      wahlID,
-                      teamA,
-                      stimmzettelkennungSequenz.getAndIncrement()))
-              .create();
-      wrongWahlbezirkID
-          .getWahlvorschlaege()
-          .forEach(
-              wahlvorschlag ->
-                  wahlvorschlag.setWahlvorschlagID(
-                      "wvInvalidWahlbezirkID" + wahlvorschlagIDCounter.getAndIncrement()));
-      val wrongWahlID =
-          Instancio.of(stimmzettelModel)
-              .set(
-                  field(Stimmzettel::getId),
-                  new StimmzettelID(
-                      wahlbezirkID,
-                      wahlID + "sth",
-                      teamA,
-                      stimmzettelkennungSequenz.getAndIncrement()))
-              .create();
-      wrongWahlID
-          .getWahlvorschlaege()
-          .forEach(
-              wahlvorschlag ->
-                  wahlvorschlag.setWahlvorschlagID(
-                      "wvInvalidWahlID" + wahlvorschlagIDCounter.getAndIncrement()));
+  private List<Stimmzettel> createStimmzettelWithNonMatchingStimmzettelIDs(
+      Model<Stimmzettel> stimmzettelModel) {
+    val wrongWahlbezirkID =
+        Instancio.of(stimmzettelModel)
+            .set(
+                field(Stimmzettel::getId),
+                new StimmzettelID(
+                    wahlbezirkID + "sth",
+                    wahlID,
+                    teamA,
+                    stimmzettelkennungSequenz.getAndIncrement()))
+            .create();
+    wrongWahlbezirkID
+        .getWahlvorschlaege()
+        .forEach(
+            wahlvorschlag ->
+                wahlvorschlag.setWahlvorschlagID(
+                    "wvInvalidWahlbezirkID" + wahlvorschlagIDCounter.getAndIncrement()));
+    val wrongWahlID =
+        Instancio.of(stimmzettelModel)
+            .set(
+                field(Stimmzettel::getId),
+                new StimmzettelID(
+                    wahlbezirkID,
+                    wahlID + "sth",
+                    teamA,
+                    stimmzettelkennungSequenz.getAndIncrement()))
+            .create();
+    wrongWahlID
+        .getWahlvorschlaege()
+        .forEach(
+            wahlvorschlag ->
+                wahlvorschlag.setWahlvorschlagID(
+                    "wvInvalidWahlID" + wahlvorschlagIDCounter.getAndIncrement()));
 
-      return List.of(wrongWahlbezirkID, wrongWahlID);
-    }
+    return List.of(wrongWahlbezirkID, wrongWahlID);
+  }
 
-    private Stimmzettel createStimmzettelWithGueltigkeitInvalid(
-        Model<Stimmzettel> stimmzettelModel) {
-      val stimmzettelInvalid =
-          Instancio.of(stimmzettelModel)
-              .set(
-                  field(Stimmzettel::getId),
-                  new StimmzettelID(
-                      wahlbezirkID, wahlID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
-              .set(field(Stimmzettel::getGueltigkeit), StimmzettelGueltigkeit.INVALID)
-              .create();
-      stimmzettelInvalid
-          .getWahlvorschlaege()
-          .forEach(
-              wahlvorschlag ->
-                  wahlvorschlag.setWahlvorschlagID(
-                      "wvStimmzettelInvalid" + wahlvorschlagIDCounter.getAndIncrement()));
+  private Stimmzettel createStimmzettelWithGueltigkeitInvalid(Model<Stimmzettel> stimmzettelModel) {
+    val stimmzettelInvalid =
+        Instancio.of(stimmzettelModel)
+            .set(
+                field(Stimmzettel::getId),
+                new StimmzettelID(
+                    wahlbezirkID, wahlID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+            .set(field(Stimmzettel::getGueltigkeit), StimmzettelGueltigkeit.INVALID)
+            .create();
+    stimmzettelInvalid
+        .getWahlvorschlaege()
+        .forEach(
+            wahlvorschlag ->
+                wahlvorschlag.setWahlvorschlagID(
+                    "wvStimmzettelInvalid" + wahlvorschlagIDCounter.getAndIncrement()));
 
-      return stimmzettelInvalid;
-    }
+    return stimmzettelInvalid;
   }
 }

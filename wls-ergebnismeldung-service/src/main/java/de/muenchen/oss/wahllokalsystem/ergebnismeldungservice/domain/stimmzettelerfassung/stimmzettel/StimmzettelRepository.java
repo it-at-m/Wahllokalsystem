@@ -41,7 +41,6 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                     SELECT COUNT(wahlvorschlag)
                     FROM Wahlvorschlag wahlvorschlag
                     WHERE wahlvorschlag.stimmzettel = stimmzettel
-                      AND wahlvorschlag.selected = true
                   ) = 1
                   AND NOT EXISTS (
                     SELECT kandidat

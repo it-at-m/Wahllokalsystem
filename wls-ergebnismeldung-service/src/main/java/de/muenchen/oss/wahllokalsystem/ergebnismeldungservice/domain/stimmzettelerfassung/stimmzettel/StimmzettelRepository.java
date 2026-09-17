@@ -54,7 +54,7 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                   )
                 GROUP BY selectedWahlvorschlag.wahlvorschlagID
                 """)
-  //For MBW Stapel A
+  // For MBW Stapel A
   List<WahlvorschlagStimmzettelAnzahl>
       getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneSelectedWahlvorschlagAndNoOtherKennzeichen(
           @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
@@ -85,7 +85,7 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                   )
                 GROUP BY selectedWahlvorschlag.wahlvorschlagID
                 """)
-  //for MBW Stapel B
+  // for MBW Stapel B
   List<WahlvorschlagStimmzettelAnzahl>
       getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneWahlvorschlagAndAtLeastOneOtherKennzeichen(
           @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
@@ -131,8 +131,8 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                 GROUP BY wahlvorschlag.wahlvorschlagID,
                          kandidat.kandidatID.kandidatID
                 """)
-  //For MBW Stapel BC
+  // For MBW Stapel BC
   List<KandidatStimmenAnzahl>
-  getSumValidKandidatenVotesPerWahlvorschlagWhenNotOnlyOneListenkreuzReststimmeAreGiven(
+      getSumValidKandidatenVotesPerWahlvorschlagWhenNotOnlyOneListenkreuzReststimmeAreGiven(
           @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
 }

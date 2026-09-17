@@ -1,4 +1,4 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
@@ -182,7 +182,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
     describe("startNewEmptyStimmzettelWithStimmzettelkennung", () => {
       it("should_setActiveStimmzettel_when_calledWithKennung", () => {
         const mockedKennung = generateRandomNumber(3);
-        const mockedEmptyStimmzettel: Stimmzettel =
+        const mockedEmptyStimmzettel: PersistedStimmzettel =
           preparePersistedStimmzettel()
             .stimmzettelkennung(mockedKennung)
             .build();

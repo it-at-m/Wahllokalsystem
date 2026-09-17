@@ -1,4 +1,4 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnismeldung/common/WahlvorschlagWithKandidatenErgebnissen.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
@@ -6,7 +6,7 @@ import type { Ref } from "vue";
 import { computed } from "vue";
 
 export function useStimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils(
-  stimmzettelListe: Ref<Stimmzettel[]>,
+  stimmzettelListe: Ref<PersistedStimmzettel[]>,
   wahlvorschlaege: Ref<Wahlvorschlag[]>
 ) {
   const wahlvorschlaegeWithKandidatenErgebnissen = computed(() => {

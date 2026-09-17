@@ -1,4 +1,4 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
@@ -161,7 +161,8 @@ describe("stimmzettelState", () => {
 
   describe("saveOrUpdateStimmzettel", () => {
     it("should_appendStimmzettelAndPersist_when_initialCollectionIsEmpty", async () => {
-      const mockedNewStimmzettel: Stimmzettel = createPersistedStimmzettel();
+      const mockedNewStimmzettel: PersistedStimmzettel =
+        createPersistedStimmzettel();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 
@@ -190,7 +191,8 @@ describe("stimmzettelState", () => {
 
       const mockedLastSaveCall =
         mockDefinitions.saveStimmzettel.mock.calls.at(-1) ?? [];
-      const mockedSavedCollection = mockedLastSaveCall[3] as Stimmzettel[];
+      const mockedSavedCollection =
+        mockedLastSaveCall[3] as PersistedStimmzettel[];
 
       expect(mockedSavedCollection).toStrictEqual([
         mockedExistingStimmzettel,

@@ -1,4 +1,4 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 import type { Ref } from "vue";
 
 import { computed, onActivated, readonly, ref } from "vue";
@@ -15,7 +15,7 @@ export function useStimmzettelState(
   teamID: string
 ) {
   const isStimmzettelLoading = ref(false);
-  const savedStimmzettel: Ref<Stimmzettel[]> = ref([]);
+  const savedStimmzettel: Ref<PersistedStimmzettel[]> = ref([]);
 
   const hasStimmzettel = computed(() => savedStimmzettel.value.length > 0);
 
@@ -23,7 +23,9 @@ export function useStimmzettelState(
     await _loadStimmzettel();
   });
 
-  async function saveOrUpdateStimmzettel(stimmzettelToSave: Stimmzettel) {
+  async function saveOrUpdateStimmzettel(
+    stimmzettelToSave: PersistedStimmzettel
+  ) {
     const newStimmzettelCollectionToSave = [...savedStimmzettel.value];
     const stimmzettelExistsIndex = newStimmzettelCollectionToSave.findIndex(
       (savedStimmzettel) =>

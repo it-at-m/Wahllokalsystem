@@ -1,7 +1,7 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 
 export function useStimmzettelkennungDialogUtils() {
-  function getNextStimmzettelNumber(stimmzettelList: Stimmzettel[]) {
+  function getNextStimmzettelNumber(stimmzettelList: PersistedStimmzettel[]) {
     return stimmzettelList.length > 0
       ? Math.max(
           ...stimmzettelList.map(

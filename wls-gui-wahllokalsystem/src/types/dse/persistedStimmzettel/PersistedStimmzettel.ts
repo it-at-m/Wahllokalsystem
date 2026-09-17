@@ -5,7 +5,7 @@ import type { PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/Pe
 
 import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/PersistedStimmzettelGueltigkeitEnum.ts";
 
-export interface Stimmzettel {
+export interface PersistedStimmzettel {
   stimmzettelkennung: number;
   teamID: string;
   wahlvorschlaege: PersistedWahlvorschlag[];

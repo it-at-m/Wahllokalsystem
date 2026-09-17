@@ -1,4 +1,4 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 
 import { computed, onActivated, ref } from "vue";
 
@@ -21,7 +21,7 @@ export function useBeschlussfassungViewUtils(
   const { teamstatusList, loadTeamStatusListe } =
     useStimmzettelerfassungTeamStatusListState(wahlID, wahlbezirkID);
   const isStimmzettelForBeschlussLoading = ref(false);
-  const stimmzettelForBeschlussfassung = ref<Stimmzettel[]>([]);
+  const stimmzettelForBeschlussfassung = ref<PersistedStimmzettel[]>([]);
 
   const completedStimmzettelForBeschlussfassung = computed(() =>
     stimmzettelForBeschlussfassung.value.filter(
@@ -55,7 +55,7 @@ export function useBeschlussfassungViewUtils(
       const registeredTeams = computed(() =>
         teamstatusList.value.map((team) => team.teamID)
       );
-      const stimmzettelOfAllTeams: Stimmzettel[] = [];
+      const stimmzettelOfAllTeams: PersistedStimmzettel[] = [];
 
       for (const teamId of registeredTeams.value) {
         const stimmzettelOfTeam = await getStimmzettel(

@@ -143,7 +143,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
@@ -172,7 +172,7 @@ const isDialogVisibleModel = defineModel("modelValue", {
 
 const properties = defineProps({
   stimmzettel: {
-    type: Object as PropType<Stimmzettel>,
+    type: Object as PropType<PersistedStimmzettel>,
     required: true,
   },
   wahlvorschlaege: {
@@ -195,8 +195,8 @@ const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
 
 const emit = defineEmits<{
   cancel: [];
-  confirmClose: [stimmzettel: Stimmzettel];
-  confirmNext: [stimmzettel: Stimmzettel];
+  confirmClose: [stimmzettel: PersistedStimmzettel];
+  confirmNext: [stimmzettel: PersistedStimmzettel];
 }>();
 
 defineExpose({ focusCommandProcessingTextField });

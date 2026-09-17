@@ -10,8 +10,8 @@ import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBe
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { PersistedBeschlussfassung } from "@/types/dse/persistedStimmzettel/PersistedBeschlussfassung.ts";
 import type { PersistedKandidat } from "@/types/dse/persistedStimmzettel/PersistedKandidat.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 import type { PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/PersistedWahlvorschlag.ts";
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Stimmzettel as ManageableStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
@@ -19,7 +19,10 @@ import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandida
 const { hasAnyKennzeichenOrReststimme } = useKandidatTools();
 
 export function useStimmzettelMapper() {
-  function toModel(dto: StimmzettelOfTeamDTO, teamID: string): Stimmzettel {
+  function toModel(
+    dto: StimmzettelOfTeamDTO,
+    teamID: string
+  ): PersistedStimmzettel {
     const wahlvorstandBeschlussgruende = (
       dto.wahlvorstandBeschlussvorschlag ?? []
     ).map((beschlussgrundDTO: WahlvorstandBeschlussgrundDTO) =>
@@ -49,7 +52,7 @@ export function useStimmzettelMapper() {
     manageableStimmzettel: ManageableStimmzettel,
     stimmzettelkennung: number,
     teamID: string
-  ): Stimmzettel {
+  ): PersistedStimmzettel {
     const mappedWahlvorschlaege: PersistedWahlvorschlag[] =
       manageableStimmzettel.wahlvorschlaege
         .map((wahlvorschlag) => {
@@ -93,7 +96,7 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function toDTO(model: Stimmzettel): StimmzettelOfTeamDTO {
+  function toDTO(model: PersistedStimmzettel): StimmzettelOfTeamDTO {
     return {
       gueltigkeit: model.gueltigkeit,
       invalideVotes: model.invalideVotes,
@@ -124,7 +127,7 @@ export function useStimmzettelMapper() {
 
   function mapPersistedStimmzettelValuesToExistingDseStimmzettel(
     target: ManageableStimmzettel,
-    source: Stimmzettel
+    source: PersistedStimmzettel
   ) {
     target.wahlvorschlaege.map((wahlvorschlag) => {
       const beforeEditWahlvorschlag = source.wahlvorschlaege.find(

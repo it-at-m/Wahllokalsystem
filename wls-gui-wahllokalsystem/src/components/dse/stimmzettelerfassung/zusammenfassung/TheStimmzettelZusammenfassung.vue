@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { storeToRefs } from "pinia";
@@ -43,7 +43,7 @@ const wahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 
 defineProps<{
-  stimmzettelListe: Stimmzettel[];
+  stimmzettelListe: PersistedStimmzettel[];
   wahlvorschlaege: Wahlvorschlag[];
 }>();
 </script>

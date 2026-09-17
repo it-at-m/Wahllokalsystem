@@ -5,8 +5,8 @@ import type {
   StimmzettelOfTeamDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { PersistedKandidat } from "@/types/dse/persistedStimmzettel/PersistedKandidat.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 import type { PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/PersistedWahlvorschlag.ts";
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
@@ -78,9 +78,9 @@ describe("stimmzettelMapper.ts", () => {
     it("should_mapAllFields_when_dtoIsGiven", () => {
       const dtoToMap = createStimmzettelOfTeamDTO();
 
-      const result: Stimmzettel = toModel(dtoToMap, teamID);
+      const result: PersistedStimmzettel = toModel(dtoToMap, teamID);
 
-      const expectedResult: Stimmzettel = preparePersistedStimmzettel()
+      const expectedResult: PersistedStimmzettel = preparePersistedStimmzettel()
         .stimmzettelkennung(dtoToMap.stimmzettelkennung)
         .teamID(teamID)
         .invalideVotes(dtoToMap.invalideVotes)
@@ -475,7 +475,7 @@ describe("stimmzettelMapper.ts", () => {
             wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
           };
         });
-      const expectedResult: Stimmzettel = {
+      const expectedResult: PersistedStimmzettel = {
         stimmzettelkennung,
         teamID,
         beschlussfassung: dseStimmzettel.beschlussfassung,

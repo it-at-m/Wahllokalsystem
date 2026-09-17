@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 
 import { computed } from "vue";
 
@@ -32,7 +32,7 @@ const { getNextStimmzettelNumber } = useStimmzettelkennungDialogUtils();
 const props = defineProps<{
   visible: boolean;
   teamName: string;
-  existingStimmzettel: Stimmzettel[];
+  existingStimmzettel: PersistedStimmzettel[];
 }>();
 
 const emit = defineEmits<{

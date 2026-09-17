@@ -1,4 +1,4 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 import type { Ref } from "vue";
 
@@ -20,7 +20,7 @@ export function useStimmzettelErfassungViewUtils(
 ) {
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
   const isStatusLoading = ref(false);
-  const activeStimmzettel: Ref<Stimmzettel | null> = ref(null);
+  const activeStimmzettel: Ref<PersistedStimmzettel | null> = ref(null);
 
   //DialogVisibilityState
   const isKennungsDialogVisible = ref(false);

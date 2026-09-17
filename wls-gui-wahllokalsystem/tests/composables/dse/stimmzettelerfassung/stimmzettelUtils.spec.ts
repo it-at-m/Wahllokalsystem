@@ -1,3 +1,4 @@
+import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Kandidat as DseKandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag as DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
@@ -16,6 +17,9 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
 
 const mockDefinitions = vi.hoisted(() => ({
   getStimmzettel: vi.fn(),
+  sortSystemBeschlussgruende: vi.fn(),
+  sortWahlvorstandBeschlussgruende: vi.fn(),
+  sortAndDeepCloneWahlvorschlaege: vi.fn(),
 }));
 
 vi.mock(
@@ -29,7 +33,36 @@ vi.mock(
   })
 );
 
-const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
+vi.mock(
+  import("@/composables/dse/beschlussfassung/beschlussgrundTools.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useBeschlussgrundTools: () => ({
+        ...original.useBeschlussgrundTools(),
+        sortSystemBeschlussgruende: mockDefinitions.sortSystemBeschlussgruende,
+        sortWahlvorstandBeschlussgruende:
+          mockDefinitions.sortWahlvorstandBeschlussgruende,
+      }),
+    };
+  }
+);
+
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/wahlvorschlagTools.ts"),
+  () => ({
+    useWahlvorschlagTools: () => ({
+      sortAndDeepCloneWahlvorschlaege:
+        mockDefinitions.sortAndDeepCloneWahlvorschlaege,
+    }),
+  })
+);
+const {
+  preparePersistedStimmzettel,
+  preparePersistedStimmzettelWahlvorschlag,
+  createStimmzettel,
+  prepareStimmzettel,
+} = useStimmzettelTestDataFactory();
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
 const {
   createWahlvorschlaege,
@@ -43,6 +76,9 @@ describe("stimmzettelUtils.ts", () => {
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
     createStimmzettelWithWahlvorschlaege,
+    normalizePersistedStimmzettel,
+    resetDseStimmzettel,
+    isSamePersistedStimmzettel,
   } = useStimmzettelUtils();
 
   const { mapSystemBeschlussgrundReasonEnumToText } =
@@ -393,5 +429,135 @@ describe("stimmzettelUtils.ts", () => {
 
       expect(result).toStrictEqual("");
     });
+  });
+
+  describe("normalizePersistedStimmzettel", () => {
+    it("should_returnNormalizedStimmzettel_when_givenStimmzettel", () => {
+      const sysBeschlussvorschlag = [
+        { reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig },
+      ];
+      const wvBeschlussvorschlag = [{ text: generateRandomString(6) }];
+
+      const wvA = preparePersistedStimmzettelWahlvorschlag()
+        .kandidaten([])
+        .wahlvorschlagID("a")
+        .build();
+      const wvB = preparePersistedStimmzettelWahlvorschlag()
+        .kandidaten([])
+        .wahlvorschlagID("b")
+        .build();
+
+      const wahlvorschlaegeSorted = [wvA, wvB];
+
+      mockDefinitions.sortSystemBeschlussgruende.mockReturnValueOnce(
+        sysBeschlussvorschlag
+      );
+      mockDefinitions.sortWahlvorstandBeschlussgruende.mockReturnValueOnce(
+        wvBeschlussvorschlag
+      );
+      mockDefinitions.sortAndDeepCloneWahlvorschlaege.mockReturnValue(
+        wahlvorschlaegeSorted
+      );
+
+      const input = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag(sysBeschlussvorschlag)
+        .wahlvorstandBeschlussvorschlag(wvBeschlussvorschlag)
+        .wahlvorschlaege([wvB, wvA])
+        .build();
+
+      const result = normalizePersistedStimmzettel(input);
+
+      const expectedNormalizedStimmzettel = {
+        stimmzettelkennung: input.stimmzettelkennung,
+        teamID: input.teamID,
+        wahlvorschlaege: wahlvorschlaegeSorted,
+        invalideVotes: input.invalideVotes ?? 0,
+        gueltigkeit: input.gueltigkeit,
+        wahlvorstandBeschlussvorschlag: wvBeschlussvorschlag,
+        systemBeschlussvorschlag: sysBeschlussvorschlag,
+        beschlussfassung: input.beschlussfassung
+          ? { ...input.beschlussfassung }
+          : null,
+      } satisfies PersistedStimmzettel;
+
+      expect(result).toStrictEqual(expectedNormalizedStimmzettel);
+      expect(
+        mockDefinitions.sortWahlvorstandBeschlussgruende
+      ).toHaveBeenCalledOnce();
+      expect(mockDefinitions.sortSystemBeschlussgruende).toHaveBeenCalledOnce();
+      expect(
+        mockDefinitions.sortAndDeepCloneWahlvorschlaege
+      ).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe("resetDseStimmzettel", () => {
+    it("should_returnDseStimmzettelWithoutAnyValuesSet_when_called", () => {
+      const dseStimmzettel = createStimmzettel();
+
+      const expectedResetStimmzettel = prepareStimmzettel()
+        .invalideVotes(0)
+        .gueltigkeit("VALID")
+        .wahlvorstandBeschlussvorschlag([])
+        .systemBeschlussvorschlag([])
+        .beschlussfassung(null)
+        .wahlvorschlaege(dseStimmzettel.wahlvorschlaege)
+        .build();
+      const expectedWahlvorschlaege =
+        expectedResetStimmzettel.wahlvorschlaege[0];
+      expectedWahlvorschlaege.selected = false;
+      const expectedKandidaten = expectedWahlvorschlaege.kandidaten[0];
+      expectedKandidaten.einzelstimmen = null;
+      expectedKandidaten.ungueltigeStimmen = null;
+      expectedKandidaten.reststimmen = null;
+      expectedKandidaten.durchgestrichen = false;
+
+      const result = resetDseStimmzettel(dseStimmzettel);
+
+      expect(result).toStrictEqual(expectedResetStimmzettel);
+    });
+  });
+
+  describe("isSamePersistedStimmzettel", () => {
+    it.each([
+      {
+        stimmzettelkennungMatches: false,
+        teamIdMatches: false,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: true,
+        teamIdMatches: false,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: false,
+        teamIdMatches: true,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: true,
+        teamIdMatches: true,
+        expected: true,
+      },
+    ])(
+      "should_return'$expected'_whenStimmzettelkennungMatchesIs'$stimmzettelkennungMatches'AndTeamIdMatchesIs'$teamIdMatches'",
+      ({ stimmzettelkennungMatches, teamIdMatches, expected }) => {
+        const stimmzettel1 = preparePersistedStimmzettel()
+          .stimmzettelkennung(1)
+          .teamID("A")
+          .build();
+        const stimmzettel2 = preparePersistedStimmzettel()
+          .stimmzettelkennung(
+            stimmzettelkennungMatches ? stimmzettel1.stimmzettelkennung : 2
+          )
+          .teamID(teamIdMatches ? stimmzettel1.teamID : "B")
+          .build();
+
+        expect(isSamePersistedStimmzettel(stimmzettel1, stimmzettel2)).toBe(
+          expected
+        );
+      }
+    );
   });
 });

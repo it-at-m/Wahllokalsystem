@@ -1,3 +1,4 @@
+import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 
 import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
@@ -33,8 +34,22 @@ export function useBeschlussgrundTools() {
     };
   }
 
+  function sortWahlvorstandBeschlussgruende(
+    gruende: WahlvorstandBeschlussgrund[]
+  ) {
+    return gruende.slice().sort((x, y) => x.text.localeCompare(y.text));
+  }
+
+  function sortSystemBeschlussgruende(gruende: SystemBeschlussgrund[]) {
+    return gruende
+      .slice()
+      .sort((x, y) => String(x.reason).localeCompare(String(y.reason)));
+  }
+
   return {
     createBeschlussgrundWithText,
     getWahlvorstandBeschlussvorschlaege,
+    sortWahlvorstandBeschlussgruende,
+    sortSystemBeschlussgruende,
   };
 }

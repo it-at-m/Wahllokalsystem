@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { computed } from "vue";
 

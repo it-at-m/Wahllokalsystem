@@ -1,5 +1,5 @@
 import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
-import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
@@ -12,7 +12,7 @@ import { computed } from "vue";
 import { useStimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
 import { UnsupportedCommandError } from "@/types/dse/error/UnsupportedCommandError.ts";
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/PersistedStimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const { ref } = await import("vue");

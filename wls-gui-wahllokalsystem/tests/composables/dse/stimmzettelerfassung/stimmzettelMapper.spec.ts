@@ -4,9 +4,9 @@ import type {
   KandidatDTO,
   StimmzettelOfTeamDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { PersistedKandidat } from "@/types/dse/persistedStimmzettel/PersistedKandidat.ts";
-import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
-import type { PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/PersistedWahlvorschlag.ts";
+import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
+import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/PersistedWahlvorschlag.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";

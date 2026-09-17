@@ -143,8 +143,8 @@
 </template>
 
 <script setup lang="ts">
-import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
@@ -163,7 +163,7 @@ import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStim
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/PersistedStimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,

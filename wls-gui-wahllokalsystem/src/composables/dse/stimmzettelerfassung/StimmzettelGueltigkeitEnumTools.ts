@@ -1,4 +1,4 @@
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/PersistedStimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 
 export function useStimmzettelGueltigkeitEnumTools() {
   const gueltigkeitTextMap = {

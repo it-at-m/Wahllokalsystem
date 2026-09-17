@@ -1,5 +1,5 @@
-import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
 import type { Kandidat as DSEKandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";

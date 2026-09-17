@@ -1,4 +1,4 @@
-import type { PersistedKandidat } from "@/types/dse/persistedStimmzettel/PersistedKandidat.ts";
+import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
 
 export interface PersistedWahlvorschlag {
   wahlvorschlagID: string;

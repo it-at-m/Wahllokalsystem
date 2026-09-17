@@ -1,4 +1,4 @@
-import type { PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/PersistedWahlvorschlag.ts";
+import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/PersistedWahlvorschlag.ts";
 
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 

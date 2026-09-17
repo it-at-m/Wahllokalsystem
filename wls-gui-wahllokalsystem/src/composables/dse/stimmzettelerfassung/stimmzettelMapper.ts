@@ -6,12 +6,12 @@ import type {
   WahlvorschlagDTO,
   WahlvorstandBeschlussgrundDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type { PersistedBeschlussfassung } from "@/types/dse/beschlussfassung/PersistedBeschlussfassung.ts";
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
-import type { PersistedBeschlussfassung } from "@/types/dse/persistedStimmzettel/PersistedBeschlussfassung.ts";
-import type { PersistedKandidat } from "@/types/dse/persistedStimmzettel/PersistedKandidat.ts";
-import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
-import type { PersistedWahlvorschlag } from "@/types/dse/persistedStimmzettel/PersistedWahlvorschlag.ts";
+import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
+import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/PersistedWahlvorschlag.ts";
 import type { Stimmzettel as ManageableStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";

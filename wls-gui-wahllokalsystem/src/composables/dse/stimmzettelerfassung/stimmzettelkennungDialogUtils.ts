@@ -1,4 +1,4 @@
-import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 export function useStimmzettelkennungDialogUtils() {
   function getNextStimmzettelNumber(stimmzettelList: PersistedStimmzettel[]) {

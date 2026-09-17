@@ -1,4 +1,4 @@
-import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Ref } from "vue";
 
 import { computed, onActivated, readonly, ref } from "vue";

@@ -24,14 +24,14 @@
 </template>
 
 <script setup lang="ts">
-import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { computed } from "vue";
 
 import BaseCardKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/MBW/stapelBC/BaseCardKandidatenstimmenAnzeigen.vue";
 import { useStimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils.ts";
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/PersistedStimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
   stimmzettelListe: PersistedStimmzettel[];

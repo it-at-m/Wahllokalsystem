@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/PersistedStimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { ref } from "vue";
 
@@ -57,7 +57,7 @@ import {
   TABLE_LOADING_DATA_STIMMZETTEL,
   TABLE_NO_DATA_TEXT_BESCHLUSSFASSUNG,
 } from "@/constants.ts";
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/PersistedStimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
   stimmzettelListe: PersistedStimmzettel[];

@@ -6,7 +6,7 @@ import type { Builder } from "@tests/utils/Builder.ts";
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/PersistedStimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 
 // TODO managedStimmzettel = persistedStimmzettel, kann die factory weg?
 export function useManagedStimmzettelTestDataFactory() {

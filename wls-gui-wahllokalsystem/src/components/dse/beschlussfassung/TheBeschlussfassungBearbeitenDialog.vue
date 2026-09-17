@@ -57,7 +57,7 @@ const isDialogVisibleModel = defineModel("modelValue", {
 });
 
 defineProps<{
-  stimmzettel: Stimmzettel | null;
+  stimmzettel: Stimmzettel | undefined;
 }>();
 
 const emit = defineEmits<{

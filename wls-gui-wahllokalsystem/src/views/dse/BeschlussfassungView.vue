@@ -58,7 +58,7 @@ const wahlID = (route.params.wahlId as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 
 const isBearbeitenDialogVisible = ref(false);
-const activeStimmzettelForBeschluss = ref<Stimmzettel | null>(null);
+const activeStimmzettelForBeschluss = ref<Stimmzettel>();
 
 const {
   isStimmzettelForBeschlussLoading,
@@ -79,8 +79,8 @@ async function onBeschlussfassungBeendenClicked() {
 }
 
 function onBeschlussBearbeitenClicked(stimmzettelToEdit: Stimmzettel) {
-  isBearbeitenDialogVisible.value = true;
   activeStimmzettelForBeschluss.value = stimmzettelToEdit;
+  isBearbeitenDialogVisible.value = true;
 
   console.debug(JSON.stringify(stimmzettelToEdit));
 }

@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 import type { CommandHandler } from "@/types/dse/stimmzettelerfassung/command/CommandHandler.ts";
 
 import { useHandlerTools } from "@/composables/dse/stimmzettelerfassung/command/handlerTools.ts";
@@ -27,7 +27,7 @@ export function useRemoveStreichungFromKandidatenRangeHandler(): CommandHandler 
 
   function handleOrThrow(
     command: string,
-    stimmzettel: ManagedStimmzettel
+    stimmzettel: BearbeitenDialogStimmzettel
   ): void {
     const commandArguments = _parseCommandArguments(command);
     if (!commandArguments) {

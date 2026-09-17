@@ -10,7 +10,7 @@ import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestD
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { describe, expect, it, vi } from "vitest";
 
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
@@ -71,7 +71,7 @@ const {
   prepareKandidat,
 } = useWahlvorschlaegeTestDataFactory();
 
-describe("stimmzettelUtils.ts", () => {
+describe("stimmzettelTools.ts", () => {
   const {
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
@@ -79,7 +79,7 @@ describe("stimmzettelUtils.ts", () => {
     normalizePersistedStimmzettel,
     resetDseStimmzettel,
     isSamePersistedStimmzettel,
-  } = useStimmzettelUtils();
+  } = useStimmzettelTools();
 
   const { mapSystemBeschlussgrundReasonEnumToText } =
     useSystemBeschlussgrundReasonEnumTools();

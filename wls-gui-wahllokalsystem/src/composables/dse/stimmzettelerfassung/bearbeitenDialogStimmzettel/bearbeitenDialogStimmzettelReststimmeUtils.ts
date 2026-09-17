@@ -8,7 +8,7 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
-export function useManagedStimmzettelReststimmeUtils(
+export function useBearbeitenDialogStimmzettelReststimmeUtils(
   stimmzettel: Ref<Stimmzettel>,
   maximalErlaubteStimmenProWaehler: Ref<number>,
   maxEinzelstimmen: number,

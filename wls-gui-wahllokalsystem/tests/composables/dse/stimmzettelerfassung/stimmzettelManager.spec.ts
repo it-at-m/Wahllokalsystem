@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
 import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
@@ -47,21 +47,24 @@ vi.mock(
     return { COMMAND_HANDLERS: handlers };
   }
 );
-vi.mock("@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts", () => ({
-  useBearbeitenDialogStimmzettelUtils: (
-    stimmzettel: Ref<Stimmzettel>,
-    wahlID: string
-  ) => {
-    return {
-      kandidatAddEinzelstimmenOrThrow:
-        mockDefinitions.mangedStimmzettel.kandidatAddEinzelstimmenOrThrow,
-      resetStimmzettelAndHistory: mockDefinitions.resetStimmzettelAndHistory,
-      hasAnyValuesSet: mockDefinitions.mangedStimmzettel.hasAnyValuesSet,
-      stimmzettel,
-      wahlID,
-    };
-  },
-}));
+vi.mock(
+  "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts",
+  () => ({
+    useBearbeitenDialogStimmzettelUtils: (
+      stimmzettel: Ref<Stimmzettel>,
+      wahlID: string
+    ) => {
+      return {
+        kandidatAddEinzelstimmenOrThrow:
+          mockDefinitions.mangedStimmzettel.kandidatAddEinzelstimmenOrThrow,
+        resetStimmzettelAndHistory: mockDefinitions.resetStimmzettelAndHistory,
+        hasAnyValuesSet: mockDefinitions.mangedStimmzettel.hasAnyValuesSet,
+        stimmzettel,
+        wahlID,
+      };
+    },
+  })
+);
 
 vi.mock(
   import("@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts"),
@@ -125,7 +128,8 @@ describe("stimmzettelManager.ts", () => {
       const callArgs = mockDefinitions.handlerOneHandleOrThrow.mock.calls[0];
       expect(callArgs[0]).toBe(command);
       expect(
-        (callArgs[1] as ManagedStimmzettel).kandidatAddEinzelstimmenOrThrow
+        (callArgs[1] as BearbeitenDialogStimmzettel)
+          .kandidatAddEinzelstimmenOrThrow
       ).toBeDefined();
 
       expect(mockDefinitions.handlerTwoCanHandle).not.toHaveBeenCalled();

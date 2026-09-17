@@ -16,7 +16,7 @@ const { sortWahlvorstandBeschlussgruende, sortSystemBeschlussgruende } =
   useBeschlussgrundTools();
 const { sortAndDeepCloneWahlvorschlaege } = useWahlvorschlagTools();
 
-function _useStimmzettelUtils() {
+export function useStimmzettelTools() {
   function createStimmzettelWithWahlvorschlaege(
     wahlvorschlaege: Wahlvorschlag[]
   ): Stimmzettel {
@@ -179,10 +179,3 @@ function _useStimmzettelUtils() {
     isSamePersistedStimmzettel,
   };
 }
-
-/**
- * @deprecated TODO is an tools composable. Does not serve any high level function
- * maybe split into separate tools for different types
- */
-export const useStimmzettelUtils = _useStimmzettelUtils;
-export const useStimmzettelTools = _useStimmzettelUtils;

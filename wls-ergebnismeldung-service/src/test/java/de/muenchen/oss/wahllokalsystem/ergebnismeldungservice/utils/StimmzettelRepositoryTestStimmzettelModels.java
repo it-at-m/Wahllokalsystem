@@ -28,7 +28,7 @@ public class StimmzettelRepositoryTestStimmzettelModels {
           final String teamID,
           final int stimzettelkennung) {
     return Instancio.of(
-            createBlankInvalidStimmzettelModel(wahlID, wahlbezirkID, teamID, stimzettelkennung))
+            createBlankValidStimmzettelModel(wahlID, wahlbezirkID, teamID, stimzettelkennung))
         .setModel(
             field(Stimmzettel::getWahlvorschlaege),
             singleWahlvorschlagModelWithOnlyReststimmenKandidaten)

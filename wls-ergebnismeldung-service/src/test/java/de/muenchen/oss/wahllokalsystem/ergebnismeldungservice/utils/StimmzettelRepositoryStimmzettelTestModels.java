@@ -193,33 +193,6 @@ public class StimmzettelRepositoryStimmzettelTestModels {
   }
 
   public static Model<Stimmzettel>
-      createInvalidStimmzettelModelWith2WahlvorschlaegenEachWithReststimme(
-          final String wahlID,
-          final String wahlbezirkID,
-          final String teamID,
-          final int stimzettelkennung) {
-    return Instancio.of(
-            createBlankInvalidStimmzettelModel(wahlID, wahlbezirkID, teamID, stimzettelkennung))
-        .supply(
-            field(Stimmzettel::getWahlvorschlaege),
-            () ->
-                List.of(
-                    Instancio.of(createBlankNonSelectedWahlvorschlagModel("wv1"))
-                        .supply(
-                            field(Wahlvorschlag::getKandidaten),
-                            () ->
-                                List.of(createBlankKandidatWithSingleVoteByWahlvorschlag("k11", 1)))
-                        .create(),
-                    Instancio.of(createBlankNonSelectedWahlvorschlagModel("wv2"))
-                        .supply(
-                            field(Wahlvorschlag::getKandidaten),
-                            () ->
-                                List.of(createBlankKandidatWithSingleVoteByWahlvorschlag("k21", 1)))
-                        .create()))
-        .toModel();
-  }
-
-  public static Model<Stimmzettel>
       createValidStimmzettelModelWith2WahlvorschlaegenEachWithReststimme(
           final String wahlID,
           final String wahlbezirkID,

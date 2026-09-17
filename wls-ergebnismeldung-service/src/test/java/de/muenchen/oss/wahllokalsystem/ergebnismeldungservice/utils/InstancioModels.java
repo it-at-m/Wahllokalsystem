@@ -113,31 +113,4 @@ public class InstancioModels {
         .set(field(Kandidat::isDiscarded), false)
         .toModel();
   }
-
-  public static Model<Stimmzettel> createStimmzettelWithOnlyOneWahlvorschlagSelectedModel(
-      String wahlID,
-      String wahlbezirkID,
-      String teamID,
-      int stimmzettelkennung,
-      String wahlvorschlagID) {
-    val selectedWahlvorschlag =
-        Instancio.of(createEmptyWahlvorschlag(wahlvorschlagID))
-            .set(field(Wahlvorschlag::isSelected), true)
-            .create();
-
-    return Instancio.of(
-            createEmptyValidStimmzettelModel(wahlID, wahlbezirkID, teamID, stimmzettelkennung))
-        .set(field(Stimmzettel::getGueltigkeit), StimmzettelGueltigkeit.VALID)
-        .set(field(Stimmzettel::getWahlvorschlaege), List.of(selectedWahlvorschlag))
-        .toModel();
-  }
-
-  public static Model<StimmzettelID> createNonMatchingStimmzettelIDModel(
-      String wahlID, String wahlbezirkID, int stimmzettelkennung) {
-    return Instancio.of(StimmzettelID.class)
-        .set(field(StimmzettelID::getWahlID), wahlID + "sth")
-        .set(field(StimmzettelID::getWahlbezirkID), wahlbezirkID + "sth")
-        .set(field(StimmzettelID::getStimmzettelkennung), stimmzettelkennung)
-        .toModel();
-  }
 }

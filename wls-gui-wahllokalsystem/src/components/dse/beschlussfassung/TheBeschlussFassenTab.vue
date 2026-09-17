@@ -53,46 +53,49 @@
             v-model="andererGrundChecked"
             label="Anderer Grund:"
           />
-          <v-text-field
-            v-model="andererGrund"
-            label="Grund"
-            :disabled="!andererGrundChecked"
-          />
+          <v-col>
+            <v-textarea
+              v-model="andererGrund"
+              label="Grund"
+              :disabled="!andererGrundChecked"
+              rows="1"
+              auto-grow
+              max-width="300"
+            />
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
     <v-card>
       <v-card-title class="mb-4"> Abstimmungsergebnis </v-card-title>
       <v-card-text>
-        <v-form v-model="isAbstimmungsergebnisValid">
-          <v-row style="align-items: stretch">
-            <v-col cols="5">
-              <base-number-input
-                :model-value="stimmenDafuer"
-                :rules="[required]"
-                label="Stimmen dafür"
+        <v-row style="align-items: stretch">
+          <v-col cols="5">
+            <base-number-input
+              :model-value="stimmenDafuer"
+              :rules="[required]"
+              label="Stimmen dafür"
+            />
+          </v-col>
+          <v-col
+            cols="2"
+            style="display: flex"
+          >
+            <div class="icon-wrapper">
+              <v-icon
+                icon="$beschlussAbstimmung"
+                size="large"
               />
-            </v-col>
-            <v-col
-              cols="2"
-              style="display: flex"
-            >
-              <div class="icon-wrapper">
-                <v-icon
-                  icon="$beschlussAbstimmung"
-                  size="large"
-                />
-              </div>
-            </v-col>
-            <v-col cols="5">
-              <base-number-input
-                :model-value="stimmenDagegen"
-                :rules="[required]"
-                label="Stimmen dagegen"
-              />
-            </v-col>
-          </v-row>
-        </v-form>
+            </div>
+          </v-col>
+          <v-col cols="5">
+            <base-number-input
+              :model-value="stimmenDagegen"
+              :rules="[required]"
+              label="Stimmen dagegen"
+            />
+          </v-col>
+        </v-row>
       </v-card-text>
     </v-card>
   </div>
@@ -121,7 +124,6 @@ const andererGrund = ref("");
 const andererGrundChecked = ref(false);
 const stimmenDafuer = ref<number | null>(null);
 const stimmenDagegen = ref<number | null>(null);
-const isAbstimmungsergebnisValid = ref<boolean | null>(null);
 
 const gruende = {
   gueltig: [

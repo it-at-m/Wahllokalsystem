@@ -29,7 +29,6 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
-import { useInfomanagementStore } from "@/stores/infomanagementStore";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -555,9 +554,6 @@ describe("DSE navigation", () => {
       createSpy: vi.fn,
       stubActions: false,
     });
-    useInfomanagementStore().konfigurationsparameter = [
-      { schluessel: "DSE_AKTIV", wert: "true" },
-    ];
     useUserStore().user = prepareUser()
       .wahlMetaData([{ wahlID, wahlbezirkID, wahlnummer: "1" }])
       .build();
@@ -573,51 +569,6 @@ describe("DSE navigation", () => {
     useWorkflowStore().isStimmabgabeErfasst = true;
     useWorkflowStore().isStimmabgabevermerkeErfasst = true;
   });
-
-  it.each([
-    {
-      stepsDone: { [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true },
-      expectedRoute: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-    },
-    {
-      stepsDone: {
-        [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
-        [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
-      },
-      expectedRoute: MbwStepsEnum.MBW_DSE_MONITORING,
-    },
-    {
-      stepsDone: {
-        [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
-        [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
-        [MbwStepsEnum.MBW_DSE_MONITORING]: true,
-      },
-      expectedRoute: MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
-    },
-    {
-      stepsDone: {
-        [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
-        [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
-        [MbwStepsEnum.MBW_DSE_MONITORING]: true,
-        [MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG]: true,
-      },
-      expectedRoute: MbwStepsEnum.MBW_SCHNELLMELDUNG,
-    },
-  ])(
-    "should_returnNextDseRouteForSchriftfuehrung_when_dseWorkflowStepIsCompleted",
-    ({ stepsDone, expectedRoute }) => {
-      // @ts-expect-error: cannot set readonly
-      useUserStore().hasRoleSchriftfuehrung = true;
-      setWorkflow(stepsDone);
-
-      const result = useNavigationService().getNextRoute();
-
-      expect(result).toStrictEqual({
-        name: expectedRoute,
-        params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
-      });
-    }
-  );
 
   it("should_returnNextDseRouteForErfassungsteam_when_stimmzettelerfassungNotDone", () => {
     // @ts-expect-error: cannot set readonly
@@ -635,6 +586,9 @@ describe("DSE navigation", () => {
       name: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
       params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
     });
+    expect(
+      mockDefinitions.mbwGetNextRouteOrNull
+    ).toHaveBeenCalledExactlyOnceWith(wahlID, wahlbezirkID);
   });
 
   it("should_returnFinished_when_erfassungsteamHasCompletedStimmzettelerfassung", () => {

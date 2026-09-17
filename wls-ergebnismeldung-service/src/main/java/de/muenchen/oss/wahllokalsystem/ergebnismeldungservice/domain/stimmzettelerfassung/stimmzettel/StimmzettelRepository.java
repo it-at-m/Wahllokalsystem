@@ -109,27 +109,16 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                 JOIN wahlvorschlag.kandidaten kandidat
                 WHERE stimmzettel.id.wahlID = :wahlID
                   AND stimmzettel.id.wahlbezirkID = :wahlbezirkID
-                  AND (
-                    EXISTS (
-                      SELECT discardedKandidat
-                      FROM Wahlvorschlag wahlvorschlagWithDiscardedKandidat
-                      JOIN wahlvorschlagWithDiscardedKandidat.kandidaten discardedKandidat
-                      WHERE wahlvorschlagWithDiscardedKandidat.stimmzettel = stimmzettel
-                        AND (discardedKandidat.discarded = true OR discardedKandidat.invalidVotes > 0)
-                    )
-                    OR EXISTS (
-                      SELECT votedKandidat
-                      FROM Wahlvorschlag wahlvorschlagWithVotedKandidat
-                      JOIN wahlvorschlagWithVotedKandidat.kandidaten votedKandidat
-                      WHERE wahlvorschlagWithVotedKandidat.stimmzettel = stimmzettel
-                        AND votedKandidat.votesByVoter > 0
-                    )
-                    OR (
-                      SELECT COUNT(selectedWahlvorschlag)
-                      FROM Wahlvorschlag selectedWahlvorschlag
-                      WHERE selectedWahlvorschlag.stimmzettel = stimmzettel
-                        AND selectedWahlvorschlag.selected = true
-                    ) >= 2
+                  AND stimmzettel.gueltigkeit = de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit.VALID
+                  AND EXISTS (
+                    SELECT kandidat
+                    FROM Kandidat kandidat
+                    WHERE kandidat.wahlvorschlag = wahlvorschlag
+                      AND (
+                        kandidat.discarded = true
+                        OR kandidat.votesByVoter IS NOT NULL AND kandidat.votesByVoter <> 0
+                        OR kandidat.votesByWahlvorschlag IS NOT NULL AND kandidat.votesByWahlvorschlag <> 0
+                      )
                   )
                 GROUP BY wahlvorschlag.wahlvorschlagID,
                          kandidat.kandidatID.kandidatID

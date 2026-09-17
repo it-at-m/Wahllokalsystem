@@ -50,6 +50,7 @@ public class InstancioModels {
         .toModel();
   }
 
+  //TODO stimmzettelkennung als supplier
   public static Model<Stimmzettel> createEmptyValidStimmzettelModel(
       String wahlID, String wahlbezirkID, String teamID, int stimmzettelkennung) {
     return Instancio.ofBlank(Stimmzettel.class)
@@ -61,6 +62,7 @@ public class InstancioModels {
         .toModel();
   }
 
+  //TODO stimmzettelkennung als supplier
   public static Model<Stimmzettel> createEmptyInvalidStimmzettelModel(
       String wahlID, String wahlbezirkID, String teamID, int stimmzettelkennung) {
     return Instancio.ofBlank(Stimmzettel.class)

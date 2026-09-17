@@ -1,9 +1,3 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel;
 
-public interface KandidatStimmenAnzahl {
-  String getWahlvorschlagID();
-
-  String getKandidatID();
-
-  Long getAnzahl();
-}
+public record KandidatStimmenAnzahl(String wahlvorschlagID, String kandidatID, long anzahl) {}

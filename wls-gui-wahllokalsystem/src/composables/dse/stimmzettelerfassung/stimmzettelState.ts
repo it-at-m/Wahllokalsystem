@@ -4,7 +4,7 @@ import type { Ref } from "vue";
 import { computed, onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
-import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 
 const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
 const { isSamePersistedStimmzettel } = useStimmzettelTools();

@@ -2,9 +2,9 @@ import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedSt
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
 
-import { useManagedStimmzettelKandidatUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel/managedStimmzettelKandidatUtils.ts";
+import { useBearbeitenDialogStimmzettelKandidatUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelKandidatUtils.ts";
 
-describe("managedStimmzettelKandidatUtils.ts", () => {
+describe("bearbeitenDialogStimmzettelKandidatUtils.ts", () => {
   const {
     prepareManagedStimmzettelStimmzettel,
     prepareManagedStimmzettelWahlvorschlag,
@@ -38,7 +38,9 @@ describe("managedStimmzettelKandidatUtils.ts", () => {
         ])
         .build();
 
-      const tools = useManagedStimmzettelKandidatUtils(ref(stimmzettel));
+      const tools = useBearbeitenDialogStimmzettelKandidatUtils(
+        ref(stimmzettel)
+      );
       expect(tools.getKandidatToAddVotesByOrdnungszahl(101)).toStrictEqual(
         kWithVotes
       );
@@ -71,7 +73,9 @@ describe("managedStimmzettelKandidatUtils.ts", () => {
             .build(),
         ])
         .build();
-      const tools = useManagedStimmzettelKandidatUtils(ref(stimmzettel));
+      const tools = useBearbeitenDialogStimmzettelKandidatUtils(
+        ref(stimmzettel)
+      );
 
       expect(tools.getKandidatToAddVotesForRangeByOrdnungszahl(101)).toEqual([
         k1,
@@ -113,7 +117,9 @@ describe("managedStimmzettelKandidatUtils.ts", () => {
         ])
         .build();
 
-      const tools = useManagedStimmzettelKandidatUtils(ref(stimmzettel));
+      const tools = useBearbeitenDialogStimmzettelKandidatUtils(
+        ref(stimmzettel)
+      );
       expect(tools.getKandidatForStreichungByOrdnungszahl(101)).toStrictEqual(
         kNoVotes
       );
@@ -145,7 +151,9 @@ describe("managedStimmzettelKandidatUtils.ts", () => {
         ])
         .build();
 
-      const tools = useManagedStimmzettelKandidatUtils(ref(stimmzettel));
+      const tools = useBearbeitenDialogStimmzettelKandidatUtils(
+        ref(stimmzettel)
+      );
       expect(
         tools.getKandidatToRemoveStreichungByOrdnungszahl(101)
       ).toStrictEqual(kStruck);

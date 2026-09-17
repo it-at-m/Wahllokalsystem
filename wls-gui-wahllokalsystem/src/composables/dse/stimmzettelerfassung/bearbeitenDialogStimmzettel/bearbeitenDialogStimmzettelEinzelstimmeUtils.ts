@@ -10,7 +10,7 @@ const {
   getUngueltigeStimmenOrZero,
 } = useKandidatTools();
 
-export function useManagedStimmzettelEinzelstimmeUtils(
+export function useBearbeitenDialogStimmzettelEinzelstimmeUtils(
   maxEinzelstimmen: number
 ) {
   function addVotesToKandidat(kandidat: Kandidat, numberOfVotes: number) {

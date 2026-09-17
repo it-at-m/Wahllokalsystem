@@ -1,7 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel;
 
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createEmptyKandidatWithSingleVoteByVoter;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createEmptyValidStimmzettelModel;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createEmptyWahlvorschlag;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createNonMatchingStimmzettelIDModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createStimmzettelWithOnlyOneWahlvorschlagSelectedModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestModels.createSingleWahlvorschlagWithEinzelstimmeModel;
@@ -756,14 +758,45 @@ class StimmzettelRepositoryTest {
 
     @Test
     void should_returnEmptyList_when_noStimmzettelIsMatching() {
-      val nonMatchingStimmzettel = new LinkedList<Stimmzettel>();
 
-      // 2 Wahlvorschlaege mit Daten
-      // 1 leerer Wahlvorschlag
-      // 1 Wahlvorschlag aber keine Kandidaten
-      // 1 Wahlvorschlag, aber nur ungültige Stimmen
-      // 1 Wahlvorschlag, aber nur gestrichen
-      // ungültigert Stimmzettel mit 1 Wahlvorschlag mit einer Einzelstimme
+      val stimmzettelWith2WahlvorschlaegenModel =
+          Instancio.of(
+                  createEmptyValidStimmzettelModel(
+                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+              .supply(
+                  field(Stimmzettel::getWahlvorschlaege),
+                  () ->
+                      List.of(
+                          Instancio.of(createEmptyWahlvorschlag("wv1"))
+                              .supply(
+                                  field(Wahlvorschlag::getKandidaten),
+                                  () -> List.of(createEmptyKandidatWithSingleVoteByVoter("k11", 1)))
+                              .create(),
+                          Instancio.of(createEmptyWahlvorschlag("wv2"))
+                              .supply(
+                                  field(Wahlvorschlag::getKandidaten),
+                                  () -> List.of(createEmptyKandidatWithSingleVoteByVoter("k21", 1)))
+                              .create()))
+              .toModel();
+      val stimmzettelWithoutAnyWahlvorschlaegeModel =
+          Instancio.of(
+                  createEmptyValidStimmzettelModel(
+                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+              .toModel();
+
+      val nonMatchingStimmzettel = new LinkedList<Stimmzettel>();
+      nonMatchingStimmzettel.add(Instancio.create(stimmzettelWith2WahlvorschlaegenModel));
+      nonMatchingStimmzettel.addAll(
+          createStimmzettelWithNonMatchingStimmzettelIDs(stimmzettelWith2WahlvorschlaegenModel));
+      nonMatchingStimmzettel.add(
+          createStimmzettelWithGueltigkeitInvalid(stimmzettelWith2WahlvorschlaegenModel));
+
+      nonMatchingStimmzettel.add(Instancio.create(stimmzettelWithoutAnyWahlvorschlaegeModel));
+      nonMatchingStimmzettel.addAll(
+          createStimmzettelWithNonMatchingStimmzettelIDs(
+              stimmzettelWithoutAnyWahlvorschlaegeModel));
+      nonMatchingStimmzettel.add(
+          createStimmzettelWithGueltigkeitInvalid(stimmzettelWithoutAnyWahlvorschlaegeModel));
 
       transactionTemplate.executeWithoutResult(
           status -> {

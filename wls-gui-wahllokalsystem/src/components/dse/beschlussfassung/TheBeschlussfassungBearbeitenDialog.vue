@@ -31,9 +31,10 @@
         </v-tabs-window-item>
         <v-tabs-window-item value="two" />
       </v-tabs-window>
-      <v-card-actions v-if="tab === 'one'">
+      <v-card-actions>
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
         <base-wls-button-save
+          v-if="tab === 'one'"
           save-text="Beschluss speichern"
           @click="onSaveClicked"
         />

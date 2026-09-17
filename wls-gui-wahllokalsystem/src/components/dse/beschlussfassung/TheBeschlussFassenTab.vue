@@ -72,7 +72,7 @@
         <v-row style="align-items: stretch">
           <v-col cols="5">
             <base-number-input
-              :model-value="stimmenDafuer"
+              v-model="stimmenDafuer"
               :rules="[required]"
               label="Stimmen dafür"
             />
@@ -90,7 +90,7 @@
           </v-col>
           <v-col cols="5">
             <base-number-input
-              :model-value="stimmenDagegen"
+              v-model="stimmenDagegen"
               :rules="[required]"
               label="Stimmen dagegen"
             />
@@ -111,7 +111,6 @@ import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
 
 const { required } = useRules();
 const { isBWB } = storeToRefs(useUserStore());
@@ -186,17 +185,28 @@ function rebuildBeschlussgruende() {
 watch(
   () => props.stimmzettel,
   (stimmzettel) => {
-    if (!stimmzettel) return;
-    isGueltig.value =
-      stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Valid;
+    if (stimmzettel) {
+      const systemBeschlussvorschlaege =
+        props.stimmzettel?.systemBeschlussvorschlag ?? [];
 
-    const texts = (stimmzettel.wahlvorstandBeschlussvorschlag ?? []).map(
-      (w) => w.text
-    );
-    andererGrund.value = texts.join(", ");
-    andererGrundChecked.value = texts.length > 0;
+      isGueltig.value = systemBeschlussvorschlaege.some(
+        (beschlussvorschlag) => {
+          const mappedReason =
+            mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
+              beschlussvorschlag.reason
+            );
+          return gruende.gueltig.some((grund) => grund === mappedReason);
+        }
+      );
 
-    rebuildBeschlussgruende();
+      const texts = (stimmzettel.wahlvorstandBeschlussvorschlag ?? []).map(
+        (w) => w.text
+      );
+      andererGrund.value = texts.join(", ");
+      andererGrundChecked.value = texts.length > 0;
+
+      rebuildBeschlussgruende();
+    }
   },
   { immediate: true }
 );

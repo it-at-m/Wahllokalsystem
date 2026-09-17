@@ -23,17 +23,16 @@ const mockDefinitions = vi.hoisted(() => ({
 
 vi.mock(
   import("@/composables/dse/stimmzettelerfassung/kandidatTools.ts"),
-  () => ({
-    useKandidatTools: () => ({
-      hasAnyKennzeichenOrReststimme:
-        mockDefinitions.hasAnyKennzeichenOrReststimme,
-      hasAnyKennzeichen: vi.fn(),
-      getTotalEinzelAndUngueltigeStimmenOfKandidatenWithSameId: vi.fn(),
-      getEinzelstimmenOrZero: vi.fn(),
-      getTotalEinzelstimmenOfKandidatenWithSameId: vi.fn(),
-      getUngueltigeStimmenOrZero: vi.fn(),
-    }),
-  })
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useKandidatTools: () => ({
+        ...original.useKandidatTools(),
+        hasAnyKennzeichenOrReststimme:
+          mockDefinitions.hasAnyKennzeichenOrReststimme,
+      }),
+    };
+  }
 );
 
 const {
@@ -62,8 +61,12 @@ const { generateRandomNumber, generateRandomString } =
   useCommonTestDataFactory();
 
 describe("stimmzettelMapper.ts", () => {
-  const { toModel, toPersistedStimmzettel, toDTO, resetStimmzettel } =
-    useStimmzettelMapper();
+  const {
+    toModel,
+    toPersistedStimmzettel,
+    toDTO,
+    mapPersistedStimmzettelValuesToExistingDseStimmzettel,
+  } = useStimmzettelMapper();
   const teamID = "teamID";
 
   afterEach(() => {
@@ -589,28 +592,7 @@ describe("stimmzettelMapper.ts", () => {
     });
   });
 
-  describe("resetStimmzettel", () => {
-    it("should_resetStimmzettelToEmpty_when_calledWithoutReference", () => {
-      const stimmzettelToMapTo = ref(createStimmzettel());
-
-      const result = resetStimmzettel(stimmzettelToMapTo);
-
-      expect(result.value.wahlvorstandBeschlussvorschlag).toStrictEqual([]);
-      expect(result.value.systemBeschlussvorschlag).toStrictEqual([]);
-      expect(result.value.gueltigkeit).toStrictEqual("VALID");
-      expect(result.value.beschlussfassung).toBeNull();
-      expect(result.value.invalideVotes).toBe(0);
-      result.value.wahlvorschlaege.forEach((wahlvorschlag) => {
-        expect(wahlvorschlag.selected).toBe(false);
-        wahlvorschlag.kandidaten.forEach((k) => {
-          expect(k.einzelstimmen).toBeNull();
-          expect(k.ungueltigeStimmen).toBeNull();
-          expect(k.reststimmen).toBeNull();
-          expect(k.durchgestrichen).toBe(false);
-        });
-      });
-    });
-
+  describe("mapPersistedStimmzettelValuesToExistingDseStimmzettel", () => {
     it("should_resetStimmzettelToReference_when_calledWithReference", () => {
       const stimmzettelToMapToWahlvorschlag = prepareStimmzettelWahlvorschlag()
         .wahlvorschlagID("1")
@@ -682,23 +664,28 @@ describe("stimmzettelMapper.ts", () => {
         .beschlussfassung(null)
         .build();
 
-      const result = resetStimmzettel(stimmzettelToMapTo, stimmzettelToResetTo);
+      mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+        stimmzettelToMapTo.value,
+        stimmzettelToResetTo
+      );
 
-      expect(result.value.wahlvorstandBeschlussvorschlag).toStrictEqual([
+      expect(
+        stimmzettelToMapTo.value.wahlvorstandBeschlussvorschlag
+      ).toStrictEqual([
         {
           text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
         },
       ]);
-      expect(result.value.systemBeschlussvorschlag).toStrictEqual([
+      expect(stimmzettelToMapTo.value.systemBeschlussvorschlag).toStrictEqual([
         {
           reason:
             SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
         },
       ]);
-      expect(result.value.gueltigkeit).toStrictEqual("INVALID");
-      expect(result.value.beschlussfassung).toBeNull();
-      expect(result.value.invalideVotes).toBe(0);
-      result.value.wahlvorschlaege.forEach((wahlvorschlag) => {
+      expect(stimmzettelToMapTo.value.gueltigkeit).toStrictEqual("INVALID");
+      expect(stimmzettelToMapTo.value.beschlussfassung).toBeNull();
+      expect(stimmzettelToMapTo.value.invalideVotes).toBe(0);
+      stimmzettelToMapTo.value.wahlvorschlaege.forEach((wahlvorschlag) => {
         expect(wahlvorschlag.selected).toBe(true);
         wahlvorschlag.kandidaten.forEach((k) => {
           expect(k.einzelstimmen).toBe(5);

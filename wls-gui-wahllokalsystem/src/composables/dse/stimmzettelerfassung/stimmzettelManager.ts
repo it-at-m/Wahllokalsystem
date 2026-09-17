@@ -58,11 +58,10 @@ export function useStimmzettelManager(
       stimmzettelToSet
     );
 
-    managedBearbeitenDialogStimmzettel.value =
-      mapPersistedStimmzettelValuesToExistingDseStimmzettel(
-        managedBearbeitenDialogStimmzettel.value,
-        stimmzettelToSet
-      );
+    mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+      managedBearbeitenDialogStimmzettel.value,
+      stimmzettelToSet
+    );
   }
 
   function getStimmzettelSnapshot(): PersistedStimmzettel {

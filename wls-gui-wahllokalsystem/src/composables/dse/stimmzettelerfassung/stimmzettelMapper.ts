@@ -157,8 +157,6 @@ export function useStimmzettelMapper() {
       ? { ...source.beschlussfassung }
       : null;
     target.invalideVotes = source.invalideVotes;
-
-    return target;
   }
 
   function _kandidatDtoToModel(dto: KandidatDTO): Kandidat {

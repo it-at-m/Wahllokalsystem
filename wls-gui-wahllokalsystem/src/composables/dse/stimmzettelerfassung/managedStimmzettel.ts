@@ -144,7 +144,7 @@ function _useManagedStimmzettel(
   ) {
     changeHistory.reset();
     if (stimmzettelBeforeEdit) {
-      stimmzettel.value = mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+      mapPersistedStimmzettelValuesToExistingDseStimmzettel(
         stimmzettel.value,
         stimmzettelBeforeEdit
       );

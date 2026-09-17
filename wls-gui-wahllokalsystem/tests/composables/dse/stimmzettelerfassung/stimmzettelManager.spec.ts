@@ -84,9 +84,6 @@ const {
   preparePersistedStimmzettel,
   preparePersistedStimmzettelWahlvorschlag,
   preparePersistedStimmzettelKandidat,
-  prepareStimmzettel,
-  prepareStimmzettelWahlvorschlag,
-  prepareStimmzettelKandidat,
 } = useStimmzettelTestDataFactory();
 
 describe("stimmzettelManager.ts", () => {
@@ -280,28 +277,22 @@ describe("stimmzettelManager.ts", () => {
           ])
           .build();
 
-      mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockReturnValue(
-        structuredClone(
-          prepareStimmzettel()
-            .invalideVotes(3)
-            .wahlvorschlaege([
-              prepareStimmzettelWahlvorschlag()
-                .wahlvorschlagID(wahlvorschlagID)
-                .selected(true)
-                .kandidaten([
-                  prepareStimmzettelKandidat()
-                    .kandidatId(kandidatID)
-                    .nennung(1)
-                    .einzelstimmen(5)
-                    .ungueltigeStimmen(1)
-                    .reststimmen(2)
-                    .durchgestrichen(true)
-                    .build(),
-                ])
-                .build(),
-            ])
-            .build()
-        )
+      mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockImplementation(
+        (target, source) => {
+          target.invalideVotes = source.invalideVotes;
+
+          target.wahlvorschlaege[0].selected =
+            source.wahlvorschlaege[0].selected;
+
+          target.wahlvorschlaege[0].kandidaten[0].einzelstimmen =
+            source.wahlvorschlaege[0].kandidaten[0].votesByVoter;
+          target.wahlvorschlaege[0].kandidaten[0].ungueltigeStimmen =
+            source.wahlvorschlaege[0].kandidaten[0].invalidVotes;
+          target.wahlvorschlaege[0].kandidaten[0].reststimmen =
+            source.wahlvorschlaege[0].kandidaten[0].votesByWahlvorschlag;
+          target.wahlvorschlaege[0].kandidaten[0].durchgestrichen =
+            source.wahlvorschlaege[0].kandidaten[0].isDiscarded;
+        }
       );
 
       expect(stimmzettelBeforeEdit.value).toBeNull();
@@ -330,7 +321,8 @@ describe("stimmzettelManager.ts", () => {
   describe("hasStimmzettelBeenEdited", () => {
     beforeEach(() => {
       mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockImplementation(
-        (dseStimmzettel) => dseStimmzettel
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (target, source) => target
       );
       mockDefinitions.normalizePersistedStimmzettel.mockImplementation(
         (persistedStimmzettel) => persistedStimmzettel

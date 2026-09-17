@@ -7,6 +7,7 @@ const {
   createStimmzettelWahlvorschlag,
   prepareStimmzettelKandidat,
   prepareStimmzettelKandidatOfWahlvorschlag,
+  preparePersistedStimmzettelKandidat,
 } = useStimmzettelTestDataFactory();
 
 describe("kandidatTools.ts", () => {
@@ -305,6 +306,44 @@ describe("kandidatTools.ts", () => {
           firstKandidat
         )
       ).toStrictEqual(10);
+    });
+  });
+
+  describe("sortAndDeepCloneKandidaten", () => {
+    const kdA1 = preparePersistedStimmzettelKandidat()
+      .kandidatId("a")
+      .nennung(1)
+      .build();
+    const kdA2 = preparePersistedStimmzettelKandidat()
+      .kandidatId("a")
+      .nennung(2)
+      .build();
+    const kdB = preparePersistedStimmzettelKandidat()
+      .kandidatId("b")
+      .nennung(1)
+      .build();
+
+    it.each([
+      { text: "NotSorted", kandidaten: [kdB, kdA2, kdA1] },
+      { text: "Sorted", kandidaten: [kdA1, kdA2, kdB] },
+    ])(
+      `should_returnSortedAndClonedKandidaten_when_givenListOfKandidatenThatIs'$text'`,
+      ({ kandidaten }) => {
+        const expectedResult = [kdA1, kdA2, kdB];
+        const arrayBeforeSort = kandidaten.slice();
+
+        const result = unitUnderTest.sortAndDeepCloneKandidaten(kandidaten);
+
+        expect(result).not.toBe(kandidaten);
+        expect(result).toStrictEqual(expectedResult);
+        expect(kandidaten).toStrictEqual(arrayBeforeSort);
+      }
+    );
+
+    it("should_returnEmptyList_when_givenEmptyList", () => {
+      const result = unitUnderTest.sortAndDeepCloneKandidaten([]);
+
+      expect(result).toStrictEqual([]);
     });
   });
 });

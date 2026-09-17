@@ -405,12 +405,8 @@ class StimmzettelRepositoryTest {
       nonMatchingStimmzettel.add(
           Instancio.create(stimmzettelWithSingleWahlvorschlagWithReststimmeAndEinzelstimmeModel));
       nonMatchingStimmzettel.add(Instancio.create(stimmzettelWith2SelectedWahlvorschlaegenModel));
-      nonMatchingStimmzettel.add(
-          createStimmzettelWithGueltigkeitInvalid(
-              stimmzettelWithSingleWahlvorschlagWithOnlyReststimmenModel));
       nonMatchingStimmzettel.addAll(
-          createStimmzettelWithNonMatchingStimmzettelIDs(
-              stimmzettelWithSingleWahlvorschlagWithOnlyReststimmenModel));
+          createNonValidVariants(stimmzettelWithSingleWahlvorschlagWithOnlyReststimmenModel));
 
       transactionTemplate.executeWithoutResult(
           status -> {
@@ -519,11 +515,7 @@ class StimmzettelRepositoryTest {
 
         val nonMatchingStimmzettel = new LinkedList<Stimmzettel>();
         nonMatchingStimmzettel.addAll(
-            createStimmzettelWithNonMatchingStimmzettelIDs(
-                stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
-        nonMatchingStimmzettel.add(
-            createStimmzettelWithGueltigkeitInvalid(
-                stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
+            createNonValidVariants(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
 
         transactionTemplate.executeWithoutResult(
             status -> {
@@ -649,19 +641,11 @@ class StimmzettelRepositoryTest {
         val nonMatchingStimmzettel = new LinkedList<Stimmzettel>();
         nonMatchingStimmzettel.add(
             Instancio.create(stimmzettelWithSingleWahlvorschlagWithReststimmeModel));
-
-        nonMatchingStimmzettel.add(
-            createStimmzettelWithGueltigkeitInvalid(
+        nonMatchingStimmzettel.addAll(
+            createNonValidVariants(
                 stimmzettelWithSingleWahlvorschlagWithReststimmeAndEinzelstimmeModel));
         nonMatchingStimmzettel.addAll(
-            createStimmzettelWithNonMatchingStimmzettelIDs(
-                stimmzettelWithSingleWahlvorschlagWithReststimmeAndEinzelstimmeModel));
-
-        nonMatchingStimmzettel.add(
-            createStimmzettelWithGueltigkeitInvalid(
-                stimmzettelWithSingleWahlvorschlagWithStreichungAndEinzelstimmeModel));
-        nonMatchingStimmzettel.addAll(
-            createStimmzettelWithNonMatchingStimmzettelIDs(
+            createNonValidVariants(
                 stimmzettelWithSingleWahlvorschlagWithStreichungAndEinzelstimmeModel));
 
         transactionTemplate.executeWithoutResult(
@@ -809,25 +793,11 @@ class StimmzettelRepositoryTest {
 
         val nonMatchingStimmzettel = new LinkedList<Stimmzettel>();
         nonMatchingStimmzettel.add(Instancio.create(stimmzettelSingleWvOnlyReststimmenModel));
-
-        nonMatchingStimmzettel.add(
-            createStimmzettelWithGueltigkeitInvalid(wvStreichungAndReststimmeModel));
         nonMatchingStimmzettel.addAll(
             createStimmzettelWithNonMatchingStimmzettelIDs(wvStreichungAndReststimmeModel));
-
-        nonMatchingStimmzettel.add(
-            createStimmzettelWithGueltigkeitInvalid(wvStreichungAndEinzelstimmeModel));
-        nonMatchingStimmzettel.addAll(
-            createStimmzettelWithNonMatchingStimmzettelIDs(wvStreichungAndEinzelstimmeModel));
-
-        nonMatchingStimmzettel.add(createStimmzettelWithGueltigkeitInvalid(wvStreichungModel));
-        nonMatchingStimmzettel.addAll(
-            createStimmzettelWithNonMatchingStimmzettelIDs(wvStreichungModel));
-
-        nonMatchingStimmzettel.add(
-            createStimmzettelWithGueltigkeitInvalid(wvMultipleStreichungModel));
-        nonMatchingStimmzettel.addAll(
-            createStimmzettelWithNonMatchingStimmzettelIDs(wvMultipleStreichungModel));
+        nonMatchingStimmzettel.addAll(createNonValidVariants(wvStreichungAndEinzelstimmeModel));
+        nonMatchingStimmzettel.addAll(createNonValidVariants(wvStreichungModel));
+        nonMatchingStimmzettel.addAll(createNonValidVariants(wvMultipleStreichungModel));
 
         transactionTemplate.executeWithoutResult(
             status -> {
@@ -890,26 +860,16 @@ class StimmzettelRepositoryTest {
 
       val nonMatchingStimmzettel = new LinkedList<Stimmzettel>();
       nonMatchingStimmzettel.add(Instancio.create(stimmzettelWith2WahlvorschlaegenModel));
-      nonMatchingStimmzettel.addAll(
-          createStimmzettelWithNonMatchingStimmzettelIDs(stimmzettelWith2WahlvorschlaegenModel));
-      nonMatchingStimmzettel.add(
-          createStimmzettelWithGueltigkeitInvalid(stimmzettelWith2WahlvorschlaegenModel));
+      nonMatchingStimmzettel.addAll(createNonValidVariants(stimmzettelWith2WahlvorschlaegenModel));
 
       nonMatchingStimmzettel.add(Instancio.create(stimmzettelWithoutAnyWahlvorschlaegeModel));
       nonMatchingStimmzettel.addAll(
-          createStimmzettelWithNonMatchingStimmzettelIDs(
-              stimmzettelWithoutAnyWahlvorschlaegeModel));
-      nonMatchingStimmzettel.add(
-          createStimmzettelWithGueltigkeitInvalid(stimmzettelWithoutAnyWahlvorschlaegeModel));
+          createNonValidVariants(stimmzettelWithoutAnyWahlvorschlaegeModel));
 
       nonMatchingStimmzettel.add(
           Instancio.create(stimmzettelWithSingleWahlvorschlagWithoutAnyKandidatenModel));
       nonMatchingStimmzettel.addAll(
-          createStimmzettelWithNonMatchingStimmzettelIDs(
-              stimmzettelWithSingleWahlvorschlagWithoutAnyKandidatenModel));
-      nonMatchingStimmzettel.add(
-          createStimmzettelWithGueltigkeitInvalid(
-              stimmzettelWithSingleWahlvorschlagWithoutAnyKandidatenModel));
+          createNonValidVariants(stimmzettelWithSingleWahlvorschlagWithoutAnyKandidatenModel));
 
       transactionTemplate.executeWithoutResult(
           status -> {
@@ -1127,37 +1087,14 @@ class StimmzettelRepositoryTest {
 
       val nonMatchingStimmzettel = new LinkedList<Stimmzettel>();
       nonMatchingStimmzettel.add(Instancio.create(stimmzettelWithExactlyOneListenkreuzModel));
-
+      nonMatchingStimmzettel.addAll(createNonValidVariants(stimmzettelWithEinzelstimmeModel));
+      nonMatchingStimmzettel.addAll(createNonValidVariants(stimmzettelWithStreichungModel));
       nonMatchingStimmzettel.addAll(
-          createStimmzettelWithNonMatchingStimmzettelIDs(stimmzettelWithEinzelstimmeModel));
-      nonMatchingStimmzettel.add(
-          createStimmzettelWithGueltigkeitInvalid(stimmzettelWithEinzelstimmeModel));
-
+          createNonValidVariants(stimmzettelWithMultipleStreichungenModel));
       nonMatchingStimmzettel.addAll(
-          createStimmzettelWithNonMatchingStimmzettelIDs(stimmzettelWithStreichungModel));
-      nonMatchingStimmzettel.add(
-          createStimmzettelWithGueltigkeitInvalid(stimmzettelWithStreichungModel));
-
-      nonMatchingStimmzettel.addAll(
-          createStimmzettelWithNonMatchingStimmzettelIDs(stimmzettelWithMultipleStreichungenModel));
-      nonMatchingStimmzettel.add(
-          createStimmzettelWithGueltigkeitInvalid(stimmzettelWithMultipleStreichungenModel));
-
-      nonMatchingStimmzettel.addAll(
-          createStimmzettelWithNonMatchingStimmzettelIDs(
-              stimmzettelWithReststimmeAndEinzelstimmeModel));
-      nonMatchingStimmzettel.add(
-          createStimmzettelWithGueltigkeitInvalid(stimmzettelWithReststimmeAndEinzelstimmeModel));
-
-      nonMatchingStimmzettel.addAll(
-          createStimmzettelWithNonMatchingStimmzettelIDs(stimmzettelWithTwoListenkreuzen));
-      nonMatchingStimmzettel.add(
-          createStimmzettelWithGueltigkeitInvalid(stimmzettelWithTwoListenkreuzen));
-
-      nonMatchingStimmzettel.addAll(
-          createStimmzettelWithNonMatchingStimmzettelIDs(stimmzettelWithTwoListenkreuzen));
-      nonMatchingStimmzettel.add(
-          createStimmzettelWithGueltigkeitInvalid(stimmzettelWithTwoChangedWahlvorschlaegen));
+          createNonValidVariants(stimmzettelWithReststimmeAndEinzelstimmeModel));
+      nonMatchingStimmzettel.addAll(createNonValidVariants(stimmzettelWithTwoListenkreuzen));
+      nonMatchingStimmzettel.addAll(createNonValidVariants(stimmzettelWithTwoListenkreuzen));
 
       transactionTemplate.executeWithoutResult(
           status -> {
@@ -1222,6 +1159,15 @@ class StimmzettelRepositoryTest {
     }
   }
 
+  private List<Stimmzettel> createNonValidVariants(Model<Stimmzettel> model) {
+    val result = new LinkedList<Stimmzettel>();
+
+    result.addAll(createStimmzettelWithNonMatchingStimmzettelIDs(model));
+    result.addAll(createStimmzettelWithOtherGueltigkeiten(model, StimmzettelGueltigkeit.VALID));
+
+    return result;
+  }
+
   private List<Stimmzettel> createStimmzettelWithNonMatchingStimmzettelIDs(
       Model<Stimmzettel> stimmzettelModel) {
     val wrongWahlbezirkID =
@@ -1260,23 +1206,34 @@ class StimmzettelRepositoryTest {
     return List.of(wrongWahlbezirkID, wrongWahlID);
   }
 
-  // TODO umbauen in nonValid: Listen mit Stimmzettel != VALID
-  private Stimmzettel createStimmzettelWithGueltigkeitInvalid(Model<Stimmzettel> stimmzettelModel) {
-    val stimmzettelInvalid =
-        Instancio.of(stimmzettelModel)
-            .set(
-                field(Stimmzettel::getId),
-                new StimmzettelID(
-                    wahlbezirkID, wahlID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
-            .set(field(Stimmzettel::getGueltigkeit), StimmzettelGueltigkeit.INVALID)
-            .create();
-    stimmzettelInvalid
-        .getWahlvorschlaege()
-        .forEach(
-            wahlvorschlag ->
-                wahlvorschlag.setWahlvorschlagID(
-                    "wvStimmzettelInvalid" + wahlvorschlagIDCounter.getAndIncrement()));
+  private List<Stimmzettel> createStimmzettelWithOtherGueltigkeiten(
+      Model<Stimmzettel> stimmzettelModel, StimmzettelGueltigkeit gueltigkeitToExclude) {
+    return Arrays.stream(StimmzettelGueltigkeit.values())
+        .filter(gueltigkeit -> !gueltigkeitToExclude.equals(gueltigkeit))
+        .map(
+            gueltigkeit -> {
+              val stimmzettelInvalid =
+                  Instancio.of(stimmzettelModel)
+                      .set(
+                          field(Stimmzettel::getId),
+                          new StimmzettelID(
+                              wahlbezirkID,
+                              wahlID,
+                              teamA,
+                              stimmzettelkennungSequenz.getAndIncrement()))
+                      .set(field(Stimmzettel::getGueltigkeit), gueltigkeit)
+                      .create();
+              stimmzettelInvalid
+                  .getWahlvorschlaege()
+                  .forEach(
+                      wahlvorschlag ->
+                          wahlvorschlag.setWahlvorschlagID(
+                              "wvStimmzettel"
+                                  + gueltigkeit.name()
+                                  + wahlvorschlagIDCounter.getAndIncrement()));
 
-    return stimmzettelInvalid;
+              return stimmzettelInvalid;
+            })
+        .toList();
   }
 }

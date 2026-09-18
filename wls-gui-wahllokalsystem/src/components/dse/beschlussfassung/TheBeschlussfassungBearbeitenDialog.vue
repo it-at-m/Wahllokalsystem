@@ -13,7 +13,11 @@
         class="rounded-t border-b"
       >
         <v-tab value="one">
-          <v-icon icon="$stimmzettelBeschluss" />
+          <v-icon
+            icon="$stimmzettelBeschluss"
+            size="x-large"
+            class="mr-2"
+          />
           Beschluss fassen
         </v-tab>
         <v-tab value="two"> Stimmzettel anzeigen und bearbeiten </v-tab>

@@ -25,11 +25,11 @@ import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Stimm
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.createSingleWahlvorschlagModelWithReststimmeAndEinzelstimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.createSingleWahlvorschlagModelWithStreichungAndEinzelStimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithEinzelstimme;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithInvalideVoteAndReststimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithMultipleStreichungen;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithOnlyReststimmenKandidaten;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithReststimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithReststimmeAndEinzelstimme;
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithSingleInvalideVote;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithSingleStreichungen;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithStreichungAndEinzelStimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithStreichungAndReststimme;
@@ -320,6 +320,8 @@ class StimmzettelRepositoryTest {
           .usingRecursiveComparison()
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
+
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToFind.size());
     }
 
     @Test
@@ -423,6 +425,18 @@ class StimmzettelRepositoryTest {
           .usingRecursiveComparison()
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
+
+      Assertions.assertThat(stimmzettelRepository.count())
+          .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
+    }
+
+    @Test
+    void should_returnEmptyList_when_noDataWasFound() {
+      val result =
+          unitUnderTest
+              .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneSelectedWahlvorschlagAndNoOtherKennzeichen(
+                  wahlID, wahlbezirkID);
+      Assertions.assertThat(result).isEmpty();
     }
   }
 
@@ -493,6 +507,8 @@ class StimmzettelRepositoryTest {
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
+
+        Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToFind.size());
       }
 
       @Test
@@ -505,22 +521,25 @@ class StimmzettelRepositoryTest {
                     field(Stimmzettel::getWahlvorschlaege),
                     singleWahlvorschlagModelWithEinzelstimme)
                 .toModel();
-
-        val stimmzettelToFind = new LinkedList<Stimmzettel>();
-        stimmzettelToFind.add(
-            Instancio.create(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
-
-        val nonMatchingStimmzettel =
-            new LinkedList<>(
-                createNonValidVariants(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
-        nonMatchingStimmzettel.add(
+        val stimmzettelWithSingleWahlvorschlagAndInvalidVote =
             Instancio.of(
                     createBlankValidStimmzettelModel(
                         wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
                 .setModel(
                     field(Stimmzettel::getWahlvorschlaege),
-                    singleWahlvorschlagModelWithSingleInvalideVote)
-                .create());
+                    singleWahlvorschlagModelWithInvalideVoteAndReststimme)
+                .toModel();
+
+        val stimmzettelToFind = new LinkedList<Stimmzettel>();
+        stimmzettelToFind.add(
+            Instancio.create(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
+        stimmzettelToFind.add(Instancio.create(stimmzettelWithSingleWahlvorschlagAndInvalidVote));
+
+        val nonMatchingStimmzettel =
+            new LinkedList<>(
+                createNonValidVariants(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
+        nonMatchingStimmzettel.addAll(
+            createNonValidVariants(stimmzettelWithSingleWahlvorschlagAndInvalidVote));
 
         transactionTemplate.executeWithoutResult(
             status -> {
@@ -533,11 +552,17 @@ class StimmzettelRepositoryTest {
                 .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneWahlvorschlagAndAtLeastOneOtherKennzeichen(
                     wahlID, wahlbezirkID);
 
-        val expectedResult = List.of(new WahlvorschlagStimmzettelAnzahl("wvEinzelstimme", 1L));
+        val expectedResult =
+            List.of(
+                new WahlvorschlagStimmzettelAnzahl("wvEinzelstimme", 1L),
+                new WahlvorschlagStimmzettelAnzahl("wvInvalidVote+Reststimme", 1L));
         Assertions.assertThat(result)
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
+
+        Assertions.assertThat(stimmzettelRepository.count())
+            .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
       }
     }
 
@@ -605,13 +630,14 @@ class StimmzettelRepositoryTest {
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
+
+        Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToFind.size());
       }
 
       @Test
       void should_findMatchingStimmzettel_when_matchingAndNonMatchingStimmzettelAreGiven() {
         val stimmzettelToFind = new LinkedList<Stimmzettel>();
 
-        // votes by wahlvorschlag + votes by voter
         val stimmzettelWithSingleWahlvorschlagWithReststimmeAndEinzelstimmeModel =
             Instancio.of(
                     createBlankValidStimmzettelModel(
@@ -670,6 +696,9 @@ class StimmzettelRepositoryTest {
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
+
+        Assertions.assertThat(stimmzettelRepository.count())
+            .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
       }
     }
 
@@ -880,6 +909,8 @@ class StimmzettelRepositoryTest {
               .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneWahlvorschlagAndAtLeastOneOtherKennzeichen(
                   wahlID, wahlbezirkID);
       Assertions.assertThat(result).isEmpty();
+
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(nonMatchingStimmzettel.size());
     }
   }
 
@@ -891,10 +922,13 @@ class StimmzettelRepositoryTest {
 
       val stimmzettelToCount = new LinkedList<Stimmzettel>();
 
-      stimmzettelToCount.add(
-          Instancio.create(
-              createInvalidStimmzettelModelWithSingleWahlvorschlagWithEinzelstimme(
-                  wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement())));
+      val invalidStimmzettelModelWithSingleEinzelstimme =
+          Instancio.of(
+                  createInvalidStimmzettelModelWithSingleWahlvorschlagWithEinzelstimme(
+                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+              .toModel();
+
+      stimmzettelToCount.add(Instancio.create(invalidStimmzettelModelWithSingleEinzelstimme));
       stimmzettelToCount.add(
           Instancio.create(
               createInvalidStimmzettelModelWithSingleWahlvorschlagWithMultipleStreichungen(
@@ -908,12 +942,23 @@ class StimmzettelRepositoryTest {
               createInvalidStimmzettelModelWith2WahlvorschlaegenEachWithEinzelstimme(
                   wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement())));
 
+      val nonMatchingStimmzettel =
+          new LinkedList<>(
+              createStimmzettelWithOtherGueltigkeiten(
+                  invalidStimmzettelModelWithSingleEinzelstimme, StimmzettelGueltigkeit.INVALID));
+
       transactionTemplate.executeWithoutResult(
-          status -> stimmzettelRepository.saveAll(stimmzettelToCount));
+          status -> {
+            stimmzettelRepository.saveAll(stimmzettelToCount);
+            stimmzettelRepository.saveAll(nonMatchingStimmzettel);
+          });
 
       val result = unitUnderTest.countInvalidStimmzettel(wahlID, wahlbezirkID);
 
       Assertions.assertThat(result).isEqualTo(stimmzettelToCount.size());
+
+      Assertions.assertThat(stimmzettelRepository.count())
+          .isEqualTo(stimmzettelToCount.size() + nonMatchingStimmzettel.size());
     }
 
     @Test
@@ -954,6 +999,8 @@ class StimmzettelRepositoryTest {
 
       val result = unitUnderTest.countInvalidStimmzettel(wahlID, wahlbezirkID);
       Assertions.assertThat(result).isEqualTo(0L);
+
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(nonMatchingStimmzettel.size());
     }
   }
 
@@ -1048,6 +1095,8 @@ class StimmzettelRepositoryTest {
           .usingRecursiveComparison()
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
+
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToCount.size());
     }
 
     @Test
@@ -1111,6 +1160,18 @@ class StimmzettelRepositoryTest {
           .usingRecursiveComparison()
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
+
+      Assertions.assertThat(stimmzettelRepository.count())
+          .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
+    }
+
+    @Test
+    void should_returnEmptyList_when_noDataWasFound() {
+      val result =
+          unitUnderTest
+              .getSumValidKandidatenVotesPerWahlvorschlagWhenNotOnlyOneListenkreuzReststimmeAreGiven(
+                  wahlID, wahlbezirkID);
+      Assertions.assertThat(result).isEmpty();
     }
 
     private List<KandidatStimmenAnzahl> getExpectedKandidatenStimmenAnzahl(

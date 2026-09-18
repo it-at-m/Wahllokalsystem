@@ -80,6 +80,7 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                       AND (
                         kandidat.discarded = true
                         OR kandidat.votesByVoter > 0
+                        OR kandidat.invalidVotes > 0
                       )
                   )
                 GROUP BY selectedWahlvorschlag.wahlvorschlagID
@@ -97,6 +98,7 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                   AND stimmzettel.id.wahlbezirkID = :wahlbezirkID
                   AND stimmzettel.gueltigkeit = de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit.INVALID
                 """)
+  // for MBW Stapel D Ungueltig
   long countInvalidStimmzettel(
       @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
 

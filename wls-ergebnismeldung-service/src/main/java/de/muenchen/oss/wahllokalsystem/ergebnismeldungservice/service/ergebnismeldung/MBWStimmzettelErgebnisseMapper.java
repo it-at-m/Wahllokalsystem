@@ -1,6 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
@@ -11,13 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class MBWStimmzettelErgebnisseMapper implements MBWStapelErgebnisCollector {
+public class MBWStimmzettelErgebnisseMapper {
 
   private final StimmzettelService stimmzettelService;
 
-  @Override
   @Transactional(readOnly = true)
-  public MBWErgebnisseModel getErgebnisse(String wahlID, String wahlbezirkID) {
+  public ErgebnismeldungsErgebnisseModel getErgebnisse(String wahlID, String wahlbezirkID) {
     val stapelA =
         stimmzettelService
             .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
@@ -27,6 +28,8 @@ public class MBWStimmzettelErgebnisseMapper implements MBWStapelErgebnisCollecto
                 entry ->
                     new ErgebnisModel(entry.wahlvorschlagID(), null, null, entry.anzahl(), null))
             .toList();
+    val stapelAErgebnisseModel =
+        new ErgebnisseModel(wahlbezirkID, wahlID, StapelartModel.MBW_A, stapelA);
 
     val stapelB =
         stimmzettelService
@@ -37,6 +40,8 @@ public class MBWStimmzettelErgebnisseMapper implements MBWStapelErgebnisCollecto
                 entry ->
                     new ErgebnisModel(entry.wahlvorschlagID(), null, null, entry.anzahl(), null))
             .toList();
+    val stapelBErgebnisseModel =
+        new ErgebnisseModel(wahlbezirkID, wahlID, StapelartModel.MBW_B, stapelB);
 
     val stapelBC =
         stimmzettelService.getKandidatVotes(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
@@ -45,6 +50,8 @@ public class MBWStimmzettelErgebnisseMapper implements MBWStapelErgebnisCollecto
                     new ErgebnisModel(
                         entry.wahlvorschlagID(), entry.kandidatID(), null, entry.anzahl(), null))
             .toList();
+    val stapelBCErgebnisseModel =
+        new ErgebnisseModel(wahlbezirkID, wahlID, StapelartModel.MBW_B_C, stapelBC);
 
     val countStapelDUngueltig =
         List.of(
@@ -54,7 +61,12 @@ public class MBWStimmzettelErgebnisseMapper implements MBWStapelErgebnisCollecto
                 null,
                 stimmzettelService.getCountUngueltige(new BezirkUndWahlID(wahlID, wahlbezirkID)),
                 null));
+    val stapelDErgebnisseModel =
+        new ErgebnisseModel(
+            wahlbezirkID, wahlID, StapelartModel.MBW_D_UNGUELTIG, countStapelDUngueltig);
 
-    return new MBWErgebnisseModel(stapelA, stapelB, countStapelDUngueltig, stapelBC);
+    return new ErgebnismeldungsErgebnisseModel(
+        List.of(stapelAErgebnisseModel, stapelBErgebnisseModel, stapelBCErgebnisseModel),
+        List.of(stapelDErgebnisseModel));
   }
 }

@@ -1,6 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.KandidatStimmenAnzahlModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.StimmzettelService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel.WahlvorschlagStimmzettelAnzahlModel;
@@ -49,11 +51,17 @@ class MBWStimmzettelErgebnisseMapperTest {
       val result = unitUnderTest.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID);
 
       val expectedResult =
-          new MBWErgebnisseModel(
-              List.of(),
-              List.of(),
-              List.of(new ErgebnisModel(null, null, null, 0L, null)),
-              List.of());
+          new ErgebnismeldungsErgebnisseModel(
+              List.of(
+                  new ErgebnisseModel(WAHLBEZIRK_ID, WAHL_ID, StapelartModel.MBW_A, List.of()),
+                  new ErgebnisseModel(WAHLBEZIRK_ID, WAHL_ID, StapelartModel.MBW_B, List.of()),
+                  new ErgebnisseModel(WAHLBEZIRK_ID, WAHL_ID, StapelartModel.MBW_B_C, List.of())),
+              List.of(
+                  new ErgebnisseModel(
+                      WAHLBEZIRK_ID,
+                      WAHL_ID,
+                      StapelartModel.MBW_D_UNGUELTIG,
+                      List.of(new ErgebnisModel(null, null, null, 0L, null)))));
       Assertions.assertThat(result).isEqualTo(expectedResult);
       verifyStimmzettelServiceWasCalledWith(bezirkUndWahlID);
     }
@@ -87,15 +95,33 @@ class MBWStimmzettelErgebnisseMapperTest {
       val result = unitUnderTest.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID);
 
       val expectedResult =
-          new MBWErgebnisseModel(
+          new ErgebnismeldungsErgebnisseModel(
               List.of(
-                  new ErgebnisModel("wahlvorschlagIDA", null, null, 3L, null),
-                  new ErgebnisModel("wahlvorschlagIDB", null, null, 5L, null)),
-              List.of(new ErgebnisModel("wahlvorschlagIDC", null, null, 7L, null)),
-              List.of(new ErgebnisModel(null, null, null, 17L, null)),
+                  new ErgebnisseModel(
+                      WAHLBEZIRK_ID,
+                      WAHL_ID,
+                      StapelartModel.MBW_A,
+                      List.of(
+                          new ErgebnisModel("wahlvorschlagIDA", null, null, 3L, null),
+                          new ErgebnisModel("wahlvorschlagIDB", null, null, 5L, null))),
+                  new ErgebnisseModel(
+                      WAHLBEZIRK_ID,
+                      WAHL_ID,
+                      StapelartModel.MBW_B,
+                      List.of(new ErgebnisModel("wahlvorschlagIDC", null, null, 7L, null))),
+                  new ErgebnisseModel(
+                      WAHLBEZIRK_ID,
+                      WAHL_ID,
+                      StapelartModel.MBW_B_C,
+                      List.of(
+                          new ErgebnisModel("wahlvorschlagIDA", "kandidatID1", null, 11L, null),
+                          new ErgebnisModel("wahlvorschlagIDB", "kandidatID2", null, 13L, null)))),
               List.of(
-                  new ErgebnisModel("wahlvorschlagIDA", "kandidatID1", null, 11L, null),
-                  new ErgebnisModel("wahlvorschlagIDB", "kandidatID2", null, 13L, null)));
+                  new ErgebnisseModel(
+                      WAHLBEZIRK_ID,
+                      WAHL_ID,
+                      StapelartModel.MBW_D_UNGUELTIG,
+                      List.of(new ErgebnisModel(null, null, null, 17L, null)))));
       Assertions.assertThat(result).isEqualTo(expectedResult);
       verifyStimmzettelServiceWasCalledWith(bezirkUndWahlID);
     }

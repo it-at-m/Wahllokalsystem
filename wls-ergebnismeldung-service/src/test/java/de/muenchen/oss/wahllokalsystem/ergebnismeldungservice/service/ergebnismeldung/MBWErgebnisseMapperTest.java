@@ -1,9 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
@@ -25,6 +24,8 @@ class MBWErgebnisseMapperTest {
 
   @Mock MBWStimmzettelErgebnisseMapper mbwStimmzettelErgebnisseMapper;
 
+  @Mock MBWStapelErgebnisseMapper mbwStapelErgebnisseMapper;
+
   @InjectMocks MBWErgebnisseMapper unitUnderTest;
 
   @Nested
@@ -43,10 +44,13 @@ class MBWErgebnisseMapperTest {
   class GetErgebnismeldungErgebnisse {
 
     @Test
-    void should_returnErgebnisseForEveryMBWStapel_when_stimmzettelErgebnisseAreGiven() {
-      val mbwErgebnisse = Instancio.create(MBWErgebnisseModel.class);
+    void should_combineErgebnisse_when_stimmzettelAndStapelErgebnisseAreGiven() {
+      val stimmzettelErgebnisse = Instancio.create(ErgebnismeldungsErgebnisseModel.class);
+      val stapelErgebnisse = Instancio.create(ErgebnismeldungsErgebnisseModel.class);
       Mockito.when(mbwStimmzettelErgebnisseMapper.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
-          .thenReturn(mbwErgebnisse);
+          .thenReturn(stimmzettelErgebnisse);
+      Mockito.when(mbwStapelErgebnisseMapper.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
+          .thenReturn(stapelErgebnisse);
 
       val result =
           unitUnderTest.getErgebnismeldungErgebnisse(
@@ -54,44 +58,31 @@ class MBWErgebnisseMapperTest {
 
       val expectedResult =
           new ErgebnismeldungsErgebnisseModel(
-              List.of(
-                  new ErgebnisseModel(
-                      WAHLBEZIRK_ID, WAHL_ID, StapelartModel.MBW_A, mbwErgebnisse.stapelA()),
-                  new ErgebnisseModel(
-                      WAHLBEZIRK_ID, WAHL_ID, StapelartModel.MBW_B, mbwErgebnisse.stapelB()),
-                  new ErgebnisseModel(
-                      WAHLBEZIRK_ID,
-                      WAHL_ID,
-                      StapelartModel.MBW_B_C,
-                      mbwErgebnisse.stimmenJeKandidatStapelBC())),
-              List.of(
-                  new ErgebnisseModel(
-                      WAHLBEZIRK_ID,
-                      WAHL_ID,
-                      StapelartModel.MBW_D_UNGUELTIG,
-                      mbwErgebnisse.stapelDUngueltig())));
+              Stream.concat(
+                      stimmzettelErgebnisse.gueltigeErgebnisse().stream(),
+                      stapelErgebnisse.gueltigeErgebnisse().stream())
+                  .toList(),
+              Stream.concat(
+                      stimmzettelErgebnisse.ungueltigeErgebnisse().stream(),
+                      stapelErgebnisse.ungueltigeErgebnisse().stream())
+                  .toList());
       Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
     }
 
     @Test
-    void should_returnEmptyErgebnisseForEveryMBWStapel_when_stimmzettelErgebnisseAreEmpty() {
-      val mbwErgebnisse = new MBWErgebnisseModel(List.of(), List.of(), List.of(), List.of());
+    void should_returnEmptyErgebnisse_when_stimmzettelAndStapelErgebnisseAreEmpty() {
+      val stimmzettelErgebnisse = new ErgebnismeldungsErgebnisseModel(List.of(), List.of());
+      val stapelErgebnisse = new ErgebnismeldungsErgebnisseModel(List.of(), List.of());
       Mockito.when(mbwStimmzettelErgebnisseMapper.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
-          .thenReturn(mbwErgebnisse);
+          .thenReturn(stimmzettelErgebnisse);
+      Mockito.when(mbwStapelErgebnisseMapper.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
+          .thenReturn(stapelErgebnisse);
 
       val result =
           unitUnderTest.getErgebnismeldungErgebnisse(
               WAHL_ID, WAHLBEZIRK_ID, WahlartModel.MBW, MeldungsartModel.V1);
 
-      val expectedResult =
-          new ErgebnismeldungsErgebnisseModel(
-              List.of(
-                  new ErgebnisseModel(WAHLBEZIRK_ID, WAHL_ID, StapelartModel.MBW_A, List.of()),
-                  new ErgebnisseModel(WAHLBEZIRK_ID, WAHL_ID, StapelartModel.MBW_B, List.of()),
-                  new ErgebnisseModel(WAHLBEZIRK_ID, WAHL_ID, StapelartModel.MBW_B_C, List.of())),
-              List.of(
-                  new ErgebnisseModel(
-                      WAHLBEZIRK_ID, WAHL_ID, StapelartModel.MBW_D_UNGUELTIG, List.of())));
+      val expectedResult = new ErgebnismeldungsErgebnisseModel(List.of(), List.of());
       Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
     }
   }

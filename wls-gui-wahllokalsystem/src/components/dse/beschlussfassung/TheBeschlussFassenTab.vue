@@ -130,21 +130,29 @@ const stimmenDafuer = ref<number | null>(null);
 const stimmenDagegen = ref<number | null>(null);
 
 const gruende = {
-  gueltig: [
-    "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)",
-    "Briefwahl: Mehrere gleich gekennzeichnete Stimmzettel im Umschlag",
-    "Briefwahl: Mehrere Stimmzettel im Umschlag, einer gekennzeichnet, die anderen leer",
-    "Mehr als 3 Stimmen bei mind. einer Person und 80 Stimmen gesamt nicht überschritten",
-    "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
-    "einzelne Stimmen ungültig",
-  ],
-  ungueltig: [
-    "Wählerwille ist nicht zweifelsfrei erkennbar",
-    "mehr als 80 Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
-    "Stimmzettel ist mit einem besonderen Merkmal, Zusatz oder Vorbehalt versehen",
-    "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
-    "Briefwahl: Mehrere unterschiedlich gekennzeichnete Stimmzettel im Umschlag",
-  ],
+  common: {
+    gueltig: [
+      "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)",
+      "Mehr als 3 Stimmen bei mind. einer Person und 80 Stimmen gesamt nicht überschritten",
+      "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
+      "einzelne Stimmen ungültig",
+    ],
+    ungueltig: [
+      "Wählerwille ist nicht zweifelsfrei erkennbar",
+      "mehr als 80 Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
+      "Stimmzettel ist mit einem besonderen Merkmal, Zusatz oder Vorbehalt versehen",
+      "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
+    ],
+  },
+  bwb: {
+    gueltig: [
+      "Mehrere gleich gekennzeichnete Stimmzettel im Umschlag",
+      "Mehrere Stimmzettel im Umschlag, einer gekennzeichnet, die anderen leer",
+    ],
+    ungueltig: [
+      "Mehrere unterschiedlich gekennzeichnete Stimmzettel im Umschlag",
+    ],
+  },
 };
 
 const props = defineProps<{
@@ -158,9 +166,13 @@ interface BeschlussgrundOption {
 const beschlussgruende = ref<BeschlussgrundOption[]>([]);
 
 function rebuildBeschlussgruende() {
-  const gruendeList = (
-    isGueltig.value ? gruende.gueltig : gruende.ungueltig
-  ).filter((grund) => (isBWB.value ? true : !grund.includes("Briefwahl:")));
+  const gruendeList = isGueltig.value
+    ? isBWB.value
+      ? [...gruende.common.gueltig, ...gruende.bwb.gueltig]
+      : gruende.common.gueltig
+    : isBWB.value
+      ? [...gruende.common.ungueltig, ...gruende.bwb.ungueltig]
+      : gruende.common.ungueltig;
   const beschlussgrundOptions: BeschlussgrundOption[] = gruendeList.map(
     (element) => ({
       grund: element,
@@ -200,7 +212,9 @@ watch(
             mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
               beschlussvorschlag.reason
             );
-          return gruende.ungueltig.some((grund) => grund === mappedReason);
+          return [...gruende.common.ungueltig, ...gruende.bwb.ungueltig].some(
+            (grund) => grund === mappedReason
+          );
         }
       );
 

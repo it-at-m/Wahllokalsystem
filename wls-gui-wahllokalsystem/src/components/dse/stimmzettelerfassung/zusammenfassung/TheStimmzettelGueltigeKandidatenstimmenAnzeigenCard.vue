@@ -24,17 +24,17 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { computed } from "vue";
 
 import BaseCardKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/MBW/stapelBC/BaseCardKandidatenstimmenAnzeigen.vue";
 import { useStimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
-  stimmzettelListe: Stimmzettel[];
+  stimmzettelListe: PersistedStimmzettel[];
   wahlvorschlaege: Wahlvorschlag[];
 }>();
 
@@ -43,7 +43,7 @@ const { wahlvorschlaegeWithKandidatenErgebnissen } =
     computed(() =>
       props.stimmzettelListe.filter(
         (stimmzettel) =>
-          stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Valid
+          stimmzettel.gueltigkeit === PersistedStimmzettelGueltigkeitEnum.Valid
       )
     ),
     computed(() => props.wahlvorschlaege)

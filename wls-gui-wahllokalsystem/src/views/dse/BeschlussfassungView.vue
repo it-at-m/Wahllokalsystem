@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { useRoute } from "vue-router";
 
@@ -68,7 +68,7 @@ async function onBeschlussfassungBeendenClicked() {
   await router.push(getNextRoute());
 }
 
-function onBeschlussBearbeitenClicked(stimmzettelToEdit: Stimmzettel) {
+function onBeschlussBearbeitenClicked(stimmzettelToEdit: PersistedStimmzettel) {
   // TODO Bearbeiten-Funktionalität Platzhalter. #3270
   console.debug(JSON.stringify(stimmzettelToEdit));
 }

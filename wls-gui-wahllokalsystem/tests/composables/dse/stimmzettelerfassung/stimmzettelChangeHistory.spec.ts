@@ -6,7 +6,7 @@ import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfass
 import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHistoryTypeEnum.ts";
 
 describe("stimmzettelChangeHistory.ts", () => {
-  const { createStimmzettelKandidat, createStimmzettelWahlvorschlag } =
+  const { createDseKandidat, createDseWahlvorschlag } =
     useStimmzettelTestDataFactory();
 
   let changeHistory: ReturnType<typeof useStimmzettelChangeHistory>;
@@ -24,17 +24,17 @@ describe("stimmzettelChangeHistory.ts", () => {
 
     it("should_returnHistoryInReverseOrder_when_multipleChangesWereRegistered", () => {
       const firstKandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Kandidat 1",
       };
       const secondKandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 102,
         name: "Kandidat 2",
       };
       const wahlvorschlag = {
-        ...createStimmzettelWahlvorschlag(),
+        ...createDseWahlvorschlag(),
         kurzname: "WV",
         ordnungszahl: 1,
       };
@@ -63,7 +63,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("registerKandidatEinzelstimmenAdded", () => {
     it("should_addSingularVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
       const kandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
@@ -86,7 +86,7 @@ describe("stimmzettelChangeHistory.ts", () => {
 
     it("should_addPluralVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", async () => {
       const kandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
@@ -111,7 +111,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("registerKandidatEinzelstimmenRemoved", () => {
     it("should_addSingularVoteRemovalHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
       const kandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
@@ -134,7 +134,7 @@ describe("stimmzettelChangeHistory.ts", () => {
 
     it("should_addPluralVoteRemovalHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", async () => {
       const kandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
@@ -159,11 +159,11 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("registerKandidatEinzelstimmenRangeAdded", () => {
     it("should_addSingularVoteRangeHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
       const firstKandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
       };
       const lastKandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 103,
       };
 
@@ -188,11 +188,11 @@ describe("stimmzettelChangeHistory.ts", () => {
 
     it("should_addPluralVoteRangeHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", async () => {
       const firstKandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
       };
       const lastKandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 103,
       };
 
@@ -219,7 +219,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("registerKandidatUngueltigeStimmenAdded", () => {
     it("should_addSingularInvalidVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
       const kandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
@@ -242,7 +242,7 @@ describe("stimmzettelChangeHistory.ts", () => {
 
     it("should_addPluralInvalidVoteHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", async () => {
       const kandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
@@ -267,7 +267,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("registerKandidatUngueltigeStimmenRemoved", () => {
     it("should_addSingularInvalidVoteRemovalHistoryEntryAndUpdateLastUsedKandidat_when_countIsOne", async () => {
       const kandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
@@ -290,7 +290,7 @@ describe("stimmzettelChangeHistory.ts", () => {
 
     it("should_addPluralInvalidVoteRemovalHistoryEntryAndUpdateLastUsedKandidat_when_countIsGreaterThanOne", async () => {
       const kandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
@@ -315,7 +315,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("registerKandidatStreichungSet", () => {
     it("should_addDiscardKandidatHistoryEntryAndUpdateLastUsedKandidat_when_kandidatWasGiven", async () => {
       const kandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
@@ -340,7 +340,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("registerKandidatStreichungUnset", () => {
     it("should_addRevokeDiscardKandidatHistoryEntryAndUpdateLastUsedKandidat_when_kandidatWasGiven", async () => {
       const kandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Max Mustermann",
       };
@@ -365,11 +365,11 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("registerKandidatStreichungRangeSet", () => {
     it("should_addDiscardRangeHistoryEntryAndUpdateLastUsedKandidat_when_kandidatenWereGiven", async () => {
       const firstKandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
       };
       const lastKandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 103,
       };
 
@@ -396,11 +396,11 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("registerKandidatStreichungRangeUnset", () => {
     it("should_addRevokeDiscardRangeHistoryEntryAndUpdateLastUsedKandidat_when_kandidatenWereGiven", async () => {
       const firstKandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
       };
       const lastKandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 103,
       };
 
@@ -427,7 +427,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("registerWahlvorschlagSelected", () => {
     it("should_addWahlvorschlagHistoryEntryAndUpdateLastUsedWahlvorschlag_when_wahlvorschlagWasGiven", async () => {
       const wahlvorschlag = {
-        ...createStimmzettelWahlvorschlag(),
+        ...createDseWahlvorschlag(),
         kurzname: "WV",
         ordnungszahl: 1,
       };
@@ -452,7 +452,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("registerWahlvorschlagDeselected", () => {
     it("should_addRevokeWahlvorschlagHistoryEntryAndUpdateLastUsedWahlvorschlag_when_wahlvorschlagWasGiven", async () => {
       const wahlvorschlag = {
-        ...createStimmzettelWahlvorschlag(),
+        ...createDseWahlvorschlag(),
         kurzname: "WV",
         ordnungszahl: 1,
       };
@@ -477,7 +477,7 @@ describe("stimmzettelChangeHistory.ts", () => {
   describe("reset", () => {
     it("should_clearHistoryAndLastUsedData_when_called", async () => {
       const kandidat = {
-        ...createStimmzettelKandidat(),
+        ...createDseKandidat(),
         ordnungszahl: 101,
         name: "Max Mustermann",
       };

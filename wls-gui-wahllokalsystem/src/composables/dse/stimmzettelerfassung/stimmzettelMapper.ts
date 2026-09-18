@@ -6,7 +6,7 @@ import type {
   WahlvorschlagDTO,
   WahlvorstandBeschlussgrundDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { PersistedBeschlussfassung } from "@/types/dse/beschlussfassung/PersistedBeschlussfassung.ts";
+import type { Beschlussfassung } from "@/types/dse/beschlussfassung/Beschlussfassung.ts";
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
@@ -228,7 +228,7 @@ export function useStimmzettelMapper() {
 
   function _beschlussfassungDtoToModel(
     dto: BeschlussfassungDTO
-  ): PersistedBeschlussfassung {
+  ): Beschlussfassung {
     return {
       contra: dto.contra,
       pro: dto.pro,
@@ -253,7 +253,7 @@ export function useStimmzettelMapper() {
   }
 
   function _beschlussfassungModelToDto(
-    model: PersistedBeschlussfassung
+    model: Beschlussfassung
   ): BeschlussfassungDTO {
     return {
       pro: model.pro,

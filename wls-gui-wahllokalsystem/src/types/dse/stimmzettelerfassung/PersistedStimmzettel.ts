@@ -1,4 +1,4 @@
-import type { PersistedBeschlussfassung } from "@/types/dse/beschlussfassung/PersistedBeschlussfassung.ts";
+import type { Beschlussfassung } from "@/types/dse/beschlussfassung/Beschlussfassung.ts";
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/PersistedWahlvorschlag.ts";
@@ -14,5 +14,5 @@ export interface PersistedStimmzettel {
   gueltigkeit: PersistedStimmzettelGueltigkeitEnum;
   wahlvorstandBeschlussvorschlag: WahlvorstandBeschlussgrund[];
   systemBeschlussvorschlag: SystemBeschlussgrund[];
-  beschlussfassung: PersistedBeschlussfassung | null;
+  beschlussfassung: Beschlussfassung | null;
 }

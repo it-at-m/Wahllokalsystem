@@ -1,4 +1,4 @@
-import type { PersistedBeschlussfassung } from "@/types/dse/beschlussfassung/PersistedBeschlussfassung.ts";
+import type { Beschlussfassung } from "@/types/dse/beschlussfassung/Beschlussfassung.ts";
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
@@ -20,7 +20,7 @@ const {
 } = useCommonTestDataFactory();
 
 export function usePersistedStimmzettelTestDataFactory() {
-  function createStimmzettelBeschlussfassung(): PersistedBeschlussfassung {
+  function createStimmzettelBeschlussfassung(): Beschlussfassung {
     return {
       text: generateRandomString(20),
       pro: generateRandomNumber(2),
@@ -94,10 +94,8 @@ export function usePersistedStimmzettelTestDataFactory() {
     return proxyBuilder<PersistedStimmzettel>(createPersistedStimmzettel());
   }
 
-  function preparePersistedStimmzettelBeschlussfassung(): Builder<PersistedBeschlussfassung> {
-    return proxyBuilder<PersistedBeschlussfassung>(
-      createStimmzettelBeschlussfassung()
-    );
+  function preparePersistedStimmzettelBeschlussfassung(): Builder<Beschlussfassung> {
+    return proxyBuilder<Beschlussfassung>(createStimmzettelBeschlussfassung());
   }
 
   function preparePersistedStimmzettelBeschlussgrund(): Builder<WahlvorstandBeschlussgrund> {

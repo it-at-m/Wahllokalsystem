@@ -320,6 +320,8 @@ class StimmzettelRepositoryTest {
           .usingRecursiveComparison()
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
+
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToFind.size());
     }
 
     @Test
@@ -423,6 +425,9 @@ class StimmzettelRepositoryTest {
           .usingRecursiveComparison()
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
+
+      Assertions.assertThat(stimmzettelRepository.count())
+          .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
     }
 
     @Test
@@ -502,6 +507,8 @@ class StimmzettelRepositoryTest {
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
+
+        Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToFind.size());
       }
 
       @Test
@@ -547,6 +554,9 @@ class StimmzettelRepositoryTest {
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
+
+        Assertions.assertThat(stimmzettelRepository.count())
+            .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
       }
     }
 
@@ -614,6 +624,8 @@ class StimmzettelRepositoryTest {
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
+
+        Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToFind.size());
       }
 
       @Test
@@ -679,6 +691,9 @@ class StimmzettelRepositoryTest {
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
+
+        Assertions.assertThat(stimmzettelRepository.count())
+            .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
       }
     }
 
@@ -889,6 +904,8 @@ class StimmzettelRepositoryTest {
               .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneWahlvorschlagAndAtLeastOneOtherKennzeichen(
                   wahlID, wahlbezirkID);
       Assertions.assertThat(result).isEmpty();
+
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(nonMatchingStimmzettel.size());
     }
   }
 
@@ -934,6 +951,9 @@ class StimmzettelRepositoryTest {
       val result = unitUnderTest.countInvalidStimmzettel(wahlID, wahlbezirkID);
 
       Assertions.assertThat(result).isEqualTo(stimmzettelToCount.size());
+
+      Assertions.assertThat(stimmzettelRepository.count())
+          .isEqualTo(stimmzettelToCount.size() + nonMatchingStimmzettel.size());
     }
 
     @Test
@@ -974,6 +994,8 @@ class StimmzettelRepositoryTest {
 
       val result = unitUnderTest.countInvalidStimmzettel(wahlID, wahlbezirkID);
       Assertions.assertThat(result).isEqualTo(0L);
+
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(nonMatchingStimmzettel.size());
     }
   }
 
@@ -1068,6 +1090,8 @@ class StimmzettelRepositoryTest {
           .usingRecursiveComparison()
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
+
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToCount.size());
     }
 
     @Test
@@ -1131,6 +1155,9 @@ class StimmzettelRepositoryTest {
           .usingRecursiveComparison()
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
+
+      Assertions.assertThat(stimmzettelRepository.count())
+          .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
     }
 
     @Test

@@ -80,6 +80,7 @@ public interface StimmzettelRepository extends CrudRepository<Stimmzettel, Stimm
                       AND (
                         kandidat.discarded = true
                         OR kandidat.votesByVoter > 0
+                        OR kandidat.invalidVotes > 0
                       )
                   )
                 GROUP BY selectedWahlvorschlag.wahlvorschlagID

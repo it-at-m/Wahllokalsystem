@@ -25,11 +25,11 @@ import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Stimm
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.createSingleWahlvorschlagModelWithReststimmeAndEinzelstimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.createSingleWahlvorschlagModelWithStreichungAndEinzelStimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithEinzelstimme;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithInvalideVoteAndReststimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithMultipleStreichungen;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithOnlyReststimmenKandidaten;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithReststimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithReststimmeAndEinzelstimme;
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithSingleInvalideVote;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithSingleStreichungen;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithStreichungAndEinzelStimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestWahlvorschlagModels.singleWahlvorschlagModelWithStreichungAndReststimme;
@@ -521,22 +521,25 @@ class StimmzettelRepositoryTest {
                     field(Stimmzettel::getWahlvorschlaege),
                     singleWahlvorschlagModelWithEinzelstimme)
                 .toModel();
-
-        val stimmzettelToFind = new LinkedList<Stimmzettel>();
-        stimmzettelToFind.add(
-            Instancio.create(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
-
-        val nonMatchingStimmzettel =
-            new LinkedList<>(
-                createNonValidVariants(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
-        nonMatchingStimmzettel.add(
+        val stimmzettelWithSingleWahlvorschlagAndInvalidVote =
             Instancio.of(
                     createBlankValidStimmzettelModel(
                         wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
                 .setModel(
                     field(Stimmzettel::getWahlvorschlaege),
-                    singleWahlvorschlagModelWithSingleInvalideVote)
-                .create());
+                    singleWahlvorschlagModelWithInvalideVoteAndReststimme)
+                .toModel();
+
+        val stimmzettelToFind = new LinkedList<Stimmzettel>();
+        stimmzettelToFind.add(
+            Instancio.create(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
+        stimmzettelToFind.add(Instancio.create(stimmzettelWithSingleWahlvorschlagAndInvalidVote));
+
+        val nonMatchingStimmzettel =
+            new LinkedList<>(
+                createNonValidVariants(stimmzettelWithSingleWahlvorschlagAndEinzelstimmeModel));
+        nonMatchingStimmzettel.addAll(
+            createNonValidVariants(stimmzettelWithSingleWahlvorschlagAndInvalidVote));
 
         transactionTemplate.executeWithoutResult(
             status -> {
@@ -549,7 +552,10 @@ class StimmzettelRepositoryTest {
                 .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneWahlvorschlagAndAtLeastOneOtherKennzeichen(
                     wahlID, wahlbezirkID);
 
-        val expectedResult = List.of(new WahlvorschlagStimmzettelAnzahl("wvEinzelstimme", 1L));
+        val expectedResult =
+            List.of(
+                new WahlvorschlagStimmzettelAnzahl("wvEinzelstimme", 1L),
+                new WahlvorschlagStimmzettelAnzahl("wvInvalidVote+Reststimme", 1L));
         Assertions.assertThat(result)
             .usingRecursiveComparison()
             .ignoringCollectionOrder()

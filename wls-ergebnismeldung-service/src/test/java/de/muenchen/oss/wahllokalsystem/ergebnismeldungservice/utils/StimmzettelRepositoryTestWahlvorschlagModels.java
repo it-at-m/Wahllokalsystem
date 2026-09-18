@@ -127,4 +127,16 @@ public class StimmzettelRepositoryTestWahlvorschlagModels {
               field(Wahlvorschlag::getKandidaten),
               () -> List.of(createBlankKandidatWithInvalidVote("k1", 1)))
           .toModel();
+
+  public static final Model<List<Wahlvorschlag>>
+      singleWahlvorschlagModelWithInvalideVoteAndReststimme =
+          Instancio.ofList(createBlankNonSelectedWahlvorschlagModel("wvInvalidVote+Reststimme"))
+              .size(1)
+              .supply(
+                  field(Wahlvorschlag::getKandidaten),
+                  () ->
+                      List.of(
+                          createBlankKandidatWithInvalidVote("k1", 1),
+                          createBlankKandidatWithSingleVoteByWahlvorschlag("k2", 1)))
+              .toModel();
 }

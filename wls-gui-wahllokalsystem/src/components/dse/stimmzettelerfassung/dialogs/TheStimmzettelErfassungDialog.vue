@@ -163,7 +163,7 @@ import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStim
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
@@ -247,8 +247,8 @@ const isCancelButtonDisabled = computed(
 const isCommandInputFieldDisabled = computed(
   () =>
     stimmzettelGueltigkeit.value ===
-      PersistedStimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag ||
-    stimmzettelGueltigkeit.value === PersistedStimmzettelGueltigkeitEnum.Leer
+      StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag ||
+    stimmzettelGueltigkeit.value === StimmzettelGueltigkeitEnum.Leer
 );
 const isSaveDisabled = computed(() => {
   if (
@@ -261,11 +261,11 @@ const isSaveDisabled = computed(() => {
   return (
     !stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
       .value &&
-    stimmzettelGueltigkeit.value !== PersistedStimmzettelGueltigkeitEnum.Leer &&
+    stimmzettelGueltigkeit.value !== StimmzettelGueltigkeitEnum.Leer &&
     stimmzettelGueltigkeit.value !==
-      PersistedStimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag &&
+      StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag &&
     stimmzettelGueltigkeit.value !==
-      PersistedStimmzettelGueltigkeitEnum.BeschlussAusstehend &&
+      StimmzettelGueltigkeitEnum.BeschlussAusstehend &&
     !!stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
   );
 });

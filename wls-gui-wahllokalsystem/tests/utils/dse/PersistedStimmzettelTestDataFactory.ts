@@ -1,4 +1,4 @@
-import type { PersistedBeschlussfassung } from "@/types/dse/beschlussfassung/PersistedBeschlussfassung.ts";
+import type { Beschlussfassung } from "@/types/dse/beschlussfassung/Beschlussfassung.ts";
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
@@ -10,7 +10,7 @@ import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const {
   generateRandomNumber,
@@ -20,7 +20,7 @@ const {
 } = useCommonTestDataFactory();
 
 export function usePersistedStimmzettelTestDataFactory() {
-  function createStimmzettelBeschlussfassung(): PersistedBeschlussfassung {
+  function createStimmzettelBeschlussfassung(): Beschlussfassung {
     return {
       text: generateRandomString(20),
       pro: generateRandomNumber(2),
@@ -84,9 +84,7 @@ export function usePersistedStimmzettelTestDataFactory() {
       ],
       beschlussfassung: createStimmzettelBeschlussfassung(),
       invalideVotes: generateRandomNumber(2),
-      gueltigkeit: getRandomItem(
-        Object.values(PersistedStimmzettelGueltigkeitEnum)
-      ),
+      gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),
     };
   }
 
@@ -94,10 +92,8 @@ export function usePersistedStimmzettelTestDataFactory() {
     return proxyBuilder<PersistedStimmzettel>(createPersistedStimmzettel());
   }
 
-  function preparePersistedStimmzettelBeschlussfassung(): Builder<PersistedBeschlussfassung> {
-    return proxyBuilder<PersistedBeschlussfassung>(
-      createStimmzettelBeschlussfassung()
-    );
+  function preparePersistedStimmzettelBeschlussfassung(): Builder<Beschlussfassung> {
+    return proxyBuilder<Beschlussfassung>(createStimmzettelBeschlussfassung());
   }
 
   function preparePersistedStimmzettelBeschlussgrund(): Builder<WahlvorstandBeschlussgrund> {

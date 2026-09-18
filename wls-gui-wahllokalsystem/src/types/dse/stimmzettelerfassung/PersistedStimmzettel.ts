@@ -1,9 +1,8 @@
-import type { PersistedBeschlussfassung } from "@/types/dse/beschlussfassung/PersistedBeschlussfassung.ts";
+import type { Beschlussfassung } from "@/types/dse/beschlussfassung/Beschlussfassung.ts";
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/PersistedWahlvorschlag.ts";
-
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
+import type { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 export interface PersistedStimmzettel {
   stimmzettelkennung: number;
@@ -11,8 +10,8 @@ export interface PersistedStimmzettel {
   wahlvorschlaege: PersistedWahlvorschlag[];
 
   invalideVotes: number;
-  gueltigkeit: PersistedStimmzettelGueltigkeitEnum;
+  gueltigkeit: StimmzettelGueltigkeitEnum;
   wahlvorstandBeschlussvorschlag: WahlvorstandBeschlussgrund[];
   systemBeschlussvorschlag: SystemBeschlussgrund[];
-  beschlussfassung: PersistedBeschlussfassung | null;
+  beschlussfassung: Beschlussfassung | null;
 }

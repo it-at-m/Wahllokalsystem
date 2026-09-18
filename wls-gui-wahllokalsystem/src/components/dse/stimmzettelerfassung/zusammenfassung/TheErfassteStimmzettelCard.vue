@@ -41,7 +41,7 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 
 import { computed } from "vue";
 
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
   stimmzettelListe: PersistedStimmzettel[];
@@ -51,7 +51,7 @@ const validStimmzettelCount = computed(
   () =>
     props.stimmzettelListe.filter(
       (stimmzettel) =>
-        stimmzettel.gueltigkeit === PersistedStimmzettelGueltigkeitEnum.Valid
+        stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Valid
     ).length
 );
 
@@ -60,7 +60,7 @@ const beschlussVorgemerktCount = computed(
     props.stimmzettelListe.filter(
       (stimmzettel) =>
         stimmzettel.gueltigkeit ===
-        PersistedStimmzettelGueltigkeitEnum.BeschlussAusstehend
+        StimmzettelGueltigkeitEnum.BeschlussAusstehend
     ).length
 );
 

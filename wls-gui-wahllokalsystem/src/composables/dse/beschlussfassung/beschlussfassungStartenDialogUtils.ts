@@ -29,7 +29,11 @@ export function useBeschlussfassungStartenDialogUtils() {
       status: StimmzettelerfassungStatusEnum.SteAbgeschlossen,
     });
 
-    setStepDone(wahlId, wahlbezirkId, MbwStepsEnum.MBW_DSE_MONITORING);
+    setStepDone(
+      wahlId,
+      wahlbezirkId,
+      MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+    );
 
     await router.push(getNextRoute());
   }

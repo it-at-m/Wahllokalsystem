@@ -37,10 +37,11 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       } else {
         result.push(..._createNavigationForDseErfassungsteam());
       }
-    } else {
+    }
+    //Stapelerfassung only for ROLE Schriftfuehrung
+    else if (hasRoleSchriftfuehrung.value) {
       result.push(..._createNavigationForSchriftfuehrung());
     }
-
     return result;
   });
 
@@ -55,20 +56,6 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
   }
 
   function _createMbwRoute(
-    routeName: MbwStepsEnum,
-    wahlId: string,
-    wahlbezirkId: string
-  ): RouteLocationAsRelativeGenericWithStringName {
-    return {
-      name: routeName,
-      params: {
-        wahlId,
-        wahlbezirkId,
-      },
-    };
-  }
-
-  function _createMbwDseRoute(
     routeName: MbwStepsEnum,
     wahlId: string,
     wahlbezirkId: string
@@ -168,7 +155,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
     return [
       {
         title: `Zählen der ${getStimmzettelTermForWahlID(wahlID)}`,
-        targetRoute: _createMbwDseRoute(
+        targetRoute: _createMbwRoute(
           MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
           wahlID,
           wahlbezirkID
@@ -177,7 +164,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Stimmzettelerfassung`,
-        targetRoute: _createMbwDseRoute(
+        targetRoute: _createMbwRoute(
           MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
           wahlID,
           wahlbezirkID
@@ -190,8 +177,8 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Monitoring`,
-        targetRoute: _createMbwDseRoute(
-          MbwStepsEnum.MBW_DSE_MONITORING,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
           wahlID,
           wahlbezirkID
         ),
@@ -203,18 +190,20 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Beschlussfassung`,
-        targetRoute: _createMbwDseRoute(
+        targetRoute: _createMbwRoute(
           MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
           wahlID,
           wahlbezirkID
         ),
         disabled: mbwWorkflow.value
-          ? !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_DSE_MONITORING]
+          ? !mbwWorkflow.value.stepsDone[
+              MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+            ]
           : false,
       },
       {
         title: `Schnellmeldung`,
-        targetRoute: _createMbwDseRoute(
+        targetRoute: _createMbwRoute(
           MbwStepsEnum.MBW_SCHNELLMELDUNG,
           wahlID,
           wahlbezirkID
@@ -225,7 +214,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Niederschrift`,
-        targetRoute: _createMbwDseRoute(
+        targetRoute: _createMbwRoute(
           MbwStepsEnum.MBW_NIEDERSCHRIFT,
           wahlID,
           wahlbezirkID
@@ -241,7 +230,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
     return [
       {
         title: `Stimmzettelerfassung`,
-        targetRoute: _createMbwDseRoute(
+        targetRoute: _createMbwRoute(
           MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
           wahlID,
           wahlbezirkID

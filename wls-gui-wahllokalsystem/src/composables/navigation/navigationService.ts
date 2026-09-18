@@ -17,6 +17,7 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -47,6 +48,7 @@ export function useNavigationService() {
   const workflowStore = useWorkflowStore();
   const wahlenStore = useWahlenStore();
   const userStore = useUserStore();
+  const infomanagementStore = useInfomanagementStore();
 
   function routeWithName(routeName: string): RouteLocationAsRelativeGeneric {
     return {
@@ -65,6 +67,14 @@ export function useNavigationService() {
   }
 
   function getNextRoute(): RouteLocationAsRelativeGeneric {
+    //No valid role
+    if (
+      !userStore.hasRoleSchriftfuehrung &&
+      (!userStore.hasRoleErfassungsteam || !infomanagementStore.isDseAktiv)
+    ) {
+      return routeWithName(ROUTES_HOME);
+    }
+
     // check all elections in their order
     let metaDataOfFirstUnfinishedElection;
 
@@ -88,9 +98,8 @@ export function useNavigationService() {
             wahlMetaData.wahlbezirkID
           )
       );
-    } else {
-      return routeWithName(ROUTES_HOME);
     }
+
     //no not-finished election found
     if (!metaDataOfFirstUnfinishedElection) {
       return routeWithName(ROUTE_FINISHED);

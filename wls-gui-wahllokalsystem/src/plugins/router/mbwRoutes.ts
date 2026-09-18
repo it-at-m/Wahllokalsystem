@@ -3,6 +3,7 @@ import type { RouteRecordRawWithoutName } from "@/types/navigation/RouteRecordRa
 import { type RouteRecordRaw } from "vue-router";
 
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
+import { allGuards, anyGuard } from "@/composables/navigation/routerUtils.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import BeschlussfassungView from "@/views/dse/BeschlussfassungView.vue";
 import MonitoringView from "@/views/dse/MonitoringView.vue";
@@ -28,7 +29,7 @@ const {
 const BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM =
   "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
 
-const BASE_PATH_DSE = "/DSE/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
+const BASE_PATH_DSE = "/MBW/DSE/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
 
 const auszaehlungPrerequisiteGuards = [
   permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
@@ -49,36 +50,17 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
   [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: {
     path: BASE_PATH_DSE + "/stimmzettelerfassung",
     component: StimmzettelerfassungView,
-    beforeEnter: [
-      async (to, from, next) => {
-        const stepAuszaehlung = isStepDoneInElectionState(
-          MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
-        );
-
-        const dseSchriftfuehrerEntryValid =
-          (await stepAuszaehlung(to, from, () => {
-            return;
-          })) &&
-          (await requireRoleSchriftfuehrung(to, from, () => {
-            return;
-          }));
-        const dseErfassungsteamEntryValid = await requireRoleErfassungteam(
-          to,
-          from,
-          () => {
-            return;
-          }
-        );
-
-        if (dseErfassungsteamEntryValid || dseSchriftfuehrerEntryValid) {
-          next();
-        } else {
-          next(false);
-        }
-      },
-    ],
+    beforeEnter: anyGuard(
+      // Conditions ROLE Schriftfuerer
+      allGuards(
+        isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+        requireRoleSchriftfuehrung
+      ),
+      // Conditions ROLE Erfassungsteam
+      allGuards(requireRoleErfassungteam)
+    ),
   },
-  [MbwStepsEnum.MBW_DSE_MONITORING]: {
+  [MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS]: {
     path: BASE_PATH_DSE + "/monitoring",
     component: MonitoringView,
     beforeEnter: [
@@ -94,7 +76,9 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
       requireRoleSchriftfuehrung,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG),
-      isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_MONITORING),
+      isStepDoneInElectionState(
+        MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+      ),
     ],
   },
   [MbwStepsEnum.MBW_STAPEL_E]: {
@@ -141,53 +125,22 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
       ...auszaehlungPrerequisiteGuards,
       requireRoleSchriftfuehrung,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
-      async (to, from, next) => {
-        //Stapelerfassung Vorbedingungen
-        const stepE = isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_E);
-        const stepD = isStepDoneInElectionState(
-          MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG
-        );
-        const stepAB = isStepDoneInElectionState(
-          MbwStepsEnum.MBW_STAPEL_A_AND_B
-        );
-        //DSE Vorbedingungen
-        const dseStimmzettel = isStepDoneInElectionState(
-          MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
-        );
-        const dseMonitoring = isStepDoneInElectionState(
-          MbwStepsEnum.MBW_DSE_MONITORING
-        );
-        const dseBeschluss = isStepDoneInElectionState(
-          MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG
-        );
-
-        const stapelerfassungValid =
-          (await stepE(to, from, () => {
-            return;
-          })) &&
-          (await stepD(to, from, () => {
-            return;
-          })) &&
-          (await stepAB(to, from, () => {
-            return;
-          }));
-        const dseValid =
-          (await dseStimmzettel(to, from, () => {
-            return;
-          })) &&
-          (await dseMonitoring(to, from, () => {
-            return;
-          })) &&
-          (await dseBeschluss(to, from, () => {
-            return;
-          }));
-
-        if (stapelerfassungValid || dseValid) {
-          next();
-        } else {
-          next(false);
-        }
-      },
+      anyGuard(
+        // Conditions DSE
+        allGuards(
+          isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG),
+          isStepDoneInElectionState(
+            MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+          ),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG)
+        ),
+        // Conditions Stapelerfassung
+        allGuards(
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_E),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_A_AND_B)
+        )
+      ),
     ],
   },
   [MbwStepsEnum.MBW_STAPEL_BC]: {
@@ -214,57 +167,23 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
       requireRoleSchriftfuehrung,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwStepsEnum.MBW_SCHNELLMELDUNG),
-      async (to, from, next) => {
-        //Stapelerfassung Vorbedingungen
-        const stepE = isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_E);
-        const stepD = isStepDoneInElectionState(
-          MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG
-        );
-        const stepAB = isStepDoneInElectionState(
-          MbwStepsEnum.MBW_STAPEL_A_AND_B
-        );
-        const stepBC = isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_BC);
-        //DSE Vorbedingungen
-        const dseStimmzettel = isStepDoneInElectionState(
-          MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
-        );
-        const dseMonitoring = isStepDoneInElectionState(
-          MbwStepsEnum.MBW_DSE_MONITORING
-        );
-        const dseBeschluss = isStepDoneInElectionState(
-          MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG
-        );
-
-        const stapelerfassungValid =
-          (await stepE(to, from, () => {
-            return;
-          })) &&
-          (await stepD(to, from, () => {
-            return;
-          })) &&
-          (await stepAB(to, from, () => {
-            return;
-          })) &&
-          (await stepBC(to, from, () => {
-            return;
-          }));
-        const dseValid =
-          (await dseStimmzettel(to, from, () => {
-            return;
-          })) &&
-          (await dseMonitoring(to, from, () => {
-            return;
-          })) &&
-          (await dseBeschluss(to, from, () => {
-            return;
-          }));
-
-        if (stapelerfassungValid || dseValid) {
-          next();
-        } else {
-          next(false);
-        }
-      },
+      anyGuard(
+        // Conditions DSE
+        allGuards(
+          isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG),
+          isStepDoneInElectionState(
+            MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+          ),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG)
+        ),
+        // Conditions Stapelerfassung
+        allGuards(
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_E),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_A_AND_B),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_BC)
+        )
+      ),
     ],
   },
 };

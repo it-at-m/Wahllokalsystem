@@ -46,10 +46,18 @@ export function useDseWorkflowStatusService() {
       const { setStepDone } = useWorkflowStore();
 
       if (StimmzettelerfassungStatusEnum.SteAbgeschlossen == result?.status) {
-        setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_DSE_MONITORING);
+        setStepDone(
+          wahlID,
+          wahlbezirkID,
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+        );
       }
       if (StimmzettelerfassungStatusEnum.BeAbgeschlossen == result?.status) {
-        setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_DSE_MONITORING);
+        setStepDone(
+          wahlID,
+          wahlbezirkID,
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+        );
         setStepDone(
           wahlID,
           wahlbezirkID,
@@ -57,7 +65,7 @@ export function useDseWorkflowStatusService() {
         );
       }
 
-      return responseData ? dtoToModel(responseData) : null;
+      return result;
     } catch (error) {
       if (sendNotification) {
         addNotification(

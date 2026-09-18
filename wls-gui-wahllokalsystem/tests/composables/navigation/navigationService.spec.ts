@@ -29,6 +29,7 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -198,8 +199,8 @@ describe("navigationService.ts", () => {
         useWorkflowStore().isStimmabgabevermerkeErfasst = true;
 
         useWorkflowStore().electionWorkflowsStates = [
-          createStatusWithNiederschriftGedruckt(wahlID1, wahlbezirkID1),
-          createStatusWithNiederschriftGedruckt(wahlID2, wahlbezirkID2),
+          _createStatusWithNiederschriftGedruckt(wahlID1, wahlbezirkID1),
+          _createStatusWithNiederschriftGedruckt(wahlID2, wahlbezirkID2),
         ];
 
         const result = unitUnderTest.getNextRoute();
@@ -437,6 +438,114 @@ describe("navigationService.ts", () => {
           unitUnderTest.routeWithName(ROUTE_STIMMABGABEVERMERKE)
         );
       });
+
+      it("should_returnNextDseRouteForErfassungsteam_when_stimmzettelerfassungNotDone", () => {
+        const wahlID = "wahlID";
+        const wahlbezirkID = "wahlbezirkID";
+
+        _setDseTestData(wahlID, wahlbezirkID);
+        useWorkflowStore().isWahlvorstandErfasst = true;
+        useWorkflowStore().isWahlumgebungErfasst = true;
+        useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+        useWorkflowStore().isWahleroeffnungErfasst = true;
+        useWorkflowStore().isStimmabgabeErfasst = true;
+        useWorkflowStore().isStimmabgabevermerkeErfasst = true;
+
+        // @ts-expect-error: cannot set readonly
+        useUserStore().hasRoleSchriftfuehrung = false;
+        // @ts-expect-error: cannot set readonly
+        useUserStore().hasRoleErfassungsteam = true;
+        _setWorkflow(wahlID, wahlbezirkID, {
+          [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
+        });
+
+        mockDefinitions.mbwGetNextRouteOrNull.mockReturnValueOnce({
+          name: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+          params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
+        });
+
+        const result = useNavigationService().getNextRoute();
+
+        expect(result).toStrictEqual({
+          name: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+          params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
+        });
+        expect(
+          mockDefinitions.mbwGetNextRouteOrNull
+        ).toHaveBeenCalledExactlyOnceWith(wahlID, wahlbezirkID);
+      });
+
+      it("should_returnFinished_when_erfassungsteamHasCompletedStimmzettelerfassung", () => {
+        const wahlID = "wahlID";
+        const wahlbezirkID = "wahlbezirkID";
+
+        _setDseTestData(wahlID, wahlbezirkID);
+        useWorkflowStore().isWahlvorstandErfasst = true;
+        useWorkflowStore().isWahlumgebungErfasst = true;
+        useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+        useWorkflowStore().isWahleroeffnungErfasst = true;
+        useWorkflowStore().isStimmabgabeErfasst = true;
+        useWorkflowStore().isStimmabgabevermerkeErfasst = true;
+
+        // @ts-expect-error: cannot set readonly
+        useUserStore().hasRoleSchriftfuehrung = false;
+        // @ts-expect-error: cannot set readonly
+        useUserStore().hasRoleErfassungsteam = true;
+        _setWorkflow(wahlID, wahlbezirkID, {
+          [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
+        });
+
+        const result = useNavigationService().getNextRoute();
+
+        expect(result).toStrictEqual({ name: ROUTE_FINISHED });
+      });
+
+      it("should_returnRouteToHome_when_erfassungsteamAndDseIsInactive", () => {
+        // @ts-expect-error: cannot set readonly
+        useUserStore().hasRoleSchriftfuehrung = false;
+        // @ts-expect-error: cannot set readonly
+        useUserStore().hasRoleErfassungsteam = true;
+        useInfomanagementStore().konfigurationsparameter = [
+          { schluessel: "DSE_AKTIV", wert: "false" },
+        ];
+
+        const result = unitUnderTest.getNextRoute();
+
+        expect(result).toStrictEqual(unitUnderTest.routeWithName(ROUTES_HOME));
+      });
+
+      function _setDseTestData(wahlID: string, wahlbezirkID: string) {
+        useUserStore().user = prepareUser()
+          .wahlMetaData([{ wahlID, wahlbezirkID, wahlnummer: "1" }])
+          .build();
+        useWahlenStore().wahlenState = {
+          wahlen: [
+            prepareWahl().wahlID(wahlID).wahlart(WahlWahlartEnum.Mbw).build(),
+          ],
+        };
+        useInfomanagementStore().konfigurationsparameter = [
+          { schluessel: "DSE_AKTIV", wert: "true" },
+        ];
+      }
+
+      function _setWorkflow(
+        wahlID: string,
+        wahlbezirkID: string,
+        stepsDone: Partial<Record<string, boolean>>
+      ) {
+        useWorkflowStore().electionWorkflowsStates = [
+          prepareElectionWorkflow()
+            .bezirkUndWahlID(
+              prepareBezirkUndWahlID()
+                .wahlID(wahlID)
+                .wahlbezirkID(wahlbezirkID)
+                .build()
+            )
+            .isNiederschriftDone(false)
+            .stepsDone(stepsDone as Record<string, boolean>)
+            .build(),
+        ];
+      }
     });
 
     describe("when having no role", () => {
@@ -446,6 +555,7 @@ describe("navigationService.ts", () => {
         // @ts-expect-error: cannot set readonly
         useUserStore().hasRoleErfassungsteam = false;
       });
+
       it("should_returnRouteToHome_when_noUnfinishedElectionExists", () => {
         const wahlID1 = "wahlID1";
         const wahlbezirkID1 = "wahlbezirkID1";
@@ -528,7 +638,7 @@ describe("navigationService.ts", () => {
     });
   });
 
-  function createStatusWithNiederschriftGedruckt(
+  function _createStatusWithNiederschriftGedruckt(
     wahlID: string,
     wahlbezirkID: string,
     finished = true
@@ -542,79 +652,5 @@ describe("navigationService.ts", () => {
       )
       .isNiederschriftDone(finished)
       .build();
-  }
-});
-
-describe("DSE navigation", () => {
-  const wahlID = "wahlID";
-  const wahlbezirkID = "wahlbezirkID";
-
-  beforeEach(() => {
-    createTestingPinia({
-      createSpy: vi.fn,
-      stubActions: false,
-    });
-    useUserStore().user = prepareUser()
-      .wahlMetaData([{ wahlID, wahlbezirkID, wahlnummer: "1" }])
-      .build();
-    useWahlenStore().wahlenState = {
-      wahlen: [
-        prepareWahl().wahlID(wahlID).wahlart(WahlWahlartEnum.Mbw).build(),
-      ],
-    };
-    useWorkflowStore().isWahlvorstandErfasst = true;
-    useWorkflowStore().isWahlumgebungErfasst = true;
-    useWorkflowStore().isWaehlerverzeichnisErfasst = true;
-    useWorkflowStore().isWahleroeffnungErfasst = true;
-    useWorkflowStore().isStimmabgabeErfasst = true;
-    useWorkflowStore().isStimmabgabevermerkeErfasst = true;
-  });
-
-  it("should_returnNextDseRouteForErfassungsteam_when_stimmzettelerfassungNotDone", () => {
-    // @ts-expect-error: cannot set readonly
-    useUserStore().hasRoleErfassungsteam = true;
-    setWorkflow({ [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true });
-
-    mockDefinitions.mbwGetNextRouteOrNull.mockReturnValueOnce({
-      name: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-      params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
-    });
-
-    const result = useNavigationService().getNextRoute();
-
-    expect(result).toStrictEqual({
-      name: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-      params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
-    });
-    expect(
-      mockDefinitions.mbwGetNextRouteOrNull
-    ).toHaveBeenCalledExactlyOnceWith(wahlID, wahlbezirkID);
-  });
-
-  it("should_returnFinished_when_erfassungsteamHasCompletedStimmzettelerfassung", () => {
-    // @ts-expect-error: cannot set readonly
-    useUserStore().hasRoleErfassungsteam = true;
-    setWorkflow({
-      [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
-    });
-
-    const result = useNavigationService().getNextRoute();
-
-    expect(result).toStrictEqual({ name: ROUTE_FINISHED });
-  });
-
-  function setWorkflow(stepsDone: Partial<Record<string, boolean>>) {
-    useWorkflowStore().electionWorkflowsStates = [
-      prepareElectionWorkflow()
-        .bezirkUndWahlID(
-          prepareBezirkUndWahlID()
-            .wahlID(wahlID)
-            .wahlbezirkID(wahlbezirkID)
-            .build()
-        )
-        .isNiederschriftDone(false)
-        .stepsDone(stepsDone as Record<string, boolean>)
-        .build(),
-    ];
   }
 });

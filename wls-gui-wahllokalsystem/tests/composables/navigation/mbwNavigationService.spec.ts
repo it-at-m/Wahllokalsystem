@@ -33,7 +33,7 @@ describe("mbwNavigationService.ts", () => {
   const mbwStepsWithDseForSchriftfuehrung = {
     MBW_AUSZAEHLUNG_STIMMZETTEL: MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
     MBW_DSE_STIMMZETTELERFASSUNG: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-    MBW_DSE_MONITORING: MbwStepsEnum.MBW_DSE_MONITORING,
+    MBW_DSE_MONITORING: MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
     MBW_DSE_BESCHLUSSFASSUNG: MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
     MBW_SCHNELLMELDUNG: MbwStepsEnum.MBW_SCHNELLMELDUNG,
     MBW_NIEDERSCHRIFT: MbwStepsEnum.MBW_NIEDERSCHRIFT,
@@ -146,11 +146,11 @@ describe("mbwNavigationService.ts", () => {
     });
   });
 
-  describe("dse workflow", () => {
+  describe("getNextRouteOrNull", () => {
     const dseStepsForSchriftfuehrung = [
       MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
       MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-      MbwStepsEnum.MBW_DSE_MONITORING,
+      MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
       MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
       MbwStepsEnum.MBW_SCHNELLMELDUNG,
       MbwStepsEnum.MBW_NIEDERSCHRIFT,
@@ -186,20 +186,20 @@ describe("mbwNavigationService.ts", () => {
         enabledSteps: [
           MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
           MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-          MbwStepsEnum.MBW_DSE_MONITORING,
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
         ],
-        expectedRoute: MbwStepsEnum.MBW_DSE_MONITORING,
+        expectedRoute: MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
       },
       {
         stepsDone: {
           [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
           [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
-          [MbwStepsEnum.MBW_DSE_MONITORING]: true,
+          [MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS]: true,
         },
         enabledSteps: [
           MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
           MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-          MbwStepsEnum.MBW_DSE_MONITORING,
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
           MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
         ],
         expectedRoute: MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
@@ -208,13 +208,13 @@ describe("mbwNavigationService.ts", () => {
         stepsDone: {
           [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
           [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
-          [MbwStepsEnum.MBW_DSE_MONITORING]: true,
+          [MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS]: true,
           [MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG]: true,
         },
         enabledSteps: [
           MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
           MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-          MbwStepsEnum.MBW_DSE_MONITORING,
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
           MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
           MbwStepsEnum.MBW_SCHNELLMELDUNG,
         ],
@@ -224,7 +224,7 @@ describe("mbwNavigationService.ts", () => {
         stepsDone: {
           [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
           [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
-          [MbwStepsEnum.MBW_DSE_MONITORING]: true,
+          [MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS]: true,
           [MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG]: true,
           [MbwStepsEnum.MBW_SCHNELLMELDUNG]: true,
         },
@@ -234,11 +234,11 @@ describe("mbwNavigationService.ts", () => {
     ])(
       "should_correctlyHandleNavigationAndNextRoute_when_navigateToNextStep",
       ({ stepsDone, enabledSteps, expectedRoute }) => {
-        setDseWorkflow(stepsDone);
+        _setDseWorkflow(stepsDone);
 
         const service = useMbwNavigationService(wahlID, wahlbezirkID);
 
-        // 1. Navigation State prüfen
+        // 1. Check navigation state
         service.navigation.value.forEach((navigationItem) => {
           expect(navigationItem.disabled).toBe(
             !(enabledSteps as string[]).includes(
@@ -247,7 +247,7 @@ describe("mbwNavigationService.ts", () => {
           );
         });
 
-        // 2. Nächste Route prüfen
+        // 2. Check next route
         const nextRoute = service.getNextRouteOrNull();
         expect(nextRoute).toStrictEqual({
           name: expectedRoute,
@@ -259,7 +259,7 @@ describe("mbwNavigationService.ts", () => {
     it("should_returnStimmzettelerfassung_when_dseIsActiveAndUserIsErfassungsteam", () => {
       // @ts-expect-error: cannot set readonly
       useUserStore().hasRoleSchriftfuehrung = false;
-      setDseWorkflow({});
+      _setDseWorkflow({});
 
       const result = useMbwNavigationService(
         wahlID,
@@ -272,7 +272,7 @@ describe("mbwNavigationService.ts", () => {
       });
     });
 
-    function setDseWorkflow(stepsDone: Partial<Record<string, boolean>>) {
+    function _setDseWorkflow(stepsDone: Partial<Record<string, boolean>>) {
       useWorkflowStore().electionWorkflowsStates = [
         prepareElectionWorkflow()
           .bezirkUndWahlID(

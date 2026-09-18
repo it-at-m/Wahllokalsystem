@@ -76,7 +76,7 @@ class SecurityConfigurationTest {
 
   @Test
   void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
-    api.perform(get("/swagger-ui/index.html")).andExpect(status().isOk());
+    api.perform(get("/webjars/swagger-ui/index.html")).andExpect(status().isOk());
   }
 
   @Nested

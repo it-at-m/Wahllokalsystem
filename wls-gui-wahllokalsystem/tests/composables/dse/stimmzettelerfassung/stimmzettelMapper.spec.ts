@@ -10,6 +10,7 @@ import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/Pe
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
+import { useStimmzettelDTOTestDataFactory } from "@tests/utils/dse/StimmzettelDTOTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
@@ -39,18 +40,21 @@ vi.mock(
 const {
   createDseStimmzettel,
   createDseWahlvorschlag,
+  prepareDseStimmzettel,
+  prepareDseKandidatOfDseWahlvorschlag,
+  prepareDseWahlvorschlag,
+} = useStimmzettelTestDataFactory();
+
+const {
   createStimmzettelOfTeamDTO,
   prepareStimmzettelOfTeamDTO,
   createStimmzettelKandidatDTO,
-  prepareDseStimmzettel,
   prepareStimmzettelBeschlussfassungDTO,
   prepareStimmzettelBeschlussgrundDTO,
-  prepareDseKandidatOfDseWahlvorschlag,
   prepareStimmzettelKandidatDTO,
   prepareStimmzettelKandidatIdDTO,
-  prepareDseWahlvorschlag,
   prepareStimmzettelWahlvorschlagDTO,
-} = useStimmzettelTestDataFactory();
+} = useStimmzettelDTOTestDataFactory();
 
 const {
   createPersistedStimmzettel,

@@ -1,4 +1,4 @@
-export interface Beschlussfassung {
+export interface PersistedBeschlussfassung {
   pro: number;
   contra: number;
   text: string;

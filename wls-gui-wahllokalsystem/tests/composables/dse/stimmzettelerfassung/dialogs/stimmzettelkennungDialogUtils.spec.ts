@@ -1,9 +1,10 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelkennungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelkennungDialogUtils.ts";
 
-const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
+const { preparePersistedStimmzettel } =
+  usePersistedStimmzettelTestDataFactory();
 
 describe("stimmzettelkennungDialogUtils.ts", () => {
   const { getNextStimmzettelNumber } = useStimmzettelkennungDialogUtils();

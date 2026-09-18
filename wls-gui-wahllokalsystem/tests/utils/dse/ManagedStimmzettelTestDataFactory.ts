@@ -6,8 +6,9 @@ import type { Builder } from "@tests/utils/Builder.ts";
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 
+// TODO managedStimmzettel = persistedStimmzettel, kann die factory weg?
 export function useManagedStimmzettelTestDataFactory() {
   const {
     generateRandomNumber,
@@ -49,7 +50,9 @@ export function useManagedStimmzettelTestDataFactory() {
         createManagedStimmzettelWahlvorschlag(),
       ],
       invalideVotes: generateRandomNumber(2),
-      gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),
+      gueltigkeit: getRandomItem(
+        Object.values(PersistedStimmzettelGueltigkeitEnum)
+      ),
       wahlvorstandBeschlussvorschlag: [],
       systemBeschlussvorschlag: [],
       beschlussfassung: null,

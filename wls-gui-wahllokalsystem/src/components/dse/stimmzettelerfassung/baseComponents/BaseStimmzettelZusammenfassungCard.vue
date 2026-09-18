@@ -42,7 +42,7 @@ import { computed } from "vue";
 
 import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
 import { useStimmzettelGueltigkeitEnumTools } from "@/composables/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnumTools.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
   listenstimmen: Wahlvorschlag[];
@@ -50,7 +50,7 @@ const props = defineProps<{
   direktstimmen: number;
   reststimmen: number;
   streichungen: number;
-  gueltigkeit: StimmzettelGueltigkeitEnum;
+  gueltigkeit: PersistedStimmzettelGueltigkeitEnum;
 }>();
 
 const { toText } = useStimmzettelGueltigkeitEnumTools();

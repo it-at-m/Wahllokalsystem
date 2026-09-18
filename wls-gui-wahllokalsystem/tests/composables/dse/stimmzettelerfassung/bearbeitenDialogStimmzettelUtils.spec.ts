@@ -1,8 +1,9 @@
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
-import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Stimmzettel as DseStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 
 import { useManagedStimmzettelTestDataFactory } from "@tests/utils/dse/ManagedStimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import {
@@ -112,13 +113,16 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
     prepareManagedStimmzettelKandidat,
   } = useManagedStimmzettelTestDataFactory();
   const {
-    preparePersistedStimmzettelKandidat,
     prepareStimmzettel,
     prepareStimmzettelWahlvorschlag,
     prepareStimmzettelKandidatOfWahlvorschlag,
+  } = useStimmzettelTestDataFactory();
+
+  const {
+    preparePersistedStimmzettelKandidat,
     preparePersistedStimmzettel,
     preparePersistedStimmzettelWahlvorschlag,
-  } = useStimmzettelTestDataFactory();
+  } = usePersistedStimmzettelTestDataFactory();
 
   const MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER = 999;
 

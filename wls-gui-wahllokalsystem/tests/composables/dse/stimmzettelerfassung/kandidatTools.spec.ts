@@ -1,3 +1,4 @@
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
@@ -7,8 +8,10 @@ const {
   createStimmzettelWahlvorschlag,
   prepareStimmzettelKandidat,
   prepareStimmzettelKandidatOfWahlvorschlag,
-  preparePersistedStimmzettelKandidat,
 } = useStimmzettelTestDataFactory();
+
+const { preparePersistedStimmzettelKandidat } =
+  usePersistedStimmzettelTestDataFactory();
 
 describe("kandidatTools.ts", () => {
   let unitUnderTest: ReturnType<typeof useKandidatTools>;

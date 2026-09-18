@@ -107,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
@@ -156,7 +156,7 @@ const gruende = {
 };
 
 const props = defineProps<{
-  stimmzettel: Stimmzettel | undefined;
+  stimmzettel: PersistedStimmzettel | undefined;
 }>();
 
 interface BeschlussgrundOption {
@@ -196,6 +196,28 @@ function rebuildBeschlussgruende() {
       }
     }
   }
+
+  const wahlvorstandBeschlussvorschlag =
+    props.stimmzettel?.wahlvorstandBeschlussvorschlag ?? [];
+  beschlussgrundOptions.map((beschlussgrundOption) => {
+    for (const beschlussvorschlag of wahlvorstandBeschlussvorschlag) {
+      if (beschlussgrundOption.grund === beschlussvorschlag.text) {
+        beschlussgrundOption.selected = true;
+      }
+    }
+  });
+
+  const texts = wahlvorstandBeschlussvorschlag
+    .filter(
+      (beschlussvorschlag) =>
+        !beschlussgrundOptions.find(
+          (beschlussgrund) => beschlussgrund.grund === beschlussvorschlag.text
+        )
+    )
+    .map((w) => w.text);
+  andererGrund.value = texts.join(", ");
+  andererGrundChecked.value = texts.length > 0;
+
   beschlussgruende.value = beschlussgrundOptions;
 }
 
@@ -205,9 +227,11 @@ watch(
     if (stimmzettel) {
       const systemBeschlussvorschlaege =
         props.stimmzettel?.systemBeschlussvorschlag ?? [];
+      const wahlvorstandBeschlussvorschlag =
+        props.stimmzettel?.wahlvorstandBeschlussvorschlag ?? [];
 
-      isGueltig.value = !systemBeschlussvorschlaege.some(
-        (beschlussvorschlag) => {
+      isGueltig.value =
+        !systemBeschlussvorschlaege.some((beschlussvorschlag) => {
           const mappedReason =
             mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
               beschlussvorschlag.reason
@@ -215,14 +239,12 @@ watch(
           return [...gruende.common.ungueltig, ...gruende.bwb.ungueltig].some(
             (grund) => grund === mappedReason
           );
-        }
-      );
-
-      const texts = (stimmzettel.wahlvorstandBeschlussvorschlag ?? []).map(
-        (w) => w.text
-      );
-      andererGrund.value = texts.join(", ");
-      andererGrundChecked.value = texts.length > 0;
+        }) &&
+        !wahlvorstandBeschlussvorschlag.some((beschlussvorschlag) => {
+          return [...gruende.common.ungueltig, ...gruende.bwb.ungueltig].some(
+            (grund) => grund === beschlussvorschlag.text
+          );
+        });
 
       rebuildBeschlussgruende();
     }

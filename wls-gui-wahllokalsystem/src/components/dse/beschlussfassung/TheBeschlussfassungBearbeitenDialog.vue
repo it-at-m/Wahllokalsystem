@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { ref } from "vue";
 
@@ -56,7 +56,7 @@ const isDialogVisibleModel = defineModel("modelValue", {
 });
 
 defineProps<{
-  stimmzettel: Stimmzettel | undefined;
+  stimmzettel: PersistedStimmzettel | undefined;
 }>();
 
 const emit = defineEmits<{

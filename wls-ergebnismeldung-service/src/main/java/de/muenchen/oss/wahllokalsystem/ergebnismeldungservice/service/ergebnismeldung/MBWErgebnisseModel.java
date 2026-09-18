@@ -1,9 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
 
-import java.util.Map;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisModel;
+import java.util.List;
 
 public record MBWErgebnisseModel(
-    Map<String, Long> stapelA,
-    Map<String, Long> stapelB,
-    long stapelDUngueltig,
-    Map<String, Map<String, Long>> stimmenJeKandidatStapelBC) {}
+    List<ErgebnisModel> stapelA,
+    List<ErgebnisModel> stapelB,
+    List<ErgebnisModel> stapelDUngueltig,
+    List<ErgebnisModel> stimmenJeKandidatStapelBC) {}

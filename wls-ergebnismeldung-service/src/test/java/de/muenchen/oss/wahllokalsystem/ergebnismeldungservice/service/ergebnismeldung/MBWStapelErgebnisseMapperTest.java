@@ -44,8 +44,7 @@ class MBWStapelErgebnisseMapperTest {
       val ergebnisse = List.of(gueltigesErgebnisA, ungueltigesErgebnisD, gueltigesErgebnisBC);
       final Predicate<StapelartModel> predicateForInvalidErgebnisse =
           stapelart ->
-              StapelartModel.MBW_D_UNGUELTIG.equals(stapelart)
-                  || StapelartModel.MBW_E_UNGUELTIG.equals(stapelart);
+              StapelartModel.MBW_D_UNGUELTIG.equals(stapelart);
       Mockito.when(ergebnisseService.getAllErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
           .thenReturn(ergebnisse);
       Mockito.when(

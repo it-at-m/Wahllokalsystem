@@ -46,7 +46,6 @@ public enum StapelartModel {
   MBW_A_B,
   MBW_D,
   MBW_D_UNGUELTIG,
-  MBW_E_UNGUELTIG, // internal use only
   MBW_B_C,
   // Allgemeine Stapel
   STIMMZETTEL_UMSCHLAEGE,

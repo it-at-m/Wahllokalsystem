@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.mapping;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ergebnisseProvider;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
@@ -18,16 +18,19 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class MBWErgebnisseMapperTest {
+class MBWErgebnisseProviderTest {
 
   private static final String WAHL_ID = Instancio.create(String.class);
   private static final String WAHLBEZIRK_ID = Instancio.create(String.class);
 
-  @Mock MBWStimmzettelErgebnisseMapper mbwStimmzettelErgebnisseMapper;
+  @Mock
+  MBWStimmzettelErgebnismeldungsErgebnisseProvider mbwStimmzettelErgebnismeldungsErgebnisseProvider;
 
-  @Mock MBWStapelErgebnisseMapper mbwStapelErgebnisseMapper;
+  @Mock
+  MBWStapelErgebnismeldungsErgebnisseProvider mbwStapelErgebnismeldungsErgebnisseProvider;
 
-  @InjectMocks MBWErgebnisseMapper unitUnderTest;
+  @InjectMocks
+  MBWErgebnisseProvider unitUnderTest;
 
   @Nested
   class CanHandleWahlart {
@@ -48,9 +51,12 @@ class MBWErgebnisseMapperTest {
     void should_combineErgebnisse_when_stimmzettelAndStapelErgebnisseAreGiven() {
       val stimmzettelErgebnisse = Instancio.create(ErgebnismeldungsErgebnisseModel.class);
       val stapelErgebnisse = Instancio.create(ErgebnismeldungsErgebnisseModel.class);
-      Mockito.when(mbwStimmzettelErgebnisseMapper.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
+      Mockito.when(
+              mbwStimmzettelErgebnismeldungsErgebnisseProvider.getErgebnisse(
+                  WAHL_ID, WAHLBEZIRK_ID))
           .thenReturn(stimmzettelErgebnisse);
-      Mockito.when(mbwStapelErgebnisseMapper.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
+      Mockito.when(
+              mbwStapelErgebnismeldungsErgebnisseProvider.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
           .thenReturn(stapelErgebnisse);
 
       val result =
@@ -74,9 +80,12 @@ class MBWErgebnisseMapperTest {
     void should_returnEmptyErgebnisse_when_stimmzettelAndStapelErgebnisseAreEmpty() {
       val stimmzettelErgebnisse = new ErgebnismeldungsErgebnisseModel(List.of(), List.of());
       val stapelErgebnisse = new ErgebnismeldungsErgebnisseModel(List.of(), List.of());
-      Mockito.when(mbwStimmzettelErgebnisseMapper.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
+      Mockito.when(
+              mbwStimmzettelErgebnismeldungsErgebnisseProvider.getErgebnisse(
+                  WAHL_ID, WAHLBEZIRK_ID))
           .thenReturn(stimmzettelErgebnisse);
-      Mockito.when(mbwStapelErgebnisseMapper.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
+      Mockito.when(
+              mbwStapelErgebnismeldungsErgebnisseProvider.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
           .thenReturn(stapelErgebnisse);
 
       val result =

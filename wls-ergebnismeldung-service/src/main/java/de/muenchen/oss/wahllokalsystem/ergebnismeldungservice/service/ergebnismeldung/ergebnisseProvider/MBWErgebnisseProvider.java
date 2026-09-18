@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.mapping;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ergebnisseProvider;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
@@ -9,17 +9,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MBWErgebnisseMapper implements ErgebnismeldungsErgebnisseMapper {
+public class MBWErgebnisseProvider implements ErgebnismeldungsErgebnisseProvider {
 
-  private final MBWStimmzettelErgebnisseMapper mbwStimmzettelErgebnisseMapper;
+  private final MBWStimmzettelErgebnismeldungsErgebnisseProvider
+      mbwStimmzettelErgebnismeldungsErgebnisseProvider;
 
-  private final MBWStapelErgebnisseMapper mbwStapelErgebnisseMapper;
+  private final MBWStapelErgebnismeldungsErgebnisseProvider
+      mbwStapelErgebnismeldungsErgebnisseProvider;
 
   @Override
   public ErgebnismeldungsErgebnisseModel getErgebnismeldungErgebnisse(
       String wahlID, String wahlbezirkID, WahlartModel wahlart, MeldungsartModel meldungsart) {
-    val stimmzettelErgebnisse = mbwStimmzettelErgebnisseMapper.getErgebnisse(wahlID, wahlbezirkID);
-    val stapelErgebnisse = mbwStapelErgebnisseMapper.getErgebnisse(wahlID, wahlbezirkID);
+    val stimmzettelErgebnisse =
+        mbwStimmzettelErgebnismeldungsErgebnisseProvider.getErgebnisse(wahlID, wahlbezirkID);
+    val stapelErgebnisse =
+        mbwStapelErgebnismeldungsErgebnisseProvider.getErgebnisse(wahlID, wahlbezirkID);
 
     return new ErgebnismeldungsErgebnisseModel(
         Stream.concat(

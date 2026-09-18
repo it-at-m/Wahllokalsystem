@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.mapping;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ergebnisseProvider;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ErgebnismeldungErgebnisseService {
 
-  private final List<ErgebnismeldungsErgebnisseMapper> ergebnisseMappers;
+  private final List<ErgebnismeldungsErgebnisseProvider> ergebnisseMappers;
 
   public ErgebnismeldungsErgebnisseModel getErgebnisse(
       String wahlID, String wahlbezirkID, WahlartModel wahlart, MeldungsartModel meldungsart) {

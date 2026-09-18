@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.mapping;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ergebnisseProvider;
 
 import static org.instancio.Select.field;
 import static org.mockito.Mockito.times;
@@ -26,7 +26,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class DefaultStapelErgebnisseMapperTest {
+class DefaultStapelErgebnisseProviderTest {
 
   private static final String WAHL_ID = "wahlID";
   private static final String WAHLBEZIRK_ID = "wahlbezirkID";
@@ -35,7 +35,8 @@ class DefaultStapelErgebnisseMapperTest {
 
   @Mock WahlartPredicateHolder wahlartPredicateHolder;
 
-  @InjectMocks DefaultStapelErgebnisseMapper unitUnderTest;
+  @InjectMocks
+  DefaultStapelErgebnisseProvider unitUnderTest;
 
   @Nested
   class getErgebnismeldungErgebnisse {

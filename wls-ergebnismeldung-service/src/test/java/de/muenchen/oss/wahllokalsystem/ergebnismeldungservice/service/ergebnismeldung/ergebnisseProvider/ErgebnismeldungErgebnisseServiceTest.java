@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.mapping;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ergebnisseProvider;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -22,9 +22,10 @@ class ErgebnismeldungErgebnisseServiceTest {
   private static final String WAHL_ID = Instancio.create(String.class);
   private static final String WAHLBEZIRK_ID = Instancio.create(String.class);
 
-  @Mock ErgebnismeldungsErgebnisseMapper firstErgebnisseMapper;
+  @Mock
+  ErgebnismeldungsErgebnisseProvider firstErgebnisseMapper;
 
-  @Mock ErgebnismeldungsErgebnisseMapper secondErgebnisseMapper;
+  @Mock ErgebnismeldungsErgebnisseProvider secondErgebnisseMapper;
 
   ErgebnismeldungErgebnisseService unitUnderTest;
 

@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.mapping;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
 
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -19,9 +19,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Wahl
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.BriefwahlClient;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ErgebnismeldungMappingService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ergebnisseProvider.ErgebnismeldungErgebnisseService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ergebnisseProvider.ErgebnismeldungsErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
@@ -53,16 +52,14 @@ class ErgebnismeldungMappingServiceTest {
   @Mock MBWBedenklicheStimmzettelService mbwBedenklicheStimmzettelService;
 
   @Mock AuthenticationService authenticationService;
-  @Mock
-  BriefwahlClient briefwahlClient;
+  @Mock BriefwahlClient briefwahlClient;
 
   @Mock
   ErgebnismeldungErgebnisseService ergebnismeldungErgebnisseService;
 
   @Mock Mapping mapping;
 
-  @InjectMocks
-  ErgebnismeldungMappingService unitUnderTest;
+  @InjectMocks ErgebnismeldungMappingService unitUnderTest;
 
   @Nested
   class CreateErgebnismeldung {

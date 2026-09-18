@@ -1,6 +1,8 @@
---- Stapel A
 CREATE INDEX idx_stimmzettel_wahl_wahlbezirk_gueltigkeit_invalidevotes
     ON stimmzettel (wahlid, wahlbezirkid, gueltigkeit, invalidevotes);
+
+CREATE INDEX idx_stimmzettel_wahl_wahlbezirk_gueltigkeit
+    ON stimmzettel (wahlid, wahlbezirkid, gueltigkeit);
 
 CREATE INDEX idx_wahlvorschlag_stimmzettel_selected
     ON wahlvorschlag (
@@ -26,15 +28,9 @@ CREATE INDEX idx_kandidat_wahlvorschlag
                  wahlvorschlag_id
         );
 
---- Stapel B
-CREATE INDEX idx_kandidat_discarded_votesbyvoter
+CREATE INDEX idx_kandidat_discarded_votesbyvoter_invalidevotes
     ON kandidat (
                  discarded,
-                 votesByVoter
+                 votesByVoter,
+                 invalidvotes
         );
-
---- Stapel BC
-
---- Stapel D
-CREATE INDEX idx_stimmzettel_wahl_wahlbezirk_gueltigkeit
-    ON stimmzettel (wahlid, wahlbezirkid, gueltigkeit);

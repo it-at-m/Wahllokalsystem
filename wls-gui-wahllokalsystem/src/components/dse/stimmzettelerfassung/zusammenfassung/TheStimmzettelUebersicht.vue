@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { computed, useTemplateRef } from "vue";
@@ -99,11 +99,11 @@ import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfas
 
 const props = defineProps<{
   teamId: string;
-  stimmzettelListe: Stimmzettel[];
+  stimmzettelListe: PersistedStimmzettel[];
   isStimmzettelLoading: boolean;
   hasStimmzettel: boolean;
   wahlvorschlaege: Wahlvorschlag[];
-  saveStimmzettel: (stimmzettel: Stimmzettel) => Promise<void>;
+  saveStimmzettel: (stimmzettel: PersistedStimmzettel) => Promise<void>;
 }>();
 
 const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
@@ -133,7 +133,7 @@ const {
   isStatusLoading,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
-  sendStatusInBearbeitung,
+  ensureStatusInBearbeitung,
   sendStatusUnterbrochen,
   startNewEmptyStimmzettelWithStimmzettelkennung,
   reloadTeamStatus,
@@ -153,7 +153,7 @@ function onErfassungStartenClicked() {
 }
 
 async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
-  await sendStatusInBearbeitung();
+  await ensureStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
   startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
   if (isErfassungsDialogVisible.value) {
@@ -184,23 +184,21 @@ async function onStimmzettelErfassungCanceled() {
   isErfassungsDialogVisible.value = false;
 }
 async function onStimmzettelErfassungConfirmed(
-  confirmedStimmzettel: Stimmzettel
+  confirmedStimmzettel: PersistedStimmzettel
 ) {
   await props.saveStimmzettel(confirmedStimmzettel);
   isErfassungsDialogVisible.value = false;
 }
 async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
-  confirmedStimmzettel: Stimmzettel
+  confirmedStimmzettel: PersistedStimmzettel
 ) {
   await props.saveStimmzettel(confirmedStimmzettel);
   isKennungsDialogVisible.value = true;
 }
-async function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
-  if (
-    teamStatus.value?.status === StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
-  ) {
-    await sendStatusInBearbeitung();
-  }
+async function onStimmzettelBearbeitenClicked(
+  stimmzettel: PersistedStimmzettel
+) {
+  await ensureStatusInBearbeitung();
 
   activeStimmzettel.value = stimmzettel;
   isErfassungsDialogVisible.value = true;

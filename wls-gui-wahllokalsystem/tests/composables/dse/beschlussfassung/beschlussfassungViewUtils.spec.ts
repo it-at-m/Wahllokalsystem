@@ -1,11 +1,11 @@
 import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatus.ts";
 
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
 import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
@@ -68,7 +68,8 @@ vi.mock("@/composables/dse/stimmzettelerfassung/stimmzettelService.ts", () => ({
 }));
 
 describe("beschlussfassungViewUtils.ts", () => {
-  const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
+  const { preparePersistedStimmzettel } =
+    usePersistedStimmzettelTestDataFactory();
 
   const wahlID = "W1";
   const wahlbezirkID = "WB1";

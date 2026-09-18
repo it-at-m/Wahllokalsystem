@@ -1,11 +1,13 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Ref } from "vue";
 
 import { computed, onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 
 const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
+const { isSamePersistedStimmzettel } = useStimmzettelTools();
 
 export function useStimmzettelState(
   wahlID: string,
@@ -13,7 +15,7 @@ export function useStimmzettelState(
   teamID: string
 ) {
   const isStimmzettelLoading = ref(false);
-  const savedStimmzettel: Ref<Stimmzettel[]> = ref([]);
+  const savedStimmzettel: Ref<PersistedStimmzettel[]> = ref([]);
 
   const hasStimmzettel = computed(() => savedStimmzettel.value.length > 0);
 
@@ -21,12 +23,13 @@ export function useStimmzettelState(
     await _loadStimmzettel();
   });
 
-  async function saveOrUpdateStimmzettel(stimmzettelToSave: Stimmzettel) {
+  async function saveOrUpdateStimmzettel(
+    stimmzettelToSave: PersistedStimmzettel
+  ) {
     const newStimmzettelCollectionToSave = [...savedStimmzettel.value];
     const stimmzettelExistsIndex = newStimmzettelCollectionToSave.findIndex(
       (savedStimmzettel) =>
-        savedStimmzettel.stimmzettelkennung ===
-        stimmzettelToSave.stimmzettelkennung
+        isSamePersistedStimmzettel(savedStimmzettel, stimmzettelToSave)
     );
 
     if (stimmzettelExistsIndex !== -1) {

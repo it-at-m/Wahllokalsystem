@@ -1,8 +1,8 @@
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { Ref } from "vue";
 
-export function useManagedStimmzettelWahlvorschlagUtils(
-  stimmzettel: Ref<Stimmzettel>
+export function useBearbeitenDialogStimmzettelWahlvorschlagUtils(
+  stimmzettel: Ref<DseStimmzettel>
 ) {
   function getWahlvorschlagByOrdnungszahl(ordnungszahl: number) {
     return stimmzettel.value.wahlvorschlaege.find(

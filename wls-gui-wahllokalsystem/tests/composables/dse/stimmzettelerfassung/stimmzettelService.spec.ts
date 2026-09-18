@@ -1,11 +1,12 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
+import { useStimmzettelDTOTestDataFactory } from "@tests/utils/dse/StimmzettelDTOTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { createStimmzettelOfTeamDTO, createPersistedStimmzettel } =
-  useStimmzettelTestDataFactory();
+const { createStimmzettelOfTeamDTO } = useStimmzettelDTOTestDataFactory();
+const { createPersistedStimmzettel } = usePersistedStimmzettelTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   mapDtoToModel: vi.fn(),
@@ -35,14 +36,16 @@ vi.mock(
 
 vi.mock(
   import("@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts"),
-  () => ({
-    useStimmzettelMapper: () => ({
-      toModel: mockDefinitions.mapDtoToModel,
-      toDTO: mockDefinitions.mapModelToDto,
-      toPersistedStimmzettel: vi.fn(),
-      resetStimmzettel: vi.fn(),
-    }),
-  })
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useStimmzettelMapper: () => ({
+        ...original.useStimmzettelMapper(),
+        toModel: mockDefinitions.mapDtoToModel,
+        toDTO: mockDefinitions.mapModelToDto,
+      }),
+    };
+  }
 );
 
 vi.mock(

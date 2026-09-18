@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { ref } from "vue";
 import { useRoute } from "vue-router";
@@ -58,7 +58,7 @@ const wahlID = (route.params.wahlId as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 
 const isBearbeitenDialogVisible = ref(false);
-const activeStimmzettelForBeschluss = ref<Stimmzettel>();
+const activeStimmzettelForBeschluss = ref<PersistedStimmzettel>();
 
 const {
   isStimmzettelForBeschlussLoading,
@@ -78,7 +78,7 @@ async function onBeschlussfassungBeendenClicked() {
   });
 }
 
-function onBeschlussBearbeitenClicked(stimmzettelToEdit: Stimmzettel) {
+function onBeschlussBearbeitenClicked(stimmzettelToEdit: PersistedStimmzettel) {
   activeStimmzettelForBeschluss.value = stimmzettelToEdit;
   isBearbeitenDialogVisible.value = true;
   // TODO #3271 Beschluss zu einem Stimmzettel speichern

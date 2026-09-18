@@ -1,21 +1,26 @@
-import type { Kandidat as DseKandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
-import type { Wahlvorschlag as DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { Wahlvorschlag as UiWahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { describe, expect, it, vi } from "vitest";
 
 import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts";
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getStimmzettel: vi.fn(),
+  sortSystemBeschlussgruende: vi.fn(),
+  sortWahlvorstandBeschlussgruende: vi.fn(),
+  sortAndDeepCloneWahlvorschlaege: vi.fn(),
 }));
 
 vi.mock(
@@ -29,7 +34,36 @@ vi.mock(
   })
 );
 
-const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
+vi.mock(
+  import("@/composables/dse/beschlussfassung/beschlussgrundTools.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useBeschlussgrundTools: () => ({
+        ...original.useBeschlussgrundTools(),
+        sortSystemBeschlussgruende: mockDefinitions.sortSystemBeschlussgruende,
+        sortWahlvorstandBeschlussgruende:
+          mockDefinitions.sortWahlvorstandBeschlussgruende,
+      }),
+    };
+  }
+);
+
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/wahlvorschlagTools.ts"),
+  () => ({
+    useWahlvorschlagTools: () => ({
+      sortAndDeepCloneWahlvorschlaege:
+        mockDefinitions.sortAndDeepCloneWahlvorschlaege,
+    }),
+  })
+);
+const { createDseStimmzettel, prepareDseStimmzettel } =
+  useDseStimmzettelTestDataFactory();
+const {
+  preparePersistedStimmzettel,
+  preparePersistedStimmzettelWahlvorschlag,
+} = usePersistedStimmzettelTestDataFactory();
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
 const {
   createWahlvorschlaege,
@@ -38,12 +72,15 @@ const {
   prepareKandidat,
 } = useWahlvorschlaegeTestDataFactory();
 
-describe("stimmzettelUtils.ts", () => {
+describe("stimmzettelTools.ts", () => {
   const {
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
     createStimmzettelWithWahlvorschlaege,
-  } = useStimmzettelUtils();
+    normalizePersistedStimmzettel,
+    resetDseStimmzettel,
+    isSamePersistedStimmzettel,
+  } = useStimmzettelTools();
 
   const { mapSystemBeschlussgrundReasonEnumToText } =
     useSystemBeschlussgrundReasonEnumTools();
@@ -52,11 +89,11 @@ describe("stimmzettelUtils.ts", () => {
     it("should_createStimmzettelWithInitialValues_when_wahlvorschlaegeAreGiven", () => {
       const uiWahlvorschlaege: Wahlvorschlaege = createWahlvorschlaege();
 
-      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege(
+      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege(
         uiWahlvorschlaege.wahlvorschlaege
       );
 
-      const expected: Stimmzettel = {
+      const expected: DseStimmzettel = {
         wahlvorstandBeschlussvorschlag: [],
         systemBeschlussvorschlag: [],
         beschlussfassung: null,
@@ -120,7 +157,7 @@ describe("stimmzettelUtils.ts", () => {
         .kandidaten([kandidatWithTwoNennungen])
         .build();
 
-      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([
+      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([
         uiWahlvorschlag,
       ]);
 
@@ -161,7 +198,7 @@ describe("stimmzettelUtils.ts", () => {
       const uiWahlvorschlagWithoutKandidaten: UiWahlvorschlag =
         prepareWahlvorschlag().kandidaten(undefined).build();
 
-      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([
+      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([
         uiWahlvorschlagWithoutKandidaten,
       ]);
 
@@ -186,7 +223,7 @@ describe("stimmzettelUtils.ts", () => {
         .ordnungszahl(20)
         .build();
 
-      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([
+      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([
         w1,
         w2,
       ]);
@@ -237,9 +274,9 @@ describe("stimmzettelUtils.ts", () => {
     });
 
     it("should_createStimmzettelWithEmptyWahlvorschlaege_when_inputIsEmpty", () => {
-      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([]);
+      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([]);
 
-      const expected: Stimmzettel = {
+      const expected: DseStimmzettel = {
         wahlvorstandBeschlussvorschlag: [],
         systemBeschlussvorschlag: [],
         beschlussfassung: null,
@@ -393,5 +430,135 @@ describe("stimmzettelUtils.ts", () => {
 
       expect(result).toStrictEqual("");
     });
+  });
+
+  describe("normalizePersistedStimmzettel", () => {
+    it("should_returnNormalizedStimmzettel_when_givenStimmzettel", () => {
+      const sysBeschlussvorschlag = [
+        { reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig },
+      ];
+      const wvBeschlussvorschlag = [{ text: generateRandomString(6) }];
+
+      const wvA = preparePersistedStimmzettelWahlvorschlag()
+        .kandidaten([])
+        .wahlvorschlagID("a")
+        .build();
+      const wvB = preparePersistedStimmzettelWahlvorschlag()
+        .kandidaten([])
+        .wahlvorschlagID("b")
+        .build();
+
+      const wahlvorschlaegeSorted = [wvA, wvB];
+
+      mockDefinitions.sortSystemBeschlussgruende.mockReturnValueOnce(
+        sysBeschlussvorschlag
+      );
+      mockDefinitions.sortWahlvorstandBeschlussgruende.mockReturnValueOnce(
+        wvBeschlussvorschlag
+      );
+      mockDefinitions.sortAndDeepCloneWahlvorschlaege.mockReturnValue(
+        wahlvorschlaegeSorted
+      );
+
+      const input = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag(sysBeschlussvorschlag)
+        .wahlvorstandBeschlussvorschlag(wvBeschlussvorschlag)
+        .wahlvorschlaege([wvB, wvA])
+        .build();
+
+      const result = normalizePersistedStimmzettel(input);
+
+      const expectedNormalizedStimmzettel = {
+        stimmzettelkennung: input.stimmzettelkennung,
+        teamID: input.teamID,
+        wahlvorschlaege: wahlvorschlaegeSorted,
+        invalideVotes: input.invalideVotes ?? 0,
+        gueltigkeit: input.gueltigkeit,
+        wahlvorstandBeschlussvorschlag: wvBeschlussvorschlag,
+        systemBeschlussvorschlag: sysBeschlussvorschlag,
+        beschlussfassung: input.beschlussfassung
+          ? { ...input.beschlussfassung }
+          : null,
+      } satisfies PersistedStimmzettel;
+
+      expect(result).toStrictEqual(expectedNormalizedStimmzettel);
+      expect(
+        mockDefinitions.sortWahlvorstandBeschlussgruende
+      ).toHaveBeenCalledOnce();
+      expect(mockDefinitions.sortSystemBeschlussgruende).toHaveBeenCalledOnce();
+      expect(
+        mockDefinitions.sortAndDeepCloneWahlvorschlaege
+      ).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe("resetDseStimmzettel", () => {
+    it("should_returnDseStimmzettelWithoutAnyValuesSet_when_called", () => {
+      const dseStimmzettel = createDseStimmzettel();
+
+      const expectedResetStimmzettel = prepareDseStimmzettel()
+        .invalideVotes(0)
+        .gueltigkeit("VALID")
+        .wahlvorstandBeschlussvorschlag([])
+        .systemBeschlussvorschlag([])
+        .beschlussfassung(null)
+        .wahlvorschlaege(dseStimmzettel.wahlvorschlaege)
+        .build();
+      const expectedWahlvorschlaege =
+        expectedResetStimmzettel.wahlvorschlaege[0];
+      expectedWahlvorschlaege.selected = false;
+      const expectedKandidaten = expectedWahlvorschlaege.kandidaten[0];
+      expectedKandidaten.einzelstimmen = null;
+      expectedKandidaten.ungueltigeStimmen = null;
+      expectedKandidaten.reststimmen = null;
+      expectedKandidaten.durchgestrichen = false;
+
+      const result = resetDseStimmzettel(dseStimmzettel);
+
+      expect(result).toStrictEqual(expectedResetStimmzettel);
+    });
+  });
+
+  describe("isSamePersistedStimmzettel", () => {
+    it.each([
+      {
+        stimmzettelkennungMatches: false,
+        teamIdMatches: false,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: true,
+        teamIdMatches: false,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: false,
+        teamIdMatches: true,
+        expected: false,
+      },
+      {
+        stimmzettelkennungMatches: true,
+        teamIdMatches: true,
+        expected: true,
+      },
+    ])(
+      "should_return'$expected'_whenStimmzettelkennungMatchesIs'$stimmzettelkennungMatches'AndTeamIdMatchesIs'$teamIdMatches'",
+      ({ stimmzettelkennungMatches, teamIdMatches, expected }) => {
+        const stimmzettel1 = preparePersistedStimmzettel()
+          .stimmzettelkennung(1)
+          .teamID("A")
+          .build();
+        const stimmzettel2 = preparePersistedStimmzettel()
+          .stimmzettelkennung(
+            stimmzettelkennungMatches ? stimmzettel1.stimmzettelkennung : 2
+          )
+          .teamID(teamIdMatches ? stimmzettel1.teamID : "B")
+          .build();
+
+        expect(isSamePersistedStimmzettel(stimmzettel1, stimmzettel2)).toBe(
+          expected
+        );
+      }
+    );
   });
 });

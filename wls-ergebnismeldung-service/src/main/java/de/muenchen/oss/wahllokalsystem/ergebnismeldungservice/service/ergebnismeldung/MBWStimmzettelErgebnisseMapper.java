@@ -21,7 +21,7 @@ public class MBWStimmzettelErgebnisseMapper implements MBWStapelErgebnisCollecto
   public MBWErgebnisseModel getErgebnisse(String wahlID, String wahlbezirkID) {
     val stapelA =
         stimmzettelService
-            .getStimmzettelWithExactlyOneWahlvorschlagSelected(
+            .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
                 new BezirkUndWahlID(wahlID, wahlbezirkID))
             .stream()
             .collect(

@@ -76,7 +76,7 @@ public class StimmzettelService {
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
   // MBW Stapel A
   public Collection<WahlvorschlagStimmzettelAnzahlModel>
-      getStimmzettelWithExactlyOneWahlvorschlagSelected(
+      getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
           @P("param") final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 

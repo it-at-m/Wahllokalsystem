@@ -282,7 +282,7 @@ class StimmzettelServiceSecurityTest {
   }
 
   @Nested
-  class GetStimmzettelWithExactlyOneWahlvorschlagSelected {
+  class GetCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected {
 
     @Test
     void should_getAccess_when_allRequiredAuthoritiesArePresentAndIDsAreMatching() {
@@ -297,7 +297,9 @@ class StimmzettelServiceSecurityTest {
       Assertions.assertThatNoException()
           .isThrownBy(
               () ->
-                  unitUnderTest.getStimmzettelWithExactlyOneWahlvorschlagSelected(bezirkUndWahlID));
+                  unitUnderTest
+                      .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
+                          bezirkUndWahlID));
     }
 
     @Test
@@ -313,7 +315,9 @@ class StimmzettelServiceSecurityTest {
       Assertions.assertThatException()
           .isThrownBy(
               () ->
-                  unitUnderTest.getStimmzettelWithExactlyOneWahlvorschlagSelected(bezirkUndWahlID))
+                  unitUnderTest
+                      .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
+                          bezirkUndWahlID))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -330,7 +334,9 @@ class StimmzettelServiceSecurityTest {
       Assertions.assertThatException()
           .isThrownBy(
               () ->
-                  unitUnderTest.getStimmzettelWithExactlyOneWahlvorschlagSelected(bezirkUndWahlID))
+                  unitUnderTest
+                      .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
+                          bezirkUndWahlID))
           .isInstanceOf(AccessDeniedException.class);
     }
   }

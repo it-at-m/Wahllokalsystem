@@ -196,7 +196,7 @@ class StimmzettelServiceTest {
   }
 
   @Nested
-  class GetStimmzettelWithExactlyOneWahlvorschlagSelected {
+  class GetCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected {
 
     @Test
     void should_returnMappedCollection_when_repoReturnedData() {
@@ -208,7 +208,9 @@ class StimmzettelServiceTest {
                       bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
           .thenReturn(Collections.emptyList());
 
-      val result = unitUnderTest.getStimmzettelWithExactlyOneWahlvorschlagSelected(bezirkUndWahlID);
+      val result =
+          unitUnderTest.getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
+              bezirkUndWahlID);
 
       Assertions.assertThat(result).isEmpty();
       Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
@@ -229,7 +231,9 @@ class StimmzettelServiceTest {
       Mockito.when(stimmzettelModelMapper.toModel(any(WahlvorschlagStimmzettelAnzahl.class)))
           .thenReturn(Instancio.create(WahlvorschlagStimmzettelAnzahlModel.class));
 
-      val result = unitUnderTest.getStimmzettelWithExactlyOneWahlvorschlagSelected(bezirkUndWahlID);
+      val result =
+          unitUnderTest.getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
+              bezirkUndWahlID);
 
       Assertions.assertThat(result).hasSize(mockedRepoResponse.size());
       Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);

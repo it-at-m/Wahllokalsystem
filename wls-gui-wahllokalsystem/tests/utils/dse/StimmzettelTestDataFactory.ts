@@ -33,13 +33,13 @@ const {
 } = useCommonTestDataFactory();
 
 export function useStimmzettelTestDataFactory() {
-  function createStimmzettel(): DseStimmzettel {
+  function createDseStimmzettel(): DseStimmzettel {
     return {
       gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),
       wahlvorschlaege: [
-        createStimmzettelWahlvorschlag(),
-        createStimmzettelWahlvorschlag(),
-        createStimmzettelWahlvorschlag(),
+        createDseWahlvorschlag(),
+        createDseWahlvorschlag(),
+        createDseWahlvorschlag(),
       ],
       beschlussfassung: createStimmzettelBeschlussfassung(),
       systemBeschlussvorschlag: [],
@@ -58,8 +58,8 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelKandidat(): DseKandidat {
-    const wahlvorschlag = _createStimmzettelWahlvorschlagWithoutKandidaten();
+  function createDseKandidat(): DseKandidat {
+    const wahlvorschlag = _createDseWahlvorschlagWithoutKandidaten();
     const result = {
       reststimmen: generateRandomNumber(2),
       ungueltigeStimmen: generateRandomNumber(2),
@@ -77,7 +77,7 @@ export function useStimmzettelTestDataFactory() {
     return result;
   }
 
-  function createStimmzettelKandidatOfWahlvorschlag(
+  function createDseKandidatOfDseWahlvorschlag(
     owningWahlvorschlag: DseWahlvorschlag
   ): DseKandidat {
     return {
@@ -146,12 +146,12 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelWahlvorschlag(): DseWahlvorschlag {
-    const result = _createStimmzettelWahlvorschlagWithoutKandidaten();
+  function createDseWahlvorschlag(): DseWahlvorschlag {
+    const result = _createDseWahlvorschlagWithoutKandidaten();
     result.kandidaten = [
-      createStimmzettelKandidatOfWahlvorschlag(result),
-      createStimmzettelKandidatOfWahlvorschlag(result),
-      createStimmzettelKandidatOfWahlvorschlag(result),
+      createDseKandidatOfDseWahlvorschlag(result),
+      createDseKandidatOfDseWahlvorschlag(result),
+      createDseKandidatOfDseWahlvorschlag(result),
     ];
     return result;
   }
@@ -189,8 +189,8 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function prepareStimmzettel(): Builder<DseStimmzettel> {
-    return proxyBuilder<DseStimmzettel>(createStimmzettel());
+  function prepareDseStimmzettel(): Builder<DseStimmzettel> {
+    return proxyBuilder<DseStimmzettel>(createDseStimmzettel());
   }
 
   function prepareStimmzettelOfTeamDTO(): Builder<StimmzettelOfTeamDTO> {
@@ -209,15 +209,15 @@ export function useStimmzettelTestDataFactory() {
     );
   }
 
-  function prepareStimmzettelKandidat(): Builder<DseKandidat> {
-    return proxyBuilder<DseKandidat>(createStimmzettelKandidat());
+  function prepareDseKandidat(): Builder<DseKandidat> {
+    return proxyBuilder<DseKandidat>(createDseKandidat());
   }
 
-  function prepareStimmzettelKandidatOfWahlvorschlag(
+  function prepareDseKandidatOfDseWahlvorschlag(
     owningWahlvorschlag: DseWahlvorschlag
   ): Builder<DseKandidat> {
     return proxyBuilder<DseKandidat>(
-      createStimmzettelKandidatOfWahlvorschlag(owningWahlvorschlag)
+      createDseKandidatOfDseWahlvorschlag(owningWahlvorschlag)
     );
   }
 
@@ -233,11 +233,11 @@ export function useStimmzettelTestDataFactory() {
     return proxyBuilder<WahlvorschlagDTO>(createStimmzettelWahlvorschlagDTO());
   }
 
-  function prepareStimmzettelWahlvorschlag(): Builder<DseWahlvorschlag> {
-    return proxyBuilder<DseWahlvorschlag>(createStimmzettelWahlvorschlag());
+  function prepareDseWahlvorschlag(): Builder<DseWahlvorschlag> {
+    return proxyBuilder<DseWahlvorschlag>(createDseWahlvorschlag());
   }
 
-  function _createStimmzettelWahlvorschlagWithoutKandidaten(): DseWahlvorschlag {
+  function _createDseWahlvorschlagWithoutKandidaten(): DseWahlvorschlag {
     return {
       ordnungszahl: generateRandomNumber(2),
       kandidaten: [],
@@ -251,21 +251,21 @@ export function useStimmzettelTestDataFactory() {
   }
 
   return {
-    createStimmzettel,
+    createDseStimmzettel,
     createStimmzettelOfTeamDTO,
-    createStimmzettelKandidat,
-    createStimmzettelKandidatOfWahlvorschlag,
+    createDseKandidat,
+    createDseKandidatOfDseWahlvorschlag,
     createStimmzettelKandidatDTO,
-    createStimmzettelWahlvorschlag,
-    prepareStimmzettel,
+    createDseWahlvorschlag,
+    prepareDseStimmzettel,
     prepareStimmzettelOfTeamDTO,
     prepareStimmzettelBeschlussfassungDTO,
     prepareStimmzettelBeschlussgrundDTO,
-    prepareStimmzettelKandidat,
-    prepareStimmzettelKandidatOfWahlvorschlag,
+    prepareDseKandidat,
+    prepareDseKandidatOfDseWahlvorschlag,
     prepareStimmzettelKandidatDTO,
     prepareStimmzettelKandidatIdDTO,
-    prepareStimmzettelWahlvorschlag,
+    prepareDseWahlvorschlag,
     prepareStimmzettelWahlvorschlagDTO,
     createStimmzettelSystemBeschlussgrund,
     createStimmzettelWahlvorstandBeschlussgrund,

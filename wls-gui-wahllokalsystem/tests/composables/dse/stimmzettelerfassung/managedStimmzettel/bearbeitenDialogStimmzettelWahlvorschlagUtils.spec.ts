@@ -5,14 +5,14 @@ import { ref } from "vue";
 import { useBearbeitenDialogStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelWahlvorschlagUtils.ts";
 
 describe("bearbeitenDialogStimmzettelWahlvorschlagUtils.ts", () => {
-  const { prepareStimmzettel, prepareStimmzettelWahlvorschlag } =
+  const { prepareDseStimmzettel, prepareDseWahlvorschlag } =
     useStimmzettelTestDataFactory();
 
   describe("getWahlvorschlagByOrdnungszahl", () => {
     it("should_findWahlvorschlagByOrdnungszahl_when_called", () => {
-      const wv1 = prepareStimmzettelWahlvorschlag().ordnungszahl(1).build();
-      const wv2 = prepareStimmzettelWahlvorschlag().ordnungszahl(2).build();
-      const stimmzettel = prepareStimmzettel()
+      const wv1 = prepareDseWahlvorschlag().ordnungszahl(1).build();
+      const wv2 = prepareDseWahlvorschlag().ordnungszahl(2).build();
+      const stimmzettel = prepareDseStimmzettel()
         .wahlvorschlaege([wv1, wv2])
         .build();
 

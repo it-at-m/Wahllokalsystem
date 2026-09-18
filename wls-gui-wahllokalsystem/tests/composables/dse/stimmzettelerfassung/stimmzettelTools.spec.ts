@@ -58,7 +58,7 @@ vi.mock(
     }),
   })
 );
-const { createStimmzettel, prepareStimmzettel } =
+const { createDseStimmzettel, prepareDseStimmzettel } =
   useStimmzettelTestDataFactory();
 const {
   preparePersistedStimmzettel,
@@ -494,9 +494,9 @@ describe("stimmzettelTools.ts", () => {
 
   describe("resetDseStimmzettel", () => {
     it("should_returnDseStimmzettelWithoutAnyValuesSet_when_called", () => {
-      const dseStimmzettel = createStimmzettel();
+      const dseStimmzettel = createDseStimmzettel();
 
-      const expectedResetStimmzettel = prepareStimmzettel()
+      const expectedResetStimmzettel = prepareDseStimmzettel()
         .invalideVotes(0)
         .gueltigkeit("VALID")
         .wahlvorstandBeschlussvorschlag([])

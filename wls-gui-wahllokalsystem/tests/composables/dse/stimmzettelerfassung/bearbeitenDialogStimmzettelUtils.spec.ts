@@ -1,6 +1,6 @@
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
-import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
@@ -107,10 +107,10 @@ vi.mock(
 describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   const mockedWahlId = "wahl-1";
   const {
-    prepareStimmzettel,
-    prepareStimmzettelWahlvorschlag,
-    prepareStimmzettelKandidat,
-    prepareStimmzettelKandidatOfWahlvorschlag,
+    prepareDseStimmzettel,
+    prepareDseWahlvorschlag,
+    prepareDseKandidat,
+    prepareDseKandidatOfDseWahlvorschlag,
   } = useStimmzettelTestDataFactory();
 
   const {
@@ -144,11 +144,11 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
       },
     ];
 
-    mockedStimmzettelWithoutWahlvorschlaege = prepareStimmzettel()
+    mockedStimmzettelWithoutWahlvorschlaege = prepareDseStimmzettel()
       .wahlvorschlaege([])
       .build();
 
-    const kandidatWithoutVotes = prepareStimmzettelKandidat()
+    const kandidatWithoutVotes = prepareDseKandidat()
       .listenposition(1)
       .ordnungszahl(101)
       .einzelstimmen(null)
@@ -157,9 +157,9 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
       .ungueltigeStimmen(null)
       .build();
 
-    stimmzettelWithoutValuesSet = prepareStimmzettel()
+    stimmzettelWithoutValuesSet = prepareDseStimmzettel()
       .wahlvorschlaege([
-        prepareStimmzettelWahlvorschlag()
+        prepareDseWahlvorschlag()
           .ordnungszahl(1)
           .kandidaten([kandidatWithoutVotes])
           .build(),
@@ -246,12 +246,12 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
 
   describe("kandidatAddEinzelstimmenOrThrow", () => {
     it("should_addVotes_when_kandidatIsPresent", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareDseKandidat()
         .ordnungszahl(101)
         .einzelstimmen(1)
         .durchgestrichen(false)
         .build();
-      const stimmzettel = prepareStimmzettel()
+      const stimmzettel = prepareDseStimmzettel()
         .wahlvorschlaege([kandidat.owningWahlvorschlag])
         .build();
       const votesToAdd = 2;
@@ -279,12 +279,12 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   });
 
   describe("kandidatRemoveEinzelstimmenOrThrow", () => {
-    const kandidat = prepareStimmzettelKandidat()
+    const kandidat = prepareDseKandidat()
       .ordnungszahl(101)
       .einzelstimmen(3)
       .ungueltigeStimmen(null)
       .build();
-    const stimmzettel = prepareStimmzettel()
+    const stimmzettel = prepareDseStimmzettel()
       .wahlvorschlaege([kandidat.owningWahlvorschlag])
       .build();
 
@@ -340,13 +340,13 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
 
   describe("kandidatAddUngueltigeStimmenOrThrow", () => {
     it("should_addInvalidVotes_when_kandidatIsPresent", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareDseKandidat()
         .ordnungszahl(101)
         .ungueltigeStimmen(1)
         .build();
-      const stimmzettel = prepareStimmzettel()
+      const stimmzettel = prepareDseStimmzettel()
         .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag()
+          prepareDseWahlvorschlag()
             .ordnungszahl(1)
             .kandidaten([kandidat])
             .build(),
@@ -377,13 +377,13 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   });
 
   describe("kandidatRemoveUngueltigeStimmenOrThrow", () => {
-    const kandidat = prepareStimmzettelKandidat()
+    const kandidat = prepareDseKandidat()
       .ordnungszahl(101)
       .ungueltigeStimmen(3)
       .build();
-    const stimmzettel = prepareStimmzettel()
+    const stimmzettel = prepareDseStimmzettel()
       .wahlvorschlaege([
-        prepareStimmzettelWahlvorschlag()
+        prepareDseWahlvorschlag()
           .ordnungszahl(1)
           .kandidaten([kandidat])
           .build(),
@@ -428,22 +428,19 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   });
 
   describe("kandidatenAddStimmenInRangeOrThrow", () => {
-    const k1 = prepareStimmzettelKandidat()
+    const k1 = prepareDseKandidat()
       .ordnungszahl(101)
       .einzelstimmen(null)
       .durchgestrichen(false)
       .build();
-    const k2 = prepareStimmzettelKandidat()
+    const k2 = prepareDseKandidat()
       .ordnungszahl(102)
       .einzelstimmen(null)
       .durchgestrichen(false)
       .build();
-    const stimmzettel = prepareStimmzettel()
+    const stimmzettel = prepareDseStimmzettel()
       .wahlvorschlaege([
-        prepareStimmzettelWahlvorschlag()
-          .ordnungszahl(1)
-          .kandidaten([k1, k2])
-          .build(),
+        prepareDseWahlvorschlag().ordnungszahl(1).kandidaten([k1, k2]).build(),
       ])
       .build();
 
@@ -486,13 +483,13 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   });
 
   describe("kandidatAddStreichungOrThrow", () => {
-    const kandidat = prepareStimmzettelKandidat()
+    const kandidat = prepareDseKandidat()
       .ordnungszahl(101)
       .durchgestrichen(false)
       .build();
-    const stimmzettel = prepareStimmzettel()
+    const stimmzettel = prepareDseStimmzettel()
       .wahlvorschlaege([
-        prepareStimmzettelWahlvorschlag()
+        prepareDseWahlvorschlag()
           .ordnungszahl(1)
           .kandidaten([kandidat])
           .build(),
@@ -535,13 +532,13 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   });
 
   describe("kandidatRemoveStreichungOrThrow", () => {
-    const kandidat = prepareStimmzettelKandidat()
+    const kandidat = prepareDseKandidat()
       .ordnungszahl(101)
       .durchgestrichen(true)
       .build();
-    const stimmzettel = prepareStimmzettel()
+    const stimmzettel = prepareDseStimmzettel()
       .wahlvorschlaege([
-        prepareStimmzettelWahlvorschlag()
+        prepareDseWahlvorschlag()
           .ordnungszahl(1)
           .kandidaten([kandidat])
           .build(),
@@ -584,20 +581,17 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   });
 
   describe("kandidatenStreichungenInRangeOrThrow", () => {
-    const k1 = prepareStimmzettelKandidat()
+    const k1 = prepareDseKandidat()
       .ordnungszahl(101)
       .durchgestrichen(false)
       .build();
-    const k2 = prepareStimmzettelKandidat()
+    const k2 = prepareDseKandidat()
       .ordnungszahl(102)
       .durchgestrichen(false)
       .build();
-    const stimmzettel = prepareStimmzettel()
+    const stimmzettel = prepareDseStimmzettel()
       .wahlvorschlaege([
-        prepareStimmzettelWahlvorschlag()
-          .ordnungszahl(1)
-          .kandidaten([k1, k2])
-          .build(),
+        prepareDseWahlvorschlag().ordnungszahl(1).kandidaten([k1, k2]).build(),
       ])
       .build();
 
@@ -630,16 +624,13 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
     });
 
     it("should_throwError_when_kandidatInRangeNotFound", () => {
-      const k1 = prepareStimmzettelKandidat()
+      const k1 = prepareDseKandidat()
         .ordnungszahl(101)
         .durchgestrichen(false)
         .build();
-      const stimmzettel = prepareStimmzettel()
+      const stimmzettel = prepareDseStimmzettel()
         .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([k1])
-            .build(),
+          prepareDseWahlvorschlag().ordnungszahl(1).kandidaten([k1]).build(),
         ])
         .build();
       const managed = useBearbeitenDialogStimmzettelUtils(
@@ -653,20 +644,17 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   });
 
   describe("kandidatenRemoveStreichungenInRangeOrThrow", () => {
-    const k1 = prepareStimmzettelKandidat()
+    const k1 = prepareDseKandidat()
       .ordnungszahl(101)
       .durchgestrichen(true)
       .build();
-    const k2 = prepareStimmzettelKandidat()
+    const k2 = prepareDseKandidat()
       .ordnungszahl(102)
       .durchgestrichen(true)
       .build();
-    const stimmzettel = prepareStimmzettel()
+    const stimmzettel = prepareDseStimmzettel()
       .wahlvorschlaege([
-        prepareStimmzettelWahlvorschlag()
-          .ordnungszahl(1)
-          .kandidaten([k1, k2])
-          .build(),
+        prepareDseWahlvorschlag().ordnungszahl(1).kandidaten([k1, k2]).build(),
       ])
       .build();
 
@@ -697,16 +685,13 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
     });
 
     it("should_throwError_when_kandidatInRangeNotFound", () => {
-      const k1 = prepareStimmzettelKandidat()
+      const k1 = prepareDseKandidat()
         .ordnungszahl(101)
         .durchgestrichen(false)
         .build();
-      const stimmzettel = prepareStimmzettel()
+      const stimmzettel = prepareDseStimmzettel()
         .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten([k1])
-            .build(),
+          prepareDseWahlvorschlag().ordnungszahl(1).kandidaten([k1]).build(),
         ])
         .build();
       const managed = useBearbeitenDialogStimmzettelUtils(
@@ -845,26 +830,26 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
 
   describe("wahlvorschlagAddVotesOrThrow", () => {
     it("should_selectWahlvorschlagAndAssignReststimmen_when_wahlvorschlagIsPresent", () => {
-      const k1 = prepareStimmzettelKandidat()
+      const k1 = prepareDseKandidat()
         .ordnungszahl(101)
         .einzelstimmen(null)
         .ungueltigeStimmen(0)
         .reststimmen(null)
         .durchgestrichen(false)
         .build();
-      const k2 = prepareStimmzettelKandidat()
+      const k2 = prepareDseKandidat()
         .ordnungszahl(102)
         .einzelstimmen(null)
         .ungueltigeStimmen(0)
         .reststimmen(null)
         .durchgestrichen(false)
         .build();
-      const wv = prepareStimmzettelWahlvorschlag()
+      const wv = prepareDseWahlvorschlag()
         .ordnungszahl(1)
         .selected(false)
         .kandidaten([k1, k2])
         .build();
-      const stimmzettel = prepareStimmzettel().wahlvorschlaege([wv]).build();
+      const stimmzettel = prepareDseStimmzettel().wahlvorschlaege([wv]).build();
 
       const managed = useBearbeitenDialogStimmzettelUtils(
         ref(stimmzettel),
@@ -883,12 +868,12 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
     });
 
     it("should_throwError_when_wahlvorschlagAlreadySelected", () => {
-      const wv = prepareStimmzettelWahlvorschlag()
+      const wv = prepareDseWahlvorschlag()
         .ordnungszahl(1)
         .selected(true)
         .kandidaten([])
         .build();
-      const stimmzettel = prepareStimmzettel().wahlvorschlaege([wv]).build();
+      const stimmzettel = prepareDseStimmzettel().wahlvorschlaege([wv]).build();
       const managed = useBearbeitenDialogStimmzettelUtils(
         ref(stimmzettel),
         mockedWahlId
@@ -911,20 +896,14 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
 
   describe("wahlvorschlagRemoveVotesOrThrow", () => {
     it("should_deselectWahlvorschlagAndClearReststimmen_when_wahlvorschlagIsPresent", () => {
-      const k1 = prepareStimmzettelKandidat()
-        .ordnungszahl(101)
-        .reststimmen(1)
-        .build();
-      const k2 = prepareStimmzettelKandidat()
-        .ordnungszahl(102)
-        .reststimmen(1)
-        .build();
-      const wv = prepareStimmzettelWahlvorschlag()
+      const k1 = prepareDseKandidat().ordnungszahl(101).reststimmen(1).build();
+      const k2 = prepareDseKandidat().ordnungszahl(102).reststimmen(1).build();
+      const wv = prepareDseWahlvorschlag()
         .ordnungszahl(1)
         .selected(true)
         .kandidaten([k1, k2])
         .build();
-      const stimmzettel = prepareStimmzettel().wahlvorschlaege([wv]).build();
+      const stimmzettel = prepareDseStimmzettel().wahlvorschlaege([wv]).build();
       const managed = useBearbeitenDialogStimmzettelUtils(
         ref(stimmzettel),
         mockedWahlId
@@ -942,12 +921,12 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
     });
 
     it("should_throwError_when_wahlvorschlagAlreadyDeselected", () => {
-      const wv = prepareStimmzettelWahlvorschlag()
+      const wv = prepareDseWahlvorschlag()
         .ordnungszahl(1)
         .selected(false)
         .kandidaten([])
         .build();
-      const stimmzettel = prepareStimmzettel().wahlvorschlaege([wv]).build();
+      const stimmzettel = prepareDseStimmzettel().wahlvorschlaege([wv]).build();
       const managed = useBearbeitenDialogStimmzettelUtils(
         ref(stimmzettel),
         mockedWahlId
@@ -969,7 +948,7 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   });
 
   describe("resetStimmzettelAndHistory", () => {
-    const initialEmptyDseWahlvorschlag = prepareStimmzettelWahlvorschlag()
+    const initialEmptyDseWahlvorschlag = prepareDseWahlvorschlag()
       .wahlvorschlagID("1")
       .ordnungszahl(1)
       .kandidaten([])
@@ -980,7 +959,7 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
       .kurzname("kurzname")
       .build();
 
-    const initialEmptyDseKandidat = prepareStimmzettelKandidatOfWahlvorschlag(
+    const initialEmptyDseKandidat = prepareDseKandidatOfDseWahlvorschlag(
       initialEmptyDseWahlvorschlag
     )
       .ordnungszahl(101)
@@ -991,7 +970,7 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
       .owningWahlvorschlag(initialEmptyDseWahlvorschlag)
       .build();
 
-    const initialEmptyDseStimzettel = prepareStimmzettel()
+    const initialEmptyDseStimzettel = prepareDseStimmzettel()
       .wahlvorstandBeschlussvorschlag([])
       .systemBeschlussvorschlag([])
       .beschlussfassung(null)

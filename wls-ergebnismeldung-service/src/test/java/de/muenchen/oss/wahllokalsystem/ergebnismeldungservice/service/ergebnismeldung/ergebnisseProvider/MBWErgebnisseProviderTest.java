@@ -51,7 +51,7 @@ class MBWErgebnisseProviderTest {
       val stapelErgebnisse = Instancio.create(ErgebnismeldungsErgebnisseModel.class);
       Mockito.when(
               mbwStimmzettelErgebnismeldungsErgebnisseProvider.getErgebnisse(
-                  WAHL_ID, WAHLBEZIRK_ID))
+                  WAHL_ID, WAHLBEZIRK_ID, MeldungsartModel.V1))
           .thenReturn(stimmzettelErgebnisse);
       Mockito.when(
               mbwStapelErgebnismeldungsErgebnisseProvider.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))
@@ -80,7 +80,7 @@ class MBWErgebnisseProviderTest {
       val stapelErgebnisse = new ErgebnismeldungsErgebnisseModel(List.of(), List.of());
       Mockito.when(
               mbwStimmzettelErgebnismeldungsErgebnisseProvider.getErgebnisse(
-                  WAHL_ID, WAHLBEZIRK_ID))
+                  WAHL_ID, WAHLBEZIRK_ID, MeldungsartModel.V1))
           .thenReturn(stimmzettelErgebnisse);
       Mockito.when(
               mbwStapelErgebnismeldungsErgebnisseProvider.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID))

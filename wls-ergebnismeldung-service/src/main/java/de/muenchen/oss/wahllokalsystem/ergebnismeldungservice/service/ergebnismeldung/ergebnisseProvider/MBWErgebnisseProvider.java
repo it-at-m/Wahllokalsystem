@@ -24,7 +24,8 @@ public class MBWErgebnisseProvider implements ErgebnismeldungsErgebnisseProvider
       final WahlartModel wahlart,
       final MeldungsartModel meldungsart) {
     val stimmzettelErgebnisse =
-        mbwStimmzettelErgebnismeldungsErgebnisseProvider.getErgebnisse(wahlID, wahlbezirkID);
+        mbwStimmzettelErgebnismeldungsErgebnisseProvider.getErgebnisse(
+            wahlID, wahlbezirkID, meldungsart);
     val stapelErgebnisse =
         mbwStapelErgebnismeldungsErgebnisseProvider.getErgebnisse(wahlID, wahlbezirkID);
 

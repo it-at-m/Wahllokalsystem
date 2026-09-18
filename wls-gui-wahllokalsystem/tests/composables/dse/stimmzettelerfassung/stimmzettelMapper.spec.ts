@@ -10,6 +10,7 @@ import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/Pe
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
+import { useStimmzettelDTOTestDataFactory } from "@tests/utils/dse/StimmzettelDTOTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
@@ -37,20 +38,23 @@ vi.mock(
 );
 
 const {
-  createStimmzettel,
-  createStimmzettelWahlvorschlag,
+  createDseStimmzettel,
+  createDseWahlvorschlag,
+  prepareDseStimmzettel,
+  prepareDseKandidatOfDseWahlvorschlag,
+  prepareDseWahlvorschlag,
+} = useStimmzettelTestDataFactory();
+
+const {
   createStimmzettelOfTeamDTO,
   prepareStimmzettelOfTeamDTO,
   createStimmzettelKandidatDTO,
-  prepareStimmzettel,
   prepareStimmzettelBeschlussfassungDTO,
   prepareStimmzettelBeschlussgrundDTO,
-  prepareStimmzettelKandidatOfWahlvorschlag,
   prepareStimmzettelKandidatDTO,
   prepareStimmzettelKandidatIdDTO,
-  prepareStimmzettelWahlvorschlag,
   prepareStimmzettelWahlvorschlagDTO,
-} = useStimmzettelTestDataFactory();
+} = useStimmzettelDTOTestDataFactory();
 
 const {
   createPersistedStimmzettel,
@@ -451,7 +455,7 @@ describe("stimmzettelMapper.ts", () => {
     it("should_returnPersistedStimmzettel_when_dseStimmzettelIsGiven", () => {
       const stimmzettelkennung = generateRandomNumber(2);
       const teamID = generateRandomString(10);
-      const dseStimmzettel = createStimmzettel();
+      const dseStimmzettel = createDseStimmzettel();
 
       mockDefinitions.hasAnyKennzeichenOrReststimme.mockReturnValue(true);
 
@@ -496,10 +500,8 @@ describe("stimmzettelMapper.ts", () => {
       const stimmzettelkennung = generateRandomNumber(2);
       const teamID = generateRandomString(10);
 
-      const dseStimmzettel = prepareStimmzettel()
-        .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag().selected(false).build(),
-        ])
+      const dseStimmzettel = prepareDseStimmzettel()
+        .wahlvorschlaege([prepareDseWahlvorschlag().selected(false).build()])
         .build();
 
       mockDefinitions.hasAnyKennzeichenOrReststimme.mockReturnValue(false);
@@ -521,10 +523,8 @@ describe("stimmzettelMapper.ts", () => {
       const stimmzettelkennung = generateRandomNumber(2);
       const teamID = generateRandomString(10);
 
-      const dseStimmzettel = prepareStimmzettel()
-        .wahlvorschlaege([
-          prepareStimmzettelWahlvorschlag().selected(true).build(),
-        ])
+      const dseStimmzettel = prepareDseStimmzettel()
+        .wahlvorschlaege([prepareDseWahlvorschlag().selected(true).build()])
         .build();
 
       mockDefinitions.hasAnyKennzeichenOrReststimme.mockReturnValue(false);
@@ -546,22 +546,23 @@ describe("stimmzettelMapper.ts", () => {
       const stimmzettelkennung = generateRandomNumber(2);
       const teamID = generateRandomString(10);
 
-      const wahlvorschlag = createStimmzettelWahlvorschlag();
-      const kandidatWithKennzeichen = prepareStimmzettelKandidatOfWahlvorschlag(
+      const wahlvorschlag = createDseWahlvorschlag();
+      const kandidatWithKennzeichen = prepareDseKandidatOfDseWahlvorschlag(
         wahlvorschlag
       )
         .kandidatId("k1")
         .build();
-      const kandidatWithoutKennzeichen =
-        prepareStimmzettelKandidatOfWahlvorschlag(wahlvorschlag)
-          .kandidatId("k2")
-          .build();
+      const kandidatWithoutKennzeichen = prepareDseKandidatOfDseWahlvorschlag(
+        wahlvorschlag
+      )
+        .kandidatId("k2")
+        .build();
       wahlvorschlag.kandidaten = [
         kandidatWithKennzeichen,
         kandidatWithoutKennzeichen,
       ];
 
-      const dseStimmzettel = prepareStimmzettel()
+      const dseStimmzettel = prepareDseStimmzettel()
         .wahlvorschlaege([wahlvorschlag])
         .build();
 
@@ -598,7 +599,7 @@ describe("stimmzettelMapper.ts", () => {
 
   describe("mapPersistedStimmzettelValuesToExistingDseStimmzettel", () => {
     it("should_resetStimmzettelToReference_when_calledWithReference", () => {
-      const stimmzettelToMapToWahlvorschlag = prepareStimmzettelWahlvorschlag()
+      const stimmzettelToMapToWahlvorschlag = prepareDseWahlvorschlag()
         .wahlvorschlagID("1")
         .ordnungszahl(1)
         .kandidaten([])
@@ -608,19 +609,18 @@ describe("stimmzettelMapper.ts", () => {
         .erhaeltStimmen(true)
         .kurzname("kurzname")
         .build();
-      const stimmzettelToMapToKandidat =
-        prepareStimmzettelKandidatOfWahlvorschlag(
-          stimmzettelToMapToWahlvorschlag
-        )
-          .ordnungszahl(101)
-          .einzelstimmen(4)
-          .ungueltigeStimmen(1)
-          .reststimmen(null)
-          .durchgestrichen(true)
-          .owningWahlvorschlag(stimmzettelToMapToWahlvorschlag)
-          .build();
+      const stimmzettelToMapToKandidat = prepareDseKandidatOfDseWahlvorschlag(
+        stimmzettelToMapToWahlvorschlag
+      )
+        .ordnungszahl(101)
+        .einzelstimmen(4)
+        .ungueltigeStimmen(1)
+        .reststimmen(null)
+        .durchgestrichen(true)
+        .owningWahlvorschlag(stimmzettelToMapToWahlvorschlag)
+        .build();
       const stimmzettelToMapTo = ref(
-        prepareStimmzettel()
+        prepareDseStimmzettel()
           .wahlvorstandBeschlussvorschlag([])
           .systemBeschlussvorschlag([])
           .beschlussfassung(null)

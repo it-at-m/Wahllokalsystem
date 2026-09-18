@@ -9,10 +9,10 @@ import type {
 import type { PersistedBeschlussfassung } from "@/types/dse/beschlussfassung/PersistedBeschlussfassung.ts";
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/PersistedWahlvorschlag.ts";
-import type { Stimmzettel as ManageableStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
@@ -49,7 +49,7 @@ export function useStimmzettelMapper() {
   }
 
   function toPersistedStimmzettel(
-    manageableStimmzettel: ManageableStimmzettel,
+    manageableStimmzettel: DseStimmzettel,
     stimmzettelkennung: number,
     teamID: string
   ): PersistedStimmzettel {
@@ -126,7 +126,7 @@ export function useStimmzettelMapper() {
   }
 
   function mapPersistedStimmzettelValuesToExistingDseStimmzettel(
-    target: ManageableStimmzettel,
+    target: DseStimmzettel,
     source: PersistedStimmzettel
   ) {
     target.wahlvorschlaege.map((wahlvorschlag) => {

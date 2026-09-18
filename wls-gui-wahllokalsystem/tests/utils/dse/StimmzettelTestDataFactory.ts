@@ -1,27 +1,14 @@
-import type {
-  BeschlussfassungDTO,
-  KandidatDTO,
-  KandidatIdDTO,
-  StimmzettelOfTeamDTO,
-  SystemBeschlussgrundDTO,
-  WahlvorschlagDTO,
-  WahlvorstandBeschlussgrundDTO,
-} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Beschlussfassung } from "@/types/dse/beschlussfassung/Beschlussfassung.ts";
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-import {
-  StimmzettelOfTeamDTOGueltigkeitEnum,
-  SystemBeschlussgrundDTOReasonEnum,
-} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
@@ -33,13 +20,13 @@ const {
 } = useCommonTestDataFactory();
 
 export function useStimmzettelTestDataFactory() {
-  function createStimmzettel(): Stimmzettel {
+  function createDseStimmzettel(): DseStimmzettel {
     return {
       gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),
       wahlvorschlaege: [
-        createStimmzettelWahlvorschlag(),
-        createStimmzettelWahlvorschlag(),
-        createStimmzettelWahlvorschlag(),
+        createDseWahlvorschlag(),
+        createDseWahlvorschlag(),
+        createDseWahlvorschlag(),
       ],
       beschlussfassung: createStimmzettelBeschlussfassung(),
       systemBeschlussvorschlag: [],
@@ -48,18 +35,8 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelKandidatDTO(): KandidatDTO {
-    return {
-      id: createStimmzettelKandidatIdDTO(),
-      discarded: generateRandomBoolean(),
-      votesByWahlvorschlag: generateRandomNumber(2),
-      invalidVotes: generateRandomNumber(2),
-      votesByVoter: generateRandomNumber(2),
-    };
-  }
-
-  function createStimmzettelKandidat(): Kandidat {
-    const wahlvorschlag = _createStimmzettelWahlvorschlagWithoutKandidaten();
+  function createDseKandidat(): DseKandidat {
+    const wahlvorschlag = _createDseWahlvorschlagWithoutKandidaten();
     const result = {
       reststimmen: generateRandomNumber(2),
       ungueltigeStimmen: generateRandomNumber(2),
@@ -77,9 +54,9 @@ export function useStimmzettelTestDataFactory() {
     return result;
   }
 
-  function createStimmzettelKandidatOfWahlvorschlag(
-    owningWahlvorschlag: Wahlvorschlag
-  ): Kandidat {
+  function createDseKandidatOfDseWahlvorschlag(
+    owningWahlvorschlag: DseWahlvorschlag
+  ): DseKandidat {
     return {
       reststimmen: generateRandomNumber(2),
       ungueltigeStimmen: generateRandomNumber(2),
@@ -94,25 +71,11 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelBeschlussfassungDTO(): BeschlussfassungDTO {
-    return {
-      text: generateRandomString(20),
-      pro: generateRandomNumber(2),
-      contra: generateRandomNumber(2),
-    };
-  }
-
   function createStimmzettelBeschlussfassung(): Beschlussfassung {
     return {
       text: generateRandomString(20),
       pro: generateRandomNumber(2),
       contra: generateRandomNumber(2),
-    };
-  }
-
-  function createStimmzettelWahlvorstandBeschlussgrundDTO(): WahlvorstandBeschlussgrundDTO {
-    return {
-      text: generateRandomString(20),
     };
   }
 
@@ -122,122 +85,43 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelSystemBeschlussgrundDto(): SystemBeschlussgrundDTO {
-    return {
-      reason: getRandomItem(Object.values(SystemBeschlussgrundDTOReasonEnum)),
-    };
-  }
-
   function createStimmzettelWahlvorstandBeschlussgrund(): WahlvorstandBeschlussgrund {
     return {
       text: generateRandomString(20),
     };
   }
 
-  function createStimmzettelWahlvorschlagDTO(): WahlvorschlagDTO {
-    return {
-      wahlvorschlagID: generateRandomString(10),
-      kandidaten: [
-        createStimmzettelKandidatDTO(),
-        createStimmzettelKandidatDTO(),
-        createStimmzettelKandidatDTO(),
-      ],
-      selected: generateRandomBoolean(),
-    };
-  }
-
-  function createStimmzettelWahlvorschlag(): Wahlvorschlag {
-    const result = _createStimmzettelWahlvorschlagWithoutKandidaten();
+  function createDseWahlvorschlag(): DseWahlvorschlag {
+    const result = _createDseWahlvorschlagWithoutKandidaten();
     result.kandidaten = [
-      createStimmzettelKandidatOfWahlvorschlag(result),
-      createStimmzettelKandidatOfWahlvorschlag(result),
-      createStimmzettelKandidatOfWahlvorschlag(result),
+      createDseKandidatOfDseWahlvorschlag(result),
+      createDseKandidatOfDseWahlvorschlag(result),
+      createDseKandidatOfDseWahlvorschlag(result),
     ];
     return result;
   }
 
-  function createStimmzettelKandidatIdDTO(): KandidatIdDTO {
-    return {
-      kandidatID: generateRandomString(10),
-      nennungsNummer: generateRandomNumber(2),
-    };
+  function prepareDseStimmzettel(): Builder<DseStimmzettel> {
+    return proxyBuilder<DseStimmzettel>(createDseStimmzettel());
   }
 
-  function createStimmzettelOfTeamDTO(): StimmzettelOfTeamDTO {
-    return {
-      stimmzettelkennung: generateRandomNumber(6),
-      invalideVotes: generateRandomNumber(6),
-      gueltigkeit: getRandomItem(
-        Object.values(StimmzettelOfTeamDTOGueltigkeitEnum)
-      ),
-      beschlussfassung: createStimmzettelBeschlussfassungDTO(),
-      systemBeschlussvorschlag: [
-        createStimmzettelSystemBeschlussgrundDto(),
-        createStimmzettelSystemBeschlussgrundDto(),
-        createStimmzettelSystemBeschlussgrundDto(),
-      ],
-      wahlvorstandBeschlussvorschlag: [
-        createStimmzettelWahlvorstandBeschlussgrundDTO(),
-        createStimmzettelWahlvorstandBeschlussgrundDTO(),
-        createStimmzettelWahlvorstandBeschlussgrundDTO(),
-      ],
-      wahlvorschlaege: [
-        createStimmzettelWahlvorschlagDTO(),
-        createStimmzettelWahlvorschlagDTO(),
-        createStimmzettelWahlvorschlagDTO(),
-      ],
-    };
+  function prepareDseKandidat(): Builder<DseKandidat> {
+    return proxyBuilder<DseKandidat>(createDseKandidat());
   }
 
-  function prepareStimmzettel(): Builder<Stimmzettel> {
-    return proxyBuilder<Stimmzettel>(createStimmzettel());
-  }
-
-  function prepareStimmzettelOfTeamDTO(): Builder<StimmzettelOfTeamDTO> {
-    return proxyBuilder<StimmzettelOfTeamDTO>(createStimmzettelOfTeamDTO());
-  }
-
-  function prepareStimmzettelBeschlussfassungDTO(): Builder<BeschlussfassungDTO> {
-    return proxyBuilder<BeschlussfassungDTO>(
-      createStimmzettelBeschlussfassungDTO()
+  function prepareDseKandidatOfDseWahlvorschlag(
+    owningWahlvorschlag: DseWahlvorschlag
+  ): Builder<DseKandidat> {
+    return proxyBuilder<DseKandidat>(
+      createDseKandidatOfDseWahlvorschlag(owningWahlvorschlag)
     );
   }
 
-  function prepareStimmzettelBeschlussgrundDTO(): Builder<WahlvorstandBeschlussgrundDTO> {
-    return proxyBuilder<WahlvorstandBeschlussgrundDTO>(
-      createStimmzettelWahlvorstandBeschlussgrundDTO()
-    );
+  function prepareDseWahlvorschlag(): Builder<DseWahlvorschlag> {
+    return proxyBuilder<DseWahlvorschlag>(createDseWahlvorschlag());
   }
 
-  function prepareStimmzettelKandidat(): Builder<Kandidat> {
-    return proxyBuilder<Kandidat>(createStimmzettelKandidat());
-  }
-
-  function prepareStimmzettelKandidatOfWahlvorschlag(
-    owningWahlvorschlag: Wahlvorschlag
-  ): Builder<Kandidat> {
-    return proxyBuilder<Kandidat>(
-      createStimmzettelKandidatOfWahlvorschlag(owningWahlvorschlag)
-    );
-  }
-
-  function prepareStimmzettelKandidatDTO(): Builder<KandidatDTO> {
-    return proxyBuilder<KandidatDTO>(createStimmzettelKandidatDTO());
-  }
-
-  function prepareStimmzettelKandidatIdDTO(): Builder<KandidatIdDTO> {
-    return proxyBuilder<KandidatIdDTO>(createStimmzettelKandidatIdDTO());
-  }
-
-  function prepareStimmzettelWahlvorschlagDTO(): Builder<WahlvorschlagDTO> {
-    return proxyBuilder<WahlvorschlagDTO>(createStimmzettelWahlvorschlagDTO());
-  }
-
-  function prepareStimmzettelWahlvorschlag(): Builder<Wahlvorschlag> {
-    return proxyBuilder<Wahlvorschlag>(createStimmzettelWahlvorschlag());
-  }
-
-  function _createStimmzettelWahlvorschlagWithoutKandidaten(): Wahlvorschlag {
+  function _createDseWahlvorschlagWithoutKandidaten(): DseWahlvorschlag {
     return {
       ordnungszahl: generateRandomNumber(2),
       kandidaten: [],
@@ -251,22 +135,14 @@ export function useStimmzettelTestDataFactory() {
   }
 
   return {
-    createStimmzettel,
-    createStimmzettelOfTeamDTO,
-    createStimmzettelKandidat,
-    createStimmzettelKandidatOfWahlvorschlag,
-    createStimmzettelKandidatDTO,
-    createStimmzettelWahlvorschlag,
-    prepareStimmzettel,
-    prepareStimmzettelOfTeamDTO,
-    prepareStimmzettelBeschlussfassungDTO,
-    prepareStimmzettelBeschlussgrundDTO,
-    prepareStimmzettelKandidat,
-    prepareStimmzettelKandidatOfWahlvorschlag,
-    prepareStimmzettelKandidatDTO,
-    prepareStimmzettelKandidatIdDTO,
-    prepareStimmzettelWahlvorschlag,
-    prepareStimmzettelWahlvorschlagDTO,
+    createDseStimmzettel,
+    createDseKandidat,
+    createDseKandidatOfDseWahlvorschlag,
+    createDseWahlvorschlag,
+    prepareDseStimmzettel,
+    prepareDseKandidat,
+    prepareDseKandidatOfDseWahlvorschlag,
+    prepareDseWahlvorschlag,
     createStimmzettelSystemBeschlussgrund,
     createStimmzettelWahlvorstandBeschlussgrund,
   };

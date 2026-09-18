@@ -1,7 +1,7 @@
-import type { Kandidat as DseKandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
-import type { Wahlvorschlag as DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { Wahlvorschlag as UiWahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
@@ -58,7 +58,7 @@ vi.mock(
     }),
   })
 );
-const { createStimmzettel, prepareStimmzettel } =
+const { createDseStimmzettel, prepareDseStimmzettel } =
   useStimmzettelTestDataFactory();
 const {
   preparePersistedStimmzettel,
@@ -89,11 +89,11 @@ describe("stimmzettelTools.ts", () => {
     it("should_createStimmzettelWithInitialValues_when_wahlvorschlaegeAreGiven", () => {
       const uiWahlvorschlaege: Wahlvorschlaege = createWahlvorschlaege();
 
-      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege(
+      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege(
         uiWahlvorschlaege.wahlvorschlaege
       );
 
-      const expected: Stimmzettel = {
+      const expected: DseStimmzettel = {
         wahlvorstandBeschlussvorschlag: [],
         systemBeschlussvorschlag: [],
         beschlussfassung: null,
@@ -157,7 +157,7 @@ describe("stimmzettelTools.ts", () => {
         .kandidaten([kandidatWithTwoNennungen])
         .build();
 
-      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([
+      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([
         uiWahlvorschlag,
       ]);
 
@@ -198,7 +198,7 @@ describe("stimmzettelTools.ts", () => {
       const uiWahlvorschlagWithoutKandidaten: UiWahlvorschlag =
         prepareWahlvorschlag().kandidaten(undefined).build();
 
-      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([
+      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([
         uiWahlvorschlagWithoutKandidaten,
       ]);
 
@@ -223,7 +223,7 @@ describe("stimmzettelTools.ts", () => {
         .ordnungszahl(20)
         .build();
 
-      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([
+      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([
         w1,
         w2,
       ]);
@@ -274,9 +274,9 @@ describe("stimmzettelTools.ts", () => {
     });
 
     it("should_createStimmzettelWithEmptyWahlvorschlaege_when_inputIsEmpty", () => {
-      const result: Stimmzettel = createStimmzettelWithWahlvorschlaege([]);
+      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([]);
 
-      const expected: Stimmzettel = {
+      const expected: DseStimmzettel = {
         wahlvorstandBeschlussvorschlag: [],
         systemBeschlussvorschlag: [],
         beschlussfassung: null,
@@ -494,9 +494,9 @@ describe("stimmzettelTools.ts", () => {
 
   describe("resetDseStimmzettel", () => {
     it("should_returnDseStimmzettelWithoutAnyValuesSet_when_called", () => {
-      const dseStimmzettel = createStimmzettel();
+      const dseStimmzettel = createDseStimmzettel();
 
-      const expectedResetStimmzettel = prepareStimmzettel()
+      const expectedResetStimmzettel = prepareDseStimmzettel()
         .invalideVotes(0)
         .gueltigkeit("VALID")
         .wahlvorstandBeschlussvorschlag([])

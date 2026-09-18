@@ -5,7 +5,7 @@ import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestD
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
 import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 
-const { createStimmzettelWahlvorschlag } = useStimmzettelTestDataFactory();
+const { createDseWahlvorschlag } = useStimmzettelTestDataFactory();
 
 const meta = {
   component: BaseStimmzettelZusammenfassungCard,
@@ -15,10 +15,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Valid: Story = {
   args: {
-    listenstimmen: [
-      createStimmzettelWahlvorschlag(),
-      createStimmzettelWahlvorschlag(),
-    ],
+    listenstimmen: [createDseWahlvorschlag(), createDseWahlvorschlag()],
     ungueltigestimmen: 0,
     direktstimmen: 1,
     reststimmen: 0,
@@ -29,7 +26,7 @@ export const Valid: Story = {
 
 export const Invalid: Story = {
   args: {
-    listenstimmen: [createStimmzettelWahlvorschlag()],
+    listenstimmen: [createDseWahlvorschlag()],
     ungueltigestimmen: 0,
     direktstimmen: 1,
     reststimmen: 0,

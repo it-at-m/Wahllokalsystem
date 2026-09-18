@@ -132,6 +132,33 @@ class MbwValidationImplTest {
           Arguments.of(false, true, false),
           Arguments.of(false, false, false));
     }
+
+    @ParameterizedTest
+    @MethodSource("dseValidationParameters")
+    void should_returnDseValidationResult_when_stapelValidationIsInvalid(
+        final MeldungsartModel meldungsart,
+        final Optional<ErfassungStatusModel> erfassungStatus,
+        final boolean expectedResult) {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+
+      Mockito.when(
+              defaultElectionTypeValidator.checkValidation(
+                  any(), anyString(), anyString(), any(), any()))
+          .thenReturn(false);
+      Mockito.when(stimmzettelerfassungService.getStimmzettelerfassungStatus(any()))
+          .thenReturn(erfassungStatus);
+
+      val result =
+          unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
+    private static Stream<Arguments> dseValidationParameters() {
+      return dseValidationParametersForAllMeldungsarten();
+    }
   }
 
   @Nested
@@ -199,13 +226,9 @@ class MbwValidationImplTest {
           Arguments.of(false, true, false),
           Arguments.of(false, false, false));
     }
-  }
-
-  @Nested
-  class IsValidDse {
 
     @ParameterizedTest
-    @MethodSource("validationParameters")
+    @MethodSource("dseValidationParameters")
     void should_returnDseValidationResult_when_stapelValidationIsInvalid(
         final MeldungsartModel meldungsart,
         final Optional<ErfassungStatusModel> erfassungStatus,
@@ -221,31 +244,29 @@ class MbwValidationImplTest {
       Mockito.when(stimmzettelerfassungService.getStimmzettelerfassungStatus(any()))
           .thenReturn(erfassungStatus);
 
-      val uwbResult =
-          unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
-      val bwbResult =
+      val result =
           unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
 
-      Assertions.assertThat(uwbResult).isEqualTo(expectedResult);
-      Assertions.assertThat(bwbResult).isEqualTo(expectedResult);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
-    private static Stream<Arguments> validationParameters() {
-      return Stream.of(
-          Arguments.of(MeldungsartModel.V3, Optional.empty(), false),
-          Arguments.of(
-              MeldungsartModel.V3, Optional.of(ErfassungStatusModel.STE_BEARBEITUNG), false),
-          Arguments.of(
-              MeldungsartModel.V3, Optional.of(ErfassungStatusModel.STE_ABGESCHLOSSEN), true),
-          Arguments.of(
-              MeldungsartModel.V3, Optional.of(ErfassungStatusModel.BE_ABGESCHLOSSEN), true),
-          Arguments.of(MeldungsartModel.V1, Optional.empty(), false),
-          Arguments.of(
-              MeldungsartModel.V1, Optional.of(ErfassungStatusModel.STE_BEARBEITUNG), false),
-          Arguments.of(
-              MeldungsartModel.V1, Optional.of(ErfassungStatusModel.STE_ABGESCHLOSSEN), false),
-          Arguments.of(
-              MeldungsartModel.V1, Optional.of(ErfassungStatusModel.BE_ABGESCHLOSSEN), true));
+    private static Stream<Arguments> dseValidationParameters() {
+      return dseValidationParametersForAllMeldungsarten();
     }
+  }
+
+  private static Stream<Arguments> dseValidationParametersForAllMeldungsarten() {
+    return Stream.of(
+        Arguments.of(MeldungsartModel.V3, Optional.empty(), false),
+        Arguments.of(MeldungsartModel.V3, Optional.of(ErfassungStatusModel.STE_BEARBEITUNG), false),
+        Arguments.of(
+            MeldungsartModel.V3, Optional.of(ErfassungStatusModel.STE_ABGESCHLOSSEN), true),
+        Arguments.of(MeldungsartModel.V3, Optional.of(ErfassungStatusModel.BE_ABGESCHLOSSEN), true),
+        Arguments.of(MeldungsartModel.V1, Optional.empty(), false),
+        Arguments.of(MeldungsartModel.V1, Optional.of(ErfassungStatusModel.STE_BEARBEITUNG), false),
+        Arguments.of(
+            MeldungsartModel.V1, Optional.of(ErfassungStatusModel.STE_ABGESCHLOSSEN), false),
+        Arguments.of(
+            MeldungsartModel.V1, Optional.of(ErfassungStatusModel.BE_ABGESCHLOSSEN), true));
   }
 }

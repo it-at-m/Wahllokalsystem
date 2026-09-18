@@ -1,5 +1,7 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.mapping;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.WahlartPredicateHolder;
@@ -11,25 +13,34 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MBWStapelErgebnisseMapper {
+public class DefaultStapelErgebnisseMapper implements ErgebnismeldungsErgebnisseMapper {
 
   private final ErgebnisseService ergebnisseService;
 
   private final WahlartPredicateHolder wahlartPredicateHolder;
 
-  public ErgebnismeldungsErgebnisseModel getErgebnisse(String wahlID, String wahlbezirkID) {
+  @Override
+  public ErgebnismeldungsErgebnisseModel getErgebnismeldungErgebnisse(
+      String wahlID, String wahlbezirkID, WahlartModel wahlart, MeldungsartModel meldungsart) {
     val ergebnisse = ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID);
 
-    val gueltigeErgebnisse = getErgebnisse(ergebnisse, true);
-    val ungueltigeErgebnisse = getErgebnisse(ergebnisse, false);
+    val gueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, true);
+    val ungueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, false);
 
     return new ErgebnismeldungsErgebnisseModel(gueltigeErgebnisse, ungueltigeErgebnisse);
   }
 
+  @Override
+  public boolean canHandleWahlart(WahlartModel wahlart) {
+    return !WahlartModel.MBW.equals(wahlart);
+  }
+
   private Collection<ErgebnisseModel> getErgebnisse(
-      final Collection<ErgebnisseModel> ergebnisse, final boolean gueltig) {
+      final WahlartModel wahlart,
+      final Collection<ErgebnisseModel> ergebnisse,
+      final boolean gueltig) {
     val predicateForStapelWithInvalidErgebnisse =
-        wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(WahlartModel.MBW);
+        wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart);
     val ergebnisseFilter =
         gueltig
             ? Predicate.not(predicateForStapelWithInvalidErgebnisse)

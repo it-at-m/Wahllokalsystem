@@ -1,6 +1,7 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.mapping;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 
 public interface ErgebnismeldungsErgebnisseMapper {
 

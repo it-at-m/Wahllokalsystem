@@ -16,10 +16,10 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Wahl
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.mapping.ErgebnismeldungErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class ErgebnismeldungMappingService {
   private final AuthenticationService authenticationService;
   private final BriefwahlClient briefwahlClient;
 
-  private final List<ErgebnismeldungsErgebnisseMapper> ergebnismeldungsErgebnisseMapper;
+  private final ErgebnismeldungErgebnisseService ergebnismeldungErgebnisseService;
 
   private final Mapping mapping;
 
@@ -50,13 +50,6 @@ public class ErgebnismeldungMappingService {
       final Long waehlerverzeichnisNummer,
       final MeldungsartModel meldungsart,
       final String hauptwahlbezirkID) {
-    val ergebnismeldungsMapper =
-        ergebnismeldungsErgebnisseMapper.stream()
-            .filter(erm -> erm.canHandleWahlart(wahlart))
-            .findFirst()
-            .orElseThrow(
-                () -> new IllegalArgumentException("No mapper found for wahlart " + wahlart));
-
     val ergebnismeldung = new ErgebnismeldungDTO();
     ergebnismeldung.setWahlID(wahlID);
     ergebnismeldung.setWahlbezirkID(wahlbezirkID);
@@ -79,8 +72,7 @@ public class ErgebnismeldungMappingService {
         wahlart);
 
     val ergebnismeldungErgebnisse =
-        ergebnismeldungsMapper.getErgebnismeldungErgebnisse(
-            wahlID, wahlbezirkID, wahlart, meldungsart);
+        ergebnismeldungErgebnisseService.getErgebnisse(wahlID, wahlbezirkID, wahlart, meldungsart);
     ergebnismeldung.setErgebnisse(
         mapping.toDtoErgebnisseSet(ergebnismeldungErgebnisse.gueltigeErgebnisse()));
     val eaiMeldungsart = mapping.toDTO(meldungsart);

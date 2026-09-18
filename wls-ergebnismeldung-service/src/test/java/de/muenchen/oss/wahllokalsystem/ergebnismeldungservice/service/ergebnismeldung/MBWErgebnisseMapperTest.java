@@ -20,8 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MBWErgebnisseMapperTest {
 
-  private static final String WAHL_ID = "wahlID";
-  private static final String WAHLBEZIRK_ID = "wahlbezirkID";
+  private static final String WAHL_ID = Instancio.create(String.class);
+  private static final String WAHLBEZIRK_ID = Instancio.create(String.class);
 
   @Mock MBWStimmzettelErgebnisseMapper mbwStimmzettelErgebnisseMapper;
 

@@ -8,6 +8,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MBWStimmzettelErgebnisseMapperTest {
 
-  private static final String WAHL_ID = "wahlID";
-  private static final String WAHLBEZIRK_ID = "wahlbezirkID";
+  private static final String WAHL_ID = Instancio.create(String.class);
+  private static final String WAHLBEZIRK_ID = Instancio.create(String.class);
 
   @Mock StimmzettelService stimmzettelService;
 

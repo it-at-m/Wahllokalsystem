@@ -19,7 +19,10 @@ public class MBWErgebnisseProvider implements ErgebnismeldungsErgebnisseProvider
 
   @Override
   public ErgebnismeldungsErgebnisseModel getErgebnismeldungErgebnisse(
-      String wahlID, String wahlbezirkID, WahlartModel wahlart, MeldungsartModel meldungsart) {
+      final String wahlID,
+      final String wahlbezirkID,
+      final WahlartModel wahlart,
+      final MeldungsartModel meldungsart) {
     val stimmzettelErgebnisse =
         mbwStimmzettelErgebnismeldungsErgebnisseProvider.getErgebnisse(wahlID, wahlbezirkID);
     val stapelErgebnisse =
@@ -37,7 +40,7 @@ public class MBWErgebnisseProvider implements ErgebnismeldungsErgebnisseProvider
   }
 
   @Override
-  public boolean canHandleWahlart(WahlartModel wahlart) {
+  public boolean canHandleWahlart(final WahlartModel wahlart) {
     return WahlartModel.MBW.equals(wahlart);
   }
 }

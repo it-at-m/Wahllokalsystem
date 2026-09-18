@@ -18,7 +18,8 @@ public class MBWStimmzettelErgebnismeldungsErgebnisseProvider {
   private final StimmzettelService stimmzettelService;
 
   @Transactional(readOnly = true)
-  public ErgebnismeldungsErgebnisseModel getErgebnisse(String wahlID, String wahlbezirkID) {
+  public ErgebnismeldungsErgebnisseModel getErgebnisse(
+      final String wahlID, final String wahlbezirkID) {
     val stapelA =
         stimmzettelService
             .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(

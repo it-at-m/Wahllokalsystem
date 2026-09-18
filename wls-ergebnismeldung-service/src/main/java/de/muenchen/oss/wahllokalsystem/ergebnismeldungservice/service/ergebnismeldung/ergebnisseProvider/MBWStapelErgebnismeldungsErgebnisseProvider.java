@@ -18,7 +18,8 @@ public class MBWStapelErgebnismeldungsErgebnisseProvider {
 
   private final WahlartPredicateHolder wahlartPredicateHolder;
 
-  public ErgebnismeldungsErgebnisseModel getErgebnisse(String wahlID, String wahlbezirkID) {
+  public ErgebnismeldungsErgebnisseModel getErgebnisse(
+      final String wahlID, final String wahlbezirkID) {
     val ergebnisse = ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID);
 
     val gueltigeErgebnisse = getErgebnisse(ergebnisse, true);

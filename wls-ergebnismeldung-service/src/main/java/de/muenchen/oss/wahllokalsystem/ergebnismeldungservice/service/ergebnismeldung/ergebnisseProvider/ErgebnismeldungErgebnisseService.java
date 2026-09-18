@@ -14,7 +14,10 @@ public class ErgebnismeldungErgebnisseService {
   private final List<ErgebnismeldungsErgebnisseProvider> ergebnisseMappers;
 
   public ErgebnismeldungsErgebnisseModel getErgebnisse(
-      String wahlID, String wahlbezirkID, WahlartModel wahlart, MeldungsartModel meldungsart) {
+      final String wahlID,
+      final String wahlbezirkID,
+      final WahlartModel wahlart,
+      final MeldungsartModel meldungsart) {
     val ergebnismeldungsMapper =
         ergebnisseMappers.stream()
             .filter(erm -> erm.canHandleWahlart(wahlart))

@@ -21,7 +21,10 @@ public class DefaultStapelErgebnisseProvider implements ErgebnismeldungsErgebnis
 
   @Override
   public ErgebnismeldungsErgebnisseModel getErgebnismeldungErgebnisse(
-      String wahlID, String wahlbezirkID, WahlartModel wahlart, MeldungsartModel meldungsart) {
+      final String wahlID,
+      final String wahlbezirkID,
+      final WahlartModel wahlart,
+      final MeldungsartModel meldungsart) {
     val ergebnisse = ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID);
 
     val gueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, true);
@@ -31,7 +34,7 @@ public class DefaultStapelErgebnisseProvider implements ErgebnismeldungsErgebnis
   }
 
   @Override
-  public boolean canHandleWahlart(WahlartModel wahlart) {
+  public boolean canHandleWahlart(final WahlartModel wahlart) {
     return !WahlartModel.MBW.equals(wahlart);
   }
 

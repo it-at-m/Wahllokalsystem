@@ -1,4 +1,4 @@
-export interface Kandidat {
+export interface PersistedKandidat {
   kandidatId: string;
   nennung: number;
   isDiscarded: boolean;

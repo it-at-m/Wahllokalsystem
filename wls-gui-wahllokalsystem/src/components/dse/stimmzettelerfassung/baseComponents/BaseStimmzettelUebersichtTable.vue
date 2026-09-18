@@ -38,12 +38,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { ref } from "vue";
 
 import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import {
   ITEMS_PER_PAGE_TITLE,
   TABLE_LOADING_DATA_STIMMZETTEL,
@@ -52,7 +52,7 @@ import {
 
 const props = defineProps<{
   teamId: string;
-  stimmzettelListe: Stimmzettel[];
+  stimmzettelListe: PersistedStimmzettel[];
   stimmzettelLoading: boolean;
   bearbeitungDisabled: boolean;
 }>();
@@ -69,13 +69,13 @@ const itemsPerPage = ref(10);
 const sortBy = ref([{ key: stimmzettelkennungKey, order: "desc" }] as const);
 
 const { isVorgemerktFuerBeschluss, getVormerkungsgrund } =
-  useStimmzettelUtils();
+  useStimmzettelTools();
 
 const emit = defineEmits<{
-  stimmzettelBearbeiten: [newValue: Stimmzettel];
+  stimmzettelBearbeiten: [newValue: PersistedStimmzettel];
 }>();
 
-function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
+function onStimmzettelBearbeitenClicked(stimmzettel: PersistedStimmzettel) {
   emit("stimmzettelBearbeiten", stimmzettel);
 }
 </script>

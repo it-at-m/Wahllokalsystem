@@ -1,15 +1,15 @@
-import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { Stimmzettel as DseStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { ComputedRef, Ref } from "vue";
 
 import { computed, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
+import { useBearbeitenDialogStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 import { COMMAND_HANDLERS } from "@/composables/dse/stimmzettelerfassung/command/commandHandlers.ts";
-import { useBearbeitenDialogStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
 import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
-import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { UnsupportedCommandError } from "@/types/dse/error/UnsupportedCommandError.ts";
 
 const { logDebug } = useLogging("stimmzettelManager");

@@ -1,4 +1,4 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
@@ -12,7 +12,7 @@ const {
   preparePersistedStimmzettel,
   preparePersistedStimmzettelWahlvorschlag,
   preparePersistedStimmzettelKandidat,
-} = useStimmzettelTestDataFactory();
+} = usePersistedStimmzettelTestDataFactory();
 
 describe("stimmzettelGueltigeKandidatenstimmenUtils", () => {
   it("should_calculateGueltigeKandidatenstimmen_ when_votesAcrossMultipleStimmzettel", () => {

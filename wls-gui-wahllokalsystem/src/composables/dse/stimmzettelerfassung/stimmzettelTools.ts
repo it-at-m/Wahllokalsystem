@@ -1,7 +1,7 @@
-import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { Kandidat as DSEKandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
-import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
@@ -16,10 +16,10 @@ const { sortWahlvorstandBeschlussgruende, sortSystemBeschlussgruende } =
   useBeschlussgrundTools();
 const { sortAndDeepCloneWahlvorschlaege } = useWahlvorschlagTools();
 
-function _useStimmzettelUtils() {
+export function useStimmzettelTools() {
   function createStimmzettelWithWahlvorschlaege(
     wahlvorschlaege: Wahlvorschlag[]
-  ): Stimmzettel {
+  ): DseStimmzettel {
     const initWahlvorschlaege = wahlvorschlaege.map(_toDSEWahlvorschlag);
     return {
       wahlvorstandBeschlussvorschlag: [],
@@ -95,7 +95,7 @@ function _useStimmzettelUtils() {
     };
   }
 
-  function resetDseStimmzettel(stimmzettel: Stimmzettel): Stimmzettel {
+  function resetDseStimmzettel(stimmzettel: DseStimmzettel): DseStimmzettel {
     stimmzettel.wahlvorschlaege.map((wahlvorschlag) => {
       wahlvorschlag.selected = false;
       wahlvorschlag.kandidaten.map((kandidat) => {
@@ -124,8 +124,8 @@ function _useStimmzettelUtils() {
     );
   }
 
-  function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DSEWahlvorschlag {
-    const dseWahlvorschlag: DSEWahlvorschlag = {
+  function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DseWahlvorschlag {
+    const dseWahlvorschlag: DseWahlvorschlag = {
       wahlvorschlagID: wahlvorschlag.identifikator,
       ordnungszahl: wahlvorschlag.ordnungszahl,
       kandidaten: [],
@@ -145,9 +145,9 @@ function _useStimmzettelUtils() {
 
   function _toDSEKandidat(
     kandidat: Kandidat,
-    wahlvorschlagOfKandiat: DSEWahlvorschlag
-  ): DSEKandidat[] {
-    const result: DSEKandidat[] = [];
+    wahlvorschlagOfKandiat: DseWahlvorschlag
+  ): DseKandidat[] {
+    const result: DseKandidat[] = [];
     for (let nennung = 1; nennung <= kandidat.anzahlNennungen; nennung++) {
       result.push({
         kandidatId: kandidat.identifikator,
@@ -179,10 +179,3 @@ function _useStimmzettelUtils() {
     isSamePersistedStimmzettel,
   };
 }
-
-/**
- * @deprecated TODO is an tools composable. Does not serve any high level function
- * maybe split into separate tools for different types
- */
-export const useStimmzettelUtils = _useStimmzettelUtils;
-export const useStimmzettelTools = _useStimmzettelUtils;

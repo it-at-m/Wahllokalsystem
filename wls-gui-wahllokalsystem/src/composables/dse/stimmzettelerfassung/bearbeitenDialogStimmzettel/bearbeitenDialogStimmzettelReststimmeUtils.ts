@@ -1,5 +1,5 @@
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 import type { Ref } from "vue";
 
 import { computed, ref } from "vue";
@@ -8,8 +8,8 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
-export function useManagedStimmzettelReststimmeUtils(
-  stimmzettel: Ref<Stimmzettel>,
+export function useBearbeitenDialogStimmzettelReststimmeUtils(
+  stimmzettel: Ref<DseStimmzettel>,
   maximalErlaubteStimmenProWaehler: Ref<number>,
   maxEinzelstimmen: number,
   countVotesGivenAsReststimme = 1
@@ -25,11 +25,11 @@ export function useManagedStimmzettelReststimmeUtils(
     )
   );
 
-  function selectWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
+  function selectWahlvorschlag(wahlvorschlag: DseWahlvorschlag) {
     wahlvorschlag.selected = true;
   }
 
-  function deselectWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
+  function deselectWahlvorschlag(wahlvorschlag: DseWahlvorschlag) {
     if (wahlvorschlag.selected) {
       wahlvorschlag.kandidaten.forEach(
         (kandidat) => (kandidat.reststimmen = null)
@@ -123,7 +123,7 @@ export function useManagedStimmzettelReststimmeUtils(
   }
 
   function _placeReststimmenOnWahlvorschlag(
-    wahlvorschlag: Wahlvorschlag,
+    wahlvorschlag: DseWahlvorschlag,
     votesLeftToPlace: number,
     votesKandidatenAlreadyGotTool: ReturnType<typeof useStringNumberMapTools>
   ) {

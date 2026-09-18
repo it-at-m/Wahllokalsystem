@@ -1,9 +1,9 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
@@ -56,12 +56,12 @@ vi.mock(
 );
 
 vi.mock(
-  import("@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts"),
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
     return {
-      useStimmzettelUtils: () => ({
-        ...mod.useStimmzettelUtils(),
+      useStimmzettelTools: () => ({
+        ...mod.useStimmzettelTools(),
         getEmptyStimmzettelWithStimmzettelkennung:
           mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung,
       }),
@@ -82,7 +82,8 @@ vi.mock(import("@/composables/common/logging.ts"), async (importOriginal) => {
 describe("stimmzettelErfassungViewUtils.ts", () => {
   const { generateRandomString, generateRandomNumber } =
     useCommonTestDataFactory();
-  const { preparePersistedStimmzettel } = useStimmzettelTestDataFactory();
+  const { preparePersistedStimmzettel } =
+    usePersistedStimmzettelTestDataFactory();
   const { createStimmzettelerfassungTeamStatusModel } =
     useStimmzettelerfassungTeamStatusTestDataFactory();
 
@@ -182,7 +183,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
     describe("startNewEmptyStimmzettelWithStimmzettelkennung", () => {
       it("should_setActiveStimmzettel_when_calledWithKennung", () => {
         const mockedKennung = generateRandomNumber(3);
-        const mockedEmptyStimmzettel: Stimmzettel =
+        const mockedEmptyStimmzettel: PersistedStimmzettel =
           preparePersistedStimmzettel()
             .stimmzettelkennung(mockedKennung)
             .build();

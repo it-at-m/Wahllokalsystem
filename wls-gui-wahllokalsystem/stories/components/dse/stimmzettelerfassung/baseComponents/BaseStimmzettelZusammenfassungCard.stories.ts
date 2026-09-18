@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-const { createDseWahlvorschlag } = useStimmzettelTestDataFactory();
+const { createDseWahlvorschlag } = useDseStimmzettelTestDataFactory();
 
 const meta = {
   component: BaseStimmzettelZusammenfassungCard,
@@ -20,7 +20,7 @@ export const Valid: Story = {
     direktstimmen: 1,
     reststimmen: 0,
     streichungen: 1,
-    gueltigkeit: PersistedStimmzettelGueltigkeitEnum.Valid,
+    gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
   },
 };
 
@@ -31,7 +31,7 @@ export const Invalid: Story = {
     direktstimmen: 1,
     reststimmen: 0,
     streichungen: 1,
-    gueltigkeit: PersistedStimmzettelGueltigkeitEnum.Invalid,
+    gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
   },
 };
 
@@ -42,6 +42,6 @@ export const BeschlussAusstehend: Story = {
     direktstimmen: 1,
     reststimmen: 0,
     streichungen: 1,
-    gueltigkeit: PersistedStimmzettelGueltigkeitEnum.BeschlussAusstehend,
+    gueltigkeit: StimmzettelGueltigkeitEnum.BeschlussAusstehend,
   },
 };

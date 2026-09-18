@@ -5,26 +5,26 @@
   />
 </template>
 <script setup lang="ts">
-import type { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
+import type { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import type { PropType } from "vue";
 
 import { computed } from "vue";
 
 const props = defineProps({
   gueltigkeit: {
-    type: String as PropType<PersistedStimmzettelGueltigkeitEnum>,
+    type: String as PropType<StimmzettelGueltigkeitEnum>,
     required: true,
   },
 });
 
-const typeMapping: Record<PersistedStimmzettelGueltigkeitEnum, string> = {
+const typeMapping: Record<StimmzettelGueltigkeitEnum, string> = {
   VALID: "$stimmzettelGueltig",
   INVALID: "$stimmzettelUngueltig",
   BESCHLUSS_AUSSTEHEND: "$stimmzettelBeschluss",
   BWB_PSEUDO_STIMMZETTEL_LEERER_UMSCHLAG: "$stimmzettelUngueltig",
   LEER: "$stimmzettelUngueltig",
 };
-const colorMapping: Record<PersistedStimmzettelGueltigkeitEnum, string> = {
+const colorMapping: Record<StimmzettelGueltigkeitEnum, string> = {
   VALID: "success",
   INVALID: "error",
   BESCHLUSS_AUSSTEHEND: "info",

@@ -2,8 +2,8 @@ import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBe
 import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import {
   afterEach,
@@ -111,7 +111,7 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
     prepareDseWahlvorschlag,
     prepareDseKandidat,
     prepareDseKandidatOfDseWahlvorschlag,
-  } = useStimmzettelTestDataFactory();
+  } = useDseStimmzettelTestDataFactory();
 
   const {
     preparePersistedStimmzettelKandidat,

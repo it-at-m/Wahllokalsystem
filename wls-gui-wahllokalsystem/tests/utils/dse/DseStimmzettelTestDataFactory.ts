@@ -1,6 +1,4 @@
 import type { Beschlussfassung } from "@/types/dse/beschlussfassung/Beschlussfassung.ts";
-import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
-import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
@@ -9,7 +7,6 @@ import type { Builder } from "@tests/utils/Builder.ts";
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const {
@@ -19,7 +16,7 @@ const {
   getRandomItem,
 } = useCommonTestDataFactory();
 
-export function useStimmzettelTestDataFactory() {
+export function useDseStimmzettelTestDataFactory() {
   function createDseStimmzettel(): DseStimmzettel {
     return {
       gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),
@@ -79,18 +76,6 @@ export function useStimmzettelTestDataFactory() {
     };
   }
 
-  function createStimmzettelSystemBeschlussgrund(): SystemBeschlussgrund {
-    return {
-      reason: getRandomItem(Object.values(SystemBeschlussgrundReasonEnum)),
-    };
-  }
-
-  function createStimmzettelWahlvorstandBeschlussgrund(): WahlvorstandBeschlussgrund {
-    return {
-      text: generateRandomString(20),
-    };
-  }
-
   function createDseWahlvorschlag(): DseWahlvorschlag {
     const result = _createDseWahlvorschlagWithoutKandidaten();
     result.kandidaten = [
@@ -143,7 +128,5 @@ export function useStimmzettelTestDataFactory() {
     prepareDseKandidat,
     prepareDseKandidatOfDseWahlvorschlag,
     prepareDseWahlvorschlag,
-    createStimmzettelSystemBeschlussgrund,
-    createStimmzettelWahlvorstandBeschlussgrund,
   };
 }

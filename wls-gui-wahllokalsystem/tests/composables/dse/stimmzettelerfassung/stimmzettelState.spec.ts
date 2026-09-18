@@ -5,7 +5,7 @@ import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/Persist
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelState } from "@/composables/dse/stimmzettelerfassung/stimmzettelState.ts";
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
@@ -206,10 +206,10 @@ describe("stimmzettelState", () => {
 
     it("should_replaceExistingStimmzettel_when_collectionAlreadyContainsItemsAndIsSamePersistedStimmzettelIsTrue", async () => {
       const mockedExistingStimmzettel = preparePersistedStimmzettel()
-        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.Valid)
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
         .build();
       const mockedEditedStimmzettel = preparePersistedStimmzettel()
-        .gueltigkeit(PersistedStimmzettelGueltigkeitEnum.Invalid)
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
         .build();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);

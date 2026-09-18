@@ -1,4 +1,4 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 import { flushPromises } from "@vue/test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
 
@@ -7,7 +7,7 @@ import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHist
 
 describe("stimmzettelChangeHistory.ts", () => {
   const { createDseKandidat, createDseWahlvorschlag } =
-    useStimmzettelTestDataFactory();
+    useDseStimmzettelTestDataFactory();
 
   let changeHistory: ReturnType<typeof useStimmzettelChangeHistory>;
 

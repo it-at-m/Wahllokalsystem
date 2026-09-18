@@ -9,9 +9,9 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/PersistedWahlvorschlag.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelDTOTestDataFactory } from "@tests/utils/dse/StimmzettelDTOTestDataFactory.ts";
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
@@ -43,7 +43,7 @@ const {
   prepareDseStimmzettel,
   prepareDseKandidatOfDseWahlvorschlag,
   prepareDseWahlvorschlag,
-} = useStimmzettelTestDataFactory();
+} = useDseStimmzettelTestDataFactory();
 
 const {
   createStimmzettelOfTeamDTO,

@@ -1,10 +1,10 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import { useBearbeitenDialogStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts";
 
 describe("bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts", () => {
-  const { prepareDseKandidat } = useStimmzettelTestDataFactory();
+  const { prepareDseKandidat } = useDseStimmzettelTestDataFactory();
 
   describe("addInvalidVotesToKandidat", () => {
     it("should_addInvalidVotes_when_called", () => {

@@ -54,8 +54,7 @@ class ErgebnismeldungMappingServiceTest {
   @Mock AuthenticationService authenticationService;
   @Mock BriefwahlClient briefwahlClient;
 
-  @Mock
-  ErgebnismeldungErgebnisseService ergebnismeldungErgebnisseService;
+  @Mock ErgebnismeldungErgebnisseService ergebnismeldungErgebnisseService;
 
   @Mock Mapping mapping;
 

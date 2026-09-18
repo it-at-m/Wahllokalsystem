@@ -26,11 +26,9 @@ class MBWErgebnisseProviderTest {
   @Mock
   MBWStimmzettelErgebnismeldungsErgebnisseProvider mbwStimmzettelErgebnismeldungsErgebnisseProvider;
 
-  @Mock
-  MBWStapelErgebnismeldungsErgebnisseProvider mbwStapelErgebnismeldungsErgebnisseProvider;
+  @Mock MBWStapelErgebnismeldungsErgebnisseProvider mbwStapelErgebnismeldungsErgebnisseProvider;
 
-  @InjectMocks
-  MBWErgebnisseProvider unitUnderTest;
+  @InjectMocks MBWErgebnisseProvider unitUnderTest;
 
   @Nested
   class CanHandleWahlart {

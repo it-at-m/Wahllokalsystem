@@ -32,8 +32,7 @@ class MBWStapelErgebnismeldungsErgebnisseProviderTest {
 
   @Mock WahlartPredicateHolder wahlartPredicateHolder;
 
-  @InjectMocks
-  MBWStapelErgebnismeldungsErgebnisseProvider unitUnderTest;
+  @InjectMocks MBWStapelErgebnismeldungsErgebnisseProvider unitUnderTest;
 
   @Nested
   class GetErgebnisse {

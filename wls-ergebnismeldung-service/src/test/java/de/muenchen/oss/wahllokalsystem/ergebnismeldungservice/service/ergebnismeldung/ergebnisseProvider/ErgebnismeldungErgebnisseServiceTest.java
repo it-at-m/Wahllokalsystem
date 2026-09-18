@@ -22,8 +22,7 @@ class ErgebnismeldungErgebnisseServiceTest {
   private static final String WAHL_ID = Instancio.create(String.class);
   private static final String WAHLBEZIRK_ID = Instancio.create(String.class);
 
-  @Mock
-  ErgebnismeldungsErgebnisseProvider firstErgebnisseMapper;
+  @Mock ErgebnismeldungsErgebnisseProvider firstErgebnisseMapper;
 
   @Mock ErgebnismeldungsErgebnisseProvider secondErgebnisseMapper;
 

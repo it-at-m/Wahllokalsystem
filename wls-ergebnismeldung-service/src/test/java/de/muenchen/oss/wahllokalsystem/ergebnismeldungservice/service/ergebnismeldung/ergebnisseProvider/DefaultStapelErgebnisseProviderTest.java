@@ -35,8 +35,7 @@ class DefaultStapelErgebnisseProviderTest {
 
   @Mock WahlartPredicateHolder wahlartPredicateHolder;
 
-  @InjectMocks
-  DefaultStapelErgebnisseProvider unitUnderTest;
+  @InjectMocks DefaultStapelErgebnisseProvider unitUnderTest;
 
   @Nested
   class getErgebnismeldungErgebnisse {

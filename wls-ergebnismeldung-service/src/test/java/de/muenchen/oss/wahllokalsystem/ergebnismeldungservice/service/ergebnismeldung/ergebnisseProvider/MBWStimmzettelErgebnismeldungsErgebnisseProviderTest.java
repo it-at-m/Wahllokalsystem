@@ -27,8 +27,7 @@ class MBWStimmzettelErgebnismeldungsErgebnisseProviderTest {
 
   @Mock StimmzettelService stimmzettelService;
 
-  @InjectMocks
-  MBWStimmzettelErgebnismeldungsErgebnisseProvider unitUnderTest;
+  @InjectMocks MBWStimmzettelErgebnismeldungsErgebnisseProvider unitUnderTest;
 
   @Nested
   class GetErgebnisse {

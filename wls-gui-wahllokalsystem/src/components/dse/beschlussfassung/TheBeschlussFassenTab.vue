@@ -41,18 +41,23 @@
         <v-row
           v-for="beschlussgrund in beschlussgruende"
           :key="beschlussgrund.grund"
+          dense
         >
-          <v-checkbox
-            v-model="beschlussgrund.selected"
-            :label="beschlussgrund.grund"
-            hide-details
-          />
+          <v-col>
+            <v-checkbox
+              v-model="beschlussgrund.selected"
+              :label="beschlussgrund.grund"
+              hide-details
+            />
+          </v-col>
         </v-row>
         <v-row>
-          <v-checkbox-btn
-            v-model="andererGrundChecked"
-            label="Anderer Grund:"
-          />
+          <v-col cols="auto">
+            <v-checkbox-btn
+              v-model="andererGrundChecked"
+              label="Anderer Grund:"
+            />
+          </v-col>
           <v-col>
             <v-textarea
               v-model="andererGrund"
@@ -60,7 +65,7 @@
               :disabled="!andererGrundChecked"
               rows="1"
               auto-grow
-              max-width="300"
+              max-width="500"
             />
           </v-col>
         </v-row>

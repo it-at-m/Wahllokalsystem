@@ -900,10 +900,13 @@ class StimmzettelRepositoryTest {
 
       val stimmzettelToCount = new LinkedList<Stimmzettel>();
 
-      stimmzettelToCount.add(
-          Instancio.create(
-              createInvalidStimmzettelModelWithSingleWahlvorschlagWithEinzelstimme(
-                  wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement())));
+      val invalidStimmzettelModelWithSingleEinzelstimme =
+          Instancio.of(
+                  createInvalidStimmzettelModelWithSingleWahlvorschlagWithEinzelstimme(
+                      wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement()))
+              .toModel();
+
+      stimmzettelToCount.add(Instancio.create(invalidStimmzettelModelWithSingleEinzelstimme));
       stimmzettelToCount.add(
           Instancio.create(
               createInvalidStimmzettelModelWithSingleWahlvorschlagWithMultipleStreichungen(
@@ -917,8 +920,16 @@ class StimmzettelRepositoryTest {
               createInvalidStimmzettelModelWith2WahlvorschlaegenEachWithEinzelstimme(
                   wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement())));
 
+      val nonMatchingStimmzettel =
+          new LinkedList<>(
+              createStimmzettelWithOtherGueltigkeiten(
+                  invalidStimmzettelModelWithSingleEinzelstimme, StimmzettelGueltigkeit.INVALID));
+
       transactionTemplate.executeWithoutResult(
-          status -> stimmzettelRepository.saveAll(stimmzettelToCount));
+          status -> {
+            stimmzettelRepository.saveAll(stimmzettelToCount);
+            stimmzettelRepository.saveAll(nonMatchingStimmzettel);
+          });
 
       val result = unitUnderTest.countInvalidStimmzettel(wahlID, wahlbezirkID);
 

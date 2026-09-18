@@ -59,15 +59,9 @@ public class MBWErgebnisseMapper implements ErgebnismeldungsErgebnisseMapper {
         new ErgebnisseModel(
             wahlbezirkID, wahlID, StapelartModel.MBW_D_UNGUELTIG, List.of(stapelDUngueltig));
 
-    val stapelEUngueltig =
-        new ErgebnisModel(null, null, null, mbwErgebnisse.stapelEUngueltig(), null);
-    val ergebnisseStapelEUngueltig =
-        new ErgebnisseModel(
-            wahlbezirkID, wahlID, StapelartModel.MBW_E_UNGUELTIG, List.of(stapelEUngueltig));
-
     return new ErgebnismeldungsErgebnisseModel(
         List.of(stapelAErgebnisse, stapelBErgebnisse, stapelBCErgebnisse),
-        List.of(ergebnisseStapelDUngueltig, ergebnisseStapelEUngueltig));
+        List.of(ergebnisseStapelDUngueltig));
   }
 
   @Override

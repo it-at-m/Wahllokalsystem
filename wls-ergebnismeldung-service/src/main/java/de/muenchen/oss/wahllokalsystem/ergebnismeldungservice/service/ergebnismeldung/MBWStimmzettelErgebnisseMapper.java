@@ -31,7 +31,7 @@ public class MBWStimmzettelErgebnisseMapper implements MBWStapelErgebnisCollecto
 
     val stapelB =
         stimmzettelService
-            .getStimmzettelWithExactlyOneWahlvorschlagSelectedAndNoCandidateVotes(
+            .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
                 new BezirkUndWahlID(wahlID, wahlbezirkID))
             .stream()
             .collect(
@@ -40,7 +40,7 @@ public class MBWStimmzettelErgebnisseMapper implements MBWStapelErgebnisCollecto
                     Collectors.summingLong(WahlvorschlagStimmzettelAnzahlModel::anzahl)));
 
     val stapelBC =
-        stimmzettelService.getStapelBC(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
+        stimmzettelService.getKandidatVotes(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
             .collect(
                 Collectors.groupingBy(
                     KandidatStimmenAnzahlModel::wahlvorschlagID,
@@ -50,9 +50,7 @@ public class MBWStimmzettelErgebnisseMapper implements MBWStapelErgebnisCollecto
 
     val countStapelDUngueltig =
         stimmzettelService.getCountUngueltige(new BezirkUndWahlID(wahlID, wahlbezirkID));
-    val countStapelEUngueltig = 0;
 
-    return new MBWErgebnisseModel(
-        stapelA, stapelB, countStapelDUngueltig, countStapelEUngueltig, stapelBC);
+    return new MBWErgebnisseModel(stapelA, stapelB, countStapelDUngueltig, stapelBC);
   }
 }

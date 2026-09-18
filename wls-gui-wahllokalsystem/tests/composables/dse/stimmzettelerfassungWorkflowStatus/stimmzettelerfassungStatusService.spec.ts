@@ -1,7 +1,11 @@
+import { createTestingPinia } from "@pinia/testing";
 import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -53,13 +57,13 @@ const {
 } = useStimmzettelerfassungStatusTestDataFactory();
 
 describe("DseWorkflowStatusService.ts", () => {
-  const {
-    isWorkflowStatusLoading,
-    loadDseWorkflowStatus,
-    saveDseWorkflowStatus,
-  } = useDseWorkflowStatusService();
+  let unitUnderTest: ReturnType<typeof useDseWorkflowStatusService>;
 
   beforeEach(() => {
+    createTestingPinia({
+      createSpy: vi.fn,
+    });
+    unitUnderTest = useDseWorkflowStatusService();
     vi.resetAllMocks();
     vi.clearAllMocks();
   });
@@ -76,10 +80,16 @@ describe("DseWorkflowStatusService.ts", () => {
         })
       );
 
-      const mockedResult = createStimmzettelerfassungStatus();
+      const mockedResult = {
+        ...createStimmzettelerfassungStatus(),
+        status: StimmzettelerfassungStatusEnum.SteAbgeschlossen,
+      };
       mockDefinitions.mapDtoToModel.mockReturnValue(mockedResult);
 
-      const result = await loadDseWorkflowStatus(wahlID, wahlbezirkID);
+      const result = await unitUnderTest.loadDseWorkflowStatus(
+        wahlID,
+        wahlbezirkID
+      );
 
       expect(result).toStrictEqual(mockedResult);
 
@@ -89,6 +99,11 @@ describe("DseWorkflowStatusService.ts", () => {
       expect(
         mockDefinitions.getStimmzettelerfassungStatus.mock.calls
       ).toStrictEqual([[wahlID, wahlbezirkID]]);
+      expect(useWorkflowStore().setStepDone).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+      );
     });
 
     it("should_returnNull_when_apiReturned204", async () => {
@@ -99,7 +114,10 @@ describe("DseWorkflowStatusService.ts", () => {
         Promise.resolve({ status: 204, data: null })
       );
 
-      const result = await loadDseWorkflowStatus(wahlID, wahlbezirkID);
+      const result = await unitUnderTest.loadDseWorkflowStatus(
+        wahlID,
+        wahlbezirkID
+      );
 
       expect(result).toBeNull();
     });
@@ -113,7 +131,7 @@ describe("DseWorkflowStatusService.ts", () => {
       );
 
       await expect(async () =>
-        loadDseWorkflowStatus(wahlID, wahlbezirkID)
+        unitUnderTest.loadDseWorkflowStatus(wahlID, wahlbezirkID)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
@@ -134,7 +152,7 @@ describe("DseWorkflowStatusService.ts", () => {
       );
 
       await expect(async () =>
-        loadDseWorkflowStatus(wahlID, wahlbezirkID, false)
+        unitUnderTest.loadDseWorkflowStatus(wahlID, wahlbezirkID, false)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
@@ -157,12 +175,12 @@ describe("DseWorkflowStatusService.ts", () => {
         })
       );
 
-      expect(isWorkflowStatusLoading.value).toBe(false);
-      const promise = loadDseWorkflowStatus(wahlID, wahlbezirkID);
-      expect(isWorkflowStatusLoading.value).toBe(true);
+      expect(unitUnderTest.isWorkflowStatusLoading.value).toBe(false);
+      const promise = unitUnderTest.loadDseWorkflowStatus(wahlID, wahlbezirkID);
+      expect(unitUnderTest.isWorkflowStatusLoading.value).toBe(true);
       vi.advanceTimersByTime(timeout);
       await promise;
-      expect(isWorkflowStatusLoading.value).toBe(false);
+      expect(unitUnderTest.isWorkflowStatusLoading.value).toBe(false);
 
       vi.useRealTimers();
     });
@@ -178,7 +196,7 @@ describe("DseWorkflowStatusService.ts", () => {
 
       mockDefinitions.mapModelToDto.mockReturnValue(mockedDto);
 
-      await saveDseWorkflowStatus(wahlID, wahlbezirkID, status);
+      await unitUnderTest.saveDseWorkflowStatus(wahlID, wahlbezirkID, status);
 
       expect(
         mockDefinitions.saveStimmzettelerfassungStatus.mock.calls
@@ -201,7 +219,7 @@ describe("DseWorkflowStatusService.ts", () => {
       );
 
       await expect(async () =>
-        saveDseWorkflowStatus(wahlID, wahlbezirkID, status)
+        unitUnderTest.saveDseWorkflowStatus(wahlID, wahlbezirkID, status)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
@@ -223,7 +241,7 @@ describe("DseWorkflowStatusService.ts", () => {
       );
 
       await expect(async () =>
-        saveDseWorkflowStatus(wahlID, wahlbezirkID, status, false)
+        unitUnderTest.saveDseWorkflowStatus(wahlID, wahlbezirkID, status, false)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(

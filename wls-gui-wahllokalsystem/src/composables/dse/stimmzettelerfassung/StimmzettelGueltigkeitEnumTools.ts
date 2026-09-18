@@ -1,17 +1,15 @@
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 export function useStimmzettelGueltigkeitEnumTools() {
   const gueltigkeitTextMap = {
-    [PersistedStimmzettelGueltigkeitEnum.Valid]: "gültig",
-    [PersistedStimmzettelGueltigkeitEnum.Invalid]: "ungültig",
-    [PersistedStimmzettelGueltigkeitEnum.BeschlussAusstehend]:
-      "Beschluss notwendig",
-    [PersistedStimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]:
-      "ungültig",
-    [PersistedStimmzettelGueltigkeitEnum.Leer]: "ungültig",
+    [StimmzettelGueltigkeitEnum.Valid]: "gültig",
+    [StimmzettelGueltigkeitEnum.Invalid]: "ungültig",
+    [StimmzettelGueltigkeitEnum.BeschlussAusstehend]: "Beschluss notwendig",
+    [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]: "ungültig",
+    [StimmzettelGueltigkeitEnum.Leer]: "ungültig",
   };
 
-  function toText(value: PersistedStimmzettelGueltigkeitEnum): string {
+  function toText(value: StimmzettelGueltigkeitEnum): string {
     return gueltigkeitTextMap[value];
   }
 

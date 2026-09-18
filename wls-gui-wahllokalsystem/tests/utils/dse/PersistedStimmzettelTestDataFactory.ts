@@ -10,7 +10,7 @@ import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
-import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const {
   generateRandomNumber,
@@ -84,9 +84,7 @@ export function usePersistedStimmzettelTestDataFactory() {
       ],
       beschlussfassung: createStimmzettelBeschlussfassung(),
       invalideVotes: generateRandomNumber(2),
-      gueltigkeit: getRandomItem(
-        Object.values(PersistedStimmzettelGueltigkeitEnum)
-      ),
+      gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),
     };
   }
 

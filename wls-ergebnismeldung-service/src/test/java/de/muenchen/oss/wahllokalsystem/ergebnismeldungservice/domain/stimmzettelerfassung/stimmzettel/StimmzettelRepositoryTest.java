@@ -424,6 +424,15 @@ class StimmzettelRepositoryTest {
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
     }
+
+    @Test
+    void should_returnEmptyList_when_noDataWasFound() {
+      val result =
+          unitUnderTest
+              .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneSelectedWahlvorschlagAndNoOtherKennzeichen(
+                  wahlID, wahlbezirkID);
+      Assertions.assertThat(result).isEmpty();
+    }
   }
 
   @Nested
@@ -1111,6 +1120,15 @@ class StimmzettelRepositoryTest {
           .usingRecursiveComparison()
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
+    }
+
+    @Test
+    void should_returnEmptyList_when_noDataWasFound() {
+      val result =
+          unitUnderTest
+              .getSumValidKandidatenVotesPerWahlvorschlagWhenNotOnlyOneListenkreuzReststimmeAreGiven(
+                  wahlID, wahlbezirkID);
+      Assertions.assertThat(result).isEmpty();
     }
 
     private List<KandidatStimmenAnzahl> getExpectedKandidatenStimmenAnzahl(

@@ -194,13 +194,13 @@ watch(
       const systemBeschlussvorschlaege =
         props.stimmzettel?.systemBeschlussvorschlag ?? [];
 
-      isGueltig.value = systemBeschlussvorschlaege.some(
+      isGueltig.value = !systemBeschlussvorschlaege.some(
         (beschlussvorschlag) => {
           const mappedReason =
             mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
               beschlussvorschlag.reason
             );
-          return gruende.gueltig.some((grund) => grund === mappedReason);
+          return gruende.ungueltig.some((grund) => grund === mappedReason);
         }
       );
 

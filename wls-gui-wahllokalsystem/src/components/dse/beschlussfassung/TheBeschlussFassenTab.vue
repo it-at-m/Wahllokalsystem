@@ -84,7 +84,7 @@
             <div class="icon-wrapper">
               <v-icon
                 icon="$beschlussAbstimmung"
-                size="large"
+                size="x-large"
               />
             </div>
           </v-col>

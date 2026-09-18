@@ -5,13 +5,7 @@
     fullscreen
   >
     <v-card>
-      <v-tabs
-        v-model="tab"
-        bg-color="grey-lighten-3"
-        slider-color="primary"
-        color="primary"
-        class="rounded-t border-b"
-      >
+      <v-tabs v-model="tab">
         <v-tab value="one">
           <v-icon
             icon="$stimmzettelBeschluss"

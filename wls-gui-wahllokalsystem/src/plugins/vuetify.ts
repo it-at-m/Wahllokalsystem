@@ -165,5 +165,11 @@ export default createVuetify({
       sortAscIcon: "$asc",
       sortDescIcon: "$desc",
     },
+    VTabs: {
+      bgColor: "grey-lighten-3",
+      sliderColor: "primary",
+      color: "primary",
+      class: "rounded-t border-b",
+    },
   },
 });

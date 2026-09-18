@@ -24,7 +24,7 @@
 
     <template #[`item.gueltigkeit`]="{ value }">
       <base-stimmzettel-gueltigkeit-icon
-        v-if="value !== StimmzettelGueltigkeitEnum.BeschlussAusstehend"
+        v-if="value !== PersistedStimmzettelGueltigkeitEnum.BeschlussAusstehend"
         :gueltigkeit="value"
       />
       {{ value == "VALID" ? "gültig" : value == "INVALID" ? "ungültig" : "" }}
@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { ref } from "vue";
 
@@ -57,10 +57,10 @@ import {
   TABLE_LOADING_DATA_STIMMZETTEL,
   TABLE_NO_DATA_TEXT_BESCHLUSSFASSUNG,
 } from "@/constants.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { PersistedStimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
-  stimmzettelListe: Stimmzettel[];
+  stimmzettelListe: PersistedStimmzettel[];
   stimmzettelLoading: boolean;
 }>();
 
@@ -83,7 +83,7 @@ const sortBy = ref([
 const { getVormerkungsgrund } = useStimmzettelTools();
 
 function getVormerkungsOrEntscheidungsgrundBasedOnBeschlussfassung(
-  stimmzettel: Stimmzettel
+  stimmzettel: PersistedStimmzettel
 ) {
   if (stimmzettel.beschlussfassung) {
     return stimmzettel.beschlussfassung.text;
@@ -93,10 +93,10 @@ function getVormerkungsOrEntscheidungsgrundBasedOnBeschlussfassung(
 }
 
 const emit = defineEmits<{
-  editBeschlussStimmzettel: [stimmzettel: Stimmzettel];
+  editBeschlussStimmzettel: [stimmzettel: PersistedStimmzettel];
 }>();
 
-function onBeschlussBearbeitenClicked(stimmzettel: Stimmzettel) {
+function onBeschlussBearbeitenClicked(stimmzettel: PersistedStimmzettel) {
   emit("editBeschlussStimmzettel", stimmzettel);
 }
 </script>

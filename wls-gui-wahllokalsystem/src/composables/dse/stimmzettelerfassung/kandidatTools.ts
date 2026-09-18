@@ -1,5 +1,5 @@
-import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
 
 export function useKandidatTools() {
   function hasAnyKennzeichenOrReststimme(kandidat: DseKandidat): boolean {

@@ -1,7 +1,8 @@
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
-import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
 
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import {
@@ -106,14 +107,17 @@ vi.mock(
 describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   const mockedWahlId = "wahl-1";
   const {
-    preparePersistedStimmzettelKandidat,
     prepareStimmzettel,
     prepareStimmzettelWahlvorschlag,
     prepareStimmzettelKandidat,
     prepareStimmzettelKandidatOfWahlvorschlag,
+  } = useStimmzettelTestDataFactory();
+
+  const {
+    preparePersistedStimmzettelKandidat,
     preparePersistedStimmzettel,
     preparePersistedStimmzettelWahlvorschlag,
-  } = useStimmzettelTestDataFactory();
+  } = usePersistedStimmzettelTestDataFactory();
 
   const MAXIMAL_ERLAUBTE_STIMMEN_PRO_WAEHLER = 999;
 

@@ -87,6 +87,13 @@ public class InstancioModels {
         .toModel();
   }
 
+  public static Kandidat createBlankKandidatWithInvalidVote(
+      final String kandidatID, final int nennung) {
+    return Instancio.of(createBlankKandidatModel(kandidatID, nennung))
+        .set(field(Kandidat::getInvalidVotes), 1)
+        .create();
+  }
+
   public static Kandidat createBlankKandidatWithSingleVoteByWahlvorschlag(
       final String kandidatID, final int nennung) {
     return Instancio.of(createBlankKandidatModel(kandidatID, nennung))

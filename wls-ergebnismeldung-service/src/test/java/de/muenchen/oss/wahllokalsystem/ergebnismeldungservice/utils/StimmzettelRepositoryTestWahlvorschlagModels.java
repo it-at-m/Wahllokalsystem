@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils;
 
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankDiscardedKandidat;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankKandidatWithInvalidVote;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankKandidatWithSingleVoteByVoter;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankKandidatWithSingleVoteByWahlvorschlag;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankNonSelectedWahlvorschlagModel;
@@ -118,4 +119,12 @@ public class StimmzettelRepositoryTestWahlvorschlagModels {
 
   public static final Model<List<Wahlvorschlag>> singleWahlvorschlagModelWithEinzelstimme =
       createSingleWahlvorschlagModelWithEinzelstimme("wvEinzelstimme");
+
+  public static final Model<List<Wahlvorschlag>> singleWahlvorschlagModelWithSingleInvalideVote =
+      Instancio.ofList(createBlankNonSelectedWahlvorschlagModel("wvInvalidVote"))
+          .size(1)
+          .supply(
+              field(Wahlvorschlag::getKandidaten),
+              () -> List.of(createBlankKandidatWithInvalidVote("k1", 1)))
+          .toModel();
 }

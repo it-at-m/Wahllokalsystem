@@ -5,13 +5,13 @@ import type { Ref } from "vue";
 import { onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewButtonStateUtils.ts";
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 
-const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelUtils();
+const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelTools();
 
 export function useStimmzettelErfassungViewUtils(
   wahlID: string,
@@ -41,11 +41,16 @@ export function useStimmzettelErfassungViewUtils(
       getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung);
   }
 
-  async function sendStatusInBearbeitung(sendNotification = false) {
-    await _postTeamStatus(
-      StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
-      sendNotification
-    );
+  async function ensureStatusInBearbeitung(sendNotification = false) {
+    if (
+      teamStatus.value?.status !==
+      StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+    ) {
+      await _postTeamStatus(
+        StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+        sendNotification
+      );
+    }
   }
 
   async function sendStatusUnterbrochen(sendNotification = false) {
@@ -103,7 +108,7 @@ export function useStimmzettelErfassungViewUtils(
     isStatusLoading: readonly(isStatusLoading),
 
     //actions
-    sendStatusInBearbeitung,
+    ensureStatusInBearbeitung,
     sendStatusUnterbrochen,
     startNewEmptyStimmzettelWithStimmzettelkennung,
     reloadTeamStatus,

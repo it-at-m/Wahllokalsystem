@@ -4,8 +4,10 @@ import type { Ref } from "vue";
 import { computed, onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 
 const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
+const { isSamePersistedStimmzettel } = useStimmzettelTools();
 
 export function useStimmzettelState(
   wahlID: string,
@@ -25,8 +27,7 @@ export function useStimmzettelState(
     const newStimmzettelCollectionToSave = [...savedStimmzettel.value];
     const stimmzettelExistsIndex = newStimmzettelCollectionToSave.findIndex(
       (savedStimmzettel) =>
-        savedStimmzettel.stimmzettelkennung ===
-        stimmzettelToSave.stimmzettelkennung
+        isSamePersistedStimmzettel(savedStimmzettel, stimmzettelToSave)
     );
 
     if (stimmzettelExistsIndex !== -1) {

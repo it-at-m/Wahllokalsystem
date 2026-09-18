@@ -1,6 +1,6 @@
 import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
 
-export function useManagedStimmzettelUngueltigeStimmeUtils() {
+export function useBearbeitenDialogStimmzettelUngueltigeStimmeUtils() {
   function addInvalidVotesToKandidat(
     kandidat: Kandidat,
     numberOfVotes: number

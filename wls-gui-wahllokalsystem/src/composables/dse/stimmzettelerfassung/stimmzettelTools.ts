@@ -5,12 +5,18 @@ import type { Wahlvorschlag as DSEWahlvorschlag } from "@/types/dse/stimmzettele
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
+import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/stimmzettelerfassung/systemBeschlussgrundReasonEnumTools.ts";
+import { useWahlvorschlagTools } from "@/composables/dse/stimmzettelerfassung/wahlvorschlagTools.ts";
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-function _useStimmzettelUtils() {
+const { sortWahlvorstandBeschlussgruende, sortSystemBeschlussgruende } =
+  useBeschlussgrundTools();
+const { sortAndDeepCloneWahlvorschlaege } = useWahlvorschlagTools();
+
+export function useStimmzettelTools() {
   function createStimmzettelWithWahlvorschlaege(
     wahlvorschlaege: Wahlvorschlag[]
   ): Stimmzettel {
@@ -38,6 +44,84 @@ function _useStimmzettelUtils() {
       systemBeschlussvorschlag: [],
       wahlvorschlaege: [],
     };
+  }
+
+  function isVorgemerktFuerBeschluss(
+    stimmzettel: PersistedStimmzettel
+  ): boolean {
+    return (
+      stimmzettel.systemBeschlussvorschlag.length > 0 ||
+      stimmzettel.wahlvorstandBeschlussvorschlag.length > 0
+    );
+  }
+
+  function getVormerkungsgrund(stimmzettel: PersistedStimmzettel): string {
+    const { mapSystemBeschlussgrundReasonEnumToText } =
+      useSystemBeschlussgrundReasonEnumTools();
+    const wahlvorstandVorschlaege =
+      stimmzettel.wahlvorstandBeschlussvorschlag.map(
+        (vorschlag) => vorschlag.text
+      );
+    const systemVorschlaege = stimmzettel.systemBeschlussvorschlag.map(
+      (vorschlag) => mapSystemBeschlussgrundReasonEnumToText(vorschlag.reason)
+    );
+    return [...systemVorschlaege, ...wahlvorstandVorschlaege].join(", ");
+  }
+
+  function normalizePersistedStimmzettel(
+    stimmzettel: PersistedStimmzettel
+  ): PersistedStimmzettel {
+    const systemBeschluss = sortSystemBeschlussgruende(
+      stimmzettel.systemBeschlussvorschlag ?? []
+    );
+    const wvBeschluss = sortWahlvorstandBeschlussgruende(
+      stimmzettel.wahlvorstandBeschlussvorschlag ?? []
+    );
+    const wvSorted = sortAndDeepCloneWahlvorschlaege(
+      stimmzettel.wahlvorschlaege ?? []
+    );
+
+    return {
+      stimmzettelkennung: stimmzettel.stimmzettelkennung,
+      teamID: stimmzettel.teamID,
+      wahlvorschlaege: wvSorted,
+      invalideVotes: stimmzettel.invalideVotes ?? 0,
+      gueltigkeit: stimmzettel.gueltigkeit,
+      wahlvorstandBeschlussvorschlag: wvBeschluss,
+      systemBeschlussvorschlag: systemBeschluss,
+      beschlussfassung: stimmzettel.beschlussfassung
+        ? { ...stimmzettel.beschlussfassung }
+        : null,
+    };
+  }
+
+  function resetDseStimmzettel(stimmzettel: Stimmzettel): Stimmzettel {
+    stimmzettel.wahlvorschlaege.map((wahlvorschlag) => {
+      wahlvorschlag.selected = false;
+      wahlvorschlag.kandidaten.map((kandidat) => {
+        kandidat.einzelstimmen = null;
+        kandidat.ungueltigeStimmen = null;
+        kandidat.reststimmen = null;
+        kandidat.durchgestrichen = false;
+      });
+    });
+    stimmzettel.gueltigkeit = StimmzettelGueltigkeitEnum.Valid;
+    stimmzettel.wahlvorstandBeschlussvorschlag = [];
+    stimmzettel.systemBeschlussvorschlag = [];
+    stimmzettel.beschlussfassung = null;
+    stimmzettel.invalideVotes = 0;
+
+    return stimmzettel;
+  }
+
+  function isSamePersistedStimmzettel(
+    stimmzettel1: PersistedStimmzettel,
+    stimmzettel2: PersistedStimmzettel
+  ): boolean {
+    return (
+      stimmzettel1.stimmzettelkennung === stimmzettel2.stimmzettelkennung &&
+      stimmzettel1.teamID == stimmzettel2.teamID
+    );
   }
 
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DSEWahlvorschlag {
@@ -85,39 +169,13 @@ function _useStimmzettelUtils() {
     return result;
   }
 
-  function isVorgemerktFuerBeschluss(
-    stimmzettel: PersistedStimmzettel
-  ): boolean {
-    return (
-      stimmzettel.systemBeschlussvorschlag.length > 0 ||
-      stimmzettel.wahlvorstandBeschlussvorschlag.length > 0
-    );
-  }
-
-  function getVormerkungsgrund(stimmzettel: PersistedStimmzettel): string {
-    const { mapSystemBeschlussgrundReasonEnumToText } =
-      useSystemBeschlussgrundReasonEnumTools();
-    const wahlvorstandVorschlaege =
-      stimmzettel.wahlvorstandBeschlussvorschlag.map(
-        (vorschlag) => vorschlag.text
-      );
-    const systemVorschlaege = stimmzettel.systemBeschlussvorschlag.map(
-      (vorschlag) => mapSystemBeschlussgrundReasonEnumToText(vorschlag.reason)
-    );
-    return [...systemVorschlaege, ...wahlvorstandVorschlaege].join(", ");
-  }
-
   return {
     createStimmzettelWithWahlvorschlaege,
     getEmptyStimmzettelWithStimmzettelkennung,
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
+    normalizePersistedStimmzettel,
+    resetDseStimmzettel,
+    isSamePersistedStimmzettel,
   };
 }
-
-/**
- * @deprecated TODO is an tools composable. Does not serve any high level function
- * maybe split into separate tools for different types
- */
-export const useStimmzettelUtils = _useStimmzettelUtils;
-export const useStimmzettelTools = _useStimmzettelUtils;

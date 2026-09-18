@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 
 import {
   invalidCommandRanges,
@@ -42,13 +42,13 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
   });
 
   describe("handleOrThrow", () => {
-    let mockManagedStimmzettel: ManagedStimmzettel;
+    let mockManagedStimmzettel: BearbeitenDialogStimmzettel;
 
     beforeEach(() => {
       mockManagedStimmzettel = {
         kandidatenAddStimmenInRangeOrThrow:
           mockDefinitions.kandidatenAddStimmenInRangeOrThrow,
-      } as unknown as ManagedStimmzettel;
+      } as unknown as BearbeitenDialogStimmzettel;
     });
 
     afterEach(() => {

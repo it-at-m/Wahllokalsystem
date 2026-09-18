@@ -1,11 +1,11 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelState } from "@/composables/dse/stimmzettelerfassung/stimmzettelState.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
@@ -54,7 +54,7 @@ vi.mock(
 );
 
 vi.mock(
-  import("@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts"),
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
     return {
@@ -69,7 +69,7 @@ vi.mock(
 describe("stimmzettelState", () => {
   const { generateRandomString } = useCommonTestDataFactory();
   const { preparePersistedStimmzettel, createPersistedStimmzettel } =
-    useStimmzettelTestDataFactory();
+    usePersistedStimmzettelTestDataFactory();
 
   const mockedWahlId = generateRandomString(10);
   const mockedWahlbezirkId = generateRandomString(10);
@@ -161,7 +161,8 @@ describe("stimmzettelState", () => {
 
   describe("saveOrUpdateStimmzettel", () => {
     it("should_appendStimmzettelAndPersist_when_initialCollectionIsEmpty", async () => {
-      const mockedNewStimmzettel: Stimmzettel = createPersistedStimmzettel();
+      const mockedNewStimmzettel: PersistedStimmzettel =
+        createPersistedStimmzettel();
 
       mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
 
@@ -190,7 +191,8 @@ describe("stimmzettelState", () => {
 
       const mockedLastSaveCall =
         mockDefinitions.saveStimmzettel.mock.calls.at(-1) ?? [];
-      const mockedSavedCollection = mockedLastSaveCall[3] as Stimmzettel[];
+      const mockedSavedCollection =
+        mockedLastSaveCall[3] as PersistedStimmzettel[];
 
       expect(mockedSavedCollection).toStrictEqual([
         mockedExistingStimmzettel,

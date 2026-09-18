@@ -1,4 +1,4 @@
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 
 import { useNumberTools } from "@/composables/common/numberTools.ts";
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
@@ -10,10 +10,10 @@ const {
   getUngueltigeStimmenOrZero,
 } = useKandidatTools();
 
-export function useManagedStimmzettelEinzelstimmeUtils(
+export function useBearbeitenDialogStimmzettelEinzelstimmeUtils(
   maxEinzelstimmen: number
 ) {
-  function addVotesToKandidat(kandidat: Kandidat, numberOfVotes: number) {
+  function addVotesToKandidat(kandidat: DseKandidat, numberOfVotes: number) {
     if (kandidat.durchgestrichen) {
       kandidat.ungueltigeStimmen = zeroAsNull(
         getUngueltigeStimmenOrZero(kandidat) + numberOfVotes
@@ -35,7 +35,10 @@ export function useManagedStimmzettelEinzelstimmeUtils(
     }
   }
 
-  function removeVotesFromKandidat(kandidat: Kandidat, numberOfVotes: number) {
+  function removeVotesFromKandidat(
+    kandidat: DseKandidat,
+    numberOfVotes: number
+  ) {
     let numberOfVotesToRemove = numberOfVotes;
     const currentEinzelstimmen = kandidat.einzelstimmen ?? 0;
     const currentInvalidVotes = kandidat.ungueltigeStimmen ?? 0;

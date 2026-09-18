@@ -1,17 +1,17 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 import type { Ref } from "vue";
 
 import { onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewButtonStateUtils.ts";
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 
-const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelUtils();
+const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelTools();
 
 export function useStimmzettelErfassungViewUtils(
   wahlID: string,
@@ -20,7 +20,7 @@ export function useStimmzettelErfassungViewUtils(
 ) {
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
   const isStatusLoading = ref(false);
-  const activeStimmzettel: Ref<Stimmzettel | null> = ref(null);
+  const activeStimmzettel: Ref<PersistedStimmzettel | null> = ref(null);
 
   //DialogVisibilityState
   const isKennungsDialogVisible = ref(false);

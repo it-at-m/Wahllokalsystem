@@ -37,14 +37,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { computed } from "vue";
 
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
-  stimmzettelListe: Stimmzettel[];
+  stimmzettelListe: PersistedStimmzettel[];
 }>();
 
 const validStimmzettelCount = computed(

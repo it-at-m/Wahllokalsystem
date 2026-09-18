@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 
 export interface CommandHandler {
   canHandle: (command: string) => boolean;
@@ -9,5 +9,8 @@ export interface CommandHandler {
    * @param stimmzettel
    * @throws CommandExecutionError when an error occurred during processing of command
    */
-  handleOrThrow: (command: string, stimmzettel: ManagedStimmzettel) => void;
+  handleOrThrow: (
+    command: string,
+    stimmzettel: BearbeitenDialogStimmzettel
+  ) => void;
 }

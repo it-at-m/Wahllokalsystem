@@ -1,14 +1,12 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useBeschlussgrundTestDataFactory } from "@tests/utils/dse/BeschlussgrundTestDataFacytory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 
-const {
-  createStimmzettelSystemBeschlussgrund,
-  createStimmzettelWahlvorstandBeschlussgrund,
-} = useStimmzettelTestDataFactory();
+const { createSystemBeschlussgrund, createWahlvorstandBeschlussgrund } =
+  useBeschlussgrundTestDataFactory();
 
 describe("useBeschlussgrundTools.ts", () => {
   let unitUnderTest: ReturnType<typeof useBeschlussgrundTools>;
@@ -19,15 +17,15 @@ describe("useBeschlussgrundTools.ts", () => {
 
   describe("sortWahlvorstandBeschlussgruende", () => {
     const wvGrund1 = {
-      ...createStimmzettelWahlvorstandBeschlussgrund(),
+      ...createWahlvorstandBeschlussgrund(),
       text: "kaffee ausgeschüttet",
     };
     const wvGrund2 = {
-      ...createStimmzettelWahlvorstandBeschlussgrund(),
+      ...createWahlvorstandBeschlussgrund(),
       text: WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
     };
     const wvGrund3 = {
-      ...createStimmzettelWahlvorstandBeschlussgrund(),
+      ...createWahlvorstandBeschlussgrund(),
       text: WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
     };
 
@@ -63,15 +61,15 @@ describe("useBeschlussgrundTools.ts", () => {
 
   describe("sortSystemBeschlussgruende", () => {
     const systemGrund1 = {
-      ...createStimmzettelSystemBeschlussgrund(),
+      ...createSystemBeschlussgrund(),
       reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
     };
     const systemGrund2 = {
-      ...createStimmzettelSystemBeschlussgrund(),
+      ...createSystemBeschlussgrund(),
       reason: SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
     };
     const systemGrund3 = {
-      ...createStimmzettelSystemBeschlussgrund(),
+      ...createSystemBeschlussgrund(),
       reason:
         SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
     };

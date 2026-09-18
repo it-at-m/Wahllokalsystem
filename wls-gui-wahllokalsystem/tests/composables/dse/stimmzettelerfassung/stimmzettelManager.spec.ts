@@ -1,10 +1,10 @@
-import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
-import type { Stimmzettel as PersistedStimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { computed } from "vue";
@@ -12,7 +12,7 @@ import { computed } from "vue";
 import { useStimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
 import { UnsupportedCommandError } from "@/types/dse/error/UnsupportedCommandError.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const { ref } = await import("vue");
@@ -47,21 +47,24 @@ vi.mock(
     return { COMMAND_HANDLERS: handlers };
   }
 );
-vi.mock("@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts", () => ({
-  useBearbeitenDialogStimmzettelUtils: (
-    stimmzettel: Ref<Stimmzettel>,
-    wahlID: string
-  ) => {
-    return {
-      kandidatAddEinzelstimmenOrThrow:
-        mockDefinitions.mangedStimmzettel.kandidatAddEinzelstimmenOrThrow,
-      resetStimmzettelAndHistory: mockDefinitions.resetStimmzettelAndHistory,
-      hasAnyValuesSet: mockDefinitions.mangedStimmzettel.hasAnyValuesSet,
-      stimmzettel,
-      wahlID,
-    };
-  },
-}));
+vi.mock(
+  "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts",
+  () => ({
+    useBearbeitenDialogStimmzettelUtils: (
+      stimmzettel: Ref<DseStimmzettel>,
+      wahlID: string
+    ) => {
+      return {
+        kandidatAddEinzelstimmenOrThrow:
+          mockDefinitions.mangedStimmzettel.kandidatAddEinzelstimmenOrThrow,
+        resetStimmzettelAndHistory: mockDefinitions.resetStimmzettelAndHistory,
+        hasAnyValuesSet: mockDefinitions.mangedStimmzettel.hasAnyValuesSet,
+        stimmzettel,
+        wahlID,
+      };
+    },
+  })
+);
 
 vi.mock(
   import("@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts"),
@@ -84,7 +87,7 @@ const {
   preparePersistedStimmzettel,
   preparePersistedStimmzettelWahlvorschlag,
   preparePersistedStimmzettelKandidat,
-} = useStimmzettelTestDataFactory();
+} = usePersistedStimmzettelTestDataFactory();
 
 describe("stimmzettelManager.ts", () => {
   const dummyWahlvorschlag: Wahlvorschlag = {
@@ -125,7 +128,8 @@ describe("stimmzettelManager.ts", () => {
       const callArgs = mockDefinitions.handlerOneHandleOrThrow.mock.calls[0];
       expect(callArgs[0]).toBe(command);
       expect(
-        (callArgs[1] as ManagedStimmzettel).kandidatAddEinzelstimmenOrThrow
+        (callArgs[1] as BearbeitenDialogStimmzettel)
+          .kandidatAddEinzelstimmenOrThrow
       ).toBeDefined();
 
       expect(mockDefinitions.handlerTwoCanHandle).not.toHaveBeenCalled();

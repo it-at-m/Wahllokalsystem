@@ -19,11 +19,16 @@ public class MBWErgebnisseMapper implements ErgebnismeldungsErgebnisseMapper {
       String wahlID, String wahlbezirkID, WahlartModel wahlart, MeldungsartModel meldungsart) {
     val mbwErgebnisse = mbwStimmzettelErgebnisseMapper.getErgebnisse(wahlID, wahlbezirkID);
 
-    val stapelAErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, StapelartModel.MBW_A, mbwErgebnisse.stapelA());
+    val stapelAErgebnisse =
+        new ErgebnisseModel(wahlbezirkID, wahlID, StapelartModel.MBW_A, mbwErgebnisse.stapelA());
     val stapelBErgebnisse =
         new ErgebnisseModel(wahlbezirkID, wahlID, StapelartModel.MBW_B, mbwErgebnisse.stapelB());
     val stapelBCErgebnisse =
-        new ErgebnisseModel(wahlbezirkID, wahlID, StapelartModel.MBW_B_C, mbwErgebnisse.stimmenJeKandidatStapelBC());
+        new ErgebnisseModel(
+            wahlbezirkID,
+            wahlID,
+            StapelartModel.MBW_B_C,
+            mbwErgebnisse.stimmenJeKandidatStapelBC());
     val ergebnisseStapelDUngueltig =
         new ErgebnisseModel(
             wahlbezirkID, wahlID, StapelartModel.MBW_D_UNGUELTIG, mbwErgebnisse.stapelDUngueltig());

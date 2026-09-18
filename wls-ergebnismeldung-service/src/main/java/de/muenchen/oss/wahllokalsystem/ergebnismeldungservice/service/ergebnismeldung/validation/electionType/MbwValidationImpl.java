@@ -102,13 +102,12 @@ public class MbwValidationImpl implements ElectionTypeValidation {
   private boolean isValidDSE(
       final MeldungsartModel meldungsart, final BezirkUndWahlID bezirkUndWahlID) {
     Optional<ErfassungStatusModel> status =
-        stimmzettelerfassungService.getStimmzettelerfassungStatus(bezirkUndWahlID);
+        stimmzettelerfassungService.getStimmzettelerfassungStatusForValidation(bezirkUndWahlID);
     // Schnellmeldung
     if (MeldungsartModel.V3.equals(meldungsart)) {
       return status.map(ErfassungStatusModel::isStimmzettelerfassungAbgeschlossen).orElse(false);
-    }
-    // Niederschrift
-    else if (MeldungsartModel.V1.equals(meldungsart)) {
+    } else if (MeldungsartModel.V1.equals(meldungsart)) {
+      // Niederschrift
       return status.map(ErfassungStatusModel::isBeschlussfassungAbgeschlossen).orElse(false);
     }
     return false;

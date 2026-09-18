@@ -55,6 +55,19 @@ public class StimmzettelerfassungService {
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
   public Optional<ErfassungStatusModel> getStimmzettelerfassungStatus(
       @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID) {
+    return getStimmzettelerfassungStatusInternal(bezirkUndWahlID);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_SendErgebnisse')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
+  public Optional<ErfassungStatusModel> getStimmzettelerfassungStatusForValidation(
+      @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID) {
+    return getStimmzettelerfassungStatusInternal(bezirkUndWahlID);
+  }
+
+  private Optional<ErfassungStatusModel> getStimmzettelerfassungStatusInternal(
+      final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelerfassungValidator.validBezirkUndWahlIdOrThrow(
         bezirkUndWahlID,
         exceptionFactory.createFachlicheWlsException(

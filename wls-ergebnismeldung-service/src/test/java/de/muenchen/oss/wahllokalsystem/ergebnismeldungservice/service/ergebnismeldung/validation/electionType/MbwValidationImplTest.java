@@ -147,7 +147,7 @@ class MbwValidationImplTest {
               defaultElectionTypeValidator.checkValidation(
                   any(), anyString(), anyString(), any(), any()))
           .thenReturn(false);
-      Mockito.when(stimmzettelerfassungService.getStimmzettelerfassungStatus(any()))
+      Mockito.when(stimmzettelerfassungService.getStimmzettelerfassungStatusForValidation(any()))
           .thenReturn(erfassungStatus);
 
       val result =
@@ -241,7 +241,7 @@ class MbwValidationImplTest {
               defaultElectionTypeValidator.checkValidation(
                   any(), anyString(), anyString(), any(), any()))
           .thenReturn(false);
-      Mockito.when(stimmzettelerfassungService.getStimmzettelerfassungStatus(any()))
+      Mockito.when(stimmzettelerfassungService.getStimmzettelerfassungStatusForValidation(any()))
           .thenReturn(erfassungStatus);
 
       val result =

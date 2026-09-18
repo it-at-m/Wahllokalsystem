@@ -632,7 +632,6 @@ class StimmzettelRepositoryTest {
       void should_findMatchingStimmzettel_when_matchingAndNonMatchingStimmzettelAreGiven() {
         val stimmzettelToFind = new LinkedList<Stimmzettel>();
 
-        // votes by wahlvorschlag + votes by voter
         val stimmzettelWithSingleWahlvorschlagWithReststimmeAndEinzelstimmeModel =
             Instancio.of(
                     createBlankValidStimmzettelModel(

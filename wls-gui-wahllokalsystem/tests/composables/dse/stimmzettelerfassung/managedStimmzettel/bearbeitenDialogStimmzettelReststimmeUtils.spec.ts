@@ -1,6 +1,6 @@
 import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { ref } from "vue";
@@ -14,7 +14,7 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
     prepareDseKandidatOfDseWahlvorschlag,
     prepareDseStimmzettel,
     prepareDseWahlvorschlag,
-  } = useStimmzettelTestDataFactory();
+  } = useDseStimmzettelTestDataFactory();
 
   const wahlId = "wahl-1";
 

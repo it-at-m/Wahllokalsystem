@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-const { createDseWahlvorschlag } = useStimmzettelTestDataFactory();
+const { createDseWahlvorschlag } = useDseStimmzettelTestDataFactory();
 
 const meta = {
   component: BaseStimmzettelZusammenfassungCard,

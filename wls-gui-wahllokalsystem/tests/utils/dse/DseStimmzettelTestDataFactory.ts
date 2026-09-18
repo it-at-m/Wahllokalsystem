@@ -16,7 +16,7 @@ const {
   getRandomItem,
 } = useCommonTestDataFactory();
 
-export function useStimmzettelTestDataFactory() {
+export function useDseStimmzettelTestDataFactory() {
   function createDseStimmzettel(): DseStimmzettel {
     return {
       gueltigkeit: getRandomItem(Object.values(StimmzettelGueltigkeitEnum)),

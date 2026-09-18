@@ -1,4 +1,4 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
 
@@ -6,7 +6,7 @@ import { useBearbeitenDialogStimmzettelWahlvorschlagUtils } from "@/composables/
 
 describe("bearbeitenDialogStimmzettelWahlvorschlagUtils.ts", () => {
   const { prepareDseStimmzettel, prepareDseWahlvorschlag } =
-    useStimmzettelTestDataFactory();
+    useDseStimmzettelTestDataFactory();
 
   describe("getWahlvorschlagByOrdnungszahl", () => {
     it("should_findWahlvorschlagByOrdnungszahl_when_called", () => {

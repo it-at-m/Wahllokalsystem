@@ -1,5 +1,5 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { useBearbeitenDialogStimmzettelEinzelstimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelEinzelstimmeUtils.ts";
@@ -23,7 +23,7 @@ vi.mock(
 );
 
 const { generateRandomNumber } = useCommonTestDataFactory();
-const { prepareDseKandidat } = useStimmzettelTestDataFactory();
+const { prepareDseKandidat } = useDseStimmzettelTestDataFactory();
 
 describe("bearbeitenDialogStimmzettelEinzelstimmeUtils.ts", () => {
   const MAX_EINZELSTIMMEN = 3;

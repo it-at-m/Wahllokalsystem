@@ -1,5 +1,5 @@
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
@@ -8,7 +8,7 @@ const {
   createDseWahlvorschlag,
   prepareDseKandidat,
   prepareDseKandidatOfDseWahlvorschlag,
-} = useStimmzettelTestDataFactory();
+} = useDseStimmzettelTestDataFactory();
 
 const { preparePersistedStimmzettelKandidat } =
   usePersistedStimmzettelTestDataFactory();

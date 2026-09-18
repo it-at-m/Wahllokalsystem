@@ -81,8 +81,7 @@ async function onBeschlussfassungBeendenClicked() {
 function onBeschlussBearbeitenClicked(stimmzettelToEdit: Stimmzettel) {
   activeStimmzettelForBeschluss.value = stimmzettelToEdit;
   isBearbeitenDialogVisible.value = true;
-
-  console.debug(JSON.stringify(stimmzettelToEdit));
+  // TODO #3271 Beschluss zu einem Stimmzettel speichern
 }
 
 function onBeschlussBearbeitenCanceled() {

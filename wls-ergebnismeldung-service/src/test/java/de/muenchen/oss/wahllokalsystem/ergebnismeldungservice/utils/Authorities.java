@@ -7,6 +7,8 @@ import org.apache.commons.lang3.ArrayUtils;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Authorities {
 
+  public static final String AUTHORITY_WAHLVORSTAND = "WLS_WAHLVORSTAND";
+
   public static final String SERVICE_GET_AWERTE = "Ergebnismeldung_BUSINESSACTION_GetAWerte";
   public static final String ADMIN_LOADWAHLTERMINDATEN = "Admin_BUSINESSACTION_LoadWahltermindaten";
   public static final String SERVICE_GET_STATUS = "Ergebnismeldung_BUSINESSACTION_GetStatus";
@@ -177,6 +179,7 @@ public class Authorities {
       new String[] {
         SERVICE_SEND_ERGEBNISSE,
         REPOSITORY_READ_ERGEBNISSE,
+        SERVICE_GET_ERGEBNISSE,
         REPOSITORY_READ_WAHLSCHEINE,
         SERVICE_GET_STIMMZETTELUMSCHLAEGE,
         REPOSITORY_READ_STIMMZETTELUMSCHLAEGE,
@@ -188,6 +191,7 @@ public class Authorities {
         SERVICE_SEND_ERGEBNISSE,
         REPOSITORY_READ_AWERTE,
         SERVICE_GET_AWERTE,
+        SERVICE_GET_ERGEBNISSE,
         REPOSITORY_READ_ERGEBNISSE,
         REPOSITORY_READ_STIMMABGABEVERMERKE,
         SERVICE_GET_STIMMZETTELUMSCHLAEGE,

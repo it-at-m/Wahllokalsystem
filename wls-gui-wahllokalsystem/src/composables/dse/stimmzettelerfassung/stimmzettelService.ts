@@ -1,4 +1,10 @@
 import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type {
+  AxiosInterceptorManager,
+  InternalAxiosRequestConfig,
+} from "axios";
+
+import { gzip } from "pako";
 
 import {
   Configuration,
@@ -10,6 +16,41 @@ import { useUserNotificationService } from "@/composables/userNotification/userN
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
+function getOnFulfilled() {
+  return (config: InternalAxiosRequestConfig<string | Uint8Array>) => {
+    if (
+      config.url?.endsWith("/stimmzettel") &&
+      config.method?.toLowerCase() === "post" &&
+      config.url?.startsWith(ERGEBNISMELDUNG_SERVICE_API_URL) &&
+      config.headers["Content-Encoding"] != "gzip"
+    ) {
+      if (config.data !== undefined) {
+        config.data = gzip(config.data);
+      }
+      config.headers["Content-Encoding"] = "gzip";
+      config.headers["Content-Type"] = "application/json";
+    }
+    return config;
+  };
+}
+
+let interceptorNumber: number | undefined;
+function registerGZipInterceptor(
+  interceptorManager: AxiosInterceptorManager<InternalAxiosRequestConfig>
+) {
+  if (interceptorNumber == undefined) {
+    interceptorNumber = interceptorManager.use(getOnFulfilled());
+  }
+}
+
+class MyStimmzettelController extends StimmzettelControllerApi {
+  constructor(configuration: Configuration) {
+    super(configuration);
+
+    registerGZipInterceptor(this.axios.interceptors.request);
+  }
+}
+
 export function useStimmzettelService() {
   const { addNotification } = useUserNotificationService();
   const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
@@ -20,7 +61,7 @@ export function useStimmzettelService() {
     basePath: ERGEBNISMELDUNG_SERVICE_API_URL,
   });
 
-  const stimmzettelControllerApi = new StimmzettelControllerApi(
+  const stimmzettelControllerApi = new MyStimmzettelController(
     ergebnismeldungConfiguration
   );
 

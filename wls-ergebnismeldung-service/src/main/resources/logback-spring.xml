@@ -26,6 +26,12 @@
             <appender-ref ref="STDOUT" />
         </logger>
 
+        <logger name="de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception"
+                level="info"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
         <logger name="performance"
                 level="info"
                 additivity="false">
@@ -126,6 +132,12 @@
                 level="warn"
                 additivity="false">
             <appender-ref ref="JSON_STDOUT" />
+        </logger>
+
+        <logger name="de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception"
+                level="info"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
         </logger>
 
         <logger name="de.muenchen.allgemein"

@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.logging.PerformanceLogging;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelJdbcRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -24,6 +25,7 @@ public class StimmzettelService {
   private final StimmzettelValidator stimmzettelValidator;
   private final StimmzettelModelMapper stimmzettelModelMapper;
   private final StimmzettelRepository stimmzettelRepository;
+  private final StimmzettelJdbcRepository stimmzettelJdbcRepository;
 
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelOfTeam')"
@@ -70,14 +72,15 @@ public class StimmzettelService {
     stimmzettelValidator.validOrThrow(stimmzettelOwner);
     stimmzettelValidator.validOrThrow(stimmzettelToSave);
 
-    stimmzettelRepository.deleteByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
-        stimmzettelOwner.wahlbezirkID(), stimmzettelOwner.wahlID(), stimmzettelOwner.teamID());
+//    stimmzettelRepository.deleteByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
+//        stimmzettelOwner.wahlbezirkID(), stimmzettelOwner.wahlID(), stimmzettelOwner.teamID());
 
     val entitiesToSave =
         stimmzettelToSave.stream()
             .map(stimmzettel -> stimmzettelModelMapper.toEntity(stimmzettelOwner, stimmzettel))
             .toList();
-    stimmzettelRepository.saveAll(entitiesToSave);
+//    stimmzettelRepository.saveAll(entitiesToSave);
+    stimmzettelJdbcRepository.replaceStimmzettel(stimmzettelOwner.wahlbezirkID(), stimmzettelOwner.wahlID(), stimmzettelOwner.teamID(), entitiesToSave);
   }
 
   @PreAuthorize(

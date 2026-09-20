@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.PerformanceLogging;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -7,6 +8,8 @@ import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class StimmzettelService {
+
+  private static final Logger getStimmzettelPerformanceLogger = PerformanceLogging.createPerformanceLogger(StimmzettelService.class.getName() + ".getStimmzettel");
 
   private final StimmzettelValidator stimmzettelValidator;
   private final StimmzettelModelMapper stimmzettelModelMapper;
@@ -29,12 +34,25 @@ public class StimmzettelService {
           + ")")
   public List<StimmzettelOfTeamModel> getStimmzettel(
       @P("param") final TeamBezirkUndWahlIDModel stimmzettelOwner) {
+    val totalStopWatch = StopWatch.createStarted();
     stimmzettelValidator.validOrThrow(stimmzettelOwner);
 
+    val repoFindStopWatch = StopWatch.createStarted();
     val entitiesFound =
         stimmzettelRepository.findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
             stimmzettelOwner.wahlbezirkID(), stimmzettelOwner.wahlID(), stimmzettelOwner.teamID());
-    return entitiesFound.stream().map(stimmzettelModelMapper::toModel).toList();
+    repoFindStopWatch.stop();
+    getStimmzettelPerformanceLogger.atInfo().log("repoFind {} ms", repoFindStopWatch.getDuration().toMillis());
+
+    val toModelStopWatch = StopWatch.createStarted();
+    val stimmzettelModels = entitiesFound.stream().map(stimmzettelModelMapper::toModel).toList();
+    toModelStopWatch.stop();
+    getStimmzettelPerformanceLogger.atInfo().log("toModel {} ms", toModelStopWatch.getDuration().toMillis());
+
+    totalStopWatch.stop();
+
+    getStimmzettelPerformanceLogger.atInfo().log("total {} ms", totalStopWatch.getDuration().toMillis());
+    return stimmzettelModels;
   }
 
   @PreAuthorize(

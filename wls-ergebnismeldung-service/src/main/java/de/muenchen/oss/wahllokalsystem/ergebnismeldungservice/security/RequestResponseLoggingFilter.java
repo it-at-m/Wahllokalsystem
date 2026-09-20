@@ -4,6 +4,7 @@
  */
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.security;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.logging.PerformanceLogging;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -16,6 +17,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.core.context.SecurityContext;
@@ -33,6 +37,8 @@ public class RequestResponseLoggingFilter implements Filter {
 
   private static final List<String> CHANGING_METHODS =
       Arrays.asList("POST", "PUT", "PATCH", "DELETE");
+
+  private static final Logger performanceLogger = PerformanceLogging.createPerformanceLogger(RequestResponseLoggingFilter.class.getName());
 
   /** The property or a zero length string if no property is available. */
   @Value("${security.logging.requests:}")
@@ -54,9 +60,13 @@ public class RequestResponseLoggingFilter implements Filter {
   public void doFilter(
       final ServletRequest request, final ServletResponse response, final FilterChain chain)
       throws IOException, ServletException {
+    val stopWatch = StopWatch.createStarted();
     chain.doFilter(request, response);
+    stopWatch.stop();
+
     final HttpServletRequest httpRequest = (HttpServletRequest) request;
     final HttpServletResponse httpResponse = (HttpServletResponse) response;
+    performanceLogger.atInfo().log("Request on {} {} took {} ms", httpRequest.getMethod(), httpRequest.getRequestURI(), stopWatch.getDuration().toMillis());
     if (checkForLogging(httpRequest)) {
       log.info(
           "User {} executed {} on URI {} with http status {}",

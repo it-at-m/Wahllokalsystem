@@ -21,7 +21,13 @@
 
         <!-- Logger -->
         <logger name="de.muenchen.oss.wahllokalsystem.ergebnismeldungservice"
-                level="debug"
+                level="warn"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="performance"
+                level="info"
                 additivity="false">
             <appender-ref ref="STDOUT" />
         </logger>

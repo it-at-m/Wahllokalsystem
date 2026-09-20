@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.PerformanceLogging;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.logging.PerformanceLogging;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -38,9 +38,10 @@ public class StimmzettelService {
     stimmzettelValidator.validOrThrow(stimmzettelOwner);
 
     val repoFindStopWatch = StopWatch.createStarted();
-    val entitiesFound =
-        stimmzettelRepository.findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
-            stimmzettelOwner.wahlbezirkID(), stimmzettelOwner.wahlID(), stimmzettelOwner.teamID());
+    val entitiesFound = stimmzettelRepository.findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(stimmzettelOwner.wahlbezirkID(), stimmzettelOwner.wahlID(), stimmzettelOwner.teamID());
+    stimmzettelRepository.readKandidaten(entitiesFound.stream().flatMap(s -> s.getWahlvorschlaege().stream()).toList());
+    stimmzettelRepository.readWahlvorstandBeschlussvorschlag(entitiesFound);
+    stimmzettelRepository.readSystemBeschlussvorschlag(entitiesFound);
     repoFindStopWatch.stop();
     getStimmzettelPerformanceLogger.atInfo().log("repoFind {} ms", repoFindStopWatch.getDuration().toMillis());
 

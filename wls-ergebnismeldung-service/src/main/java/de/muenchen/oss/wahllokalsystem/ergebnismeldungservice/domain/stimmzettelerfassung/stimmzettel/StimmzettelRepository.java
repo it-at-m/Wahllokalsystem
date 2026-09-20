@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel;
 
+import java.util.Collection;
 import java.util.List;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,8 +9,50 @@ import org.springframework.data.repository.query.Param;
 
 public interface StimmzettelRepository extends CrudRepository<Stimmzettel, StimmzettelID> {
 
-  List<Stimmzettel> findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
-      String wahlbezirkID, String wahlID, String teamID);
+    @Query(
+            """
+                SELECT stimmzettel
+                FROM Stimmzettel stimmzettel
+                LEFT JOIN FETCH stimmzettel.wahlvorschlaege
+                WHERE stimmzettel.id.wahlbezirkID = :wahlbezirkID
+                  AND stimmzettel.id.wahlID = :wahlID
+                  AND stimmzettel.id.teamID = :teamID
+                """
+    )
+    List<Stimmzettel> findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
+            @Param("wahlbezirkID") String wahlbezirkID,
+            @Param("wahlID") String wahlID,
+            @Param("teamID") String teamID);
+
+    @Query(
+        """
+                SELECT stimmzettel
+                FROM Stimmzettel stimmzettel
+                LEFT JOIN FETCH stimmzettel.systemBeschlussvorschlag w
+                WHERE stimmzettel in :stimmzettels
+                """
+    )
+    List<Stimmzettel> readSystemBeschlussvorschlag(@Param("stimmzettels") Collection<Stimmzettel> stimmzettels);
+
+    @Query(
+        """
+                SELECT stimmzettel
+                FROM Stimmzettel stimmzettel
+                LEFT JOIN FETCH stimmzettel.wahlvorstandBeschlussvorschlag w
+                WHERE stimmzettel in :stimmzettels
+                """
+    )
+    List<Stimmzettel> readWahlvorstandBeschlussvorschlag(@Param("stimmzettels") Collection<Stimmzettel> stimmzettels);
+
+    @Query(
+        """
+                SELECT w
+                FROM Wahlvorschlag w
+                LEFT JOIN FETCH w.kandidaten
+                WHERE w in :wahlvorschlags
+                """
+    )
+    List<Wahlvorschlag> readKandidaten(@Param("wahlvorschlags") Collection<Wahlvorschlag> wahlvorschlags);
 
   @Query(
       """

@@ -40,6 +40,9 @@ security:
     resource.user-info-uri: http://host.docker.internal:8100/user
 
 server:
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain
   shutdown: "graceful"
   port: 8080
   error:

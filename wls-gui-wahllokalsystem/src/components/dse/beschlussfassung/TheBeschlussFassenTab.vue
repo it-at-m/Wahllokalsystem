@@ -207,13 +207,13 @@ watch(
   () => props.stimmzettel,
   (stimmzettel) => {
     if (stimmzettel) {
-      const systemBeschlussvorschlaege =
+      const systemBeschlussvorschlag =
         props.stimmzettel?.systemBeschlussvorschlag ?? [];
       const wahlvorstandBeschlussvorschlag =
         props.stimmzettel?.wahlvorstandBeschlussvorschlag ?? [];
 
       isGueltig.value =
-        !systemBeschlussvorschlaege.some((beschlussvorschlag) => {
+        !systemBeschlussvorschlag.some((beschlussvorschlag) => {
           const mappedReason =
             mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
               beschlussvorschlag.reason

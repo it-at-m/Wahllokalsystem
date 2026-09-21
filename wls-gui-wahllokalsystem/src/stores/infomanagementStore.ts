@@ -19,6 +19,7 @@ const KONFIG_KEY_CHECK_WAHLSCHLUSS = "MELDUNGSZEIT_WAHL_SCHLIESSEN";
 const KONFIG_KEY_DELAY_BEFORE_INAKTIV = "WLK_TIME_OUT";
 const KONFIG_KEY_WAEHLERVERZEICHNIS_URL = "WAEHLERVERZEICHNIS_URL";
 const KONFIG_KEY_WAHLLOKALFINDER_URL = "WAHLLOKALFINDER_URL";
+const KONFIG_KEY_DSE_AKTIV = "DSE_AKTIV";
 const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_UW = "08:00:00";
 const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_BW = "15:00:00";
 const DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_UW = "17:59:00";
@@ -77,6 +78,15 @@ export const useInfomanagementStore = defineStore(storeID, () => {
   const waehlerverzeichnisUrl = computed(() => {
     const url = _getKonfigParamValue(KONFIG_KEY_WAEHLERVERZEICHNIS_URL);
     return url ? url : null;
+  });
+
+  const isDseAktiv = computed(() => {
+    const dseAktiv = _getKonfigParamValue(KONFIG_KEY_DSE_AKTIV);
+    //Default ist true
+    if (dseAktiv == null || dseAktiv === "") {
+      return true;
+    }
+    return String(dseAktiv).toLowerCase() === "true";
   });
 
   const wahlraumUrl = computed(() => {
@@ -197,6 +207,7 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     /** FRUEHESTE_SCHLIESSUNGSZEIT bezeichnet den spätesten Wert, zu dem die Wahlhandlung eröffnet werden kann
      * und den frühesten Wert, zu dem die Wahlhandlung geschlossen werden kann. */
     fruehesteSchliessungsuhrzeit,
+    isDseAktiv,
   };
 });
 

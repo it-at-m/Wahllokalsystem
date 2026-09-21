@@ -28,6 +28,10 @@ Dabei werden die Wahlvorschläge, Kandidaten und Beschlüsse entsprechend dupliz
 > [!NOTE]
 > Die duplizierten Stimmzettel werden am Ende, also nach dem höchsten Wert der `stimmzettelkennung` des Teams, eingefügt.
 
+> [!NOTE] BrowserCache (IndexedDB leeren)
+> Ist der Service-Worker aktiv wird es notwendig sein, die IndexedDB zu leeren damit die duplizierten Stimmzettel
+> sichtbar werden. Eine Leerung erfolgt auch im Rahmen eines Benutzerwechsels.
+
 ## Disclaimer zu erzeugten IDs
 
 Die UUIDs, die mit dem Skript erstellt werden, verwenden einen anderen Algorithmus als der Service. Es ist daher

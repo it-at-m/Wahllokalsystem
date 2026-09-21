@@ -1,109 +1,99 @@
 <template>
-  <div>
-    <v-row class="mt-2 ml-2">
-      <v-col>
-        <v-radio-group v-model="isGueltig">
-          <v-radio
-            :value="true"
-            class="full-width-radio"
-          >
-            <template #label>
-              <v-row>
-                <v-col> Die Stimmabgabe ist gültig </v-col>
-                <v-col>
-                  <v-icon
-                    icon="$stimmzettelGueltig"
-                    color="success"
-                  />
-                </v-col>
-              </v-row>
-            </template>
-          </v-radio>
-          <v-radio
-            :value="false"
-            class="full-width-radio"
-          >
-            <template #label>
-              <v-row>
-                <v-col> Die Stimmabgabe ist ungültig </v-col>
-                <v-col>
-                  <v-icon
-                    icon="$stimmzettelUngueltig"
-                    color="error"
-                  />
-                </v-col>
-              </v-row>
-            </template>
-          </v-radio>
-        </v-radio-group>
-      </v-col>
-      <v-col>
-        <v-row
-          v-for="beschlussgrund in beschlussgruende"
-          :key="beschlussgrund.grund"
-          dense
-        >
-          <v-col>
+  <v-card>
+    <v-card-text>
+      <v-row>
+        <v-col>
+          <v-radio-group v-model="isGueltig">
+            <v-radio
+              :value="true"
+              class="my-2 full-width-radio"
+            >
+              <template #label>
+                <v-row>
+                  <v-col> Die Stimmabgabe ist gültig </v-col>
+                  <v-col>
+                    <v-icon
+                      icon="$stimmzettelGueltig"
+                      color="success"
+                    />
+                  </v-col>
+                </v-row>
+              </template>
+            </v-radio>
+            <v-radio
+              :value="false"
+              class="my-2 full-width-radio"
+            >
+              <template #label>
+                <v-row>
+                  <v-col> Die Stimmabgabe ist ungültig </v-col>
+                  <v-col>
+                    <v-icon
+                      icon="$stimmzettelUngueltig"
+                      color="error"
+                    />
+                  </v-col>
+                </v-row>
+              </template>
+            </v-radio>
+          </v-radio-group>
+        </v-col>
+        <v-col>
+          <v-checkbox
+            v-for="beschlussgrund in beschlussgruende"
+            :key="beschlussgrund.grund"
+            v-model="beschlussgrund.selected"
+            :label="beschlussgrund.grund"
+            hide-details
+          />
+          <div class="d-flex align-center">
             <v-checkbox
-              v-model="beschlussgrund.selected"
-              :label="beschlussgrund.grund"
-              hide-details
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="auto">
-            <v-checkbox-btn
               v-model="andererGrundChecked"
               label="Anderer Grund:"
+              class="mr-5"
             />
-          </v-col>
-          <v-col>
             <v-textarea
               v-model="andererGrund"
               label="Grund"
               :disabled="!andererGrundChecked"
               rows="1"
               auto-grow
-              max-width="500"
             />
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-    <v-card>
-      <v-card-title class="mb-4"> Abstimmungsergebnis </v-card-title>
-      <v-card-text>
-        <v-row style="align-items: stretch">
-          <v-col cols="5">
-            <base-number-input
-              v-model="stimmenDafuer"
-              :rules="[required]"
-              label="Stimmen dafür"
+          </div>
+        </v-col>
+      </v-row>
+    </v-card-text>
+    <v-card-title class="mb-4"> Abstimmungsergebnis </v-card-title>
+    <v-card-text>
+      <v-row style="align-items: stretch">
+        <v-col cols="5">
+          <base-number-input
+            v-model="stimmenDafuer"
+            :rules="[required]"
+            label="Stimmen dafür"
+          />
+        </v-col>
+        <v-col
+          cols="2"
+          style="display: flex"
+        >
+          <div class="icon-wrapper">
+            <v-icon
+              icon="$beschlussAbstimmung"
+              size="x-large"
             />
-          </v-col>
-          <v-col
-            cols="2"
-            style="display: flex"
-          >
-            <div class="icon-wrapper">
-              <v-icon
-                icon="$beschlussAbstimmung"
-                size="x-large"
-              />
-            </div>
-          </v-col>
-          <v-col cols="5">
-            <base-number-input
-              v-model="stimmenDagegen"
-              :rules="[required]"
-              label="Stimmen dagegen"
-            />
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
-  </div>
+          </div>
+        </v-col>
+        <v-col cols="5">
+          <base-number-input
+            v-model="stimmenDagegen"
+            :rules="[required]"
+            label="Stimmen dagegen"
+          />
+        </v-col>
+      </v-row>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script setup lang="ts">
@@ -264,5 +254,9 @@ watch(
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+
+.full-width-radio :deep(.v-selection-control__wrapper + .v-label) {
+  flex: 1;
 }
 </style>

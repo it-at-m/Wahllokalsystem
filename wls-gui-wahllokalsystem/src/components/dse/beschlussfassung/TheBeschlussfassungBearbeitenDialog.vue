@@ -29,6 +29,7 @@
         </v-tabs-window-item>
         <v-tabs-window-item value="two" />
       </v-tabs-window>
+      <v-spacer />
       <v-card-actions>
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
         <base-wls-button-save

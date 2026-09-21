@@ -27,6 +27,7 @@ assignees: ''
 ## Technical Information
 
 - Date of finding the bug: 
+- Browser: <!-- chrome / firefox ... -->
 - Environment: <!-- local, testing (k) 1/2/3, prod (p) or training (s) -->
 - User/Wahlbezirknummer:
 - User role: <!-- Schriftführung / Erfassungsteam -->

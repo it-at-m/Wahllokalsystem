@@ -3,14 +3,14 @@
     <v-row class="mt-2 ml-2">
       <v-col>
         <v-radio-group v-model="isGueltig">
-          <v-radio :value="true">
+          <v-radio
+            :value="true"
+            class="full-width-radio"
+          >
             <template #label>
               <v-row>
                 <v-col> Die Stimmabgabe ist gültig </v-col>
-                <v-col
-                  cols="auto"
-                  class="ml-4"
-                >
+                <v-col>
                   <v-icon
                     icon="$stimmzettelGueltig"
                     color="success"
@@ -19,14 +19,14 @@
               </v-row>
             </template>
           </v-radio>
-          <v-radio :value="false">
+          <v-radio
+            :value="false"
+            class="full-width-radio"
+          >
             <template #label>
               <v-row>
                 <v-col> Die Stimmabgabe ist ungültig </v-col>
-                <v-col
-                  cols="auto"
-                  class="ml-4"
-                >
+                <v-col>
                   <v-icon
                     icon="$stimmzettelUngueltig"
                     color="error"

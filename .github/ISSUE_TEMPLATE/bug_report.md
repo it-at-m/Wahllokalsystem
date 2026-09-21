@@ -28,9 +28,9 @@ assignees: ''
 
 - Date of finding the bug: 
 - Environment: <!-- local, testing (k) 1/2/3, prod (p) or training (s) -->
-- User/Wahlbezirknummer: <!-- 
+- User/Wahlbezirknummer:
 - User role: <!-- Schriftführung / Erfassungsteam -->
-- Device: <!-- Wahlkoffer/ PC ... -->
+- Device: <!-- Wahlkoffer / PC ... -->
 - System: <!-- gui-wls / gui-admintool -->
 
 ## Additional Context

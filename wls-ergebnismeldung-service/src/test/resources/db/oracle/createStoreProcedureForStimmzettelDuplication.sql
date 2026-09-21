@@ -73,7 +73,7 @@ BEGIN
                   AND stimmzettel_stimmzettelkennung = p_oldKennung
                 ) LOOP
                     DECLARE
-                        v_newID VARCHAR2(255) := uuid_v4();
+                        v_newID VARCHAR2(255) := uuid_v4_formatted_sys_guid();
                     BEGIN
                         INSERT INTO Wahlvorschlag (
                             id, wahlvorschlagID, selected,
@@ -107,7 +107,7 @@ BEGIN
                                     votesByVoter, invalidVotes, votesByWahlvorschlag
                                 )
                                 VALUES (
-                                           uuid_v4(),
+                                           uuid_v4_formatted_sys_guid(),
                                            k.kandidatID,
                                            k.nennungsNummer,
                                            v_newID,
@@ -129,7 +129,7 @@ BEGIN
                 stimmzettel_teamID, stimmzettel_stimmzettelkennung
             )
             SELECT
-                uuid_v4(),
+                uuid_v4_formatted_sys_guid(),
                 text,
                 stimmzettel_wahlbezirkID,
                 stimmzettel_wahlID,
@@ -150,7 +150,7 @@ BEGIN
                 stimmzettel_teamID, stimmzettel_stimmzettelkennung
             )
             SELECT
-                uuid_v4(),
+                uuid_v4_formatted_sys_guid(),
                 reason,
                 stimmzettel_wahlbezirkID,
                 stimmzettel_wahlID,

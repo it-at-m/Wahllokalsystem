@@ -9,7 +9,7 @@ duplizieren kann.
 ## Installation
 
 Das Skript `createStoredProcedureToGenerateUUIDv4.sql` sowie `createStoreProcedureForStimmzettelDuplication.sql`
-(aus `wls-ergebnismeldung-service\test\resources\db\oracle`)
+(aus `wls-ergebnismeldung-service\src\test\resources\db\oracle`)
 müssen in der Umgebung und im Schema des Ergebnismeldungsservices ausgeführt werden,
 in dem die Funktionalität zur Verfügung stehen soll.
 

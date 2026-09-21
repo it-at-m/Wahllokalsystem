@@ -879,8 +879,7 @@ class MBWStimmzettelRepositoryTest {
 
       transactionTemplate.executeWithoutResult(status -> unitUnderTest.saveAll(stimmzettelToCount));
 
-      val result =
-          unitUnderTest.getStapelBC(wahlID, wahlbezirkID);
+      val result = unitUnderTest.getStapelBC(wahlID, wahlbezirkID);
 
       val expectedResult =
           List.of(
@@ -947,8 +946,7 @@ class MBWStimmzettelRepositoryTest {
             unitUnderTest.saveAll(nonMatchingStimmzettel);
           });
 
-      val result =
-          unitUnderTest.getStapelBC(wahlID, wahlbezirkID);
+      val result = unitUnderTest.getStapelBC(wahlID, wahlbezirkID);
 
       val expectedResult = getExpectedKandidatenStimmenAnzahl(stimmzettelToFind);
       Assertions.assertThat(result)
@@ -962,8 +960,7 @@ class MBWStimmzettelRepositoryTest {
 
     @Test
     void should_returnEmptyList_when_noDataWasFound() {
-      val result =
-          unitUnderTest.getStapelBC(wahlID, wahlbezirkID);
+      val result = unitUnderTest.getStapelBC(wahlID, wahlbezirkID);
       Assertions.assertThat(result).isEmpty();
     }
 

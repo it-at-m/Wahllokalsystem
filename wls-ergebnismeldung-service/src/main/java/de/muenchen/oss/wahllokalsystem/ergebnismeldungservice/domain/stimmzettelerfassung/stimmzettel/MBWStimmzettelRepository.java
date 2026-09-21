@@ -73,8 +73,7 @@ public interface MBWStimmzettelRepository extends StimmzettelRepository {
                   AND stimmzettel.id.wahlbezirkID = :wahlbezirkID
                   AND stimmzettel.gueltigkeit = de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit.INVALID
                 """)
-  long getStapelD(
-      @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
+  long getStapelD(@Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
 
   @Query(
       """

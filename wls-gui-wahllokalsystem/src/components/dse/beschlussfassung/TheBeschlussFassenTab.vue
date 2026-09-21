@@ -47,17 +47,10 @@
             hide-details
           />
           <div class="d-flex align-center">
-            <v-checkbox
-              v-model="andererGrundChecked"
-              label="Anderer Grund:"
-              class="mr-5"
-            />
-            <v-textarea
+            <v-checkbox :model-value="andererGrundChecked" />
+            <v-text-field
               v-model="andererGrund"
-              label="Grund"
-              :disabled="!andererGrundChecked"
-              rows="1"
-              auto-grow
+              label="Andere Gründe"
             />
           </div>
         </v-col>
@@ -100,7 +93,7 @@
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { storeToRefs } from "pinia";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
@@ -115,7 +108,7 @@ const { mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText } =
 
 const isGueltig = ref<boolean | null>(null);
 const andererGrund = ref("");
-const andererGrundChecked = ref(false);
+const andererGrundChecked = computed(() => !!andererGrund.value);
 const stimmenDafuer = ref<number | null>(null);
 const stimmenDagegen = ref<number | null>(null);
 
@@ -206,7 +199,6 @@ function rebuildBeschlussgruende() {
     )
     .map((w) => w.text);
   andererGrund.value = texts.join(", ");
-  andererGrundChecked.value = texts.length > 0;
 
   beschlussgruende.value = beschlussgrundOptions;
 }

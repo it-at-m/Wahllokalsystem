@@ -16,12 +16,13 @@
         </v-tab>
         <v-tab value="two"> Stimmzettel anzeigen und bearbeiten </v-tab>
         <v-spacer />
-        <div
+        <base-stimmzettelkennung-strong-text
           v-if="stimmzettel"
-          class="stimmzettelkennung-container pr-4 text-no-wrap font-weight-bold"
-        >
-          {{ stimmzettel.teamID }}{{ stimmzettel.stimmzettelkennung }}
-        </div>
+          :stimmzettelkennung="stimmzettel.stimmzettelkennung"
+          :team-name="stimmzettel.teamID"
+          compact
+          class="mr-2"
+        />
       </v-tabs>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
@@ -50,6 +51,7 @@ import { ref } from "vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheBeschlussFassenTab from "@/components/dse/beschlussfassung/TheBeschlussFassenTab.vue";
+import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
@@ -75,12 +77,3 @@ function onSaveClicked() {
   emit("save");
 }
 </script>
-
-<style scoped>
-.stimmzettelkennung-container {
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-  font-size: clamp(0.95rem, 6vh, 1.5rem);
-}
-</style>

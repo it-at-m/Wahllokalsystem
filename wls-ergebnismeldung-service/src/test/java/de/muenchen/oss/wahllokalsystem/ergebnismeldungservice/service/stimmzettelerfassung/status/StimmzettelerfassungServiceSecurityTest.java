@@ -10,11 +10,14 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -100,9 +103,10 @@ public class StimmzettelerfassungServiceSecurityTest {
 
   @Nested
   class GetStimmzettelerfassungStatus {
-    @Test
-    void should_getAccess_when_requiredAuthorityIsPresent() {
-      SecurityUtils.runWith(Authorities.SERVICE_GET_STIMMZETTELERFASSUNGSTATUS);
+    @ParameterizedTest(name = "{index} - {0}")
+    @MethodSource("authoritiesWithAccess")
+    void should_getAccess_when_anAllowedAuthorityIsPresent(final String authority) {
+      SecurityUtils.runWith(authority);
 
       val wahlbezirkID = "wahlbezirkID";
       val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
@@ -145,6 +149,11 @@ public class StimmzettelerfassungServiceSecurityTest {
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.getStimmzettelerfassungStatus(id))
           .isInstanceOf(AccessDeniedException.class);
+    }
+
+    private static Stream<String> authoritiesWithAccess() {
+      return Stream.of(
+          Authorities.SERVICE_GET_STIMMZETTELERFASSUNGSTATUS, Authorities.SERVICE_SEND_ERGEBNISSE);
     }
   }
 

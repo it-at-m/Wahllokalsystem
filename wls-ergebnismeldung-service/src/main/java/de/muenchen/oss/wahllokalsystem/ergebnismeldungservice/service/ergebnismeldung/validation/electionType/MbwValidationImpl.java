@@ -7,6 +7,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisme
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.validation.DefaultElectionTypeValidator;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.validation.ElectionTypeValidation;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.ErfassungStatusModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class MbwValidationImpl implements ElectionTypeValidation {
   private final DefaultElectionTypeValidator validator;
 
   private final MBWBedenklicheStimmzettelService mbwBedenklicheStimmzettelService;
+  private final StimmzettelerfassungService stimmzettelerfassungService;
 
   @Override
   public boolean supportsWahlart(final WahlartModel wahlart) {
@@ -36,9 +39,25 @@ public class MbwValidationImpl implements ElectionTypeValidation {
       final MeldungsartModel meldungsart)
       throws WlsException {
     val necessaryStacks = buildNecessaryStack();
-    return validator.checkValidation(
-            WahlbezirkArtModel.UWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks)
-        && hasBedenklicheStimmzettel(wahlbezirkID, wahlID);
+
+    boolean stacksValid =
+        validator.checkValidation(
+            WahlbezirkArtModel.UWB,
+            wahlbezirkID,
+            wahlID,
+            waehlerverzeichnisNummer,
+            necessaryStacks);
+    val bezirkUndWahlId = new BezirkUndWahlID(wahlID, wahlbezirkID);
+
+    boolean hasBedenklich = hasBedenklicheStimmzettel(bezirkUndWahlId);
+
+    // Stapelerfassung valid
+    if (stacksValid && hasBedenklich) {
+      return true;
+    }
+
+    // invalid in general or valid for DSE
+    return isValidDSE(meldungsart, bezirkUndWahlId);
   }
 
   @Override
@@ -49,9 +68,24 @@ public class MbwValidationImpl implements ElectionTypeValidation {
       final MeldungsartModel meldungsart)
       throws WlsException {
     val necessaryStacks = buildNecessaryStack();
-    return validator.checkValidation(
-            WahlbezirkArtModel.BWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks)
-        && hasBedenklicheStimmzettel(wahlbezirkID, wahlID);
+
+    boolean stacksValid =
+        validator.checkValidation(
+            WahlbezirkArtModel.BWB,
+            wahlbezirkID,
+            wahlID,
+            waehlerverzeichnisNummer,
+            necessaryStacks);
+    val bezirkUndWahlId = new BezirkUndWahlID(wahlID, wahlbezirkID);
+    boolean hasBedenklich = hasBedenklicheStimmzettel(bezirkUndWahlId);
+
+    // Stapelerfassung valid
+    if (stacksValid && hasBedenklich) {
+      return true;
+    }
+
+    // invalid in general or valid for DSE
+    return isValidDSE(meldungsart, bezirkUndWahlId);
   }
 
   private List<Stapelart> buildNecessaryStack() {
@@ -62,8 +96,20 @@ public class MbwValidationImpl implements ElectionTypeValidation {
     return necessaryStacks;
   }
 
-  private boolean hasBedenklicheStimmzettel(final String wahlbezirkID, final String wahlID) {
-    return mbwBedenklicheStimmzettelService.hasBedenklicheStimmzettel(
-        new BezirkUndWahlID(wahlID, wahlbezirkID));
+  private boolean hasBedenklicheStimmzettel(BezirkUndWahlID bezirkUndWahlID) {
+    return mbwBedenklicheStimmzettelService.hasBedenklicheStimmzettel(bezirkUndWahlID);
+  }
+
+  private boolean isValidDSE(
+      final MeldungsartModel meldungsart, final BezirkUndWahlID bezirkUndWahlID) {
+    val status = stimmzettelerfassungService.getStimmzettelerfassungStatus(bezirkUndWahlID);
+    // Schnellmeldung
+    if (MeldungsartModel.V3.equals(meldungsart)) {
+      return status.map(ErfassungStatusModel::isStimmzettelerfassungAbgeschlossen).orElse(false);
+    } else if (MeldungsartModel.V1.equals(meldungsart)) {
+      // Niederschrift
+      return status.map(ErfassungStatusModel::isBeschlussfassungAbgeschlossen).orElse(false);
+    }
+    return false;
   }
 }

@@ -567,7 +567,7 @@ class StimmzettelRepositoryTest {
     }
 
     @Nested
-    class OnlyOneWahlvorschlagThatHasReststimmen {
+    class OnlyOneWahlvorschlagThatHasReststimmenAndOneOtherKennzeichen {
 
       @Test
       void should_countByWahlvorschlag_when_foundWahlvorschlaege() {

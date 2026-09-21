@@ -9,30 +9,40 @@ import type {
 type NavigationGuardNextArgument =
   boolean | Error | NavigationGuardNextCallback | RouteLocationRaw;
 
+async function isGuardValid(
+  guard: NavigationGuard,
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized
+): Promise<boolean> {
+  let hasCalledNext = false;
+  let isValid = false;
+
+  const fakeNext: NavigationGuardNext = (arg?: NavigationGuardNextArgument) => {
+    hasCalledNext = true;
+    isValid = arg === undefined || arg === true;
+  };
+
+  const result = await guard(to, from, fakeNext);
+
+  return hasCalledNext ? isValid : result === undefined || result === true;
+}
+
 /**
  * Evaluates navigation guards: At least one of the navigation guards must be true to receive "true"
  */
 export function anyGuard(...guards: NavigationGuard[]): NavigationGuard {
   return async (to, from, next) => {
     for (const guard of guards) {
-      let isValid = false;
-
-      // dummy method for necessary inner guard
-      const fakeNext: NavigationGuardNext = (
-        arg?: NavigationGuardNextArgument
-      ) => {
-        if (arg === undefined || arg === true) {
-          isValid = true;
-        }
-      };
-
-      await guard(to as RouteLocationNormalized, from, fakeNext);
+      const isValid = await isGuardValid(
+        guard,
+        to as RouteLocationNormalized,
+        from
+      );
 
       if (isValid) {
         return next();
       }
     }
-
     next(false);
   };
 }
@@ -43,18 +53,11 @@ export function anyGuard(...guards: NavigationGuard[]): NavigationGuard {
 export function allGuards(...guards: NavigationGuard[]): NavigationGuard {
   return async (to, from, next) => {
     for (const guard of guards) {
-      let isValid = false;
-
-      // dummy method for necessary inner guard
-      const fakeNext: NavigationGuardNext = (
-        arg?: NavigationGuardNextArgument
-      ) => {
-        if (arg === undefined || arg === true) {
-          isValid = true;
-        }
-      };
-
-      await guard(to as RouteLocationNormalized, from, fakeNext);
+      const isValid = await isGuardValid(
+        guard,
+        to as RouteLocationNormalized,
+        from
+      );
 
       if (!isValid) {
         return next(false);

@@ -13,6 +13,16 @@ describe("routerUtils.ts", () => {
   }
 
   describe("anyGuard", () => {
+    it("should_permitNavigation_when_oneGuardReturnsTrue", async () => {
+      const invalidGuard: NavigationGuard = () => false;
+      const validGuard: NavigationGuard = () => true;
+      const next = vi.fn();
+
+      await anyGuard(invalidGuard, validGuard)(to, from, next);
+
+      expect(next).toHaveBeenCalledExactlyOnceWith();
+    });
+
     it("should_permitNavigation_when_oneGuardIsValid", async () => {
       const invalidGuard = vi.fn(createGuard(false));
       const validGuard = vi.fn(createGuard(true));
@@ -54,6 +64,16 @@ describe("routerUtils.ts", () => {
   });
 
   describe("allGuards", () => {
+    it("should_permitNavigation_when_allGuardsReturnTrue", async () => {
+      const firstGuard: NavigationGuard = () => true;
+      const secondGuard: NavigationGuard = () => true;
+      const next = vi.fn();
+
+      await allGuards(firstGuard, secondGuard)(to, from, next);
+
+      expect(next).toHaveBeenCalledExactlyOnceWith();
+    });
+
     it("should_permitNavigation_when_allGuardsAreValid", async () => {
       const firstGuard = vi.fn(createGuard(true));
       const secondGuard = vi.fn(createGuard(true));

@@ -34,5 +34,5 @@ assignees: ''
 - System: <!-- gui-wls / gui-admintool -->
 
 ## Additional Context
-<!-- Add any other context about the problem here. E.g. logs, error-messages, triggers, possible solutions or 
+<!-- Add any other context about the problem here. E.g. logs, error messages, triggers, possible solutions or 
 workarounds -->

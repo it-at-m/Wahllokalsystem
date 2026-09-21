@@ -13,7 +13,6 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -48,7 +47,9 @@ public class MbwValidationImpl implements ElectionTypeValidation {
             wahlID,
             waehlerverzeichnisNummer,
             necessaryStacks);
-    boolean hasBedenklich = hasBedenklicheStimmzettel(wahlbezirkID, wahlID);
+    val bezirkUndWahlId = new BezirkUndWahlID(wahlID, wahlbezirkID);
+
+    boolean hasBedenklich = hasBedenklicheStimmzettel(bezirkUndWahlId);
 
     // Stapelerfassung valid
     if (stacksValid && hasBedenklich) {
@@ -56,7 +57,7 @@ public class MbwValidationImpl implements ElectionTypeValidation {
     }
 
     // invalid in general or valid for DSE
-    return isValidDSE(meldungsart, new BezirkUndWahlID(wahlID, wahlbezirkID));
+    return isValidDSE(meldungsart, bezirkUndWahlId);
   }
 
   @Override
@@ -75,7 +76,8 @@ public class MbwValidationImpl implements ElectionTypeValidation {
             wahlID,
             waehlerverzeichnisNummer,
             necessaryStacks);
-    boolean hasBedenklich = hasBedenklicheStimmzettel(wahlbezirkID, wahlID);
+    val bezirkUndWahlId = new BezirkUndWahlID(wahlID, wahlbezirkID);
+    boolean hasBedenklich = hasBedenklicheStimmzettel(bezirkUndWahlId);
 
     // Stapelerfassung valid
     if (stacksValid && hasBedenklich) {
@@ -83,7 +85,7 @@ public class MbwValidationImpl implements ElectionTypeValidation {
     }
 
     // invalid in general or valid for DSE
-    return isValidDSE(meldungsart, new BezirkUndWahlID(wahlID, wahlbezirkID));
+    return isValidDSE(meldungsart, bezirkUndWahlId);
   }
 
   private List<Stapelart> buildNecessaryStack() {
@@ -94,15 +96,13 @@ public class MbwValidationImpl implements ElectionTypeValidation {
     return necessaryStacks;
   }
 
-  private boolean hasBedenklicheStimmzettel(final String wahlbezirkID, final String wahlID) {
-    return mbwBedenklicheStimmzettelService.hasBedenklicheStimmzettel(
-        new BezirkUndWahlID(wahlID, wahlbezirkID));
+  private boolean hasBedenklicheStimmzettel(BezirkUndWahlID bezirkUndWahlID) {
+    return mbwBedenklicheStimmzettelService.hasBedenklicheStimmzettel(bezirkUndWahlID);
   }
 
   private boolean isValidDSE(
       final MeldungsartModel meldungsart, final BezirkUndWahlID bezirkUndWahlID) {
-    Optional<ErfassungStatusModel> status =
-        stimmzettelerfassungService.getStimmzettelerfassungStatusForValidation(bezirkUndWahlID);
+    val status = stimmzettelerfassungService.getStimmzettelerfassungStatus(bezirkUndWahlID);
     // Schnellmeldung
     if (MeldungsartModel.V3.equals(meldungsart)) {
       return status.map(ErfassungStatusModel::isStimmzettelerfassungAbgeschlossen).orElse(false);

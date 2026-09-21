@@ -5,17 +5,11 @@ public enum ErfassungStatusModel {
   STE_ABGESCHLOSSEN,
   BE_ABGESCHLOSSEN;
 
-  public static boolean isStimmzettelerfassungAbgeschlossen(ErfassungStatusModel status) {
-    if (status == null) {
-      return false;
-    }
-    return status == STE_ABGESCHLOSSEN || status == BE_ABGESCHLOSSEN;
+  public boolean isStimmzettelerfassungAbgeschlossen() {
+    return STE_ABGESCHLOSSEN.equals(this) || BE_ABGESCHLOSSEN.equals(this);
   }
 
-  public static boolean isBeschlussfassungAbgeschlossen(ErfassungStatusModel status) {
-    if (status == null) {
-      return false;
-    }
-    return status == BE_ABGESCHLOSSEN;
+  public boolean isBeschlussfassungAbgeschlossen() {
+    return BE_ABGESCHLOSSEN.equals(this);
   }
 }

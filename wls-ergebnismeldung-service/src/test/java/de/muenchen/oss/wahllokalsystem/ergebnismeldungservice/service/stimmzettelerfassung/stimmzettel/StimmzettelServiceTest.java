@@ -1,8 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
-import static org.mockito.ArgumentMatchers.any;
-
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.MBWStimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
@@ -29,8 +26,6 @@ class StimmzettelServiceTest {
 
   @Mock StimmzettelModelMapper stimmzettelModelMapper;
 
-  @Mock MBWStimmzettelRepository mbwStimmzettelRepository;
-
   @Mock StimmzettelRepository stimmzettelRepository;
 
   @InjectMocks StimmzettelService unitUnderTest;
@@ -52,7 +47,7 @@ class StimmzettelServiceTest {
                   stimmzettelOwner.teamID()))
           .thenReturn(mockedRepoResponse);
 
-      Mockito.when(stimmzettelModelMapper.toModel(any(Stimmzettel.class)))
+      Mockito.when(stimmzettelModelMapper.toModel(Mockito.any(Stimmzettel.class)))
           .thenAnswer(invocation -> Instancio.create(StimmzettelOfTeamModel.class));
 
       val result = unitUnderTest.getStimmzettel(stimmzettelOwner);
@@ -97,7 +92,7 @@ class StimmzettelServiceTest {
       val stimmzettelOwner = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val stimmzettelToSave = Instancio.ofList(StimmzettelOfTeamModel.class).size(5).create();
 
-      Mockito.when(stimmzettelModelMapper.toEntity(Mockito.eq(stimmzettelOwner), any()))
+      Mockito.when(stimmzettelModelMapper.toEntity(Mockito.eq(stimmzettelOwner), Mockito.any()))
           .thenAnswer(invocation -> Instancio.create(Stimmzettel.class));
 
       unitUnderTest.saveStimmzettel(stimmzettelOwner, stimmzettelToSave);
@@ -137,7 +132,7 @@ class StimmzettelServiceTest {
           FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
       Mockito.doNothing()
           .when(stimmzettelValidator)
-          .validOrThrow(any(TeamBezirkUndWahlIDModel.class));
+          .validOrThrow(Mockito.any(TeamBezirkUndWahlIDModel.class));
       Mockito.doThrow(mockedWlsException)
           .when(stimmzettelValidator)
           .validOrThrow(stimmzettelToSave);

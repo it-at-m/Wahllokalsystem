@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
@@ -68,6 +68,12 @@ const emit = defineEmits<{
 }>();
 
 const tab = ref("one");
+
+watch(isDialogVisibleModel, (isVisible) => {
+  if (isVisible) {
+    tab.value = "one";
+  }
+});
 
 function onCancelClicked() {
   emit("cancel");

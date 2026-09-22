@@ -29,9 +29,8 @@
         :wahlbezirk-id="currentUserWahlbezirkID"
         :wahl-id="wahlID"
       />
-      <the-m-b-w-gueltige-kandidatenstimmen-anzeigen-card
-        :wahlbezirk-id="currentUserWahlbezirkID"
-        :wahl-id="wahlID"
+      <base-card-wahlvorschlaege-kandidatenstimmen-anzeigen
+        :kandidatenstimmen="wahlvorschlaegeWithKandidatenErgebnissen"
       />
       <the-vorkommnisse-requirement-card
         :type="
@@ -71,18 +70,19 @@ import { computed, onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/common/BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen.vue";
 import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
 import TheVorkommnisseRequirementCard from "@/components/ergebnismeldung/common/TheVorkommnisseRequirementCard.vue";
 import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
-import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
+import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
 import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckBWB.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
@@ -163,7 +163,13 @@ const isDruckenActive = computed(
       isNiederschriftSendenClicked.value)
 );
 
+const {
+  wahlvorschlaegeWithKandidatenErgebnissen,
+  loadWahlvorschlaegeAndErgebnisse,
+} = useMwbStapelBCUtils(currentUserWahlbezirkID, wahlID);
+
 onActivated(async () => {
+  await loadWahlvorschlaegeAndErgebnisse();
   ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
   status.value = await loadStatusByWahlIdAndWahlbezirkId(
     wahlID,

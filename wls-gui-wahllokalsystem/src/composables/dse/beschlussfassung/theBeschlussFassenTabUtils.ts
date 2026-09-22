@@ -10,7 +10,7 @@ const {
   mapGruendeToBeschlussgrundOptions,
   setSystemBeschlussgruendeTrueWhenFoundInStimmzettel,
   setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel,
-  setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
+  setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
 } = useBeschlussgrundOptionTools();
 
 export function useTheBeschlussFassenTabUtils() {
@@ -64,13 +64,12 @@ export function useTheBeschlussFassenTabUtils() {
       beschlussgrundOptions.value
     );
 
-    const texts =
-      setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
+    const andererGrund =
+      setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
         stimmzettel?.wahlvorstandBeschlussvorschlag ?? [],
+        stimmzettel?.systemBeschlussvorschlag ?? [],
         beschlussgrundOptions.value
       );
-
-    const andererGrund = texts.join(", ");
     const beschlussgruende = beschlussgrundOptions.value;
 
     return {

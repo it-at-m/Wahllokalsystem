@@ -52,24 +52,43 @@ export function useBeschlussgrundOptionTools() {
     }
   }
 
-  function setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
+  function setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
     wahlvorstandBeschlussvorschlag: WahlvorstandBeschlussgrund[],
+    systemBeschlussvorschlag: SystemBeschlussgrund[],
     beschlussgrundOptions: BeschlussgrundOption[]
   ) {
-    return wahlvorstandBeschlussvorschlag
-      .filter(
-        (beschlussvorschlag) =>
-          !beschlussgrundOptions.find(
-            (beschlussgrund) => beschlussgrund.grund === beschlussvorschlag.text
-          )
-      )
-      .map((w) => w.text);
+    const result: string[] = [];
+
+    for (const beschlussvorschlag of wahlvorstandBeschlussvorschlag) {
+      const existsInOptions = !!beschlussgrundOptions.find(
+        (beschlussgrund) => beschlussgrund.grund === beschlussvorschlag.text
+      );
+      if (!existsInOptions) {
+        result.push(beschlussvorschlag.text);
+      }
+    }
+
+    for (const beschlussvorschlag of systemBeschlussvorschlag) {
+      const reasonAsGrund =
+        mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
+          beschlussvorschlag.reason
+        );
+      if (!reasonAsGrund) continue;
+      const existsInOptions = !!beschlussgrundOptions.find(
+        (beschlussgrundOption) => beschlussgrundOption.grund === reasonAsGrund
+      );
+      if (!existsInOptions) {
+        result.push(reasonAsGrund);
+      }
+    }
+
+    return result.join(", ");
   }
 
   return {
     mapGruendeToBeschlussgrundOptions,
     setSystemBeschlussgruendeTrueWhenFoundInStimmzettel,
     setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel,
-    setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
+    setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
   };
 }

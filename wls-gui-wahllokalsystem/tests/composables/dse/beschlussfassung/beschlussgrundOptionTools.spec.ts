@@ -147,13 +147,19 @@ describe("beschlussgrundOptionTools.ts", () => {
     });
   });
 
-  describe("setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList", () => {
+  describe("setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList", () => {
     it("should_returnOnlyNonMatchingTexts_when_notAllOptionsAreMatching", () => {
       const stimmzettel = preparePersistedStimmzettel()
         .wahlvorstandBeschlussvorschlag([
           { text: "custom-1" },
           { text: "Wählerwille ist nicht zweifelsfrei erkennbar" },
           { text: "custom-2" },
+        ])
+        .systemBeschlussvorschlag([
+          {
+            reason:
+              SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+          },
         ])
         .build();
 
@@ -163,12 +169,15 @@ describe("beschlussgrundOptionTools.ts", () => {
       ]);
 
       const result =
-        unitUnderTest.setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
+        unitUnderTest.setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
           stimmzettel.wahlvorstandBeschlussvorschlag,
+          stimmzettel.systemBeschlussvorschlag,
           options
         );
 
-      expect(result).toStrictEqual(["custom-1", "custom-2"]);
+      expect(result).toStrictEqual(
+        "custom-1, custom-2, keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze"
+      );
     });
 
     it("should_returnEmptyList_when_allTextsMatchOptions", () => {
@@ -176,19 +185,27 @@ describe("beschlussgrundOptionTools.ts", () => {
         .wahlvorstandBeschlussvorschlag([
           { text: "Wählerwille ist nicht zweifelsfrei erkennbar" },
         ])
+        .systemBeschlussvorschlag([
+          {
+            reason:
+              SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+          },
+        ])
         .build();
 
       const options = unitUnderTest.mapGruendeToBeschlussgrundOptions([
         "Wählerwille ist nicht zweifelsfrei erkennbar",
+        "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
       ]);
 
       const result =
-        unitUnderTest.setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
+        unitUnderTest.setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
           stimmzettel.wahlvorstandBeschlussvorschlag,
+          stimmzettel.systemBeschlussvorschlag,
           options
         );
 
-      expect(result).toStrictEqual([]);
+      expect(result).toStrictEqual("");
     });
   });
 });

@@ -11,8 +11,7 @@ const mockDefinitions = vi.hoisted(() => ({
   mapGruendeToBeschlussgrundOptions: vi.fn(),
   setSystemBeschlussgruendeTrueWhenFoundInStimmzettel: vi.fn(),
   setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel: vi.fn(),
-  setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList:
-    vi.fn(),
+  setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList: vi.fn(),
 }));
 
 vi.mock(
@@ -26,8 +25,8 @@ vi.mock(
           mockDefinitions.setSystemBeschlussgruendeTrueWhenFoundInStimmzettel,
         setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel:
           mockDefinitions.setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel,
-        setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList:
-          mockDefinitions.setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
+        setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList:
+          mockDefinitions.setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
       }),
     };
   }
@@ -101,7 +100,7 @@ describe("theBeschlussFassenTabUtils.ts", () => {
           (gruende: string[]) =>
             gruende.map((g) => ({ grund: g, selected: false }))
         );
-        mockDefinitions.setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList.mockReturnValue(
+        mockDefinitions.setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList.mockReturnValue(
           []
         );
 

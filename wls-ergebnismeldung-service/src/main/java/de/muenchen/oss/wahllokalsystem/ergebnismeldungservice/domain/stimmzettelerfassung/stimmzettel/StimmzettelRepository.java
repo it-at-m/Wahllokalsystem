@@ -1,11 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel;
 
 import java.util.List;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+@Primary
 public interface StimmzettelRepository extends CrudRepository<Stimmzettel, StimmzettelID> {
 
   List<Stimmzettel> findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(

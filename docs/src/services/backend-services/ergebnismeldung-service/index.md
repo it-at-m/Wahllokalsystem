@@ -124,3 +124,35 @@ notwendig, um die Erfassung für ein Erfassungsteam freizuschalten.
 
 Eine Ergebnismeldung kann eine Schnellmeldung oder eine Niederschrift sein, welche an das externe System übermittelt wird.
 Die Ergebnismeldung aggregiert die zuvor erfassten Daten wie zum Beispiel die Ergebnisse und Stimmabgabevermerke.
+
+Je nach Wahlart bestehen die gültigen und ungültigen Stimmen aus unterschiedlichen Stapeln. Die Stimmzettel
+werden nach bestimmten Regeln den Stapeln zugeordnet.
+
+#### MBW
+
+##### Stapel A
+
+Auf diesem Stapel befinden sich alle gültigen Stimmzettel, die genau ein Listenkreuz haben.
+
+##### Stapel B
+
+Auf diesem Stapel befinden sich alle gültigen Stimmzettel, die genau ein Listenkreuz aufweisen, aber zusätzlich noch weitere
+Kennzeichen (z. B. Streichungen, Einzelstimmen) bei dem Wahlvorschlag mit dem Listenkreuz haben.
+
+Stapel B fließt indirekt über den Stapel BC in die Ergebnismeldung ein.
+
+##### Stapel BC
+
+Zusätzlich zu Stapel B sind auf diesem Stapel alle gültigen Stimmzettel, bei denen die
+Stimmen auf mehr als einen Wahlvorschlag entfallen.
+
+##### Stapel D
+
+Auf diesem Stapel landen alle ungültigen Stimmzettel.
+
+##### Stapel E
+
+Bei der Erfassung nach Stapeln gibt es zusätzlich den Stapel E. Über die Stimmzettel wird ein Beschluss gefasst, und anschließend
+werden die Stimmzettel den entsprechenden Stapeln zugewiesen.
+Bei der [DSE](/dse/index) erfolgt die [Beschlussfassung](/dse/#neue-statuswerte) nach dem Erfassen der Stimmzettel.
+Ein Stapel E wird bei der DSE nicht explizit ausgewiesen.

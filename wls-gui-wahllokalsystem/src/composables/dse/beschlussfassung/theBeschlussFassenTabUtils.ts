@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useBeschlussgrundOptionTools } from "@/composables/dse/beschlussfassung/beschlussgrundOptionTools.ts";
+import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const {
@@ -12,6 +13,8 @@ const {
   setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel,
   setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
 } = useBeschlussgrundOptionTools();
+const { mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText } =
+  useSystemBeschlussgrundReasonEnumTools();
 
 export function useTheBeschlussFassenTabUtils() {
   const { isBWB } = storeToRefs(useUserStore());
@@ -78,6 +81,35 @@ export function useTheBeschlussFassenTabUtils() {
     };
   }
 
+  function isStimmzettelGueltigBasedOnVormerkungsgruenden(
+    stimmzettel: PersistedStimmzettel
+  ) {
+    const ungueltigOptions =
+      updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit(
+        false,
+        undefined
+      ).beschlussgruende;
+    const ungueltigSet = new Set(ungueltigOptions.map((o) => o.grund));
+
+    const hasUngueltigerSystemGrund = (
+      stimmzettel.systemBeschlussvorschlag ?? []
+    ).some((beschlussvorschlag) => {
+      const mappedReason =
+        mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
+          beschlussvorschlag.reason
+        );
+      return ungueltigSet.has(mappedReason);
+    });
+
+    const hasUngueltigerWahlvorstandGrund = (
+      stimmzettel.wahlvorstandBeschlussvorschlag ?? []
+    ).some((beschlussvorschlag) => {
+      return ungueltigSet.has(beschlussvorschlag.text);
+    });
+
+    return !(hasUngueltigerSystemGrund || hasUngueltigerWahlvorstandGrund);
+  }
+
   function _getBeschlussGruendeBasedOnGueltigkeit(isGueltig: boolean) {
     return isGueltig
       ? isBWB.value
@@ -93,5 +125,6 @@ export function useTheBeschlussFassenTabUtils() {
 
   return {
     updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit,
+    isStimmzettelGueltigBasedOnVormerkungsgruenden,
   };
 }

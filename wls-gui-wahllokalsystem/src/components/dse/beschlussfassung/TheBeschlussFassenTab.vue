@@ -96,15 +96,14 @@ import { computed, ref, watch } from "vue";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
-import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
 
 const { required } = useRules();
 
-const { mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText } =
-  useSystemBeschlussgrundReasonEnumTools();
-const { updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit } =
-  useTheBeschlussFassenTabUtils();
+const {
+  updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit,
+  isStimmzettelGueltigBasedOnVormerkungsgruenden,
+} = useTheBeschlussFassenTabUtils();
 
 const props = defineProps<{
   stimmzettel: PersistedStimmzettel | undefined;
@@ -124,30 +123,11 @@ const stimmenDagegen = ref<number | null>(null);
 watch(
   () => props.stimmzettel,
   (stimmzettel) => {
-    if (stimmzettel) {
-      const systemBeschlussvorschlag =
-        props.stimmzettel?.systemBeschlussvorschlag ?? [];
-      const wahlvorstandBeschlussvorschlag =
-        props.stimmzettel?.wahlvorstandBeschlussvorschlag ?? [];
+    if (!stimmzettel) return;
 
-      isGueltig.value =
-        !systemBeschlussvorschlag.some((beschlussvorschlag) => {
-          const mappedReason =
-            mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
-              beschlussvorschlag.reason
-            );
-          return beschlussgruende.value.some(
-            (grund) => grund.grund === mappedReason
-          );
-        }) &&
-        !wahlvorstandBeschlussvorschlag.some((beschlussvorschlag) => {
-          return beschlussgruende.value.some(
-            (grund) => grund.grund === beschlussvorschlag.text
-          );
-        });
-
-      rebuildBeschlussgruende();
-    }
+    isGueltig.value =
+      isStimmzettelGueltigBasedOnVormerkungsgruenden(stimmzettel);
+    rebuildBeschlussgruende();
   },
   { immediate: true }
 );

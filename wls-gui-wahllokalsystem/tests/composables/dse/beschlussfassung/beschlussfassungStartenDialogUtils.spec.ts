@@ -1,3 +1,4 @@
+import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -11,6 +12,17 @@ const mockDefinitions = vi.hoisted(() => ({
   getAnzahlStimmzettel: vi.fn(),
   saveDseWorkflowStatus: vi.fn(),
   routerPush: vi.fn(),
+  getNextRoute: vi.fn(),
+  routeWithName: vi.fn(),
+  routeWithNameAndParams: vi.fn(),
+}));
+
+vi.mock(import("@/composables/navigation/navigationService.ts"), () => ({
+  useNavigationService: () => ({
+    getNextRoute: mockDefinitions.getNextRoute,
+    routeWithName: mockDefinitions.routeWithName,
+    routeWithNameAndParams: mockDefinitions.routeWithNameAndParams,
+  }),
 }));
 
 vi.mock(
@@ -50,6 +62,9 @@ describe("beschlussfassungStartenDialogUtils.ts", () => {
   const wahlbezirkID = "wahlbezirkID";
 
   beforeEach(() => {
+    createTestingPinia({
+      createSpy: vi.fn,
+    });
     unitUnderTest = useBeschlussfassungStartenDialogUtils();
   });
 

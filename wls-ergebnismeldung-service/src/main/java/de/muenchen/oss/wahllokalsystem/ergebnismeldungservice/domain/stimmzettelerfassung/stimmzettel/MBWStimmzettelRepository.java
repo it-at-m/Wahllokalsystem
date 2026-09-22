@@ -27,8 +27,8 @@ public interface MBWStimmzettelRepository extends StimmzettelRepository {
                     WHERE kandidat.wahlvorschlag = selectedWahlvorschlag
                       AND (
                         kandidat.discarded = true
-                        OR kandidat.votesByVoter IS NOT NULL AND kandidat.votesByVoter <> 0
-                        OR kandidat.invalidVotes IS NOT NULL AND kandidat.invalidVotes <> 0
+                        OR kandidat.votesByVoter > 0
+                        OR kandidat.invalidVotes > 0
                       )
                   )
                 GROUP BY selectedWahlvorschlag.wahlvorschlagID
@@ -105,7 +105,6 @@ public interface MBWStimmzettelRepository extends StimmzettelRepository {
                 GROUP BY wahlvorschlag.wahlvorschlagID,
                          kandidat.kandidatID.kandidatID
                 """)
-  // For MBW Stapel BC
   List<KandidatStimmenAnzahl> getStapelBC(
       @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
 }

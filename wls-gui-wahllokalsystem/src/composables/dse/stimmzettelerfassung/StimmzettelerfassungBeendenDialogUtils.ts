@@ -2,13 +2,14 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
-import { ROUTE_FINISHED } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
-import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useStimmzettelerfassungBeendenDialogUtils(
@@ -17,9 +18,10 @@ export function useStimmzettelerfassungBeendenDialogUtils(
   closeDialogCallback: () => void
 ) {
   const { addNotification } = useUserNotificationService();
+  const navigationService = useNavigationService();
+  const { setStepDone } = useWorkflowStore();
   const { synchronizeOfflineData } = useDataSyncStore();
-  const { hasRoleErfassungsteam, currentUserTeamName } =
-    storeToRefs(useUserStore());
+  const { currentUserTeamName } = storeToRefs(useUserStore());
   const { isSaving, postErfassungTeamStatus } =
     useStimmzettelerfassungTeamStatusService();
 
@@ -58,14 +60,13 @@ export function useStimmzettelerfassungBeendenDialogUtils(
   }
 
   async function _navigateToNextView() {
-    if (hasRoleErfassungsteam.value) {
-      await router.push({ name: ROUTE_FINISHED });
-    } else {
-      await router.push({
-        name: DseStepsEnum.DSE_MONITORING,
-        params: { wahlId: wahlId, wahlbezirkId: wahlbezirkId },
-      });
-    }
+    setStepDone(
+      wahlId,
+      wahlbezirkId,
+      MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
+    );
+
+    await router.push(navigationService.getNextRoute());
   }
 
   return {

@@ -1,8 +1,8 @@
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 
 export function useBearbeitenDialogStimmzettelUngueltigeStimmeUtils() {
   function addInvalidVotesToKandidat(
-    kandidat: Kandidat,
+    kandidat: DseKandidat,
     numberOfVotes: number
   ) {
     const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;
@@ -10,7 +10,7 @@ export function useBearbeitenDialogStimmzettelUngueltigeStimmeUtils() {
   }
 
   function removeInvalidVotesFromKandidat(
-    kandidat: Kandidat,
+    kandidat: DseKandidat,
     numberOfVotes: number
   ) {
     const currentUngueltigeStimmen = kandidat.ungueltigeStimmen ?? 0;

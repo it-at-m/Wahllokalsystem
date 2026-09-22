@@ -1,12 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.KandidatStimmenAnzahl;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.MBWStimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.WahlvorschlagStimmzettelAnzahl;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -30,6 +28,8 @@ class StimmzettelServiceTest {
   @Mock StimmzettelValidator stimmzettelValidator;
 
   @Mock StimmzettelModelMapper stimmzettelModelMapper;
+
+  @Mock MBWStimmzettelRepository mbwStimmzettelRepository;
 
   @Mock StimmzettelRepository stimmzettelRepository;
 
@@ -192,164 +192,6 @@ class StimmzettelServiceTest {
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.getAnzahlStimmzettel(bezirkUndWahlID))
           .isEqualTo(mockedWlsException);
-    }
-  }
-
-  @Nested
-  class GetCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected {
-
-    @Test
-    void should_returnMappedCollection_when_repoReturnedData() {
-      val bezirkUndWahlID = Instancio.create(BezirkUndWahlID.class);
-
-      Mockito.when(
-              stimmzettelRepository
-                  .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneSelectedWahlvorschlagAndNoOtherKennzeichen(
-                      bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
-          .thenReturn(Collections.emptyList());
-
-      val result =
-          unitUnderTest.getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-              bezirkUndWahlID);
-
-      Assertions.assertThat(result).isEmpty();
-      Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
-      Mockito.verifyNoInteractions(stimmzettelModelMapper);
-    }
-
-    @Test
-    void should_returnEmptyCollection_when_repoReturnedNoData() {
-      val bezirkUndWahlID = Instancio.create(BezirkUndWahlID.class);
-
-      val mockedRepoResponse = Instancio.createList(WahlvorschlagStimmzettelAnzahl.class);
-      Mockito.when(
-              stimmzettelRepository
-                  .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneSelectedWahlvorschlagAndNoOtherKennzeichen(
-                      bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
-          .thenReturn(mockedRepoResponse);
-
-      Mockito.when(stimmzettelModelMapper.toModel(any(WahlvorschlagStimmzettelAnzahl.class)))
-          .thenReturn(Instancio.create(WahlvorschlagStimmzettelAnzahlModel.class));
-
-      val result =
-          unitUnderTest.getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-              bezirkUndWahlID);
-
-      Assertions.assertThat(result).hasSize(mockedRepoResponse.size());
-      Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
-      Mockito.verify(stimmzettelModelMapper, times(mockedRepoResponse.size()))
-          .toModel(any(WahlvorschlagStimmzettelAnzahl.class));
-    }
-  }
-
-  @Nested
-  class CountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges {
-
-    @Test
-    void should_returnMappedCollection_when_repoReturnedData() {
-      val bezirkUndWahlID = Instancio.create(BezirkUndWahlID.class);
-
-      Mockito.when(
-              stimmzettelRepository
-                  .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneWahlvorschlagAndAtLeastOneOtherKennzeichen(
-                      bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
-          .thenReturn(Collections.emptyList());
-
-      val result =
-          unitUnderTest
-              .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-                  bezirkUndWahlID);
-
-      Assertions.assertThat(result).isEmpty();
-      Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
-      Mockito.verifyNoInteractions(stimmzettelModelMapper);
-    }
-
-    @Test
-    void should_returnEmptyCollection_when_repoReturnedNoData() {
-      val bezirkUndWahlID = Instancio.create(BezirkUndWahlID.class);
-
-      val mockedRepoResponse = Instancio.createList(WahlvorschlagStimmzettelAnzahl.class);
-      Mockito.when(
-              stimmzettelRepository
-                  .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneWahlvorschlagAndAtLeastOneOtherKennzeichen(
-                      bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
-          .thenReturn(mockedRepoResponse);
-
-      Mockito.when(stimmzettelModelMapper.toModel(any(WahlvorschlagStimmzettelAnzahl.class)))
-          .thenReturn(Instancio.create(WahlvorschlagStimmzettelAnzahlModel.class));
-
-      val result =
-          unitUnderTest
-              .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-                  bezirkUndWahlID);
-
-      Assertions.assertThat(result).hasSize(mockedRepoResponse.size());
-      Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
-      Mockito.verify(stimmzettelModelMapper, times(mockedRepoResponse.size()))
-          .toModel(any(WahlvorschlagStimmzettelAnzahl.class));
-    }
-  }
-
-  @Nested
-  class GetKandidatVotes {
-
-    @Test
-    void should_returnMappedCollection_when_repoReturnedData() {
-      val bezirkUndWahlID = Instancio.create(BezirkUndWahlID.class);
-
-      Mockito.when(
-              stimmzettelRepository
-                  .getSumValidKandidatenVotesPerWahlvorschlagWhenNotOnlyOneListenkreuzReststimmeAreGiven(
-                      bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
-          .thenReturn(Collections.emptyList());
-
-      val result = unitUnderTest.getKandidatVotes(bezirkUndWahlID);
-
-      Assertions.assertThat(result).isEmpty();
-      Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
-      Mockito.verifyNoInteractions(stimmzettelModelMapper);
-    }
-
-    @Test
-    void should_returnEmptyCollection_when_repoReturnedNoData() {
-      val bezirkUndWahlID = Instancio.create(BezirkUndWahlID.class);
-
-      val mockedRepoResponse = Instancio.createList(KandidatStimmenAnzahl.class);
-      Mockito.when(
-              stimmzettelRepository
-                  .getSumValidKandidatenVotesPerWahlvorschlagWhenNotOnlyOneListenkreuzReststimmeAreGiven(
-                      bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
-          .thenReturn(mockedRepoResponse);
-
-      Mockito.when(stimmzettelModelMapper.toModel(any(KandidatStimmenAnzahl.class)))
-          .thenReturn(Instancio.create(KandidatStimmenAnzahlModel.class));
-
-      val result = unitUnderTest.getKandidatVotes(bezirkUndWahlID);
-
-      Assertions.assertThat(result).hasSize(mockedRepoResponse.size());
-      Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
-      Mockito.verify(stimmzettelModelMapper, times(mockedRepoResponse.size()))
-          .toModel(any(KandidatStimmenAnzahl.class));
-    }
-  }
-
-  @Nested
-  class GetCountUngueltige {
-
-    @Test
-    void should_returnValueOfRepo_when_called() {
-      val bezirkUndWahlID = Instancio.create(BezirkUndWahlID.class);
-
-      val mockedRepoResponse = Instancio.gen().longs().get();
-      Mockito.when(
-              stimmzettelRepository.countInvalidStimmzettel(
-                  bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
-          .thenReturn(mockedRepoResponse);
-
-      val result = unitUnderTest.getCountUngueltige(bezirkUndWahlID);
-      Assertions.assertThat(result).isEqualTo(mockedRepoResponse);
-      Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
     }
   }
 }

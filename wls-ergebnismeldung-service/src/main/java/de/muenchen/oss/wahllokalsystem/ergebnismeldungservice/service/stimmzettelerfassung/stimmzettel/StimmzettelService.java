@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -69,66 +68,5 @@ public class StimmzettelService {
 
     return stimmzettelRepository.countByIdWahlbezirkIDAndIdWahlID(
         bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID());
-  }
-
-  @PreAuthorize(
-      "hasAuthority('WLS_WAHLVORSTAND')"
-          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
-  // MBW Stapel A
-  public Collection<WahlvorschlagStimmzettelAnzahlModel>
-      getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-          @P("param") final BezirkUndWahlID bezirkUndWahlID) {
-    stimmzettelValidator.validOrThrow(bezirkUndWahlID);
-
-    return stimmzettelRepository
-        .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneSelectedWahlvorschlagAndNoOtherKennzeichen(
-            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
-        .stream()
-        .map(stimmzettelModelMapper::toModel)
-        .toList();
-  }
-
-  @PreAuthorize(
-      "hasAuthority('WLS_WAHLVORSTAND')"
-          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
-  // MBW Stapel B
-  public Collection<WahlvorschlagStimmzettelAnzahlModel>
-      countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-          @P("param") final BezirkUndWahlID bezirkUndWahlID) {
-    stimmzettelValidator.validOrThrow(bezirkUndWahlID);
-
-    return stimmzettelRepository
-        .getWahlvorschlaegeAndCountWhereStimmzettelHasOnlyOneWahlvorschlagAndAtLeastOneOtherKennzeichen(
-            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
-        .stream()
-        .map(stimmzettelModelMapper::toModel)
-        .toList();
-  }
-
-  @PreAuthorize(
-      "hasAuthority('WLS_WAHLVORSTAND')"
-          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
-  // MBW Stapel BC
-  public List<KandidatStimmenAnzahlModel> getKandidatVotes(
-      @P("param") final BezirkUndWahlID bezirkUndWahlID) {
-    stimmzettelValidator.validOrThrow(bezirkUndWahlID);
-
-    return stimmzettelRepository
-        .getSumValidKandidatenVotesPerWahlvorschlagWhenNotOnlyOneListenkreuzReststimmeAreGiven(
-            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
-        .stream()
-        .map(stimmzettelModelMapper::toModel)
-        .toList();
-  }
-
-  @PreAuthorize(
-      "hasAuthority('WLS_WAHLVORSTAND')"
-          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
-  // MBW Stapel D Ungueltig
-  public long getCountUngueltige(@P("param") final BezirkUndWahlID bezirkUndWahlID) {
-    stimmzettelValidator.validOrThrow(bezirkUndWahlID);
-
-    return stimmzettelRepository.countInvalidStimmzettel(
-        bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID());
   }
 }

@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-const { createStimmzettelWahlvorschlag } = useStimmzettelTestDataFactory();
+const { createDseWahlvorschlag } = useDseStimmzettelTestDataFactory();
 
 const meta = {
   component: BaseStimmzettelZusammenfassungCard,
@@ -15,10 +15,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Valid: Story = {
   args: {
-    listenstimmen: [
-      createStimmzettelWahlvorschlag(),
-      createStimmzettelWahlvorschlag(),
-    ],
+    listenstimmen: [createDseWahlvorschlag(), createDseWahlvorschlag()],
     ungueltigestimmen: 0,
     direktstimmen: 1,
     reststimmen: 0,
@@ -29,7 +26,7 @@ export const Valid: Story = {
 
 export const Invalid: Story = {
   args: {
-    listenstimmen: [createStimmzettelWahlvorschlag()],
+    listenstimmen: [createDseWahlvorschlag()],
     ungueltigestimmen: 0,
     direktstimmen: 1,
     reststimmen: 0,

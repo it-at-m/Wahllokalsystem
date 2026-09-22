@@ -39,7 +39,7 @@ public class ErgebnismeldungMappingService {
   private final AuthenticationService authenticationService;
   private final BriefwahlClient briefwahlClient;
 
-  private final ErgebnismeldungErgebnisseService ergebnismeldungErgebnisseService;
+  private final ErgebnismeldungErgebnisseService ergebnismeldungsErgebnisseMapper;
 
   private final Mapping mapping;
 
@@ -72,7 +72,7 @@ public class ErgebnismeldungMappingService {
         wahlart);
 
     val ergebnismeldungErgebnisse =
-        ergebnismeldungErgebnisseService.getErgebnisse(wahlID, wahlbezirkID, wahlart, meldungsart);
+        ergebnismeldungsErgebnisseMapper.getErgebnisse(wahlID, wahlbezirkID, wahlart, meldungsart);
     ergebnismeldung.setErgebnisse(
         mapping.toDtoErgebnisseSet(ergebnismeldungErgebnisse.gueltigeErgebnisse()));
     val eaiMeldungsart = mapping.toDTO(meldungsart);

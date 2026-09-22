@@ -6,6 +6,7 @@ import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
@@ -15,6 +16,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
 
   const { electionWorkflowsStates } = storeToRefs(useWorkflowStore());
   const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
+  const { isDseAktiv } = storeToRefs(useInfomanagementStore());
 
   const mbwWorkflow = computed(() =>
     electionWorkflowsStates.value.find(
@@ -29,10 +31,17 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
 
     const result: NavigationDefinition[] = [];
 
-    if (hasRoleSchriftfuehrung.value) {
+    if (isDseAktiv.value) {
+      if (hasRoleSchriftfuehrung.value) {
+        result.push(..._createNavigationForDseSchriftfuehrung());
+      } else {
+        result.push(..._createNavigationForDseErfassungsteam());
+      }
+    }
+    //Stapelerfassung only for ROLE Schriftfuehrung
+    else if (hasRoleSchriftfuehrung.value) {
       result.push(..._createNavigationForSchriftfuehrung());
     }
-
     return result;
   });
 
@@ -138,6 +147,95 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
         disabled: mbwWorkflow.value
           ? !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_STAPEL_BC]
           : false,
+      },
+    ];
+  }
+
+  function _createNavigationForDseSchriftfuehrung() {
+    return [
+      {
+        title: `Zählen der ${getStimmzettelTermForWahlID(wahlID)}`,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+          wahlID,
+          wahlbezirkID
+        ),
+        disabled: false,
+      },
+      {
+        title: `Stimmzettelerfassung`,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+          wahlID,
+          wahlbezirkID
+        ),
+        disabled: mbwWorkflow.value
+          ? !mbwWorkflow.value.stepsDone[
+              MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+            ]
+          : false,
+      },
+      {
+        title: `Monitoring`,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+          wahlID,
+          wahlbezirkID
+        ),
+        disabled: mbwWorkflow.value
+          ? !mbwWorkflow.value.stepsDone[
+              MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
+            ]
+          : false,
+      },
+      {
+        title: `Beschlussfassung`,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
+          wahlID,
+          wahlbezirkID
+        ),
+        disabled: mbwWorkflow.value
+          ? !mbwWorkflow.value.stepsDone[
+              MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+            ]
+          : false,
+      },
+      {
+        title: `Schnellmeldung`,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_SCHNELLMELDUNG,
+          wahlID,
+          wahlbezirkID
+        ),
+        disabled: mbwWorkflow.value
+          ? !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG]
+          : false,
+      },
+      {
+        title: `Niederschrift`,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_NIEDERSCHRIFT,
+          wahlID,
+          wahlbezirkID
+        ),
+        disabled: mbwWorkflow.value
+          ? !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_SCHNELLMELDUNG]
+          : false,
+      },
+    ];
+  }
+
+  function _createNavigationForDseErfassungsteam() {
+    return [
+      {
+        title: `Stimmzettelerfassung`,
+        targetRoute: _createMbwRoute(
+          MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+          wahlID,
+          wahlbezirkID
+        ),
+        disabled: false,
       },
     ];
   }

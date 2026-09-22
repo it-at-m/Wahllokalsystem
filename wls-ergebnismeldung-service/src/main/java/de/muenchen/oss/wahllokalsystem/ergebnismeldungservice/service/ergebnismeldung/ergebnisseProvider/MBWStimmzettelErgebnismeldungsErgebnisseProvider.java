@@ -25,10 +25,7 @@ public class MBWStimmzettelErgebnismeldungsErgebnisseProvider {
     val gueltigeErgebnisse = new LinkedList<ErgebnisseModel>();
 
     val stapelA =
-        mbwStimmzettelService
-            .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-                new BezirkUndWahlID(wahlID, wahlbezirkID))
-            .stream()
+        mbwStimmzettelService.getStapelA(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
             .map(
                 entry ->
                     new ErgebnisModel(entry.wahlvorschlagID(), null, null, entry.anzahl(), null))
@@ -37,10 +34,7 @@ public class MBWStimmzettelErgebnismeldungsErgebnisseProvider {
         new ErgebnisseModel(wahlbezirkID, wahlID, StapelartModel.MBW_A, stapelA));
 
     val stapelB =
-        mbwStimmzettelService
-            .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-                new BezirkUndWahlID(wahlID, wahlbezirkID))
-            .stream()
+        mbwStimmzettelService.getStapelB(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
             .map(
                 entry ->
                     new ErgebnisModel(entry.wahlvorschlagID(), null, null, entry.anzahl(), null))
@@ -50,7 +44,7 @@ public class MBWStimmzettelErgebnismeldungsErgebnisseProvider {
 
     if (!MeldungsartModel.V3.equals(meldungsartModel)) {
       val stapelBC =
-          mbwStimmzettelService.getKandidatVotes(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
+          mbwStimmzettelService.getStapelBC(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
               .map(
                   entry ->
                       new ErgebnisModel(
@@ -66,7 +60,7 @@ public class MBWStimmzettelErgebnismeldungsErgebnisseProvider {
                 null,
                 null,
                 null,
-                mbwStimmzettelService.getCountUngueltige(new BezirkUndWahlID(wahlID, wahlbezirkID)),
+                mbwStimmzettelService.getStapelD(new BezirkUndWahlID(wahlID, wahlbezirkID)),
                 null));
     val stapelDErgebnisseModel =
         new ErgebnisseModel(

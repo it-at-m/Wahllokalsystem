@@ -20,10 +20,8 @@ public class MBWStimmzettelService {
   @PreAuthorize(
       "hasAuthority('WLS_WAHLVORSTAND')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
-  // MBW Stapel A
-  public Collection<WahlvorschlagStimmzettelAnzahlModel>
-      getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-          @P("param") final BezirkUndWahlID bezirkUndWahlID) {
+  public Collection<WahlvorschlagStimmzettelAnzahlModel> getStapelA(
+      @P("param") final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
     return mbwStimmzettelRepository
@@ -36,10 +34,8 @@ public class MBWStimmzettelService {
   @PreAuthorize(
       "hasAuthority('WLS_WAHLVORSTAND')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
-  // MBW Stapel B
-  public Collection<WahlvorschlagStimmzettelAnzahlModel>
-      countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-          @P("param") final BezirkUndWahlID bezirkUndWahlID) {
+  public Collection<WahlvorschlagStimmzettelAnzahlModel> getStapelB(
+      @P("param") final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
     return mbwStimmzettelRepository
@@ -52,7 +48,7 @@ public class MBWStimmzettelService {
   @PreAuthorize(
       "hasAuthority('WLS_WAHLVORSTAND')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
-  public List<KandidatStimmenAnzahlModel> getKandidatVotes(
+  public List<KandidatStimmenAnzahlModel> getStapelBC(
       @P("param") final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
@@ -66,7 +62,7 @@ public class MBWStimmzettelService {
   @PreAuthorize(
       "hasAuthority('WLS_WAHLVORSTAND')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.getWahlbezirkID(), authentication)")
-  public long getCountUngueltige(@P("param") final BezirkUndWahlID bezirkUndWahlID) {
+  public long getStapelD(@P("param") final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
     return mbwStimmzettelRepository.getStapelD(

@@ -46,11 +46,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith(Authorities.AUTHORITY_WAHLVORSTAND);
       Assertions.assertThatNoException()
-          .isThrownBy(
-              () ->
-                  unitUnderTest
-                      .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-                          bezirkUndWahlID));
+          .isThrownBy(() -> unitUnderTest.getStapelA(bezirkUndWahlID));
     }
 
     @Test
@@ -64,11 +60,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith(Authorities.AUTHORITY_WAHLVORSTAND);
       Assertions.assertThatException()
-          .isThrownBy(
-              () ->
-                  unitUnderTest
-                      .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-                          bezirkUndWahlID))
+          .isThrownBy(() -> unitUnderTest.getStapelA(bezirkUndWahlID))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -83,11 +75,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith();
       Assertions.assertThatException()
-          .isThrownBy(
-              () ->
-                  unitUnderTest
-                      .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-                          bezirkUndWahlID))
+          .isThrownBy(() -> unitUnderTest.getStapelA(bezirkUndWahlID))
           .isInstanceOf(AccessDeniedException.class);
     }
   }
@@ -106,11 +94,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith(Authorities.AUTHORITY_WAHLVORSTAND);
       Assertions.assertThatNoException()
-          .isThrownBy(
-              () ->
-                  unitUnderTest
-                      .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-                          bezirkUndWahlID));
+          .isThrownBy(() -> unitUnderTest.getStapelB(bezirkUndWahlID));
     }
 
     @Test
@@ -124,11 +108,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith(Authorities.AUTHORITY_WAHLVORSTAND);
       Assertions.assertThatException()
-          .isThrownBy(
-              () ->
-                  unitUnderTest
-                      .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-                          bezirkUndWahlID))
+          .isThrownBy(() -> unitUnderTest.getStapelB(bezirkUndWahlID))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -143,11 +123,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith();
       Assertions.assertThatException()
-          .isThrownBy(
-              () ->
-                  unitUnderTest
-                      .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-                          bezirkUndWahlID))
+          .isThrownBy(() -> unitUnderTest.getStapelB(bezirkUndWahlID))
           .isInstanceOf(AccessDeniedException.class);
     }
   }
@@ -166,7 +142,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith(Authorities.AUTHORITY_WAHLVORSTAND);
       Assertions.assertThatNoException()
-          .isThrownBy(() -> unitUnderTest.getKandidatVotes(bezirkUndWahlID));
+          .isThrownBy(() -> unitUnderTest.getStapelBC(bezirkUndWahlID));
     }
 
     @Test
@@ -180,7 +156,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith(Authorities.AUTHORITY_WAHLVORSTAND);
       Assertions.assertThatException()
-          .isThrownBy(() -> unitUnderTest.getKandidatVotes(bezirkUndWahlID))
+          .isThrownBy(() -> unitUnderTest.getStapelBC(bezirkUndWahlID))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -195,7 +171,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith();
       Assertions.assertThatException()
-          .isThrownBy(() -> unitUnderTest.getKandidatVotes(bezirkUndWahlID))
+          .isThrownBy(() -> unitUnderTest.getStapelBC(bezirkUndWahlID))
           .isInstanceOf(AccessDeniedException.class);
     }
   }
@@ -214,7 +190,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith(Authorities.AUTHORITY_WAHLVORSTAND);
       Assertions.assertThatNoException()
-          .isThrownBy(() -> unitUnderTest.getCountUngueltige(bezirkUndWahlID));
+          .isThrownBy(() -> unitUnderTest.getStapelD(bezirkUndWahlID));
     }
 
     @Test
@@ -228,7 +204,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith(Authorities.AUTHORITY_WAHLVORSTAND);
       Assertions.assertThatException()
-          .isThrownBy(() -> unitUnderTest.getCountUngueltige(bezirkUndWahlID))
+          .isThrownBy(() -> unitUnderTest.getStapelD(bezirkUndWahlID))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -243,7 +219,7 @@ class MBWStimmzettelServiceSecurityTest {
 
       SecurityUtils.runWith();
       Assertions.assertThatException()
-          .isThrownBy(() -> unitUnderTest.getCountUngueltige(bezirkUndWahlID))
+          .isThrownBy(() -> unitUnderTest.getStapelD(bezirkUndWahlID))
           .isInstanceOf(AccessDeniedException.class);
     }
   }

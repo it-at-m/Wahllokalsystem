@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
@@ -32,7 +31,7 @@ class MBWStimmzettelServiceTest {
   @InjectMocks MBWStimmzettelService unitUnderTest;
 
   @Nested
-  class GetCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected {
+  class GetStapelA {
 
     @Test
     void should_returnMappedCollection_when_repoReturnedData() {
@@ -43,9 +42,7 @@ class MBWStimmzettelServiceTest {
                   bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
           .thenReturn(Collections.emptyList());
 
-      val result =
-          unitUnderTest.getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-              bezirkUndWahlID);
+      val result = unitUnderTest.getStapelA(bezirkUndWahlID);
 
       Assertions.assertThat(result).isEmpty();
       Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
@@ -65,9 +62,7 @@ class MBWStimmzettelServiceTest {
       Mockito.when(stimmzettelModelMapper.toModel(any(WahlvorschlagStimmzettelAnzahl.class)))
           .thenReturn(Instancio.create(WahlvorschlagStimmzettelAnzahlModel.class));
 
-      val result =
-          unitUnderTest.getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-              bezirkUndWahlID);
+      val result = unitUnderTest.getStapelA(bezirkUndWahlID);
 
       Assertions.assertThat(result).hasSize(mockedRepoResponse.size());
       Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
@@ -77,7 +72,7 @@ class MBWStimmzettelServiceTest {
   }
 
   @Nested
-  class CountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges {
+  class GetStapelB {
 
     @Test
     void should_returnMappedCollection_when_repoReturnedData() {
@@ -88,10 +83,7 @@ class MBWStimmzettelServiceTest {
                   bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
           .thenReturn(Collections.emptyList());
 
-      val result =
-          unitUnderTest
-              .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-                  bezirkUndWahlID);
+      val result = unitUnderTest.getStapelB(bezirkUndWahlID);
 
       Assertions.assertThat(result).isEmpty();
       Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
@@ -111,10 +103,7 @@ class MBWStimmzettelServiceTest {
       Mockito.when(stimmzettelModelMapper.toModel(any(WahlvorschlagStimmzettelAnzahl.class)))
           .thenReturn(Instancio.create(WahlvorschlagStimmzettelAnzahlModel.class));
 
-      val result =
-          unitUnderTest
-              .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-                  bezirkUndWahlID);
+      val result = unitUnderTest.getStapelB(bezirkUndWahlID);
 
       Assertions.assertThat(result).hasSize(mockedRepoResponse.size());
       Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
@@ -124,7 +113,7 @@ class MBWStimmzettelServiceTest {
   }
 
   @Nested
-  class GetKandidatVotes {
+  class GetStapelBC {
 
     @Test
     void should_returnMappedCollection_when_repoReturnedData() {
@@ -135,7 +124,7 @@ class MBWStimmzettelServiceTest {
                   bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
           .thenReturn(Collections.emptyList());
 
-      val result = unitUnderTest.getKandidatVotes(bezirkUndWahlID);
+      val result = unitUnderTest.getStapelBC(bezirkUndWahlID);
 
       Assertions.assertThat(result).isEmpty();
       Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
@@ -155,7 +144,7 @@ class MBWStimmzettelServiceTest {
       Mockito.when(stimmzettelModelMapper.toModel(any(KandidatStimmenAnzahl.class)))
           .thenReturn(Instancio.create(KandidatStimmenAnzahlModel.class));
 
-      val result = unitUnderTest.getKandidatVotes(bezirkUndWahlID);
+      val result = unitUnderTest.getStapelBC(bezirkUndWahlID);
 
       Assertions.assertThat(result).hasSize(mockedRepoResponse.size());
       Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
@@ -165,7 +154,7 @@ class MBWStimmzettelServiceTest {
   }
 
   @Nested
-  class GetCountUngueltige {
+  class GetStapelD {
 
     @Test
     void should_returnValueOfRepo_when_called() {
@@ -177,7 +166,7 @@ class MBWStimmzettelServiceTest {
                   bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
           .thenReturn(mockedRepoResponse);
 
-      val result = unitUnderTest.getCountUngueltige(bezirkUndWahlID);
+      val result = unitUnderTest.getStapelD(bezirkUndWahlID);
       Assertions.assertThat(result).isEqualTo(mockedRepoResponse);
       Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
     }

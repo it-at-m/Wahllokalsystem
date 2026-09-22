@@ -36,18 +36,10 @@ class MBWStimmzettelErgebnismeldungsErgebnisseProviderTest {
     @Test
     void should_returnResult_when_serviceReturnsNoData() {
       val bezirkUndWahlID = new BezirkUndWahlID(WAHL_ID, WAHLBEZIRK_ID);
-      Mockito.when(
-              mbwStimmzettelService
-                  .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-                      bezirkUndWahlID))
-          .thenReturn(List.of());
-      Mockito.when(
-              mbwStimmzettelService
-                  .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-                      bezirkUndWahlID))
-          .thenReturn(List.of());
-      Mockito.when(mbwStimmzettelService.getKandidatVotes(bezirkUndWahlID)).thenReturn(List.of());
-      Mockito.when(mbwStimmzettelService.getCountUngueltige(bezirkUndWahlID)).thenReturn(0L);
+      Mockito.when(mbwStimmzettelService.getStapelA(bezirkUndWahlID)).thenReturn(List.of());
+      Mockito.when(mbwStimmzettelService.getStapelB(bezirkUndWahlID)).thenReturn(List.of());
+      Mockito.when(mbwStimmzettelService.getStapelBC(bezirkUndWahlID)).thenReturn(List.of());
+      Mockito.when(mbwStimmzettelService.getStapelD(bezirkUndWahlID)).thenReturn(0L);
 
       val result = unitUnderTest.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID, MeldungsartModel.V1);
 
@@ -79,18 +71,10 @@ class MBWStimmzettelErgebnismeldungsErgebnisseProviderTest {
               new KandidatStimmenAnzahlModel("wahlvorschlagIDA", "kandidatID1", 11L),
               new KandidatStimmenAnzahlModel("wahlvorschlagIDB", "kandidatID2", 13L));
 
-      Mockito.when(
-              mbwStimmzettelService
-                  .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-                      bezirkUndWahlID))
-          .thenReturn(stapelA);
-      Mockito.when(
-              mbwStimmzettelService
-                  .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-                      bezirkUndWahlID))
-          .thenReturn(stapelB);
-      Mockito.when(mbwStimmzettelService.getKandidatVotes(bezirkUndWahlID)).thenReturn(stapelBC);
-      Mockito.when(mbwStimmzettelService.getCountUngueltige(bezirkUndWahlID)).thenReturn(17L);
+      Mockito.when(mbwStimmzettelService.getStapelA(bezirkUndWahlID)).thenReturn(stapelA);
+      Mockito.when(mbwStimmzettelService.getStapelB(bezirkUndWahlID)).thenReturn(stapelB);
+      Mockito.when(mbwStimmzettelService.getStapelBC(bezirkUndWahlID)).thenReturn(stapelBC);
+      Mockito.when(mbwStimmzettelService.getStapelD(bezirkUndWahlID)).thenReturn(17L);
 
       val result = unitUnderTest.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID, MeldungsartModel.V1);
 
@@ -134,17 +118,9 @@ class MBWStimmzettelErgebnismeldungsErgebnisseProviderTest {
               new WahlvorschlagStimmzettelAnzahlModel("wahlvorschlagIDB", 5L));
       val stapelB = List.of(new WahlvorschlagStimmzettelAnzahlModel("wahlvorschlagIDC", 7L));
 
-      Mockito.when(
-              mbwStimmzettelService
-                  .getCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected(
-                      bezirkUndWahlID))
-          .thenReturn(stapelA);
-      Mockito.when(
-              mbwStimmzettelService
-                  .countByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges(
-                      bezirkUndWahlID))
-          .thenReturn(stapelB);
-      Mockito.when(mbwStimmzettelService.getCountUngueltige(bezirkUndWahlID)).thenReturn(17L);
+      Mockito.when(mbwStimmzettelService.getStapelA(bezirkUndWahlID)).thenReturn(stapelA);
+      Mockito.when(mbwStimmzettelService.getStapelB(bezirkUndWahlID)).thenReturn(stapelB);
+      Mockito.when(mbwStimmzettelService.getStapelD(bezirkUndWahlID)).thenReturn(17L);
 
       val result = unitUnderTest.getErgebnisse(WAHL_ID, WAHLBEZIRK_ID, MeldungsartModel.V3);
 

@@ -1,3 +1,4 @@
+import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -16,13 +17,25 @@ const mockDefinitions = await vi.hoisted(async () => {
     postErfassungTeamStatus: vi.fn(),
     routerPush: vi.fn(),
     hasRoleErfassungsteamValue: ref(true),
+    hasRoleSchriftfuehrungValue: ref(false),
     currentUserTeamNameValue: ref("TEAM-1"),
     closeDialogCallback: vi.fn().mockImplementation(() => {
       return;
     }),
     isSavingRef: ref(false),
+    getNextRoute: vi.fn(),
+    routeWithName: vi.fn(),
+    routeWithNameAndParams: vi.fn(),
   };
 });
+
+vi.mock("@/composables/navigation/navigationService.ts", () => ({
+  useNavigationService: () => ({
+    getNextRoute: mockDefinitions.getNextRoute,
+    routeWithName: mockDefinitions.routeWithName,
+    routeWithNameAndParams: mockDefinitions.routeWithNameAndParams,
+  }),
+}));
 
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   useUserNotificationService: () => ({
@@ -39,6 +52,7 @@ vi.mock("@/stores/dataSyncStore.ts", () => ({
 vi.mock("@/stores/userStore.ts", () => ({
   useUserStore: () => ({
     hasRoleErfassungsteam: mockDefinitions.hasRoleErfassungsteamValue,
+    hasRoleSchriftfuehrung: mockDefinitions.hasRoleSchriftfuehrungValue,
     currentUserTeamName: mockDefinitions.currentUserTeamNameValue,
   }),
 }));
@@ -70,6 +84,9 @@ describe("StimmzettelerfassungBeendenDialogUtils.ts", () => {
   >;
 
   beforeEach(() => {
+    createTestingPinia({
+      createSpy: vi.fn,
+    });
     unitUnderTest = useStimmzettelerfassungBeendenDialogUtils(
       wahlId,
       wahlbezirkId,
@@ -77,8 +94,10 @@ describe("StimmzettelerfassungBeendenDialogUtils.ts", () => {
     );
 
     mockDefinitions.hasRoleErfassungsteamValue.value = true;
+    mockDefinitions.hasRoleSchriftfuehrungValue.value = false;
     mockDefinitions.currentUserTeamNameValue.value = "TEAM-1";
     mockDefinitions.isSavingRef.value = false;
+    mockDefinitions.getNextRoute.mockReturnValue({ name: ROUTE_FINISHED });
   });
 
   afterEach(() => {
@@ -166,9 +185,14 @@ describe("StimmzettelerfassungBeendenDialogUtils.ts", () => {
       expect(mockDefinitions.closeDialogCallback).toHaveBeenCalledTimes(1);
     });
 
-    it("should_postTeamStatusAndNavigateToMonitoring_when_syncSuccessfulAndUserHasNotRoleErfassungsteam", async () => {
+    it("should_postTeamStatusAndNavigateToNextRoute_when_syncSuccessfulAndUserHasRoleSchriftfuehrung", async () => {
       mockDefinitions.hasRoleErfassungsteamValue.value = false;
+      mockDefinitions.hasRoleSchriftfuehrungValue.value = true;
       mockDefinitions.currentUserTeamNameValue.value = "TEAM-SONSTIG";
+      mockDefinitions.getNextRoute.mockReturnValue({
+        name: DseStepsEnum.DSE_MONITORING,
+        params: { wahlId, wahlbezirkId },
+      });
       mockDefinitions.synchronizeOfflineData.mockResolvedValue({
         numberOfDirtyTasksRemaining: 0,
       });

@@ -1,20 +1,17 @@
-import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
-import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts";
+import { useBeschlussgrundOptionTools } from "@/composables/dse/beschlussfassung/beschlussgrundOptionTools.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
-const { mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText } =
-  useSystemBeschlussgrundReasonEnumTools();
-
-interface BeschlussgrundOption {
-  grund: string;
-  selected: boolean;
-}
+const {
+  mapGruendeToBeschlussgrundOptions,
+  setSystemBeschlussgruendeTrueWhenFoundInStimmzettel,
+  setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel,
+  setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
+} = useBeschlussgrundOptionTools();
 
 export function useTheBeschlussFassenTabUtils() {
   const { isBWB } = storeToRefs(useUserStore());
@@ -55,20 +52,20 @@ export function useTheBeschlussFassenTabUtils() {
     const gruendeList =
       _getBeschlussGruendeBasedOnGueltigkeit(isStimmzettelGueltig);
     const beschlussgrundOptions = ref(
-      _mapGruendeToBeschlussgrundOptions(gruendeList)
+      mapGruendeToBeschlussgrundOptions(gruendeList)
     );
 
-    _setSystemBeschlussgruendeTrueWhenFoundInStimmzettel(
+    setSystemBeschlussgruendeTrueWhenFoundInStimmzettel(
       stimmzettel?.systemBeschlussvorschlag ?? [],
       beschlussgrundOptions.value
     );
-    _setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel(
+    setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel(
       stimmzettel?.wahlvorstandBeschlussvorschlag ?? [],
       beschlussgrundOptions.value
     );
 
     const texts =
-      _setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
+      setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
         stimmzettel?.wahlvorstandBeschlussvorschlag ?? [],
         beschlussgrundOptions.value
       );
@@ -93,64 +90,6 @@ export function useTheBeschlussFassenTabUtils() {
             ...beschlussGruende.bwb.ungueltig,
           ]
         : beschlussGruende.common.ungueltig;
-  }
-
-  function _mapGruendeToBeschlussgrundOptions(
-    gruende: string[]
-  ): BeschlussgrundOption[] {
-    return gruende.map((element) => ({
-      grund: element,
-      selected: false,
-    }));
-  }
-
-  function _setSystemBeschlussgruendeTrueWhenFoundInStimmzettel(
-    systemBeschlussvorschlag: SystemBeschlussgrund[],
-    beschlussgrundOptions: BeschlussgrundOption[]
-  ) {
-    for (const beschlussvorschlag of systemBeschlussvorschlag) {
-      const reasonAsGrund =
-        mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
-          beschlussvorschlag.reason
-        );
-      if (reasonAsGrund) {
-        const entry = beschlussgrundOptions.find(
-          (beschlussgrundOption) => beschlussgrundOption.grund === reasonAsGrund
-        );
-        if (entry) {
-          entry.selected = true;
-        }
-      }
-    }
-  }
-
-  function _setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel(
-    wahlvorstandBeschlussvorschlag: WahlvorstandBeschlussgrund[],
-    beschlussgrundOptions: BeschlussgrundOption[]
-  ) {
-    for (const beschlussvorschlag of wahlvorstandBeschlussvorschlag) {
-      const entry = beschlussgrundOptions.find(
-        (beschlussgrundOption) =>
-          beschlussgrundOption.grund === beschlussvorschlag.text
-      );
-      if (entry) {
-        entry.selected = true;
-      }
-    }
-  }
-
-  function _setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
-    wahlvorstandBeschlussvorschlag: WahlvorstandBeschlussgrund[],
-    beschlussgrundOptions: BeschlussgrundOption[]
-  ) {
-    return wahlvorstandBeschlussvorschlag
-      .filter(
-        (beschlussvorschlag) =>
-          !beschlussgrundOptions.find(
-            (beschlussgrund) => beschlussgrund.grund === beschlussvorschlag.text
-          )
-      )
-      .map((w) => w.text);
   }
 
   return {

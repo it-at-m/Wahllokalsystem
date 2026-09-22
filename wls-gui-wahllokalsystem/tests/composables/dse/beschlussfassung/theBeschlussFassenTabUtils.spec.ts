@@ -5,12 +5,36 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  mapGruendeToBeschlussgrundOptions: vi.fn(),
+  setSystemBeschlussgruendeTrueWhenFoundInStimmzettel: vi.fn(),
+  setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel: vi.fn(),
+  setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList:
+    vi.fn(),
+}));
+
+vi.mock(
+  "@/composables/dse/beschlussfassung/beschlussgrundOptionTools.ts",
+  () => {
+    return {
+      useBeschlussgrundOptionTools: () => ({
+        mapGruendeToBeschlussgrundOptions:
+          mockDefinitions.mapGruendeToBeschlussgrundOptions,
+        setSystemBeschlussgruendeTrueWhenFoundInStimmzettel:
+          mockDefinitions.setSystemBeschlussgruendeTrueWhenFoundInStimmzettel,
+        setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel:
+          mockDefinitions.setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel,
+        setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList:
+          mockDefinitions.setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
+      }),
+    };
+  }
+);
+
 const { prepareUser } = useUserTestDataFactory();
-const { preparePersistedStimmzettel, createPersistedStimmzettel } =
-  usePersistedStimmzettelTestDataFactory();
+const { createPersistedStimmzettel } = usePersistedStimmzettelTestDataFactory();
 
 describe("theBeschlussFassenTabUtils.ts", () => {
   let userStore: ReturnType<typeof useUserStore>;
@@ -46,68 +70,40 @@ describe("theBeschlussFassenTabUtils.ts", () => {
     const bwbUngueltig = [
       "Mehrere unterschiedlich gekennzeichnete Stimmzettel im Umschlag",
     ];
-    const customGrund = "kaffee ausgeschüttet";
-
-    function setUserBwb(isBwb: boolean) {
-      userStore.user = prepareUser()
-        .wahlbezirksArt(isBwb ? WahlbezirksArtEnum.BWB : WahlbezirksArtEnum.UWB)
-        .build();
-    }
-
-    const systemBeschlussgrundMatchingGueltigeGruende = {
-      reason: SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
-    };
-    const systembeschlussgrundMatchingUngueltigeGruende = {
-      reason:
-        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
-    };
-    const wahlvorstandBeschlussgrundMatchingGueltigeGruende = {
-      text: commonGueltigGruende[0],
-    };
-    const wahlvorstandBeschlussgrundMatchingUngueltigeGruende = {
-      text: commonUngueltigGruende[0],
-    };
-
-    const mockedStimmzettel = preparePersistedStimmzettel()
-      .systemBeschlussvorschlag([
-        systemBeschlussgrundMatchingGueltigeGruende,
-        systembeschlussgrundMatchingUngueltigeGruende,
-      ])
-      .wahlvorstandBeschlussvorschlag([
-        wahlvorstandBeschlussgrundMatchingGueltigeGruende,
-        wahlvorstandBeschlussgrundMatchingUngueltigeGruende,
-      ])
-      .build();
-    const mockedStimmzettelWithAnderenGruenden = preparePersistedStimmzettel()
-      .systemBeschlussvorschlag([])
-      .wahlvorstandBeschlussvorschlag([{ text: customGrund }])
-      .build();
 
     it.each([
       {
-        isBwb: false,
+        wahlbezirksart: WahlbezirksArtEnum.UWB,
         isGueltig: true,
         expectedLength: commonGueltigGruende.length,
       },
       {
-        isBwb: false,
+        wahlbezirksart: WahlbezirksArtEnum.UWB,
         isGueltig: false,
         expectedLength: commonUngueltigGruende.length,
       },
       {
-        isBwb: true,
+        wahlbezirksart: WahlbezirksArtEnum.BWB,
         isGueltig: true,
         expectedLength: commonGueltigGruende.length + bwbGueltig.length,
       },
       {
-        isBwb: true,
+        wahlbezirksart: WahlbezirksArtEnum.BWB,
         isGueltig: false,
         expectedLength: commonUngueltigGruende.length + bwbUngueltig.length,
       },
     ])(
       "should_returnCorrectBeschlussGruende_when_isBwbIs'$isBwb'AndStimmzettelIsGueltigIs'$isGueltig'",
-      ({ isBwb, isGueltig, expectedLength }) => {
-        setUserBwb(isBwb);
+      ({ wahlbezirksart, isGueltig, expectedLength }) => {
+        userStore.user = prepareUser().wahlbezirksArt(wahlbezirksart).build();
+
+        mockDefinitions.mapGruendeToBeschlussgrundOptions.mockImplementation(
+          (gruende: string[]) =>
+            gruende.map((g) => ({ grund: g, selected: false }))
+        );
+        mockDefinitions.setWahlvorstandbeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList.mockReturnValue(
+          []
+        );
 
         const result =
           unitUnderTest.updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit(
@@ -118,82 +114,6 @@ describe("theBeschlussFassenTabUtils.ts", () => {
         expect(result.beschlussgruende).toHaveLength(expectedLength);
       }
     );
-
-    it("should_returnSelectedGueltigGruende_when_stimmzettelIsGueltigAndSomeGruendeAreSelectedInStimmzettel", () => {
-      setUserBwb(true);
-
-      const result =
-        unitUnderTest.updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit(
-          true,
-          mockedStimmzettel
-        );
-
-      expect(result.beschlussgruende).toHaveLength(
-        commonGueltigGruende.length + bwbGueltig.length
-      );
-
-      const selected = result.beschlussgruende
-        .filter((option) => option.selected)
-        .map((option) => option.grund);
-      expect(selected).toEqual(
-        expect.arrayContaining([
-          commonGueltigGruende[2],
-          commonGueltigGruende[0],
-        ])
-      );
-      expect(selected).not.toEqual(
-        expect.arrayContaining([
-          commonUngueltigGruende[1],
-          commonUngueltigGruende[0],
-        ])
-      );
-    });
-
-    it("should_returnSelectedUngueltigGruende_when_stimmzettelIsUngueltigAndSomeGruendeAreSelectedInStimmzettel", () => {
-      setUserBwb(true);
-
-      const result =
-        unitUnderTest.updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit(
-          false,
-          mockedStimmzettel
-        );
-
-      expect(result.beschlussgruende).toHaveLength(
-        commonUngueltigGruende.length + bwbUngueltig.length
-      );
-
-      const selected = result.beschlussgruende
-        .filter((o) => o.selected)
-        .map((o) => o.grund);
-      expect(selected).toEqual(
-        expect.arrayContaining([
-          commonUngueltigGruende[1],
-          commonUngueltigGruende[0],
-        ])
-      );
-      expect(selected).not.toEqual(
-        expect.arrayContaining([
-          commonGueltigGruende[2],
-          commonGueltigGruende[0],
-        ])
-      );
-    });
-
-    it("should_returnAndereGruende_when_stimmzettelGueltigkeitIs'$isGueltig'AndCustomGruendeAreSelectedInStimmzettel", () => {
-      setUserBwb(true);
-
-      const result =
-        unitUnderTest.updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit(
-          true,
-          mockedStimmzettelWithAnderenGruenden
-        );
-
-      expect(result.beschlussgruende).toHaveLength(
-        commonGueltigGruende.length + bwbGueltig.length
-      );
-      expect(result.beschlussgruende.some((o) => o.selected)).toBe(false);
-      expect(result.andererGrund).toBe(customGrund);
-    });
 
     it("should_returnEmptyList_when_stimmzettelGueltigkeitIsNull", () => {
       const result =

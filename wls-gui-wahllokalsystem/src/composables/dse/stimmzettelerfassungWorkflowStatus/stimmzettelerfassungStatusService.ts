@@ -10,6 +10,9 @@ import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useStimmzettelerfassungStatusMapper } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { addNotification } = useUserNotificationService();
@@ -38,7 +41,31 @@ export function useDseWorkflowStatusService() {
         );
 
       const responseData = getNullOn204OrElseResponseData(response);
-      return responseData ? dtoToModel(responseData) : null;
+      const result = responseData ? dtoToModel(responseData) : null;
+
+      const { setStepDone } = useWorkflowStore();
+
+      if (StimmzettelerfassungStatusEnum.SteAbgeschlossen == result?.status) {
+        setStepDone(
+          wahlID,
+          wahlbezirkID,
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+        );
+      }
+      if (StimmzettelerfassungStatusEnum.BeAbgeschlossen == result?.status) {
+        setStepDone(
+          wahlID,
+          wahlbezirkID,
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+        );
+        setStepDone(
+          wahlID,
+          wahlbezirkID,
+          MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG
+        );
+      }
+
+      return result;
     } catch (error) {
       if (sendNotification) {
         addNotification(

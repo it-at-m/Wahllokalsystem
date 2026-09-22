@@ -47,7 +47,10 @@
             hide-details
           />
           <div class="d-flex align-center">
-            <v-checkbox :model-value="andererGrundChecked" />
+            <v-checkbox
+              :model-value="andererGrundChecked"
+              readonly
+            />
             <v-text-field
               v-model="andererGrund"
               label="Andere Gründe"

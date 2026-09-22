@@ -105,7 +105,6 @@ public interface MBWStimmzettelRepository extends StimmzettelRepository {
                 GROUP BY wahlvorschlag.wahlvorschlagID,
                          kandidat.kandidatID.kandidatID
                 """)
-  // For MBW Stapel BC
   List<KandidatStimmenAnzahl> getStapelBC(
       @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
 }

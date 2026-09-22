@@ -33,7 +33,7 @@ class MBWStimmzettelServiceSecurityTest {
   @Autowired MBWStimmzettelService unitUnderTest;
 
   @Nested
-  class GetCountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagSelected {
+  class GetStapelA {
 
     @Test
     void should_getAccess_when_allRequiredAuthoritiesArePresentAndIDsAreMatching() {
@@ -81,7 +81,7 @@ class MBWStimmzettelServiceSecurityTest {
   }
 
   @Nested
-  class CountByWahlvorschlagIDOfStimmzettelWithExactlyOneWahlvorschlagThatHasChanges {
+  class GetStapelB {
 
     @Test
     void should_getAccess_when_allRequiredAuthoritiesArePresentAndIDsAreMatching() {
@@ -129,7 +129,7 @@ class MBWStimmzettelServiceSecurityTest {
   }
 
   @Nested
-  class GetKandidatVotes {
+  class GetStapelBC {
 
     @Test
     void should_getAccess_when_allRequiredAuthoritiesArePresentAndIDsAreMatching() {
@@ -177,7 +177,7 @@ class MBWStimmzettelServiceSecurityTest {
   }
 
   @Nested
-  class GetCountUngueltige {
+  class GetStapelD {
 
     @Test
     void should_getAccess_when_allRequiredAuthoritiesArePresentAndIDsAreMatching() {

@@ -13,21 +13,6 @@ CREATE INDEX idx_wahlvorschlag_stimmzettel_selected
                       selected
         );
 
---- Foreign key: wahlvorschlag -> stimmzettel
-CREATE INDEX idx_wahlvorschlag_stimmzettel
-    ON wahlvorschlag (
-                      stimmzettel_wahlid,
-                      stimmzettel_wahlbezirkid,
-                      stimmzettel_teamid,
-                      stimmzettel_stimmzettelkennung
-        );
-
---- Foreign key: kandidat -> wahlvorschlag
-CREATE INDEX idx_kandidat_wahlvorschlag
-    ON kandidat (
-                 wahlvorschlag_id
-        );
-
 CREATE INDEX idx_kandidat_discarded_votesbyvoter_invalidevotes
     ON kandidat (
                  discarded,

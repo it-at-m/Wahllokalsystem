@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.ErfassungStatus;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.StimmzettelerfassungStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.status.StimmzettelerfassungStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.ErfassungTeamStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatus;
@@ -20,6 +21,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExcept
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Arrays;
+import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
@@ -499,6 +501,117 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
                       new SimpleGrantedAuthority(
                           Authorities.SERVICE_GET_STIMMZETTELERFASSUNGTEAMSTATUS))
                   .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
+    }
+  }
+
+  @Nested
+  class ReopenStimmzettelerfassung {
+
+    @Test
+    void should_setTeamAndWorkflowStatusToInBearbeitung_when_called() throws Exception {
+      val id = Instancio.create(TeamBezirkUndWahlID.class);
+      val workflowId = new BezirkUndWahlID(id.getWahlID(), id.getWahlbezirkID());
+      teamstatusRepository.save(
+          new StimmzettelerfassungTeamStatus(id, ErfassungTeamStatus.ABGESCHLOSSEN));
+      stimmzettelerfassungStatusRepository.save(
+          new StimmzettelerfassungStatus(workflowId, ErfassungStatus.STE_ABGESCHLOSSEN));
+
+      mockMvc
+          .perform(
+              createReopenRequest(
+                  id.getWahlID(),
+                  id.getWahlbezirkID(),
+                  id.getTeamID(),
+                  id.getWahlbezirkID(),
+                  id.getTeamID()))
+          .andExpect(status().isCreated());
+
+      Assertions.assertThat(teamstatusRepository.findById(id))
+          .contains(new StimmzettelerfassungTeamStatus(id, ErfassungTeamStatus.IN_BEARBEITUNG));
+      Assertions.assertThat(stimmzettelerfassungStatusRepository.findById(workflowId))
+          .contains(new StimmzettelerfassungStatus(workflowId, ErfassungStatus.STE_BEARBEITUNG));
+    }
+
+    @Test
+    void should_returnBadRequest_when_pathVariablesAreInvalid() throws Exception {
+      mockMvc
+          .perform(createReopenRequest(" ", " ", " ", " ", " "))
+          .andExpect(status().isBadRequest());
+
+      Assertions.assertThat(teamstatusRepository.count()).isZero();
+      Assertions.assertThat(stimmzettelerfassungStatusRepository.count()).isZero();
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongClaims() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val teamID = "teamID";
+
+      mockMvc
+          .perform(createReopenRequest(wahlID, wahlbezirkID, teamID, wahlbezirkID + "x", teamID))
+          .andExpect(status().isForbidden());
+      mockMvc
+          .perform(createReopenRequest(wahlID, wahlbezirkID, teamID, wahlbezirkID, teamID + "x"))
+          .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void should_notPersistTeamStatus_when_savingWorkflowStatusFails() throws Exception {
+      val id = Instancio.create(TeamBezirkUndWahlID.class);
+      val workflowId = new BezirkUndWahlID(id.getWahlID(), id.getWahlbezirkID());
+      val existingTeamStatus =
+          new StimmzettelerfassungTeamStatus(id, ErfassungTeamStatus.ABGESCHLOSSEN);
+      val existingWorkflowStatus =
+          new StimmzettelerfassungStatus(workflowId, ErfassungStatus.STE_BEARBEITUNG);
+      teamstatusRepository.save(existingTeamStatus);
+      stimmzettelerfassungStatusRepository.save(existingWorkflowStatus);
+      Mockito.doThrow(new RuntimeException("saving workflow status failed"))
+          .when(stimmzettelerfassungStatusRepository)
+          .save(Mockito.any());
+
+      mockMvc
+          .perform(
+              createReopenRequest(
+                  id.getWahlID(),
+                  id.getWahlbezirkID(),
+                  id.getTeamID(),
+                  id.getWahlbezirkID(),
+                  id.getTeamID()))
+          .andExpect(status().isInternalServerError());
+
+      Assertions.assertThat(teamstatusRepository.findById(id)).contains(existingTeamStatus);
+      Assertions.assertThat(stimmzettelerfassungStatusRepository.findById(workflowId))
+          .contains(existingWorkflowStatus);
+    }
+
+    private MockHttpServletRequestBuilder createReopenRequest(
+        final String wahlID,
+        final String wahlbezirkID,
+        final String teamID,
+        final String claimWahlbezirkID,
+        final String claimTeamID) {
+      return MockMvcRequestBuilders.post(
+              "/stimmzettelerfassung/wahl/"
+                  + wahlID
+                  + "/wahlbezirk/"
+                  + wahlbezirkID
+                  + "/team/"
+                  + teamID
+                  + "/reopen")
+          .with(csrf())
+          .with(
+              jwt()
+                  .authorities(
+                      Stream.concat(
+                              Arrays.stream(Authorities.ALL_AUTHORITIES_SAVE_TEAMSTATUS),
+                              Stream.of(Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGSTATUS))
+                          .map(SimpleGrantedAuthority::new)
+                          .toArray(SimpleGrantedAuthority[]::new))
+                  .jwt(
+                      jwt ->
+                          jwt.claim("wahlbezirkID", claimWahlbezirkID)
+                              .claim("teamID", claimTeamID)));
     }
   }
 }

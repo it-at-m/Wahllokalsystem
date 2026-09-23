@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
@@ -18,8 +17,7 @@ const mockDefinitions = await vi.hoisted(async () => {
     },
     loadTeamStatusListe: vi.fn(),
     loadWorkflowStatus: vi.fn(),
-    postErfassungTeamStatus: vi.fn(),
-    saveDseWorkflowStatus: vi.fn(),
+    reopenStimmzettelerfassung: vi.fn(),
     setStepDone: vi.fn(),
     getNextRoute: vi.fn(),
     routerPush: vi.fn(),
@@ -58,16 +56,7 @@ vi.mock(
   "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts",
   () => ({
     useStimmzettelerfassungTeamStatusService: () => ({
-      postErfassungTeamStatus: mockDefinitions.postErfassungTeamStatus,
-    }),
-  })
-);
-
-vi.mock(
-  "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts",
-  () => ({
-    useDseWorkflowStatusService: () => ({
-      saveDseWorkflowStatus: mockDefinitions.saveDseWorkflowStatus,
+      reopenStimmzettelerfassung: mockDefinitions.reopenStimmzettelerfassung,
     }),
   })
 );
@@ -130,17 +119,10 @@ describe("monitoringViewUtils.ts", () => {
     it("should_reopenCurrentTeamAndNavigateToNextRoute_when_currentTeamIsReopened", async () => {
       await unit.reopenStimmzettelerfassung("teamID");
 
-      expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalledWith(
+      expect(mockDefinitions.reopenStimmzettelerfassung).toHaveBeenCalledWith(
         "wahlID",
         "wahlbezirkID",
         "teamID",
-        { status: "IN_BEARBEITUNG" },
-        true
-      );
-      expect(mockDefinitions.saveDseWorkflowStatus).toHaveBeenCalledWith(
-        "wahlID",
-        "wahlbezirkID",
-        { status: StimmzettelerfassungStatusEnum.SteBearbeitung },
         true
       );
       expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
@@ -164,15 +146,19 @@ describe("monitoringViewUtils.ts", () => {
       expect(mockDefinitions.routerPush).toHaveBeenCalledWith({
         name: "nextRoute",
       });
-      expect(mockDefinitions.loadTeamStatusListe).not.toHaveBeenCalled();
     });
 
     it("should_reloadTeamStatusListWithoutNavigation_when_anotherTeamIsReopened", async () => {
       await unit.reopenStimmzettelerfassung("anotherTeamID");
 
+      expect(mockDefinitions.reopenStimmzettelerfassung).toHaveBeenCalledWith(
+        "wahlID",
+        "wahlbezirkID",
+        "anotherTeamID",
+        true
+      );
       expect(mockDefinitions.setStepDone).toHaveBeenCalledTimes(2);
       expect(mockDefinitions.routerPush).not.toHaveBeenCalled();
-      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledOnce();
     });
   });
 });

@@ -3,7 +3,7 @@ import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
 
-import { useStimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils.ts";
+import { useStimmzettelZusammenfassungUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelZusammenfassungUtils.ts";
 
 const { prepareWahlvorschlag, prepareKandidat } =
   useWahlvorschlaegeTestDataFactory();
@@ -94,7 +94,7 @@ describe("stimmzettelGueltigeKandidatenstimmenUtils", () => {
     const wahlvorschlaege = [wv1, wv2];
 
     const { wahlvorschlaegeWithKandidatenErgebnissen } =
-      useStimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils(
+      useStimmzettelZusammenfassungUtils(
         ref(stimmzettelListe),
         ref(wahlvorschlaege)
       );
@@ -188,10 +188,7 @@ describe("stimmzettelGueltigeKandidatenstimmenUtils", () => {
       .build();
 
     const { wahlvorschlaegeWithKandidatenErgebnissen } =
-      useStimmzettelGueltigeKandidatenstimmenAnzeigenCardUtils(
-        ref([stimmzettel]),
-        ref([wv])
-      );
+      useStimmzettelZusammenfassungUtils(ref([stimmzettel]), ref([wv]));
 
     const result = wahlvorschlaegeWithKandidatenErgebnissen.value[0];
     expect(result.identifikator).toBe("wvX");

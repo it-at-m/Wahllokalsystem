@@ -1,9 +1,24 @@
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBeschlussgrundOptionTools } from "@/composables/dse/beschlussfassung/beschlussgrundOptionTools.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText: vi.fn(),
+}));
+
+vi.mock(
+  import("@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts"),
+  () => ({
+    useSystemBeschlussgrundReasonEnumTools: () => ({
+      mapSystemBeschlussgrundReasonEnumToText: vi.fn(),
+      mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText:
+        mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText,
+    }),
+  })
+);
 
 const { preparePersistedStimmzettel } =
   usePersistedStimmzettelTestDataFactory();
@@ -164,8 +179,11 @@ describe("beschlussgrundOptionTools.ts", () => {
           },
         ])
         .build();
+      const mockedSystemgrundText = "mocked grund";
 
-      // todo mock getBeschlussgrundEnumValueAsString
+      mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText.mockReturnValue(
+        mockedSystemgrundText
+      );
 
       const options = unitUnderTest.mapGruendeToBeschlussgrundOptions([
         WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
@@ -180,7 +198,7 @@ describe("beschlussgrundOptionTools.ts", () => {
         );
 
       expect(result).toStrictEqual(
-        `custom-1, custom-2, keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze`
+        `custom-1, custom-2, ${mockedSystemgrundText}`
       );
     });
 

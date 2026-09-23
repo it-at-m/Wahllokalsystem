@@ -3,6 +3,7 @@ import type { Ref } from "vue";
 
 import { computed } from "vue";
 
+import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
 import { usePersistedStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/PersistedStimmzettelTools.ts";
 
 export function useMbwStimmzettelFilterService(
@@ -26,9 +27,30 @@ export function useMbwStimmzettelFilterService(
     stimmzettel.value.filter(matchesMBWStapelEUngueltig)
   );
 
+  const stapelASumGroupedByWahlvorschlag = computed(() => {
+    const sumTool = useStringNumberMapTools(new Map<string, number>());
+    stapelA.value
+      .flatMap((stimmzettel) => stimmzettel.wahlvorschlaege)
+      .forEach((wahlvorschlag) =>
+        sumTool.add(wahlvorschlag.wahlvorschlagID, 1)
+      );
+    return sumTool;
+  });
+  const stapelBSumGroupedByWahlvorschlag = computed(() => {
+    const sumTool = useStringNumberMapTools(new Map<string, number>());
+    stapelB.value
+      .flatMap((stimmzettel) => stimmzettel.wahlvorschlaege)
+      .forEach((wahlvorschlag) =>
+        sumTool.add(wahlvorschlag.wahlvorschlagID, 1)
+      );
+    return sumTool;
+  });
+
   return {
     stapelA,
+    stapelASumGroupedByWahlvorschlag,
     stapelB,
+    stapelBSumGroupedByWahlvorschlag,
     stapelBC,
     stapelDUngueltig,
     stapelEUngueltig,

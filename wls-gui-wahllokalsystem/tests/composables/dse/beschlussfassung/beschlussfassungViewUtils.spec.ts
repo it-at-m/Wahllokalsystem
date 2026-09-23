@@ -246,7 +246,7 @@ describe("beschlussfassungViewUtils.ts", () => {
         .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
         .build();
 
-      mockDefinitions.isBeschlussRequired(true);
+      mockDefinitions.isBeschlussRequired.mockReturnValue(true);
       stimmzettelOfWahlbezirkMockedRef.value = [
         stZettCompleted1,
         stZettCompleted2,

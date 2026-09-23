@@ -15,9 +15,9 @@
         :wahl-id="wahlID"
       />
       <the-erfasste-stimmzettel-card :stimmzettel-liste="stimmzettelListe" />
-      <the-stimmzettel-gueltige-kandidatenstimmen-anzeigen-card
-        :stimmzettel-liste="stimmzettelListe"
-        :wahlvorschlaege="wahlvorschlaege"
+
+      <base-card-wahlvorschlaege-kandidatenstimmen-anzeigen
+        :kandidatenstimmen="wahlvorschlaegeWithKandidatenErgebnissen"
       />
     </div>
   </div>
@@ -28,13 +28,16 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import TheErfassteStimmzettelCard from "@/components/dse/stimmzettelerfassung/zusammenfassung/TheErfassteStimmzettelCard.vue";
-import TheStimmzettelGueltigeKandidatenstimmenAnzeigenCard from "@/components/dse/stimmzettelerfassung/zusammenfassung/TheStimmzettelGueltigeKandidatenstimmenAnzeigenCard.vue";
+import BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/common/BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen.vue";
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
+import { useStimmzettelZusammenfassungUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelZusammenfassungUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 const route = useRoute();
@@ -42,8 +45,19 @@ const route = useRoute();
 const wahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 
-defineProps<{
+const props = defineProps<{
   stimmzettelListe: PersistedStimmzettel[];
   wahlvorschlaege: Wahlvorschlag[];
 }>();
+
+const { wahlvorschlaegeWithKandidatenErgebnissen } =
+  useStimmzettelZusammenfassungUtils(
+    computed(() =>
+      props.stimmzettelListe.filter(
+        (stimmzettel) =>
+          stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Valid
+      )
+    ),
+    computed(() => props.wahlvorschlaege)
+  );
 </script>

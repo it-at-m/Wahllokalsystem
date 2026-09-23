@@ -36,22 +36,22 @@ class AusdruckRepositoryTest {
     @Test
     void should_returnData_when_idIsGiven() {
       val idToFind =
-          new WahlUndBezirkIDUndMeldungsart("wahlbezirkID01", "wahlID01", Meldungsart.V1);
+          new WahlUndBezirkIDUndDokumentart("wahlbezirkID01", "wahlID01", Dokumentart.V1);
       val timeNow = Instant.now();
       val ausdruckToFind = new Ausdruck(idToFind, "Testcontent", timeNow);
       val ausdruckeToSave =
           List.of(
               ausdruckToFind,
               new Ausdruck(
-                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID02", "wahlID01", Meldungsart.V1),
+                  new WahlUndBezirkIDUndDokumentart("wahlbezirkID02", "wahlID01", Dokumentart.V1),
                   "Testcontent",
                   timeNow),
               new Ausdruck(
-                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID03", "wahlID01", Meldungsart.V1),
+                  new WahlUndBezirkIDUndDokumentart("wahlbezirkID03", "wahlID01", Dokumentart.V1),
                   "Testcontent",
                   timeNow),
               new Ausdruck(
-                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID04", "wahlID01", Meldungsart.V1),
+                  new WahlUndBezirkIDUndDokumentart("wahlbezirkID04", "wahlID01", Dokumentart.V1),
                   "Testcontent",
                   timeNow));
 
@@ -76,12 +76,12 @@ class AusdruckRepositoryTest {
       val timeNow = Instant.now();
       val ausdruckToFind1 =
           new Ausdruck(
-              new WahlUndBezirkIDUndMeldungsart(wahlbezirkIdToFind, wahlIdToFind, Meldungsart.V1),
+              new WahlUndBezirkIDUndDokumentart(wahlbezirkIdToFind, wahlIdToFind, Dokumentart.V1),
               "Testcontent",
               timeNow);
       val ausdruckToFind2 =
           new Ausdruck(
-              new WahlUndBezirkIDUndMeldungsart(wahlbezirkIdToFind, wahlIdToFind, Meldungsart.V3),
+              new WahlUndBezirkIDUndDokumentart(wahlbezirkIdToFind, wahlIdToFind, Dokumentart.V3),
               "Testcontent",
               timeNow);
       val ausdruckeToSave =
@@ -89,15 +89,15 @@ class AusdruckRepositoryTest {
               ausdruckToFind1,
               ausdruckToFind2,
               new Ausdruck(
-                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID02", "wahlID01", Meldungsart.V1),
+                  new WahlUndBezirkIDUndDokumentart("wahlbezirkID02", "wahlID01", Dokumentart.V1),
                   "Testcontent",
                   timeNow),
               new Ausdruck(
-                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID03", "wahlID01", Meldungsart.V1),
+                  new WahlUndBezirkIDUndDokumentart("wahlbezirkID03", "wahlID01", Dokumentart.V1),
                   "Testcontent",
                   timeNow),
               new Ausdruck(
-                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID04", "wahlID01", Meldungsart.V1),
+                  new WahlUndBezirkIDUndDokumentart("wahlbezirkID04", "wahlID01", Dokumentart.V1),
                   "Testcontent",
                   timeNow));
 
@@ -108,9 +108,9 @@ class AusdruckRepositoryTest {
       Assertions.assertThat(result)
           .allSatisfy(
               ausdruck -> {
-                Assertions.assertThat(ausdruck.getWahlUndBezirkIDUndMeldungsart().getWahlID())
+                Assertions.assertThat(ausdruck.getWahlUndBezirkIDUndDokumentart().getWahlID())
                     .isEqualTo(wahlIdToFind);
-                Assertions.assertThat(ausdruck.getWahlUndBezirkIDUndMeldungsart().getWahlbezirkID())
+                Assertions.assertThat(ausdruck.getWahlUndBezirkIDUndDokumentart().getWahlbezirkID())
                     .isEqualTo(wahlbezirkIdToFind);
               });
     }

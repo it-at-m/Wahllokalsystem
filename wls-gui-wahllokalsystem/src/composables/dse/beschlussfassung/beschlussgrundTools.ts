@@ -51,22 +51,14 @@ export function useBeschlussgrundTools() {
       .sort((x, y) => String(x.reason).localeCompare(String(y.reason)));
   }
 
-  function getBeschlussgrundEnumValueAsString(
-    grund: string | SystemBeschlussgrundReasonEnum
-  ): string {
-    const systemGruende = Object.values(
-      SystemBeschlussgrundReasonEnum
-    ) as string[];
+  function getBeschlussgrundEnumValueAsString(grund: string): string {
+    const systemGrund = Object.values(SystemBeschlussgrundReasonEnum).find(
+      (reason) => reason === grund
+    );
 
-    const valueToCheck = String(grund);
-
-    if (systemGruende.includes(valueToCheck)) {
-      return mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
-        valueToCheck as SystemBeschlussgrundReasonEnum
-      );
-    }
-
-    return valueToCheck;
+    return systemGrund
+      ? mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(systemGrund)
+      : grund;
   }
 
   return {

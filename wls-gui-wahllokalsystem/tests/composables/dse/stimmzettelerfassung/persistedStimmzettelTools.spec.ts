@@ -395,7 +395,7 @@ describe("persistedStimmzettelTools.ts", () => {
         text: "stimmzettelIsLeer",
         gueltigkeit: StimmzettelGueltigkeitEnum.Leer,
         beschlussfassung: null,
-        expected: true,
+        expected: false,
       },
       {
         text: "invalidStimmzettelHasBeschlussfassung",

@@ -46,9 +46,8 @@ export function usePersistedStimmzettelTools() {
 
   function matchesMBWStapelEUngueltig(stimmzettel: PersistedStimmzettel) {
     return (
-      stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Leer ||
-      (stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Invalid &&
-        !!stimmzettel.beschlussfassung)
+      stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Invalid &&
+      !!stimmzettel.beschlussfassung
     );
   }
 

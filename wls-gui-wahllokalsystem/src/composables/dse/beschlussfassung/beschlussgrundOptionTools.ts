@@ -2,6 +2,10 @@ import type { BeschlussgrundOption } from "@/types/dse/beschlussfassung/Beschlus
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 
+import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
+
+const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
+
 export function useBeschlussgrundOptionTools() {
   function mapGruendeToBeschlussgrundOptions(
     gruende: string[]
@@ -54,7 +58,9 @@ export function useBeschlussgrundOptionTools() {
         (beschlussgrund) => beschlussgrund.grund === beschlussvorschlag.text
       );
       if (!existsInOptions) {
-        result.push(beschlussvorschlag.text);
+        result.push(
+          getBeschlussgrundEnumValueAsString(beschlussvorschlag.text)
+        );
       }
     }
 
@@ -64,7 +70,9 @@ export function useBeschlussgrundOptionTools() {
           beschlussgrundOption.grund === beschlussvorschlag.reason
       );
       if (!existsInOptions) {
-        result.push(beschlussvorschlag.reason);
+        result.push(
+          getBeschlussgrundEnumValueAsString(beschlussvorschlag.reason)
+        );
       }
     }
 

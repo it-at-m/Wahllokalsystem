@@ -43,7 +43,7 @@
             v-for="beschlussgrund in beschlussgruende"
             :key="beschlussgrund.grund"
             v-model="beschlussgrund.selected"
-            :label="beschlussgrund.grund"
+            :label="getBeschlussgrundEnumValueAsString(beschlussgrund.grund)"
             hide-details
           />
           <div class="d-flex align-center">
@@ -51,9 +51,11 @@
               :model-value="andererGrundChecked"
               readonly
             />
-            <v-text-field
+            <v-textarea
               v-model="andererGrund"
               label="Andere Gründe"
+              rows="1"
+              auto-grow
             />
           </div>
         </v-col>
@@ -99,6 +101,7 @@ import { computed, ref, watch } from "vue";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
 
 const { required } = useRules();
@@ -107,6 +110,7 @@ const {
   createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
   isStimmzettelGueltigBasedOnVormerkungsgruenden,
 } = useTheBeschlussFassenTabUtils();
+const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
 
 const props = defineProps<{
   stimmzettel: PersistedStimmzettel | undefined;

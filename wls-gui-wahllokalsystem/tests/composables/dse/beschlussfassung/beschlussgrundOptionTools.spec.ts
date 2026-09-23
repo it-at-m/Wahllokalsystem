@@ -165,6 +165,8 @@ describe("beschlussgrundOptionTools.ts", () => {
         ])
         .build();
 
+      // todo mock getBeschlussgrundEnumValueAsString
+
       const options = unitUnderTest.mapGruendeToBeschlussgrundOptions([
         WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
         SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
@@ -178,7 +180,7 @@ describe("beschlussgrundOptionTools.ts", () => {
         );
 
       expect(result).toStrictEqual(
-        `custom-1, custom-2, ${SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich}`
+        `custom-1, custom-2, keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze`
       );
     });
 

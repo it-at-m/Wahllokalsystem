@@ -52,16 +52,10 @@ export function useBeschlussgrundTools() {
   }
 
   function getBeschlussgrundEnumValueAsString(
-    grund:
-      | string
-      | WahlvorstandBeschlussvorschlaegeEnum
-      | SystemBeschlussgrundReasonEnum
+    grund: string | SystemBeschlussgrundReasonEnum
   ): string {
     const systemGruende = Object.values(
       SystemBeschlussgrundReasonEnum
-    ) as string[];
-    const wahlvorstandGruende = Object.values(
-      WahlvorstandBeschlussvorschlaegeEnum
     ) as string[];
 
     const valueToCheck = String(grund);
@@ -70,15 +64,6 @@ export function useBeschlussgrundTools() {
       return mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
         valueToCheck as SystemBeschlussgrundReasonEnum
       );
-    }
-
-    if (wahlvorstandGruende.includes(valueToCheck)) {
-      if (
-        valueToCheck ===
-        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleIstZweifelsfreiErkennbar
-      ) {
-        return "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)";
-      }
     }
 
     return valueToCheck;

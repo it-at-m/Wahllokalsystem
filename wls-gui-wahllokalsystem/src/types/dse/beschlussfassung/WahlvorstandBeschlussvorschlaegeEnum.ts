@@ -1,6 +1,6 @@
 export const WahlvorstandBeschlussvorschlaegeEnum = {
   WaehlerwilleIstZweifelsfreiErkennbar:
-    "WAEHLERWILLE_IST_ZWEIFELSFREI_ERKENNBAR",
+    "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)",
   WaehlerwilleNichtZweifelsfreiErkennbar:
     "Wählerwille ist nicht zweifelsfrei erkennbar",
   StimmzettelMitBesonderemZusatz:

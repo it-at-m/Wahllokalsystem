@@ -6,7 +6,7 @@
     <v-card-text>
       <v-row>
         <v-col
-          v-for="vorschlag in wahlvorschlaegeWithKandidatenErgebnissen"
+          v-for="vorschlag in kandidatenstimmen"
           :key="vorschlag.identifikator"
           class="pa-0"
           cols="12"
@@ -24,20 +24,11 @@
 </template>
 
 <script setup lang="ts">
-import { onActivated } from "vue";
+import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnismeldung/common/WahlvorschlagWithKandidatenErgebnissen.ts";
 
-import BaseCardKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/MBW/stapelBC/BaseCardKandidatenstimmenAnzeigen.vue";
-import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
+import BaseCardKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/common/BaseCardKandidatenstimmenAnzeigen.vue";
 
-const props = defineProps<{
-  wahlbezirkId: string;
-  wahlId: string;
+defineProps<{
+  kandidatenstimmen: WahlvorschlagWithKandidatenErgebnissen[];
 }>();
-
-const {
-  wahlvorschlaegeWithKandidatenErgebnissen,
-  loadWahlvorschlaegeAndErgebnisse,
-} = useMwbStapelBCUtils(props.wahlbezirkId, props.wahlId);
-
-onActivated(loadWahlvorschlaegeAndErgebnisse);
 </script>

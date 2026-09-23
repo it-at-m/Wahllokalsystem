@@ -47,11 +47,15 @@ import BaseBeschlussfassungUebersichtTable from "@/components/dse/beschlussfassu
 import TheBeschlussfassungBearbeitenDialog from "@/components/dse/beschlussfassung/TheBeschlussfassungBearbeitenDialog.vue";
 import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
 import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
-import { ROUTE_FINISHED } from "@/constants.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import router from "@/plugins/router.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const { saveDseWorkflowStatus } = useDseWorkflowStatusService();
+const { setStepDone } = useWorkflowStore();
+const { getNextRoute } = useNavigationService();
 const route = useRoute();
 
 const wahlID = (route.params.wahlId as string) || "";
@@ -72,10 +76,9 @@ async function onBeschlussfassungBeendenClicked() {
     status: StimmzettelerfassungStatusEnum.BeAbgeschlossen,
   });
 
-  await router.push({
-    name: ROUTE_FINISHED,
-    params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
-  });
+  setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG);
+
+  await router.push(getNextRoute());
 }
 
 function onBeschlussBearbeitenClicked(stimmzettelToEdit: PersistedStimmzettel) {

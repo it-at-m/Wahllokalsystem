@@ -35,19 +35,6 @@ vi.mock(
   }
 );
 
-vi.mock(
-  import("@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts"),
-  () => {
-    return {
-      useSystemBeschlussgrundReasonEnumTools: () => ({
-        mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText:
-          mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText,
-        mapSystemBeschlussgrundReasonEnumToText: vi.fn(),
-      }),
-    };
-  }
-);
-
 const { prepareUser } = useUserTestDataFactory();
 const { createPersistedStimmzettel, preparePersistedStimmzettel } =
   usePersistedStimmzettelTestDataFactory();
@@ -164,10 +151,6 @@ describe("theBeschlussFassenTabUtils.ts", () => {
         ])
         .build();
 
-      mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText.mockReturnValueOnce(
-        "einzelne Stimmen ungültig"
-      );
-
       const result =
         unitUnderTest.isStimmzettelGueltigBasedOnVormerkungsgruenden(
           stimmzettel
@@ -204,10 +187,6 @@ describe("theBeschlussFassenTabUtils.ts", () => {
         ])
         .wahlvorstandBeschlussvorschlag([])
         .build();
-
-      mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText.mockReturnValueOnce(
-        "mehr als 80 Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen"
-      );
 
       const result =
         unitUnderTest.isStimmzettelGueltigBasedOnVormerkungsgruenden(

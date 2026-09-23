@@ -2,11 +2,6 @@ import type { BeschlussgrundOption } from "@/types/dse/beschlussfassung/Beschlus
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 
-import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts";
-
-const { mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText } =
-  useSystemBeschlussgrundReasonEnumTools();
-
 export function useBeschlussgrundOptionTools() {
   function mapGruendeToBeschlussgrundOptions(
     gruende: string[]
@@ -22,17 +17,12 @@ export function useBeschlussgrundOptionTools() {
     beschlussgrundOptions: BeschlussgrundOption[]
   ) {
     for (const beschlussvorschlag of systemBeschlussvorschlag) {
-      const reasonAsGrund =
-        mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
-          beschlussvorschlag.reason
-        );
-      if (reasonAsGrund) {
-        const entry = beschlussgrundOptions.find(
-          (beschlussgrundOption) => beschlussgrundOption.grund === reasonAsGrund
-        );
-        if (entry) {
-          entry.selected = true;
-        }
+      const entry = beschlussgrundOptions.find(
+        (beschlussgrundOption) =>
+          beschlussgrundOption.grund === beschlussvorschlag.reason
+      );
+      if (entry) {
+        entry.selected = true;
       }
     }
   }
@@ -69,16 +59,12 @@ export function useBeschlussgrundOptionTools() {
     }
 
     for (const beschlussvorschlag of systemBeschlussvorschlag) {
-      const reasonAsGrund =
-        mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
-          beschlussvorschlag.reason
-        );
-      if (!reasonAsGrund) continue;
       const existsInOptions = !!beschlussgrundOptions.find(
-        (beschlussgrundOption) => beschlussgrundOption.grund === reasonAsGrund
+        (beschlussgrundOption) =>
+          beschlussgrundOption.grund === beschlussvorschlag.reason
       );
       if (!existsInOptions) {
-        result.push(reasonAsGrund);
+        result.push(beschlussvorschlag.reason);
       }
     }
 

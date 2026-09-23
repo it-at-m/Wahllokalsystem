@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { useBeschlussgrundOptionTools } from "@/composables/dse/beschlussfassung/beschlussgrundOptionTools.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
+import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 
 const { preparePersistedStimmzettel } =
   usePersistedStimmzettelTestDataFactory();
@@ -49,9 +50,8 @@ describe("beschlussgrundOptionTools.ts", () => {
         .build();
 
       const options = unitUnderTest.mapGruendeToBeschlussgrundOptions([
-        "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
-        "Mehr als 3 Stimmen bei mind. einer Person und 80 Stimmen gesamt nicht überschritten",
-        "einzelne Stimmen ungültig",
+        SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
       ]);
 
       unitUnderTest.setSystemBeschlussgruendeTrueWhenFoundInStimmzettel(
@@ -62,8 +62,8 @@ describe("beschlussgrundOptionTools.ts", () => {
       const selected = options.filter((o) => o.selected).map((o) => o.grund);
       expect(selected).toEqual(
         expect.arrayContaining([
-          "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
-          "Mehr als 3 Stimmen bei mind. einer Person und 80 Stimmen gesamt nicht überschritten",
+          SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+          SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
         ])
       );
     });
@@ -79,8 +79,8 @@ describe("beschlussgrundOptionTools.ts", () => {
         .build();
 
       const options = unitUnderTest.mapGruendeToBeschlussgrundOptions([
-        "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)",
-        "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleIstZweifelsfreiErkennbar,
+        SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
       ]);
 
       unitUnderTest.setSystemBeschlussgruendeTrueWhenFoundInStimmzettel(
@@ -97,18 +97,18 @@ describe("beschlussgrundOptionTools.ts", () => {
       const stimmzettel = preparePersistedStimmzettel()
         .wahlvorstandBeschlussvorschlag([
           {
-            text: "Wählerwille ist nicht zweifelsfrei erkennbar",
+            text: WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
           },
           {
-            text: "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
+            text: WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
           },
         ])
         .build();
 
       const options = unitUnderTest.mapGruendeToBeschlussgrundOptions([
-        "Wählerwille ist nicht zweifelsfrei erkennbar",
-        "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
-        "mehr als 80 Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
+        WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
+        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
       ]);
 
       unitUnderTest.setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel(
@@ -119,8 +119,8 @@ describe("beschlussgrundOptionTools.ts", () => {
       const selected = options.filter((o) => o.selected).map((o) => o.grund);
       expect(selected).toEqual(
         expect.arrayContaining([
-          "Wählerwille ist nicht zweifelsfrei erkennbar",
-          "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
+          WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
+          WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
         ])
       );
     });
@@ -135,7 +135,7 @@ describe("beschlussgrundOptionTools.ts", () => {
         .build();
 
       const options = unitUnderTest.mapGruendeToBeschlussgrundOptions([
-        "Wählerwille ist nicht zweifelsfrei erkennbar",
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
       ]);
 
       unitUnderTest.setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel(
@@ -152,7 +152,9 @@ describe("beschlussgrundOptionTools.ts", () => {
       const stimmzettel = preparePersistedStimmzettel()
         .wahlvorstandBeschlussvorschlag([
           { text: "custom-1" },
-          { text: "Wählerwille ist nicht zweifelsfrei erkennbar" },
+          {
+            text: WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
+          },
           { text: "custom-2" },
         ])
         .systemBeschlussvorschlag([
@@ -164,8 +166,8 @@ describe("beschlussgrundOptionTools.ts", () => {
         .build();
 
       const options = unitUnderTest.mapGruendeToBeschlussgrundOptions([
-        "Wählerwille ist nicht zweifelsfrei erkennbar",
-        "mehr als 80 Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
+        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
       ]);
 
       const result =
@@ -176,14 +178,16 @@ describe("beschlussgrundOptionTools.ts", () => {
         );
 
       expect(result).toStrictEqual(
-        "custom-1, custom-2, keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze"
+        `custom-1, custom-2, ${SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich}`
       );
     });
 
     it("should_returnEmptyList_when_allTextsMatchOptions", () => {
       const stimmzettel = preparePersistedStimmzettel()
         .wahlvorstandBeschlussvorschlag([
-          { text: "Wählerwille ist nicht zweifelsfrei erkennbar" },
+          {
+            text: WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
+          },
         ])
         .systemBeschlussvorschlag([
           {
@@ -194,8 +198,8 @@ describe("beschlussgrundOptionTools.ts", () => {
         .build();
 
       const options = unitUnderTest.mapGruendeToBeschlussgrundOptions([
-        "Wählerwille ist nicht zweifelsfrei erkennbar",
-        "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
+        SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
       ]);
 
       const result =

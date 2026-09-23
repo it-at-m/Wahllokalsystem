@@ -4,8 +4,9 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useBeschlussgrundOptionTools } from "@/composables/dse/beschlussfassung/beschlussgrundOptionTools.ts";
-import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
+import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 
 const {
   mapGruendeToBeschlussgrundOptions,
@@ -13,8 +14,6 @@ const {
   setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel,
   setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
 } = useBeschlussgrundOptionTools();
-const { mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText } =
-  useSystemBeschlussgrundReasonEnumTools();
 
 export function useTheBeschlussFassenTabUtils() {
   const { isBWB } = storeToRefs(useUserStore());
@@ -22,25 +21,25 @@ export function useTheBeschlussFassenTabUtils() {
   const beschlussGruende = {
     common: {
       gueltig: [
-        "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)",
-        "Mehr als 3 Stimmen bei mind. einer Person und 80 Stimmen gesamt nicht überschritten",
-        "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
-        "einzelne Stimmen ungültig",
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleIstZweifelsfreiErkennbar,
+        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+        SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+        SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
       ],
       ungueltig: [
-        "Wählerwille ist nicht zweifelsfrei erkennbar",
-        "mehr als 80 Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
-        "Stimmzettel ist mit einem besonderen Merkmal, Zusatz oder Vorbehalt versehen",
-        "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
+        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+        WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
+        WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
       ],
     },
     bwb: {
       gueltig: [
-        "Mehrere gleich gekennzeichnete Stimmzettel im Umschlag",
-        "Mehrere Stimmzettel im Umschlag, einer gekennzeichnet, die anderen leer",
+        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagIdentischGekennzeichnet,
+        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagLeerUndGekennzeichnet,
       ],
       ungueltig: [
-        "Mehrere unterschiedlich gekennzeichnete Stimmzettel im Umschlag",
+        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagUnterschiedlichGekennzeichnet,
       ],
     },
   };
@@ -94,11 +93,7 @@ export function useTheBeschlussFassenTabUtils() {
     const hasUngueltigerSystemGrund = (
       stimmzettel.systemBeschlussvorschlag ?? []
     ).some((beschlussvorschlag) => {
-      const mappedReason =
-        mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText(
-          beschlussvorschlag.reason
-        );
-      return ungueltigSet.has(mappedReason);
+      return ungueltigSet.has(beschlussvorschlag.reason);
     });
 
     const hasUngueltigerWahlvorstandGrund = (

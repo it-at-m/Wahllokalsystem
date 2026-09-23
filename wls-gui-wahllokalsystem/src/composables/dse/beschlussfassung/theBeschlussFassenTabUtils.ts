@@ -45,7 +45,7 @@ export function useTheBeschlussFassenTabUtils() {
     },
   };
 
-  function updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit(
+  function createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
     isStimmzettelGueltig: boolean | null,
     stimmzettel: PersistedStimmzettel | undefined
   ) {
@@ -85,7 +85,7 @@ export function useTheBeschlussFassenTabUtils() {
     stimmzettel: PersistedStimmzettel
   ) {
     const ungueltigOptions =
-      updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit(
+      createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
         false,
         undefined
       ).beschlussgruende;
@@ -124,7 +124,7 @@ export function useTheBeschlussFassenTabUtils() {
   }
 
   return {
-    updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit,
+    createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
     isStimmzettelGueltigBasedOnVormerkungsgruenden,
   };
 }

@@ -66,7 +66,7 @@ describe("theBeschlussFassenTabUtils.ts", () => {
     unitUnderTest = useTheBeschlussFassenTabUtils();
   });
 
-  describe("updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit", () => {
+  describe("createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit", () => {
     const commonGueltigGruende = [
       "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)",
       "Mehr als 3 Stimmen bei mind. einer Person und 80 Stimmen gesamt nicht überschritten",
@@ -118,7 +118,7 @@ describe("theBeschlussFassenTabUtils.ts", () => {
         );
 
         const result =
-          unitUnderTest.updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit(
+          unitUnderTest.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
             isGueltig,
             createPersistedStimmzettel()
           );
@@ -129,7 +129,7 @@ describe("theBeschlussFassenTabUtils.ts", () => {
 
     it("should_returnEmptyList_when_stimmzettelGueltigkeitIsNull", () => {
       const result =
-        unitUnderTest.updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit(
+        unitUnderTest.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
           null,
           createPersistedStimmzettel()
         );

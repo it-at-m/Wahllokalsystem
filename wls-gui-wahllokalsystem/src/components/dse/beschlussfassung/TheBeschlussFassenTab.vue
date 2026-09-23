@@ -104,7 +104,7 @@ import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassun
 const { required } = useRules();
 
 const {
-  updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit,
+  createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
   isStimmzettelGueltigBasedOnVormerkungsgruenden,
 } = useTheBeschlussFassenTabUtils();
 
@@ -141,10 +141,11 @@ watch(
 );
 
 function rebuildBeschlussgruende() {
-  const gruende = updateBeschlussgruendeBasedOnStimmzettelAndGueltigkeit(
-    isGueltig.value,
-    props.stimmzettel
-  );
+  const gruende =
+    createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
+      isGueltig.value,
+      props.stimmzettel
+    );
   andererGrund.value = gruende.andererGrund;
   beschlussgruende.value = gruende.beschlussgruende;
 }

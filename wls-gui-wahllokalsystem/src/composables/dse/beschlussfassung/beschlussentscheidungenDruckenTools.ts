@@ -6,9 +6,10 @@ import type { Wahl } from "@/types/wahl/Wahl.ts";
 import { storeToRefs } from "pinia";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useDruckTemplateTools } from "@/composables/drucken/druckTemplateTools.ts";
+import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
 import { useAusdruckService } from "@/composables/ergebnismeldung/common/ausdruckService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 
 const { logError } = useLogging("useBeschlussentscheidungenDruckenTools");
@@ -21,7 +22,7 @@ export function useBeschlussentscheidungenDruckenTools(
     storeToRefs(useUserStore());
 
   const { postAusdruck } = useAusdruckService();
-  const { createFooter } = useDruckTemplateTools();
+  const { createFooter } = useCommonPrintService();
 
   async function sendAusdruckBeschlussentscheidungen(
     meldungsart: MeldungsartEnum,
@@ -45,6 +46,7 @@ export function useBeschlussentscheidungenDruckenTools(
       wahlbezirksArt: currentUserWahlbezirksArt.value,
       footer: createFooter(
         MeldungValidierungsstatusEnum.Valide,
+        MeldungsArtEnum.Schnellmeldung,
         currentUserWahlbezirkNummer.value
       ),
     };

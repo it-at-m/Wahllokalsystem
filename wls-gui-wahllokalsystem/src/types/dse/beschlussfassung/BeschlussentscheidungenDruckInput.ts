@@ -7,5 +7,5 @@ export interface BeschlussentscheidungenDruckInput {
   wahlbezirkNummer: string;
   aktuelleWahl: Wahl;
   wahlbezirksArt: WahlbezirksArtEnum;
-  footer: string;
+  footer?: string;
 }

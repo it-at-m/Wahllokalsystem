@@ -98,6 +98,37 @@
           />
         </v-col>
       </v-row>
+      <v-row>
+        <v-col>
+          <base-feedback-card
+            v-if="abstimmungIsUnentschieden"
+            title="Die Abstimmung ist unentschieden"
+            type="warning"
+          >
+            <div>
+              <p>
+                Bei einem Gleichstand ist die Stimme des Wahlvorstehers / der
+                Wahlvorsteherin ausschlaggebend.
+              </p>
+              <p>
+                Bitte bestätigen Sie, dass der/die Wahlvorsteher/in
+                <span class="font-weight-bold"> dafür </span> gestimmt hat, und
+                das Abstimmungsergebnis somit
+                <span class="font-weight-bold">
+                  {{ (stimmenDafuer ?? 0) + 1 }} zu {{ stimmenDagegen }} für den
+                  Beschlussvorschlag
+                </span>
+                ist.
+              </p>
+              <v-checkbox
+                v-model="hasWahlvorsteherVotedDafuer"
+                label="Der/Die Wahlvorsteher/in hat dafür gestimmt"
+                hide-details
+              />
+            </div>
+          </base-feedback-card>
+        </v-col>
+      </v-row>
     </v-card-text>
   </v-card>
 </template>
@@ -108,6 +139,7 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
@@ -139,6 +171,13 @@ const andererGrund = ref("");
 const andererGrundChecked = computed(() => !!andererGrund.value);
 const stimmenDafuer = ref<number | null>(null);
 const stimmenDagegen = ref<number | null>(null);
+const hasWahlvorsteherVotedDafuer = ref(false);
+const abstimmungIsUnentschieden = computed(() => {
+  if (!stimmenDafuer.value || !stimmenDagegen.value) {
+    return false;
+  }
+  return stimmenDafuer.value === stimmenDagegen.value;
+});
 
 watch(
   () => props.stimmzettel,

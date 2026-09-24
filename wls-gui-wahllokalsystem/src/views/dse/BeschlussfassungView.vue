@@ -27,6 +27,7 @@
       </v-card-actions>
     </v-card>
     <the-beschlussfassung-bearbeiten-dialog
+      v-if="activeStimmzettelForBeschluss"
       v-model="isBearbeitenDialogVisible"
       :stimmzettel="activeStimmzettelForBeschluss"
       @cancel="onBeschlussBearbeitenCanceled"

@@ -109,7 +109,7 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, nextTick, useTemplateRef } from "vue";
 
 import BaseStimmzettelSonderfaelleCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelSonderfaelleCard.vue";
 import BaseStimmzettelZusammenfassungCard from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelZusammenfassungCard.vue";
@@ -126,7 +126,7 @@ const stimmzettelManager = defineModel("modelValue", {
   required: true,
 });
 
-const properties = defineProps({
+const props = defineProps({
   stimmzettel: {
     type: Object as PropType<PersistedStimmzettel>,
     required: true,
@@ -136,7 +136,7 @@ const properties = defineProps({
     required: true,
   },
   stimmzettelGueltigkeit: {
-    type: Object as PropType<StimmzettelGueltigkeitEnum>,
+    type: String,
     required: true,
   },
 });
@@ -146,9 +146,9 @@ const changeHistory = computed(
 );
 const isCommandInputFieldDisabled = computed(
   () =>
-    properties.stimmzettelGueltigkeit ===
+    props.stimmzettelGueltigkeit ===
       StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag ||
-    properties.stimmzettelGueltigkeit === StimmzettelGueltigkeitEnum.Leer
+    props.stimmzettelGueltigkeit === StimmzettelGueltigkeitEnum.Leer
 );
 const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
@@ -157,4 +157,17 @@ const latestChangedWahlvorschlagId = computed<string | null>(
 const latestChangedKandidat = computed<DseKandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
 );
+
+const COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME =
+  "commandProcessingTextField" as const;
+const commandProcessingTextField = useTemplateRef<
+  InstanceType<typeof TheStimmzettelCommandProcessingTextField>
+>(COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME);
+
+async function focusCommandProcessingTextField() {
+  await nextTick();
+  commandProcessingTextField.value?.focus();
+}
+
+defineExpose({ focusCommandProcessingTextField });
 </script>

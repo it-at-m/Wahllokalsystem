@@ -13,6 +13,7 @@
         {{ stimmzettel.stimmzettelkennung }}
       </v-card-title>
       <base-stimmzettel-erfassung-card-content
+        :ref="BASE_CONTENT_TEMPLATE_REF_NAME"
         v-model="stimmzettelManager"
         :stimmzettel="stimmzettel"
         :wahlvorschlaege="wahlvorschlaege"
@@ -61,7 +62,6 @@ import BaseSaveButtonWithActionMenu from "@/components/common/buttons/BaseSaveBu
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseStimmzettelErfassungCardContent from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelErfassungCardContent.vue";
 import TheStimmzettelErfassungCancelConfirmationDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungCancelConfirmationDialog.vue";
-import TheStimmzettelCommandProcessingTextField from "@/components/dse/stimmzettelerfassung/TheStimmzettelCommandProcessingTextField.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -114,11 +114,11 @@ const actions = [
   },
 ];
 
-const COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME =
-  "commandProcessingTextField";
-const commandProcessingTextField = useTemplateRef<
-  InstanceType<typeof TheStimmzettelCommandProcessingTextField>
->(COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME);
+const BASE_CONTENT_TEMPLATE_REF_NAME =
+  "baseStimmzettelErfassungCardContent" as const;
+const baseContentRef = useTemplateRef<
+  InstanceType<typeof BaseStimmzettelErfassungCardContent>
+>(BASE_CONTENT_TEMPLATE_REF_NAME);
 
 const currentAction = ref(actions[0]);
 
@@ -181,7 +181,7 @@ const isCancelConfirmationDialogVisible = ref(false);
 
 async function focusCommandProcessingTextField() {
   await nextTick();
-  commandProcessingTextField.value?.focus();
+  baseContentRef.value?.focusCommandProcessingTextField();
 }
 
 function onCancelClicked() {

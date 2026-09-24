@@ -17,7 +17,6 @@
         <v-tab value="two"> Stimmzettel anzeigen und bearbeiten </v-tab>
         <v-spacer />
         <base-stimmzettelkennung-strong-text
-          v-if="stimmzettel"
           :stimmzettelkennung="stimmzettel.stimmzettelkennung"
           :team-name="stimmzettel.teamID"
           compact
@@ -28,8 +27,18 @@
         <v-tabs-window-item value="one">
           <the-beschluss-fassen-tab :stimmzettel="stimmzettel" />
         </v-tabs-window-item>
-        <v-tabs-window-item value="two">
-          <v-card/>
+        <v-tabs-window-item
+          value="two"
+          eager
+        >
+          <v-card>
+            <base-stimmzettel-erfassung-card-content
+              v-model="stimmzettelManager"
+              :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
+              :wahlvorschlaege="wahlvorschlaege"
+              :stimmzettel="stimmzettel"
+            />
+          </v-card>
         </v-tabs-window-item>
       </v-tabs-window>
       <v-spacer />
@@ -48,21 +57,40 @@
 <script setup lang="ts">
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
-import { ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { computed, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheBeschlussFassenTab from "@/components/dse/beschlussfassung/TheBeschlussFassenTab.vue";
+import BaseStimmzettelErfassungCardContent from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelErfassungCardContent.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
+import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
+import { useWahlvorschlaegeState } from "@/composables/dse/stimmzettelerfassung/wahlvorschlaegeState.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
   required: false,
 });
 
-defineProps<{
-  stimmzettel: PersistedStimmzettel | undefined;
+const props = defineProps<{
+  stimmzettel: PersistedStimmzettel;
 }>();
+
+const route = useRoute();
+const wahlID = route.params.wahlId as string;
+const wahlbezirkID = route.params.wahlbezirkId as string;
+const { currentUserTeamName } = storeToRefs(useUserStore());
+const { wahlvorschlaege } = useWahlvorschlaegeState(wahlID, wahlbezirkID);
+
+const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
+  computed(() => props.stimmzettel.stimmzettelkennung),
+  wahlvorschlaege.value,
+  wahlID,
+  currentUserTeamName.value
+);
 
 const emit = defineEmits<{
   cancel: [];
@@ -70,6 +98,12 @@ const emit = defineEmits<{
 }>();
 
 const tab = ref("one");
+
+const stimmzettelGueltigkeit = computed(
+  () =>
+    stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
+      .gueltigkeit
+);
 
 watch(isDialogVisibleModel, (isVisible) => {
   if (isVisible) {

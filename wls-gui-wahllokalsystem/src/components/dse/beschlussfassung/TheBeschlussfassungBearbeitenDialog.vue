@@ -28,7 +28,9 @@
         <v-tabs-window-item value="one">
           <the-beschluss-fassen-tab :stimmzettel="stimmzettel" />
         </v-tabs-window-item>
-        <v-tabs-window-item value="two" />
+        <v-tabs-window-item value="two">
+          <v-card/>
+        </v-tabs-window-item>
       </v-tabs-window>
       <v-spacer />
       <v-card-actions>

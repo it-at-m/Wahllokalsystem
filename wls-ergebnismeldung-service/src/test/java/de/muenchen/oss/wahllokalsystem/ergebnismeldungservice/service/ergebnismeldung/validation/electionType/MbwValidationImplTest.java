@@ -180,6 +180,30 @@ class MbwValidationImplTest {
       // we have to avoid to get exception to early: #793
       Mockito.verifyNoInteractions(defaultElectionTypeValidator);
     }
+
+    @ParameterizedTest
+    @EnumSource(MeldungsartModel.class)
+    void should_returnFalse_when_exceptionOccurredInStimmzettelServiceAndStapelValidationFailed(
+        final MeldungsartModel meldungsart) {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+
+      val mockedStimmzettelException = new RuntimeException("mocked exception");
+      Mockito.doThrow(mockedStimmzettelException)
+          .when(stimmzettelerfassungService)
+          .getStimmzettelerfassungStatus(any());
+
+      Mockito.when(
+              defaultElectionTypeValidator.checkValidation(
+                  any(), anyString(), anyString(), any(), any()))
+          .thenReturn(false);
+
+      val result =
+          unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(result).isEqualTo(false);
+    }
   }
 
   @Nested
@@ -293,6 +317,30 @@ class MbwValidationImplTest {
       Assertions.assertThat(result).isEqualTo(true);
       // we have to avoid to get exception to early: #793
       Mockito.verifyNoInteractions(defaultElectionTypeValidator);
+    }
+
+    @ParameterizedTest
+    @EnumSource(MeldungsartModel.class)
+    void should_returnFalse_when_exceptionOccurredInStimmzettelServiceAndStapelValidationFailed(
+        final MeldungsartModel meldungsart) {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+
+      val mockedStimmzettelException = new RuntimeException("mocked exception");
+      Mockito.doThrow(mockedStimmzettelException)
+          .when(stimmzettelerfassungService)
+          .getStimmzettelerfassungStatus(any());
+
+      Mockito.when(
+              defaultElectionTypeValidator.checkValidation(
+                  any(), anyString(), anyString(), any(), any()))
+          .thenReturn(false);
+
+      val result =
+          unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(result).isEqualTo(false);
     }
   }
 

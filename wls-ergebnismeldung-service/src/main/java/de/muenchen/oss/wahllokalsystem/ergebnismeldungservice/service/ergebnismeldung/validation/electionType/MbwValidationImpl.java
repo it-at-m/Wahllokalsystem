@@ -14,11 +14,13 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MbwValidationImpl implements ElectionTypeValidation {
 
   private final DefaultElectionTypeValidator validator;
@@ -100,14 +102,19 @@ public class MbwValidationImpl implements ElectionTypeValidation {
 
   private boolean isValidDSE(
       final MeldungsartModel meldungsart, final BezirkUndWahlID bezirkUndWahlID) {
-    val status = stimmzettelerfassungService.getStimmzettelerfassungStatus(bezirkUndWahlID);
-    // Schnellmeldung
-    if (MeldungsartModel.V3.equals(meldungsart)) {
-      return status.map(ErfassungStatusModel::isStimmzettelerfassungAbgeschlossen).orElse(false);
-    } else if (MeldungsartModel.V1.equals(meldungsart)) {
-      // Niederschrift
-      return status.map(ErfassungStatusModel::isBeschlussfassungAbgeschlossen).orElse(false);
+    try {
+      val status = stimmzettelerfassungService.getStimmzettelerfassungStatus(bezirkUndWahlID);
+      // Schnellmeldung
+      if (MeldungsartModel.V3.equals(meldungsart)) {
+        return status.map(ErfassungStatusModel::isStimmzettelerfassungAbgeschlossen).orElse(false);
+      } else if (MeldungsartModel.V1.equals(meldungsart)) {
+        // Niederschrift
+        return status.map(ErfassungStatusModel::isBeschlussfassungAbgeschlossen).orElse(false);
+      }
+      return false;
+    } catch (final RuntimeException ex) {
+      log.warn("exception occurred during check if dse ist valid", ex);
+      return false;
     }
-    return false;
   }
 }

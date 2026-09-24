@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WahlUndBezirkIDUndMeldungsart implements Serializable {
+public class WahlUndBezirkIDUndDokumentart implements Serializable {
 
   @NotBlank @Size(max = 1024) private String wahlbezirkID;
 
   @NotBlank @Size(max = 1024) private String wahlID;
 
   @NotNull @Enumerated(EnumType.STRING)
-  private Meldungsart meldungsart;
+  private Dokumentart dokumentart;
 }

@@ -46,6 +46,14 @@ export function useStimmzettelTools() {
     };
   }
 
+  function isBeschlussRequired(stimmzettel: PersistedStimmzettel) {
+    return (
+      stimmzettel.gueltigkeit ===
+        StimmzettelGueltigkeitEnum.BeschlussAusstehend ||
+      stimmzettel.beschlussfassung !== null
+    );
+  }
+
   function isVorgemerktFuerBeschluss(
     stimmzettel: PersistedStimmzettel
   ): boolean {
@@ -172,6 +180,7 @@ export function useStimmzettelTools() {
   return {
     createStimmzettelWithWahlvorschlaege,
     getEmptyStimmzettelWithStimmzettelkennung,
+    isBeschlussRequired,
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
     normalizePersistedStimmzettel,

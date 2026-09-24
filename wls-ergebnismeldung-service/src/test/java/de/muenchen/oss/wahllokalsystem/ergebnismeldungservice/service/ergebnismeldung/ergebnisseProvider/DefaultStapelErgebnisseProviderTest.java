@@ -1,10 +1,11 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ergebnisseProvider;
 
 import static org.instancio.Select.field;
 import static org.mockito.Mockito.times;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.WahlartPredicateHolder;
@@ -25,7 +26,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class DefaultStapelErgebnisseMapperTest {
+class DefaultStapelErgebnisseProviderTest {
 
   private static final String WAHL_ID = "wahlID";
   private static final String WAHLBEZIRK_ID = "wahlbezirkID";
@@ -34,7 +35,7 @@ class DefaultStapelErgebnisseMapperTest {
 
   @Mock WahlartPredicateHolder wahlartPredicateHolder;
 
-  @InjectMocks DefaultStapelErgebnisseMapper unitUnderTest;
+  @InjectMocks DefaultStapelErgebnisseProvider unitUnderTest;
 
   @Nested
   class getErgebnismeldungErgebnisse {
@@ -125,7 +126,7 @@ class DefaultStapelErgebnisseMapperTest {
     void should_returnTrue_when_anyWahlartIsGiven(final WahlartModel wahlart) {
       val result = unitUnderTest.canHandleWahlart(wahlart);
 
-      Assertions.assertThat(result).isTrue();
+      Assertions.assertThat(result).isEqualTo(!WahlartModel.MBW.equals(wahlart));
       Mockito.verifyNoInteractions(ergebnisseService, wahlartPredicateHolder);
     }
   }

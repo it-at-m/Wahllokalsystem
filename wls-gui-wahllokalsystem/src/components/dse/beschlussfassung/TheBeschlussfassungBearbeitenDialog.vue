@@ -39,6 +39,7 @@
         <base-wls-button-save
           v-if="tab === 'one'"
           save-text="Beschluss speichern"
+          :disabled="isBeschlussSpeichernButtonDisabled"
           @click="onSaveClicked"
         />
       </v-card-actions>
@@ -49,7 +50,7 @@
 <script setup lang="ts">
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
@@ -74,6 +75,16 @@ const emit = defineEmits<{
 }>();
 
 const tab = ref("one");
+const isBeschlussSpeichernButtonDisabled = computed(() => {
+  const ergebnis = abstimmungsergebnis.value;
+  return (
+    ergebnis.abstimmungIsUngueltig ||
+    (ergebnis.abstimmungIsUnentschieden &&
+      !ergebnis.hasWahlvorsteherVotedDafuer) ||
+    ergebnis.stimmenDafuer == null ||
+    ergebnis.stimmenDagegen == null
+  );
+});
 
 watch(isDialogVisibleModel, (isVisible) => {
   if (isVisible) {

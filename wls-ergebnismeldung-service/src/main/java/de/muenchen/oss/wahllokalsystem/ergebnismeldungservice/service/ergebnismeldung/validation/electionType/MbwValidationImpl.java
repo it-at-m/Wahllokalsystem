@@ -38,8 +38,13 @@ public class MbwValidationImpl implements ElectionTypeValidation {
       final Long waehlerverzeichnisNummer,
       final MeldungsartModel meldungsart)
       throws WlsException {
-    val necessaryStacks = buildNecessaryStack();
+    val bezirkUndWahlId = new BezirkUndWahlID(wahlID, wahlbezirkID);
 
+    if (isValidDSE(meldungsart, bezirkUndWahlId)) {
+      return true;
+    }
+
+    val necessaryStacks = buildNecessaryStack();
     boolean stacksValid =
         validator.checkValidation(
             WahlbezirkArtModel.UWB,
@@ -47,17 +52,9 @@ public class MbwValidationImpl implements ElectionTypeValidation {
             wahlID,
             waehlerverzeichnisNummer,
             necessaryStacks);
-    val bezirkUndWahlId = new BezirkUndWahlID(wahlID, wahlbezirkID);
-
     boolean hasBedenklich = hasBedenklicheStimmzettel(bezirkUndWahlId);
-
     // Stapelerfassung valid
-    if (stacksValid && hasBedenklich) {
-      return true;
-    }
-
-    // invalid in general or valid for DSE
-    return isValidDSE(meldungsart, bezirkUndWahlId);
+    return stacksValid && hasBedenklich;
   }
 
   @Override
@@ -67,8 +64,15 @@ public class MbwValidationImpl implements ElectionTypeValidation {
       final Long waehlerverzeichnisNummer,
       final MeldungsartModel meldungsart)
       throws WlsException {
-    val necessaryStacks = buildNecessaryStack();
 
+    val bezirkUndWahlId = new BezirkUndWahlID(wahlID, wahlbezirkID);
+
+    // invalid in general or valid for DSE
+    if (isValidDSE(meldungsart, bezirkUndWahlId)) {
+      return true;
+    }
+
+    val necessaryStacks = buildNecessaryStack();
     boolean stacksValid =
         validator.checkValidation(
             WahlbezirkArtModel.BWB,
@@ -76,16 +80,10 @@ public class MbwValidationImpl implements ElectionTypeValidation {
             wahlID,
             waehlerverzeichnisNummer,
             necessaryStacks);
-    val bezirkUndWahlId = new BezirkUndWahlID(wahlID, wahlbezirkID);
     boolean hasBedenklich = hasBedenklicheStimmzettel(bezirkUndWahlId);
 
     // Stapelerfassung valid
-    if (stacksValid && hasBedenklich) {
-      return true;
-    }
-
-    // invalid in general or valid for DSE
-    return isValidDSE(meldungsart, bezirkUndWahlId);
+    return stacksValid && hasBedenklich;
   }
 
   private List<Stapelart> buildNecessaryStack() {

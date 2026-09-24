@@ -58,7 +58,6 @@ import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 import { useStimmzettelZusammenfassungUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelZusammenfassungUtils.ts";
 import { useMbwNiederschriftViewUtils } from "@/composables/ergebnismeldung/MBW/theMbwDseNiederschriftViewUtils.ts";
-import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
@@ -80,7 +79,6 @@ const emit = defineEmits<{
 }>();
 
 const { hasDoneVorkommnisse } = useEreignisUtils();
-const { getEreignisse } = useEreignisService();
 
 const {
   stapelA,

@@ -56,7 +56,6 @@ import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
-import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
@@ -78,7 +77,6 @@ const emit = defineEmits<{
 }>();
 
 const { hasDoneVorkommnisse } = useEreignisUtils();
-const { getEreignisse } = useEreignisService();
 const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 const {
   wahlvorschlaegeWithKandidatenErgebnissen,

@@ -63,15 +63,15 @@ import org.springframework.transaction.support.TransactionTemplate;
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
-class MBWStimmzettelRepositoryTest {
+class MBWStimmzettelRepositoryImplTest {
 
   private final String wahlID = Instancio.create(String.class);
   private final String wahlbezirkID = Instancio.create(String.class);
   private final String teamA = "A";
   private final String teamB = "B";
 
-  @Autowired StimmzettelRepository stimmzettelRepository;
   @Autowired MBWStimmzettelRepository unitUnderTest;
+  @Autowired StimmzettelRepository stimmzettelRepository;
 
   @Autowired TransactionTemplate transactionTemplate;
 

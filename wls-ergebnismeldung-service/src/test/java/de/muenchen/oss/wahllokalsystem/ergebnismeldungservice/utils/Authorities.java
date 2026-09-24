@@ -7,6 +7,8 @@ import org.apache.commons.lang3.ArrayUtils;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Authorities {
 
+  public static final String AUTHORITY_WAHLVORSTAND = "WLS_WAHLVORSTAND";
+
   public static final String SERVICE_GET_AWERTE = "Ergebnismeldung_BUSINESSACTION_GetAWerte";
   public static final String ADMIN_LOADWAHLTERMINDATEN = "Admin_BUSINESSACTION_LoadWahltermindaten";
   public static final String SERVICE_GET_STATUS = "Ergebnismeldung_BUSINESSACTION_GetStatus";

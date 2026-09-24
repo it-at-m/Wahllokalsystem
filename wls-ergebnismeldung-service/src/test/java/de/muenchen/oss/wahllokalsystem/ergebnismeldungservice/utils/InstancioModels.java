@@ -70,6 +70,21 @@ public class InstancioModels {
         .toModel();
   }
 
+  public static Model<Stimmzettel> createBlankStimmzettelModel(
+      final String wahlID,
+      final String wahlbezirkID,
+      final String teamID,
+      final int stimmzettelkennung,
+      final StimmzettelGueltigkeit stimmzettelGueltigkeit) {
+    return Instancio.ofBlank(Stimmzettel.class)
+        .set(
+            field(Stimmzettel::getId),
+            new StimmzettelID(wahlbezirkID, wahlID, teamID, stimmzettelkennung))
+        .set(field(Stimmzettel::getGueltigkeit), stimmzettelGueltigkeit)
+        .onComplete(all(Stimmzettel.class), LINK_PARENT_STIMMZETTEL_ON_WAHLVORSCHLAEGEN)
+        .toModel();
+  }
+
   public static Model<Wahlvorschlag> createBlankNonSelectedWahlvorschlagModel(
       String wahlvorschlagID) {
     return Instancio.ofBlank(Wahlvorschlag.class)

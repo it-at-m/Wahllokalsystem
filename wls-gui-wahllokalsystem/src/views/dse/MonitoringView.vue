@@ -159,13 +159,5 @@ async function onAktualisierenClicked() {
 
 async function onOpenStimmzettelerfassungClicked(teamID: string) {
   await reopenStimmzettelerfassung(teamID);
-  // await postErfassungTeamStatus(
-  //     wahlID,
-  //     wahlbezirkID,
-  //     teamID,
-  //     { status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG },
-  //     true
-  // );
-  // await onMonitoringSynchronisierenClicked();
 }
 </script>

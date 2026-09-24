@@ -21,7 +21,6 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExcept
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Arrays;
-import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
@@ -563,7 +562,7 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
       val existingTeamStatus =
           new StimmzettelerfassungTeamStatus(id, ErfassungTeamStatus.ABGESCHLOSSEN);
       val existingWorkflowStatus =
-          new StimmzettelerfassungStatus(workflowId, ErfassungStatus.STE_BEARBEITUNG);
+          new StimmzettelerfassungStatus(workflowId, ErfassungStatus.STE_ABGESCHLOSSEN);
       teamstatusRepository.save(existingTeamStatus);
       stimmzettelerfassungStatusRepository.save(existingWorkflowStatus);
       Mockito.doThrow(new RuntimeException("saving workflow status failed"))
@@ -598,14 +597,12 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
                   + wahlbezirkID
                   + "/team/"
                   + teamID
-                  + "/reopen")
+                  + "/status/inBearbeitung")
           .with(csrf())
           .with(
               jwt()
                   .authorities(
-                      Stream.concat(
-                              Arrays.stream(Authorities.ALL_AUTHORITIES_SAVE_TEAMSTATUS),
-                              Stream.of(Authorities.SERVICE_SAVE_STIMMZETTELERFASSUNGSTATUS))
+                      Arrays.stream(Authorities.ALL_AUTHORITIES_SAVE_TEAMSTATUS)
                           .map(SimpleGrantedAuthority::new)
                           .toArray(SimpleGrantedAuthority[]::new))
                   .jwt(

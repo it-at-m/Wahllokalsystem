@@ -1,11 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelerfassung.teamstatus;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.ErfassungStatusModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.ErfassungTeamStatusModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamStatusService;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -23,8 +20,6 @@ import org.springframework.http.HttpStatus;
 class StimmzettelerfassungTeamStatusControllerTest {
 
   @Mock TeamStatusService teamStatusService;
-
-  @Mock StimmzettelerfassungService stimmzettelerfassungService;
 
   @Mock ErfassungTeamStatusDTOMapper erfassungTeamStatusDTOMapper;
   @Mock ErfassungTeamStatusEntryDTOMapper erfassungTeamStatusEntryDTOMapper;
@@ -172,13 +167,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
 
       underTest.reopenStimmzettelerfassung(wahlID, wahlbezirkID, teamID);
 
-      Mockito.verify(teamStatusService)
-          .saveTeamStatus(
-              new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
-              ErfassungTeamStatusModel.IN_BEARBEITUNG);
-      Mockito.verify(stimmzettelerfassungService)
-          .saveStimmzettelerfassungStatus(
-              new BezirkUndWahlID(wahlID, wahlbezirkID), ErfassungStatusModel.STE_BEARBEITUNG);
+      Mockito.verify(teamStatusService).reopenStimmzettelerfassung(wahlID, wahlbezirkID, teamID);
     }
   }
 }

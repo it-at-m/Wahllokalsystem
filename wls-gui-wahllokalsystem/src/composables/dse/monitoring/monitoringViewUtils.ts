@@ -27,12 +27,12 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     );
 
   async function onMonitoringSynchronisierenClicked() {
-    await stimmzettelerfassungTeamState.loadTeamStatusListe();
+    await _loadTeamstatusListe();
   }
 
   onActivated(async () => {
     await Promise.allSettled([
-      stimmzettelerfassungTeamState.loadTeamStatusListe(),
+      _loadTeamstatusListe(),
       stimmzettelerfassungState.loadWorkflowStatus(),
     ]);
   });
@@ -75,8 +75,12 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     }
     //Another Team (=> Erfassungsteam)
     else {
-      await onMonitoringSynchronisierenClicked();
+      await _loadTeamstatusListe();
     }
+  }
+
+  async function _loadTeamstatusListe() {
+    await stimmzettelerfassungTeamState.loadTeamStatusListe();
   }
 
   return {

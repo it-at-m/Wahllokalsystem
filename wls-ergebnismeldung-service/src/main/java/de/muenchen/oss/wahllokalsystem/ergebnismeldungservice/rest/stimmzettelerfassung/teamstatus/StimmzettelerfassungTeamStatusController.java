@@ -2,9 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettele
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.ErfassungStatusModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.ErfassungTeamStatusModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamStatusService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
@@ -107,18 +105,13 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
           "Setze den Team-Status sowie den Workflowstatus für die digitale Stimmzettelerfassung zurück auf in Bearbeitung")
   @ApiResponses(
       value = {@ApiResponse(responseCode = "201", description = "Die Status wurden erfasst")})
-  @PostMapping("/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/reopen")
+  @PostMapping("/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/status/inBearbeitung")
   @ResponseStatus(HttpStatus.CREATED)
   @Transactional
   public void reopenStimmzettelerfassung(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("teamID") final String teamID) {
-    teamStatusService.saveTeamStatus(
-        new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
-        ErfassungTeamStatusModel.IN_BEARBEITUNG);
-
-    stimmzettelerfassungService.saveStimmzettelerfassungStatus(
-        new BezirkUndWahlID(wahlID, wahlbezirkID), ErfassungStatusModel.STE_BEARBEITUNG);
+    teamStatusService.reopenStimmzettelerfassung(wahlID, wahlbezirkID, teamID);
   }
 }

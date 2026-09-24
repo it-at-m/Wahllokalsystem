@@ -158,6 +158,7 @@ describe("monitoringViewUtils.ts", () => {
         true
       );
       expect(mockDefinitions.setStepDone).toHaveBeenCalledTimes(2);
+      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledOnce();
       expect(mockDefinitions.routerPush).not.toHaveBeenCalled();
     });
   });

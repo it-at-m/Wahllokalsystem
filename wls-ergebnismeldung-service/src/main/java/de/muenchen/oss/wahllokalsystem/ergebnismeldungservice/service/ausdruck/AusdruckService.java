@@ -26,7 +26,7 @@ public class AusdruckService {
   private final AusdruckRepository ausdruckRepository;
   private final AusdruckModelMapper ausdruckModelMapper;
   private final ExceptionFactory exceptionFactory;
-  private final WahlUndBezirkIDUndMeldungsartValidator wahlUndBezirkIDUndMeldungsartValidator;
+  private final WahlUndBezirkIDUndDokumentartValidator wahlUndBezirkIDUndDokumentartValidator;
   private final Validator validator;
 
   @PreAuthorize(
@@ -40,9 +40,9 @@ public class AusdruckService {
   }
 
   @PreAuthorize(
-      "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID, authentication)")
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndDokumentartModel.wahlbezirkID, authentication)")
   public void saveAusdruck(@P("param") @NotNull final AusdruckWriteModel ausdruck) {
-    log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsartModel().meldungsart());
+    log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndDokumentartModel().dokumentart());
 
     if (!validator.validate(ausdruck).isEmpty()) {
       throw exceptionFactory.createFachlicheWlsException(
@@ -57,12 +57,12 @@ public class AusdruckService {
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')"
           + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
   public Optional<AusdruckReadModel> getAusdruck(
-      @P("param") @NotNull WahlUndBezirkIDUndMeldungsartModel idModel) {
-    log.debug("Loading printout {}", idModel.meldungsart());
+      @P("param") @NotNull WahlUndBezirkIDUndDokumentartModel idModel) {
+    log.debug("Loading printout {}", idModel.dokumentart());
 
     val id = ausdruckModelMapper.toEntity(idModel);
 
-    wahlUndBezirkIDUndMeldungsartValidator.validWahlUndBezirkIDUndMeldungsartOrThrow(
+    wahlUndBezirkIDUndDokumentartValidator.validWahlUndBezirkIDUndDokumentartOrThrow(
         id,
         exceptionFactory.createFachlicheWlsException(
             ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG));

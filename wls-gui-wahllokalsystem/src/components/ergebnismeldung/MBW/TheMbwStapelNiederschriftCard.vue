@@ -68,6 +68,7 @@ const props = defineProps<{
   isDruckenActive: boolean | undefined;
   isDruckenLoading: boolean;
   isSendenActive: boolean;
+  ereignisse: WahlbezirkEreignisse | null;
 }>();
 
 const emit = defineEmits<{
@@ -85,11 +86,9 @@ const {
 } = useMwbStapelBCUtils(props.wahlbezirkID, props.wahlID);
 
 const status = ref<Status | null>(null);
-const ereignisse = ref<WahlbezirkEreignisse | null>(null);
 
 onActivated(async () => {
   await loadWahlvorschlaegeAndErgebnisse();
-  ereignisse.value = await getEreignisse(props.wahlbezirkID);
   status.value = await loadStatusByWahlIdAndWahlbezirkId(
     props.wahlID,
     props.wahlbezirkID

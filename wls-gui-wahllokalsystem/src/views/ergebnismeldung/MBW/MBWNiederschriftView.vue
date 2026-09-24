@@ -4,6 +4,7 @@
       v-if="isDseAktiv"
       :wahlbezirk-i-d="currentUserWahlbezirkID"
       :wahl-i-d="wahlID"
+      :ereignisse="ereignisse"
       :is-sending-niederschrift="isSendingNiederschrift"
       :is-korrigieren-valid="isKorrigierenValid"
       :is-drucken-active="isDruckenActive"
@@ -17,6 +18,7 @@
       v-else
       :wahlbezirk-i-d="currentUserWahlbezirkID"
       :wahl-i-d="wahlID"
+      :ereignisse="ereignisse"
       :is-sending-niederschrift="isSendingNiederschrift"
       :is-korrigieren-valid="isKorrigierenValid"
       :is-drucken-active="isDruckenActive"
@@ -52,7 +54,7 @@ import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed, onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
@@ -67,6 +69,7 @@ import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/nied
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
@@ -84,6 +87,7 @@ const { wahlenActions } = useWahlenStore();
 const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 const { addNotification } = useUserNotificationService();
 const { hasDoneVorkommnisse } = useEreignisUtils();
+const { getEreignisse } = useEreignisService();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 const { getNextRoute } = useNavigationService();
 const { isDseAktiv } = storeToRefs(useInfomanagementStore());
@@ -141,6 +145,14 @@ const isDruckenActive = computed(
       status.value?.niederschrift.gedruckt ||
       isNiederschriftSendenClicked.value)
 );
+
+onActivated(async () => {
+  ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
+  status.value = await loadStatusByWahlIdAndWahlbezirkId(
+    wahlID,
+    currentUserWahlbezirkID
+  );
+});
 
 function onSendenClicked() {
   isOfflineSyncDialogVisible.value = true;

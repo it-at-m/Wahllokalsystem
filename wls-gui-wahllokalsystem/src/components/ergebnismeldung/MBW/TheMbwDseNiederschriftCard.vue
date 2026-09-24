@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
-import { computed, onActivated, ref } from "vue";
+import { computed } from "vue";
 
 import BaseCardUngueltigeStimmenAnzeigen from "@/components/ergebnismeldung/common/BaseCardUngueltigeStimmenAnzeigen.vue";
 import BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/common/BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen.vue";
@@ -70,6 +70,7 @@ const props = defineProps<{
   isDruckenActive: boolean | undefined;
   isDruckenLoading: boolean;
   isSendenActive: boolean;
+  ereignisse: WahlbezirkEreignisse | null;
 }>();
 
 const emit = defineEmits<{
@@ -102,16 +103,10 @@ const {
     wahlvorschlaegeWithKandidatenErgebnissenStapelBC,
 } = useStimmzettelZusammenfassungUtils(stapelBC, wahlvorschlaege);
 
-const ereignisse = ref<WahlbezirkEreignisse | null>(null);
-
 const ungueltigeStimmen = computed(() => stapelDUngueltig.value.length);
 const ungueltigeStimmzettelNachBeschluss = computed(
   () => stapelEUngueltig.value.length
 );
-
-onActivated(async () => {
-  ereignisse.value = await getEreignisse(props.wahlbezirkID);
-});
 
 function onSave() {
   emit("save");

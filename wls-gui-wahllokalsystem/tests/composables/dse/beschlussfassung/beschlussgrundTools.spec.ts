@@ -1,9 +1,24 @@
 import { useBeschlussgrundTestDataFactory } from "@tests/utils/dse/BeschlussgrundTestDataFacytory.ts";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText: vi.fn(),
+}));
+
+vi.mock(
+  import("@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts"),
+  () => ({
+    useSystemBeschlussgrundReasonEnumTools: () => ({
+      mapSystemBeschlussgrundReasonEnumToText: vi.fn(),
+      mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText:
+        mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText,
+    }),
+  })
+);
 
 const { createSystemBeschlussgrund, createWahlvorstandBeschlussgrund } =
   useBeschlussgrundTestDataFactory();
@@ -102,6 +117,49 @@ describe("useBeschlussgrundTools.ts", () => {
       const result = unitUnderTest.sortSystemBeschlussgruende([]);
 
       expect(result).toStrictEqual([]);
+    });
+  });
+
+  describe("getBeschlussgrundEnumValueAsString", () => {
+    afterEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it.each([
+      SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+      SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+      SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+      SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+    ])("should_returnCorrespondingString%s_when_givenEnumValue%s", (input) => {
+      mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText.mockReturnValue(
+        "mocked Systemgrund"
+      );
+      expect(
+        unitUnderTest.getBeschlussgrundEnumValueAsString(input)
+      ).toStrictEqual("mocked Systemgrund");
+      expect(
+        mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText
+      ).toHaveBeenCalledWith(input);
+    });
+
+    it.each([
+      "1234",
+      "irgendein text",
+      WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
+      WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagUnterschiedlichGekennzeichnet,
+      WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagLeerUndGekennzeichnet,
+      WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagIdentischGekennzeichnet,
+      WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleIstZweifelsfreiErkennbar,
+      WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
+      WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
+    ])("should_returnInputString_when_givenNonEnumValue", (input) => {
+      expect(
+        unitUnderTest.getBeschlussgrundEnumValueAsString(input)
+      ).toStrictEqual(input);
+
+      expect(
+        mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText
+      ).not.toHaveBeenCalled();
     });
   });
 });

@@ -26,7 +26,7 @@
       </v-tabs>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
-          <the-beschluss-fassen-tab :stimmzettel="stimmzettel" />
+          <the-beschluss-fassen-tab v-model:stimmzettel="stimmzettel" />
         </v-tabs-window-item>
         <v-tabs-window-item value="two" />
       </v-tabs-window>
@@ -58,9 +58,9 @@ const isDialogVisibleModel = defineModel("modelValue", {
   required: false,
 });
 
-defineProps<{
-  stimmzettel: PersistedStimmzettel | undefined;
-}>();
+const stimmzettel = defineModel<PersistedStimmzettel | undefined>(
+  "stimmzettel"
+);
 
 const emit = defineEmits<{
   cancel: [];

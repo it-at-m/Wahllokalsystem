@@ -182,9 +182,9 @@ const { anwesendeWahlvorstandsmitgliederAnzahl } = storeToRefs(
   useWahlvorstandStore()
 );
 
-const props = defineProps<{
-  stimmzettel: PersistedStimmzettel | undefined;
-}>();
+const stimmzettel = defineModel<PersistedStimmzettel | undefined>(
+  "stimmzettel"
+);
 
 interface BeschlussgrundOption {
   grund: string;
@@ -222,7 +222,7 @@ const abstimmungIsUngueltig = computed(() => {
 });
 
 watch(
-  () => props.stimmzettel,
+  () => stimmzettel.value,
   (stimmzettel) => {
     if (!stimmzettel) return;
 
@@ -242,7 +242,7 @@ function rebuildBeschlussgruende() {
   const gruende =
     createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
       isGueltig.value,
-      props.stimmzettel
+      stimmzettel.value
     );
   andererGrund.value = gruende.andererGrund;
   beschlussgruende.value = gruende.beschlussgruende;

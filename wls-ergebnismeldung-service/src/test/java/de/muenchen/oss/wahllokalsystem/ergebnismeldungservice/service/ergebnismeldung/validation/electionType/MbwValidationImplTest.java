@@ -24,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -143,7 +144,8 @@ class MbwValidationImplTest {
       val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 0L;
 
-      Mockito.when(
+      Mockito.lenient()
+          .when(
               defaultElectionTypeValidator.checkValidation(
                   any(), anyString(), anyString(), any(), any()))
           .thenReturn(false);
@@ -158,6 +160,49 @@ class MbwValidationImplTest {
 
     private static Stream<Arguments> dseValidationParameters() {
       return dseValidationParametersForAllMeldungsarten();
+    }
+
+    @ParameterizedTest
+    @EnumSource(MeldungsartModel.class)
+    void should_notUseDefaultValidator_when_dseValidationResultIsTrue(
+        final MeldungsartModel meldungsart) {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+
+      Mockito.when(stimmzettelerfassungService.getStimmzettelerfassungStatus(any()))
+          .thenReturn(Optional.of(ErfassungStatusModel.BE_ABGESCHLOSSEN));
+
+      val result =
+          unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(result).isEqualTo(true);
+      // we have to avoid to get exception to early: #793
+      Mockito.verifyNoInteractions(defaultElectionTypeValidator);
+    }
+
+    @ParameterizedTest
+    @EnumSource(MeldungsartModel.class)
+    void should_returnFalse_when_exceptionOccurredInStimmzettelServiceAndStapelValidationFailed(
+        final MeldungsartModel meldungsart) {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+
+      val mockedStimmzettelException = new RuntimeException("mocked exception");
+      Mockito.doThrow(mockedStimmzettelException)
+          .when(stimmzettelerfassungService)
+          .getStimmzettelerfassungStatus(any());
+
+      Mockito.when(
+              defaultElectionTypeValidator.checkValidation(
+                  any(), anyString(), anyString(), any(), any()))
+          .thenReturn(false);
+
+      val result =
+          unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(result).isEqualTo(false);
     }
   }
 
@@ -237,7 +282,8 @@ class MbwValidationImplTest {
       val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 0L;
 
-      Mockito.when(
+      Mockito.lenient()
+          .when(
               defaultElectionTypeValidator.checkValidation(
                   any(), anyString(), anyString(), any(), any()))
           .thenReturn(false);
@@ -252,6 +298,49 @@ class MbwValidationImplTest {
 
     private static Stream<Arguments> dseValidationParameters() {
       return dseValidationParametersForAllMeldungsarten();
+    }
+
+    @ParameterizedTest
+    @EnumSource(MeldungsartModel.class)
+    void should_notUseDefaultValidator_when_dseValidationResultIsTrue(
+        final MeldungsartModel meldungsart) {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+
+      Mockito.when(stimmzettelerfassungService.getStimmzettelerfassungStatus(any()))
+          .thenReturn(Optional.of(ErfassungStatusModel.BE_ABGESCHLOSSEN));
+
+      val result =
+          unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(result).isEqualTo(true);
+      // we have to avoid to get exception to early: #793
+      Mockito.verifyNoInteractions(defaultElectionTypeValidator);
+    }
+
+    @ParameterizedTest
+    @EnumSource(MeldungsartModel.class)
+    void should_returnFalse_when_exceptionOccurredInStimmzettelServiceAndStapelValidationFailed(
+        final MeldungsartModel meldungsart) {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+
+      val mockedStimmzettelException = new RuntimeException("mocked exception");
+      Mockito.doThrow(mockedStimmzettelException)
+          .when(stimmzettelerfassungService)
+          .getStimmzettelerfassungStatus(any());
+
+      Mockito.when(
+              defaultElectionTypeValidator.checkValidation(
+                  any(), anyString(), anyString(), any(), any()))
+          .thenReturn(false);
+
+      val result =
+          unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(result).isEqualTo(false);
     }
   }
 

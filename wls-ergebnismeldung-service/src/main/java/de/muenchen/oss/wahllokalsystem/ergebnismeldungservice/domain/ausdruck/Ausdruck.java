@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Ausdruck {
 
-  @Valid @NotNull @EmbeddedId private WahlUndBezirkIDUndMeldungsart wahlUndBezirkIDUndMeldungsart;
+  @Valid @NotNull @EmbeddedId private WahlUndBezirkIDUndDokumentart wahlUndBezirkIDUndDokumentart;
 
   @Lob private String content;
 

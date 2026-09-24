@@ -30,6 +30,8 @@ class AusdruckControllerTest {
 
   @Mock AusdruckDTOMapper ausdruckDTOMapper;
 
+  @Mock DokumentartDTOMapper dokumentartDTOMapper;
+
   @InjectMocks AusdruckController unitUnderTest;
 
   @Nested
@@ -53,6 +55,7 @@ class AusdruckControllerTest {
           .thenReturn(Optional.of(mockedServiceResponse));
       Mockito.when(ausdruckDTOMapper.toDTO(mockedServiceResponse))
           .thenReturn(mockedServiceResponseAsDTO);
+      Mockito.when(dokumentartDTOMapper.toModel(dokumentartDTO)).thenReturn(dokumentartModel);
 
       val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, dokumentartDTO);
 
@@ -69,7 +72,6 @@ class AusdruckControllerTest {
       val dokumentartDTO = DokumentartDTO.V1;
 
       Mockito.when(ausdruckService.getAusdruck(any())).thenReturn(Optional.empty());
-
       val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, dokumentartDTO);
 
       Assertions.assertThat(result.getBody()).isNull();

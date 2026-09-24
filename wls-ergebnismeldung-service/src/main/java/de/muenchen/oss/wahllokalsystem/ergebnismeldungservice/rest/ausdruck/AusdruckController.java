@@ -33,6 +33,8 @@ public class AusdruckController {
 
   private final AusdruckDTOMapper ausdruckDTOMapper;
 
+  private final DokumentartDTOMapper dokumentartDTOMapper;
+
   @Operation(
       description =
           "Lesen eines Ausdrucks einer bestimmten Dokumentart für einen Wahlbezirk einer Wahl")
@@ -59,7 +61,7 @@ public class AusdruckController {
     val ausdruckReadModel =
         ausdruckService.getAusdruck(
             new WahlUndBezirkIDUndDokumentartModel(
-                wahlbezirkID, wahlID, DokumentartModel.valueOf(dokumentartDTO.name())));
+                wahlbezirkID, wahlID, dokumentartDTOMapper.toModel(dokumentartDTO)));
 
     if (ausdruckReadModel.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);

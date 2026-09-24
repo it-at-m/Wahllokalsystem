@@ -26,7 +26,10 @@
       </v-tabs>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
-          <the-beschluss-fassen-tab v-model:stimmzettel="stimmzettel" />
+          <the-beschluss-fassen-tab
+            v-model:stimmzettel="stimmzettel"
+            v-model:abstimmungsergebnis="abstimmungsergebnis"
+          />
         </v-tabs-window-item>
         <v-tabs-window-item value="two" />
       </v-tabs-window>
@@ -52,6 +55,7 @@ import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheBeschlussFassenTab from "@/components/dse/beschlussfassung/TheBeschlussFassenTab.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
+import { useTheBeschlussfassungBearbeitenDialogUtils } from "@/composables/dse/beschlussfassung/theBeschlussfassungBearbeitenDialogUtils.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
@@ -61,6 +65,8 @@ const isDialogVisibleModel = defineModel("modelValue", {
 const stimmzettel = defineModel<PersistedStimmzettel | undefined>(
   "stimmzettel"
 );
+const { abstimmungsergebnis } =
+  useTheBeschlussfassungBearbeitenDialogUtils(stimmzettel);
 
 const emit = defineEmits<{
   cancel: [];

@@ -62,11 +62,11 @@
       </v-row>
     </v-card-text>
     <v-card-title class="mb-4"> Abstimmungsergebnis </v-card-title>
-    <v-card-text>
+    <v-card-text v-if="abstimmungsergebnis">
       <v-row style="align-items: stretch">
         <v-col cols="5">
           <base-number-input
-            v-model="stimmenDafuer"
+            v-model="abstimmungsergebnis.stimmenDafuer"
             :rules="[
               required,
               minNumber(1),
@@ -88,7 +88,7 @@
         </v-col>
         <v-col cols="5">
           <base-number-input
-            v-model="stimmenDagegen"
+            v-model="abstimmungsergebnis.stimmenDagegen"
             :rules="[
               required,
               minNumber(0),
@@ -101,7 +101,7 @@
       <v-row>
         <v-col>
           <base-feedback-card
-            v-if="abstimmungIsUnentschieden"
+            v-if="abstimmungsergebnis.abstimmungIsUnentschieden"
             title="Die Abstimmung ist unentschieden"
             type="warning"
           >
@@ -115,20 +115,21 @@
                 <span class="font-weight-bold"> dafür </span> gestimmt hat, und
                 das Abstimmungsergebnis somit
                 <span class="font-weight-bold">
-                  {{ (stimmenDafuer ?? 0) + 1 }} zu {{ stimmenDagegen }} für den
+                  {{ (abstimmungsergebnis.stimmenDafuer ?? 0) + 1 }} zu
+                  {{ abstimmungsergebnis.stimmenDagegen }} für den
                   Beschlussvorschlag
                 </span>
                 ist.
               </p>
               <v-checkbox
-                v-model="hasWahlvorsteherVotedDafuer"
+                v-model="abstimmungsergebnis.hasWahlvorsteherVotedDafuer"
                 label="Der/Die Wahlvorsteher/in hat dafür gestimmt"
                 hide-details
               />
             </div>
           </base-feedback-card>
           <base-feedback-card
-            v-if="abstimmungIsUngueltig"
+            v-if="abstimmungsergebnis.abstimmungIsUngueltig"
             title="Ungültige Zusammensetzung an Stimmen"
             type="error"
           >
@@ -159,6 +160,7 @@
 </template>
 
 <script setup lang="ts">
+import type { BeschlussAbstimmungsergebnis } from "@/types/dse/beschlussfassung/BeschlussAbstimmungsergebnis.ts";
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { storeToRefs } from "pinia";
@@ -185,6 +187,9 @@ const { anwesendeWahlvorstandsmitgliederAnzahl } = storeToRefs(
 const stimmzettel = defineModel<PersistedStimmzettel | undefined>(
   "stimmzettel"
 );
+const abstimmungsergebnis = defineModel<BeschlussAbstimmungsergebnis>(
+  "abstimmungsergebnis"
+);
 
 interface BeschlussgrundOption {
   grund: string;
@@ -194,32 +199,6 @@ const beschlussgruende = ref<BeschlussgrundOption[]>([]);
 const isGueltig = ref<boolean | null>(null);
 const andererGrund = ref("");
 const andererGrundChecked = computed(() => !!andererGrund.value);
-const stimmenDafuer = ref<number | null>(null);
-const stimmenDagegen = ref<number | null>(null);
-const hasWahlvorsteherVotedDafuer = ref(false);
-const abstimmungIsUnentschieden = computed(() => {
-  if (
-    !stimmenDafuer.value ||
-    !stimmenDagegen.value ||
-    abstimmungIsUngueltig.value
-  ) {
-    return false;
-  }
-  return stimmenDafuer.value === stimmenDagegen.value;
-});
-const abstimmungIsUngueltig = computed(() => {
-  if (!stimmenDafuer.value || !stimmenDagegen.value) {
-    return false;
-  }
-
-  const stimmenGesamt = stimmenDafuer.value + stimmenDagegen.value;
-
-  return (
-    stimmenGesamt < 3 ||
-    stimmenGesamt > anwesendeWahlvorstandsmitgliederAnzahl.value ||
-    stimmenDafuer.value < stimmenDagegen.value
-  );
-});
 
 watch(
   () => stimmzettel.value,

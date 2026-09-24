@@ -91,7 +91,8 @@ function onBeschlussBearbeitenCanceled() {
   isBearbeitenDialogVisible.value = false;
 }
 
-function onBeschlussBearbeitenSaved() {
+function onBeschlussBearbeitenSaved(stimmzettel: PersistedStimmzettel) {
   isBearbeitenDialogVisible.value = false;
+  // todo save stimmzettel
 }
 </script>

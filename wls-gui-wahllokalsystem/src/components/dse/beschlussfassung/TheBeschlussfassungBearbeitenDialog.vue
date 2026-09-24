@@ -70,7 +70,7 @@ const { abstimmungsergebnis } =
 
 const emit = defineEmits<{
   cancel: [];
-  save: [];
+  save: [stimmzettel: PersistedStimmzettel];
 }>();
 
 const tab = ref("one");
@@ -86,6 +86,14 @@ function onCancelClicked() {
 }
 
 function onSaveClicked() {
-  emit("save");
+  const stimmzettelToSave = stimmzettel.value;
+  if (stimmzettelToSave) {
+    stimmzettelToSave.beschlussfassung = {
+      pro: abstimmungsergebnis.value.stimmenDafuer ?? 0,
+      contra: abstimmungsergebnis.value.stimmenDagegen ?? 0,
+      text: "beschlussgrundoptions", // todo get beschlussgrundOptions
+    };
+    emit("save", stimmzettelToSave);
+  }
 }
 </script>

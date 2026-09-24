@@ -27,7 +27,7 @@
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
           <the-beschluss-fassen-tab
-            v-model:stimmzettel="stimmzettel"
+            v-model:beschluss-details="beschlussDetails"
             v-model:abstimmungsergebnis="abstimmungsergebnis"
           />
         </v-tabs-window-item>
@@ -57,6 +57,7 @@ import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue
 import TheBeschlussFassenTab from "@/components/dse/beschlussfassung/TheBeschlussFassenTab.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useTheBeschlussfassungBearbeitenDialogUtils } from "@/composables/dse/beschlussfassung/theBeschlussfassungBearbeitenDialogUtils.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
@@ -66,7 +67,7 @@ const isDialogVisibleModel = defineModel("modelValue", {
 const stimmzettel = defineModel<PersistedStimmzettel | undefined>(
   "stimmzettel"
 );
-const { abstimmungsergebnis } =
+const { abstimmungsergebnis, beschlussDetails } =
   useTheBeschlussfassungBearbeitenDialogUtils(stimmzettel);
 
 const emit = defineEmits<{
@@ -99,10 +100,13 @@ function onCancelClicked() {
 function onSaveClicked() {
   const stimmzettelToSave = stimmzettel.value;
   if (stimmzettelToSave) {
+    stimmzettelToSave.gueltigkeit = beschlussDetails.value.isGueltig
+      ? StimmzettelGueltigkeitEnum.Valid
+      : StimmzettelGueltigkeitEnum.Invalid;
     stimmzettelToSave.beschlussfassung = {
       pro: abstimmungsergebnis.value.stimmenDafuer ?? 0,
       contra: abstimmungsergebnis.value.stimmenDagegen ?? 0,
-      text: "beschlussgrundoptions", // todo get beschlussgrundOptions
+      text: beschlussDetails.value.beschlussText,
     };
     emit("save", stimmzettelToSave);
   }

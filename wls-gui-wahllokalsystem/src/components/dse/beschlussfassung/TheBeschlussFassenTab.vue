@@ -1,9 +1,9 @@
 <template>
   <v-card>
-    <v-card-text>
+    <v-card-text v-if="beschlussDetails">
       <v-row>
         <v-col>
-          <v-radio-group v-model="isGueltig">
+          <v-radio-group v-model="beschlussDetails.isGueltig">
             <v-radio
               :value="true"
               class="my-2 full-width-radio"
@@ -40,7 +40,7 @@
         </v-col>
         <v-col>
           <v-checkbox
-            v-for="beschlussgrund in beschlussgruende"
+            v-for="beschlussgrund in beschlussDetails.beschlussgruende"
             :key="beschlussgrund.grund"
             v-model="beschlussgrund.selected"
             :label="getBeschlussgrundEnumValueAsString(beschlussgrund.grund)"
@@ -48,11 +48,11 @@
           />
           <div class="d-flex align-center">
             <v-checkbox
-              :model-value="andererGrundChecked"
+              :model-value="beschlussDetails.andererGrundChecked"
               readonly
             />
             <v-textarea
-              v-model="andererGrund"
+              v-model="beschlussDetails.andererGrund"
               label="Andere Gründe"
               rows="1"
               auto-grow
@@ -161,71 +161,28 @@
 
 <script setup lang="ts">
 import type { BeschlussAbstimmungsergebnis } from "@/types/dse/beschlussfassung/BeschlussAbstimmungsergebnis.ts";
-import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
+import type { BeschlussfassungDialogDetails } from "@/types/dse/beschlussfassung/BeschlussfassungDialogDetails.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
 
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
-import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
 const { required, minNumber, maxNumber } = useRules();
 
-const {
-  createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
-  isStimmzettelGueltigBasedOnVormerkungsgruenden,
-} = useTheBeschlussFassenTabUtils();
 const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
 const { anwesendeWahlvorstandsmitgliederAnzahl } = storeToRefs(
   useWahlvorstandStore()
 );
 
-const stimmzettel = defineModel<PersistedStimmzettel | undefined>(
-  "stimmzettel"
-);
+const beschlussDetails =
+  defineModel<BeschlussfassungDialogDetails>("beschlussDetails");
 const abstimmungsergebnis = defineModel<BeschlussAbstimmungsergebnis>(
   "abstimmungsergebnis"
 );
-
-interface BeschlussgrundOption {
-  grund: string;
-  selected: boolean;
-}
-const beschlussgruende = ref<BeschlussgrundOption[]>([]);
-const isGueltig = ref<boolean | null>(null);
-const andererGrund = ref("");
-const andererGrundChecked = computed(() => !!andererGrund.value);
-
-watch(
-  () => stimmzettel.value,
-  (stimmzettel) => {
-    if (!stimmzettel) return;
-
-    isGueltig.value =
-      isStimmzettelGueltigBasedOnVormerkungsgruenden(stimmzettel);
-    rebuildBeschlussgruende();
-  },
-  { immediate: true }
-);
-
-watch(
-  () => isGueltig.value,
-  () => rebuildBeschlussgruende()
-);
-
-function rebuildBeschlussgruende() {
-  const gruende =
-    createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
-      isGueltig.value,
-      stimmzettel.value
-    );
-  andererGrund.value = gruende.andererGrund;
-  beschlussgruende.value = gruende.beschlussgruende;
-}
 </script>
 
 <style scoped>

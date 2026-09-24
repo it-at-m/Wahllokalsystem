@@ -16,6 +16,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Wahl
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ergebnisseProvider.ErgebnismeldungErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -38,7 +39,7 @@ public class ErgebnismeldungMappingService {
   private final AuthenticationService authenticationService;
   private final BriefwahlClient briefwahlClient;
 
-  private final ErgebnismeldungsErgebnisseMapper ergebnismeldungsErgebnisseMapper;
+  private final ErgebnismeldungErgebnisseService ergebnismeldungsErgebnisseMapper;
 
   private final Mapping mapping;
 
@@ -71,8 +72,7 @@ public class ErgebnismeldungMappingService {
         wahlart);
 
     val ergebnismeldungErgebnisse =
-        ergebnismeldungsErgebnisseMapper.getErgebnismeldungErgebnisse(
-            wahlID, wahlbezirkID, wahlart, meldungsart);
+        ergebnismeldungsErgebnisseMapper.getErgebnisse(wahlID, wahlbezirkID, wahlart, meldungsart);
     ergebnismeldung.setErgebnisse(
         mapping.toDtoErgebnisseSet(ergebnismeldungErgebnisse.gueltigeErgebnisse()));
     val eaiMeldungsart = mapping.toDTO(meldungsart);

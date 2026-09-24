@@ -1,3 +1,4 @@
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatus.ts";
 
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
@@ -21,12 +22,8 @@ const mockDefinitions = await vi.hoisted(async () => {
       }
     },
     clearActivatedCallbacks: () => activatedCallbacks.splice(0),
-    getStimmzettel: vi.fn(),
-    loadTeamStatusListe: vi.fn(),
-    teamstatusList: [
-      { teamID: "A", status: "REGISTRIERT" },
-      { teamID: "B", status: "REGISTRIERT" },
-    ],
+    isBeschlussRequired: vi.fn(),
+    loadStimmzettelOfWahlbezirk: vi.fn(),
   };
 });
 
@@ -39,16 +36,6 @@ vi.mock("vue", async (importOriginal) => {
   };
 });
 
-vi.mock(
-  "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts",
-  () => ({
-    useStimmzettelerfassungTeamStatusListState: () => ({
-      loadTeamStatusListe: mockDefinitions.loadTeamStatusListe,
-      teamstatusList: ref(mockDefinitions.teamstatusList),
-    }),
-  })
-);
-
 let mockedWorkflowStatusRef: ReturnType<typeof ref> | undefined;
 
 vi.mock(
@@ -60,12 +47,36 @@ vi.mock(
     }),
   })
 );
+const stimmzettelOfWahlbezirkMockedRef = ref<PersistedStimmzettel[]>([]);
+vi.mock(
+  import("@/composables/dse/allStimmzettelOfWahlbezirkState.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useAllStimmzettelOfWahlbezirkState: () => ({
+        ...mod.useAllStimmzettelOfWahlbezirkState("", ""),
+        stimmzettelOfWahlbezirk: stimmzettelOfWahlbezirkMockedRef,
+        loadStimmzettelOfWahlbezirk: vi.fn().mockImplementation(() => {
+          stimmzettelOfWahlbezirkMockedRef.value =
+            mockDefinitions.loadStimmzettelOfWahlbezirk();
+        }),
+      }),
+    };
+  }
+);
 
-vi.mock("@/composables/dse/stimmzettelerfassung/stimmzettelService.ts", () => ({
-  useStimmzettelService: () => ({
-    getStimmzettel: mockDefinitions.getStimmzettel,
-  }),
-}));
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelTools"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useStimmzettelTools: () => ({
+        ...mod.useStimmzettelTools(),
+        isBeschlussRequired: mockDefinitions.isBeschlussRequired,
+      }),
+    };
+  }
+);
 
 describe("beschlussfassungViewUtils.ts", () => {
   const { preparePersistedStimmzettel } =
@@ -77,6 +88,7 @@ describe("beschlussfassungViewUtils.ts", () => {
   let unitUnderTest: ReturnType<typeof useBeschlussfassungViewUtils>;
 
   beforeEach(() => {
+    stimmzettelOfWahlbezirkMockedRef.value = [];
     vi.clearAllMocks();
     vi.resetAllMocks();
     mockDefinitions.clearActivatedCallbacks();
@@ -100,7 +112,7 @@ describe("beschlussfassungViewUtils.ts", () => {
   });
 
   describe("onActivated", async () => {
-    it("should_loadTeamStatusListeAndStimmzettel_when_onActivatedSuccess", async () => {
+    it("should_loadStimmzettelForBeschlussfassung_when_onActivatedSuccess", async () => {
       const stimmzettelForBeschlussfassungTeamA = preparePersistedStimmzettel()
         .teamID("A")
         .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
@@ -113,83 +125,45 @@ describe("beschlussfassungViewUtils.ts", () => {
           text: "beschluss wurde gefasst",
         })
         .build();
-      const validStimmzettelTeamA = preparePersistedStimmzettel()
-        .teamID("A")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
-        .beschlussfassung(null)
-        .build();
-      const inValidStimmzettelTeamB = preparePersistedStimmzettel()
-        .teamID("B")
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
-        .beschlussfassung(null)
-        .build();
+      const someStimmzettelThatDoesNotNeedBeschluss =
+        preparePersistedStimmzettel()
+          .teamID("X")
+          .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+          .build();
 
-      mockDefinitions.getStimmzettel.mockResolvedValueOnce([
+      mockDefinitions.loadStimmzettelOfWahlbezirk.mockReturnValue([
         stimmzettelForBeschlussfassungTeamA,
-        validStimmzettelTeamA,
-      ]);
-      mockDefinitions.getStimmzettel.mockResolvedValueOnce([
+        someStimmzettelThatDoesNotNeedBeschluss,
         stimmzettelForBeschlussfassungTeamB,
-        inValidStimmzettelTeamB,
       ]);
-
-      const spy = vi.spyOn(
-        unitUnderTest.isStimmzettelForBeschlussLoading,
-        "value",
-        "set"
+      mockDefinitions.isBeschlussRequired.mockImplementation(
+        (stimmzettel: PersistedStimmzettel) =>
+          stimmzettel.teamID !== someStimmzettelThatDoesNotNeedBeschluss.teamID
       );
 
-      const loadingPromise = mockDefinitions.runActivatedCallbacks();
-      expect(unitUnderTest.isStimmzettelForBeschlussLoading.value).toBe(true);
-      await loadingPromise;
+      await mockDefinitions.runActivatedCallbacks();
 
       const expectedResult = [
         stimmzettelForBeschlussfassungTeamA,
         stimmzettelForBeschlussfassungTeamB,
       ];
-
-      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalled();
-      expect(mockDefinitions.getStimmzettel).toHaveBeenCalledTimes(2);
-      expect(unitUnderTest.isStimmzettelForBeschlussLoading.value).toBe(false);
       expect(unitUnderTest.stimmzettelForBeschlussfassung.value).toEqual(
         expectedResult
       );
-      expect(spy.mock.calls).toStrictEqual([[true], [false]]);
-      spy.mockReset();
     });
 
     it("should_notPopulateStimmzettelForBeschlussfassung_when_getStimmzettelReturnsEmptyList", async () => {
-      mockDefinitions.getStimmzettel.mockResolvedValueOnce([]);
-      mockDefinitions.getStimmzettel.mockResolvedValueOnce([]);
+      mockDefinitions.loadStimmzettelOfWahlbezirk.mockReturnValue([]);
+      mockDefinitions.isBeschlussRequired.mockReturnValue(true);
 
       await mockDefinitions.runActivatedCallbacks();
 
-      expect(mockDefinitions.getStimmzettel).toHaveBeenCalledTimes(2);
       expect(unitUnderTest.stimmzettelForBeschlussfassung.value).toEqual([]);
-    });
-
-    it("should_toggleLoadingState_when_getStimmzettelFails", async () => {
-      const mockedError = new Error("error");
-      mockDefinitions.getStimmzettel.mockRejectedValue(mockedError);
-
-      const spy = vi.spyOn(
-        unitUnderTest.isStimmzettelForBeschlussLoading,
-        "value",
-        "set"
-      );
-
-      const loadingPromise = mockDefinitions.runActivatedCallbacks();
-      expect(unitUnderTest.isStimmzettelForBeschlussLoading.value).toBe(true);
-      await loadingPromise;
-
-      expect(unitUnderTest.isStimmzettelForBeschlussLoading.value).toBe(false);
-      expect(spy.mock.calls).toStrictEqual([[true], [false]]);
-      spy.mockReset();
     });
   });
 
   describe("completedStimmzettelForBeschlussfassung", () => {
-    it("should_returnOnlyStimmzettelWithGueltigkeitNotBeschlussAusstehend_when_givenStimmzettelWithMixedGueltigkeiten", () => {
+    it("should_returnOnlyStimmzettelWithGueltigkeitNotBeschlussAusstehend_when_givenStimmzettelWithMixedGueltigkeiten", async () => {
       const stZettBeschlussAusstehend = preparePersistedStimmzettel()
         .teamID("A")
         .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
@@ -205,7 +179,9 @@ describe("beschlussfassungViewUtils.ts", () => {
         .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
         .build();
 
-      unitUnderTest.stimmzettelForBeschlussfassung.value = [
+      mockDefinitions.isBeschlussRequired.mockReturnValue(true);
+
+      stimmzettelOfWahlbezirkMockedRef.value = [
         stZettBeschlussAusstehend,
         stZettValid,
         stZettInvalid,
@@ -227,7 +203,8 @@ describe("beschlussfassungViewUtils.ts", () => {
         .gueltigkeit(StimmzettelGueltigkeitEnum.BeschlussAusstehend)
         .build();
 
-      unitUnderTest.stimmzettelForBeschlussfassung.value = [stZettA, stZettB];
+      mockDefinitions.isBeschlussRequired.mockReturnValue(true);
+      stimmzettelOfWahlbezirkMockedRef.value = [stZettA, stZettB];
 
       expect(
         unitUnderTest.completedStimmzettelForBeschlussfassung.value
@@ -247,7 +224,8 @@ describe("beschlussfassungViewUtils.ts", () => {
         .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
         .build();
 
-      unitUnderTest.stimmzettelForBeschlussfassung.value = [
+      mockDefinitions.isBeschlussRequired.mockReturnValue(true);
+      stimmzettelOfWahlbezirkMockedRef.value = [
         stZettBeschlussAusstehend,
         stZettCompleted,
       ];
@@ -268,7 +246,8 @@ describe("beschlussfassungViewUtils.ts", () => {
         .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
         .build();
 
-      unitUnderTest.stimmzettelForBeschlussfassung.value = [
+      mockDefinitions.isBeschlussRequired.mockReturnValue(true);
+      stimmzettelOfWahlbezirkMockedRef.value = [
         stZettCompleted1,
         stZettCompleted2,
       ];
@@ -284,7 +263,8 @@ describe("beschlussfassungViewUtils.ts", () => {
         status: StimmzettelerfassungStatusEnum.BeAbgeschlossen,
       };
 
-      unitUnderTest.stimmzettelForBeschlussfassung.value = [];
+      mockDefinitions.isBeschlussRequired.mockReturnValue(true);
+      stimmzettelOfWahlbezirkMockedRef.value = [];
       expect(unitUnderTest.isBeschlussfassungBeendenButtonDisabled.value).toBe(
         true
       );

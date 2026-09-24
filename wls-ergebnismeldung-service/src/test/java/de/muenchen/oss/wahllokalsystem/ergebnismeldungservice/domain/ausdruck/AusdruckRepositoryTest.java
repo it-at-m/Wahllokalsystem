@@ -70,7 +70,7 @@ class AusdruckRepositoryTest {
   class FindByWahlIdAndWahlbezirkId {
 
     @Test
-    void should_returnAusdruck_when_wahlUndBezirkIDUndMeldungsartIsGiven() {
+    void should_returnAusdruck_when_wahlUndBezirkIDUndDokumentartIsGiven() {
       val wahlIdToFind = "wahlId01";
       val wahlbezirkIdToFind = "wahlbezirkID01";
       val timeNow = Instant.now();

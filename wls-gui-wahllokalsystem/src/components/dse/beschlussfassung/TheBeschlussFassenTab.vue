@@ -127,6 +127,31 @@
               />
             </div>
           </base-feedback-card>
+          <base-feedback-card
+            v-if="abstimmungIsUngueltig"
+            title="Ungültige Zusammensetzung an Stimmen"
+            type="error"
+          >
+            <ul>
+              <li>
+                Es müssen sich mindestens
+                <span class="font-weight-bold"> 3 </span> Personen an der
+                Abstimmung beteiligen.
+              </li>
+              <li>
+                Es können nicht mehr als
+                <span class="font-weight-bold">
+                  {{ anwesendeWahlvorstandsmitgliederAnzahl }}
+                </span>
+                Personen an der Abstimmung teilnehmen.
+              </li>
+              <li>
+                Die Anzahl der "Stimmen dagegen" darf nicht größer sein, als die
+                Anzahl der "Stimmen dafür". Über einen abgelehnten
+                Beschlussvorschlag muss neu abgestimmt werden.
+              </li>
+            </ul>
+          </base-feedback-card>
         </v-col>
       </v-row>
     </v-card-text>
@@ -173,10 +198,27 @@ const stimmenDafuer = ref<number | null>(null);
 const stimmenDagegen = ref<number | null>(null);
 const hasWahlvorsteherVotedDafuer = ref(false);
 const abstimmungIsUnentschieden = computed(() => {
-  if (!stimmenDafuer.value || !stimmenDagegen.value) {
+  if (
+    !stimmenDafuer.value ||
+    !stimmenDagegen.value ||
+    abstimmungIsUngueltig.value
+  ) {
     return false;
   }
   return stimmenDafuer.value === stimmenDagegen.value;
+});
+const abstimmungIsUngueltig = computed(() => {
+  if (!stimmenDafuer.value || !stimmenDagegen.value) {
+    return false;
+  }
+
+  const stimmenGesamt = stimmenDafuer.value + stimmenDagegen.value;
+
+  return (
+    stimmenGesamt < 3 ||
+    stimmenGesamt > anwesendeWahlvorstandsmitgliederAnzahl.value ||
+    stimmenDafuer.value < stimmenDagegen.value
+  );
 });
 
 watch(

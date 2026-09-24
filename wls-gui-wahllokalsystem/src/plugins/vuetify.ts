@@ -37,6 +37,7 @@ import {
   mdiPlaylistMinus,
   mdiPlus,
   mdiPlusCircle,
+  mdiPoll,
   mdiPrinter,
   mdiRemoteDesktop,
   mdiRoutes,
@@ -112,6 +113,7 @@ export default createVuetify({
       desc: mdiSortDescending,
       slideLeft: mdiArrowLeftDropCircle,
       slideRight: mdiArrowRightDropCircle,
+      beschlussAbstimmung: mdiPoll,
     },
     sets: {
       mdi,
@@ -162,6 +164,12 @@ export default createVuetify({
     VDataTable: {
       sortAscIcon: "$asc",
       sortDescIcon: "$desc",
+    },
+    VTabs: {
+      bgColor: "grey-lighten-3",
+      sliderColor: "primary",
+      color: "primary",
+      class: "rounded-t border-b",
     },
   },
 });

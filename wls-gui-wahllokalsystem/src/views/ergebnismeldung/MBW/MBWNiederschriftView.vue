@@ -8,8 +8,12 @@
       :is-drucken-active="isDruckenActive"
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
+      :is-beschlussentscheidungen-drucken-loading="
+        isBeschlussentscheidungenDruckenLoading
+      "
       @save="onSendenClicked"
       @edit="onKorrigierenClicked"
+      @print-beschlussentscheidungen="onBeschlussentscheidungenDruckenClicked"
       @print="onDruckenClicked"
     >
       <the-m-b-w-wahlberechtigte-anzeigen-card
@@ -58,6 +62,9 @@
         verschickt werden, wurde der Vorgang abgebrochen.
       </div>
     </base-dialog>
+    <base-beschlussentscheidungen-drucken-info-dialog
+      v-model="isBeschlussentscheidungenDruckenDialogVisble"
+    />
   </div>
 </template>
 
@@ -70,6 +77,7 @@ import { computed, onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import BaseBeschlussentscheidungenDruckenInfoDialog from "@/components/dse/beschlussfassung/BaseBeschlussentscheidungenDruckenInfoDialog.vue";
 import BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/common/BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen.vue";
 import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
 import TheVorkommnisseRequirementCard from "@/components/ergebnismeldung/common/TheVorkommnisseRequirementCard.vue";
@@ -79,6 +87,9 @@ import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import { useLogging } from "@/composables/common/logging.ts";
+import { useBeschlussentscheidungenDruckenTools } from "@/composables/dse/beschlussfassung/beschlussentscheidungenDruckenTools.ts";
+import { useBeschlussentscheidungenDruckTemplateTools } from "@/composables/dse/beschlussfassung/beschlussentscheidungenDruckTemplateTools.ts";
+import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
@@ -111,11 +122,13 @@ const { getNextRoute } = useNavigationService();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
+const isBeschlussentscheidungenDruckenLoading = ref<boolean>(false);
 const isDruckenLoading = ref<boolean>(false);
 const isNiederschriftSendenClicked = ref<boolean>(false);
 
 const isOfflineSyncDialogVisible = ref(false);
 const isSyncErrorDialogVisible = ref(false);
+const isBeschlussentscheidungenDruckenDialogVisble = ref(false);
 const { logError } = useLogging("mbwNiederschriftView");
 const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
@@ -126,7 +139,16 @@ const status = ref<Status | null>(null);
 const { isSendingNiederschrift, sendNiederschrift, sendAusdruckNiederschrift } =
   useMbwUtils(wahlID, currentUserWahlbezirkID);
 const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
+const { stimmzettelForBeschlussfassung } = useBeschlussfassungViewUtils(
+  wahlID,
+  currentUserWahlbezirkID
+);
 
+const {
+  sendAusdruckBeschlussentscheidungen,
+  prepareDataForBeschlussentscheidungenDruck,
+} = useBeschlussentscheidungenDruckenTools(wahlID, currentUserWahlbezirkID);
+const { buildTemplate } = useBeschlussentscheidungenDruckTemplateTools();
 const {
   buildNiederschriftTemplateFromData: buildNiederschriftTemplateFromDataUWB,
 } = useNiederschriftDruckUWB();
@@ -254,5 +276,46 @@ async function buildNiederschriftTemplate() {
     }
   }
   return " ";
+}
+
+async function onBeschlussentscheidungenDruckenClicked() {
+  isBeschlussentscheidungenDruckenLoading.value = true;
+  try {
+    const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+    if (wahl) {
+      const pdfText = buildTemplate(
+        prepareDataForBeschlussentscheidungenDruck(
+          wahl,
+          stimmzettelForBeschlussfassung.value
+        )
+      );
+      const printWindow = window.open(
+        "",
+        "",
+        "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
+      );
+
+      if (printWindow) {
+        printWindow.document.writeln(pdfText);
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
+      }
+
+      isBeschlussentscheidungenDruckenDialogVisble.value = true;
+
+      await sendAusdruckBeschlussentscheidungen(
+        MeldungsArtEnum.Schnellmeldung,
+        pdfText
+      );
+    }
+  } catch {
+    addNotification(
+      "Fehler beim Drucken der Beschlussentscheidungen.",
+      UserNotificationCategoryEnum.WARNING
+    );
+  } finally {
+    isBeschlussentscheidungenDruckenLoading.value = false;
+  }
 }
 </script>

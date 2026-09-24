@@ -1,12 +1,6 @@
 <template>
   <div>
-    <v-tabs
-      v-model="tab"
-      bg-color="grey-lighten-3"
-      slider-color="primary"
-      color="primary"
-      class="rounded-t border-b"
-    >
+    <v-tabs v-model="tab">
       <v-tab value="one"> Stimmzettelerfassung Übersicht </v-tab>
       <v-tab value="two"> Zusammenfassung </v-tab>
     </v-tabs>

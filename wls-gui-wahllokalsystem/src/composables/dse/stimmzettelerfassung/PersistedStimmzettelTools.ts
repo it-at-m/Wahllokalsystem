@@ -39,6 +39,8 @@ export function usePersistedStimmzettelTools() {
   function matchesMBWStapelDUngueltig(stimmzettel: PersistedStimmzettel) {
     return (
       stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Leer ||
+      stimmzettel.gueltigkeit ===
+        StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag ||
       (stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Invalid &&
         !stimmzettel.beschlussfassung)
     );

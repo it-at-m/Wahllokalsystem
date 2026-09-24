@@ -67,7 +67,11 @@
         <v-col cols="5">
           <base-number-input
             v-model="stimmenDafuer"
-            :rules="[required]"
+            :rules="[
+              required,
+              minNumber(1),
+              maxNumber(anwesendeWahlvorstandsmitgliederAnzahl),
+            ]"
             label="Stimmen dafür"
           />
         </v-col>
@@ -85,7 +89,11 @@
         <v-col cols="5">
           <base-number-input
             v-model="stimmenDagegen"
-            :rules="[required]"
+            :rules="[
+              required,
+              minNumber(0),
+              maxNumber(anwesendeWahlvorstandsmitgliederAnzahl),
+            ]"
             label="Stimmen dagegen"
           />
         </v-col>
@@ -97,20 +105,25 @@
 <script setup lang="ts">
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
+import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
+import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
-const { required } = useRules();
+const { required, minNumber, maxNumber } = useRules();
 
 const {
   createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
   isStimmzettelGueltigBasedOnVormerkungsgruenden,
 } = useTheBeschlussFassenTabUtils();
 const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
+const { anwesendeWahlvorstandsmitgliederAnzahl } = storeToRefs(
+  useWahlvorstandStore()
+);
 
 const props = defineProps<{
   stimmzettel: PersistedStimmzettel | undefined;

@@ -47,9 +47,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     )
   );
   const isMindestanwesenheitErreicht = computed<boolean>(() => {
-    const anwesend = wahlvorstand.value.wahlvorstandsmitglieder.filter(
-      (mitglied) => mitglied.anwesend
-    ).length;
+    const anwesend = anwesendeWahlvorstandsmitgliederAnzahl.value;
 
     const isWahlGeschlossen = isUWB.value
       ? schliessungsuhrzeitState.value.schliessungsuhrzeitSent
@@ -67,6 +65,11 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
       isSchriftfuehrerAnwesend.value &&
       isMindestanwesenheitErreicht.value
   );
+  const anwesendeWahlvorstandsmitgliederAnzahl = computed(() => {
+    return wahlvorstand.value.wahlvorstandsmitglieder.filter(
+      (mitglied) => mitglied.anwesend
+    ).length;
+  });
 
   async function initWahlvorstand(sendNotification = true) {
     wahlvorstand.value = await getWahlvorstand(currentUserWahlbezirkID.value, {
@@ -147,6 +150,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     isLoading,
     isSaving,
     wahlvorstand,
+    anwesendeWahlvorstandsmitgliederAnzahl,
     initWahlvorstand,
     changeAnwesendOfMitglied,
     forceLoadWahlvorstand,

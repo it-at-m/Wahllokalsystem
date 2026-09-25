@@ -1,6 +1,7 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ergebnisseProvider;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.WahlartPredicateHolder;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class DefaultStapelErgebnisseMapper implements ErgebnismeldungsErgebnisseMapper {
+public class DefaultStapelErgebnisseProvider implements ErgebnismeldungsErgebnisseProvider {
 
   private final ErgebnisseService ergebnisseService;
 
@@ -20,7 +21,10 @@ public class DefaultStapelErgebnisseMapper implements ErgebnismeldungsErgebnisse
 
   @Override
   public ErgebnismeldungsErgebnisseModel getErgebnismeldungErgebnisse(
-      String wahlID, String wahlbezirkID, WahlartModel wahlart, MeldungsartModel meldungsart) {
+      final String wahlID,
+      final String wahlbezirkID,
+      final WahlartModel wahlart,
+      final MeldungsartModel meldungsart) {
     val ergebnisse = ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID);
 
     val gueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, true);
@@ -30,8 +34,8 @@ public class DefaultStapelErgebnisseMapper implements ErgebnismeldungsErgebnisse
   }
 
   @Override
-  public boolean canHandleWahlart(WahlartModel wahlart) {
-    return true;
+  public boolean canHandleWahlart(final WahlartModel wahlart) {
+    return !WahlartModel.MBW.equals(wahlart);
   }
 
   private Collection<ErgebnisseModel> getErgebnisse(

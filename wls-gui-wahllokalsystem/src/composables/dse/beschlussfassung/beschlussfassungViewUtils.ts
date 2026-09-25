@@ -1,10 +1,10 @@
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
-import { computed, onActivated, ref } from "vue";
+import { computed, onActivated } from "vue";
 
+import { useAllStimmzettelOfWahlbezirkState } from "@/composables/dse/allStimmzettelOfWahlbezirkState.ts";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
-import { useStimmzettelerfassungTeamStatusListState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts";
 import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
@@ -20,10 +20,13 @@ export function useBeschlussfassungViewUtils(
     wahlID,
     wahlbezirkID
   );
-  const { teamstatusList, loadTeamStatusListe } =
-    useStimmzettelerfassungTeamStatusListState(wahlID, wahlbezirkID);
-  const isStimmzettelForBeschlussLoading = ref(false);
-  const stimmzettelForBeschlussfassung = ref<PersistedStimmzettel[]>([]);
+  const { isLoading, stimmzettelOfWahlbezirk, loadStimmzettelOfWahlbezirk } =
+    useAllStimmzettelOfWahlbezirkState(wahlID, wahlbezirkID);
+  const { isBeschlussRequired } = useStimmzettelTools();
+
+  const stimmzettelForBeschlussfassung = computed(() =>
+    stimmzettelOfWahlbezirk.value.filter(isBeschlussRequired)
+  );
 
   const completedStimmzettelForBeschlussfassung = computed(() =>
     stimmzettelForBeschlussfassung.value.filter(
@@ -34,7 +37,7 @@ export function useBeschlussfassungViewUtils(
   );
 
   const isBeschlussfassungBeendenButtonDisabled = computed(() => {
-    if (isStimmzettelForBeschlussLoading.value) return true;
+    if (isLoading.value) return true;
     else {
       return (
         workflowStatus.value?.status ===
@@ -46,43 +49,8 @@ export function useBeschlussfassungViewUtils(
   });
 
   onActivated(async () => {
-    await Promise.allSettled([_loadStimmzettelAndFilterForBeschlussfassung()]);
+    await Promise.allSettled([loadStimmzettelOfWahlbezirk()]);
   });
-
-  async function _loadStimmzettelAndFilterForBeschlussfassung() {
-    isStimmzettelForBeschlussLoading.value = true;
-    try {
-      stimmzettelForBeschlussfassung.value = [];
-      await loadTeamStatusListe();
-      const registeredTeams = computed(() =>
-        teamstatusList.value.map((team) => team.teamID)
-      );
-      const stimmzettelOfAllTeams: PersistedStimmzettel[] = [];
-
-      for (const teamId of registeredTeams.value) {
-        const stimmzettelOfTeam = await getStimmzettel(
-          wahlID,
-          wahlbezirkID,
-          teamId
-        );
-        stimmzettelOfAllTeams.push(...stimmzettelOfTeam);
-      }
-
-      const onlyStimmzettelForBeschlussfassung = stimmzettelOfAllTeams.filter(
-        (stimmzettel) =>
-          stimmzettel.gueltigkeit ===
-            StimmzettelGueltigkeitEnum.BeschlussAusstehend ||
-          stimmzettel.beschlussfassung !== null
-      );
-
-      if (onlyStimmzettelForBeschlussfassung.length > 0) {
-        stimmzettelForBeschlussfassung.value =
-          onlyStimmzettelForBeschlussfassung;
-      }
-    } finally {
-      isStimmzettelForBeschlussLoading.value = false;
-    }
-  }
 
   async function saveBeschlussStimmzettel(
     stimmzettelToSave: PersistedStimmzettel
@@ -116,7 +84,7 @@ export function useBeschlussfassungViewUtils(
   return {
     stimmzettelForBeschlussfassung,
     completedStimmzettelForBeschlussfassung,
-    isStimmzettelForBeschlussLoading,
+    isStimmzettelForBeschlussLoading: isLoading,
     isBeschlussfassungBeendenButtonDisabled,
     saveBeschlussStimmzettel,
   };

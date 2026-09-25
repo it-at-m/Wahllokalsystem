@@ -6,8 +6,8 @@ import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Insta
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankKandidatWithSingleVoteByWahlvorschlag;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankNonSelectedWahlvorschlagModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankSelectedWahlvorschlagModel;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankStimmzettelModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankValidStimmzettelModel;
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createDSESTimmzettelModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestStimmzettelModels.createInvalidStimmzettelModelWith2WahlvorschlaegenEachWithEinzelstimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestStimmzettelModels.createInvalidStimmzettelModelWithSingleWahlvorschlagWithEinzelstimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestStimmzettelModels.createInvalidStimmzettelModelWithSingleWahlvorschlagWithMultipleStreichungen;
@@ -63,7 +63,7 @@ import org.springframework.transaction.support.TransactionTemplate;
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
-class MBWStimmzettelRepositoryTest {
+class MBWStimmzettelRepositoryImplTest {
 
   private final String wahlID = Instancio.create(String.class);
   private final String wahlbezirkID = Instancio.create(String.class);
@@ -71,6 +71,7 @@ class MBWStimmzettelRepositoryTest {
   private final String teamB = "B";
 
   @Autowired MBWStimmzettelRepository unitUnderTest;
+  @Autowired StimmzettelRepository stimmzettelRepository;
 
   @Autowired TransactionTemplate transactionTemplate;
 
@@ -85,7 +86,7 @@ class MBWStimmzettelRepositoryTest {
 
   @AfterEach
   public void teardown() {
-    unitUnderTest.deleteAll();
+    stimmzettelRepository.deleteAll();
   }
 
   @Nested
@@ -135,7 +136,8 @@ class MBWStimmzettelRepositoryTest {
                   createSingleWahlvorschlagModelWithReststimme("wv1"))
               .create());
 
-      transactionTemplate.executeWithoutResult(status -> unitUnderTest.saveAll(stimmzettelToFind));
+      transactionTemplate.executeWithoutResult(
+          status -> stimmzettelRepository.saveAll(stimmzettelToFind));
 
       val result = unitUnderTest.getStapelA(wahlID, wahlbezirkID);
 
@@ -148,7 +150,7 @@ class MBWStimmzettelRepositoryTest {
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
 
-      Assertions.assertThat(unitUnderTest.count()).isEqualTo(stimmzettelToFind.size());
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToFind.size());
     }
 
     @Test
@@ -238,8 +240,8 @@ class MBWStimmzettelRepositoryTest {
 
       transactionTemplate.executeWithoutResult(
           status -> {
-            unitUnderTest.saveAll(stimmzettelToFind);
-            unitUnderTest.saveAll(nonMatchingStimmzettel);
+            stimmzettelRepository.saveAll(stimmzettelToFind);
+            stimmzettelRepository.saveAll(nonMatchingStimmzettel);
           });
 
       val result = unitUnderTest.getStapelA(wahlID, wahlbezirkID);
@@ -250,7 +252,7 @@ class MBWStimmzettelRepositoryTest {
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
 
-      Assertions.assertThat(unitUnderTest.count())
+      Assertions.assertThat(stimmzettelRepository.count())
           .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
     }
 
@@ -313,7 +315,7 @@ class MBWStimmzettelRepositoryTest {
                 .create());
 
         transactionTemplate.executeWithoutResult(
-            status -> unitUnderTest.saveAll(stimmzettelToFind));
+            status -> stimmzettelRepository.saveAll(stimmzettelToFind));
 
         val result = unitUnderTest.getStapelB(wahlID, wahlbezirkID);
 
@@ -326,7 +328,7 @@ class MBWStimmzettelRepositoryTest {
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
 
-        Assertions.assertThat(unitUnderTest.count()).isEqualTo(stimmzettelToFind.size());
+        Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToFind.size());
       }
 
       @Test
@@ -361,8 +363,8 @@ class MBWStimmzettelRepositoryTest {
 
         transactionTemplate.executeWithoutResult(
             status -> {
-              unitUnderTest.saveAll(stimmzettelToFind);
-              unitUnderTest.saveAll(nonMatchingStimmzettel);
+              stimmzettelRepository.saveAll(stimmzettelToFind);
+              stimmzettelRepository.saveAll(nonMatchingStimmzettel);
             });
 
         val result = unitUnderTest.getStapelB(wahlID, wahlbezirkID);
@@ -376,7 +378,7 @@ class MBWStimmzettelRepositoryTest {
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
 
-        Assertions.assertThat(unitUnderTest.count())
+        Assertions.assertThat(stimmzettelRepository.count())
             .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
       }
     }
@@ -430,7 +432,7 @@ class MBWStimmzettelRepositoryTest {
                 .create());
 
         transactionTemplate.executeWithoutResult(
-            status -> unitUnderTest.saveAll(stimmzettelToFind));
+            status -> stimmzettelRepository.saveAll(stimmzettelToFind));
 
         val result = unitUnderTest.getStapelB(wahlID, wahlbezirkID);
 
@@ -443,7 +445,7 @@ class MBWStimmzettelRepositoryTest {
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
 
-        Assertions.assertThat(unitUnderTest.count()).isEqualTo(stimmzettelToFind.size());
+        Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToFind.size());
       }
 
       @Test
@@ -491,8 +493,8 @@ class MBWStimmzettelRepositoryTest {
 
         transactionTemplate.executeWithoutResult(
             status -> {
-              unitUnderTest.saveAll(stimmzettelToFind);
-              unitUnderTest.saveAll(nonMatchingStimmzettel);
+              stimmzettelRepository.saveAll(stimmzettelToFind);
+              stimmzettelRepository.saveAll(nonMatchingStimmzettel);
             });
 
         val result = unitUnderTest.getStapelB(wahlID, wahlbezirkID);
@@ -506,7 +508,7 @@ class MBWStimmzettelRepositoryTest {
             .ignoringCollectionOrder()
             .isEqualTo(expectedResult);
 
-        Assertions.assertThat(unitUnderTest.count())
+        Assertions.assertThat(stimmzettelRepository.count())
             .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
       }
     }
@@ -560,7 +562,7 @@ class MBWStimmzettelRepositoryTest {
                 .create());
 
         transactionTemplate.executeWithoutResult(
-            status -> unitUnderTest.saveAll(stimmzettelToFind));
+            status -> stimmzettelRepository.saveAll(stimmzettelToFind));
 
         val result = unitUnderTest.getStapelB(wahlID, wahlbezirkID);
 
@@ -637,8 +639,8 @@ class MBWStimmzettelRepositoryTest {
 
         transactionTemplate.executeWithoutResult(
             status -> {
-              unitUnderTest.saveAll(stimmzettelToFind);
-              unitUnderTest.saveAll(nonMatchingStimmzettel);
+              stimmzettelRepository.saveAll(stimmzettelToFind);
+              stimmzettelRepository.saveAll(nonMatchingStimmzettel);
             });
 
         val result = unitUnderTest.getStapelB(wahlID, wahlbezirkID);
@@ -705,12 +707,12 @@ class MBWStimmzettelRepositoryTest {
           createNonValidVariants(stimmzettelWithSingleWahlvorschlagWithoutAnyKandidatenModel));
 
       transactionTemplate.executeWithoutResult(
-          status -> unitUnderTest.saveAll(nonMatchingStimmzettel));
+          status -> stimmzettelRepository.saveAll(nonMatchingStimmzettel));
 
       val result = unitUnderTest.getStapelB(wahlID, wahlbezirkID);
       Assertions.assertThat(result).isEmpty();
 
-      Assertions.assertThat(unitUnderTest.count()).isEqualTo(nonMatchingStimmzettel.size());
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(nonMatchingStimmzettel.size());
     }
   }
 
@@ -731,6 +733,22 @@ class MBWStimmzettelRepositoryTest {
       stimmzettelToCount.add(Instancio.create(invalidStimmzettelModelWithSingleEinzelstimme));
       stimmzettelToCount.add(
           Instancio.create(
+              createBlankStimmzettelModel(
+                  wahlID,
+                  wahlbezirkID,
+                  teamA,
+                  stimmzettelkennungSequenz.getAndIncrement(),
+                  StimmzettelGueltigkeit.LEER)));
+      stimmzettelToCount.add(
+          Instancio.create(
+              createBlankStimmzettelModel(
+                  wahlID,
+                  wahlbezirkID,
+                  teamA,
+                  stimmzettelkennungSequenz.getAndIncrement(),
+                  StimmzettelGueltigkeit.BWB_PSEUDO_STIMMZETTEL_LEERER_UMSCHLAG)));
+      stimmzettelToCount.add(
+          Instancio.create(
               createInvalidStimmzettelModelWithSingleWahlvorschlagWithMultipleStreichungen(
                   wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement())));
       stimmzettelToCount.add(
@@ -745,19 +763,22 @@ class MBWStimmzettelRepositoryTest {
       val nonMatchingStimmzettel =
           new LinkedList<>(
               createStimmzettelWithOtherGueltigkeiten(
-                  invalidStimmzettelModelWithSingleEinzelstimme, StimmzettelGueltigkeit.INVALID));
+                  invalidStimmzettelModelWithSingleEinzelstimme,
+                  StimmzettelGueltigkeit.INVALID,
+                  StimmzettelGueltigkeit.BWB_PSEUDO_STIMMZETTEL_LEERER_UMSCHLAG,
+                  StimmzettelGueltigkeit.LEER));
 
       transactionTemplate.executeWithoutResult(
           status -> {
-            unitUnderTest.saveAll(stimmzettelToCount);
-            unitUnderTest.saveAll(nonMatchingStimmzettel);
+            stimmzettelRepository.saveAll(stimmzettelToCount);
+            stimmzettelRepository.saveAll(nonMatchingStimmzettel);
           });
 
       val result = unitUnderTest.getStapelD(wahlID, wahlbezirkID);
 
       Assertions.assertThat(result).isEqualTo(stimmzettelToCount.size());
 
-      Assertions.assertThat(unitUnderTest.count())
+      Assertions.assertThat(stimmzettelRepository.count())
           .isEqualTo(stimmzettelToCount.size() + nonMatchingStimmzettel.size());
     }
 
@@ -768,15 +789,18 @@ class MBWStimmzettelRepositoryTest {
       Arrays.stream(StimmzettelGueltigkeit.values())
           .forEach(
               gueltigkeit -> {
-                if (!StimmzettelGueltigkeit.INVALID.equals(gueltigkeit)) {
+                if (!StimmzettelGueltigkeit.INVALID.equals(gueltigkeit)
+                    && !StimmzettelGueltigkeit.LEER.equals(gueltigkeit)
+                    && !StimmzettelGueltigkeit.BWB_PSEUDO_STIMMZETTEL_LEERER_UMSCHLAG.equals(
+                        gueltigkeit)) {
                   nonMatchingStimmzettel.add(
                       Instancio.of(
-                              createDSESTimmzettelModel(
+                              createBlankStimmzettelModel(
                                   wahlID,
                                   wahlbezirkID,
                                   teamA,
-                                  stimmzettelkennungSequenz.getAndIncrement()))
-                          .set(field(Stimmzettel::getGueltigkeit), gueltigkeit)
+                                  stimmzettelkennungSequenz.getAndIncrement(),
+                                  gueltigkeit))
                           .create());
                 }
               });
@@ -795,12 +819,12 @@ class MBWStimmzettelRepositoryTest {
                   wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement())));
 
       transactionTemplate.executeWithoutResult(
-          status -> unitUnderTest.saveAll(nonMatchingStimmzettel));
+          status -> stimmzettelRepository.saveAll(nonMatchingStimmzettel));
 
       val result = unitUnderTest.getStapelD(wahlID, wahlbezirkID);
       Assertions.assertThat(result).isEqualTo(0L);
 
-      Assertions.assertThat(unitUnderTest.count()).isEqualTo(nonMatchingStimmzettel.size());
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(nonMatchingStimmzettel.size());
     }
   }
 
@@ -877,7 +901,8 @@ class MBWStimmzettelRepositoryTest {
       stimmzettelToCount.add(Instancio.create(stimmzettelModel1WithSameKandidatWith2Nennungen));
       stimmzettelToCount.add(Instancio.create(stimmzettelModel2WithSameKandidatWith2Nennungen));
 
-      transactionTemplate.executeWithoutResult(status -> unitUnderTest.saveAll(stimmzettelToCount));
+      transactionTemplate.executeWithoutResult(
+          status -> stimmzettelRepository.saveAll(stimmzettelToCount));
 
       val result = unitUnderTest.getStapelBC(wahlID, wahlbezirkID);
 
@@ -892,7 +917,7 @@ class MBWStimmzettelRepositoryTest {
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
 
-      Assertions.assertThat(unitUnderTest.count()).isEqualTo(stimmzettelToCount.size());
+      Assertions.assertThat(stimmzettelRepository.count()).isEqualTo(stimmzettelToCount.size());
     }
 
     @Test
@@ -942,8 +967,8 @@ class MBWStimmzettelRepositoryTest {
 
       transactionTemplate.executeWithoutResult(
           status -> {
-            unitUnderTest.saveAll(stimmzettelToFind);
-            unitUnderTest.saveAll(nonMatchingStimmzettel);
+            stimmzettelRepository.saveAll(stimmzettelToFind);
+            stimmzettelRepository.saveAll(nonMatchingStimmzettel);
           });
 
       val result = unitUnderTest.getStapelBC(wahlID, wahlbezirkID);
@@ -954,7 +979,7 @@ class MBWStimmzettelRepositoryTest {
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
 
-      Assertions.assertThat(unitUnderTest.count())
+      Assertions.assertThat(stimmzettelRepository.count())
           .isEqualTo(stimmzettelToFind.size() + nonMatchingStimmzettel.size());
     }
 
@@ -1057,9 +1082,9 @@ class MBWStimmzettelRepositoryTest {
   }
 
   private List<Stimmzettel> createStimmzettelWithOtherGueltigkeiten(
-      Model<Stimmzettel> stimmzettelModel, StimmzettelGueltigkeit gueltigkeitToExclude) {
+      Model<Stimmzettel> stimmzettelModel, StimmzettelGueltigkeit... gueltigkeitToExclude) {
     return Arrays.stream(StimmzettelGueltigkeit.values())
-        .filter(gueltigkeit -> !gueltigkeitToExclude.equals(gueltigkeit))
+        .filter(gueltigkeit -> !Arrays.asList(gueltigkeitToExclude).contains(gueltigkeit))
         .map(
             gueltigkeit -> {
               val stimmzettelInvalid =

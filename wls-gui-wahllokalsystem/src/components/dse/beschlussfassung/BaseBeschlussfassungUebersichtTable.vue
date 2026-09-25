@@ -38,6 +38,7 @@
           size="x-small"
           variant="elevated"
           :color="item.beschlussfassung == null ? 'primary' : ''"
+          :disabled="props.isBeschlussBearbeitenDisabled"
           @click="onBeschlussBearbeitenClicked(item)"
         />
       </div>
@@ -62,6 +63,7 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
 const props = defineProps<{
   stimmzettelListe: PersistedStimmzettel[];
   stimmzettelLoading: boolean;
+  isBeschlussBearbeitenDisabled: boolean;
 }>();
 
 const headers = [

@@ -30,6 +30,8 @@ class AusdruckControllerTest {
 
   @Mock AusdruckDTOMapper ausdruckDTOMapper;
 
+  @Mock DokumentartDTOMapper dokumentartDTOMapper;
+
   @InjectMocks AusdruckController unitUnderTest;
 
   @Nested
@@ -53,8 +55,9 @@ class AusdruckControllerTest {
           .thenReturn(Optional.of(mockedServiceResponse));
       Mockito.when(ausdruckDTOMapper.toDTO(mockedServiceResponse))
           .thenReturn(mockedServiceResponseAsDTO);
+      Mockito.when(dokumentartDTOMapper.toModel(dokumentartDTO)).thenReturn(dokumentartModel);
 
-      val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, dokumentartModel);
+      val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, dokumentartDTO);
 
       Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO.content());
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -66,11 +69,10 @@ class AusdruckControllerTest {
     void should_returnNullBodyWithHttpStatusNotFound_when_serviceReturnsEmptyOptional() {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val dokumentartModel = DokumentartModel.V1;
+      val dokumentartDTO = DokumentartDTO.V1;
 
       Mockito.when(ausdruckService.getAusdruck(any())).thenReturn(Optional.empty());
-
-      val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, dokumentartModel);
+      val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, dokumentartDTO);
 
       Assertions.assertThat(result.getBody()).isNull();
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);

@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ausdruck;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.DokumentartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.DokumentartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.WahlUndBezirkIDUndDokumentartModel;
@@ -32,6 +33,8 @@ public class AusdruckController {
 
   private final AusdruckDTOMapper ausdruckDTOMapper;
 
+  private final DokumentartDTOMapper dokumentartDTOMapper;
+
   @Operation(
       description =
           "Lesen eines Ausdrucks einer bestimmten Dokumentart für einen Wahlbezirk einer Wahl")
@@ -54,10 +57,11 @@ public class AusdruckController {
   public ResponseEntity<String> getAusdruck(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
-      @PathVariable("dokumentart") final DokumentartModel dokumentartModel) {
+      @PathVariable("dokumentart") final DokumentartDTO dokumentartDTO) {
     val ausdruckReadModel =
         ausdruckService.getAusdruck(
-            new WahlUndBezirkIDUndDokumentartModel(wahlbezirkID, wahlID, dokumentartModel));
+            new WahlUndBezirkIDUndDokumentartModel(
+                wahlbezirkID, wahlID, dokumentartDTOMapper.toModel(dokumentartDTO)));
 
     if (ausdruckReadModel.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);

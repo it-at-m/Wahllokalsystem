@@ -258,7 +258,8 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
       const result = await unitUnderTest.prepareDataForSchnellmeldungDruck(
         mockedValues.mockedWahl,
         status,
-        meldungsArt
+        meldungsArt,
+        mockedValues.mockedWahlbezirkNummer
       );
 
       const expectedResult = prepareSchnellmeldungDruckInput()
@@ -282,6 +283,11 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
         .build();
 
       expect(result).toStrictEqual(expectedResult);
+      expect(mockDefinitions.createFooter).toHaveBeenCalledExactlyOnceWith(
+        status.schnellmeldung.validierungsstatus,
+        MeldungsArtEnum.Schnellmeldung,
+        mockedValues.mockedWahlbezirkNummer
+      );
     });
 
     it("should_returnErgebnismeldungDruckInput_when_givenWahlStatusAndMeldungsartForDSE", async () => {
@@ -304,7 +310,8 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
       const result = await unitUnderTest.prepareDataForSchnellmeldungDruck(
         mockedValues.mockedWahl,
         status,
-        meldungsArt
+        meldungsArt,
+        mockedValues.mockedWahlbezirkNummer
       );
 
       const expectedResult = prepareSchnellmeldungDruckInput()
@@ -330,6 +337,11 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
         .build();
 
       expect(result).toStrictEqual(expectedResult);
+      expect(mockDefinitions.createFooter).toHaveBeenCalledExactlyOnceWith(
+        status.schnellmeldung.validierungsstatus,
+        MeldungsArtEnum.Schnellmeldung,
+        mockedValues.mockedWahlbezirkNummer
+      );
     });
   });
 
@@ -543,6 +555,7 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
 
   function initDseIndependentMocks() {
     const mockedWahl = prepareWahl().wahlID(wahlID).build();
+    const mockedWahlbezirkNummer = generateRandomString(4);
 
     // mock aWerte
     const mockedAWerte = prepareAWerte()
@@ -586,6 +599,7 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
     mockDefinitions.createFooter.mockReturnValue(mockedFooter);
 
     return {
+      mockedWahlbezirkNummer,
       mockedBarcodeUrl,
       mockedAWerte,
       mockedBWerte,

@@ -77,7 +77,8 @@ export function useMbwSchnellmeldungDruckUtils(
   async function prepareDataForSchnellmeldungDruck(
     wahl: Wahl,
     status: Status,
-    meldungsart: MeldungsartEnum
+    meldungsart: MeldungsartEnum,
+    wahlbezirkNummer: string
   ): Promise<SchnellmeldungDruckInput> {
     let aWerte = undefined;
     if (currentUserWahlbezirksArt.value == WahlbezirksArtEnum.UWB) {
@@ -103,7 +104,11 @@ export function useMbwSchnellmeldungDruckUtils(
 
     const stimmenGesamt = gueltigeStimmenGesamt + ungueltigeStimmen;
 
-    const footer = createFooter(status, meldungsart);
+    const footer = createFooter(
+      status.schnellmeldung.validierungsstatus,
+      meldungsart,
+      wahlbezirkNummer
+    );
 
     const jpegUrl = createBarcode(
       wahl,

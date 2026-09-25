@@ -88,7 +88,7 @@ const { isDseAktiv } = storeToRefs(useInfomanagementStore());
 
 const { addNotification } = useUserNotificationService();
 const { wahlenActions } = useWahlenStore();
-const { isBWB } = storeToRefs(useUserStore());
+const { isBWB, currentUserWahlbezirkNummer } = storeToRefs(useUserStore());
 const {
   isSendingSchnellmeldung,
   sendSchnellmeldung,
@@ -173,7 +173,8 @@ async function onDruckenClicked() {
         await prepareDataForSchnellmeldungDruck(
           wahl,
           status,
-          MeldungsArtEnum.Schnellmeldung
+          MeldungsArtEnum.Schnellmeldung,
+          currentUserWahlbezirkNummer.value
         );
 
       const printWindow = window.open(

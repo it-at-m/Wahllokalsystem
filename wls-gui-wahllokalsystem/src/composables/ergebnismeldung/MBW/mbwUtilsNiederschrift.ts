@@ -137,7 +137,11 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     await _getStimmenListeUndErgebniseGesamt();
     const parteienListe = await _getParteienListe();
     const ereignisse = _getEreignisse();
-    const footer = createFooter(status, meldungsart);
+    const footer = createFooter(
+      status.niederschrift.validierungsstatus,
+      meldungsart,
+      wahlbezirkNummer
+    );
     const niederschriftDruckInputBaseData: NiederschriftDruckInputBase = {
       aktuelleWahl: wahl,
       wahltagFormatiert: wahltagFormatiert || "",

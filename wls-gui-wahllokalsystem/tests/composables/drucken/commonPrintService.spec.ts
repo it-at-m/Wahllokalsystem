@@ -1,6 +1,6 @@
-import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
@@ -42,6 +42,8 @@ vi.mock(
     }),
   })
 );
+
+const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
 
 describe("commonPrintService.ts", () => {
   const mockedNow = new Date("2026-09-25T12:34:00");
@@ -166,16 +168,18 @@ describe("commonPrintService.ts", () => {
   });
 
   describe("createFooter", () => {
+    const nonValideStatus = Object.values(MeldungValidierungsstatusEnum).filter(
+      (value) => value !== MeldungValidierungsstatusEnum.Valide
+    );
+
     it("should_returnFooterWithO_when_schnellmeldungIsValide", () => {
-      const status = {
-        schnellmeldung: {
-          validierungsstatus: MeldungValidierungsstatusEnum.Valide,
-        },
-      } as Status;
+      const status = MeldungValidierungsstatusEnum.Valide;
+      const wahlbezirkNummer = generateRandomString(4);
 
       const result = unitUnderTest.createFooter(
         status,
-        MeldungsArtEnum.Schnellmeldung
+        MeldungsArtEnum.Schnellmeldung,
+        wahlbezirkNummer
       );
 
       expect(result).toStrictEqual(`${mockedUuid}, 25.09.2026 12:34 O`);
@@ -185,38 +189,62 @@ describe("commonPrintService.ts", () => {
       expect(mockDefinitions.toHhMm).toHaveBeenCalledExactlyOnceWith(mockedNow);
     });
 
-    it("should_returnFooterWithM_when_schnellmeldungIsNotValide", () => {
-      const status = {
-        schnellmeldung: {
-          validierungsstatus: MeldungValidierungsstatusEnum.Invalide,
-        },
-      } as Status;
+    it.each(nonValideStatus)(
+      "should_returnFooterWithM_when_schnellmeldungIsNotValide",
+      (nonValidStatus) => {
+        const wahlbezirkNummer = generateRandomString(4);
+
+        const result = unitUnderTest.createFooter(
+          nonValidStatus,
+          MeldungsArtEnum.Schnellmeldung,
+          wahlbezirkNummer
+        );
+
+        expect(result).toStrictEqual(`${mockedUuid}, 25.09.2026 12:34 M`);
+      }
+    );
+
+    it("should_returnFooterWithO_when_beschlussentscheidungenIsValide", () => {
+      const status = MeldungValidierungsstatusEnum.Valide;
+      const wahlbezirkNummer = generateRandomString(4);
 
       const result = unitUnderTest.createFooter(
         status,
-        MeldungsArtEnum.Schnellmeldung
+        MeldungsArtEnum.Beschlussentscheidungen,
+        wahlbezirkNummer
       );
 
-      expect(result).toStrictEqual(`${mockedUuid}, 25.09.2026 12:34 M`);
-    });
-
-    it.each([
-      ["statusIsUndefined", undefined],
-      ["schnellmeldungIsMissing", {} as Status],
-      ["validierungsstatusIsMissing", { schnellmeldung: {} } as Status],
-    ])("should_returnUndefined_when_%s", (_condition, status) => {
-      const result = unitUnderTest.createFooter(
-        status,
-        MeldungsArtEnum.Schnellmeldung
+      expect(result).toStrictEqual(
+        `${mockedUuid}, 25.09.2026 12:34 O ${wahlbezirkNummer}`
       );
-
-      expect(result).toBeUndefined();
+      expect(mockDefinitions.toGermanDate).toHaveBeenCalledExactlyOnceWith(
+        mockedNow
+      );
+      expect(mockDefinitions.toHhMm).toHaveBeenCalledExactlyOnceWith(mockedNow);
     });
+
+    it.each(nonValideStatus)(
+      "should_returnFooterWithM_when_beschlussentscheidungenIsNotValide",
+      (nonValidStatus) => {
+        const wahlbezirkNummer = generateRandomString(4);
+
+        const result = unitUnderTest.createFooter(
+          nonValidStatus,
+          MeldungsArtEnum.Beschlussentscheidungen,
+          wahlbezirkNummer
+        );
+
+        expect(result).toStrictEqual(
+          `${mockedUuid}, 25.09.2026 12:34 M ${wahlbezirkNummer}`
+        );
+      }
+    );
 
     it("should_returnEmptyString_when_meldungsartIsNiederschrift", () => {
       const result = unitUnderTest.createFooter(
-        undefined,
-        MeldungsArtEnum.Niederschrift
+        getRandomItem(Object.values(MeldungValidierungsstatusEnum)),
+        MeldungsArtEnum.Niederschrift,
+        generateRandomString(4)
       );
 
       expect(result).toStrictEqual("");

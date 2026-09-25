@@ -760,6 +760,11 @@ describe("mbwUtilsNiederschrift.ts", () => {
       expect(result.parteienListe).toBeDefined();
       result.parteienListe = [];
       expect(result).toEqual(expectedResult);
+      expect(mockDefinitions.createFooter).toHaveBeenCalledExactlyOnceWith(
+        status.niederschrift.validierungsstatus,
+        MeldungsArtEnum.Niederschrift,
+        mockedWahlbezirkNummer
+      );
     });
   });
 });

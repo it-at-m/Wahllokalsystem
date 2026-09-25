@@ -2,9 +2,11 @@ import type { BeschlussentscheidungenDruckInput } from "@/types/dse/beschlussfas
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useStimmzettelGueltigkeitEnumTools } from "@/composables/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnumTools.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { toGermanDate } = useDateTimeFormatter();
+const { toText } = useStimmzettelGueltigkeitEnumTools();
 
 export function useBeschlussentscheidungenDruckTemplateTools() {
   function buildTemplate(data: BeschlussentscheidungenDruckInput): string {
@@ -241,7 +243,7 @@ export function useBeschlussentscheidungenDruckTemplateTools() {
     return `
       <tr>
         <td>${stimmzettel.teamID}${stimmzettel.stimmzettelkennung}</td>
-        <td>${stimmzettel.gueltigkeit}</td>
+        <td>${toText(stimmzettel.gueltigkeit)}</td>
         <td>${stimmzettel.beschlussfassung?.text}</td>
         <td>${stimmzettel.beschlussfassung?.pro}</td>
         <td>${stimmzettel.beschlussfassung?.contra}</td>

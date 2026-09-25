@@ -25,12 +25,17 @@
         ungueltigeStimmzettelNachBeschluss
       "
     />
-    <the-m-b-w-gueltige-stimmen-anzeigen-niederschrift-table
-      :wahlvorschlaege-kandidaten-ergebnisse="
-        wahlvorschlaegeWithKandidatenErgebnissenStapelAAndB
-      "
-      :ergebnisse-and-wahlvorschlaege="wahlvorschlaegeErgebnisseStapelAAndB"
-    />
+    <v-card>
+      <v-card-title> Gültige Stimmen </v-card-title>
+      <v-card-text>
+        <the-m-b-w-gueltige-stimmen-anzeigen-niederschrift-table
+          :wahlvorschlaege-kandidaten-ergebnisse="
+            wahlvorschlaegeWithKandidatenErgebnissenStapelAAndB
+          "
+          :ergebnisse-and-wahlvorschlaege="wahlvorschlaegeErgebnisseStapelAAndB"
+        />
+      </v-card-text>
+    </v-card>
     <base-card-wahlvorschlaege-kandidatenstimmen-anzeigen
       :kandidatenstimmen="wahlvorschlaegeWithKandidatenErgebnissenStapelBC"
     />

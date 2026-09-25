@@ -3614,7 +3614,7 @@ export const StimmzettelerfassungTeamStatusControllerApiAxiosParamCreator = func
             assertParamExists('reopenStimmzettelerfassung', 'wahlbezirkID', wahlbezirkID)
             // verify required parameter 'teamID' is not null or undefined
             assertParamExists('reopenStimmzettelerfassung', 'teamID', teamID)
-            const localVarPath = `/stimmzettelerfassung/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/reopen`
+            const localVarPath = `/stimmzettelerfassung/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/status/inBearbeitung`
                 .replace(`{${"wahlID"}}`, encodeURIComponent(String(wahlID)))
                 .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)))
                 .replace(`{${"teamID"}}`, encodeURIComponent(String(teamID)));

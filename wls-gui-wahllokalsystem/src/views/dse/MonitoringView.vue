@@ -54,9 +54,7 @@
             :is-wieder-oeffnen-button-disabled="
               item.status !==
                 StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN ||
-              (workflowStatus?.status !==
-                StimmzettelerfassungStatusEnum.SteBearbeitung &&
-                !!workflowStatus)
+              isElectionFinished(wahlID, wahlbezirkID)
             "
             @open-stimmzettelerfassung="
               onOpenStimmzettelerfassungClicked(item.teamID)
@@ -107,10 +105,9 @@ import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressL
 import TheBeschlussfassungStartenDialog from "@/components/dse/beschlussfassung/TheBeschlussfassungStartenDialog.vue";
 import BaseTeamStatusListItem from "@/components/dse/monitoring/BaseTeamStatusListItem.vue";
 import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import router from "@/plugins/router.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
-import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
 
 const minWidth = "220px";
@@ -129,11 +126,11 @@ const {
   isMoveOnToBeschlussfassungDisabled,
   isTeamStatusListLoading,
   isWorkflowStatusLoading,
-  workflowStatus,
   onMonitoringSynchronisierenClicked,
   loadWorkflowStatus,
+  reopenStimmzettelerfassung,
 } = useMonitoringViewUtils(wahlID, wahlbezirkID);
-const { postErfassungTeamStatus } = useStimmzettelerfassungTeamStatusService();
+const { isElectionFinished } = useWorkflowStore();
 
 const isRefreshBtnActive = computed(() => !isBeschlussfassungBtnActive.value);
 
@@ -161,13 +158,6 @@ async function onAktualisierenClicked() {
 }
 
 async function onOpenStimmzettelerfassungClicked(teamID: string) {
-  await postErfassungTeamStatus(
-    wahlID,
-    wahlbezirkID,
-    teamID,
-    { status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG },
-    true
-  );
-  await onMonitoringSynchronisierenClicked();
+  await reopenStimmzettelerfassung(teamID);
 }
 </script>

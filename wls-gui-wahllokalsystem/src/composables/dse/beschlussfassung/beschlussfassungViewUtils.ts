@@ -3,12 +3,14 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import { computed, onActivated, ref } from "vue";
 
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useStimmzettelerfassungTeamStatusListState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts";
 import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
-const { getStimmzettel } = useStimmzettelService();
+const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
+const { isSamePersistedStimmzettel } = useStimmzettelTools();
 
 export function useBeschlussfassungViewUtils(
   wahlID: string,
@@ -82,10 +84,40 @@ export function useBeschlussfassungViewUtils(
     }
   }
 
+  async function saveBeschlussStimmzettel(
+    stimmzettelToSave: PersistedStimmzettel
+  ) {
+    const teamStimmzettelList = await getStimmzettel(
+      wahlID,
+      wahlbezirkID,
+      stimmzettelToSave.teamID,
+      false
+    );
+
+    const stimmzettelIndex = teamStimmzettelList.findIndex((s) =>
+      isSamePersistedStimmzettel(s, stimmzettelToSave)
+    );
+    if (stimmzettelIndex >= 0) {
+      teamStimmzettelList[stimmzettelIndex] = stimmzettelToSave;
+
+      await saveStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        stimmzettelToSave.teamID,
+        teamStimmzettelList
+      );
+    } else {
+      throw new Error(
+        `Fehler: Stimmzettel mit Kennung ${stimmzettelToSave.teamID} ${stimmzettelToSave.stimmzettelkennung} nicht gefunden.`
+      );
+    }
+  }
+
   return {
     stimmzettelForBeschlussfassung,
     completedStimmzettelForBeschlussfassung,
     isStimmzettelForBeschlussLoading,
     isBeschlussfassungBeendenButtonDisabled,
+    saveBeschlussStimmzettel,
   };
 }

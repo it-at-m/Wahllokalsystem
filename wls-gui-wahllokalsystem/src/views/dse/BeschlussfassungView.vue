@@ -69,6 +69,7 @@ const {
   stimmzettelForBeschlussfassung,
   isBeschlussfassungBeendenButtonDisabled,
   completedStimmzettelForBeschlussfassung,
+  saveBeschlussStimmzettel,
 } = useBeschlussfassungViewUtils(wahlID, wahlbezirkID);
 
 async function onBeschlussfassungBeendenClicked() {
@@ -84,15 +85,14 @@ async function onBeschlussfassungBeendenClicked() {
 function onBeschlussBearbeitenClicked(stimmzettelToEdit: PersistedStimmzettel) {
   activeStimmzettelForBeschluss.value = stimmzettelToEdit;
   isBearbeitenDialogVisible.value = true;
-  // TODO #3271 Beschluss zu einem Stimmzettel speichern
 }
 
 function onBeschlussBearbeitenCanceled() {
   isBearbeitenDialogVisible.value = false;
 }
 
-function onBeschlussBearbeitenSaved(stimmzettel: PersistedStimmzettel) {
+async function onBeschlussBearbeitenSaved(stimmzettel: PersistedStimmzettel) {
+  await saveBeschlussStimmzettel(stimmzettel);
   isBearbeitenDialogVisible.value = false;
-  // todo save stimmzettel
 }
 </script>

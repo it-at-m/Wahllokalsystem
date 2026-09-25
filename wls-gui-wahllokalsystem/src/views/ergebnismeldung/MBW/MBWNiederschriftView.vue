@@ -282,7 +282,7 @@ async function onBeschlussentscheidungenDruckenClicked() {
       isBeschlussentscheidungenDruckenDialogVisble.value = true;
 
       await sendAusdruckBeschlussentscheidungen(
-        MeldungsArtEnum.Schnellmeldung,
+        MeldungsArtEnum.Beschlussentscheidungen,
         pdfText
       );
     }

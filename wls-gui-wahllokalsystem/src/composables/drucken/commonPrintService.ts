@@ -42,6 +42,17 @@ export function useCommonPrintService() {
         const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
 
         if (validierungsstatus === "VALIDE") {
+          return crypto.randomUUID() + ", " + formattedDateWithTime + " O";
+        } else {
+          return crypto.randomUUID() + ", " + formattedDateWithTime + " M";
+        }
+      }
+    } else if (meldungsArt == MeldungsArtEnum.Beschlussentscheidungen) {
+      if (validierungsstatus) {
+        const date = new Date();
+        const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
+
+        if (validierungsstatus === "VALIDE") {
           return (
             crypto.randomUUID() +
             ", " +

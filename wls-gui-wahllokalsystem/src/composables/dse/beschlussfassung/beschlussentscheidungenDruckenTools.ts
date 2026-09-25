@@ -9,6 +9,7 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
 import { useAusdruckService } from "@/composables/ergebnismeldung/common/ausdruckService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 
@@ -37,16 +38,20 @@ export function useBeschlussentscheidungenDruckenTools(
 
   function prepareDataForBeschlussentscheidungenDruck(
     wahl: Wahl,
-    stimmzettelWithBeschluss: PersistedStimmzettel[]
+    stimmzettelForBeschlussfassung: PersistedStimmzettel[]
   ): BeschlussentscheidungenDruckInput {
     return {
-      stimmzettelWithBeschluss: stimmzettelWithBeschluss,
+      stimmzettelWithBeschluss: stimmzettelForBeschlussfassung.filter(
+        (stimmzettel) =>
+          stimmzettel.gueltigkeit !==
+          StimmzettelGueltigkeitEnum.BeschlussAusstehend
+      ),
       wahlbezirkNummer: currentUserWahlbezirkNummer.value,
       aktuelleWahl: wahl,
       wahlbezirksArt: currentUserWahlbezirksArt.value,
       footer: createFooter(
         MeldungValidierungsstatusEnum.Valide,
-        MeldungsArtEnum.Schnellmeldung,
+        MeldungsArtEnum.Beschlussentscheidungen,
         currentUserWahlbezirkNummer.value
       ),
     };

@@ -20,13 +20,17 @@ export function useCommonPrintService() {
     wahlbezirkArt: WahlbezirksArtEnum,
     wahlbezirkNummer: string
   ) {
-    const canvas = document.createElement("canvas");
     const barcodeContent = _createBarcodeString(
       wahl,
       meldungsart,
       wahlbezirkArt,
       wahlbezirkNummer
     );
+    if (!barcodeContent) {
+      return "";
+    }
+
+    const canvas = document.createElement("canvas");
     JsBarcode(canvas, barcodeContent, { displayValue: false });
     return canvas.toDataURL("image/jpeg");
   }

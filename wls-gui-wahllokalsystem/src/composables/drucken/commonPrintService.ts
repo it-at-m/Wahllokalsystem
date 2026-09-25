@@ -1,5 +1,4 @@
 import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
-import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import JsBarcode from "jsbarcode";
@@ -7,6 +6,7 @@ import JsBarcode from "jsbarcode";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -36,22 +36,42 @@ export function useCommonPrintService() {
   }
 
   function createFooter(
-    status: Status | undefined,
-    meldungsArt: MeldungsartEnum
+    validierungsstatus: MeldungValidierungsstatusEnum,
+    meldungsArt: MeldungsartEnum,
+    wahlbezirkNummer: string
   ) {
     if (meldungsArt == MeldungsArtEnum.Schnellmeldung) {
-      if (
-        status &&
-        status.schnellmeldung &&
-        status.schnellmeldung.validierungsstatus
-      ) {
+      if (validierungsstatus) {
         const date = new Date();
         const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
 
-        if (status.schnellmeldung.validierungsstatus === "VALIDE") {
+        if (validierungsstatus === "VALIDE") {
           return crypto.randomUUID() + ", " + formattedDateWithTime + " O";
         } else {
           return crypto.randomUUID() + ", " + formattedDateWithTime + " M";
+        }
+      }
+    } else if (meldungsArt == MeldungsArtEnum.Beschlussentscheidungen) {
+      if (validierungsstatus) {
+        const date = new Date();
+        const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
+
+        if (validierungsstatus === "VALIDE") {
+          return (
+            crypto.randomUUID() +
+            ", " +
+            formattedDateWithTime +
+            " O " +
+            wahlbezirkNummer
+          );
+        } else {
+          return (
+            crypto.randomUUID() +
+            ", " +
+            formattedDateWithTime +
+            " M " +
+            wahlbezirkNummer
+          );
         }
       }
     } else {

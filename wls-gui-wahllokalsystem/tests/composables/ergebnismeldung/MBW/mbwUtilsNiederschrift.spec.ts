@@ -22,6 +22,7 @@ import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/
 import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { ref } from "vue";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
@@ -37,7 +38,7 @@ import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/Stimm
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  getAWerte: vi.fn(),
+  getAWerteForWahlbezirkAndWahl: vi.fn(),
   getUrnenwahlvorbereitung: vi.fn(),
   getStimmabgabevermerke: vi.fn(),
   getBegruendungStimmzettelumschlaege: vi.fn(),
@@ -56,10 +57,30 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(import("jsbarcode"));
+vi.mock(import("@/composables/drucken/commonPrintService.ts"), () => ({
+  useCommonPrintService: () => ({
+    createBarcode: mockDefinitions.createBarcode,
+    createFooter: mockDefinitions.createFooter,
+  }),
+}));
+
 vi.mock(
   import("@/composables/ergebnismeldung/common/aWerteService.ts"),
   () => ({
-    useAWerteService: () => ({ getAWerte: mockDefinitions.getAWerte }),
+    useAWerteService: () => ({
+      getAWerte: vi.fn(),
+      getAWerteForWahlbezirkAndWahl:
+        mockDefinitions.getAWerteForWahlbezirkAndWahl,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/ergebnismeldung/common/bWerteService.ts"),
+  () => ({
+    useBWerteService: () => ({
+      getBWerteForWahlbezirkAndWahl:
+        mockDefinitions.getBWerteForWahlbezirkAndWahl,
+    }),
   })
 );
 vi.mock(
@@ -120,18 +141,11 @@ vi.mock(
     }),
   })
 );
-vi.mock(import("@/composables/ergebnismeldung/MBW/mbwUtils.ts"), () => ({
-  useMbwUtils: () => ({
-    getBWerteForWahlbezirkAndWahl:
-      mockDefinitions.getBWerteForWahlbezirkAndWahl,
-    _createBarcode: mockDefinitions.createBarcode,
-    _createFooter: mockDefinitions.createFooter,
-  }),
-}));
-vi.mock("@/stores/ergebnismeldungStore.ts", () => ({
-  useErgebnismeldungStore: () => ({
-    getErgebnisseByWahlIdAndStapelartOrUndefined:
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined,
+
+const mockIsDseAktiv = ref(false);
+vi.mock("@/stores/infomanagementStore.ts", () => ({
+  useInfomanagementStore: () => ({
+    isDseAktiv: mockIsDseAktiv,
   }),
 }));
 
@@ -165,6 +179,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
   let unitUnderTest: ReturnType<typeof useMbtUtilsNiederschrift>;
 
   beforeEach(() => {
+    mockIsDseAktiv.value = false;
     setActivePinia(createPinia());
   });
 
@@ -355,7 +370,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
       .a1(1)
       .a2(3)
       .build();
-    mockDefinitions.getAWerte.mockReturnValue([mockedAWerte]);
+    mockDefinitions.getAWerteForWahlbezirkAndWahl.mockReturnValue(mockedAWerte);
 
     const status = createStatus();
     status.niederschrift.validierungsstatus = "VALIDE";

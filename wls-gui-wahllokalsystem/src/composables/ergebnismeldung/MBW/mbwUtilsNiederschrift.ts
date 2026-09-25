@@ -1,4 +1,6 @@
-import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
+import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { NiederschriftBeanstandeteWahlbriefe } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftBeanstandeteWahlbriefe";
@@ -17,20 +19,27 @@ import type { Wahl } from "@/types/wahl/Wahl.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogging } from "@/composables/common/logging.ts";
+import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
+import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
+import { useAllStimmzettelOfWahlbezirkState } from "@/composables/dse/allStimmzettelOfWahlbezirkState.ts";
+import { useMbwStimmzettelFilterService } from "@/composables/dse/mbwStimmzettelFilterService.ts";
+import { useStimmzettelZusammenfassungUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelZusammenfassungUtils.ts";
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
+import { useBWerteService } from "@/composables/ergebnismeldung/common/bWerteService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useWahlscheineService } from "@/composables/ergebnismeldung/common/wahlscheineService.ts";
+import { useErgebnisTools } from "@/composables/ergebnismeldung/ergebnisTools.ts";
 import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
-import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
 import { useWaehlerverzeichnisService } from "@/composables/wahlhandlung/waehlerverzeichnisService.ts";
 import { useWahlvorbereitungService } from "@/composables/wahlhandlung/wahlvorbereitungService.ts";
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -45,9 +54,10 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 const { logError } = useLogging("mbwUtilsNiederschrift");
 const { toGermanDate, toHhMm } = useDateTimeFormatter();
 const { getErgebnisse } = useErgebnisService();
+const { createWithWahlvorschlagIDAndErgebnis } = useErgebnisTools();
 
 export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
-  const { getAWerte } = useAWerteService();
+  const { getAWerteForWahlbezirkAndWahl } = useAWerteService();
   const { getUrnenwahlvorbereitung } = useWahlvorbereitungService();
   const { getStimmabgabevermerke } = useStimmabgabevermerkeService();
   const { getBegruendungStimmzettelumschlaege } = useErgebnisService();
@@ -55,6 +65,16 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
   const { getWahlvorstand } = useWahlvorstandService();
   const { getWahlscheine } = useWahlscheineService();
   const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
+
+  const { stimmzettelOfWahlbezirk, loadStimmzettelOfWahlbezirk } =
+    useAllStimmzettelOfWahlbezirkState(wahlID, wahlbezirkID);
+  const {
+    stapelA: stapelAStimmzettel,
+    stapelB: stapelBStimmzettel,
+    stapelBC: stapelBCStimmzettel,
+    stapelDUngueltig,
+    stapelEUngueltig,
+  } = useMbwStimmzettelFilterService(stimmzettelOfWahlbezirk);
 
   const { getWahlvorschlaegeByWahlIDAndWahlbezirkID } =
     useWahlvorschlaegeStore();
@@ -69,11 +89,16 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     storeToRefs(useUserStore());
   const { wahlbezirkEreignisse } = storeToRefs(useEreignisStore());
   const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
+  const { isDseAktiv } = storeToRefs(useInfomanagementStore());
 
   const wahlvorschlaegeByWahlIDAndWahlbezirkID =
     getWahlvorschlaegeByWahlIDAndWahlbezirkID(wahlID, wahlbezirkID);
-  const { getBWerteForWahlbezirkAndWahl, _createBarcode, _createFooter } =
-    useMbwUtils(wahlID, wahlbezirkID);
+  const { getBWerteForWahlbezirkAndWahl } = useBWerteService(
+    wahlID,
+    wahlbezirkID
+  );
+  const { createFooter, createBarcode } = useCommonPrintService();
+
   const gueltigeStimmenListe = ref<NiederschriftGueltigeStimme[]>([]);
   const gueltigeStimmenErgebnisGesamt =
     ref<NiederschriftGueltigeStimmenErgebnisGesamt>({
@@ -89,8 +114,18 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     wahl: Wahl
   ): Promise<NiederschriftDruckInputBWB | NiederschriftDruckInputUWB> {
     const wahltagFormatiert = toGermanDate(wahl.wahltag);
-    const barcode = _createBarcode(wahl, meldungsart);
+    const barcode = createBarcode(
+      wahl,
+      meldungsart,
+      currentUserWahlbezirksArt.value,
+      currentUserWahlbezirkNummer.value
+    );
     const wahlbezirkNummer = currentUserWahlbezirkNummer.value;
+
+    if (isDseAktiv.value) {
+      await loadStimmzettelOfWahlbezirk();
+    }
+
     const wahlvorstaende = await _getWahlvorstand();
     const eroeffnungsuhrzeit: NiederschriftUhrzeit = _getEroeffnungsuhrzeit();
     const schliessungsuhrzeit: NiederschriftUhrzeit = _getSchliessungsuhrzeit();
@@ -98,11 +133,11 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     const anzahlWahlscheine = await _getAnzahlWahlscheine();
     const begruendung = await _getBegruendungStimmzettelumschlaege(wahl);
     const bWerte = await getBWerteForWahlbezirkAndWahl();
-    const ungueltigeStimmen = await _getUngueltigeStimmen();
+    const ungueltigeStimmen = await _getUngueltigeStimmenzettel();
     await _getStimmenListeUndErgebniseGesamt();
     const parteienListe = await _getParteienListe();
     const ereignisse = _getEreignisse();
-    const footer = _createFooter(status, meldungsart);
+    const footer = createFooter(status, meldungsart);
     const niederschriftDruckInputBaseData: NiederschriftDruckInputBase = {
       aktuelleWahl: wahl,
       wahltagFormatiert: wahltagFormatiert || "",
@@ -126,7 +161,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     if (currentUserWahlbezirksArt.value == WahlbezirksArtEnum.UWB) {
       const anzahlWahltische = await _getAnzahlWahltische();
       const wvz = await _getWaehlerverzeichnisData();
-      const aWerte = await getAWerteForWahlbezirkAndWahl();
+      const aWerte = await getAWerteForWahlbezirkAndWahl(wahlbezirkID, wahlID);
       const aWerteGesamt = aWerte.a1 + (aWerte.a2 || 0);
       return {
         ...niederschriftDruckInputBaseData,
@@ -284,7 +319,13 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     return beanstandeteWahlbriefe;
   }
 
-  async function _getUngueltigeStimmen() {
+  async function _getUngueltigeStimmenzettel(): Promise<number | undefined> {
+    return isDseAktiv.value
+      ? _getUngueltigeStimmenStimmzettelByStimmzettel()
+      : _getUngueltigeStimmzettelByStapel();
+  }
+
+  async function _getUngueltigeStimmzettelByStapel() {
     if (wahlbezirkID) {
       try {
         const loadedErgebnisse = await getErgebnisse(
@@ -307,6 +348,10 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
         logError("Fehler beim Laden der Ergebnisse: ", error);
       }
     }
+  }
+
+  async function _getUngueltigeStimmenStimmzettelByStimmzettel() {
+    return stapelEUngueltig.value.length + stapelDUngueltig.value.length;
   }
 
   async function _getStimmenListeUndErgebniseGesamt() {
@@ -346,25 +391,76 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     }
   }
 
+  function _stimmzettelStapelToErgebnisse(
+    stimmzettel: PersistedStimmzettel[],
+    stapelArt: StapelArtEnum
+  ): Ergebnisse {
+    const container = new Map<string, number>();
+    const sumTool = useStringNumberMapTools(container);
+    stimmzettel
+      .flatMap((stimmzettel) => stimmzettel.wahlvorschlaege)
+      .forEach((wahlvorschlag) =>
+        sumTool.add(wahlvorschlag.wahlvorschlagID, 1)
+      );
+
+    const ergebnisse: Ergebnis[] = [];
+    container.forEach((ergebnis, wahlvorschlagID) => {
+      ergebnisse.push(
+        createWithWahlvorschlagIDAndErgebnis(wahlvorschlagID, ergebnis)
+      );
+    });
+
+    return {
+      ergebnisse: ergebnisse,
+      bezirkUndWahlIDStapelart: {
+        wahlID,
+        wahlbezirkID,
+        stapelArt,
+      },
+    };
+  }
+
+  function _stimmzettelBCToErgebnisse(): Ergebnisse | null {
+    if (wahlvorschlaegeByWahlIDAndWahlbezirkID) {
+      const { wahlvorschlaegeWithKandidatenErgebnissen } =
+        useStimmzettelZusammenfassungUtils(
+          stapelBCStimmzettel,
+          computed(() => wahlvorschlaegeByWahlIDAndWahlbezirkID.wahlvorschlaege)
+        );
+      const ergebnisse = wahlvorschlaegeWithKandidatenErgebnissen.value
+        .flatMap((wke) => wke.kandidatenErgebnisse)
+        .map((ke) => ke.ergebnis);
+      return {
+        ergebnisse,
+        bezirkUndWahlIDStapelart: {
+          wahlID,
+          wahlbezirkID,
+          stapelArt: StapelArtEnum.MbwBC,
+        },
+      };
+    } else {
+      return null;
+    }
+  }
+
   async function _getGueltigeStimmabgabe() {
-    const stapelA = await getErgebnisse(
-      wahlbezirkID,
-      wahlID,
-      StapelArtEnum.MbwA,
-      false
-    );
-    const stapelB = await getErgebnisse(
-      wahlbezirkID,
-      wahlID,
-      StapelArtEnum.MbwB,
-      false
-    );
-    const stapelBC = await getErgebnisse(
-      wahlbezirkID,
-      wahlID,
-      StapelArtEnum.MbwBC,
-      false
-    );
+    const stapelA = isDseAktiv.value
+      ? _stimmzettelStapelToErgebnisse(
+          stapelAStimmzettel.value,
+          StapelArtEnum.MbwA
+        )
+      : await getErgebnisse(wahlbezirkID, wahlID, StapelArtEnum.MbwA, false);
+
+    const stapelB = isDseAktiv.value
+      ? _stimmzettelStapelToErgebnisse(
+          stapelBStimmzettel.value,
+          StapelArtEnum.MbwB
+        )
+      : await getErgebnisse(wahlbezirkID, wahlID, StapelArtEnum.MbwB, false);
+
+    const stapelBC = isDseAktiv.value
+      ? _stimmzettelBCToErgebnisse()
+      : await getErgebnisse(wahlbezirkID, wahlID, StapelArtEnum.MbwBC, false);
 
     if (wahlvorschlaegeByWahlIDAndWahlbezirkID) {
       // @ts-expect-error old code, will be refactored later
@@ -566,24 +662,6 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     return "";
   }
 
-  async function getAWerteForWahlbezirkAndWahl(): Promise<AWerte> {
-    let aWerte;
-    try {
-      aWerte = await getAWerte(wahlbezirkID, false);
-    } catch {
-      throw new Error(`Fehler beim Laden der AWerte`);
-    }
-
-    const filteredAWert = aWerte.find(
-      ({ bezirkUndWahlID }) => bezirkUndWahlID.wahlID === wahlID
-    );
-
-    if (!filteredAWert) {
-      throw new Error(`Kein AWert gefunden für wahlID: ${wahlID}`);
-    }
-    return filteredAWert;
-  }
-
   async function _getWaehlerverzeichnisData() {
     const waehlerverzeichnisNummer =
       waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
@@ -623,12 +701,9 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
 
   async function _getParteienListe() {
     let parteienListeForTemplate;
-    const stapelBC = await getErgebnisse(
-      wahlbezirkID,
-      wahlID,
-      StapelArtEnum.MbwBC,
-      false
-    );
+    const stapelBC = isDseAktiv.value
+      ? _stimmzettelBCToErgebnisse()
+      : await getErgebnisse(wahlbezirkID, wahlID, StapelArtEnum.MbwBC, false);
 
     if (wahlvorschlaegeByWahlIDAndWahlbezirkID) {
       parteienListeForTemplate = _createParteeienListe(

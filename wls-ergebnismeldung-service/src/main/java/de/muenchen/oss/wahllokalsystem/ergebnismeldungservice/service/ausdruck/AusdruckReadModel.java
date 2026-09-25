@@ -5,6 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 
 public record AusdruckReadModel(
-    @Valid @NotNull WahlUndBezirkIDUndMeldungsartModel wahlUndBezirkIDUndMeldungsartModel,
+    @Valid @NotNull WahlUndBezirkIDUndDokumentartModel wahlUndBezirkIDUndDokumentartModel,
     String content,
     Instant erstelltAm) {}

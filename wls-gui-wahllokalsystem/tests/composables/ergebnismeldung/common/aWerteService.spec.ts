@@ -45,7 +45,8 @@ vi.mock(
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { createAxiosResponse } = useAxiosTestDataFactory();
-const { createAWerteDTO, createAWerte } = useAWerteTestDataFactory();
+const { createAWerteDTO, createAWerte, prepareAWerte } =
+  useAWerteTestDataFactory();
 
 describe("aWerteService.ts", () => {
   let unitUnderTest: ReturnType<typeof useAWerteService>;
@@ -165,6 +166,72 @@ describe("aWerteService.ts", () => {
           }),
         })
       );
+    });
+  });
+
+  describe("getAWerteForWahlbezirkAndWahl", () => {
+    it("should_returnAWertForWahl_when_matchingAWertWasLoaded", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
+      const unmatchedAWert = createAWerte();
+      const matchingAWert = prepareAWerte()
+        .bezirkUndWahlID({
+          wahlID,
+          wahlbezirkID,
+        })
+        .build();
+      const mockedAWerteDto = [createAWerteDTO(), createAWerteDTO()];
+
+      mockDefinitions.getAWerte.mockResolvedValue(
+        createAxiosResponse({
+          status: 200,
+          data: mockedAWerteDto,
+        })
+      );
+      mockDefinitions.mapToModel
+        .mockReturnValueOnce(unmatchedAWert)
+        .mockReturnValueOnce(matchingAWert);
+
+      const result = await unitUnderTest.getAWerteForWahlbezirkAndWahl(
+        wahlbezirkID,
+        wahlID
+      );
+
+      expect(result).toStrictEqual(matchingAWert);
+      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
+    });
+
+    it("should_throwError_when_loadingAWerteFailed", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
+      mockDefinitions.getAWerte.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(
+        unitUnderTest.getAWerteForWahlbezirkAndWahl(wahlbezirkID, wahlID)
+      ).rejects.toThrow("Fehler beim Laden der AWerte");
+      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
+    });
+
+    it("should_throwError_when_noAWertMatchesWahl", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
+      const mockedAWerteDto = [createAWerteDTO()];
+      const unmatchedAWert = createAWerte();
+
+      mockDefinitions.getAWerte.mockResolvedValue(
+        createAxiosResponse({
+          status: 200,
+          data: mockedAWerteDto,
+        })
+      );
+      mockDefinitions.mapToModel.mockReturnValue(unmatchedAWert);
+
+      await expect(
+        unitUnderTest.getAWerteForWahlbezirkAndWahl(wahlbezirkID, wahlID)
+      ).rejects.toThrow(`Kein AWert gefunden für wahlID: ${wahlID}`);
+      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });
   });
 });

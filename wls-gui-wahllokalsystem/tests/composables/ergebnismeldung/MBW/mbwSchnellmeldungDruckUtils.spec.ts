@@ -299,8 +299,7 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
         MeldungValidierungsstatusEnum.Valide;
       const meldungsArt = MeldungsArtEnum.Schnellmeldung;
 
-      const expectedErgebnisse =
-        createExpectedStimmzettelErgebnisse(mockedValues);
+      const expectedErgebnisse = createExpectedStimmzettelErgebnisse();
 
       const result = await unitUnderTest.prepareDataForSchnellmeldungDruck(
         mockedValues.mockedWahl,
@@ -504,9 +503,7 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
     };
   }
 
-  function createExpectedStimmzettelErgebnisse(
-    mockedValues: ReturnType<typeof initDseIndependentMocks>
-  ) {
+  function createExpectedStimmzettelErgebnisse() {
     mockedStapelDUngueltig.value = [
       createPersistedStimmzettel(),
       createPersistedStimmzettel(),

@@ -20,12 +20,19 @@ vi.mock(import("jsbarcode"), () => ({
   default: mockDefinitions.jsBarcode,
 }));
 
-vi.mock(import("@/composables/common/dateTimeFormatter.ts"), () => ({
-  useDateTimeFormatter: () => ({
-    toGermanDate: mockDefinitions.toGermanDate,
-    toHhMm: mockDefinitions.toHhMm,
-  }),
-}));
+vi.mock(
+  import("@/composables/common/dateTimeFormatter.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useDateTimeFormatter: () => ({
+        ...mod.useDateTimeFormatter(),
+        toGermanDate: mockDefinitions.toGermanDate,
+        toHhMm: mockDefinitions.toHhMm,
+      }),
+    };
+  }
+);
 
 vi.mock(
   import("@/composables/userNotification/userNotificationService.ts"),

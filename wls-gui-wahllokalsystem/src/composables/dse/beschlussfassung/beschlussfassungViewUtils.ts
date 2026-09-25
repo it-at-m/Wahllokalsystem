@@ -3,6 +3,7 @@ import { computed, onActivated } from "vue";
 import { useAllStimmzettelOfWahlbezirkState } from "@/composables/dse/allStimmzettelOfWahlbezirkState.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
@@ -17,6 +18,7 @@ export function useBeschlussfassungViewUtils(
   const { isLoading, stimmzettelOfWahlbezirk, loadStimmzettelOfWahlbezirk } =
     useAllStimmzettelOfWahlbezirkState(wahlID, wahlbezirkID);
   const { isBeschlussRequired } = useStimmzettelTools();
+  const { isElectionFinished } = useWorkflowStore();
 
   const stimmzettelForBeschlussfassung = computed(() =>
     stimmzettelOfWahlbezirk.value.filter(isBeschlussRequired)
@@ -37,10 +39,15 @@ export function useBeschlussfassungViewUtils(
         workflowStatus.value?.status ===
           StimmzettelerfassungStatusEnum.BeAbgeschlossen ||
         stimmzettelForBeschlussfassung.value.length !==
-          completedStimmzettelForBeschlussfassung.value.length
+          completedStimmzettelForBeschlussfassung.value.length ||
+        isElectionFinished(wahlID, wahlbezirkID)
       );
     }
   });
+
+  const isBeschlussBearbeitenDisabled = computed(() =>
+    isElectionFinished(wahlID, wahlbezirkID)
+  );
 
   onActivated(async () => {
     await Promise.allSettled([loadStimmzettelOfWahlbezirk()]);
@@ -51,5 +58,6 @@ export function useBeschlussfassungViewUtils(
     completedStimmzettelForBeschlussfassung,
     isStimmzettelForBeschlussLoading: isLoading,
     isBeschlussfassungBeendenButtonDisabled,
+    isBeschlussBearbeitenDisabled,
   };
 }

@@ -1,10 +1,12 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
-import { describe, expect, it } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { beforeEach, describe, expect, it } from "vitest";
 import { ref } from "vue";
 
 import { useMonitoringViewBeschlussfassungButtonsUtils } from "@/composables/dse/monitoring/monitoringViewBeschlussfassungButtonsUtils.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
@@ -17,6 +19,8 @@ const { createStimmzettelerfassungStatus, prepareStimmzettelerfassungStatus } =
 const { generateRandomBoolean, getRandomItem } = useCommonTestDataFactory();
 
 describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
+  const wahlID = "wahlID";
+  const wahlbezirkID = "wahlbezirkID";
   const teamNotDoneStates = Object.values(
     StimmzettelerfassungTeamStatusEnum
   ).filter(
@@ -40,6 +44,10 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
       ) === undefined
   );
 
+  beforeEach(() => {
+    setActivePinia(createPinia());
+  });
+
   describe("isBeschlussfassungBtnActive", () => {
     it("should_returnFalse_when_noTeamStatusAreGiven", () => {
       const { isBeschlussfassungBtnActive } =
@@ -47,7 +55,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           ref(generateRandomBoolean()),
           ref(generateRandomBoolean()),
           ref([]),
-          ref(createStimmzettelerfassungStatus())
+          ref(createStimmzettelerfassungStatus()),
+          wahlID,
+          wahlbezirkID
         );
 
       expect(isBeschlussfassungBtnActive.value).toStrictEqual(false);
@@ -63,7 +73,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           ref(generateRandomBoolean()),
           ref(generateRandomBoolean()),
           ref([teamStatusEntry]),
-          ref(createStimmzettelerfassungStatus())
+          ref(createStimmzettelerfassungStatus()),
+          wahlID,
+          wahlbezirkID
         );
 
       expect(isBeschlussfassungBtnActive.value).toStrictEqual(true);
@@ -82,7 +94,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           ref(generateRandomBoolean()),
           ref(generateRandomBoolean()),
           ref([teamStatusEntry1, teamStatusEntry2]),
-          ref(createStimmzettelerfassungStatus())
+          ref(createStimmzettelerfassungStatus()),
+          wahlID,
+          wahlbezirkID
         );
 
       expect(isBeschlussfassungBtnActive.value).toStrictEqual(true);
@@ -100,7 +114,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
             ref(generateRandomBoolean()),
             ref(generateRandomBoolean()),
             ref([teamStatusEntry]),
-            ref(createStimmzettelerfassungStatus())
+            ref(createStimmzettelerfassungStatus()),
+            wahlID,
+            wahlbezirkID
           );
 
         expect(isBeschlussfassungBtnActive.value).toStrictEqual(false);
@@ -119,7 +135,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           ref(false),
           ref(false),
           ref([teamStatusEntry]),
-          ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus())
+          ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus()),
+          wahlID,
+          wahlbezirkID
         );
 
       expect(isMoveOnToBeschlussfassungDisabled.value).toStrictEqual(false);
@@ -139,7 +157,30 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           ref(false),
           ref(false),
           ref([teamStatusEntry]),
-          ref(stimmzettelerfassungStatus)
+          ref(stimmzettelerfassungStatus),
+          wahlID,
+          wahlbezirkID
+        );
+
+      expect(isMoveOnToBeschlussfassungDisabled.value).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_electionIsFinished", () => {
+      const teamStatusEntry = prepareStimmzettelerfassungTeamStatusEntry()
+        .status(StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN)
+        .build();
+      const workflowStore = useWorkflowStore();
+      workflowStore.initElectionWorkflowState(wahlID, wahlbezirkID);
+      workflowStore.electionWorkflowsStates[0].isNiederschriftDone = true;
+
+      const { isMoveOnToBeschlussfassungDisabled } =
+        useMonitoringViewBeschlussfassungButtonsUtils(
+          ref(false),
+          ref(false),
+          ref([teamStatusEntry]),
+          ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus()),
+          wahlID,
+          wahlbezirkID
         );
 
       expect(isMoveOnToBeschlussfassungDisabled.value).toStrictEqual(true);
@@ -158,7 +199,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           ref(false),
           ref(false),
           ref([teamStatusEntry1, teamStatusEntry2]),
-          ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus())
+          ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus()),
+          wahlID,
+          wahlbezirkID
         );
 
       expect(isMoveOnToBeschlussfassungDisabled.value).toStrictEqual(false);
@@ -174,7 +217,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           ref(true),
           ref(false),
           ref([teamStatusEntry]),
-          ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus())
+          ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus()),
+          wahlID,
+          wahlbezirkID
         );
 
       expect(isMoveOnToBeschlussfassungDisabled.value).toStrictEqual(true);
@@ -190,7 +235,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           ref(false),
           ref(true),
           ref([teamStatusEntry]),
-          ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus())
+          ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus()),
+          wahlID,
+          wahlbezirkID
         );
 
       expect(isMoveOnToBeschlussfassungDisabled.value).toStrictEqual(true);
@@ -202,7 +249,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           ref(false),
           ref(false),
           ref([]),
-          ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus())
+          ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus()),
+          wahlID,
+          wahlbezirkID
         );
 
       expect(isMoveOnToBeschlussfassungDisabled.value).toStrictEqual(true);
@@ -220,7 +269,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
             ref(false),
             ref(false),
             ref([teamStatusEntry]),
-            ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus())
+            ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus()),
+            wahlID,
+            wahlbezirkID
           );
 
         expect(isMoveOnToBeschlussfassungDisabled.value).toStrictEqual(true);
@@ -247,7 +298,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
               teamStatusEntryForTeamThatIsDone,
               teamStatusEntryForTeamThatIsNotDone,
             ]),
-            ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus())
+            ref(_createNotBeAbgeschlossenStimmzettelerfassungStatus()),
+            wahlID,
+            wahlbezirkID
           );
 
         expect(isMoveOnToBeschlussfassungDisabled.value).toStrictEqual(true);
@@ -280,7 +333,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
             ref(generateRandomBoolean()),
             ref(generateRandomBoolean()),
             ref([createStimmzettelerfassungTeamStatusEntry()]),
-            ref(erfassungsStatus)
+            ref(erfassungsStatus),
+            wahlID,
+            wahlbezirkID
           );
 
         expect(isBeschlussfassungContinueBtnVisible.value).toStrictEqual(true);
@@ -299,7 +354,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
             ref(generateRandomBoolean()),
             ref(generateRandomBoolean()),
             ref([createStimmzettelerfassungTeamStatusEntry()]),
-            ref(erfassungsStatus)
+            ref(erfassungsStatus),
+            wahlID,
+            wahlbezirkID
           );
 
         expect(isBeschlussfassungContinueBtnVisible.value).toStrictEqual(false);
@@ -320,7 +377,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
             ref(generateRandomBoolean()),
             ref(generateRandomBoolean()),
             ref([createStimmzettelerfassungTeamStatusEntry()]),
-            ref(erfassungsStatus)
+            ref(erfassungsStatus),
+            wahlID,
+            wahlbezirkID
           );
 
         expect(isBeschlussfassungStartenBtnVisible.value).toStrictEqual(false);
@@ -339,7 +398,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
             ref(generateRandomBoolean()),
             ref(generateRandomBoolean()),
             ref([createStimmzettelerfassungTeamStatusEntry()]),
-            ref(erfassungsStatus)
+            ref(erfassungsStatus),
+            wahlID,
+            wahlbezirkID
           );
 
         expect(isBeschlussfassungStartenBtnVisible.value).toStrictEqual(true);
@@ -352,7 +413,9 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           ref(generateRandomBoolean()),
           ref(generateRandomBoolean()),
           ref([createStimmzettelerfassungTeamStatusEntry()]),
-          ref(null)
+          ref(null),
+          wahlID,
+          wahlbezirkID
         );
 
       expect(isBeschlussfassungStartenBtnVisible.value).toStrictEqual(true);

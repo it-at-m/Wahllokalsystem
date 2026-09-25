@@ -2,10 +2,12 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatus.ts";
 
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
+import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
 import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
@@ -86,8 +88,10 @@ describe("beschlussfassungViewUtils.ts", () => {
   const wahlbezirkID = "WB1";
 
   let unitUnderTest: ReturnType<typeof useBeschlussfassungViewUtils>;
+  let workflowStore: ReturnType<typeof useWorkflowStore>;
 
   beforeEach(() => {
+    setActivePinia(createPinia());
     stimmzettelOfWahlbezirkMockedRef.value = [];
     vi.clearAllMocks();
     vi.resetAllMocks();
@@ -97,6 +101,8 @@ describe("beschlussfassungViewUtils.ts", () => {
       mockedWorkflowStatusRef.value = null;
     }
 
+    workflowStore = useWorkflowStore();
+    workflowStore.electionWorkflowsStates = [];
     unitUnderTest = useBeschlussfassungViewUtils(wahlID, wahlbezirkID);
   });
 
@@ -275,6 +281,15 @@ describe("beschlussfassungViewUtils.ts", () => {
       expect(unitUnderTest.isBeschlussfassungBeendenButtonDisabled.value).toBe(
         true
       );
+    });
+  });
+
+  describe("isBeschlussBearbeitenDisabled", () => {
+    it("should_returnTrue_when_electionIsFinished", () => {
+      workflowStore.initElectionWorkflowState(wahlID, wahlbezirkID);
+      workflowStore.electionWorkflowsStates[0].isNiederschriftDone = true;
+
+      expect(unitUnderTest.isBeschlussBearbeitenDisabled.value).toBe(true);
     });
   });
 });

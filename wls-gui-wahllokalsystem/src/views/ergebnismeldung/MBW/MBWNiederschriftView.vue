@@ -1,45 +1,33 @@
 <template>
   <div>
-    <base-ergebnismeldung-cards-container
-      title="Niederschrift"
-      subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
-      :is-sending="isSendingNiederschrift"
-      :is-korrigieren-active="isKorrigierenValid"
+    <the-mbw-dse-niederschrift-card
+      v-if="isDseAktiv"
+      :wahlbezirk-i-d="currentUserWahlbezirkID"
+      :wahl-i-d="wahlID"
+      :ereignisse="ereignisse"
+      :is-sending-niederschrift="isSendingNiederschrift"
+      :is-korrigieren-valid="isKorrigierenValid"
       :is-drucken-active="isDruckenActive"
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
       @save="onSendenClicked"
       @edit="onKorrigierenClicked"
       @print="onDruckenClicked"
-    >
-      <the-m-b-w-wahlberechtigte-anzeigen-card
-        :wahlbezirk-id="currentUserWahlbezirkID"
-        :wahl-id="wahlID"
-      />
-      <the-m-b-w-waehler-anzeigen-card
-        :wahlbezirk-id="currentUserWahlbezirkID"
-        :wahl-id="wahlID"
-      />
-      <the-m-b-w-ungueltige-stimmen-anzeigen-card
-        :wahlbezirk-id="currentUserWahlbezirkID"
-        :wahl-id="wahlID"
-      />
-      <the-m-b-w-gueltige-stimmen-anzeigen-card
-        :is-schnellmeldung="false"
-        :wahlbezirk-id="currentUserWahlbezirkID"
-        :wahl-id="wahlID"
-      />
-      <base-card-wahlvorschlaege-kandidatenstimmen-anzeigen
-        :kandidatenstimmen="wahlvorschlaegeWithKandidatenErgebnissen"
-      />
-      <the-vorkommnisse-requirement-card
-        :type="
-          hasDoneVorkommnisse(ereignisse)
-            ? InputFeedbackTypeEnum.information
-            : InputFeedbackTypeEnum.error
-        "
-      />
-    </base-ergebnismeldung-cards-container>
+    />
+    <the-mbw-stapel-niederschrift-card
+      v-else
+      :wahlbezirk-i-d="currentUserWahlbezirkID"
+      :wahl-i-d="wahlID"
+      :ereignisse="ereignisse"
+      :is-sending-niederschrift="isSendingNiederschrift"
+      :is-korrigieren-valid="isKorrigierenValid"
+      :is-drucken-active="isDruckenActive"
+      :is-drucken-loading="isDruckenLoading"
+      :is-senden-active="isSendenActive"
+      @save="onSendenClicked"
+      @edit="onKorrigierenClicked"
+      @print="onDruckenClicked"
+    />
     <offline-syncer-dialog
       :is-dialog-visible="isOfflineSyncDialogVisible"
       @sync-success="onSyncSuccess"
@@ -70,19 +58,13 @@ import { computed, onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-import BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/common/BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen.vue";
-import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
-import TheVorkommnisseRequirementCard from "@/components/ergebnismeldung/common/TheVorkommnisseRequirementCard.vue";
-import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
-import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
-import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
-import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
+import TheMbwDseNiederschriftCard from "@/components/ergebnismeldung/MBW/TheMbwDseNiederschriftCard.vue";
+import TheMbwStapelNiederschriftCard from "@/components/ergebnismeldung/MBW/TheMbwStapelNiederschriftCard.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
-import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
 import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckBWB.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
@@ -90,10 +72,10 @@ import { useUserNotificationService } from "@/composables/userNotification/userN
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -108,6 +90,7 @@ const { hasDoneVorkommnisse } = useEreignisUtils();
 const { getEreignisse } = useEreignisService();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 const { getNextRoute } = useNavigationService();
+const { isDseAktiv } = storeToRefs(useInfomanagementStore());
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
@@ -163,13 +146,7 @@ const isDruckenActive = computed(
       isNiederschriftSendenClicked.value)
 );
 
-const {
-  wahlvorschlaegeWithKandidatenErgebnissen,
-  loadWahlvorschlaegeAndErgebnisse,
-} = useMwbStapelBCUtils(currentUserWahlbezirkID, wahlID);
-
 onActivated(async () => {
-  await loadWahlvorschlaegeAndErgebnisse();
   ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
   status.value = await loadStatusByWahlIdAndWahlbezirkId(
     wahlID,

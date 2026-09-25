@@ -12,7 +12,7 @@
     />
     <v-card-actions v-if="!isStatusLoading">
       <div
-        v-if="!hasTeamFinishedErfassung"
+        v-if="!hasTeamFinishedErfassung && !isElectionFinished"
         class="d-flex w-100"
       >
         <base-text-button

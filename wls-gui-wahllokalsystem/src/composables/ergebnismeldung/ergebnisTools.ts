@@ -11,7 +11,21 @@ export function useErgebnisTools() {
     };
   }
 
+  function createWithWahlvorschlagIDAndErgebnis(
+    wahlvorschlagID: string,
+    ergebnis: number
+  ): Ergebnis {
+    return {
+      ergebnis: ergebnis,
+      wahlvorschlagsOrdnungszahl: null,
+      wahlvorschlagID: wahlvorschlagID,
+      numIndex: null,
+      kandidatID: null,
+    };
+  }
+
   return {
     createWithErgebnisOnly,
+    createWithWahlvorschlagIDAndErgebnis,
   };
 }

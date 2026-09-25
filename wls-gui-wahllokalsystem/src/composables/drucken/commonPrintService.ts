@@ -20,13 +20,17 @@ export function useCommonPrintService() {
     wahlbezirkArt: WahlbezirksArtEnum,
     wahlbezirkNummer: string
   ) {
-    const canvas = document.createElement("canvas");
     const barcodeContent = _createBarcodeString(
       wahl,
       meldungsart,
       wahlbezirkArt,
       wahlbezirkNummer
     );
+    if (!barcodeContent) {
+      return "";
+    }
+
+    const canvas = document.createElement("canvas");
     JsBarcode(canvas, barcodeContent, { displayValue: false });
     return canvas.toDataURL("image/jpeg");
   }
@@ -41,7 +45,7 @@ export function useCommonPrintService() {
         const date = new Date();
         const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
 
-        if (validierungsstatus === "VALIDE") {
+        if (validierungsstatus === MeldungValidierungsstatusEnum.Valide) {
           return crypto.randomUUID() + ", " + formattedDateWithTime + " O";
         } else {
           return crypto.randomUUID() + ", " + formattedDateWithTime + " M";
@@ -52,7 +56,7 @@ export function useCommonPrintService() {
         const date = new Date();
         const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
 
-        if (validierungsstatus === "VALIDE") {
+        if (validierungsstatus === MeldungValidierungsstatusEnum.Valide) {
           return (
             crypto.randomUUID() +
             ", " +

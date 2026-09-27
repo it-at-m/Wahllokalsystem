@@ -6,6 +6,11 @@ import { useAddStreichungToSingleKandidatHandler } from "@/composables/dse/stimm
 import { useAddVotesToKandidatenRangeHandler } from "@/composables/dse/stimmzettelerfassung/command/addVotesToKandidatenRangeHandler.ts";
 import { useAddVotesToSingleKandidatHandler } from "@/composables/dse/stimmzettelerfassung/command/addVotesToSingleKandidatHandler.ts";
 import { useAddVotesToWahlvorschlagHandler } from "@/composables/dse/stimmzettelerfassung/command/addVotesToWahlvorschlagHandler.ts";
+import { useRemoveInvalidVotesFromSingleKandidatHandler } from "@/composables/dse/stimmzettelerfassung/command/removeInvalidVotesFromSingleKandidatHandler.ts";
+import { useRemoveStreichungFromKandidatenRangeHandler } from "@/composables/dse/stimmzettelerfassung/command/removeStreichungFromKandidatenRangeHandler.ts";
+import { useRemoveStreichungFromSingleKandidatHandler } from "@/composables/dse/stimmzettelerfassung/command/removeStreichungFromSingleKandidatHandler.ts";
+import { useRemoveVotesFromSingleKandidatHandler } from "@/composables/dse/stimmzettelerfassung/command/removeVotesFromSingleKandidatHandler.ts";
+import { useRemoveVotesFromWahlvorschlagHandler } from "@/composables/dse/stimmzettelerfassung/command/removeVotesFromWahlvorschlagHandler.ts";
 
 export const COMMAND_HANDLERS: CommandHandler[] = [
   useAddVotesToSingleKandidatHandler(),
@@ -14,4 +19,9 @@ export const COMMAND_HANDLERS: CommandHandler[] = [
   useAddStreichungToSingleKandidatHandler(),
   useAddStreichungToKandidatenRangeHandler(),
   useAddVotesToWahlvorschlagHandler(),
+  useRemoveVotesFromSingleKandidatHandler(),
+  useRemoveInvalidVotesFromSingleKandidatHandler(),
+  useRemoveStreichungFromSingleKandidatHandler(),
+  useRemoveStreichungFromKandidatenRangeHandler(),
+  useRemoveVotesFromWahlvorschlagHandler(),
 ];

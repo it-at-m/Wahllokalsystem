@@ -3,17 +3,36 @@ import type {
   KandidatDTO,
   SingleStimmzettelDTO,
   StimmzettelOfTeamDTO,
+  SystemBeschlussgrundDTO,
   WahlvorschlagDTO,
   WahlvorstandBeschlussgrundDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { Beschlussfassung } from "@/types/dse/persistedStimmzettel/Beschlussfassung.ts";
-import type { Beschlussgrund } from "@/types/dse/persistedStimmzettel/Beschlussgrund.ts";
-import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { Wahlvorschlag } from "@/types/dse/persistedStimmzettel/Wahlvorschlag.ts";
+import type { Beschlussfassung } from "@/types/dse/beschlussfassung/Beschlussfassung.ts";
+import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
+import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
+import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
+import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/PersistedWahlvorschlag.ts";
+
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
+
+const { hasAnyKennzeichenOrReststimme } = useKandidatTools();
 
 export function useStimmzettelMapper() {
-  function toModel(teamID: string, dto: StimmzettelOfTeamDTO): Stimmzettel {
+  function toModel(
+    dto: StimmzettelOfTeamDTO,
+    teamID: string
+  ): PersistedStimmzettel {
+    const wahlvorstandBeschlussgruende = (
+      dto.wahlvorstandBeschlussvorschlag ?? []
+    ).map((beschlussgrundDTO: WahlvorstandBeschlussgrundDTO) =>
+      _wahlvorstandBeschlussgrundDtoToModel(beschlussgrundDTO)
+    );
+    const systemBeschlussgruende = (dto.systemBeschlussvorschlag ?? []).map(
+      (systemBeschlussgrundDTO: SystemBeschlussgrundDTO) =>
+        _systemBeschlussgrundDtoToModel(systemBeschlussgrundDTO)
+    );
     return {
       teamID: teamID,
       stimmzettelkennung: dto.stimmzettelkennung,
@@ -22,17 +41,63 @@ export function useStimmzettelMapper() {
       ),
       invalideVotes: dto.invalideVotes,
       gueltigkeit: dto.gueltigkeit,
-      beschlussvorschlag: (dto.wahlvorstandBeschlussvorschlag ?? []).map(
-        (beschlussgrundDTO: WahlvorstandBeschlussgrundDTO) =>
-          _beschlussgrundDtoToModel(beschlussgrundDTO)
-      ),
+      wahlvorstandBeschlussvorschlag: wahlvorstandBeschlussgruende,
+      systemBeschlussvorschlag: systemBeschlussgruende,
       beschlussfassung: dto.beschlussfassung
         ? _beschlussfassungDtoToModel(dto.beschlussfassung)
         : null,
     };
   }
 
-  function toDTO(model: Stimmzettel): StimmzettelOfTeamDTO {
+  function toPersistedStimmzettel(
+    manageableStimmzettel: DseStimmzettel,
+    stimmzettelkennung: number,
+    teamID: string
+  ): PersistedStimmzettel {
+    const mappedWahlvorschlaege: PersistedWahlvorschlag[] =
+      manageableStimmzettel.wahlvorschlaege
+        .map((wahlvorschlag) => {
+          const mappedKandidaten: PersistedKandidat[] = wahlvorschlag.kandidaten
+            .filter((kandidat) => hasAnyKennzeichenOrReststimme(kandidat))
+            .map((kandidat) => ({
+              kandidatId: kandidat.kandidatId,
+              nennung: kandidat.nennung,
+              votesByWahlvorschlag: kandidat.reststimmen ?? 0,
+              invalidVotes: kandidat.ungueltigeStimmen ?? 0,
+              votesByVoter: kandidat.einzelstimmen ?? 0,
+              isDiscarded: kandidat.durchgestrichen ?? false,
+            }));
+
+          return {
+            kandidaten: mappedKandidaten,
+            wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
+            selected: wahlvorschlag.selected,
+          };
+        })
+        .filter(
+          (wahlvorschlag) =>
+            wahlvorschlag.kandidaten.length > 0 || wahlvorschlag.selected
+        );
+
+    return {
+      teamID: teamID,
+      stimmzettelkennung: stimmzettelkennung,
+      gueltigkeit: manageableStimmzettel.gueltigkeit,
+      invalideVotes: manageableStimmzettel.invalideVotes ?? 0,
+      wahlvorschlaege: mappedWahlvorschlaege,
+      wahlvorstandBeschlussvorschlag:
+        manageableStimmzettel.wahlvorstandBeschlussvorschlag.map(
+          (vorschlag) => ({ text: vorschlag.text })
+        ),
+      systemBeschlussvorschlag:
+        manageableStimmzettel.systemBeschlussvorschlag.map((vorschlag) => ({
+          reason: vorschlag.reason,
+        })),
+      beschlussfassung: manageableStimmzettel.beschlussfassung,
+    };
+  }
+
+  function toDTO(model: PersistedStimmzettel): StimmzettelOfTeamDTO {
     return {
       gueltigkeit: model.gueltigkeit,
       invalideVotes: model.invalideVotes,
@@ -47,15 +112,23 @@ export function useStimmzettelMapper() {
         ? _beschlussfassungModelToDto(model.beschlussfassung)
         : undefined,
       wahlvorstandBeschlussvorschlag:
-        model.beschlussvorschlag.length > 0
-          ? model.beschlussvorschlag.map((beschlussgrund) =>
-              _beschlussgrundModelToDto(beschlussgrund)
+        model.wahlvorstandBeschlussvorschlag.length > 0
+          ? model.wahlvorstandBeschlussvorschlag.map((beschlussgrund) =>
+              _wahlvorstandBeschlussgrundModelToDto(beschlussgrund)
+            )
+          : undefined,
+      systemBeschlussvorschlag:
+        model.systemBeschlussvorschlag.length > 0
+          ? model.systemBeschlussvorschlag.map((beschlussgrund) =>
+              _systemBeschlussgrundModelToDto(beschlussgrund)
             )
           : undefined,
     };
   }
 
-  function toSingleStimmzettelDTO(model: Stimmzettel): SingleStimmzettelDTO {
+  function toSingleStimmzettelDTO(
+    model: PersistedStimmzettel
+  ): SingleStimmzettelDTO {
     return {
       gueltigkeit: model.gueltigkeit,
       invalideVotes: model.invalideVotes,
@@ -65,19 +138,59 @@ export function useStimmzettelMapper() {
               _wahlvorschlagModelToDto(wahlvorschlag)
             )
           : undefined,
-      beschlussfassung: model.beschlussfassung
-        ? _beschlussfassungModelToDto(model.beschlussfassung)
-        : undefined,
       wahlvorstandBeschlussvorschlag:
-        model.beschlussvorschlag.length > 0
-          ? model.beschlussvorschlag.map((beschlussgrund) =>
-              _beschlussgrundModelToDto(beschlussgrund)
+        model.wahlvorstandBeschlussvorschlag.length > 0
+          ? model.wahlvorstandBeschlussvorschlag.map((beschlussgrund) =>
+              _wahlvorstandBeschlussgrundModelToDto(beschlussgrund)
+            )
+          : undefined,
+      systemBeschlussvorschlag:
+        model.systemBeschlussvorschlag.length > 0
+          ? model.systemBeschlussvorschlag.map((beschlussgrund) =>
+              _systemBeschlussgrundModelToDto(beschlussgrund)
             )
           : undefined,
     };
   }
 
-  function _kandidatDtoToModel(dto: KandidatDTO): Kandidat {
+  function mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+    target: DseStimmzettel,
+    source: PersistedStimmzettel
+  ) {
+    target.wahlvorschlaege.map((wahlvorschlag) => {
+      const beforeEditWahlvorschlag = source.wahlvorschlaege.find(
+        (before) => wahlvorschlag.wahlvorschlagID == before.wahlvorschlagID
+      );
+      wahlvorschlag.selected = beforeEditWahlvorschlag?.selected ?? false;
+      wahlvorschlag.kandidaten.map((kandidat) => {
+        const beforeEditKandidat = beforeEditWahlvorschlag?.kandidaten.find(
+          (before) =>
+            kandidat.kandidatId === before.kandidatId &&
+            kandidat.nennung === before.nennung
+        );
+        kandidat.einzelstimmen = beforeEditKandidat?.votesByVoter ?? null;
+        kandidat.ungueltigeStimmen = beforeEditKandidat?.invalidVotes ?? null;
+        kandidat.reststimmen = beforeEditKandidat?.votesByWahlvorschlag ?? null;
+        kandidat.durchgestrichen = beforeEditKandidat?.isDiscarded ?? false;
+      });
+    });
+    target.gueltigkeit = source.gueltigkeit;
+    target.wahlvorstandBeschlussvorschlag =
+      source.wahlvorstandBeschlussvorschlag.map(({ text }) => ({
+        text,
+      }));
+    target.systemBeschlussvorschlag = source.systemBeschlussvorschlag.map(
+      ({ reason }) => ({
+        reason,
+      })
+    );
+    target.beschlussfassung = source.beschlussfassung
+      ? { ...source.beschlussfassung }
+      : null;
+    target.invalideVotes = source.invalideVotes;
+  }
+
+  function _kandidatDtoToModel(dto: KandidatDTO): PersistedKandidat {
     return {
       kandidatId: dto.id.kandidatID,
       nennung: dto.id.nennungsNummer,
@@ -90,7 +203,7 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _kandidatModelToDto(model: Kandidat): KandidatDTO {
+  function _kandidatModelToDto(model: PersistedKandidat): KandidatDTO {
     return {
       id: {
         kandidatID: model.kandidatId,
@@ -105,7 +218,9 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _wahlvorschlagDtoToModel(dto: WahlvorschlagDTO): Wahlvorschlag {
+  function _wahlvorschlagDtoToModel(
+    dto: WahlvorschlagDTO
+  ): PersistedWahlvorschlag {
     return {
       wahlvorschlagID: dto.wahlvorschlagID,
       selected: dto.selected,
@@ -113,7 +228,9 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _wahlvorschlagModelToDto(model: Wahlvorschlag): WahlvorschlagDTO {
+  function _wahlvorschlagModelToDto(
+    model: PersistedWahlvorschlag
+  ): WahlvorschlagDTO {
     return {
       wahlvorschlagID: model.wahlvorschlagID,
       selected: model.selected,
@@ -121,9 +238,17 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _beschlussgrundDtoToModel(
+  function _systemBeschlussgrundDtoToModel(
+    dto: SystemBeschlussgrundDTO
+  ): SystemBeschlussgrund {
+    return {
+      reason: dto.reason,
+    };
+  }
+
+  function _wahlvorstandBeschlussgrundDtoToModel(
     dto: WahlvorstandBeschlussgrundDTO
-  ): Beschlussgrund {
+  ): WahlvorstandBeschlussgrund {
     return {
       text: dto.text,
     };
@@ -139,8 +264,16 @@ export function useStimmzettelMapper() {
     };
   }
 
-  function _beschlussgrundModelToDto(
-    model: Beschlussgrund
+  function _systemBeschlussgrundModelToDto(
+    model: SystemBeschlussgrund
+  ): SystemBeschlussgrundDTO {
+    return {
+      reason: model.reason,
+    };
+  }
+
+  function _wahlvorstandBeschlussgrundModelToDto(
+    model: WahlvorstandBeschlussgrund
   ): WahlvorstandBeschlussgrundDTO {
     return {
       text: model.text,
@@ -171,7 +304,9 @@ export function useStimmzettelMapper() {
 
   return {
     toModel,
+    toPersistedStimmzettel,
     toDTO,
+    mapPersistedStimmzettelValuesToExistingDseStimmzettel,
     toSingleStimmzettelDTO,
   };
 }

@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 
 import {
   invalidKandidatOrdnungszahlenCommand,
@@ -42,13 +42,13 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
   });
 
   describe("handleOrThrow", () => {
-    let mockManagedStimmzettel: ManagedStimmzettel;
+    let mockManagedStimmzettel: BearbeitenDialogStimmzettel;
 
     beforeEach(() => {
       mockManagedStimmzettel = {
         kandidatAddEinzelstimmenOrThrow:
           mockDefinitions.kandidatAddVotesOrThrow,
-      } as unknown as ManagedStimmzettel;
+      } as unknown as BearbeitenDialogStimmzettel;
     });
 
     afterEach(() => {
@@ -56,7 +56,7 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
       vi.clearAllMocks();
     });
 
-    it.each([validKandidatOrdnungszahlen])(
+    it.each(validKandidatOrdnungszahlen)(
       "should_callKandidatAddVotesOrThrow_when_commandIs'%s'ValidWithoutPlus",
       (kandidatOrdnungszahl) => {
         handleOrThrow(`${kandidatOrdnungszahl}`, mockManagedStimmzettel);
@@ -70,7 +70,7 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
       }
     );
 
-    it.each([validKandidatOrdnungszahlen])(
+    it.each(validKandidatOrdnungszahlen)(
       "should_callKandidatAddVotesOrThrow_withParsedVotes_when_command'%s'ContainsPlusAndVotes",
       (kandidatOrdnungszahl) => {
         handleOrThrow(`${kandidatOrdnungszahl}+3`, mockManagedStimmzettel);
@@ -84,7 +84,7 @@ describe("addVotesToSingleKandidatHandler.ts", () => {
       }
     );
 
-    it.each([validKandidatOrdnungszahlen])(
+    it.each(validKandidatOrdnungszahlen)(
       "should_defaultCountVotesToOne_when_commandContains'%s'PlusWithoutVotes",
       (kandidatOrdnungszahl) => {
         handleOrThrow(`${kandidatOrdnungszahl}+`, mockManagedStimmzettel);

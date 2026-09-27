@@ -1,71 +1,94 @@
-import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEntry.ts";
-import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatus.ts";
+import { storeToRefs } from "pinia";
+import { onActivated } from "vue";
 
-import { onActivated, ref } from "vue";
-
+import { useMonitoringViewBeschlussfassungButtonsUtils } from "@/composables/dse/monitoring/monitoringViewBeschlussfassungButtonsUtils.ts";
+import { useStimmzettelerfassungTeamStatusListState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
-import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
+import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
+import router from "@/plugins/router.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
-  const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);
-  const lastLoading = ref<Date>();
-  const isAktualisierenLoading = ref(false);
-  const isWorkflowStatusLoading = ref(false);
-  const workflowStatus = ref<StimmzettelerfassungStatus | null>(null);
-
-  const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
-  const { loadDseWorkflowStatus } = useDseWorkflowStatusService();
+  const stimmzettelerfassungState = useStimmzettelerfassungStatusState(
+    wahlID,
+    wahlbezirkID
+  );
+  const stimmzettelerfassungTeamState =
+    useStimmzettelerfassungTeamStatusListState(wahlID, wahlbezirkID);
+  const monitoringViewBeschlussfassungButtonProperties =
+    useMonitoringViewBeschlussfassungButtonsUtils(
+      stimmzettelerfassungTeamState.isTeamStatusListLoading,
+      stimmzettelerfassungState.isWorkflowStatusLoading,
+      stimmzettelerfassungTeamState.teamstatusList,
+      stimmzettelerfassungState.workflowStatus
+    );
 
   async function onMonitoringSynchronisierenClicked() {
-    await _loadTeamStatusListe();
-  }
-
-  async function reloadWorkflowStatus() {
-    await _loadWorkflowStatus();
+    await _loadTeamstatusListe();
   }
 
   onActivated(async () => {
-    await Promise.allSettled([_loadTeamStatusListe(), _loadWorkflowStatus()]);
+    await Promise.allSettled([
+      _loadTeamstatusListe(),
+      stimmzettelerfassungState.loadWorkflowStatus(),
+    ]);
   });
 
-  async function _loadTeamStatusListe() {
-    try {
-      isAktualisierenLoading.value = true;
-      const loaded =
-        await erfassungTeamStatusService.loadErfassungTeamStatusListe(
-          wahlID,
-          wahlbezirkID,
-          true
-        );
-      if (loaded) {
-        teamstatusList.value = loaded;
-        lastLoading.value = new Date();
-      }
-    } finally {
-      isAktualisierenLoading.value = false;
+  async function reopenStimmzettelerfassung(teamID: string) {
+    const { setStepDone } = useWorkflowStore();
+    const { currentUserTeamName } = storeToRefs(useUserStore());
+    const { getNextRoute } = useNavigationService();
+
+    await useStimmzettelerfassungTeamStatusService().reopenStimmzettelerfassung(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      true
+    );
+
+    setStepDone(
+      wahlID,
+      wahlbezirkID,
+      MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+      false
+    );
+    setStepDone(
+      wahlID,
+      wahlbezirkID,
+      MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
+      false
+    );
+
+    //The current team (=> Schriftfuehrung)
+    if (currentUserTeamName.value == teamID) {
+      setStepDone(
+        wahlID,
+        wahlbezirkID,
+        MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+        false
+      );
+      //Return to Stimmzettelerfassung
+      await router.push(getNextRoute());
+    }
+    //Another Team (=> Erfassungsteam)
+    else {
+      await _loadTeamstatusListe();
     }
   }
 
-  async function _loadWorkflowStatus() {
-    isWorkflowStatusLoading.value = true;
-    try {
-      workflowStatus.value = await loadDseWorkflowStatus(
-        wahlID,
-        wahlbezirkID,
-        true
-      );
-    } finally {
-      isWorkflowStatusLoading.value = false;
-    }
+  async function _loadTeamstatusListe() {
+    await stimmzettelerfassungTeamState.loadTeamStatusListe();
   }
 
   return {
-    teamstatusList,
-    lastLoading,
-    isAktualisierenLoading,
-    isWorkflowStatusLoading,
-    workflowStatus,
     onMonitoringSynchronisierenClicked,
-    reloadWorkflowStatus,
+    reopenStimmzettelerfassung,
+
+    ...stimmzettelerfassungTeamState,
+    ...stimmzettelerfassungState,
+    ...monitoringViewBeschlussfassungButtonProperties,
   };
 }

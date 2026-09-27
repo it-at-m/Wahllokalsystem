@@ -15,6 +15,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.stream.Stream;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
@@ -112,6 +113,26 @@ public class TeamStatusServiceSecurityTest {
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, ErfassungTeamStatusModel.REGISTRIERT))
           .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void
+        should_getAccess_when_allRequiredAuthoritiesArePresentWithTeamIDEvaluatorReturnsFalseButUserHasWahlvorstandAuthority() {
+      de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils.runWith(
+          ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SAVE_TEAMSTATUS, "WLS_WAHLVORSTAND"));
+
+      val teamID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, "wahlID");
+
+      Mockito.when(teamIDPermissionEvaluator.tokenUserteamIdMatches(eq(teamID), notNull()))
+          .thenReturn(false);
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.saveTeamStatus(id, ErfassungTeamStatusModel.REGISTRIERT));
     }
 
     @Test

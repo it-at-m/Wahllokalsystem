@@ -1,5 +1,9 @@
-import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 
+import {
+  invalidWahlvorschlagOrdnungszahlen,
+  validWahlvorschlagOrdnungszahlen,
+} from "@tests/utils/dse/commandTestTools.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useAddVotesToWahlvorschlagHandler } from "@/composables/dse/stimmzettelerfassung/command/addVotesToWahlvorschlagHandler.ts";
@@ -13,7 +17,6 @@ const mockDefinitions = vi.hoisted(() => ({
 describe("addVotesToWahlvorschlagHandler.ts", () => {
   const { canHandle, handleOrThrow } = useAddVotesToWahlvorschlagHandler();
 
-  const validWahlvorschlagOrdnungszahlen = [1, 2, 9, 10, 11, 99, 100, 1000];
   const commandToExpectedOrdnungszahl: [string, number][] = [
     ["1", 1],
     ["100", 1],
@@ -28,7 +31,7 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
       }
     );
 
-    it.each(["0", "abc", "010", "101", "999", "1001", "9999"])(
+    it.each(invalidWahlvorschlagOrdnungszahlen)(
       "should_returnFalse_when_command'%s'DoesNotMatchPattern",
       (command) => {
         expect(canHandle(command)).toBe(false);
@@ -37,13 +40,13 @@ describe("addVotesToWahlvorschlagHandler.ts", () => {
   });
 
   describe("handleOrThrow", () => {
-    let mockManagedStimmzettel: ManagedStimmzettel;
+    let mockManagedStimmzettel: BearbeitenDialogStimmzettel;
 
     beforeEach(() => {
       mockManagedStimmzettel = {
         wahlvorschlagAddVotesOrThrow:
           mockDefinitions.wahlvorschlagAddVotesOrThrow,
-      } as unknown as ManagedStimmzettel;
+      } as unknown as BearbeitenDialogStimmzettel;
     });
 
     afterEach(() => {

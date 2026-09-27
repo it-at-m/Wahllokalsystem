@@ -3,6 +3,7 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { computed } from "vue";
 
 import TheStimmzettelCommandProcessingTextField from "@/components/dse/stimmzettelerfassung/TheStimmzettelCommandProcessingTextField.vue";
 import { useStimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
@@ -54,8 +55,10 @@ function create5WahlvorschlaegeWith10KandidatenEach() {
 export const Default: Story = {
   args: {
     stimmzettelManager: useStimmzettelManager(
+      computed(() => 1),
       create5WahlvorschlaegeWith10KandidatenEach(),
-      "wahlID"
+      "wahlID",
+      "team A"
     ),
   },
 };

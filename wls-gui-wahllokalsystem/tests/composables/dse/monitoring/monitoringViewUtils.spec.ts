@@ -1,11 +1,9 @@
-import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
-  const { ref } = await import("vue");
-
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
 
   return {
@@ -17,127 +15,151 @@ const mockDefinitions = await vi.hoisted(async () => {
         await cb();
       }
     },
-    loadErfassungTeamStatusListe: vi.fn(),
-    loadDseWorkflowStatus: vi.fn(),
-    // Expose vue.ref for tests if needed
-    ref,
+    loadTeamStatusListe: vi.fn(),
+    loadWorkflowStatus: vi.fn(),
+    reopenStimmzettelerfassung: vi.fn(),
+    setStepDone: vi.fn(),
+    getNextRoute: vi.fn(),
+    routerPush: vi.fn(),
+    currentUserTeamName: { value: "teamID" },
   };
 });
 
-vi.mock("vue", () => ({
-  ref: mockDefinitions.ref,
-  onActivated: (cb: () => Promise<void> | void) =>
-    mockDefinitions.registerActivated(cb),
-}));
+vi.mock("vue", async (importOriginal) => {
+  const actual = (await importOriginal()) as object;
+  return {
+    ...actual,
+    onActivated: (cb: () => Promise<void> | void) =>
+      mockDefinitions.registerActivated(cb),
+  };
+});
+
+vi.mock(
+  "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts",
+  () => ({
+    useStimmzettelerfassungTeamStatusListState: () => ({
+      loadTeamStatusListe: mockDefinitions.loadTeamStatusListe,
+    }),
+  })
+);
+
+vi.mock(
+  "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts",
+  () => ({
+    useStimmzettelerfassungStatusState: () => ({
+      loadWorkflowStatus: mockDefinitions.loadWorkflowStatus,
+    }),
+  })
+);
 
 vi.mock(
   "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts",
   () => ({
     useStimmzettelerfassungTeamStatusService: () => ({
-      loadErfassungTeamStatusListe:
-        mockDefinitions.loadErfassungTeamStatusListe,
+      reopenStimmzettelerfassung: mockDefinitions.reopenStimmzettelerfassung,
     }),
   })
 );
 
-vi.mock(
-  "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts",
-  () => ({
-    useDseWorkflowStatusService: () => ({
-      loadDseWorkflowStatus: mockDefinitions.loadDseWorkflowStatus,
-    }),
-  })
-);
+vi.mock("@/stores/workflowStore.ts", () => ({
+  useWorkflowStore: () => ({ setStepDone: mockDefinitions.setStepDone }),
+}));
+
+vi.mock("@/stores/userStore.ts", () => ({
+  useUserStore: () => ({
+    currentUserTeamName: mockDefinitions.currentUserTeamName,
+  }),
+}));
+
+vi.mock("pinia", () => ({
+  storeToRefs: <T>(store: T) => store,
+}));
+
+vi.mock("@/composables/navigation/navigationService.ts", () => ({
+  useNavigationService: () => ({ getNextRoute: mockDefinitions.getNextRoute }),
+}));
+
+vi.mock("@/plugins/router.ts", () => ({
+  default: { push: mockDefinitions.routerPush },
+}));
 
 describe("monitoringViewUtils.ts", () => {
-  const { createStimmzettelerfassungStatus } =
-    useStimmzettelerfassungStatusTestDataFactory();
-
-  const wahlID = "W1";
-  const wahlbezirkID = "WB1";
-
   let unit: ReturnType<typeof useMonitoringViewUtils>;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue([]);
+    mockDefinitions.loadTeamStatusListe.mockResolvedValue([]);
+    mockDefinitions.currentUserTeamName.value = "teamID";
+    mockDefinitions.getNextRoute.mockReturnValue({ name: "nextRoute" });
 
-    unit = useMonitoringViewUtils(wahlID, wahlbezirkID);
+    unit = useMonitoringViewUtils("wahlID", "wahlbezirkID");
   });
 
   afterEach(() => {
     vi.resetAllMocks();
   });
 
-  it("should_BeEmptyAndNotLoading_when_initialState", () => {
-    expect(unit.teamstatusList.value).toEqual([]);
-    expect(unit.lastLoading.value).toBeUndefined();
-    expect(unit.isAktualisierenLoading.value).toBe(false);
-    expect(unit.isWorkflowStatusLoading.value).toBe(false);
-    expect(unit.workflowStatus.value).toBe(null);
+  describe("onMonitoringSynchronisierenClicked", async () => {
+    it("should_loadTeamStatusListe_when_onMonitoringSynchronisierenClicked", async () => {
+      await unit.onMonitoringSynchronisierenClicked();
+      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalled();
+    });
   });
 
-  it("should_loadListAndUpdateState_when_onMonitoringSynchronisierenClicked", async () => {
-    const sample = [{ team: "T1" }];
-    mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(sample);
+  describe("onActivated", async () => {
+    it("should_loadTeamStatusListeAndWorkflowStatus_when_onActivatedSuccess", async () => {
+      await mockDefinitions.runActivatedCallbacks();
 
-    const promise = unit.onMonitoringSynchronisierenClicked();
-    expect(unit.isAktualisierenLoading.value).toBe(true);
-
-    await promise;
-
-    expect(unit.isAktualisierenLoading.value).toBe(false);
-    expect(unit.teamstatusList.value).toStrictEqual(sample);
-    expect(unit.lastLoading.value).toBeInstanceOf(Date);
-
-    expect(mockDefinitions.loadErfassungTeamStatusListe).toHaveBeenCalledWith(
-      wahlID,
-      wahlbezirkID,
-      true
-    );
+      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalled();
+      expect(mockDefinitions.loadWorkflowStatus).toHaveBeenCalled();
+    });
   });
 
-  it("should_updateListAndLastLoading_when_falsyValueWasReturned", async () => {
-    mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(null);
+  describe("reopenStimmzettelerfassung", () => {
+    it("should_reopenCurrentTeamAndNavigateToNextRoute_when_currentTeamIsReopened", async () => {
+      await unit.reopenStimmzettelerfassung("teamID");
 
-    await unit.onMonitoringSynchronisierenClicked();
+      expect(mockDefinitions.reopenStimmzettelerfassung).toHaveBeenCalledWith(
+        "wahlID",
+        "wahlbezirkID",
+        "teamID",
+        true
+      );
+      expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
+        "wahlID",
+        "wahlbezirkID",
+        MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+        false
+      );
+      expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
+        "wahlID",
+        "wahlbezirkID",
+        MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
+        false
+      );
+      expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
+        "wahlID",
+        "wahlbezirkID",
+        MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+        false
+      );
+      expect(mockDefinitions.routerPush).toHaveBeenCalledWith({
+        name: "nextRoute",
+      });
+    });
 
-    expect(unit.teamstatusList.value).toEqual([]);
-    expect(unit.lastLoading.value).toBeUndefined();
-  });
+    it("should_reloadTeamStatusListWithoutNavigation_when_anotherTeamIsReopened", async () => {
+      await unit.reopenStimmzettelerfassung("anotherTeamID");
 
-  it("should_loadListAndUpdateState_when_onActivatedSuccess", async () => {
-    const sample = [{ team: "T2" }];
-    const workflowStatus = createStimmzettelerfassungStatus();
-    mockDefinitions.loadErfassungTeamStatusListe.mockResolvedValue(sample);
-    mockDefinitions.loadDseWorkflowStatus.mockResolvedValue(workflowStatus);
-    const spyOnIsWorkflowStatusLoading = vi.spyOn(
-      unit.isWorkflowStatusLoading,
-      "value",
-      "set"
-    );
-
-    expect(unit.isWorkflowStatusLoading.value).toStrictEqual(false);
-    await mockDefinitions.runActivatedCallbacks();
-
-    expect(unit.teamstatusList.value).toStrictEqual(sample);
-    expect(unit.lastLoading.value).toBeInstanceOf(Date);
-    expect(unit.workflowStatus.value).toStrictEqual(workflowStatus);
-
-    expect(mockDefinitions.loadErfassungTeamStatusListe).toHaveBeenCalledWith(
-      wahlID,
-      wahlbezirkID,
-      true
-    );
-    expect(mockDefinitions.loadDseWorkflowStatus).toHaveBeenCalledWith(
-      wahlID,
-      wahlbezirkID,
-      true
-    );
-    expect(spyOnIsWorkflowStatusLoading.mock.calls).toStrictEqual([
-      [true],
-      [false],
-    ]);
-    spyOnIsWorkflowStatusLoading.mockRestore();
+      expect(mockDefinitions.reopenStimmzettelerfassung).toHaveBeenCalledWith(
+        "wahlID",
+        "wahlbezirkID",
+        "anotherTeamID",
+        true
+      );
+      expect(mockDefinitions.setStepDone).toHaveBeenCalledTimes(2);
+      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledOnce();
+      expect(mockDefinitions.routerPush).not.toHaveBeenCalled();
+    });
   });
 });

@@ -15,14 +15,14 @@
   </base-div-item-with-scores>
 </template>
 <script setup lang="ts">
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 
 import { computed } from "vue";
 
 import BaseDivItemWithScores from "@/components/dse/stimmzettelerfassung/baseComponents/BaseDivItemWithScores.vue";
 
 const props = defineProps<{
-  kandidat: Kandidat;
+  kandidat: DseKandidat;
 }>();
 
 const gesamtStimmen = computed(

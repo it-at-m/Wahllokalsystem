@@ -230,6 +230,10 @@ export default withMermaid({
               link: `${PATH_GUIDES}user-data-cleanup.md`,
             },
             {
+              text: "Stimmzettel duplizieren",
+              link: `${PATH_GUIDES}duplicate-stimmzettel.md`,
+            },
+            {
               text: "Microservice anlegen",
               link: `${PATH_MICROSERVICE_GENERATION}`,
               collapsed: true,

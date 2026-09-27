@@ -17,9 +17,11 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import {
   MBWNextStepImpl,
   NullNextStepImpl,
@@ -46,6 +48,7 @@ export function useNavigationService() {
   const workflowStore = useWorkflowStore();
   const wahlenStore = useWahlenStore();
   const userStore = useUserStore();
+  const infomanagementStore = useInfomanagementStore();
 
   function routeWithName(routeName: string): RouteLocationAsRelativeGeneric {
     return {
@@ -64,15 +67,40 @@ export function useNavigationService() {
   }
 
   function getNextRoute(): RouteLocationAsRelativeGeneric {
-    // check all elections in their order
-    const metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
-      (wahlMetaData) =>
-        !workflowStore.isElectionFinished(
-          wahlMetaData.wahlID,
-          wahlMetaData.wahlbezirkID
-        )
-    );
+    //No valid role
+    if (
+      !userStore.hasRoleSchriftfuehrung &&
+      (!userStore.hasRoleErfassungsteam || !infomanagementStore.isDseAktiv)
+    ) {
+      return routeWithName(ROUTES_HOME);
+    }
 
+    // check all elections in their order
+    let metaDataOfFirstUnfinishedElection;
+
+    // DSE Erfassungsteam
+    if (userStore.hasRoleErfassungsteam) {
+      metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
+        (wahlMetaData) =>
+          !workflowStore.isStepDone(
+            wahlMetaData.wahlID,
+            wahlMetaData.wahlbezirkID,
+            MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
+          )
+      );
+    }
+    // Schriftführung (DSE & Stapelbearbeitung)
+    else if (userStore.hasRoleSchriftfuehrung) {
+      metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
+        (wahlMetaData) =>
+          !workflowStore.isElectionFinished(
+            wahlMetaData.wahlID,
+            wahlMetaData.wahlbezirkID
+          )
+      );
+    }
+
+    //no not-finished election found
     if (!metaDataOfFirstUnfinishedElection) {
       return routeWithName(ROUTE_FINISHED);
     }

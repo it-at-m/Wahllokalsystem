@@ -36,7 +36,7 @@ export function useHandlerTools() {
     return { lower: Math.min(a, b), upper: Math.max(a, b) };
   }
 
-  function parseOptionalPlusCountToNumber(text: string | undefined): number {
+  function parseOptionalCountToNumber(text: string | undefined): number {
     if (!text || text.length === 0) return 1;
     // accept only plain non-negative integer digits
     if (!/^\d+$/.test(text)) return Number.NaN;
@@ -49,6 +49,6 @@ export function useHandlerTools() {
     isValidCount,
     isValidRange,
     normalizeBounds,
-    parseOptionalPlusCountToNumber,
+    parseOptionalCountToNumber,
   };
 }

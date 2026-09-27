@@ -1,4 +1,4 @@
-import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 import type { CommandHandler } from "@/types/dse/stimmzettelerfassung/command/CommandHandler.ts";
 
 import { useHandlerTools } from "@/composables/dse/stimmzettelerfassung/command/handlerTools.ts";
@@ -15,7 +15,7 @@ export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
   const {
     isValidCount,
     isValidKandidatOrdnungszahl,
-    parseOptionalPlusCountToNumber,
+    parseOptionalCountToNumber,
   } = useHandlerTools();
 
   function canHandle(command: string): boolean {
@@ -29,7 +29,7 @@ export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
 
   function handleOrThrow(
     command: string,
-    stimmzettel: ManagedStimmzettel
+    stimmzettel: BearbeitenDialogStimmzettel
   ): void {
     const commandArguments = _parseCommandArguments(command);
     if (!commandArguments) {
@@ -59,7 +59,7 @@ export function useAddInvalidVotesToSingleKandidatHandler(): CommandHandler {
       const votesText = match[3];
       const commandArgs = {
         kandidatOrdnungszahl: Number.parseInt(match[1]),
-        countInvalidVotes: parseOptionalPlusCountToNumber(votesText),
+        countInvalidVotes: parseOptionalCountToNumber(votesText),
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {

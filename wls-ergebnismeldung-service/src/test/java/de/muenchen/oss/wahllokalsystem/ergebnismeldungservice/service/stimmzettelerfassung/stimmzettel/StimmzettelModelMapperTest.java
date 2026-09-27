@@ -5,12 +5,14 @@ import static org.instancio.Select.field;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Beschlussfassung;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Kandidat;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.KandidatId;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.KandidatStimmenAnzahl;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.SystemBeschlussgrund;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.SystemBeschlussgrundTyp;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.Wahlvorschlag;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.WahlvorschlagStimmzettelAnzahl;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.WahlvorstandBeschlussgrund;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import java.util.List;
@@ -68,8 +70,8 @@ class StimmzettelModelMapperTest {
                                   givenKandidaten ->
                                       new KandidatModel(
                                           new KandidatIdModel(
-                                              givenKandidaten.getId().getKandidatID(),
-                                              givenKandidaten.getId().getNennungsNummer()),
+                                              givenKandidaten.getKandidatID().getKandidatID(),
+                                              givenKandidaten.getKandidatID().getNennungsNummer()),
                                           givenKandidaten.isDiscarded(),
                                           givenKandidaten.getVotesByVoter(),
                                           givenKandidaten.getInvalidVotes(),
@@ -93,6 +95,61 @@ class StimmzettelModelMapperTest {
                 stimmzettel.getBeschlussfassung().getContra(),
                 stimmzettel.getBeschlussfassung().getText()),
             expectedWahlvorschlaege);
+      }
+    }
+
+    @Nested
+    class OfKandidat {
+
+      @Test
+      void should_returnKandidatModel_when_kandidatEntityIsGiven() {
+        val entityToMap = Instancio.create(Kandidat.class);
+
+        val result = unitUnderTest.toModel(entityToMap);
+
+        val expectedResult =
+            new KandidatModel(
+                new KandidatIdModel(
+                    entityToMap.getKandidatID().getKandidatID(),
+                    entityToMap.getKandidatID().getNennungsNummer()),
+                entityToMap.isDiscarded(),
+                entityToMap.getVotesByVoter(),
+                entityToMap.getInvalidVotes(),
+                entityToMap.getVotesByWahlvorschlag());
+
+        Assertions.assertThat(result).isEqualTo(expectedResult);
+      }
+    }
+
+    @Nested
+    class OfWahlvorschlagStimmzettelAnzahl {
+
+      @Test
+      void should_returnWahlvorschlagStimmzettelAnzahlModel_when_entityIsGiven() {
+        val entityToMap = Instancio.create(WahlvorschlagStimmzettelAnzahl.class);
+
+        val result = unitUnderTest.toModel(entityToMap);
+
+        val expectedResult =
+            new WahlvorschlagStimmzettelAnzahlModel(
+                entityToMap.wahlvorschlagID(), entityToMap.anzahl());
+        Assertions.assertThat(result).isEqualTo(expectedResult);
+      }
+    }
+
+    @Nested
+    class OfKandidatStimmenAnzahl {
+
+      @Test
+      void should_returnKandidatStimmenAnzahlModel_when_entityIsGiven() {
+        val entityToMap = Instancio.create(KandidatStimmenAnzahl.class);
+
+        val result = unitUnderTest.toModel(entityToMap);
+
+        val expectedResult =
+            new KandidatStimmenAnzahlModel(
+                entityToMap.wahlvorschlagID(), entityToMap.kandidatID(), entityToMap.anzahl());
+        Assertions.assertThat(result).isEqualTo(expectedResult);
       }
     }
   }
@@ -222,7 +279,7 @@ class StimmzettelModelMapperTest {
           final KandidatModel kandidat, final Wahlvorschlag wahlvorschlag) {
         val expectedResult = new Kandidat();
 
-        expectedResult.setId(
+        expectedResult.setKandidatID(
             new KandidatId(kandidat.id().kandidatID(), kandidat.id().nennungsNummer()));
         expectedResult.setWahlvorschlag(wahlvorschlag);
         expectedResult.setDiscarded(kandidat.discarded());
@@ -250,7 +307,7 @@ class StimmzettelModelMapperTest {
       private Kandidat createExpectedKandidat(final KandidatModel kandidat) {
         val expectedKandidat = new Kandidat();
 
-        expectedKandidat.setId(
+        expectedKandidat.setKandidatID(
             new KandidatId(kandidat.id().kandidatID(), kandidat.id().nennungsNummer()));
         expectedKandidat.setDiscarded(kandidat.discarded());
         expectedKandidat.setVotesByVoter(kandidat.votesByVoter());

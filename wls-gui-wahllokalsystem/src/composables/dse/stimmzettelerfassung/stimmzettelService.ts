@@ -1,4 +1,4 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import {
   Configuration,
@@ -29,7 +29,7 @@ export function useStimmzettelService() {
     wahlbezirkID: string,
     teamID: string,
     sendNotification = true
-  ): Promise<Stimmzettel[]> {
+  ): Promise<PersistedStimmzettel[]> {
     try {
       const response = await stimmzettelControllerApi.getStimmzettel(
         wahlID,
@@ -40,7 +40,7 @@ export function useStimmzettelService() {
       const responseData = getNullOn204OrElseResponseData(response);
       return (
         responseData?.map((stimmzettelDTO) =>
-          toModel(teamID, stimmzettelDTO)
+          toModel(stimmzettelDTO, teamID)
         ) ?? []
       );
     } catch (error) {
@@ -58,7 +58,7 @@ export function useStimmzettelService() {
     wahlID: string,
     wahlbezirkID: string,
     teamID: string,
-    stimmzettelList: Stimmzettel[],
+    stimmzettelList: PersistedStimmzettel[],
     sendNotification = true
   ) {
     try {
@@ -93,7 +93,7 @@ export function useStimmzettelService() {
   async function saveSingleStimmzettel(
     wahlID: string,
     wahlbezirkID: string,
-    stimmzettel: Stimmzettel
+    stimmzettel: PersistedStimmzettel
   ) {
     const dto = toSingleStimmzettelDTO(stimmzettel);
     await stimmzettelControllerApi.postSingleStimmzettel(

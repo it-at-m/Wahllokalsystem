@@ -11,7 +11,7 @@ import {
   vi,
 } from "vitest";
 
-import { PostAusdruckMeldungsartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import { PostAusdruckDokumentartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useAusdruckService } from "@/composables/ergebnismeldung/common/ausdruckService.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -79,7 +79,7 @@ describe("ausdruckService.ts", () => {
       const ausdruck = generateRandomString(200);
 
       const mockedMeldungsartMappingResult = getRandomItem(
-        Object.values(PostAusdruckMeldungsartEnum)
+        Object.values(PostAusdruckDokumentartEnum)
       );
       mockDefinitions.mapMeldungsartEnumToDto.mockReturnValue(
         mockedMeldungsartMappingResult
@@ -119,7 +119,7 @@ describe("ausdruckService.ts", () => {
       const ausdruck = generateRandomString(200);
 
       const mockedMeldungsartMappingResult = getRandomItem(
-        Object.values(PostAusdruckMeldungsartEnum)
+        Object.values(PostAusdruckDokumentartEnum)
       );
       mockDefinitions.mapMeldungsartEnumToDto.mockReturnValue(
         mockedMeldungsartMappingResult
@@ -160,7 +160,7 @@ describe("ausdruckService.ts", () => {
       const ausdruck = generateRandomString(200);
 
       const mockedMeldungsartMappingResult = getRandomItem(
-        Object.values(PostAusdruckMeldungsartEnum)
+        Object.values(PostAusdruckDokumentartEnum)
       );
       mockDefinitions.mapMeldungsartEnumToDto.mockReturnValue(
         mockedMeldungsartMappingResult
@@ -192,7 +192,7 @@ describe("ausdruckService.ts", () => {
       const ausdruck = generateRandomString(200);
 
       const mockedMeldungsartMappingResult = getRandomItem(
-        Object.values(PostAusdruckMeldungsartEnum)
+        Object.values(PostAusdruckDokumentartEnum)
       );
       mockDefinitions.mapMeldungsartEnumToDto.mockReturnValue(
         mockedMeldungsartMappingResult

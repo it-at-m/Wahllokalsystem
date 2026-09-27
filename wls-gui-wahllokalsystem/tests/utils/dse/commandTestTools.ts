@@ -28,3 +28,17 @@ export const invalidCommandRanges: string[] = [
   "101-",
   "125-203",
 ];
+
+export const validWahlvorschlagOrdnungszahlen = [
+  1, 2, 9, 10, 11, 99, 100, 1000,
+];
+
+export const invalidWahlvorschlagOrdnungszahlen = [
+  "0",
+  "abc",
+  "010",
+  "101",
+  "999",
+  "1001",
+  "9999",
+];

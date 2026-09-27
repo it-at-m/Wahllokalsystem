@@ -1,4 +1,4 @@
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import localforage from "localforage";
 import { toRaw } from "vue";
@@ -103,26 +103,28 @@ export function useStimmzettelRepo(wahlID: string, wahlbezirkID: string) {
   });
 
   async function getAll() {
-    const result: OfflineCachedResource<Stimmzettel>[] = [];
+    const result: OfflineCachedResource<PersistedStimmzettel>[] = [];
     await dbInstance.iterate((value) => {
       //TODO validate item
-      result.push(value as OfflineCachedResource<Stimmzettel>);
+      result.push(value as OfflineCachedResource<PersistedStimmzettel>);
     });
     return result;
   }
 
   async function getAllByTeam(teamID: string) {
-    const result: OfflineCachedResource<Stimmzettel>[] = [];
+    const result: OfflineCachedResource<PersistedStimmzettel>[] = [];
     await dbInstance.iterate((value, key) => {
       const parsedKey = StimmzettelKeyProducer.extractKey(key);
       if (parsedKey.teamID === teamID) {
-        result.push(value as OfflineCachedResource<Stimmzettel>);
+        result.push(value as OfflineCachedResource<PersistedStimmzettel>);
       }
     });
     return result;
   }
 
-  async function saveAll(ressources: OfflineCachedResource<Stimmzettel>[]) {
+  async function saveAll(
+    ressources: OfflineCachedResource<PersistedStimmzettel>[]
+  ) {
     const savePromises: Promise<void>[] = [];
     ressources.forEach((ressource) => savePromises.push(save(ressource)));
 
@@ -130,7 +132,7 @@ export function useStimmzettelRepo(wahlID: string, wahlbezirkID: string) {
   }
 
   async function save(
-    offlineCachedStimmzettel: OfflineCachedResource<Stimmzettel>
+    offlineCachedStimmzettel: OfflineCachedResource<PersistedStimmzettel>
   ) {
     const key: StimmzettelKey = {
       kennung: offlineCachedStimmzettel.resource.stimmzettelkennung,
@@ -191,17 +193,21 @@ export function useExperimentalStimmzettelService(
     }
   }
 
-  async function getStimmzettel(teamID: string): Promise<Stimmzettel[]> {
+  async function getStimmzettel(
+    teamID: string
+  ): Promise<PersistedStimmzettel[]> {
     const stimmzettelFromIndexDB = await getAllByTeam(teamID);
     return stimmzettelFromIndexDB.map((i) => i.resource);
   }
 
-  async function saveStimmzettel(stimmzettel: Stimmzettel) {
+  async function saveStimmzettel(stimmzettel: PersistedStimmzettel) {
     await save(createPendingRessource(stimmzettel));
     _transmitStimmzettelAndStoreResult(stimmzettel);
   }
 
-  async function _transmitStimmzettelAndStoreResult(stimmzettel: Stimmzettel) {
+  async function _transmitStimmzettelAndStoreResult(
+    stimmzettel: PersistedStimmzettel
+  ) {
     try {
       await saveSingleStimmzettel(wahlID, wahlbezirkID, stimmzettel);
       await save(createTransmittedRessource(stimmzettel));
@@ -213,7 +219,7 @@ export function useExperimentalStimmzettelService(
   async function _fetchStoreAndReturnStimmzettel(
     teamID: string,
     sendNotification: boolean
-  ): Promise<Stimmzettel[]> {
+  ): Promise<PersistedStimmzettel[]> {
     const fetchedStimmzettel = await fetchStimmzettel(
       wahlID,
       wahlbezirkID,

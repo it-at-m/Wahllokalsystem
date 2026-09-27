@@ -98,6 +98,86 @@ Content-Type: application/json
   },
   {
     "stimmzettelkennung": 2,
+    "invalideVotes": 2,
+    "gueltigkeit": "VALID",
+    "wahlvorstandBeschlussvorschlag": [
+      {
+        "text": "vormerkung 1"
+      },
+      {
+        "text": "vormerkung 2"
+      }
+    ],
+    "systemBeschlussvorschlag": [
+      {
+        "reason": "EINZELNE_STIMMEN_UNGUELTIG"
+      },
+      {
+        "reason": "NICHT_AMTLICHER_STIMMZETTEL"
+      }
+    ],
+    "beschlussfassung": {
+      "pro": 3,
+      "contra": 4,
+      "text": "beschlussfassung text"
+    },
+    "wahlvorschlaege": [
+      {
+        "wahlvorschlagID": "wahlvorschlagID1",
+        "selected": false,
+        "kandidaten": [
+          {
+            "id": {
+              "kandidatID": "kandidat1.1",
+              "nennungsNummer": 1
+            },
+            "discarded": false,
+            "votesByVoter": 3,
+            "invalidVotes": 4,
+            "votesByWahlvorschlag": 5
+          },
+          {
+            "id": {
+              "kandidatID": "kandidat1.1",
+              "nennungsNummer": 2
+            },
+            "discarded": true,
+            "votesByVoter": 0,
+            "invalidVotes": 0,
+            "votesByWahlvorschlag": 0
+          }
+        ]
+      },
+      {
+        "wahlvorschlagID": "wahlvorschlagID2",
+        "selected": true,
+        "kandidaten": [
+          {
+            "id": {
+              "kandidatID": "kandidat2.1",
+              "nennungsNummer": 1
+            },
+            "discarded": false,
+            "votesByVoter": 3,
+            "invalidVotes": 4,
+            "votesByWahlvorschlag": 5
+          },
+          {
+            "id": {
+              "kandidatID": "kandidat2.1",
+              "nennungsNummer": 2
+            },
+            "discarded": true,
+            "votesByVoter": 0,
+            "invalidVotes": 0,
+            "votesByWahlvorschlag": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "stimmzettelkennung": 3,
     "invalideVotes": 0,
     "gueltigkeit": "INVALID",
     "beschlussvormerkungen": [

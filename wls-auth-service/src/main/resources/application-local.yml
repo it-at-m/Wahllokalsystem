@@ -1,3 +1,9 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        generate_statistics: true # when true, enable logger org.hibernate.engine.internal.StatisticalLoggingSessionEventListener with debug
+
 server:
   port: 8100
 

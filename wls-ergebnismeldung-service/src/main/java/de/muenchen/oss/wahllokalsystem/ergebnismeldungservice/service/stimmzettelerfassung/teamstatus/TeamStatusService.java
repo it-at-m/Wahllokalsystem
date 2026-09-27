@@ -26,7 +26,10 @@ public class TeamStatusService {
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungTeamstatus')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
-          + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
+          + " and ("
+          + "@teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)"
+          + " or hasAuthority('WLS_WAHLVORSTAND')"
+          + ")")
   @Transactional
   public void saveTeamStatus(
       @P("param") final TeamBezirkUndWahlIDModel id,
@@ -67,5 +70,25 @@ public class TeamStatusService {
     return entities.stream()
         .map(erfassungTeamStatusModelMapper::toEntryModel)
         .collect(Collectors.toList());
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungTeamstatus')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+          + " and ("
+          + "@teamIDPermissionEvaluator.tokenUserteamIdMatches(#teamID, authentication)"
+          + " or hasAuthority('WLS_WAHLVORSTAND')"
+          + ")")
+  @Transactional
+  public void reopenStimmzettelerfassung(
+      final String wahlID,
+      @P("wahlbezirkID") final String wahlbezirkID,
+      @P("teamID") final String teamID) {
+    saveTeamStatus(
+        new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
+        ErfassungTeamStatusModel.IN_BEARBEITUNG);
+
+    stimmzettelerfassungService.registerStimmzettelerfassungStart(
+        new BezirkUndWahlID(wahlID, wahlbezirkID));
   }
 }

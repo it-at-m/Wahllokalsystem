@@ -1,16 +1,15 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.awerte.AWerte;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnis;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.AWerteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnisDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.UngueltigeStimmzettelDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
 import java.util.Set;
@@ -66,16 +65,20 @@ class MappingTest {
     void should_mapToSetWithDTO_when_listOfEntitiesIsGiven() {
       val entitiesToMap =
           List.of(
-              new Ergebnisse(
-                  new BezirkUndWahlIDStapelart("wbzID1", "wahlID1", Stapelart.BTW_A),
+              new ErgebnisseModel(
+                  "wbzID1",
+                  "wahlID1",
+                  StapelartModel.BTW_A,
                   List.of(
-                      new Ergebnis("wahlvorschlag11", "kandidat11", 1L, 11, null),
-                      new Ergebnis("wahlvorschlag12", "kandidat12", 2L, 12, null))),
-              new Ergebnisse(
-                  new BezirkUndWahlIDStapelart("wbzID2", "wahlID2", Stapelart.EUW_C_GUELTIG),
+                      new ErgebnisModel("wahlvorschlag11", "kandidat11", 1L, 11, null),
+                      new ErgebnisModel("wahlvorschlag12", "kandidat12", 2L, 12, null))),
+              new ErgebnisseModel(
+                  "wbzID2",
+                  "wahlID2",
+                  StapelartModel.EUW_C_GUELTIG,
                   List.of(
-                      new Ergebnis("wahlvorschlag21", "kandidat21", 3L, 21, null),
-                      new Ergebnis("wahlvorschlag22", "kandidat22", 4L, 22, null))));
+                      new ErgebnisModel("wahlvorschlag21", "kandidat21", 3L, 21, null),
+                      new ErgebnisModel("wahlvorschlag22", "kandidat22", 4L, 22, null))));
 
       val result = unitUnderTest.toDtoErgebnisseSet(entitiesToMap);
 
@@ -132,16 +135,20 @@ class MappingTest {
     void should_returnSetWithUngueltigeStimmzettelDTO_when_listWithErgebnisseIsGiven() {
       val listWithErgebnisse =
           List.of(
-              new Ergebnisse(
-                  new BezirkUndWahlIDStapelart("wbzID1", "wahlID1", Stapelart.BTW_A),
+              new ErgebnisseModel(
+                  "wbzID1",
+                  "wahlID1",
+                  StapelartModel.BTW_A,
                   List.of(
-                      new Ergebnis("wahlvorschlag11", null, null, 11, null),
-                      new Ergebnis("wahlvorschlag12", null, null, 12, null))),
-              new Ergebnisse(
-                  new BezirkUndWahlIDStapelart("wbzID2", "wahlID2", Stapelart.EUW_C_GUELTIG),
+                      new ErgebnisModel("wahlvorschlag11", null, null, 11, null),
+                      new ErgebnisModel("wahlvorschlag12", null, null, 12, null))),
+              new ErgebnisseModel(
+                  "wbzID2",
+                  "wahlID2",
+                  StapelartModel.EUW_C_GUELTIG,
                   List.of(
-                      new Ergebnis("wahlvorschlag21", null, null, 21, null),
-                      new Ergebnis("wahlvorschlag22", null, null, 22, null))));
+                      new ErgebnisModel("wahlvorschlag21", null, null, 21, null),
+                      new ErgebnisModel("wahlvorschlag22", null, null, 22, null))));
 
       val result = unitUnderTest.toDtoSet(listWithErgebnisse);
 
@@ -171,13 +178,15 @@ class MappingTest {
     }
 
     @ParameterizedTest
-    @EnumSource(Stapelart.class)
-    void should_mapToStimmenart_when_anyStapelIsGiven(final Stapelart stapelart) {
+    @EnumSource(StapelartModel.class)
+    void should_mapToStimmenart_when_anyStapelIsGiven(final StapelartModel stapelart) {
       val listWithErgebnisse =
           List.of(
-              new Ergebnisse(
-                  new BezirkUndWahlIDStapelart("wbzID1", "wahlID1", stapelart),
-                  List.of(new Ergebnis("wahlvorschlag11", null, null, 11, null))));
+              new ErgebnisseModel(
+                  "wbzID1",
+                  "wahlID1",
+                  stapelart,
+                  List.of(new ErgebnisModel("wahlvorschlag11", null, null, 11, null))));
 
       val result = unitUnderTest.toDtoSet(listWithErgebnisse);
 

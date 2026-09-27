@@ -142,9 +142,16 @@ subfolder (`common` for shared, `<domain>` for domain-specific) across: `api/` (
 
 - Component hierarchy: **Views** → **SingleUse** components → **Basis** components. Views and
   SingleUse components may read stores; Basis components may **not** (props/events only). Basis
-  components use composables only for formatting/validation, not business logic. Saving is a
-  SingleUse-component responsibility.
-- Backend access path mirrors the backend: `store → service (composable) → client + mapper`.
+  components may only use Rules- and Formatter-composables for formatting/validation, not
+  business logic or backend access. Saving is a SingleUse-component responsibility.
+- Composables are categorized (see `docs/src/technik/systemspecification/frontend.md`): Rules,
+  Formatter, StoreModule, State, Utils, FetchService, Tools, Mapper, Manager, Service. Mapper
+  composables are only used by Utils- or FetchService-composables; Manager composables only by
+  FetchService; StoreModule composables only by stores. Views/SingleUse components use higher-level
+  composables (e.g. FetchService, Service, Manager, Tools, State), Basis components only
+  Rules/Formatter.
+- Backend access path mirrors the backend: `store → FetchService (composable) → client + mapper`.
+  Components and stores do not call generated API clients directly; they delegate to composables.
 - View state is preserved across navigation via `keep-alive` (with a per-path `key` when one view
   serves multiple routes) and/or stores.
 - `tests/` and `stories/` mirror the `src/` folder structure exactly. Component tests use Vitest

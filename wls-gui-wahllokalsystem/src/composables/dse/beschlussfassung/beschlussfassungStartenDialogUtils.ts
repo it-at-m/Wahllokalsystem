@@ -2,15 +2,19 @@ import { computed, readonly, ref } from "vue";
 
 import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
 import { useExperimentalStimmzettelService } from "@/composables/experimental/experimentalStimmzettelService.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import router from "@/plugins/router.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
-import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 export function useBeschlussfassungStartenDialogUtils(
   wahlId: string,
   wahlbezirkId: string
 ) {
   const { saveDseWorkflowStatus } = useDseWorkflowStatusService();
+  const { getNextRoute } = useNavigationService();
+  const { setStepDone } = useWorkflowStore();
   const { getAnzahlStimmzettel } = useExperimentalStimmzettelService(
     wahlId,
     wahlbezirkId
@@ -28,10 +32,13 @@ export function useBeschlussfassungStartenDialogUtils(
       status: StimmzettelerfassungStatusEnum.SteAbgeschlossen,
     });
 
-    await router.push({
-      name: DseStepsEnum.DSE_BESCHLUSSFASSUNG,
-      params: { wahlId: wahlId, wahlbezirkId: wahlbezirkId },
-    });
+    setStepDone(
+      wahlId,
+      wahlbezirkId,
+      MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+    );
+
+    await router.push(getNextRoute());
   }
 
   async function loadAnzahlStimmzettel() {

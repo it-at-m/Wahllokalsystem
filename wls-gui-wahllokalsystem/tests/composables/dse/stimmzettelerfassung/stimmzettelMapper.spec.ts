@@ -4,43 +4,93 @@ import type {
   KandidatDTO,
   StimmzettelOfTeamDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { Kandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
+import type { PersistedWahlvorschlag } from "@/types/dse/stimmzettelerfassung/PersistedWahlvorschlag.ts";
 
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
-import { describe, expect, it } from "vitest";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
+import { useStimmzettelDTOTestDataFactory } from "@tests/utils/dse/StimmzettelDTOTestDataFactory.ts";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { ref } from "vue";
 
 import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
+import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
+import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  hasAnyKennzeichenOrReststimme: vi.fn(),
+}));
+
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/kandidatTools.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useKandidatTools: () => ({
+        ...original.useKandidatTools(),
+        hasAnyKennzeichenOrReststimme:
+          mockDefinitions.hasAnyKennzeichenOrReststimme,
+      }),
+    };
+  }
+);
+
+const {
+  createDseStimmzettel,
+  createDseWahlvorschlag,
+  prepareDseStimmzettel,
+  prepareDseKandidatOfDseWahlvorschlag,
+  prepareDseWahlvorschlag,
+} = useDseStimmzettelTestDataFactory();
 
 const {
   createStimmzettelOfTeamDTO,
   prepareStimmzettelOfTeamDTO,
   createStimmzettelKandidatDTO,
+  prepareStimmzettelBeschlussfassungDTO,
+  prepareStimmzettelBeschlussgrundDTO,
+  prepareStimmzettelKandidatDTO,
+  prepareStimmzettelKandidatIdDTO,
+  prepareStimmzettelWahlvorschlagDTO,
+} = useStimmzettelDTOTestDataFactory();
+
+const {
   createPersistedStimmzettel,
   preparePersistedStimmzettel,
   createPersistedStimmzettelKandidat,
   preparePersistedStimmzettelBeschlussfassung,
-  prepareStimmzettelBeschlussfassungDTO,
   preparePersistedStimmzettelBeschlussgrund,
-  prepareStimmzettelBeschlussgrundDTO,
   preparePersistedStimmzettelKandidat,
-  prepareStimmzettelKandidatDTO,
-  prepareStimmzettelKandidatIdDTO,
   preparePersistedStimmzettelWahlvorschlag,
-  prepareStimmzettelWahlvorschlagDTO,
-} = useStimmzettelTestDataFactory();
+} = usePersistedStimmzettelTestDataFactory();
+const { generateRandomNumber, generateRandomString } =
+  useCommonTestDataFactory();
 
 describe("stimmzettelMapper.ts", () => {
-  const { toModel, toDTO } = useStimmzettelMapper();
+  const {
+    toModel,
+    toPersistedStimmzettel,
+    toDTO,
+    mapPersistedStimmzettelValuesToExistingDseStimmzettel,
+  } = useStimmzettelMapper();
+  const teamID = "teamID";
+
+  afterEach(() => {
+    vi.clearAllMocks();
+    vi.resetAllMocks();
+  });
 
   describe("toModel", () => {
     it("should_mapAllFields_when_dtoIsGiven", () => {
       const dtoToMap = createStimmzettelOfTeamDTO();
 
-      const result: Stimmzettel = toModel(dtoToMap);
+      const result: PersistedStimmzettel = toModel(dtoToMap, teamID);
 
-      const expectedResult: Stimmzettel = preparePersistedStimmzettel()
+      const expectedResult: PersistedStimmzettel = preparePersistedStimmzettel()
         .stimmzettelkennung(dtoToMap.stimmzettelkennung)
+        .teamID(teamID)
         .invalideVotes(dtoToMap.invalideVotes)
         .gueltigkeit(dtoToMap.gueltigkeit)
         .beschlussfassung(
@@ -50,7 +100,12 @@ describe("stimmzettelMapper.ts", () => {
             .text(dtoToMap.beschlussfassung!.text!)
             .build()
         )
-        .beschlussvorschlag(
+        .systemBeschlussvorschlag(
+          dtoToMap.systemBeschlussvorschlag!.map((dtoSystemBschlussgrund) => ({
+            reason: dtoSystemBschlussgrund.reason,
+          }))
+        )
+        .wahlvorstandBeschlussvorschlag(
           dtoToMap.wahlvorstandBeschlussvorschlag!.map(
             (dtoWahlvorstandBeschlussgrund) =>
               preparePersistedStimmzettelBeschlussgrund()
@@ -87,37 +142,61 @@ describe("stimmzettelMapper.ts", () => {
         .wahlvorschlaege(undefined)
         .build();
 
-      const result = toModel(dtoWithoutWahlvorschlaege);
+      const result = toModel(dtoWithoutWahlvorschlaege, teamID);
 
       expect(result.wahlvorschlaege).toStrictEqual([]);
     });
 
-    it("should_returnEmptyBeschlussvorschlag_when_dtoBeschlussvorschlagIsUndefined", () => {
-      const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
-        .wahlvorstandBeschlussvorschlag(undefined)
-        .build();
+    it.each([
+      {
+        value: [],
+        testcaseSuffix: "emptyArray",
+      },
+      {
+        value: undefined,
+        testcaseSuffix: "undefined",
+      },
+    ])(
+      "should_returnEmptyWahlvorstandBeschlussvorschlag_when_dtoWahlvorstandBeschlussvorschlagIsNotGivenBy'$testcaseSuffix'",
+      (testcaseArgument) => {
+        const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
+          .wahlvorstandBeschlussvorschlag(testcaseArgument.value)
+          .build();
 
-      const result = toModel(dtoWithoutBeschlussvorschlag);
+        const result = toModel(dtoWithoutBeschlussvorschlag, teamID);
 
-      expect(result.beschlussvorschlag).toStrictEqual([]);
-    });
+        expect(result.wahlvorstandBeschlussvorschlag).toStrictEqual([]);
+      }
+    );
 
-    it("should_returnEmptyBeschlussvorschlag_when_dtoBeschlussvorschlagIsEmpty", () => {
-      const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
-        .wahlvorstandBeschlussvorschlag([])
-        .build();
+    it.each([
+      {
+        value: [],
+        testcaseSuffix: "emptyArray",
+      },
+      {
+        value: undefined,
+        testcaseSuffix: "undefined",
+      },
+    ])(
+      "should_returnEmptySystemBeschlussvorschlag_when_dtoSystemBeschlussvorschlagIsNotGivenBy'$testcaseSuffix'",
+      (testcaseArgument) => {
+        const dtoWithoutBeschlussvorschlag = prepareStimmzettelOfTeamDTO()
+          .systemBeschlussvorschlag(testcaseArgument.value)
+          .build();
 
-      const result = toModel(dtoWithoutBeschlussvorschlag);
+        const result = toModel(dtoWithoutBeschlussvorschlag, teamID);
 
-      expect(result.beschlussvorschlag).toStrictEqual([]);
-    });
+        expect(result.systemBeschlussvorschlag).toStrictEqual([]);
+      }
+    );
 
     it("should_returnNullBeschlussfassung_when_dtoBeschlussfassungIsUndefined", () => {
       const dtoWithoutBeschlussfassung = prepareStimmzettelOfTeamDTO()
         .beschlussfassung(undefined)
         .build();
 
-      const result = toModel(dtoWithoutBeschlussfassung);
+      const result = toModel(dtoWithoutBeschlussfassung, teamID);
 
       expect(result.beschlussfassung).toBeNull();
     });
@@ -127,7 +206,7 @@ describe("stimmzettelMapper.ts", () => {
         .wahlvorschlaege([])
         .build();
 
-      const result = toModel(dtoWithEmptyWahlvorschlaege);
+      const result = toModel(dtoWithEmptyWahlvorschlaege, teamID);
 
       expect(result.wahlvorschlaege).toStrictEqual([]);
     });
@@ -139,7 +218,7 @@ describe("stimmzettelMapper.ts", () => {
         ])
         .build();
 
-      const result = toModel(dtoWithEmptyKandidaten);
+      const result = toModel(dtoWithEmptyKandidaten, teamID);
 
       expect(result.wahlvorschlaege[0].kandidaten).toStrictEqual([]);
     });
@@ -151,7 +230,7 @@ describe("stimmzettelMapper.ts", () => {
         ])
         .build();
 
-      const result = toModel(dtoWithUndefinedKandidaten);
+      const result = toModel(dtoWithUndefinedKandidaten, teamID);
 
       expect(result.wahlvorschlaege[0].kandidaten).toStrictEqual([]);
     });
@@ -166,7 +245,7 @@ describe("stimmzettelMapper.ts", () => {
         ])
         .build();
 
-      const result = toModel(dtoWithSingleKandidat);
+      const result = toModel(dtoWithSingleKandidat, teamID);
 
       const expectedKandidat = preparePersistedStimmzettelKandidat()
         .kandidatId(singleKandidat.id.kandidatID)
@@ -195,7 +274,7 @@ describe("stimmzettelMapper.ts", () => {
         ])
         .build();
 
-      const result = toModel(dtoWithKandidatWithoutVotes);
+      const result = toModel(dtoWithKandidatWithoutVotes, teamID);
 
       expect(result.wahlvorschlaege[0].kandidaten[0].votesByVoter).toBeNull();
       expect(result.wahlvorschlaege[0].kandidaten[0].invalidVotes).toBeNull();
@@ -222,8 +301,13 @@ describe("stimmzettelMapper.ts", () => {
             .text(modelToMap.beschlussfassung!.text!)
             .build()
         )
+        .systemBeschlussvorschlag(
+          modelToMap.systemBeschlussvorschlag.map((modelBeschlussgrund) => ({
+            reason: modelBeschlussgrund.reason,
+          }))
+        )
         .wahlvorstandBeschlussvorschlag(
-          modelToMap.beschlussvorschlag.map((modelBeschlussgrund) =>
+          modelToMap.wahlvorstandBeschlussvorschlag.map((modelBeschlussgrund) =>
             prepareStimmzettelBeschlussgrundDTO()
               .text(modelBeschlussgrund.text)
               .build()
@@ -267,14 +351,24 @@ describe("stimmzettelMapper.ts", () => {
       expect(result.wahlvorschlaege).toBeUndefined();
     });
 
-    it("should_returnUndefinedBeschlussvorschlag_when_modelBeschlussvorschlagIsEmpty", () => {
+    it("should_returnUndefinedWahlvorstandBeschlussvorschlag_when_modelWahlvorstandBeschlussvorschlagIsEmpty", () => {
       const modelWithoutBeschlussvorschlag = preparePersistedStimmzettel()
-        .beschlussvorschlag([])
+        .wahlvorstandBeschlussvorschlag([])
         .build();
 
       const result = toDTO(modelWithoutBeschlussvorschlag);
 
       expect(result.wahlvorstandBeschlussvorschlag).toBeUndefined();
+    });
+
+    it("should_returnUndefinedSystemBeschlussvorschlag_when_modelSystemBeschlussvorschlagIsEmpty", () => {
+      const modelWithoutBeschlussvorschlag = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag([])
+        .build();
+
+      const result = toDTO(modelWithoutBeschlussvorschlag);
+
+      expect(result.systemBeschlussvorschlag).toBeUndefined();
     });
 
     it("should_returnUndefinedBeschlussfassung_when_modelBeschlussfassungIsNull", () => {
@@ -329,7 +423,7 @@ describe("stimmzettelMapper.ts", () => {
     });
 
     it("should_mapNullVoteFieldsToUndefined_when_kandidatVotesAreNull", () => {
-      const kandidatWithoutVotes: Kandidat =
+      const kandidatWithoutVotes: PersistedKandidat =
         preparePersistedStimmzettelKandidat()
           .votesByVoter(null)
           .invalidVotes(null)
@@ -354,6 +448,256 @@ describe("stimmzettelMapper.ts", () => {
       expect(
         result.wahlvorschlaege?.[0].kandidaten?.[0].invalidVotes
       ).toBeUndefined();
+    });
+  });
+
+  describe("toPersistedStimmzettel", () => {
+    it("should_returnPersistedStimmzettel_when_dseStimmzettelIsGiven", () => {
+      const stimmzettelkennung = generateRandomNumber(2);
+      const teamID = generateRandomString(10);
+      const dseStimmzettel = createDseStimmzettel();
+
+      mockDefinitions.hasAnyKennzeichenOrReststimme.mockReturnValue(true);
+
+      const result = toPersistedStimmzettel(
+        dseStimmzettel,
+        stimmzettelkennung,
+        teamID
+      );
+
+      const expectedWahlvorschlaege: PersistedWahlvorschlag[] =
+        dseStimmzettel.wahlvorschlaege.map((wahlvorschlag) => {
+          const kandidaten: PersistedKandidat[] = wahlvorschlag.kandidaten.map(
+            (kandidat) => ({
+              votesByWahlvorschlag: kandidat.reststimmen,
+              invalidVotes: kandidat.ungueltigeStimmen,
+              votesByVoter: kandidat.einzelstimmen,
+              isDiscarded: kandidat.durchgestrichen,
+              nennung: kandidat.nennung,
+              kandidatId: kandidat.kandidatId,
+            })
+          );
+          return {
+            kandidaten,
+            selected: wahlvorschlag.selected,
+            wahlvorschlagID: wahlvorschlag.wahlvorschlagID,
+          };
+        });
+      const expectedResult: PersistedStimmzettel = {
+        stimmzettelkennung,
+        teamID,
+        beschlussfassung: dseStimmzettel.beschlussfassung,
+        systemBeschlussvorschlag: [],
+        wahlvorstandBeschlussvorschlag: [],
+        invalideVotes: dseStimmzettel.invalideVotes!,
+        wahlvorschlaege: expectedWahlvorschlaege,
+        gueltigkeit: dseStimmzettel.gueltigkeit,
+      };
+      expect(result).toStrictEqual(expectedResult);
+    });
+
+    it("should_returnPersistedStimmzettelWithReducedData_when_stimmzettelHasWahlvorschlagWithOnlyKandidatenWithoutAnyKennzeichen", () => {
+      const stimmzettelkennung = generateRandomNumber(2);
+      const teamID = generateRandomString(10);
+
+      const dseStimmzettel = prepareDseStimmzettel()
+        .wahlvorschlaege([prepareDseWahlvorschlag().selected(false).build()])
+        .build();
+
+      mockDefinitions.hasAnyKennzeichenOrReststimme.mockReturnValue(false);
+
+      expect(
+        dseStimmzettel.wahlvorschlaege[0].kandidaten.length > 0
+      ).toStrictEqual(true);
+
+      const result = toPersistedStimmzettel(
+        dseStimmzettel,
+        stimmzettelkennung,
+        teamID
+      );
+
+      expect(result.wahlvorschlaege).toStrictEqual([]);
+    });
+
+    it("should_returnPersistedStimmzettelWithReducedDataButKeepWahlvorschlag_when_stimmzettelHasSelectedWahlvorschlagWithoutKandidatenWithStimmen", () => {
+      const stimmzettelkennung = generateRandomNumber(2);
+      const teamID = generateRandomString(10);
+
+      const dseStimmzettel = prepareDseStimmzettel()
+        .wahlvorschlaege([prepareDseWahlvorschlag().selected(true).build()])
+        .build();
+
+      mockDefinitions.hasAnyKennzeichenOrReststimme.mockReturnValue(false);
+
+      expect(
+        dseStimmzettel.wahlvorschlaege[0].kandidaten.length > 0
+      ).toStrictEqual(true);
+
+      const result = toPersistedStimmzettel(
+        dseStimmzettel,
+        stimmzettelkennung,
+        teamID
+      );
+
+      expect(result.wahlvorschlaege.length).toStrictEqual(1);
+    });
+
+    it("should_returnPersistedStimmzettelWithReducedData_when_stimmzettelHasWahlvorschlaegWithKandidatenWithAndWithoutAnyKennzeichen", () => {
+      const stimmzettelkennung = generateRandomNumber(2);
+      const teamID = generateRandomString(10);
+
+      const wahlvorschlag = createDseWahlvorschlag();
+      const kandidatWithKennzeichen = prepareDseKandidatOfDseWahlvorschlag(
+        wahlvorschlag
+      )
+        .kandidatId("k1")
+        .build();
+      const kandidatWithoutKennzeichen = prepareDseKandidatOfDseWahlvorschlag(
+        wahlvorschlag
+      )
+        .kandidatId("k2")
+        .build();
+      wahlvorschlag.kandidaten = [
+        kandidatWithKennzeichen,
+        kandidatWithoutKennzeichen,
+      ];
+
+      const dseStimmzettel = prepareDseStimmzettel()
+        .wahlvorschlaege([wahlvorschlag])
+        .build();
+
+      mockDefinitions.hasAnyKennzeichenOrReststimme.mockImplementation(
+        (kandidat: PersistedKandidat) =>
+          kandidat.kandidatId === kandidatWithKennzeichen.kandidatId
+      );
+
+      expect(
+        dseStimmzettel.wahlvorschlaege[0].kandidaten.length > 0
+      ).toStrictEqual(true);
+
+      const result = toPersistedStimmzettel(
+        dseStimmzettel,
+        stimmzettelkennung,
+        teamID
+      );
+
+      const expectedKandidat: PersistedKandidat = {
+        kandidatId: kandidatWithKennzeichen.kandidatId,
+        nennung: kandidatWithKennzeichen.nennung,
+        votesByWahlvorschlag: kandidatWithKennzeichen.reststimmen,
+        invalidVotes: kandidatWithKennzeichen.ungueltigeStimmen,
+        votesByVoter: kandidatWithKennzeichen.einzelstimmen,
+        isDiscarded: kandidatWithKennzeichen.durchgestrichen,
+      };
+
+      expect(result.wahlvorschlaege.length).toStrictEqual(1);
+      expect(result.wahlvorschlaege[0].kandidaten).toStrictEqual([
+        expectedKandidat,
+      ]);
+    });
+  });
+
+  describe("mapPersistedStimmzettelValuesToExistingDseStimmzettel", () => {
+    it("should_resetStimmzettelToReference_when_calledWithReference", () => {
+      const stimmzettelToMapToWahlvorschlag = prepareDseWahlvorschlag()
+        .wahlvorschlagID("1")
+        .ordnungszahl(1)
+        .kandidaten([])
+        .selected(true)
+        .ungueltigeStimmen(3)
+        .gueltigeStimmen(0)
+        .erhaeltStimmen(true)
+        .kurzname("kurzname")
+        .build();
+      const stimmzettelToMapToKandidat = prepareDseKandidatOfDseWahlvorschlag(
+        stimmzettelToMapToWahlvorschlag
+      )
+        .ordnungszahl(101)
+        .einzelstimmen(4)
+        .ungueltigeStimmen(1)
+        .reststimmen(null)
+        .durchgestrichen(true)
+        .owningWahlvorschlag(stimmzettelToMapToWahlvorschlag)
+        .build();
+      const stimmzettelToMapTo = ref(
+        prepareDseStimmzettel()
+          .wahlvorstandBeschlussvorschlag([])
+          .systemBeschlussvorschlag([])
+          .beschlussfassung(null)
+          .gueltigkeit("VALID")
+          .invalideVotes(0)
+          .wahlvorschlaege([stimmzettelToMapToWahlvorschlag])
+          .build()
+      );
+      stimmzettelToMapTo.value.wahlvorschlaege[0].kandidaten = [
+        stimmzettelToMapToKandidat,
+      ];
+
+      const stimmzettelToResetToKandidat = {
+        kandidatId:
+          stimmzettelToMapTo.value.wahlvorschlaege[0].kandidaten[0].kandidatId,
+        nennung: stimmzettelToMapToKandidat.nennung,
+        isDiscarded: true,
+        votesByVoter: 5,
+        invalidVotes: 2,
+        votesByWahlvorschlag: 1,
+      };
+      const stimmzettelToResetTo = preparePersistedStimmzettel()
+        .stimmzettelkennung(1)
+        .teamID("team-1")
+        .gueltigkeit("INVALID")
+        .invalideVotes(0)
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .wahlvorschlagID(stimmzettelToMapToWahlvorschlag.wahlvorschlagID)
+            .selected(true)
+            .kandidaten([stimmzettelToResetToKandidat])
+            .build(),
+        ])
+        .wahlvorstandBeschlussvorschlag([
+          {
+            text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
+          },
+        ])
+        .systemBeschlussvorschlag([
+          {
+            reason:
+              SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+          },
+        ])
+        .beschlussfassung(null)
+        .build();
+
+      mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+        stimmzettelToMapTo.value,
+        stimmzettelToResetTo
+      );
+
+      expect(
+        stimmzettelToMapTo.value.wahlvorstandBeschlussvorschlag
+      ).toStrictEqual([
+        {
+          text: WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
+        },
+      ]);
+      expect(stimmzettelToMapTo.value.systemBeschlussvorschlag).toStrictEqual([
+        {
+          reason:
+            SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+        },
+      ]);
+      expect(stimmzettelToMapTo.value.gueltigkeit).toStrictEqual("INVALID");
+      expect(stimmzettelToMapTo.value.beschlussfassung).toBeNull();
+      expect(stimmzettelToMapTo.value.invalideVotes).toBe(0);
+      stimmzettelToMapTo.value.wahlvorschlaege.forEach((wahlvorschlag) => {
+        expect(wahlvorschlag.selected).toBe(true);
+        wahlvorschlag.kandidaten.forEach((k) => {
+          expect(k.einzelstimmen).toBe(5);
+          expect(k.ungueltigeStimmen).toBe(2);
+          expect(k.reststimmen).toBe(1);
+          expect(k.durchgestrichen).toBe(true);
+        });
+      });
     });
   });
 });

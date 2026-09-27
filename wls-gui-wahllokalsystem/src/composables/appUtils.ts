@@ -1,47 +1,27 @@
 import { storeToRefs } from "pinia";
 
-import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
-import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useAppUtils() {
-  const { loadErfassungTeamStatus, postErfassungTeamStatus } =
-    useStimmzettelerfassungTeamStatusFetchService();
   const { currentUserWahlMetadata, currentUserTeamName } =
     storeToRefs(useUserStore());
   const { addNotification } = useUserNotificationService();
-  const { setStepDone } = useWorkflowStore();
 
   async function initStimmzettelerfassungTeamStatus() {
     try {
       for (const metadata of currentUserWahlMetadata.value) {
-        const teamStatus = await loadErfassungTeamStatus(
+        const teamStatusService = useStimmzettelerfassungTeamStatusService(
           metadata.wahlID,
-          metadata.wahlbezirkID,
-          currentUserTeamName.value,
-          false
+          metadata.wahlbezirkID
         );
-        if (!teamStatus) {
-          await postErfassungTeamStatus(
-            metadata.wahlID,
-            metadata.wahlbezirkID,
-            currentUserTeamName.value,
-            { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
-            false
-          );
-        } else if (
-          StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN == teamStatus.status
-        ) {
-          setStepDone(
-            metadata.wahlID,
-            metadata.wahlbezirkID,
-            MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
-          );
-        }
+        await teamStatusService.initTeamStatus(currentUserTeamName.value);
+        useDataSyncStore().registerSyncAdapter({
+          getTasks: teamStatusService.getTasksToSync,
+        });
       }
     } catch (error) {
       addNotification(

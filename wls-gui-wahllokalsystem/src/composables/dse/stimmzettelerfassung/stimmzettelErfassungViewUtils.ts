@@ -2,25 +2,38 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 import type { Ref } from "vue";
 
-import { onActivated, readonly, ref } from "vue";
+import { computed, onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewButtonStateUtils.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
-import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
-
-const erfassungTeamStatusService =
-  useStimmzettelerfassungTeamStatusFetchService();
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusService.ts";
+import { useWithInProgress } from "@/composables/experimental/indexedDBV2/inProgress.ts";
 
 const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelTools();
+const { createWrappedFunction } = useWithInProgress();
 
 export function useStimmzettelErfassungViewUtils(
   wahlID: string,
   wahlbezirkID: string,
   teamID: string
 ) {
+  const statusService = useStimmzettelerfassungTeamStatusService(
+    wahlID,
+    wahlbezirkID
+  );
+  const wrappedGetTeamStatus = createWrappedFunction(
+    statusService.getTeamStatus
+  );
+  const wrappedRefreshTeamStatus = createWrappedFunction(
+    statusService.refreshTeamStatus
+  );
+
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
-  const isStatusLoading = ref(false);
+  const isStatusLoading = computed(
+    () =>
+      wrappedGetTeamStatus.isInProgress.value ||
+      wrappedRefreshTeamStatus.isInProgress.value
+  );
   const activeStimmzettel: Ref<PersistedStimmzettel | null> = ref(null);
 
   //DialogVisibilityState
@@ -31,7 +44,7 @@ export function useStimmzettelErfassungViewUtils(
 
   //Hooks
   onActivated(async () => {
-    await _loadTeamStatus();
+    teamStatus.value = await wrappedGetTeamStatus.run(teamID);
   });
 
   //Public functions
@@ -42,62 +55,19 @@ export function useStimmzettelErfassungViewUtils(
       getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung);
   }
 
-  async function ensureStatusInBearbeitung(sendNotification = false) {
-    if (
-      teamStatus.value?.status !==
-      StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
-    ) {
-      await _postTeamStatus(
-        StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
-        sendNotification
-      );
-    }
+  async function setStatusInBearbeitung() {
+    await statusService.setStatusInBearbeitung(teamID);
+    teamStatus.value = await wrappedGetTeamStatus.run(teamID);
   }
 
-  async function sendStatusUnterbrochen(sendNotification = false) {
-    await _postTeamStatus(
-      StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
-      sendNotification
-    );
+  async function sendStatusUnterbrochen() {
+    await statusService.setStatusUnterbrochen(teamID);
+    teamStatus.value = await wrappedGetTeamStatus.run(teamID);
   }
 
   async function reloadTeamStatus() {
-    await _loadTeamStatus();
-  }
-
-  //private functions
-  async function _loadTeamStatus() {
-    isStatusLoading.value = true;
-    try {
-      const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
-        wahlID,
-        wahlbezirkID,
-        teamID,
-        false
-      );
-      if (loaded) {
-        teamStatus.value = loaded;
-      }
-    } finally {
-      isStatusLoading.value = false;
-    }
-  }
-
-  async function _postTeamStatus(
-    statusToChange: StimmzettelerfassungTeamStatusEnum,
-    sendNotification: boolean
-  ) {
-    const newStatus: StimmzettelerfassungTeamStatus = {
-      status: statusToChange,
-    };
-    await erfassungTeamStatusService.postErfassungTeamStatus(
-      wahlID,
-      wahlbezirkID,
-      teamID,
-      newStatus,
-      sendNotification
-    );
-    teamStatus.value = newStatus;
+    const refreshedTeamStatus = await wrappedRefreshTeamStatus.run(teamID);
+    teamStatus.value = refreshedTeamStatus.newValue;
   }
 
   return {
@@ -109,7 +79,7 @@ export function useStimmzettelErfassungViewUtils(
     isStatusLoading: readonly(isStatusLoading),
 
     //actions
-    ensureStatusInBearbeitung,
+    setStatusInBearbeitung,
     sendStatusUnterbrochen,
     startNewEmptyStimmzettelWithStimmzettelkennung,
     reloadTeamStatus,

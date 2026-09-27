@@ -1,16 +1,18 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
+import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusService.ts";
+import { useWithInProgress } from "@/composables/experimental/indexedDBV2/inProgress.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import router from "@/plugins/router.ts";
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+
+const { createWrappedFunction } = useWithInProgress();
 
 export function useStimmzettelerfassungBeendenDialogUtils(
   wahlId: string,
@@ -22,8 +24,14 @@ export function useStimmzettelerfassungBeendenDialogUtils(
   const { setStepDone } = useWorkflowStore();
   const { synchronizeOfflineData } = useDataSyncStore();
   const { currentUserTeamName } = storeToRefs(useUserStore());
-  const { isSaving, postErfassungTeamStatus } =
-    useStimmzettelerfassungTeamStatusFetchService();
+
+  const teamStatusService = useStimmzettelerfassungTeamStatusService(
+    wahlId,
+    wahlbezirkId
+  );
+  const wrappedPostTeamErfassungDone = createWrappedFunction(
+    teamStatusService.setStatusAbgeschlossen
+  );
 
   const isSyncWidgetVisible = ref(false);
 
@@ -46,13 +54,7 @@ export function useStimmzettelerfassungBeendenDialogUtils(
       );
       return;
     }
-    await postErfassungTeamStatus(
-      wahlId,
-      wahlbezirkId,
-      currentUserTeamName.value,
-      { status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN },
-      true
-    );
+    await wrappedPostTeamErfassungDone.run(currentUserTeamName.value);
 
     await _navigateToNextView();
 
@@ -71,7 +73,7 @@ export function useStimmzettelerfassungBeendenDialogUtils(
 
   return {
     isSyncWidgetVisible,
-    isSaving,
+    isSaving: wrappedPostTeamErfassungDone.isInProgress,
 
     synchronizeDataAndPostTeamErfassungDone,
   };

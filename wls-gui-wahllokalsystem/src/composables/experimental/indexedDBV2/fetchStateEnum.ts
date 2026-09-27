@@ -6,6 +6,6 @@ export const FetchStateEnum = {
 export type FetchStateEnum =
   (typeof FetchStateEnum)[keyof typeof FetchStateEnum];
 
-export function isTransferedFilter(fetchState: FetchStateEnum) {
+export function isTransfered(fetchState: FetchStateEnum) {
   return fetchState === FetchStateEnum.DONE;
 }

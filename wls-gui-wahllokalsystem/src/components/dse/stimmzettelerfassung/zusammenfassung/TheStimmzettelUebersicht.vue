@@ -133,7 +133,7 @@ const {
   isStatusLoading,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
-  ensureStatusInBearbeitung,
+  setStatusInBearbeitung,
   sendStatusUnterbrochen,
   startNewEmptyStimmzettelWithStimmzettelkennung,
   reloadTeamStatus,
@@ -153,7 +153,7 @@ function onErfassungStartenClicked() {
 }
 
 async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
-  await ensureStatusInBearbeitung();
+  await setStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
   startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
   if (isErfassungsDialogVisible.value) {
@@ -198,7 +198,7 @@ async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
 async function onStimmzettelBearbeitenClicked(
   stimmzettel: PersistedStimmzettel
 ) {
-  await ensureStatusInBearbeitung();
+  await setStatusInBearbeitung();
 
   activeStimmzettel.value = stimmzettel;
   isErfassungsDialogVisible.value = true;

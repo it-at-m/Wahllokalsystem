@@ -1,12 +1,12 @@
-import type { Kandidat as PersistedKandidat } from "@/types/dse/persistedStimmzettel/Kandidat.ts";
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
 
 export function useKandidatTools() {
-  function hasAnyKennzeichenOrReststimme(kandidat: Kandidat): boolean {
+  function hasAnyKennzeichenOrReststimme(kandidat: DseKandidat): boolean {
     return hasAnyKennzeichen(kandidat) || !!kandidat.reststimmen;
   }
 
-  function hasAnyKennzeichen(kandidat: Kandidat): boolean {
+  function hasAnyKennzeichen(kandidat: DseKandidat): boolean {
     return (
       kandidat.durchgestrichen ||
       !!kandidat.einzelstimmen ||
@@ -14,22 +14,43 @@ export function useKandidatTools() {
     );
   }
 
-  function getEinzelstimmenOrZero(kandidat: Kandidat) {
+  function hasOnlyReststimme(kandidat: PersistedKandidat): boolean {
+    return (
+      _hasReststimmen(kandidat) &&
+      !kandidat.isDiscarded &&
+      !_hasEinzelstimmen(kandidat) &&
+      !_hasUngueltigStimmen(kandidat)
+    );
+  }
+
+  function _hasEinzelstimmen(kandidat: PersistedKandidat): boolean {
+    return !!kandidat.votesByVoter;
+  }
+
+  function _hasReststimmen(kandidat: PersistedKandidat): boolean {
+    return !!kandidat.votesByWahlvorschlag;
+  }
+
+  function _hasUngueltigStimmen(kandiat: PersistedKandidat): boolean {
+    return !!kandiat.invalidVotes;
+  }
+
+  function getEinzelstimmenOrZero(kandidat: DseKandidat) {
     return kandidat.einzelstimmen ?? 0;
   }
 
-  function getUngueltigeStimmenOrZero(kandidat: Kandidat) {
+  function getUngueltigeStimmenOrZero(kandidat: DseKandidat) {
     return kandidat.ungueltigeStimmen ?? 0;
   }
 
-  function getTotalEinzelAndUngueltigeStimmen(kandidat: Kandidat) {
+  function getTotalEinzelAndUngueltigeStimmen(kandidat: DseKandidat) {
     return (
       getEinzelstimmenOrZero(kandidat) + getUngueltigeStimmenOrZero(kandidat)
     );
   }
 
   function getTotalEinzelstimmenOfKandidatenWithSameId(
-    kandidat: Kandidat
+    kandidat: DseKandidat
   ): number {
     const kandidatenWithSameId = kandidat.owningWahlvorschlag.kandidaten.filter(
       (wahlvorschlagKandidat) =>
@@ -43,7 +64,7 @@ export function useKandidatTools() {
   }
 
   function getTotalEinzelAndUngueltigeStimmenOfKandidatenWithSameId(
-    kandidat: Kandidat
+    kandidat: DseKandidat
   ) {
     const kandidatenWithSameId = kandidat.owningWahlvorschlag.kandidaten.filter(
       (wahlvorschlagKandidat) =>
@@ -95,6 +116,7 @@ export function useKandidatTools() {
     getUngueltigeStimmenOrZero,
     hasAnyKennzeichen,
     hasAnyKennzeichenOrReststimme,
+    hasOnlyReststimme,
     sortAndDeepCloneKandidaten,
   };
 }

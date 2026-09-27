@@ -1,4 +1,4 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWahlvorschlagTools } from "@/composables/dse/stimmzettelerfassung/wahlvorschlagTools.ts";
@@ -24,7 +24,7 @@ vi.mock(
 const {
   preparePersistedStimmzettelWahlvorschlag,
   createPersistedStimmzettelKandidat,
-} = useStimmzettelTestDataFactory();
+} = usePersistedStimmzettelTestDataFactory();
 
 describe("useWahlvorschlagTools.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlvorschlagTools>;

@@ -133,7 +133,7 @@ class SecurityConfigurationTest {
 
   @Test
   void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
-    api.perform(get("/swagger-ui/index.html")).andExpect(status().isOk());
+    api.perform(get("/webjars/swagger-ui/index.html")).andExpect(status().isOk());
   }
 
   @Nested
@@ -1016,6 +1016,26 @@ class SecurityConfigurationTest {
 
         Mockito.verify(teamStatusService).saveTeamStatus(notNull(), notNull());
       }
+    }
+  }
+
+  @Nested
+  class ReopenStimmzettelerfassung {
+    private static final String URL =
+        "/stimmzettelerfassung/wahl/wahlID/wahlbezirk/wahlbezirkID/team/teamID/status/inBearbeitung";
+
+    @WithAnonymousUser
+    @Test
+    void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+      val request = MockMvcRequestBuilders.post(URL).with(csrf());
+      api.perform(request).andExpect(status().isUnauthorized());
+    }
+
+    @WithMockUser
+    @Test
+    void should_returnCreated_when_userIsAuthenticated() throws Exception {
+      val request = MockMvcRequestBuilders.post(URL).with(csrf());
+      api.perform(request).andExpect(status().isCreated());
     }
   }
 }

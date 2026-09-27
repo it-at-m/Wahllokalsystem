@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { ref } from "vue";
 
@@ -52,7 +52,7 @@ import {
 
 const props = defineProps<{
   teamId: string;
-  stimmzettelListe: Stimmzettel[];
+  stimmzettelListe: PersistedStimmzettel[];
   stimmzettelLoading: boolean;
   bearbeitungDisabled: boolean;
 }>();
@@ -72,10 +72,10 @@ const { isVorgemerktFuerBeschluss, getVormerkungsgrund } =
   useStimmzettelTools();
 
 const emit = defineEmits<{
-  stimmzettelBearbeiten: [newValue: Stimmzettel];
+  stimmzettelBearbeiten: [newValue: PersistedStimmzettel];
 }>();
 
-function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
+function onStimmzettelBearbeitenClicked(stimmzettel: PersistedStimmzettel) {
   emit("stimmzettelBearbeiten", stimmzettel);
 }
 </script>

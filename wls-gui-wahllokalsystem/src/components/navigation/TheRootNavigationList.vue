@@ -29,7 +29,9 @@
       title="Ereignisse"
       :to="routeWithName(ROUTE_EREIGNISSE)"
     />
-    <the-scores-list-items />
+    <the-scores-list-items
+      v-if="hasRoleSchriftfuehrung || (hasRoleErfassungsteam && isDseAktiv)"
+    />
   </v-list>
 </template>
 
@@ -47,11 +49,14 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { routeWithName } = useNavigationService();
 const { isUWB, isBWB } = storeToRefs(useUserStore());
 const { isWahlvorstandErfasst } = storeToRefs(useWorkflowStore());
-const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
+const { isDseAktiv } = storeToRefs(useInfomanagementStore());
+const { hasRoleSchriftfuehrung, hasRoleErfassungsteam } =
+  storeToRefs(useUserStore());
 </script>

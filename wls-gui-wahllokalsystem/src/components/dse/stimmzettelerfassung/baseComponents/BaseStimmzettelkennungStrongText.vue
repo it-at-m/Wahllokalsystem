@@ -1,6 +1,11 @@
 <template>
-  <div class="mt-3 text-h1 font-weight-bold text-center">
-    {{ teamName }} {{ stimmzettelkennung }}
+  <div
+    :class="[
+      'mt-1 font-weight-bold text-center',
+      compact ? 'text-h4' : 'text-h1',
+    ]"
+  >
+    {{ teamName }}{{ stimmzettelkennung }}
   </div>
 </template>
 
@@ -13,6 +18,11 @@ defineProps({
   stimmzettelkennung: {
     type: Number,
     required: true,
+  },
+  compact: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 </script>

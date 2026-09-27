@@ -143,8 +143,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
@@ -163,7 +163,7 @@ import TheStimmzettelContent from "@/components/dse/stimmzettelerfassung/TheStim
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
@@ -172,7 +172,7 @@ const isDialogVisibleModel = defineModel("modelValue", {
 
 const properties = defineProps({
   stimmzettel: {
-    type: Object as PropType<Stimmzettel>,
+    type: Object as PropType<PersistedStimmzettel>,
     required: true,
   },
   wahlvorschlaege: {
@@ -195,8 +195,8 @@ const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
 
 const emit = defineEmits<{
   cancel: [];
-  confirmClose: [stimmzettel: Stimmzettel];
-  confirmNext: [stimmzettel: Stimmzettel];
+  confirmClose: [stimmzettel: PersistedStimmzettel];
+  confirmNext: [stimmzettel: PersistedStimmzettel];
 }>();
 
 defineExpose({ focusCommandProcessingTextField });
@@ -280,7 +280,7 @@ const latestChangedWahlvorschlagId = computed<string | null>(
   () =>
     changeHistory.value.lastUsedWahlvorschlag?.value?.wahlvorschlagID ?? null
 );
-const latestChangedKandidat = computed<Kandidat | null>(
+const latestChangedKandidat = computed<DseKandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
 );
 const stimmzettelGueltigkeit = computed(

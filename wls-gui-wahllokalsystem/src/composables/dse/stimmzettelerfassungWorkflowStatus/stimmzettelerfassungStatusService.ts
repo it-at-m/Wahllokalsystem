@@ -10,6 +10,9 @@ import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useStimmzettelerfassungStatusMapper } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { addNotification } = useUserNotificationService();
@@ -17,6 +20,7 @@ const { dtoToModel, modelToDto } = useStimmzettelerfassungStatusMapper();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 
 export function useDseWorkflowStatusService() {
+  const { axiosConfigWrapper } = useCommonApiUtils();
   const stimmzettelerfassungControllerApi =
     new StimmzettelerfassungControllerApi(
       new Configuration({ basePath: ERGEBNISMELDUNG_SERVICE_API_URL })
@@ -34,11 +38,36 @@ export function useDseWorkflowStatusService() {
       const response =
         await stimmzettelerfassungControllerApi.getStimmzettelerfassungStatus(
           wahlID,
-          wahlbezirkID
+          wahlbezirkID,
+          axiosConfigWrapper().requestAsOnlineOnly()
         );
 
       const responseData = getNullOn204OrElseResponseData(response);
-      return responseData ? dtoToModel(responseData) : null;
+      const result = responseData ? dtoToModel(responseData) : null;
+
+      const { setStepDone } = useWorkflowStore();
+
+      if (StimmzettelerfassungStatusEnum.SteAbgeschlossen == result?.status) {
+        setStepDone(
+          wahlID,
+          wahlbezirkID,
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+        );
+      }
+      if (StimmzettelerfassungStatusEnum.BeAbgeschlossen == result?.status) {
+        setStepDone(
+          wahlID,
+          wahlbezirkID,
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+        );
+        setStepDone(
+          wahlID,
+          wahlbezirkID,
+          MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG
+        );
+      }
+
+      return result;
     } catch (error) {
       if (sendNotification) {
         addNotification(

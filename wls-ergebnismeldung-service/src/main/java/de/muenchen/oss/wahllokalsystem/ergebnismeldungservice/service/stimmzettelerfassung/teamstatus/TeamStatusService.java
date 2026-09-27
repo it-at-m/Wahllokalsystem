@@ -71,4 +71,24 @@ public class TeamStatusService {
         .map(erfassungTeamStatusModelMapper::toEntryModel)
         .collect(Collectors.toList());
   }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungTeamstatus')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+          + " and ("
+          + "@teamIDPermissionEvaluator.tokenUserteamIdMatches(#teamID, authentication)"
+          + " or hasAuthority('WLS_WAHLVORSTAND')"
+          + ")")
+  @Transactional
+  public void reopenStimmzettelerfassung(
+      final String wahlID,
+      @P("wahlbezirkID") final String wahlbezirkID,
+      @P("teamID") final String teamID) {
+    saveTeamStatus(
+        new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
+        ErfassungTeamStatusModel.IN_BEARBEITUNG);
+
+    stimmzettelerfassungService.registerStimmzettelerfassungStart(
+        new BezirkUndWahlID(wahlID, wahlbezirkID));
+  }
 }

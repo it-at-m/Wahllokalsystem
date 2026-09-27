@@ -5,7 +5,7 @@
   />
 </template>
 <script setup lang="ts">
-import type { StimmzettelGueltigkeitEnum } from "@/types/dse/persistedStimmzettel/StimmzettelGueltigkeitEnum.ts";
+import type { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import type { PropType } from "vue";
 
 import { computed } from "vue";

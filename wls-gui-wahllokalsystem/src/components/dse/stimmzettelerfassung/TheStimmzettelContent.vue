@@ -39,14 +39,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 
 import BaseWahlvorschlagCard from "./baseComponents/BaseWahlvorschlagCard.vue";
 
 defineProps<{
   activeWahlvorschlagId: string | null;
-  activeKandidat: Kandidat | null;
-  wahlvorschlaege: Wahlvorschlag[];
+  activeKandidat: DseKandidat | null;
+  wahlvorschlaege: DseWahlvorschlag[];
 }>();
 </script>

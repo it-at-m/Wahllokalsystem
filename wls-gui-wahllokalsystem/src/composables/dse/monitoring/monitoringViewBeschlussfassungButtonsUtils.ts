@@ -21,14 +21,15 @@ export function useMonitoringViewBeschlussfassungButtonsUtils(
       ) && teamstatusList.value.length > 0
   );
 
-  const isMoveOnToBeschlussfassungDisabled = computed(
-    () =>
+  const isMoveOnToBeschlussfassungDisabled = computed(() => {
+    return (
       !isBeschlussfassungBtnActive.value ||
       workflowStatus.value?.status ===
         StimmzettelerfassungStatusEnum.BeAbgeschlossen ||
       isTeamStatusListLoading.value ||
       isWorkflowStatusLoading.value
-  );
+    );
+  });
 
   const isBeschlussfassungContinueBtnVisible = computed(
     () =>

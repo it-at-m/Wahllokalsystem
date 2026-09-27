@@ -155,4 +155,19 @@ class StimmzettelerfassungTeamStatusControllerTest {
       Assertions.assertThat(result.getBody()).isNull();
     }
   }
+
+  @Nested
+  class ReopenStimmzettelerfassung {
+
+    @Test
+    void should_setTeamAndWorkflowStatusToInBearbeitung_when_called() {
+      val wahlID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+      val teamID = Instancio.create(String.class);
+
+      underTest.reopenStimmzettelerfassung(wahlID, wahlbezirkID, teamID);
+
+      Mockito.verify(teamStatusService).reopenStimmzettelerfassung(wahlID, wahlbezirkID, teamID);
+    }
+  }
 }

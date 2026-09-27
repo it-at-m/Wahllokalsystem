@@ -1,14 +1,20 @@
-import { useStimmzettelTestDataFactory } from "@tests/utils/dse/StimmzettelTestDataFactory.ts";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
 const {
-  createStimmzettelWahlvorschlag,
-  prepareStimmzettelKandidat,
-  prepareStimmzettelKandidatOfWahlvorschlag,
-  preparePersistedStimmzettelKandidat,
-} = useStimmzettelTestDataFactory();
+  createDseWahlvorschlag,
+  prepareDseKandidat,
+  prepareDseKandidatOfDseWahlvorschlag,
+} = useDseStimmzettelTestDataFactory();
+
+const { preparePersistedStimmzettelKandidat } =
+  usePersistedStimmzettelTestDataFactory();
+
+const { generateRandomNumber } = useCommonTestDataFactory();
 
 describe("kandidatTools.ts", () => {
   let unitUnderTest: ReturnType<typeof useKandidatTools>;
@@ -19,7 +25,7 @@ describe("kandidatTools.ts", () => {
 
   describe("hasAnyKennzeichen", () => {
     it("should_returnTrue_when_durchgestrichenIsTrue", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareDseKandidat()
         .durchgestrichen(true)
         .einzelstimmen(null)
         .ungueltigeStimmen(null)
@@ -29,7 +35,7 @@ describe("kandidatTools.ts", () => {
     });
 
     it("should_returnTrue_when_isDurchgestrichenAndAllStimmenLargerThan0", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareDseKandidat()
         .durchgestrichen(true)
         .einzelstimmen(1)
         .ungueltigeStimmen(1)
@@ -41,7 +47,7 @@ describe("kandidatTools.ts", () => {
     it.each([1, 10])(
       "should_returnTrue_when_einzelstimmenIsLargerThan0By'%d'",
       (einzelstimmen) => {
-        const kandidat = prepareStimmzettelKandidat()
+        const kandidat = prepareDseKandidat()
           .durchgestrichen(false)
           .einzelstimmen(einzelstimmen)
           .ungueltigeStimmen(null)
@@ -54,7 +60,7 @@ describe("kandidatTools.ts", () => {
     it.each([1, 10])(
       "should_returnTrue_when_ungueltigeStimmenIsLargerThan0By'%d'",
       (listenstimmen) => {
-        const kandidat = prepareStimmzettelKandidat()
+        const kandidat = prepareDseKandidat()
           .durchgestrichen(false)
           .einzelstimmen(null)
           .ungueltigeStimmen(listenstimmen)
@@ -65,7 +71,7 @@ describe("kandidatTools.ts", () => {
     );
 
     it("should_returnFalse_when_isNotDurchgestrichenAndAllStimmenAreNull", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareDseKandidat()
         .durchgestrichen(false)
         .einzelstimmen(null)
         .ungueltigeStimmen(null)
@@ -75,7 +81,7 @@ describe("kandidatTools.ts", () => {
     });
 
     it("should_returnFalse_when_isNotDurchgestrichenAndAllStimmenAre0", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareDseKandidat()
         .durchgestrichen(false)
         .einzelstimmen(0)
         .ungueltigeStimmen(0)
@@ -87,7 +93,7 @@ describe("kandidatTools.ts", () => {
 
   describe("hasAnyKennzeichenOrReststimme", () => {
     it("should_returnTrue_when_durchgestrichenIsTrue", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareDseKandidat()
         .durchgestrichen(true)
         .einzelstimmen(null)
         .reststimmen(null)
@@ -100,7 +106,7 @@ describe("kandidatTools.ts", () => {
     });
 
     it("should_returnTrue_when_isDurchgestrichenAndAllStimmenLargerThan0", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareDseKandidat()
         .durchgestrichen(true)
         .einzelstimmen(1)
         .reststimmen(1)
@@ -115,7 +121,7 @@ describe("kandidatTools.ts", () => {
     it.each([1, 10])(
       "should_returnTrue_when_einzelstimmenIsLargerThan0By'%d'",
       (einzelstimmen) => {
-        const kandidat = prepareStimmzettelKandidat()
+        const kandidat = prepareDseKandidat()
           .durchgestrichen(false)
           .einzelstimmen(einzelstimmen)
           .reststimmen(null)
@@ -131,7 +137,7 @@ describe("kandidatTools.ts", () => {
     it.each([1, 10])(
       "should_returnTrue_when_reststimmenIsLargerThan0By'%d'",
       (reststimmen) => {
-        const kandidat = prepareStimmzettelKandidat()
+        const kandidat = prepareDseKandidat()
           .durchgestrichen(false)
           .einzelstimmen(null)
           .reststimmen(reststimmen)
@@ -147,7 +153,7 @@ describe("kandidatTools.ts", () => {
     it.each([1, 10])(
       "should_returnTrue_when_ungueltigeStimmenIsLargerThan0By'%d'",
       (listenstimmen) => {
-        const kandidat = prepareStimmzettelKandidat()
+        const kandidat = prepareDseKandidat()
           .durchgestrichen(false)
           .einzelstimmen(null)
           .reststimmen(null)
@@ -161,7 +167,7 @@ describe("kandidatTools.ts", () => {
     );
 
     it("should_returnFalse_when_isNotDurchgestrichenAndAllStimmenAreNull", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareDseKandidat()
         .durchgestrichen(false)
         .einzelstimmen(null)
         .reststimmen(null)
@@ -174,7 +180,7 @@ describe("kandidatTools.ts", () => {
     });
 
     it("should_returnFalse_when_isNotDurchgestrichenAndAllStimmenAre0", () => {
-      const kandidat = prepareStimmzettelKandidat()
+      const kandidat = prepareDseKandidat()
         .durchgestrichen(false)
         .einzelstimmen(0)
         .reststimmen(0)
@@ -187,6 +193,91 @@ describe("kandidatTools.ts", () => {
     });
   });
 
+  describe("hasOnlyReststimme", () => {
+    it("should_returnTrue_when_onlyReststimmenArePresentUsingNullForEinzelAndUngueltigeStimmen", () => {
+      const kandidat = preparePersistedStimmzettelKandidat()
+        .isDiscarded(false)
+        .votesByVoter(null)
+        .invalidVotes(null)
+        .votesByWahlvorschlag(1)
+        .build();
+
+      expect(unitUnderTest.hasOnlyReststimme(kandidat)).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_onlyMoreThanOneReststimmenArePresent", () => {
+      const kandidat = preparePersistedStimmzettelKandidat()
+        .isDiscarded(false)
+        .votesByVoter(null)
+        .invalidVotes(null)
+        .votesByWahlvorschlag(1 + generateRandomNumber(2))
+        .build();
+
+      expect(unitUnderTest.hasOnlyReststimme(kandidat)).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_onlyReststimmenArePresentUsingZeroForEinzelAndUngueltigeStimmen", () => {
+      const kandidat = preparePersistedStimmzettelKandidat()
+        .isDiscarded(false)
+        .votesByVoter(0)
+        .invalidVotes(0)
+        .votesByWahlvorschlag(1)
+        .build();
+
+      expect(unitUnderTest.hasOnlyReststimme(kandidat)).toStrictEqual(true);
+    });
+
+    it.each([
+      {
+        text: "reststimmenAreMissing",
+        isDiscarded: false,
+        votesByVoter: null,
+        invalidVotes: null,
+        votesByWahlvorschlag: null,
+      },
+      {
+        text: "reststimmenAreZero",
+        isDiscarded: false,
+        votesByVoter: null,
+        invalidVotes: null,
+        votesByWahlvorschlag: 0,
+      },
+      {
+        text: "kandidatIsDiscarded",
+        isDiscarded: true,
+        votesByVoter: null,
+        invalidVotes: null,
+        votesByWahlvorschlag: 1,
+      },
+      {
+        text: "einzelstimmenArePresent",
+        isDiscarded: false,
+        votesByVoter: 1,
+        invalidVotes: null,
+        votesByWahlvorschlag: 1,
+      },
+      {
+        text: "ungueltigeStimmenArePresent",
+        isDiscarded: false,
+        votesByVoter: null,
+        invalidVotes: 1,
+        votesByWahlvorschlag: 1,
+      },
+    ])(
+      "should_returnFalse_when_$text",
+      ({ isDiscarded, votesByVoter, invalidVotes, votesByWahlvorschlag }) => {
+        const kandidat = preparePersistedStimmzettelKandidat()
+          .isDiscarded(isDiscarded)
+          .votesByVoter(votesByVoter)
+          .invalidVotes(invalidVotes)
+          .votesByWahlvorschlag(votesByWahlvorschlag)
+          .build();
+
+        expect(unitUnderTest.hasOnlyReststimme(kandidat)).toStrictEqual(false);
+      }
+    );
+  });
+
   describe("getEinzelstimmenOrZero", () => {
     it.each([
       [null, 0],
@@ -195,7 +286,7 @@ describe("kandidatTools.ts", () => {
     ])(
       "should_return'%d'_when_einzelstimmenIs'%d'",
       (einzelstimmen, expectedResult) => {
-        const kandidat = prepareStimmzettelKandidat()
+        const kandidat = prepareDseKandidat()
           .einzelstimmen(einzelstimmen)
           .build();
 
@@ -214,7 +305,7 @@ describe("kandidatTools.ts", () => {
     ])(
       "should_return'%d'_when_ungueltigeStimmenIs'%d'",
       (ungueltigeStimmen, expectedResult) => {
-        const kandidat = prepareStimmzettelKandidat()
+        const kandidat = prepareDseKandidat()
           .ungueltigeStimmen(ungueltigeStimmen)
           .build();
 
@@ -227,28 +318,20 @@ describe("kandidatTools.ts", () => {
 
   describe("getTotalEinzelstimmenOfKandidatenWithSameId", () => {
     it("should_returnTotalOfKandidatenEinzelstimmenWithSameId_when_wahlvorschlagContainsDifferentKandidaten", () => {
-      const wahlvorschlag = createStimmzettelWahlvorschlag();
-      const firstKandidat = prepareStimmzettelKandidatOfWahlvorschlag(
-        wahlvorschlag
-      )
+      const wahlvorschlag = createDseWahlvorschlag();
+      const firstKandidat = prepareDseKandidatOfDseWahlvorschlag(wahlvorschlag)
         .kandidatId("same-kandidat-id")
         .einzelstimmen(2)
         .build();
-      const secondKandidat = prepareStimmzettelKandidatOfWahlvorschlag(
-        wahlvorschlag
-      )
+      const secondKandidat = prepareDseKandidatOfDseWahlvorschlag(wahlvorschlag)
         .kandidatId("same-kandidat-id")
         .einzelstimmen(null)
         .build();
-      const thirdKandidat = prepareStimmzettelKandidatOfWahlvorschlag(
-        wahlvorschlag
-      )
+      const thirdKandidat = prepareDseKandidatOfDseWahlvorschlag(wahlvorschlag)
         .kandidatId("different-kandidat-id")
         .einzelstimmen(3)
         .build();
-      const fourthKandidat = prepareStimmzettelKandidatOfWahlvorschlag(
-        wahlvorschlag
-      )
+      const fourthKandidat = prepareDseKandidatOfDseWahlvorschlag(wahlvorschlag)
         .kandidatId("same-kandidat-id")
         .einzelstimmen(4)
         .build();
@@ -267,29 +350,21 @@ describe("kandidatTools.ts", () => {
 
   describe("getTotalEinzelAndUngueltigeStimmenOfKandidatenWithSameId", () => {
     it("should_returnTotalOfKandidatenWithSameId_when_wahlvorschlagContainsDifferentKandidaten", () => {
-      const wahlvorschlag = createStimmzettelWahlvorschlag();
-      const firstKandidat = prepareStimmzettelKandidatOfWahlvorschlag(
-        wahlvorschlag
-      )
+      const wahlvorschlag = createDseWahlvorschlag();
+      const firstKandidat = prepareDseKandidatOfDseWahlvorschlag(wahlvorschlag)
         .kandidatId("same-kandidat-id")
         .einzelstimmen(2)
         .ungueltigeStimmen(null)
         .build();
-      const secondKandidat = prepareStimmzettelKandidatOfWahlvorschlag(
-        wahlvorschlag
-      )
+      const secondKandidat = prepareDseKandidatOfDseWahlvorschlag(wahlvorschlag)
         .kandidatId("same-kandidat-id")
         .einzelstimmen(null)
         .ungueltigeStimmen(1)
         .build();
-      const thirdKandidat = prepareStimmzettelKandidatOfWahlvorschlag(
-        wahlvorschlag
-      )
+      const thirdKandidat = prepareDseKandidatOfDseWahlvorschlag(wahlvorschlag)
         .kandidatId("different-kandidat-id")
         .build();
-      const fourthKandidat = prepareStimmzettelKandidatOfWahlvorschlag(
-        wahlvorschlag
-      )
+      const fourthKandidat = prepareDseKandidatOfDseWahlvorschlag(wahlvorschlag)
         .kandidatId("same-kandidat-id")
         .einzelstimmen(4)
         .ungueltigeStimmen(3)

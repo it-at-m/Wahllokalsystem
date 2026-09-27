@@ -3,7 +3,9 @@ import { storeToRefs } from "pinia";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useAppUtils() {
@@ -12,6 +14,7 @@ export function useAppUtils() {
   const { currentUserWahlMetadata, currentUserTeamName } =
     storeToRefs(useUserStore());
   const { addNotification } = useUserNotificationService();
+  const { setStepDone } = useWorkflowStore();
 
   async function initStimmzettelerfassungTeamStatus() {
     try {
@@ -29,6 +32,14 @@ export function useAppUtils() {
             currentUserTeamName.value,
             { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
             false
+          );
+        } else if (
+          StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN == teamStatus.status
+        ) {
+          setStepDone(
+            metadata.wahlID,
+            metadata.wahlbezirkID,
+            MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
           );
         }
       }

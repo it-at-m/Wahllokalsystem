@@ -3,7 +3,7 @@ import type {
   RouteLocationNormalizedGeneric,
 } from "vue-router";
 
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
 import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -106,7 +106,7 @@ export function useNavigationGuards() {
       }
 
       const { loadErfassungTeamStatus } =
-        useStimmzettelerfassungTeamStatusService();
+        useStimmzettelerfassungTeamStatusFetchService();
 
       try {
         const status = await loadErfassungTeamStatus(

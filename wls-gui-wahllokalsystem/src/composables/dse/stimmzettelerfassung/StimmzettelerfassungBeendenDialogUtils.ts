@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import router from "@/plugins/router.ts";
@@ -23,7 +23,7 @@ export function useStimmzettelerfassungBeendenDialogUtils(
   const { synchronizeOfflineData } = useDataSyncStore();
   const { currentUserTeamName } = storeToRefs(useUserStore());
   const { isSaving, postErfassungTeamStatus } =
-    useStimmzettelerfassungTeamStatusService();
+    useStimmzettelerfassungTeamStatusFetchService();
 
   const isSyncWidgetVisible = ref(false);
 

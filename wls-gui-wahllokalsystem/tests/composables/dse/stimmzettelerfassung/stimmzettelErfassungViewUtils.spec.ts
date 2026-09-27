@@ -42,12 +42,12 @@ vi.mock("vue", async (importOriginal) => {
 });
 
 vi.mock(
-  import("@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts"),
+  import("@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
     return {
       useStimmzettelerfassungTeamStatusService: () => ({
-        ...mod.useStimmzettelerfassungTeamStatusService(),
+        ...mod.useStimmzettelerfassungTeamStatusFetchService(),
         loadErfassungTeamStatus: mockDefinitions.loadErfassungTeamStatus,
         postErfassungTeamStatus: mockDefinitions.postErfassungTeamStatus,
       }),

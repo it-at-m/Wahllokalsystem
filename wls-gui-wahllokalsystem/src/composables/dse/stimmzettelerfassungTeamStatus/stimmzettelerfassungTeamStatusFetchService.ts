@@ -14,7 +14,7 @@ import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-export function useStimmzettelerfassungTeamStatusService() {
+export function useStimmzettelerfassungTeamStatusFetchService() {
   const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
     useCommonApiUtils();
   const { addNotification } = useUserNotificationService();

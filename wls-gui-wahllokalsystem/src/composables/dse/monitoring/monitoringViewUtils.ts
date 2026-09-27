@@ -2,8 +2,8 @@ import { storeToRefs } from "pinia";
 import { onActivated } from "vue";
 
 import { useMonitoringViewBeschlussfassungButtonsUtils } from "@/composables/dse/monitoring/monitoringViewBeschlussfassungButtonsUtils.ts";
+import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
 import { useStimmzettelerfassungTeamStatusListState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts";
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import router from "@/plugins/router.ts";
@@ -42,7 +42,7 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     const { currentUserTeamName } = storeToRefs(useUserStore());
     const { getNextRoute } = useNavigationService();
 
-    await useStimmzettelerfassungTeamStatusService().reopenStimmzettelerfassung(
+    await useStimmzettelerfassungTeamStatusFetchService().reopenStimmzettelerfassung(
       wahlID,
       wahlbezirkID,
       teamID,

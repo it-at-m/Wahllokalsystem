@@ -2,14 +2,14 @@ import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzette
 
 import { readonly, ref } from "vue";
 
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
 
 export function useStimmzettelerfassungTeamStatusListState(
   wahlID: string,
   wahlbezirkID: string
 ) {
   const { loadErfassungTeamStatusListe } =
-    useStimmzettelerfassungTeamStatusService();
+    useStimmzettelerfassungTeamStatusFetchService();
 
   const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);
   const isTeamStatusListLoading = ref(false);

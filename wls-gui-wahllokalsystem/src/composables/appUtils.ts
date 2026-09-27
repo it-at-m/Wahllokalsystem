@@ -1,6 +1,6 @@
 import { storeToRefs } from "pinia";
 
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -10,7 +10,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 export function useAppUtils() {
   const { loadErfassungTeamStatus, postErfassungTeamStatus } =
-    useStimmzettelerfassungTeamStatusService();
+    useStimmzettelerfassungTeamStatusFetchService();
   const { currentUserWahlMetadata, currentUserTeamName } =
     storeToRefs(useUserStore());
   const { addNotification } = useUserNotificationService();

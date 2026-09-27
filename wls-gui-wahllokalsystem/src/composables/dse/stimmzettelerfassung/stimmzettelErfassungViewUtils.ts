@@ -6,10 +6,11 @@ import { onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewButtonStateUtils.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
-const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
+const erfassungTeamStatusService =
+  useStimmzettelerfassungTeamStatusFetchService();
 
 const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelTools();
 

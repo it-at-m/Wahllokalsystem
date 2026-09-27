@@ -6,7 +6,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => {
@@ -94,7 +94,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
     loadErfassungTeamStatus,
     loadErfassungTeamStatusListe,
     postErfassungTeamStatus,
-  } = useStimmzettelerfassungTeamStatusService();
+  } = useStimmzettelerfassungTeamStatusFetchService();
 
   beforeEach(() => {
     vi.useFakeTimers({});

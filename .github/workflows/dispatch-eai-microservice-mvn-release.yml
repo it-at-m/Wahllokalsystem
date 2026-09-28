@@ -55,7 +55,7 @@ jobs:
         with:
           cache: 'maven'
           cache-dependency-path: '${{ github.event.inputs.service }}/pom.xml'
-          java-version: '17.0.20+8'
+          java-version: '17.0.20+101'
           distribution: 'temurin'
 
       - name: build jar without tests

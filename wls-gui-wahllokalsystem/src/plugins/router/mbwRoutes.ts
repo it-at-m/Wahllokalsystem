@@ -78,6 +78,7 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
     component: BeschlussfassungView,
     beforeEnter: [
       requireRoleSchriftfuehrung,
+      requiresIsDseAktiv,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG),
       isStepDoneInElectionState(

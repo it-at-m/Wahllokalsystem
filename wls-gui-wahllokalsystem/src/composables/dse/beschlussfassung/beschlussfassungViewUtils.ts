@@ -6,11 +6,14 @@ import { useAllStimmzettelOfWahlbezirkState } from "@/composables/dse/allStimmze
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
 const { isSamePersistedStimmzettel } = useStimmzettelTools();
+const { addNotification } = useUserNotificationService();
 
 export function useBeschlussfassungViewUtils(
   wahlID: string,
@@ -76,8 +79,13 @@ export function useBeschlussfassungViewUtils(
       );
       await loadStimmzettelOfWahlbezirk();
     } else {
+      const stimmzettelkennung = `${stimmzettelToSave.teamID} ${stimmzettelToSave.stimmzettelkennung}`;
+      addNotification(
+        `Fehler beim Speichern des Beschlusses zu Stimmzettel ${stimmzettelkennung}.`,
+        UserNotificationCategoryEnum.ERROR
+      );
       throw new Error(
-        `Fehler: Stimmzettel mit Kennung ${stimmzettelToSave.teamID} ${stimmzettelToSave.stimmzettelkennung} nicht gefunden.`
+        `Fehler: Stimmzettel mit Kennung ${stimmzettelkennung} nicht gefunden.`
       );
     }
   }

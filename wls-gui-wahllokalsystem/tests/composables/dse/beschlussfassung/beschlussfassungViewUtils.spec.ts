@@ -8,6 +8,7 @@ import { ref } from "vue";
 import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
@@ -26,6 +27,7 @@ const mockDefinitions = await vi.hoisted(async () => {
     loadStimmzettelOfWahlbezirk: vi.fn(),
     getStimmzettel: vi.fn(),
     saveStimmzettel: vi.fn(),
+    addNotification: vi.fn(),
   };
 });
 
@@ -87,6 +89,15 @@ vi.mock("@/composables/dse/stimmzettelerfassung/stimmzettelService.ts", () => ({
     getAnzahlStimmzettel: vi.fn(),
   }),
 }));
+
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 describe("beschlussfassungViewUtils.ts", () => {
   const { preparePersistedStimmzettel } =
@@ -333,6 +344,9 @@ describe("beschlussfassungViewUtils.ts", () => {
       expect(savedList).toHaveLength(2);
       expect(savedList[0]).toBe(s1);
       expect(savedList[1]).toBe(stimmzettelToSave);
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
     });
 
     it("should_throwError_when_calledWithStimmzettelNotFoundInTeamStimmzettelList", async () => {
@@ -360,6 +374,9 @@ describe("beschlussfassungViewUtils.ts", () => {
       );
 
       expect(mockDefinitions.saveStimmzettel).not.toHaveBeenCalled();
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.ERROR],
+      ]);
     });
   });
 });

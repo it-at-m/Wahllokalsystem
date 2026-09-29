@@ -325,6 +325,9 @@ describe("beschlussfassungViewUtils.ts", () => {
         wahlbezirkID
       );
       expect(mockDefinitions.saveStimmzettel.mock.calls[0][2]).toBe(teamID);
+      expect(
+        mockDefinitions.loadStimmzettelOfWahlbezirk
+      ).toHaveBeenCalledOnce();
       const savedList = mockDefinitions.saveStimmzettel.mock.calls[0][3];
       expect(Array.isArray(savedList)).toBe(true);
       expect(savedList).toHaveLength(2);

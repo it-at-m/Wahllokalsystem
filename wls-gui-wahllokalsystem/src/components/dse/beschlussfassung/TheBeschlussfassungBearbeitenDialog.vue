@@ -97,17 +97,17 @@ function onCancelClicked() {
 }
 
 function onSaveClicked() {
-  const stimmzettelToSave = stimmzettel.value;
-  if (stimmzettelToSave) {
-    stimmzettelToSave.gueltigkeit = beschlussDetails.value.isGueltig
+  if (!stimmzettel.value) return;
+  emit("save", {
+    ...stimmzettel.value,
+    gueltigkeit: beschlussDetails.value.isGueltig
       ? StimmzettelGueltigkeitEnum.Valid
-      : StimmzettelGueltigkeitEnum.Invalid;
-    stimmzettelToSave.beschlussfassung = {
+      : StimmzettelGueltigkeitEnum.Invalid,
+    beschlussfassung: {
       pro: abstimmungsergebnis.value.stimmenDafuer ?? 0,
       contra: abstimmungsergebnis.value.stimmenDagegen ?? 0,
       text: beschlussDetails.value.beschlussText,
-    };
-    emit("save", stimmzettelToSave);
-  }
+    },
+  });
 }
 </script>

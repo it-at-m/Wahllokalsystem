@@ -74,6 +74,7 @@ export function useBeschlussfassungViewUtils(
         stimmzettelToSave.teamID,
         teamStimmzettelList
       );
+      await loadStimmzettelOfWahlbezirk();
     } else {
       throw new Error(
         `Fehler: Stimmzettel mit Kennung ${stimmzettelToSave.teamID} ${stimmzettelToSave.stimmzettelkennung} nicht gefunden.`

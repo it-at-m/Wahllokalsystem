@@ -13,6 +13,7 @@
         <base-beschlussfassung-uebersicht-table
           :stimmzettel-liste="stimmzettelForBeschlussfassung"
           :stimmzettel-loading="isStimmzettelForBeschlussLoading"
+          :is-beschluss-bearbeiten-disabled="isBeschlussBearbeitenDisabled"
           @edit-beschluss-stimmzettel="onBeschlussBearbeitenClicked($event)"
       /></v-card-text>
       <v-card-actions>
@@ -89,6 +90,7 @@ const {
   isStimmzettelForBeschlussLoading,
   stimmzettelForBeschlussfassung,
   isBeschlussfassungBeendenButtonDisabled,
+  isBeschlussBearbeitenDisabled,
   completedStimmzettelForBeschlussfassung,
 } = useBeschlussfassungViewUtils(wahlID, wahlbezirkID);
 const {

@@ -160,7 +160,7 @@ Verwendete Muster: z.B. `SecurityConfigurationTest` im Admin-Service.
 - Pro Endpoint eine `@Nested`-Klasse.
 - Für jeden Endpoint:
   - `@WithAnonymousUser` → Status `401` (Unauthorized).
-  - `@WithMockUser` → Status `200`/`204` und Verifikation der Service-Aufrufe:
+  - `@WithMockUser` → Status `200`/`201`/`204` und Verifikation der Service-Aufrufe:
     ```java
     @WithMockUser
     @Test

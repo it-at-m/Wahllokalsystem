@@ -165,83 +165,90 @@ Auch wenn die Anfrage den Fokus auf Composables legt, soll der Skill Komponenten
 1. **Mounting mit Vuetify / Pinia / Router**
    - Beispiel mit Vuetify-only:
 
-     ```ts
-     import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
-     import { describe, it, expect, beforeEach, afterEach } from "vitest";
-     import { VBtn } from "vuetify/components";
+      ```ts
+      import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
+      import { describe, it, expect, beforeEach, afterEach } from "vitest";
+      import { VBtn } from "vuetify/components";
 
-     import WlsExampleDialog from "@/components/common/WlsExampleDialog.vue";
-     import vuetify from "@/plugins/vuetify.ts";
+      import {
+        COMPONENT_EVENT_TESTS,
+        COMPONENT_RENDER_TESTS,
+        stubVisualViewport,
+      } from "@tests/utils/testutils.ts";
+      import WlsExampleDialog from "@/components/common/WlsExampleDialog.vue";
+      import vuetify from "@/plugins/vuetify.ts";
 
-     describe("WlsExampleDialog.vue", () => {
-       let wrapper: VueWrapper;
+      describe("WlsExampleDialog.vue", () => {
+        let wrapper: VueWrapper;
 
-       beforeEach(() => {
-         wrapper = mount(WlsExampleDialog, {
-           attachTo: document.body,
-           global: {
-             plugins: [vuetify],
-           },
-           props: {
-             modelValue: false,
-           },
-         });
-       });
+        stubVisualViewport();
 
-       afterEach(() => {
-         if (wrapper) {
-           wrapper.unmount();
-         }
-         document.body.innerHTML = "";
-       });
+        beforeEach(() => {
+          wrapper = mount(WlsExampleDialog, {
+            global: {
+              plugins: [vuetify],
+              stubs: {
+                // Render teleport content within the mounted wrapper.
+                teleport: true,
+              },
+            },
+            props: {
+              modelValue: false,
+            },
+          });
+        });
 
-       it(
-         "should_notRenderDialog_when_modelValueIsFalse",
-         async () => {
-           await flushPromises();
+        afterEach(() => {
+          if (wrapper) {
+            wrapper.unmount();
+          }
+        });
 
-           expect(
-             wrapper.find('[data-test="wls-example-dialog"]').exists()
-           ).toBe(false);
-         }
-       );
+        describe(COMPONENT_RENDER_TESTS, () => {
+          it("should_notRenderDialog_when_modelValueIsFalse", async () => {
+            await flushPromises();
 
-       it(
-         "should_renderDialog_when_modelValueIsTrue",
-         async () => {
-           await wrapper.setProps({ modelValue: true });
+            expect(
+              wrapper.find('[data-test="wls-example-dialog"]').exists()
+            ).toBe(false);
+          });
 
-           await flushPromises();
+          it("should_renderDialog_when_modelValueIsTrue", async () => {
+            await wrapper.setProps({ modelValue: true });
 
-           expect(
-             wrapper.find('[data-test="wls-example-dialog"]').exists()
-           ).toBe(true);
-         }
-       );
+            await flushPromises();
 
-       it(
-         "should_emitUpdateModelValueFalse_when_confirmButtonClicked",
-         async () => {
-           await wrapper.setProps({ modelValue: true });
-           await flushPromises();
+            expect(
+              wrapper.find('[data-test="wls-example-dialog"]').exists()
+            ).toBe(true);
+          });
+        });
 
-           const confirmButton = wrapper
-             .findAllComponents(VBtn)
-             .find(
-               (btn) =>
-                 btn.attributes("data-test") ===
-                 "wls-example-dialog-confirm"
-             );
+        describe(COMPONENT_EVENT_TESTS, () => {
+          it(
+            "should_emitUpdateModelValueFalse_when_confirmButtonClicked",
+            async () => {
+              await wrapper.setProps({ modelValue: true });
+              await flushPromises();
 
-           await confirmButton?.trigger("click");
+              const confirmButton = wrapper
+                .findAllComponents(VBtn)
+                .find(
+                  (btn) =>
+                    btn.attributes("data-test") ===
+                    "wls-example-dialog-confirm"
+                );
 
-           expect(wrapper.emitted("update:modelValue")).toStrictEqual([
-             [false],
-           ]);
-         }
-       );
-     });
-     ```
+              await confirmButton?.trigger("click");
+
+              expect(wrapper.emitted("update:modelValue")).toStrictEqual([
+                [false],
+              ]);
+            }
+          );
+        });
+      });
+      ```
 
 2. **Keine Snapshots**
    - Komponenten-Tests verwenden **nur** `exists`, `emitted`, `attributes`, `text`, Store-/Mock-Aufrufe, Router-Navigation etc.
@@ -271,7 +278,8 @@ Wenn der Agent mit diesem Skill Tests schreibt:
    - Keine Snapshots.
 
 2. Für Komponenten:
-   - Mount mit `vuetify`, ggf. `createTestingPinia` und Router-Mocks wie in bestehenden Tests.
-   - Selektiere Elemente mit `data-test`.
-   - Prüfe fachliches Verhalten (Sichtbarkeit, Events, Store-Aufrufe).
-   - Keine Snapshots, nur direkte Assertions.
+    - Mount mit `vuetify`, ggf. `createTestingPinia` und Router-Mocks wie in bestehenden Tests.
+    - Gruppiere Render- und Verhaltenstests mit `COMPONENT_RENDER_TESTS` bzw. `COMPONENT_EVENT_TESTS` aus `@tests/utils/testutils.ts`.
+    - Selektiere Elemente mit `data-test`.
+    - Prüfe fachliches Verhalten (Sichtbarkeit, Events, Store-Aufrufe).
+    - Keine Snapshots, nur direkte Assertions.

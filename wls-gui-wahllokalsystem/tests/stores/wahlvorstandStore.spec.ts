@@ -751,6 +751,73 @@ describe("wahlvorstandStore.ts", () => {
     });
   });
 
+  describe("anwesendeWahlvorstandsmitgliederAnzahl", () => {
+    it("should_returnZero_when_noMitgliedExists", () => {
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [];
+
+      expect(
+        unitUnderTest.anwesendeWahlvorstandsmitgliederAnzahl
+      ).toStrictEqual(0);
+    });
+
+    it("should_returnOnlyCountOfAnwesende_when_mitgliederHaveMixedAnwesenheiten", () => {
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+        prepareWahlvorstandsmitglied().anwesend(true).build(),
+        prepareWahlvorstandsmitglied().anwesend(false).build(),
+        prepareWahlvorstandsmitglied().anwesend(true).build(),
+        prepareWahlvorstandsmitglied().anwesend(false).build(),
+      ];
+
+      expect(
+        unitUnderTest.anwesendeWahlvorstandsmitgliederAnzahl
+      ).toStrictEqual(2);
+    });
+
+    it("should_updateCount_when_anwesenheitChanges", () => {
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+        prepareWahlvorstandsmitglied().anwesend(true).build(),
+        prepareWahlvorstandsmitglied().anwesend(false).build(),
+      ];
+
+      expect(
+        unitUnderTest.anwesendeWahlvorstandsmitgliederAnzahl
+      ).toStrictEqual(1);
+
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder[1].anwesend = true;
+      expect(
+        unitUnderTest.anwesendeWahlvorstandsmitgliederAnzahl
+      ).toStrictEqual(2);
+
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder[0].anwesend = false;
+      expect(
+        unitUnderTest.anwesendeWahlvorstandsmitgliederAnzahl
+      ).toStrictEqual(1);
+    });
+
+    it("should_updateCount_when_mitgliederListChanges", () => {
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+        prepareWahlvorstandsmitglied().anwesend(true).build(),
+      ];
+      expect(
+        unitUnderTest.anwesendeWahlvorstandsmitgliederAnzahl
+      ).toStrictEqual(1);
+
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder.push(
+        prepareWahlvorstandsmitglied().anwesend(true).build()
+      );
+      expect(
+        unitUnderTest.anwesendeWahlvorstandsmitgliederAnzahl
+      ).toStrictEqual(2);
+
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder.push(
+        prepareWahlvorstandsmitglied().anwesend(false).build()
+      );
+      expect(
+        unitUnderTest.anwesendeWahlvorstandsmitgliederAnzahl
+      ).toStrictEqual(2);
+    });
+  });
+
   function _addAnwesendeWahlvorstandsmitglieder(zahl: number) {
     for (let i = 1; i <= zahl; i++) {
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder.push(

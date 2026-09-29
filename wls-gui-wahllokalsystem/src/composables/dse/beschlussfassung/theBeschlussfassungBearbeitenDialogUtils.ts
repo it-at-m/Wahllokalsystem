@@ -39,10 +39,19 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
     beschlussText: "",
   });
 
+  const stimmzettelGueltigkeitAusBeschluss = ref<StimmzettelGueltigkeitEnum>(
+    StimmzettelGueltigkeitEnum.BeschlussAusstehend
+  );
+
   watch(
     stimmzettel,
     () => {
       if (!stimmzettel.value) return;
+
+      _resetAbstimmungsergebnis();
+      _resetBeschlussDetails(stimmzettel.value);
+      stimmzettelGueltigkeitAusBeschluss.value =
+        StimmzettelGueltigkeitEnum.BeschlussAusstehend;
 
       const beschlussfassung = stimmzettel.value.beschlussfassung;
       if (beschlussfassung) {
@@ -55,33 +64,15 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
           abstimmungIsUnentschieden: unentschieden,
           abstimmungIsUngueltig: false,
         };
-        beschlussDetails.value = {
-          isGueltig:
-            stimmzettel.value.gueltigkeit == StimmzettelGueltigkeitEnum.Valid,
-          beschlussgruende: [],
-          andererGrund: "",
-          andererGrundChecked: false,
-          beschlussText: "",
-        };
-      } else {
-        abstimmungsergebnis.value = {
-          stimmenDafuer: null,
-          stimmenDagegen: null,
-          hasWahlvorsteherVotedDafuer: false,
-          abstimmungIsUnentschieden: false,
-          abstimmungIsUngueltig: false,
-        };
-        beschlussDetails.value = {
-          isGueltig: isStimmzettelGueltigBasedOnVormerkungsgruenden(
-            stimmzettel.value
-          ),
-          beschlussgruende: [],
-          andererGrund: "",
-          andererGrundChecked: false,
-          beschlussText: "",
-        };
-        _rebuildBeschlussgruende();
+        beschlussDetails.value.beschlussText = beschlussfassung.text;
+        beschlussDetails.value.isGueltig =
+          stimmzettel.value.gueltigkeit == StimmzettelGueltigkeitEnum.Valid;
+
+        stimmzettelGueltigkeitAusBeschluss.value =
+          stimmzettel.value.gueltigkeit;
       }
+
+      _rebuildBeschlussgruende();
     },
     { immediate: true }
   );
@@ -112,7 +103,9 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
     beschlussDetails.value.andererGrundChecked =
       !!beschlussDetails.value.andererGrund;
 
-    beschlussDetails.value.beschlussText = _mergeAndReturnBeschlussText();
+    if (beschlussDetails.value.beschlussText == "") {
+      beschlussDetails.value.beschlussText = _mergeAndReturnBeschlussText();
+    }
   });
 
   function _rebuildBeschlussgruende() {
@@ -137,5 +130,29 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
     return [selectedGruende, andereGruende].filter(Boolean).join(", ");
   }
 
-  return { abstimmungsergebnis, beschlussDetails };
+  function _resetAbstimmungsergebnis() {
+    abstimmungsergebnis.value = {
+      stimmenDafuer: null,
+      stimmenDagegen: null,
+      hasWahlvorsteherVotedDafuer: false,
+      abstimmungIsUnentschieden: false,
+      abstimmungIsUngueltig: false,
+    };
+  }
+
+  function _resetBeschlussDetails(stimmzettel: PersistedStimmzettel) {
+    beschlussDetails.value = {
+      isGueltig: isStimmzettelGueltigBasedOnVormerkungsgruenden(stimmzettel),
+      beschlussgruende: [],
+      andererGrund: "",
+      andererGrundChecked: false,
+      beschlussText: "",
+    };
+  }
+
+  return {
+    abstimmungsergebnis,
+    beschlussDetails,
+    stimmzettelGueltigkeitAusBeschluss,
+  };
 }

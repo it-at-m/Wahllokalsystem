@@ -38,7 +38,7 @@
             </v-radio>
           </v-radio-group>
         </v-col>
-        <v-col>
+        <v-col v-if="!isBeschlussGefasst">
           <v-checkbox
             v-for="beschlussgrund in beschlussDetails.beschlussgruende"
             :key="beschlussgrund.grund"
@@ -58,6 +58,30 @@
               auto-grow
             />
           </div>
+        </v-col>
+        <v-col v-else>
+          <base-feedback-card
+            title="Beschluss wurde bereits gefasst"
+            type="success"
+            hide-icon
+          >
+            <div class="w-100 mt-2">
+              Beschlussergebnis ist:
+              {{ toText(stimmzettelGueltigkeitAusBeschluss) }}
+              <base-stimmzettel-gueltigkeit-icon
+                :gueltigkeit="stimmzettelGueltigkeitAusBeschluss"
+              />
+              <v-textarea
+                v-model="beschlussDetails.beschlussText"
+                label="Beschlusstext"
+                rows="1"
+                auto-grow
+                class="mt-2"
+              />
+              Bitte für einen neuen Beschluss den Text anpassen, die Gültigkeit
+              überprüfen, erneut abstimmen und anschließend speichern.
+            </div>
+          </base-feedback-card>
         </v-col>
       </v-row>
     </v-card-text>
@@ -167,13 +191,17 @@ import { storeToRefs } from "pinia";
 
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
+import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
+import { useStimmzettelGueltigkeitEnumTools } from "@/composables/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnumTools.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const { required, minNumber, maxNumber } = useRules();
 
 const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
+const { toText } = useStimmzettelGueltigkeitEnumTools();
 const { anwesendeWahlvorstandsmitgliederAnzahl } = storeToRefs(
   useWahlvorstandStore()
 );
@@ -183,6 +211,10 @@ const beschlussDetails =
 const abstimmungsergebnis = defineModel<BeschlussAbstimmungsergebnis>(
   "abstimmungsergebnis"
 );
+defineProps<{
+  stimmzettelGueltigkeitAusBeschluss: StimmzettelGueltigkeitEnum;
+  isBeschlussGefasst: boolean;
+}>();
 </script>
 
 <style scoped>

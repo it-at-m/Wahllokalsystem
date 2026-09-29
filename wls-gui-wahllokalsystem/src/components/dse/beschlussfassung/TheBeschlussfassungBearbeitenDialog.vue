@@ -29,6 +29,10 @@
           <the-beschluss-fassen-tab
             v-model:beschluss-details="beschlussDetails"
             v-model:abstimmungsergebnis="abstimmungsergebnis"
+            :stimmzettel-gueltigkeit-aus-beschluss="
+              stimmzettelGueltigkeitAusBeschluss
+            "
+            :is-beschluss-gefasst="isBeschlussGefasst"
           />
         </v-tabs-window-item>
         <v-tabs-window-item value="two" />
@@ -67,8 +71,11 @@ const isDialogVisibleModel = defineModel("modelValue", {
 const stimmzettel = defineModel<PersistedStimmzettel | undefined>(
   "stimmzettel"
 );
-const { abstimmungsergebnis, beschlussDetails } =
-  useTheBeschlussfassungBearbeitenDialogUtils(stimmzettel);
+const {
+  abstimmungsergebnis,
+  beschlussDetails,
+  stimmzettelGueltigkeitAusBeschluss,
+} = useTheBeschlussfassungBearbeitenDialogUtils(stimmzettel);
 
 const emit = defineEmits<{
   cancel: [];
@@ -86,6 +93,11 @@ const isBeschlussSpeichernButtonDisabled = computed(() => {
     ergebnis.stimmenDagegen == null
   );
 });
+const isBeschlussGefasst = computed(
+  () =>
+    stimmzettelGueltigkeitAusBeschluss.value !==
+    StimmzettelGueltigkeitEnum.BeschlussAusstehend
+);
 
 watch(isDialogVisibleModel, (isVisible) => {
   if (isVisible) {

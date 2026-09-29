@@ -158,6 +158,7 @@
             type="error"
           >
             <ul>
+              <li>Es dürfen keine negativen Stimmen vergeben werden.</li>
               <li>
                 Es müssen sich mindestens
                 <span class="font-weight-bold"> 3 </span> Personen an der

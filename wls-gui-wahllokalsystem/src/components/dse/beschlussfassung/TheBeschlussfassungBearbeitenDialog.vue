@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
@@ -75,6 +75,8 @@ const {
   abstimmungsergebnis,
   beschlussDetails,
   stimmzettelGueltigkeitAusBeschluss,
+  isBeschlussSpeichernButtonDisabled,
+  isBeschlussGefasst,
 } = useTheBeschlussfassungBearbeitenDialogUtils(stimmzettel);
 
 const emit = defineEmits<{
@@ -83,21 +85,6 @@ const emit = defineEmits<{
 }>();
 
 const tab = ref("one");
-const isBeschlussSpeichernButtonDisabled = computed(() => {
-  const ergebnis = abstimmungsergebnis.value;
-  return (
-    ergebnis.abstimmungIsUngueltig ||
-    (ergebnis.abstimmungIsUnentschieden &&
-      !ergebnis.hasWahlvorsteherVotedDafuer) ||
-    ergebnis.stimmenDafuer == null ||
-    ergebnis.stimmenDagegen == null
-  );
-});
-const isBeschlussGefasst = computed(
-  () =>
-    stimmzettelGueltigkeitAusBeschluss.value !==
-    StimmzettelGueltigkeitEnum.BeschlussAusstehend
-);
 
 watch(isDialogVisibleModel, (isVisible) => {
   if (isVisible) {

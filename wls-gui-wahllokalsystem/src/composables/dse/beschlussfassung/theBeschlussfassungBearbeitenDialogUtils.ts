@@ -4,7 +4,7 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
-import { ref, watch, watchEffect } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
@@ -42,6 +42,38 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
   const stimmzettelGueltigkeitAusBeschluss = ref<StimmzettelGueltigkeitEnum>(
     StimmzettelGueltigkeitEnum.BeschlussAusstehend
   );
+
+  const isBeschlussGefasst = computed(
+    () =>
+      stimmzettelGueltigkeitAusBeschluss.value !==
+      StimmzettelGueltigkeitEnum.BeschlussAusstehend
+  );
+
+  const isBeschlussSpeichernButtonDisabled = computed(() => {
+    const ergebnis = abstimmungsergebnis.value;
+    const valuesSelected =
+      beschlussDetails.value.beschlussgruende.some((grund) => grund.selected) ||
+      beschlussDetails.value.andererGrundChecked;
+
+    if (isBeschlussGefasst.value) {
+      return (
+        ergebnis.abstimmungIsUngueltig ||
+        (ergebnis.abstimmungIsUnentschieden &&
+          !ergebnis.hasWahlvorsteherVotedDafuer) ||
+        ergebnis.stimmenDafuer == null ||
+        ergebnis.stimmenDagegen == null
+      );
+    } else {
+      return (
+        !valuesSelected ||
+        ergebnis.abstimmungIsUngueltig ||
+        (ergebnis.abstimmungIsUnentschieden &&
+          !ergebnis.hasWahlvorsteherVotedDafuer) ||
+        ergebnis.stimmenDafuer == null ||
+        ergebnis.stimmenDagegen == null
+      );
+    }
+  });
 
   watch(
     stimmzettel,
@@ -92,6 +124,8 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
     const ungueltig =
       stimmenNotNull &&
       (total < 3 ||
+        dafuer < 1 ||
+        dagegen < 0 ||
         total > anwesendeWahlvorstandsmitgliederAnzahl.value ||
         dafuer < dagegen);
 
@@ -154,5 +188,7 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
     abstimmungsergebnis,
     beschlussDetails,
     stimmzettelGueltigkeitAusBeschluss,
+    isBeschlussSpeichernButtonDisabled,
+    isBeschlussGefasst,
   };
 }

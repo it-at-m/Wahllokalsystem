@@ -218,7 +218,7 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
     );
   });
 
-  describe("abstimmungsergebnis rules", () => {
+  describe("abstimmungsergebnis.ungueltig", () => {
     it("should_markUngueltig_when_totalStimmenLowerThan3", async () => {
       const stimmzettelRef = ref(
         preparePersistedStimmzettel().beschlussfassung(null).build()
@@ -233,9 +233,6 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
       expect(
         unitUnderTest.abstimmungsergebnis.value.abstimmungIsUngueltig
       ).toStrictEqual(true);
-      expect(
-        unitUnderTest.abstimmungsergebnis.value.abstimmungIsUnentschieden
-      ).toStrictEqual(false);
     });
 
     it("should_markUngueltig_when_totalStimmenHigherThanAnwesende", async () => {
@@ -271,6 +268,24 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
       ).toStrictEqual(true);
     });
 
+    it("should_markUngueltig_when_anyStimmeIsNegative", async () => {
+      const stimmzettelRef = ref(
+        preparePersistedStimmzettel().beschlussfassung(null).build()
+      );
+      const unitUnderTest =
+        useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelRef);
+
+      unitUnderTest.abstimmungsergebnis.value.stimmenDafuer = -1;
+      unitUnderTest.abstimmungsergebnis.value.stimmenDagegen = -1;
+      await nextTick();
+
+      expect(
+        unitUnderTest.abstimmungsergebnis.value.abstimmungIsUngueltig
+      ).toStrictEqual(true);
+    });
+  });
+
+  describe("abstimmungsergebnis.unentschieden", () => {
     it("should_markUnentschieden_when_stimmenAreEqualAndNotUngueltig", async () => {
       const stimmzettelRef = ref(
         preparePersistedStimmzettel().beschlussfassung(null).build()
@@ -283,11 +298,233 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
       await nextTick();
 
       expect(
-        unitUnderTest.abstimmungsergebnis.value.abstimmungIsUngueltig
-      ).toStrictEqual(false);
-      expect(
         unitUnderTest.abstimmungsergebnis.value.abstimmungIsUnentschieden
       ).toStrictEqual(true);
+    });
+  });
+
+  describe("isBeschlussSpeichernButtonDisabled", () => {
+    it("should_beTrue_when_beschlussAusstehendAndNoValuesSelectedEvenIfVotesAreValid", async () => {
+      const stimmzettelRef = ref(
+        preparePersistedStimmzettel().beschlussfassung(null).build()
+      );
+
+      mockDefinitions.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit.mockReturnValue(
+        {
+          andererGrund: "",
+          beschlussgruende: [{ grund: "A", selected: false }],
+        }
+      );
+
+      const unitUnderTest =
+        useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelRef);
+      await nextTick();
+
+      unitUnderTest.abstimmungsergebnis.value.stimmenDafuer = 3;
+      unitUnderTest.abstimmungsergebnis.value.stimmenDagegen = 2;
+      await nextTick();
+
+      expect(unitUnderTest.isBeschlussSpeichernButtonDisabled.value).toBe(true);
+    });
+
+    it("should_beFalse_when_beschlussAusstehendAndValuesSelectedAndVotesAreValid", async () => {
+      const stimmzettelRef = ref(
+        preparePersistedStimmzettel().beschlussfassung(null).build()
+      );
+
+      mockDefinitions.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit.mockReturnValue(
+        {
+          andererGrund: "",
+          beschlussgruende: [{ grund: "A", selected: true }],
+        }
+      );
+
+      const unitUnderTest =
+        useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelRef);
+      await nextTick();
+
+      unitUnderTest.abstimmungsergebnis.value.stimmenDafuer = 3;
+      unitUnderTest.abstimmungsergebnis.value.stimmenDagegen = 2;
+      await nextTick();
+
+      expect(unitUnderTest.isBeschlussSpeichernButtonDisabled.value).toBe(
+        false
+      );
+    });
+
+    it("should_beTrue_when_beschlussAusstehendAndVotesAreUngueltig", async () => {
+      const stimmzettelRef = ref(
+        preparePersistedStimmzettel().beschlussfassung(null).build()
+      );
+
+      mockDefinitions.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit.mockReturnValue(
+        {
+          andererGrund: "",
+          beschlussgruende: [{ grund: "A", selected: true }],
+        }
+      );
+
+      const unitUnderTest =
+        useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelRef);
+      await nextTick();
+
+      unitUnderTest.abstimmungsergebnis.value.stimmenDafuer = 1;
+      unitUnderTest.abstimmungsergebnis.value.stimmenDagegen = 1; // total < 3 => ungueltig
+      await nextTick();
+
+      expect(unitUnderTest.isBeschlussSpeichernButtonDisabled.value).toBe(true);
+    });
+
+    it("should_beTrue_when_beschlussAusstehendAndVotesAreUnentschiedenWithoutWahlvorsteherVote", async () => {
+      const stimmzettelRef = ref(
+        preparePersistedStimmzettel().beschlussfassung(null).build()
+      );
+
+      mockDefinitions.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit.mockReturnValue(
+        {
+          andererGrund: "",
+          beschlussgruende: [{ grund: "A", selected: true }],
+        }
+      );
+
+      const unitUnderTest =
+        useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelRef);
+      await nextTick();
+
+      unitUnderTest.abstimmungsergebnis.value.stimmenDafuer = 3;
+      unitUnderTest.abstimmungsergebnis.value.stimmenDagegen = 3;
+      unitUnderTest.abstimmungsergebnis.value.hasWahlvorsteherVotedDafuer = false;
+      await nextTick();
+
+      expect(unitUnderTest.isBeschlussSpeichernButtonDisabled.value).toBe(true);
+    });
+
+    it("should_beFalse_when_beschlussAusstehendAndVotesAreUnentschiedenWithWahlvorsteherVote", async () => {
+      const stimmzettelRef = ref(
+        preparePersistedStimmzettel().beschlussfassung(null).build()
+      );
+
+      mockDefinitions.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit.mockReturnValue(
+        {
+          andererGrund: "",
+          beschlussgruende: [{ grund: "A", selected: true }],
+        }
+      );
+
+      const unitUnderTest =
+        useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelRef);
+      await nextTick();
+
+      unitUnderTest.abstimmungsergebnis.value.stimmenDafuer = 5;
+      unitUnderTest.abstimmungsergebnis.value.stimmenDagegen = 5;
+      unitUnderTest.abstimmungsergebnis.value.hasWahlvorsteherVotedDafuer = true;
+      await nextTick();
+
+      expect(unitUnderTest.isBeschlussSpeichernButtonDisabled.value).toBe(
+        false
+      );
+    });
+
+    it("should_beTrue_whenAnyVoteIsNull", async () => {
+      const stimmzettelRef = ref(
+        preparePersistedStimmzettel().beschlussfassung(null).build()
+      );
+
+      mockDefinitions.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit.mockReturnValue(
+        {
+          andererGrund: "",
+          beschlussgruende: [{ grund: "A", selected: true }],
+        }
+      );
+
+      const unitUnderTest =
+        useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelRef);
+      await nextTick();
+
+      unitUnderTest.abstimmungsergebnis.value.stimmenDafuer = 3;
+      unitUnderTest.abstimmungsergebnis.value.stimmenDagegen = null;
+      await nextTick();
+
+      expect(unitUnderTest.isBeschlussSpeichernButtonDisabled.value).toBe(true);
+    });
+
+    it("should_beFalseAndIgnoreThatNoValuesAreSelected_when_beschlussIsAlreadyGefasst", async () => {
+      const beschlussfassung = preparePersistedStimmzettelBeschlussfassung()
+        .pro(4)
+        .contra(3)
+        .build();
+      const stimmzettelRef = ref(
+        preparePersistedStimmzettel()
+          .beschlussfassung(beschlussfassung)
+          .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+          .build()
+      );
+
+      mockDefinitions.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit.mockReturnValue(
+        {
+          andererGrund: "",
+          beschlussgruende: [{ grund: "A", selected: false }],
+        }
+      );
+
+      const unitUnderTest =
+        useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelRef);
+      await nextTick();
+
+      expect(unitUnderTest.isBeschlussGefasst.value).toBe(true);
+      expect(unitUnderTest.isBeschlussSpeichernButtonDisabled.value).toBe(
+        false
+      );
+    });
+
+    it("should_beTrue_when_beschlussIsAlreadyGefasstButAbstimmungIsUnentschiedenWithoutWahlvorsteherVote", async () => {
+      const beschlussfassung = preparePersistedStimmzettelBeschlussfassung()
+        .pro(5)
+        .contra(5)
+        .build();
+      const stimmzettelRef = ref(
+        preparePersistedStimmzettel()
+          .beschlussfassung(beschlussfassung)
+          .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+          .build()
+      );
+
+      mockDefinitions.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit.mockReturnValue(
+        {
+          andererGrund: "",
+          beschlussgruende: [{ grund: "A", selected: false }],
+        }
+      );
+
+      const unitUnderTest =
+        useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelRef);
+      await nextTick();
+
+      unitUnderTest.abstimmungsergebnis.value.hasWahlvorsteherVotedDafuer = false;
+      await nextTick();
+
+      expect(unitUnderTest.isBeschlussGefasst.value).toBe(true);
+      expect(unitUnderTest.isBeschlussSpeichernButtonDisabled.value).toBe(true);
+    });
+
+    it("should_beTrue_when_beschlussIsAlreadyGefasstButVotesAreUngueltig", async () => {
+      const beschlussfassung = preparePersistedStimmzettelBeschlussfassung()
+        .pro(0)
+        .contra(0)
+        .build();
+      const stimmzettelRef = ref(
+        preparePersistedStimmzettel()
+          .beschlussfassung(beschlussfassung)
+          .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+          .build()
+      );
+
+      const unitUnderTest =
+        useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelRef);
+      await nextTick();
+
+      expect(unitUnderTest.isBeschlussGefasst.value).toBe(true);
+      expect(unitUnderTest.isBeschlussSpeichernButtonDisabled.value).toBe(true);
     });
   });
 });

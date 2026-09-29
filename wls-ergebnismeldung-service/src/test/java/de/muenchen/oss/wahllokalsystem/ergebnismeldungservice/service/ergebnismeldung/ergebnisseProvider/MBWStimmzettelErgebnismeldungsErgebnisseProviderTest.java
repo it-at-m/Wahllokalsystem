@@ -54,7 +54,7 @@ class MBWStimmzettelErgebnismeldungsErgebnisseProviderTest {
                       WAHLBEZIRK_ID,
                       WAHL_ID,
                       StapelartModel.MBW_D_UNGUELTIG,
-                      List.of(new ErgebnisModel(null, null, null, 0L, null)))));
+                      List.of(new ErgebnisModel(null, null, -1L, 0L, null)))));
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
@@ -86,26 +86,26 @@ class MBWStimmzettelErgebnismeldungsErgebnisseProviderTest {
                       WAHL_ID,
                       StapelartModel.MBW_A,
                       List.of(
-                          new ErgebnisModel("wahlvorschlagIDA", null, null, 3L, null),
-                          new ErgebnisModel("wahlvorschlagIDB", null, null, 5L, null))),
+                          new ErgebnisModel("wahlvorschlagIDA", null, -1L, 3L, null),
+                          new ErgebnisModel("wahlvorschlagIDB", null, -1L, 5L, null))),
                   new ErgebnisseModel(
                       WAHLBEZIRK_ID,
                       WAHL_ID,
                       StapelartModel.MBW_B,
-                      List.of(new ErgebnisModel("wahlvorschlagIDC", null, null, 7L, null))),
+                      List.of(new ErgebnisModel("wahlvorschlagIDC", null, -1L, 7L, null))),
                   new ErgebnisseModel(
                       WAHLBEZIRK_ID,
                       WAHL_ID,
                       StapelartModel.MBW_B_C,
                       List.of(
-                          new ErgebnisModel("wahlvorschlagIDA", "kandidatID1", null, 11L, null),
-                          new ErgebnisModel("wahlvorschlagIDB", "kandidatID2", null, 13L, null)))),
+                          new ErgebnisModel("wahlvorschlagIDA", "kandidatID1", -1L, 11L, null),
+                          new ErgebnisModel("wahlvorschlagIDB", "kandidatID2", -1L, 13L, null)))),
               List.of(
                   new ErgebnisseModel(
                       WAHLBEZIRK_ID,
                       WAHL_ID,
                       StapelartModel.MBW_D_UNGUELTIG,
-                      List.of(new ErgebnisModel(null, null, null, 17L, null)))));
+                      List.of(new ErgebnisModel(null, null, -1L, 17L, null)))));
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
@@ -132,19 +132,19 @@ class MBWStimmzettelErgebnismeldungsErgebnisseProviderTest {
                       WAHL_ID,
                       StapelartModel.MBW_A,
                       List.of(
-                          new ErgebnisModel("wahlvorschlagIDA", null, null, 3L, null),
-                          new ErgebnisModel("wahlvorschlagIDB", null, null, 5L, null))),
+                          new ErgebnisModel("wahlvorschlagIDA", null, -1L, 3L, null),
+                          new ErgebnisModel("wahlvorschlagIDB", null, -1L, 5L, null))),
                   new ErgebnisseModel(
                       WAHLBEZIRK_ID,
                       WAHL_ID,
                       StapelartModel.MBW_B,
-                      List.of(new ErgebnisModel("wahlvorschlagIDC", null, null, 7L, null)))),
+                      List.of(new ErgebnisModel("wahlvorschlagIDC", null, -1L, 7L, null)))),
               List.of(
                   new ErgebnisseModel(
                       WAHLBEZIRK_ID,
                       WAHL_ID,
                       StapelartModel.MBW_D_UNGUELTIG,
-                      List.of(new ErgebnisModel(null, null, null, 17L, null)))));
+                      List.of(new ErgebnisModel(null, null, -1L, 17L, null)))));
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
   }

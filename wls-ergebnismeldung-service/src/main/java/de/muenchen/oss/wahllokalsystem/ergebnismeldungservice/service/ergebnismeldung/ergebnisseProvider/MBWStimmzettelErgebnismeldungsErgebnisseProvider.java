@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MBWStimmzettelErgebnismeldungsErgebnisseProvider {
 
+  private static final Long PSEUDO_WAHLVORSCHLAGORDNUNGSZAHL = -1L;
+
   private final MBWStimmzettelService mbwStimmzettelService;
 
   @Transactional(readOnly = true)
@@ -28,7 +30,12 @@ public class MBWStimmzettelErgebnismeldungsErgebnisseProvider {
         mbwStimmzettelService.getStapelA(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
             .map(
                 entry ->
-                    new ErgebnisModel(entry.wahlvorschlagID(), null, null, entry.anzahl(), null))
+                    new ErgebnisModel(
+                        entry.wahlvorschlagID(),
+                        null,
+                        PSEUDO_WAHLVORSCHLAGORDNUNGSZAHL,
+                        entry.anzahl(),
+                        null))
             .toList();
     gueltigeErgebnisse.add(
         new ErgebnisseModel(wahlbezirkID, wahlID, StapelartModel.MBW_A, stapelA));
@@ -37,7 +44,12 @@ public class MBWStimmzettelErgebnismeldungsErgebnisseProvider {
         mbwStimmzettelService.getStapelB(new BezirkUndWahlID(wahlID, wahlbezirkID)).stream()
             .map(
                 entry ->
-                    new ErgebnisModel(entry.wahlvorschlagID(), null, null, entry.anzahl(), null))
+                    new ErgebnisModel(
+                        entry.wahlvorschlagID(),
+                        null,
+                        PSEUDO_WAHLVORSCHLAGORDNUNGSZAHL,
+                        entry.anzahl(),
+                        null))
             .toList();
     gueltigeErgebnisse.add(
         new ErgebnisseModel(wahlbezirkID, wahlID, StapelartModel.MBW_B, stapelB));
@@ -48,7 +60,11 @@ public class MBWStimmzettelErgebnismeldungsErgebnisseProvider {
               .map(
                   entry ->
                       new ErgebnisModel(
-                          entry.wahlvorschlagID(), entry.kandidatID(), null, entry.anzahl(), null))
+                          entry.wahlvorschlagID(),
+                          entry.kandidatID(),
+                          PSEUDO_WAHLVORSCHLAGORDNUNGSZAHL,
+                          entry.anzahl(),
+                          null))
               .toList();
       gueltigeErgebnisse.add(
           new ErgebnisseModel(wahlbezirkID, wahlID, StapelartModel.MBW_B_C, stapelBC));
@@ -59,7 +75,7 @@ public class MBWStimmzettelErgebnismeldungsErgebnisseProvider {
             new ErgebnisModel(
                 null,
                 null,
-                null,
+                PSEUDO_WAHLVORSCHLAGORDNUNGSZAHL,
                 mbwStimmzettelService.getStapelD(new BezirkUndWahlID(wahlID, wahlbezirkID)),
                 null));
     val stapelDErgebnisseModel =

@@ -73,7 +73,7 @@ vi.mock(import("@/composables/dse/mbwStimmzettelFilterService.ts"), () => ({
   useMbwStimmzettelFilterService: () => ({
     stapelA: computed<PersistedStimmzettel[]>(() => []),
     stapelB: computed<PersistedStimmzettel[]>(() => []),
-    stapelBC: computed<PersistedStimmzettel[]>(() => []),
+    stapelC: computed<PersistedStimmzettel[]>(() => []),
     stapelASumGroupedByWahlvorschlag: computed(
       () => mockedStapelASumGroupedByWahlvorschlag.value
     ),

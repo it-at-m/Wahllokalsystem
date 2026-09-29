@@ -71,7 +71,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
   const {
     stapelA: stapelAStimmzettel,
     stapelB: stapelBStimmzettel,
-    stapelBC: stapelBCStimmzettel,
+    stapelC: stapelCStimmzettel,
     stapelDUngueltig,
     stapelEUngueltig,
   } = useMbwStimmzettelFilterService(stimmzettelOfWahlbezirk);
@@ -428,7 +428,10 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     if (wahlvorschlaegeByWahlIDAndWahlbezirkID) {
       const { wahlvorschlaegeWithKandidatenErgebnissen } =
         useStimmzettelZusammenfassungUtils(
-          stapelBCStimmzettel,
+          computed(() => [
+            ...stapelBStimmzettel.value,
+            ...stapelCStimmzettel.value,
+          ]),
           computed(() => wahlvorschlaegeByWahlIDAndWahlbezirkID.wahlvorschlaege)
         );
       const ergebnisse = wahlvorschlaegeWithKandidatenErgebnissen.value

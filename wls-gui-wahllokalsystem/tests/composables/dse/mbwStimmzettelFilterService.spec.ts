@@ -7,7 +7,7 @@ import { useMbwStimmzettelFilterService } from "@/composables/dse/mbwStimmzettel
 const mockDefinitions = vi.hoisted(() => ({
   matchesMBWStapelA: vi.fn(),
   matchesMBWStapelB: vi.fn(),
-  matchesMBWStapelBC: vi.fn(),
+  matchesMBWStapelC: vi.fn(),
   matchesMBWStapelDUngueltig: vi.fn(),
   matchesMBWStapelEUngueltig: vi.fn(),
 }));
@@ -71,8 +71,8 @@ describe("mbwStimmzettelFilterService.ts", () => {
     });
   });
 
-  describe("stapelBC", () => {
-    it("should_useStapelBCMatcher_when_stimmzettelAreFiltered", () => {
+  describe("stapelC", () => {
+    it("should_useStapelCMatcher_when_stimmzettelAreFiltered", () => {
       const stimmzettel1 = createPersistedStimmzettel();
       const stimmzettel2 = createPersistedStimmzettel();
       const stimmzettel3 = createPersistedStimmzettel();
@@ -80,11 +80,11 @@ describe("mbwStimmzettelFilterService.ts", () => {
         ref([stimmzettel1, stimmzettel2, stimmzettel3])
       );
 
-      mockDefinitions.matchesMBWStapelBC.mockReturnValueOnce(true);
-      mockDefinitions.matchesMBWStapelBC.mockReturnValueOnce(false);
-      mockDefinitions.matchesMBWStapelBC.mockReturnValueOnce(true);
+      mockDefinitions.matchesMBWStapelC.mockReturnValueOnce(true);
+      mockDefinitions.matchesMBWStapelC.mockReturnValueOnce(false);
+      mockDefinitions.matchesMBWStapelC.mockReturnValueOnce(true);
 
-      expect(unitUnderTest.stapelBC.value).toStrictEqual([
+      expect(unitUnderTest.stapelC.value).toStrictEqual([
         stimmzettel1,
         stimmzettel3,
       ]);

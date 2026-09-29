@@ -263,6 +263,15 @@ describe("beschlussfassungViewUtils.ts", () => {
       );
     });
 
+    it("should_returnTrue_when_electionIsFinished", () => {
+      workflowStore.initElectionWorkflowState(wahlID, wahlbezirkID);
+      workflowStore.electionWorkflowsStates[0].isNiederschriftDone = true;
+
+      expect(unitUnderTest.isBeschlussfassungBeendenButtonDisabled.value).toBe(
+        true
+      );
+    });
+
     it("should_returnTrue_when_workflowStatusIsBeAbgeschlossen", () => {
       // @ts-expect-error: mockedWorkflowStatusRef is possibly unused
       mockedWorkflowStatusRef.value = {

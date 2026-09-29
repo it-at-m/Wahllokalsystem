@@ -137,7 +137,7 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
     beschlussDetails.value.andererGrundChecked =
       !!beschlussDetails.value.andererGrund;
 
-    if (beschlussDetails.value.beschlussText == "") {
+    if (!isBeschlussGefasst.value) {
       beschlussDetails.value.beschlussText = _mergeAndReturnBeschlussText();
     }
   });

@@ -321,7 +321,7 @@ describe("persistedStimmzettelTools.ts", () => {
       expect(unitUnderTest.matchesMBWStapelC(stimmzettel)).toStrictEqual(true);
     });
 
-    it("should_returnTrue_when:validStimmzettelHasTwoOrMoreWahlvorschlaege", () => {
+    it("should_returnTrue_when_validStimmzettelHasTwoOrMoreWahlvorschlaege", () => {
       const stimmzettel = preparePersistedStimmzettel()
         .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
         .wahlvorschlaege(

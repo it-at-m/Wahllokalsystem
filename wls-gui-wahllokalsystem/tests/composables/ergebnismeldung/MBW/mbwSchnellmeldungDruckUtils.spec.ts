@@ -290,7 +290,7 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
       );
     });
 
-    it("should_returnErgebnismeldungDruckInput_when_givenWahlStatusAndMeldungsartForDSE", async () => {
+    it("should_returnSchnellmeldungDruckInput_when_givenWahlStatusAndMeldungsartForDSE", async () => {
       const userStore = useUserStore(pinia);
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()

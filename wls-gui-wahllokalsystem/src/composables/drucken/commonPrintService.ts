@@ -49,7 +49,11 @@ export function useCommonPrintService() {
           return crypto.randomUUID() + ", " + formattedDateWithTime + " O";
         } else {
           return crypto.randomUUID() + ", " + formattedDateWithTime + " M";
-        }
+        return `${crypto.randomUUID()}, ${formattedDateWithTime}${
+          validierungsstatus === MeldungValidierungsstatusEnum.Valide
+            ? " O"
+            : " M"
+        }`;
       }
     } else if (meldungsArt == MeldungsArtEnum.Beschlussentscheidungen) {
       if (validierungsstatus) {

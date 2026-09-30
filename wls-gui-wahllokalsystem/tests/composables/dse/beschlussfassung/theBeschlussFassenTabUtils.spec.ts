@@ -62,7 +62,7 @@ describe("theBeschlussFassenTabUtils.ts", () => {
     ];
     const commonUngueltigGruende = [
       "Wählerwille ist nicht zweifelsfrei erkennbar",
-      "mehr als 80 Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
+      "zu viele Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
       "Stimmzettel ist mit einem besonderen Merkmal, Zusatz oder Vorbehalt versehen",
       "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
     ];

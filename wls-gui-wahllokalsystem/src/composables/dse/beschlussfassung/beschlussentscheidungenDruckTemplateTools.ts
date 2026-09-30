@@ -232,7 +232,7 @@ export function useBeschlussentscheidungenDruckTemplateTools() {
             <td class="noBorder borderBottom"></td>
           </tr>
         </table>
-        <div class="paddingLeft">Unterschrift Wahlvorsteher*in</div>
+        <div class="paddingLeft">Unterschrift (Brief-)Wahlvorsteher*in</div>
       </div>
     `;
   }

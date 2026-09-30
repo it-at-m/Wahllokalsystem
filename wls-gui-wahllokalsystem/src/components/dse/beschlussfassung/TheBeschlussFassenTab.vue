@@ -77,6 +77,7 @@
                 rows="1"
                 auto-grow
                 class="mt-2"
+                :rules="[required]"
               />
               Bitte für einen neuen Beschluss den Text anpassen, die Gültigkeit
               überprüfen, erneut abstimmen und anschließend speichern.

@@ -4,6 +4,7 @@ import type { Ref } from "vue";
 
 import { computed } from "vue";
 
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
@@ -11,8 +12,12 @@ export function useMonitoringViewBeschlussfassungButtonsUtils(
   isTeamStatusListLoading: Ref<boolean>,
   isWorkflowStatusLoading: Ref<boolean>,
   teamstatusList: Ref<StimmzettelerfassungTeamStatusEntry[]>,
-  workflowStatus: Ref<StimmzettelerfassungStatus | null>
+  workflowStatus: Ref<StimmzettelerfassungStatus | null>,
+  wahlID: string,
+  wahlbezirkID: string
 ) {
+  const { isElectionFinished } = useWorkflowStore();
+
   const isBeschlussfassungBtnActive = computed(
     () =>
       teamstatusList.value.every(
@@ -21,14 +26,16 @@ export function useMonitoringViewBeschlussfassungButtonsUtils(
       ) && teamstatusList.value.length > 0
   );
 
-  const isMoveOnToBeschlussfassungDisabled = computed(
-    () =>
+  const isMoveOnToBeschlussfassungDisabled = computed(() => {
+    return (
       !isBeschlussfassungBtnActive.value ||
+      isElectionFinished(wahlID, wahlbezirkID) ||
       workflowStatus.value?.status ===
         StimmzettelerfassungStatusEnum.BeAbgeschlossen ||
       isTeamStatusListLoading.value ||
       isWorkflowStatusLoading.value
-  );
+    );
+  });
 
   const isBeschlussfassungContinueBtnVisible = computed(
     () =>

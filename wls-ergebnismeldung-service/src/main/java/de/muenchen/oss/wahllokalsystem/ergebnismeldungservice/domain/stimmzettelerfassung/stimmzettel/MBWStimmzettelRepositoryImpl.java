@@ -101,7 +101,10 @@ interface MBWStapelStimmzettelRepository extends StimmzettelRepository {
                 FROM Stimmzettel stimmzettel
                 WHERE stimmzettel.id.wahlID = :wahlID
                   AND stimmzettel.id.wahlbezirkID = :wahlbezirkID
-                  AND stimmzettel.gueltigkeit = de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit.INVALID
+                  AND stimmzettel.gueltigkeit IN (
+                                  de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit.INVALID,
+                                  de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit.LEER,
+                                  de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit.BWB_PSEUDO_STIMMZETTEL_LEERER_UMSCHLAG)
                 """)
   long getStapelD(@Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
 

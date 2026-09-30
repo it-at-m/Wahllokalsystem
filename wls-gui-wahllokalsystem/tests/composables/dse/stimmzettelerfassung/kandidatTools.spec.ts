@@ -1,3 +1,4 @@
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -12,6 +13,8 @@ const {
 
 const { preparePersistedStimmzettelKandidat } =
   usePersistedStimmzettelTestDataFactory();
+
+const { generateRandomNumber } = useCommonTestDataFactory();
 
 describe("kandidatTools.ts", () => {
   let unitUnderTest: ReturnType<typeof useKandidatTools>;
@@ -188,6 +191,91 @@ describe("kandidatTools.ts", () => {
         unitUnderTest.hasAnyKennzeichenOrReststimme(kandidat)
       ).toStrictEqual(false);
     });
+  });
+
+  describe("hasOnlyReststimme", () => {
+    it("should_returnTrue_when_onlyReststimmenArePresentUsingNullForEinzelAndUngueltigeStimmen", () => {
+      const kandidat = preparePersistedStimmzettelKandidat()
+        .isDiscarded(false)
+        .votesByVoter(null)
+        .invalidVotes(null)
+        .votesByWahlvorschlag(1)
+        .build();
+
+      expect(unitUnderTest.hasOnlyReststimme(kandidat)).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_onlyMoreThanOneReststimmenArePresent", () => {
+      const kandidat = preparePersistedStimmzettelKandidat()
+        .isDiscarded(false)
+        .votesByVoter(null)
+        .invalidVotes(null)
+        .votesByWahlvorschlag(1 + generateRandomNumber(2))
+        .build();
+
+      expect(unitUnderTest.hasOnlyReststimme(kandidat)).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_onlyReststimmenArePresentUsingZeroForEinzelAndUngueltigeStimmen", () => {
+      const kandidat = preparePersistedStimmzettelKandidat()
+        .isDiscarded(false)
+        .votesByVoter(0)
+        .invalidVotes(0)
+        .votesByWahlvorschlag(1)
+        .build();
+
+      expect(unitUnderTest.hasOnlyReststimme(kandidat)).toStrictEqual(true);
+    });
+
+    it.each([
+      {
+        text: "reststimmenAreMissing",
+        isDiscarded: false,
+        votesByVoter: null,
+        invalidVotes: null,
+        votesByWahlvorschlag: null,
+      },
+      {
+        text: "reststimmenAreZero",
+        isDiscarded: false,
+        votesByVoter: null,
+        invalidVotes: null,
+        votesByWahlvorschlag: 0,
+      },
+      {
+        text: "kandidatIsDiscarded",
+        isDiscarded: true,
+        votesByVoter: null,
+        invalidVotes: null,
+        votesByWahlvorschlag: 1,
+      },
+      {
+        text: "einzelstimmenArePresent",
+        isDiscarded: false,
+        votesByVoter: 1,
+        invalidVotes: null,
+        votesByWahlvorschlag: 1,
+      },
+      {
+        text: "ungueltigeStimmenArePresent",
+        isDiscarded: false,
+        votesByVoter: null,
+        invalidVotes: 1,
+        votesByWahlvorschlag: 1,
+      },
+    ])(
+      "should_returnFalse_when_$text",
+      ({ isDiscarded, votesByVoter, invalidVotes, votesByWahlvorschlag }) => {
+        const kandidat = preparePersistedStimmzettelKandidat()
+          .isDiscarded(isDiscarded)
+          .votesByVoter(votesByVoter)
+          .invalidVotes(invalidVotes)
+          .votesByWahlvorschlag(votesByWahlvorschlag)
+          .build();
+
+        expect(unitUnderTest.hasOnlyReststimme(kandidat)).toStrictEqual(false);
+      }
+    );
   });
 
   describe("getEinzelstimmenOrZero", () => {

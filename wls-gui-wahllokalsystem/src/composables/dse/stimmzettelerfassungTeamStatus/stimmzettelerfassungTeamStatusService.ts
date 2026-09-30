@@ -142,10 +142,48 @@ export function useStimmzettelerfassungTeamStatusService() {
     }
   }
 
+  async function reopenStimmzettelerfassung(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string,
+    sendNotification = true
+  ) {
+    const { wahlenActions } = useWahlenStore();
+    const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
+    try {
+      isSaving.value = true;
+      await stimmzettelerfassungTeamStatusControllerApi.reopenStimmzettelerfassung(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        axiosConfigWrapper().requestAsOnlineOnly()
+      );
+      if (sendNotification) {
+        addNotification(
+          `Rückkehr zur Bearbeitung für ${wahlname} erfolgreich gespeichert.`,
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+    } catch {
+      if (sendNotification) {
+        addNotification(
+          `Fehler beim Speichern der Rückkehr zur Bearbeitung für ${wahlname}.`,
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw new Error(
+        `Post reopenStimmzettelerfassung für ${wahlname} failed.`
+      );
+    } finally {
+      isSaving.value = false;
+    }
+  }
+
   return {
     isSaving,
     loadErfassungTeamStatus,
     loadErfassungTeamStatusListe,
     postErfassungTeamStatus,
+    reopenStimmzettelerfassung,
   };
 }

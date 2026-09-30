@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Ausdruck;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.AusdruckRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Meldungsart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Dokumentart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndDokumentart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.TimePrecisionComparators;
@@ -64,20 +64,20 @@ public class AusdruckControllerIntegrationTest {
     void should_returnData_when_dataIsPresentInRepository() throws Exception {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsart = Meldungsart.V1;
+      val dokumentart = Dokumentart.V1;
       val content = "Testausdruck";
       val erstelltAm = Instant.now();
 
       val entityToFind =
           new Ausdruck(
-              new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart),
+              new WahlUndBezirkIDUndDokumentart(wahlbezirkID, wahlID, dokumentart),
               content,
               erstelltAm);
       ausdruckRepository.save(entityToFind);
 
       val response =
           mockMvc
-              .perform(createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart))
+              .perform(createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID, dokumentart))
               .andExpect(status().isOk())
               .andReturn()
               .getResponse();
@@ -92,10 +92,10 @@ public class AusdruckControllerIntegrationTest {
     void should_returnNotFoundRequest_when_noDataIsPresentInRepository() throws Exception {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsart = Meldungsart.V1;
+      val dokumentart = Dokumentart.V1;
 
       mockMvc
-          .perform(createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart))
+          .perform(createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID, dokumentart))
           .andExpect(status().isNotFound());
     }
 
@@ -103,10 +103,10 @@ public class AusdruckControllerIntegrationTest {
     void should_returnBadRequest_when_requestIsInvalid() throws Exception {
       val wahlID = " ";
       val wahlbezirkID = " ";
-      val meldungsart = Meldungsart.V1;
+      val dokumentart = Dokumentart.V1;
 
       mockMvc
-          .perform(createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart))
+          .perform(createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID, dokumentart))
           .andExpect(status().isBadRequest());
     }
 
@@ -114,11 +114,11 @@ public class AusdruckControllerIntegrationTest {
     void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsart = Meldungsart.V1;
+      val dokumentart = Dokumentart.V1;
 
       mockMvc
           .perform(
-              createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID + "sth", meldungsart))
+              createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID + "sth", dokumentart))
           .andExpect(status().isForbidden());
     }
   }
@@ -145,17 +145,17 @@ public class AusdruckControllerIntegrationTest {
     void should_persistData_when_dataIsSent() throws Exception {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsart = Meldungsart.V1;
+      val dokumentart = Dokumentart.V1;
       val content = "Testausdruck";
       val erstelltAm = Instant.now();
-      val idToFind = new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart);
+      val idToFind = new WahlUndBezirkIDUndDokumentart(wahlbezirkID, wahlID, dokumentart);
 
       val entityToFind = new Ausdruck(idToFind, content, erstelltAm);
 
       val requestBody = new AusdruckWriteDTO(content);
 
       mockMvc
-          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart, requestBody))
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, dokumentart, requestBody))
           .andExpect(status().isOk());
 
       val persistedEntity = ausdruckRepository.findById(idToFind);
@@ -171,10 +171,10 @@ public class AusdruckControllerIntegrationTest {
     void should_overwriteData_when_dataIsPresentInRepository() throws Exception {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsart = Meldungsart.V1;
+      val dokumentart = Dokumentart.V1;
       val content = "Testausdruck";
       val erstelltAm = Instant.now();
-      val idToFind = new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart);
+      val idToFind = new WahlUndBezirkIDUndDokumentart(wahlbezirkID, wahlID, dokumentart);
 
       val entityToOverwrite = new Ausdruck(idToFind, content, erstelltAm);
       ausdruckRepository.save(entityToOverwrite);
@@ -184,7 +184,7 @@ public class AusdruckControllerIntegrationTest {
       val requestBody = new AusdruckWriteDTO(contentToOverwrite);
 
       mockMvc
-          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart, requestBody))
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, dokumentart, requestBody))
           .andExpect(status().isOk());
 
       val persistedEntity = ausdruckRepository.findById(idToFind);
@@ -200,10 +200,10 @@ public class AusdruckControllerIntegrationTest {
     void should_returnBadRequest_when_requestBodyIsMissing() throws Exception {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsart = Meldungsart.V1;
+      val dokumentart = Dokumentart.V1;
 
       mockMvc
-          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart, null))
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, dokumentart, null))
           .andExpect(status().isBadRequest());
 
       Assertions.assertThat(ausdruckRepository.count()).isEqualTo(0);
@@ -213,13 +213,13 @@ public class AusdruckControllerIntegrationTest {
     void should_returnBadRequest_when_requestPathParameterWahlIDIsBlank() throws Exception {
       val wahlID = " ";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsart = Meldungsart.V1;
+      val dokumentart = Dokumentart.V1;
       val content = "Testausdruck";
 
       val requestBody = new AusdruckWriteDTO(content);
 
       mockMvc
-          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart, requestBody))
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, dokumentart, requestBody))
           .andExpect(status().isBadRequest());
 
       Assertions.assertThat(ausdruckRepository.count()).isEqualTo(0);
@@ -229,12 +229,12 @@ public class AusdruckControllerIntegrationTest {
     void should_returnBadRequest_when_requestPathParameterWahlbezirkIDIsBlank() throws Exception {
       val wahlID = "wahlID";
       val wahlbezirkID = " ";
-      val meldungsart = Meldungsart.V1;
+      val dokumentart = Dokumentart.V1;
       val content = "Testausdruck";
       val requestBody = new AusdruckWriteDTO(content);
 
       mockMvc
-          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart, requestBody))
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, dokumentart, requestBody))
           .andExpect(status().isBadRequest());
 
       Assertions.assertThat(ausdruckRepository.count()).isEqualTo(0);
@@ -260,14 +260,14 @@ public class AusdruckControllerIntegrationTest {
     void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsart = Meldungsart.V1;
+      val dokumentart = Dokumentart.V1;
       val content = "Testausdruck";
       val requestBody = new AusdruckWriteDTO(content);
 
       mockMvc
           .perform(
               createPostRequest(
-                  wahlID, wahlbezirkID, wahlbezirkID + "sth", meldungsart, requestBody))
+                  wahlID, wahlbezirkID, wahlbezirkID + "sth", dokumentart, requestBody))
           .andExpect(status().isForbidden());
     }
   }
@@ -284,12 +284,12 @@ public class AusdruckControllerIntegrationTest {
 
       val entityToFind1 =
           new Ausdruck(
-              new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1),
+              new WahlUndBezirkIDUndDokumentart(wahlbezirkID, wahlID, Dokumentart.V1),
               content,
               erstelltAm);
       val entityToFind2 =
           new Ausdruck(
-              new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3),
+              new WahlUndBezirkIDUndDokumentart(wahlbezirkID, wahlID, Dokumentart.V3),
               content,
               erstelltAm);
       ausdruckRepository.save(entityToFind1);
@@ -348,7 +348,7 @@ public class AusdruckControllerIntegrationTest {
       final String wahlID,
       final String wahlbezirkID,
       final String claimWahlbezirkID,
-      final Meldungsart meldungsart,
+      final Dokumentart dokumentart,
       final AusdruckWriteDTO requestBody)
       throws Exception {
     return MockMvcRequestBuilders.post(
@@ -357,7 +357,7 @@ public class AusdruckControllerIntegrationTest {
                 + "/"
                 + wahlbezirkID
                 + "/"
-                + meldungsart
+                + dokumentart
                 + "/html")
         .with(csrf())
         .with(
@@ -372,14 +372,14 @@ public class AusdruckControllerIntegrationTest {
       final String wahlID,
       final String wahlbezirkID,
       final String claimWahlbezirkID,
-      final Meldungsart meldungsart) {
+      final Dokumentart dokumentart) {
     return MockMvcRequestBuilders.get(
             "/businessActions/ausdruck/"
                 + wahlID
                 + "/"
                 + wahlbezirkID
                 + "/"
-                + meldungsart
+                + dokumentart
                 + "/html")
         .with(
             jwt()

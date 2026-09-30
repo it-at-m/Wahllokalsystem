@@ -1,8 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ausdruck;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.DokumentartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.WahlUndBezirkIDUndMeldungsartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.DokumentartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.WahlUndBezirkIDUndDokumentartModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -32,9 +33,11 @@ public class AusdruckController {
 
   private final AusdruckDTOMapper ausdruckDTOMapper;
 
+  private final DokumentartDTOMapper dokumentartDTOMapper;
+
   @Operation(
       description =
-          "Lesen eines Ausdrucks einer bestimmten Meldungsart für einen Wahlbezirk einer Wahl")
+          "Lesen eines Ausdrucks einer bestimmten Dokumentart für einen Wahlbezirk einer Wahl")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -50,14 +53,15 @@ public class AusdruckController {
             description = "Es existiert kein Ausdruck zu den entsprechenden Kriterien",
             content = {@Content()})
       })
-  @GetMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
+  @GetMapping("{wahlID}/{wahlbezirkID}/{dokumentart}/html")
   public ResponseEntity<String> getAusdruck(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
-      @PathVariable("meldungsart") final MeldungsartModel meldungsartModel) {
+      @PathVariable("dokumentart") final DokumentartDTO dokumentartDTO) {
     val ausdruckReadModel =
         ausdruckService.getAusdruck(
-            new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsartModel));
+            new WahlUndBezirkIDUndDokumentartModel(
+                wahlbezirkID, wahlID, dokumentartDTOMapper.toModel(dokumentartDTO)));
 
     if (ausdruckReadModel.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -95,7 +99,7 @@ public class AusdruckController {
 
   @Operation(
       description =
-          "Speichern eines Ausdrucks einer bestimmten Meldungsart für einen Wahlbezirk einer Wahl")
+          "Speichern eines Ausdrucks einer bestimmten Dokumentart für einen Wahlbezirk einer Wahl")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200", description = "Ausdruck erfolgreich gespeichert"),
@@ -116,16 +120,16 @@ public class AusdruckController {
                   schema = @Schema(implementation = WlsExceptionDTO.class))
             })
       })
-  @PostMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
+  @PostMapping("{wahlID}/{wahlbezirkID}/{dokumentart}/html")
   public ResponseEntity<?> postAusdruck(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
-      @PathVariable("meldungsart") final MeldungsartModel meldungsartModel,
+      @PathVariable("dokumentart") final DokumentartModel dokumentartModel,
       @RequestBody final AusdruckWriteDTO ausdruck) {
     val ausdruckWriteModel =
         ausdruckDTOMapper.toModel(
             ausdruck,
-            new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsartModel));
+            new WahlUndBezirkIDUndDokumentartModel(wahlbezirkID, wahlID, dokumentartModel));
     ausdruckService.saveAusdruck(ausdruckWriteModel);
     return new ResponseEntity<>(HttpStatus.OK);
   }

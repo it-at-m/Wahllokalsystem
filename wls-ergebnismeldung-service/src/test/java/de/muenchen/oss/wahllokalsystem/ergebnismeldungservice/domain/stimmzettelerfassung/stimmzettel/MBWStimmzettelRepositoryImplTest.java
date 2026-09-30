@@ -6,8 +6,8 @@ import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Insta
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankKandidatWithSingleVoteByWahlvorschlag;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankNonSelectedWahlvorschlagModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankSelectedWahlvorschlagModel;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankStimmzettelModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createBlankValidStimmzettelModel;
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.InstancioModels.createDSESTimmzettelModel;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestStimmzettelModels.createInvalidStimmzettelModelWith2WahlvorschlaegenEachWithEinzelstimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestStimmzettelModels.createInvalidStimmzettelModelWithSingleWahlvorschlagWithEinzelstimme;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.StimmzettelRepositoryTestStimmzettelModels.createInvalidStimmzettelModelWithSingleWahlvorschlagWithMultipleStreichungen;
@@ -733,6 +733,22 @@ class MBWStimmzettelRepositoryImplTest {
       stimmzettelToCount.add(Instancio.create(invalidStimmzettelModelWithSingleEinzelstimme));
       stimmzettelToCount.add(
           Instancio.create(
+              createBlankStimmzettelModel(
+                  wahlID,
+                  wahlbezirkID,
+                  teamA,
+                  stimmzettelkennungSequenz.getAndIncrement(),
+                  StimmzettelGueltigkeit.LEER)));
+      stimmzettelToCount.add(
+          Instancio.create(
+              createBlankStimmzettelModel(
+                  wahlID,
+                  wahlbezirkID,
+                  teamA,
+                  stimmzettelkennungSequenz.getAndIncrement(),
+                  StimmzettelGueltigkeit.BWB_PSEUDO_STIMMZETTEL_LEERER_UMSCHLAG)));
+      stimmzettelToCount.add(
+          Instancio.create(
               createInvalidStimmzettelModelWithSingleWahlvorschlagWithMultipleStreichungen(
                   wahlID, wahlbezirkID, teamA, stimmzettelkennungSequenz.getAndIncrement())));
       stimmzettelToCount.add(
@@ -747,7 +763,10 @@ class MBWStimmzettelRepositoryImplTest {
       val nonMatchingStimmzettel =
           new LinkedList<>(
               createStimmzettelWithOtherGueltigkeiten(
-                  invalidStimmzettelModelWithSingleEinzelstimme, StimmzettelGueltigkeit.INVALID));
+                  invalidStimmzettelModelWithSingleEinzelstimme,
+                  StimmzettelGueltigkeit.INVALID,
+                  StimmzettelGueltigkeit.BWB_PSEUDO_STIMMZETTEL_LEERER_UMSCHLAG,
+                  StimmzettelGueltigkeit.LEER));
 
       transactionTemplate.executeWithoutResult(
           status -> {
@@ -770,15 +789,18 @@ class MBWStimmzettelRepositoryImplTest {
       Arrays.stream(StimmzettelGueltigkeit.values())
           .forEach(
               gueltigkeit -> {
-                if (!StimmzettelGueltigkeit.INVALID.equals(gueltigkeit)) {
+                if (!StimmzettelGueltigkeit.INVALID.equals(gueltigkeit)
+                    && !StimmzettelGueltigkeit.LEER.equals(gueltigkeit)
+                    && !StimmzettelGueltigkeit.BWB_PSEUDO_STIMMZETTEL_LEERER_UMSCHLAG.equals(
+                        gueltigkeit)) {
                   nonMatchingStimmzettel.add(
                       Instancio.of(
-                              createDSESTimmzettelModel(
+                              createBlankStimmzettelModel(
                                   wahlID,
                                   wahlbezirkID,
                                   teamA,
-                                  stimmzettelkennungSequenz.getAndIncrement()))
-                          .set(field(Stimmzettel::getGueltigkeit), gueltigkeit)
+                                  stimmzettelkennungSequenz.getAndIncrement(),
+                                  gueltigkeit))
                           .create());
                 }
               });
@@ -1060,9 +1082,9 @@ class MBWStimmzettelRepositoryImplTest {
   }
 
   private List<Stimmzettel> createStimmzettelWithOtherGueltigkeiten(
-      Model<Stimmzettel> stimmzettelModel, StimmzettelGueltigkeit gueltigkeitToExclude) {
+      Model<Stimmzettel> stimmzettelModel, StimmzettelGueltigkeit... gueltigkeitToExclude) {
     return Arrays.stream(StimmzettelGueltigkeit.values())
-        .filter(gueltigkeit -> !gueltigkeitToExclude.equals(gueltigkeit))
+        .filter(gueltigkeit -> !Arrays.asList(gueltigkeitToExclude).contains(gueltigkeit))
         .map(
             gueltigkeit -> {
               val stimmzettelInvalid =

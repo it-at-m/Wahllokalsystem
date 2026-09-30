@@ -15,6 +15,8 @@ const mockDefinitions = vi.hoisted(() => ({
   configurationConstructor: vi.fn(),
   getStimmzettelerfassungStatus: vi.fn(),
   saveStimmzettelerfassungStatus: vi.fn(),
+  requestAsOnlineOnly: vi.fn(),
+  onlineOnlyAxiosConfig: { requestMode: "onlineOnly" },
 }));
 
 vi.mock(
@@ -50,6 +52,17 @@ vi.mock(
     }),
   })
 );
+vi.mock("@/composables/api/commonApiUtils.ts", () => ({
+  useCommonApiUtils: () => ({
+    getNullOn204OrElseResponseData: (response: {
+      status: number;
+      data: unknown;
+    }) => (response.status === 204 ? null : response.data),
+    axiosConfigWrapper: () => ({
+      requestAsOnlineOnly: mockDefinitions.requestAsOnlineOnly,
+    }),
+  }),
+}));
 
 const {
   createStimmzettelerfassungStatusDTO,
@@ -66,6 +79,9 @@ describe("DseWorkflowStatusService.ts", () => {
     unitUnderTest = useDseWorkflowStatusService();
     vi.resetAllMocks();
     vi.clearAllMocks();
+    mockDefinitions.requestAsOnlineOnly.mockReturnValue(
+      mockDefinitions.onlineOnlyAxiosConfig
+    );
   });
 
   describe("loadDseWorkflowStatus", () => {
@@ -98,7 +114,10 @@ describe("DseWorkflowStatusService.ts", () => {
       ).toStrictEqual(1);
       expect(
         mockDefinitions.getStimmzettelerfassungStatus.mock.calls
-      ).toStrictEqual([[wahlID, wahlbezirkID]]);
+      ).toStrictEqual([
+        [wahlID, wahlbezirkID, mockDefinitions.onlineOnlyAxiosConfig],
+      ]);
+      expect(mockDefinitions.requestAsOnlineOnly).toHaveBeenCalledOnce();
       expect(useWorkflowStore().setStepDone).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,

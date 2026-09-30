@@ -14,6 +14,27 @@ export function useKandidatTools() {
     );
   }
 
+  function hasOnlyReststimme(kandidat: PersistedKandidat): boolean {
+    return (
+      _hasReststimmen(kandidat) &&
+      !kandidat.isDiscarded &&
+      !_hasEinzelstimmen(kandidat) &&
+      !_hasUngueltigStimmen(kandidat)
+    );
+  }
+
+  function _hasEinzelstimmen(kandidat: PersistedKandidat): boolean {
+    return !!kandidat.votesByVoter;
+  }
+
+  function _hasReststimmen(kandidat: PersistedKandidat): boolean {
+    return !!kandidat.votesByWahlvorschlag;
+  }
+
+  function _hasUngueltigStimmen(kandiat: PersistedKandidat): boolean {
+    return !!kandiat.invalidVotes;
+  }
+
   function getEinzelstimmenOrZero(kandidat: DseKandidat) {
     return kandidat.einzelstimmen ?? 0;
   }
@@ -95,6 +116,7 @@ export function useKandidatTools() {
     getUngueltigeStimmenOrZero,
     hasAnyKennzeichen,
     hasAnyKennzeichenOrReststimme,
+    hasOnlyReststimme,
     sortAndDeepCloneKandidaten,
   };
 }

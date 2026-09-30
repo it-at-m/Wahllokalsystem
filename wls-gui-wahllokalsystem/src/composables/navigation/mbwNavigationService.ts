@@ -220,7 +220,8 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           wahlbezirkID
         ),
         disabled: mbwWorkflow.value
-          ? !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_SCHNELLMELDUNG]
+          ? !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_SCHNELLMELDUNG] ||
+            !mbwWorkflow.value.stepsDone[MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG]
           : false,
       },
     ];

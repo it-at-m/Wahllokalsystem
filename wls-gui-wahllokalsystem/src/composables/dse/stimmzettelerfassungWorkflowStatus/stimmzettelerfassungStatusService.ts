@@ -20,6 +20,7 @@ const { dtoToModel, modelToDto } = useStimmzettelerfassungStatusMapper();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 
 export function useDseWorkflowStatusService() {
+  const { axiosConfigWrapper } = useCommonApiUtils();
   const stimmzettelerfassungControllerApi =
     new StimmzettelerfassungControllerApi(
       new Configuration({ basePath: ERGEBNISMELDUNG_SERVICE_API_URL })
@@ -37,7 +38,8 @@ export function useDseWorkflowStatusService() {
       const response =
         await stimmzettelerfassungControllerApi.getStimmzettelerfassungStatus(
           wahlID,
-          wahlbezirkID
+          wahlbezirkID,
+          axiosConfigWrapper().requestAsOnlineOnly()
         );
 
       const responseData = getNullOn204OrElseResponseData(response);

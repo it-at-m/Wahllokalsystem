@@ -272,6 +272,24 @@ describe("mbwNavigationService.ts", () => {
       });
     });
 
+    it("should_disableNiederschrift_when_schnellmeldungIsDoneButBeschlussfassungIsNotDone", () => {
+      _setDseWorkflow({
+        [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
+        [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
+        [MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS]: true,
+        [MbwStepsEnum.MBW_SCHNELLMELDUNG]: true,
+      });
+
+      const niederschriftNavigation = useMbwNavigationService(
+        wahlID,
+        wahlbezirkID
+      ).navigation.value.find(
+        (item) => item.targetRoute.name === MbwStepsEnum.MBW_NIEDERSCHRIFT
+      );
+
+      expect(niederschriftNavigation?.disabled).toBe(true);
+    });
+
     function _setDseWorkflow(stepsDone: Partial<Record<string, boolean>>) {
       useWorkflowStore().electionWorkflowsStates = [
         prepareElectionWorkflow()

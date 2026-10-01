@@ -49,7 +49,7 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
 
   const isBeschlussSpeichernButtonDisabled = computed(() => {
     const ergebnis = abstimmungsergebnis.value;
-    const valuesSelected =
+    const isAnyGrundSelected =
       beschlussDetails.value.beschlussgruende.some((grund) => grund.selected) ||
       beschlussDetails.value.andererGrundChecked;
 
@@ -63,7 +63,7 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
       );
     } else {
       return (
-        !valuesSelected ||
+        !isAnyGrundSelected ||
         ergebnis.abstimmungIsUngueltig ||
         (ergebnis.abstimmungIsUnentschieden &&
           !ergebnis.hasWahlvorsteherVotedDafuer) ||

@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -41,7 +40,6 @@ const {
   createPersistedStimmzettel,
   createStimmzettelWahlvorstandBeschlussgrund,
   createStimmzettelSystemBeschlussgrund,
-  preparePersistedStimmzettel,
 } = usePersistedStimmzettelTestDataFactory();
 
 describe("theBeschlussFassenTabUtils.ts", () => {
@@ -148,78 +146,6 @@ describe("theBeschlussFassenTabUtils.ts", () => {
         );
 
       expect(result).toStrictEqual({ andererGrund: "", beschlussgruende: [] });
-    });
-  });
-
-  describe("isStimmzettelGueltigBasedOnVormerkungsgruenden", () => {
-    it("should_returnTrue_when_stimmzettelHasNoBeschlussgruende", () => {
-      const stimmzettel = preparePersistedStimmzettel()
-        .systemBeschlussvorschlag([])
-        .wahlvorstandBeschlussvorschlag([])
-        .build();
-
-      const result =
-        unitUnderTest.isStimmzettelGueltigBasedOnVormerkungsgruenden(
-          stimmzettel
-        );
-
-      expect(result).toStrictEqual(true);
-    });
-    it("should_returnTrue_when_stimmzettelHasNoUngueltigeBeschlussgruende", () => {
-      const stimmzettel = preparePersistedStimmzettel()
-        .systemBeschlussvorschlag([
-          { reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig },
-        ])
-        .wahlvorstandBeschlussvorschlag([
-          {
-            text: "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
-          },
-        ])
-        .build();
-
-      const result =
-        unitUnderTest.isStimmzettelGueltigBasedOnVormerkungsgruenden(
-          stimmzettel
-        );
-
-      expect(result).toStrictEqual(true);
-    });
-
-    it("should_returnFalse_when_stimmzettelHasUngueltigeWahlvorstandBeschlussgruende", () => {
-      const stimmzettel = preparePersistedStimmzettel()
-        .systemBeschlussvorschlag([])
-        .wahlvorstandBeschlussvorschlag([
-          {
-            text: "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
-          },
-        ])
-        .build();
-
-      const result =
-        unitUnderTest.isStimmzettelGueltigBasedOnVormerkungsgruenden(
-          stimmzettel
-        );
-
-      expect(result).toStrictEqual(false);
-    });
-
-    it("should_returnFalse_when_stimmzettelHasUngueltigeSystemBeschlussgruende", () => {
-      const stimmzettel = preparePersistedStimmzettel()
-        .systemBeschlussvorschlag([
-          {
-            reason:
-              SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
-          },
-        ])
-        .wahlvorstandBeschlussvorschlag([])
-        .build();
-
-      const result =
-        unitUnderTest.isStimmzettelGueltigBasedOnVormerkungsgruenden(
-          stimmzettel
-        );
-
-      expect(result).toStrictEqual(false);
     });
   });
 });

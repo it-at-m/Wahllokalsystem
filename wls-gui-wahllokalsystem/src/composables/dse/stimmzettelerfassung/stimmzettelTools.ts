@@ -12,8 +12,11 @@ import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-const { sortWahlvorstandBeschlussgruende, sortSystemBeschlussgruende } =
-  useBeschlussgrundTools();
+const {
+  beschlussGruende,
+  sortWahlvorstandBeschlussgruende,
+  sortSystemBeschlussgruende,
+} = useBeschlussgrundTools();
 const { sortAndDeepCloneWahlvorschlaege } = useWahlvorschlagTools();
 
 export function useStimmzettelTools() {
@@ -132,6 +135,31 @@ export function useStimmzettelTools() {
     );
   }
 
+  function isStimmzettelGueltigBasedOnVormerkungsgruenden(
+    stimmzettel: PersistedStimmzettel
+  ) {
+    const ungueltigSet = new Set(
+      [
+        ...beschlussGruende.common.ungueltig,
+        ...beschlussGruende.bwb.ungueltig,
+      ].map((o) => o.toString())
+    );
+
+    const hasUngueltigerSystemGrund = (
+      stimmzettel.systemBeschlussvorschlag ?? []
+    ).some((beschlussvorschlag) => {
+      return ungueltigSet.has(beschlussvorschlag.reason);
+    });
+
+    const hasUngueltigerWahlvorstandGrund = (
+      stimmzettel.wahlvorstandBeschlussvorschlag ?? []
+    ).some((beschlussvorschlag) => {
+      return ungueltigSet.has(beschlussvorschlag.text);
+    });
+
+    return !(hasUngueltigerSystemGrund || hasUngueltigerWahlvorstandGrund);
+  }
+
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DseWahlvorschlag {
     const dseWahlvorschlag: DseWahlvorschlag = {
       wahlvorschlagID: wahlvorschlag.identifikator,
@@ -186,5 +214,6 @@ export function useStimmzettelTools() {
     normalizePersistedStimmzettel,
     resetDseStimmzettel,
     isSamePersistedStimmzettel,
+    isStimmzettelGueltigBasedOnVormerkungsgruenden,
   };
 }

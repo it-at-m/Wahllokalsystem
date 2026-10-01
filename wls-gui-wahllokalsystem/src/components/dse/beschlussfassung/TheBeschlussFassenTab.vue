@@ -103,14 +103,16 @@ import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 
 const { required } = useRules();
 
 const {
   createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
-  isStimmzettelGueltigBasedOnVormerkungsgruenden,
 } = useTheBeschlussFassenTabUtils();
 const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
+const { isStimmzettelGueltigBasedOnVormerkungsgruenden } =
+  useStimmzettelTools();
 
 const props = defineProps<{
   stimmzettel: PersistedStimmzettel | undefined;

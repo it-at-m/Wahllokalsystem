@@ -51,33 +51,7 @@ export function useTheBeschlussFassenTabUtils() {
     };
   }
 
-  function isStimmzettelGueltigBasedOnVormerkungsgruenden(
-    stimmzettel: PersistedStimmzettel
-  ) {
-    const ungueltigOptions =
-      createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
-        false,
-        undefined
-      ).beschlussgruende;
-    const ungueltigSet = new Set(ungueltigOptions.map((o) => o.grund));
-
-    const hasUngueltigerSystemGrund = (
-      stimmzettel.systemBeschlussvorschlag ?? []
-    ).some((beschlussvorschlag) => {
-      return ungueltigSet.has(beschlussvorschlag.reason);
-    });
-
-    const hasUngueltigerWahlvorstandGrund = (
-      stimmzettel.wahlvorstandBeschlussvorschlag ?? []
-    ).some((beschlussvorschlag) => {
-      return ungueltigSet.has(beschlussvorschlag.text);
-    });
-
-    return !(hasUngueltigerSystemGrund || hasUngueltigerWahlvorstandGrund);
-  }
-
   return {
     createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
-    isStimmzettelGueltigBasedOnVormerkungsgruenden,
   };
 }

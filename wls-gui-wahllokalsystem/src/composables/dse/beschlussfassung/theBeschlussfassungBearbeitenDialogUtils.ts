@@ -102,14 +102,14 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
           stimmzettel.value.gueltigkeit;
       }
 
-      _rebuildBeschlussgruende();
+      _rebuildBeschlussDetailsGruende();
     },
     { immediate: true }
   );
 
   watch(
     () => beschlussDetails.value.isGueltig,
-    () => _rebuildBeschlussgruende()
+    () => _rebuildBeschlussDetailsGruende()
   );
 
   watchEffect(() => {
@@ -140,7 +140,7 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
     }
   });
 
-  function _rebuildBeschlussgruende() {
+  function _rebuildBeschlussDetailsGruende() {
     const gruende =
       createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
         beschlussDetails.value.isGueltig,

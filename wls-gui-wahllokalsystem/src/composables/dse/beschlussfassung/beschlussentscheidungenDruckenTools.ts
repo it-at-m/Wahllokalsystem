@@ -10,7 +10,6 @@ import { useCommonPrintService } from "@/composables/drucken/commonPrintService.
 import { useAusdruckService } from "@/composables/ergebnismeldung/common/ausdruckService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
-import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 
 const { logError } = useLogging("useBeschlussentscheidungenDruckenTools");
@@ -51,7 +50,6 @@ export function useBeschlussentscheidungenDruckenTools(
       wahlbezirksArt: currentUserWahlbezirksArt.value,
       footer: createFooter(
         MeldungValidierungsstatusEnum.Valide,
-        MeldungsArtEnum.Beschlussentscheidungen,
         currentUserWahlbezirkNummer.value
       ),
     };

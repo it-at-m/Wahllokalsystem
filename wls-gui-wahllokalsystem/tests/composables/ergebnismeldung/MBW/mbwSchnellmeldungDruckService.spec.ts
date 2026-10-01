@@ -252,8 +252,8 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
         MeldungValidierungsstatusEnum.Valide;
       const meldungsArt = MeldungsArtEnum.Schnellmeldung;
 
-      const mockedValues = initDseIndependentMocks();
-      const expectedErgebnisse = createdExpectedStapelErgebnisse(mockedValues);
+      const mockedValues = _initDseIndependentMocks();
+      const expectedErgebnisse = _createdExpectedStapelErgebnisse(mockedValues);
 
       const result = await unitUnderTest.prepareDataForSchnellmeldungDruck(
         mockedValues.mockedWahl,
@@ -297,7 +297,7 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
       );
       mockIsDseAktiv.value = true;
 
-      const mockedValues = initDseIndependentMocks();
+      const mockedValues = _initDseIndependentMocks();
 
       // --- prepare mock Values ---
       const status = createStatus();
@@ -305,7 +305,7 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
         MeldungValidierungsstatusEnum.Valide;
       const meldungsArt = MeldungsArtEnum.Schnellmeldung;
 
-      const expectedErgebnisse = createExpectedStimmzettelErgebnisse();
+      const expectedErgebnisse = _createExpectedStimmzettelErgebnisse();
 
       const result = await unitUnderTest.prepareDataForSchnellmeldungDruck(
         mockedValues.mockedWahl,
@@ -345,8 +345,8 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
     });
   });
 
-  function createdExpectedStapelErgebnisse(
-    mockedValues: ReturnType<typeof initDseIndependentMocks>
+  function _createdExpectedStapelErgebnisse(
+    mockedValues: ReturnType<typeof _initDseIndependentMocks>
   ) {
     // stapel A
     const ergebnisA1 = prepareErgebnis()
@@ -515,7 +515,7 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
     };
   }
 
-  function createExpectedStimmzettelErgebnisse() {
+  function _createExpectedStimmzettelErgebnisse() {
     mockedStapelDUngueltig.value = [
       createPersistedStimmzettel(),
       createPersistedStimmzettel(),
@@ -553,7 +553,7 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
     };
   }
 
-  function initDseIndependentMocks() {
+  function _initDseIndependentMocks() {
     const mockedWahl = prepareWahl().wahlID(wahlID).build();
     const mockedWahlbezirkNummer = generateRandomString(4);
 

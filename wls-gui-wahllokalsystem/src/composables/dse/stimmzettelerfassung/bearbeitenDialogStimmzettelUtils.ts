@@ -20,6 +20,7 @@ import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
+import {useKandidatTools} from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
 /**
  * Check UI/UX Adr to see the rules:
@@ -35,6 +36,7 @@ export function useBearbeitenDialogStimmzettelUtils(
   maxEinzelstimmen = 3
 ) {
   const changeHistory = useStimmzettelChangeHistory();
+  const { hasAnyKennzeichenOrReststimme } = useKandidatTools();
   const {
     kandidatenOfStimmzettel,
     getKandidatToAddVotesByOrdnungszahl,
@@ -73,7 +75,7 @@ export function useBearbeitenDialogStimmzettelUtils(
   );
 
   const kandidatenWithValues = computed(() =>
-    kandidatenOfStimmzettel.value.filter(_hasKandidatAnyStimmeOrStreichung)
+    kandidatenOfStimmzettel.value.filter(hasAnyKennzeichenOrReststimme)
   );
 
   const countTotalVotes = computed(
@@ -396,15 +398,6 @@ export function useBearbeitenDialogStimmzettelUtils(
     deselectWahlvorschlag(wahlvorschlag);
     refreshWahlvorschlaegeVotes();
     changeHistory.registerWahlvorschlagDeselected(wahlvorschlag);
-  }
-
-  function _hasKandidatAnyStimmeOrStreichung(kandidat: DseKandidat) {
-    return (
-      kandidat.einzelstimmen !== null ||
-      kandidat.ungueltigeStimmen ||
-      kandidat.reststimmen ||
-      kandidat.durchgestrichen
-    );
   }
 
   function _updateSummaryByKandidat(

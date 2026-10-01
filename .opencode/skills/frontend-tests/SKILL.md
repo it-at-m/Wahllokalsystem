@@ -39,8 +39,6 @@ Der Skill greift, wenn:
 
 3. **Imports / Werkzeuge**
    - Verwende Vitest (`describe`, `it`, `expect`, `beforeEach`, `afterEach`, `vi`) und Vue Test Utils (`mount`, `flushPromises`, `VueWrapper`) analog zu bestehenden Tests.
-   - Nutze vorhandene Test-Utils:
-     - `withSetup` für Composable-Tests: `import { withSetup } from "@tests/utils/testutils.ts";`
    - Pinia / Vuetify / Router in Komponententests nur wie in den bestehenden Specs verwendet (z.B. `createTestingPinia`, global `vuetify`-Plugin, `createRouter` oder `vi.mock` für `@/plugins/router.ts`).
 
 4. **Keine Snapshots für Vue-Komponenten**
@@ -68,19 +66,7 @@ Der Skill greift, wenn:
 
 Der Skill soll Composable-Unit-Tests immer nach folgendem Muster erzeugen:
 
-1. **Setup über `withSetup`**
-   - Composable-Tests nutzen `withSetup` aus `@tests/utils/testutils.ts`, um Composable und App-Instanz zu erhalten:
-
-     ```ts
-     import type { App } from "vue";
-
-     import { withSetup } from "@tests/utils/testutils.ts";
-     import { afterEach, beforeEach, describe, expect, it } from "vitest";
-
-     import { useCounter } from "@/composables/common/useCounter.ts";
-     ```
-
-2. **Lebenszyklus im Test**
+1. **Lebenszyklus im Test**
    - Im `beforeEach` wird die Unit initialisiert:
 
      ```ts
@@ -100,7 +86,7 @@ Der Skill soll Composable-Unit-Tests immer nach folgendem Muster erzeugen:
      });
      ```
 
-3. **Testfälle**
+2. **Testfälle**
    - Fachliche Assertions auf die Rückgabewerte / Refs, keine Snapshots:
 
      ```ts
@@ -126,7 +112,7 @@ Der Skill soll Composable-Unit-Tests immer nach folgendem Muster erzeugen:
      );
      ```
 
-4. **Timer / Zeit-bezogene Composables**
+3. **Timer / Zeit-bezogene Composables**
    - Bei Zeit- oder Timer-Composables (z.B. `useCurrentTime`):
      - `vi.useFakeTimers()` in `beforeEach`.
      - `vi.useRealTimers()` in `afterEach`.
@@ -272,7 +258,6 @@ Auch wenn die Anfrage den Fokus auf Composables legt, soll der Skill Komponenten
 Wenn der Agent mit diesem Skill Tests schreibt:
 
 1. Für Composables:
-   - Nutze `withSetup`.
    - Nutze `App`-Instanz und unmount in `afterEach`.
    - Schreibe `it("should_..._when_...", ...)` mit fachlichen Assertions auf Refs und Rückgabewerte.
    - Keine Snapshots.

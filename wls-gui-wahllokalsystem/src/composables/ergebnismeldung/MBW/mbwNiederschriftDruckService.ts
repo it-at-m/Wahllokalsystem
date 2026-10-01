@@ -136,7 +136,7 @@ export function useMbwNiederschriftDruckService(
     const anzahlWahlscheine = await _getAnzahlWahlscheine();
     const begruendung = await _getBegruendungStimmzettelumschlaege(wahl);
     const bWerte = await getBWerteForWahlbezirkAndWahl();
-    const ungueltigeStimmen = await _getUngueltigeStimmenzettel();
+    const ungueltigeStimmen = await _getUngueltigeStimmzettel();
     await _getStimmenListeUndErgebniseGesamt();
     const parteienListe = await _getParteienListe();
     const ereignisse = _getEreignisse();
@@ -326,7 +326,7 @@ export function useMbwNiederschriftDruckService(
     return beanstandeteWahlbriefe;
   }
 
-  async function _getUngueltigeStimmenzettel(): Promise<number | undefined> {
+  async function _getUngueltigeStimmzettel(): Promise<number | undefined> {
     return isDseAktiv.value
       ? _getUngueltigeStimmenStimmzettelByStimmzettel()
       : _getUngueltigeStimmzettelByStapel();

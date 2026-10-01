@@ -8,7 +8,6 @@ import { computed, ref, watch, watchEffect } from "vue";
 
 import { useBeschlussAbstimmungsergebnisTools } from "@/composables/dse/beschlussfassung/beschlussAbstimmungsergebnisTools.ts";
 import { useBeschlussfassungDialogDeailsTools } from "@/composables/dse/beschlussfassung/beschlussfassungDialogDetailsTools.ts";
-import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
@@ -23,11 +22,12 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
     createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
     isStimmzettelGueltigBasedOnVormerkungsgruenden,
   } = useTheBeschlussFassenTabUtils();
-  const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
   const { createEmptyAbstimmungsergebnis } =
     useBeschlussAbstimmungsergebnisTools();
-  const { createEmptyBeschlussfassungDialogDetails } =
-    useBeschlussfassungDialogDeailsTools();
+  const {
+    createEmptyBeschlussfassungDialogDetails,
+    mergeGruendeAndReturnBeschlusstext,
+  } = useBeschlussfassungDialogDeailsTools();
 
   const abstimmungsergebnis = ref<BeschlussAbstimmungsergebnis>(
     createEmptyAbstimmungsergebnis()
@@ -136,7 +136,9 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
       !!beschlussDetails.value.andererGrund;
 
     if (!isBeschlussGefasst.value) {
-      beschlussDetails.value.beschlussText = _mergeAndReturnBeschlussText();
+      beschlussDetails.value.beschlussText = mergeGruendeAndReturnBeschlusstext(
+        beschlussDetails.value
+      );
     }
   });
 
@@ -148,18 +150,6 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
       );
     beschlussDetails.value.andererGrund = gruende.andererGrund;
     beschlussDetails.value.beschlussgruende = gruende.beschlussgruende;
-  }
-
-  function _mergeAndReturnBeschlussText() {
-    const selectedGruende = beschlussDetails.value.beschlussgruende
-      .filter((option) => option.selected)
-      .map((option) => getBeschlussgrundEnumValueAsString(option.grund))
-      .join(", ");
-    const andereGruende = beschlussDetails.value.andererGrundChecked
-      ? beschlussDetails.value.andererGrund
-      : "";
-
-    return [selectedGruende, andereGruende].filter(Boolean).join(", ");
   }
 
   function _resetAbstimmungsergebnis() {

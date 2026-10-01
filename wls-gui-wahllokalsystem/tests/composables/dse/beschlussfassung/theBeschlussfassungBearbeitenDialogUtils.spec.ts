@@ -13,9 +13,9 @@ const mockDefinitions = vi.hoisted(() => ({
     .fn()
     .mockReturnValue({ andererGrund: "", beschlussgruende: [] }),
   isStimmzettelGueltigBasedOnVormerkungsgruenden: vi.fn().mockReturnValue(true),
-  getBeschlussgrundEnumValueAsString: vi.fn((v: string) => `Mapped(${v})`),
   createEmptyAbstimmungsergebnis: vi.fn(),
   createEmptyBeschlussfassungDialogDetails: vi.fn(),
+  mergeGruendeAndReturnBeschlusstext: vi.fn(),
 }));
 
 vi.mock(
@@ -31,15 +31,6 @@ vi.mock(
     };
   }
 );
-
-vi.mock("@/composables/dse/beschlussfassung/beschlussgrundTools.ts", () => {
-  return {
-    useBeschlussgrundTools: () => ({
-      getBeschlussgrundEnumValueAsString:
-        mockDefinitions.getBeschlussgrundEnumValueAsString,
-    }),
-  };
-});
 vi.mock(
   import("@/composables/dse/beschlussfassung/beschlussAbstimmungsergebnisTools.ts"),
   () => {
@@ -72,6 +63,8 @@ vi.mock(
               beschlussText: "",
             }
           ),
+        mergeGruendeAndReturnBeschlusstext:
+          mockDefinitions.mergeGruendeAndReturnBeschlusstext,
       }),
     };
   }
@@ -99,6 +92,7 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
 
   it("should_initializeDefaults_when_stimmzettelIsUndefined", () => {
     const stimmzettel = ref(undefined);
+    mockDefinitions.mergeGruendeAndReturnBeschlusstext.mockReturnValue("");
 
     const unitUnderTest =
       useTheBeschlussfassungBearbeitenDialogUtils(stimmzettel);
@@ -197,15 +191,17 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
         ],
       }
     );
+    mockDefinitions.mergeGruendeAndReturnBeschlusstext.mockReturnValue(
+      "mocked beschluss text"
+    );
 
     const unitUnderTest =
       useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelRef);
 
     await nextTick();
 
-    // Da kein vorgegebener Beschlusstext vorhanden ist, wird er aus Gründen zusammengebaut
     expect(unitUnderTest.beschlussDetails.value.beschlussText).toStrictEqual(
-      "Mapped(X), Freitext"
+      "mocked beschluss text"
     );
     expect(
       mockDefinitions.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit

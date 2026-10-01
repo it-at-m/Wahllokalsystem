@@ -456,6 +456,10 @@ describe("wahlvorstandStore.ts", () => {
           .funktion(WahlvorstandsmitgliedFunktionEnum.W)
           .anwesend(true)
           .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(false)
+          .build(),
       ];
 
       const mockedDatetime = new Date();

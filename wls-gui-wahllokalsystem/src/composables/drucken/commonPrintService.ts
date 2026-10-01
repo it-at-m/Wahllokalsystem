@@ -72,7 +72,7 @@ export function useCommonPrintService() {
         }
       }
     } else {
-      // to be implemented - #1978
+      // to be implemented - #3524
       return "";
     }
   }

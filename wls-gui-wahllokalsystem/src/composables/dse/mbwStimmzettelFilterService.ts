@@ -4,7 +4,7 @@ import type { Ref } from "vue";
 import { computed } from "vue";
 
 import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
-import { usePersistedStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/PersistedStimmzettelTools.ts";
+import { usePersistedStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/persistedStimmzettelTools.ts";
 
 export function useMbwStimmzettelFilterService(
   stimmzettel: Ref<PersistedStimmzettel[]>
@@ -12,14 +12,14 @@ export function useMbwStimmzettelFilterService(
   const {
     matchesMBWStapelA,
     matchesMBWStapelB,
-    matchesMBWStapelBC,
+    matchesMBWStapelC,
     matchesMBWStapelDUngueltig,
     matchesMBWStapelEUngueltig,
   } = usePersistedStimmzettelTools();
 
   const stapelA = computed(() => stimmzettel.value.filter(matchesMBWStapelA));
   const stapelB = computed(() => stimmzettel.value.filter(matchesMBWStapelB));
-  const stapelBC = computed(() => stimmzettel.value.filter(matchesMBWStapelBC));
+  const stapelC = computed(() => stimmzettel.value.filter(matchesMBWStapelC));
   const stapelDUngueltig = computed(() =>
     stimmzettel.value.filter(matchesMBWStapelDUngueltig)
   );
@@ -51,7 +51,7 @@ export function useMbwStimmzettelFilterService(
     stapelASumGroupedByWahlvorschlag,
     stapelB,
     stapelBSumGroupedByWahlvorschlag,
-    stapelBC,
+    stapelC,
     stapelDUngueltig,
     stapelEUngueltig,
   };

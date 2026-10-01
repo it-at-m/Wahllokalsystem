@@ -57,23 +57,6 @@ export function useMbwSchnellmeldungDruckUtils(
   const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
   const { createFooter, createBarcode } = useCommonPrintService();
 
-  async function _getWahlvorschlaegeAndErgebnisseAB(): Promise<
-    MbwErgebnisseAndWahlvorschlag[]
-  > {
-    if (isDseAktiv.value) {
-      const wahlvorschlaege = await getWahlvorschlaege(wahlID, wahlbezirkID);
-      const { wahlvorschlaegeErgebnisseStapelAAndB } =
-        useMbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper(
-          computed(() => wahlvorschlaege.wahlvorschlaege),
-          stapelASumGroupedByWahlvorschlag,
-          stapelBSumGroupedByWahlvorschlag
-        );
-      return wahlvorschlaegeErgebnisseStapelAAndB.value;
-    } else {
-      return await loadAndCombineErgebnisseAndWahlvorschlaege();
-    }
-  }
-
   async function prepareDataForSchnellmeldungDruck(
     wahl: Wahl,
     status: Status,
@@ -166,6 +149,23 @@ export function useMbwSchnellmeldungDruckUtils(
 
   async function _getUngueltigeStimmenStimmzettelByStimmzettel() {
     return stapelEUngueltig.value.length + stapelDUngueltig.value.length;
+  }
+
+  async function _getWahlvorschlaegeAndErgebnisseAB(): Promise<
+    MbwErgebnisseAndWahlvorschlag[]
+  > {
+    if (isDseAktiv.value) {
+      const wahlvorschlaege = await getWahlvorschlaege(wahlID, wahlbezirkID);
+      const { wahlvorschlaegeErgebnisseStapelAAndB } =
+        useMbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper(
+          computed(() => wahlvorschlaege.wahlvorschlaege),
+          stapelASumGroupedByWahlvorschlag,
+          stapelBSumGroupedByWahlvorschlag
+        );
+      return wahlvorschlaegeErgebnisseStapelAAndB.value;
+    } else {
+      return await loadAndCombineErgebnisseAndWahlvorschlaege();
+    }
   }
 
   return {

@@ -1,9 +1,9 @@
 <template>
   <v-card>
-    <v-card-text>
+    <v-card-text v-if="beschlussDetails">
       <v-row>
         <v-col>
-          <v-radio-group v-model="isGueltig">
+          <v-radio-group v-model="beschlussDetails.isStimmzettelGueltig">
             <v-radio
               :value="true"
               class="my-2 full-width-radio"
@@ -38,9 +38,9 @@
             </v-radio>
           </v-radio-group>
         </v-col>
-        <v-col>
+        <v-col v-if="!isBeschlussGefasst">
           <v-checkbox
-            v-for="beschlussgrund in beschlussgruende"
+            v-for="beschlussgrund in beschlussDetails.beschlussgruende"
             :key="beschlussgrund.grund"
             v-model="beschlussgrund.selected"
             :label="getBeschlussgrundEnumValueAsString(beschlussgrund.grund)"
@@ -48,26 +48,55 @@
           />
           <div class="d-flex align-center">
             <v-checkbox
-              :model-value="andererGrundChecked"
+              :model-value="beschlussDetails.andererGrundChecked"
               readonly
             />
             <v-textarea
-              v-model="andererGrund"
+              v-model="beschlussDetails.andererGrund"
               label="Andere Gründe"
               rows="1"
               auto-grow
             />
           </div>
         </v-col>
+        <v-col v-else>
+          <base-feedback-card
+            title="Beschluss wurde bereits gefasst"
+            type="success"
+            hide-icon
+          >
+            <div class="w-100 mt-2">
+              Beschlussergebnis ist:
+              {{ toText(stimmzettelGueltigkeitAusBeschluss) }}
+              <base-stimmzettel-gueltigkeit-icon
+                :gueltigkeit="stimmzettelGueltigkeitAusBeschluss"
+              />
+              <v-textarea
+                v-model="beschlussDetails.beschlussText"
+                label="Beschlusstext"
+                rows="1"
+                auto-grow
+                class="mt-2"
+                :rules="[required]"
+              />
+              Bitte für einen neuen Beschluss den Text anpassen, die Gültigkeit
+              überprüfen, erneut abstimmen und anschließend speichern.
+            </div>
+          </base-feedback-card>
+        </v-col>
       </v-row>
     </v-card-text>
     <v-card-title class="mb-4"> Abstimmungsergebnis </v-card-title>
-    <v-card-text>
+    <v-card-text v-if="abstimmungsergebnis">
       <v-row style="align-items: stretch">
         <v-col cols="5">
           <base-number-input
-            v-model="stimmenDafuer"
-            :rules="[required]"
+            v-model="abstimmungsergebnis.stimmenDafuer"
+            :rules="[
+              required,
+              minNumber(1),
+              maxNumber(lastSavedAnwesendeWahlvorstandsmitgliederAnzahl),
+            ]"
             label="Stimmen dafür"
           />
         </v-col>
@@ -84,10 +113,72 @@
         </v-col>
         <v-col cols="5">
           <base-number-input
-            v-model="stimmenDagegen"
-            :rules="[required]"
+            v-model="abstimmungsergebnis.stimmenDagegen"
+            :rules="[
+              required,
+              minNumber(0),
+              maxNumber(lastSavedAnwesendeWahlvorstandsmitgliederAnzahl),
+            ]"
             label="Stimmen dagegen"
           />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <base-feedback-card
+            v-if="abstimmungsergebnis.abstimmungIsUnentschieden"
+            title="Die Abstimmung ist unentschieden"
+            type="warning"
+          >
+            <div>
+              <p>
+                Bei einem Gleichstand ist die Stimme des Wahlvorstehers / der
+                Wahlvorsteherin ausschlaggebend.
+              </p>
+              <p>
+                Bitte bestätigen Sie, dass der/die Wahlvorsteher/in
+                <span class="font-weight-bold"> dafür </span> gestimmt hat, und
+                das Abstimmungsergebnis somit
+                <span class="font-weight-bold">
+                  {{ (abstimmungsergebnis.stimmenDafuer ?? 0) + 1 }} zu
+                  {{ abstimmungsergebnis.stimmenDagegen }} für den
+                  Beschlussvorschlag
+                </span>
+                ist.
+              </p>
+              <v-checkbox
+                v-model="abstimmungsergebnis.hasWahlvorsteherVotedDafuer"
+                label="Der/Die Wahlvorsteher/in hat dafür gestimmt"
+                hide-details
+              />
+            </div>
+          </base-feedback-card>
+          <base-feedback-card
+            v-if="abstimmungsergebnis.abstimmungIsUngueltig"
+            title="Ungültige Zusammensetzung an Stimmen"
+            type="error"
+          >
+            <ul>
+              <li>Es dürfen keine negativen Stimmen vergeben werden.</li>
+              <li>
+                Es müssen sich mindestens
+                <span class="font-weight-bold"> 3 </span> Personen an der
+                Abstimmung beteiligen.
+              </li>
+              <li>
+                Es können nicht mehr als
+                <span class="font-weight-bold">
+                  {{ lastSavedAnwesendeWahlvorstandsmitgliederAnzahl }}
+                </span>
+                Personen an der Abstimmung teilnehmen.
+              </li>
+              <li>
+                Die Anzahl der "Stimmen dagegen" darf nicht größer sein, als die
+                Anzahl der "Stimmen dafür". Über einen abgelehnten
+                Beschlussvorschlag muss neu abgestimmt werden.
+              </li>
+            </ul>
+          </base-feedback-card>
         </v-col>
       </v-row>
     </v-card-text>
@@ -95,64 +186,37 @@
 </template>
 
 <script setup lang="ts">
-import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
+import type { BeschlussAbstimmungsergebnis } from "@/types/dse/beschlussfassung/BeschlussAbstimmungsergebnis.ts";
+import type { BeschlussfassungDialogDetails } from "@/types/dse/beschlussfassung/BeschlussfassungDialogDetails.ts";
 
-import { computed, ref, watch } from "vue";
+import { storeToRefs } from "pinia";
 
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
+import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
-import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
+import { useStimmzettelGueltigkeitEnumTools } from "@/composables/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnumTools.ts";
+import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-const { required } = useRules();
+const { required, minNumber, maxNumber } = useRules();
 
-const {
-  createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
-  isStimmzettelGueltigBasedOnVormerkungsgruenden,
-} = useTheBeschlussFassenTabUtils();
 const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
+const { toText } = useStimmzettelGueltigkeitEnumTools();
+const { lastSavedAnwesendeWahlvorstandsmitgliederAnzahl } = storeToRefs(
+  useWahlvorstandStore()
+);
 
-const props = defineProps<{
-  stimmzettel: PersistedStimmzettel | undefined;
+const beschlussDetails =
+  defineModel<BeschlussfassungDialogDetails>("beschlussDetails");
+const abstimmungsergebnis = defineModel<BeschlussAbstimmungsergebnis>(
+  "abstimmungsergebnis"
+);
+defineProps<{
+  stimmzettelGueltigkeitAusBeschluss: StimmzettelGueltigkeitEnum;
+  isBeschlussGefasst: boolean;
 }>();
-
-interface BeschlussgrundOption {
-  grund: string;
-  selected: boolean;
-}
-const beschlussgruende = ref<BeschlussgrundOption[]>([]);
-const isGueltig = ref<boolean | null>(null);
-const andererGrund = ref("");
-const andererGrundChecked = computed(() => !!andererGrund.value);
-const stimmenDafuer = ref<number | null>(null);
-const stimmenDagegen = ref<number | null>(null);
-
-watch(
-  () => props.stimmzettel,
-  (stimmzettel) => {
-    if (!stimmzettel) return;
-
-    isGueltig.value =
-      isStimmzettelGueltigBasedOnVormerkungsgruenden(stimmzettel);
-    rebuildBeschlussgruende();
-  },
-  { immediate: true }
-);
-
-watch(
-  () => isGueltig.value,
-  () => rebuildBeschlussgruende()
-);
-
-function rebuildBeschlussgruende() {
-  const gruende =
-    createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
-      isGueltig.value,
-      props.stimmzettel
-    );
-  andererGrund.value = gruende.andererGrund;
-  beschlussgruende.value = gruende.beschlussgruende;
-}
 </script>
 
 <style scoped>

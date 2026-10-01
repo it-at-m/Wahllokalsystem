@@ -64,7 +64,7 @@ import TheMbwDseSchnellmeldungCard from "@/components/ergebnismeldung/MBW/TheMbw
 import TheMbwStapelSchnellmeldungCard from "@/components/ergebnismeldung/MBW/TheMbwStapelSchnellmeldungCard.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
-import { useMbwSchnellmeldungDruckUtils } from "@/composables/ergebnismeldung/MBW/mbwSchnellmeldungDruckUtils.ts";
+import { useMbwSchnellmeldungDruckService } from "@/composables/ergebnismeldung/MBW/mbwSchnellmeldungDruckService.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useSchnellmeldungDruck } from "@/composables/ergebnismeldung/MBW/schnellmeldungDruck.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
@@ -94,7 +94,7 @@ const {
   sendSchnellmeldung,
   updateStatusAfterSchnellmeldungDrucken,
 } = useMbwUtils(wahlID, wahlbezirkID);
-const { prepareDataForSchnellmeldungDruck } = useMbwSchnellmeldungDruckUtils(
+const { prepareDataForSchnellmeldungDruck } = useMbwSchnellmeldungDruckService(
   wahlID,
   wahlbezirkID
 );

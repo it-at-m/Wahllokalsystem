@@ -25,7 +25,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
+import { useMbwNiederschriftDruckService } from "@/composables/ergebnismeldung/MBW/mbwNiederschriftDruckService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -176,7 +176,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
   const wahlID = "wahl-id";
   const wahlbezirkID = "wahlbezirk-id";
 
-  let unitUnderTest: ReturnType<typeof useMbtUtilsNiederschrift>;
+  let unitUnderTest: ReturnType<typeof useMbwNiederschriftDruckService>;
 
   beforeEach(() => {
     mockIsDseAktiv.value = false;
@@ -377,7 +377,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
 
       const status = createStatus();
       status.niederschrift.validierungsstatus = "VALIDE";
-      unitUnderTest = useMbtUtilsNiederschrift(wahlID, wahlbezirkID);
+      unitUnderTest = useMbwNiederschriftDruckService(wahlID, wahlbezirkID);
       const result = await unitUnderTest.prepareDataForNiederschriftDruck(
         status,
         MeldungsArtEnum.Niederschrift,
@@ -657,7 +657,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
 
       const status = createStatus();
       status.niederschrift.validierungsstatus = "VALIDE";
-      unitUnderTest = useMbtUtilsNiederschrift(wahlID, wahlbezirkID);
+      unitUnderTest = useMbwNiederschriftDruckService(wahlID, wahlbezirkID);
       const result = await unitUnderTest.prepareDataForNiederschriftDruck(
         status,
         MeldungsArtEnum.Niederschrift,

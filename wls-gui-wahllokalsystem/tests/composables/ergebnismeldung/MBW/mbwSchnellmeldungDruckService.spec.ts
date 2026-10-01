@@ -20,7 +20,7 @@ import { computed, ref } from "vue";
 
 import { useNumberFormatter } from "@/composables/common/numberFormatter.ts";
 import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
-import { useMbwSchnellmeldungDruckUtils } from "@/composables/ergebnismeldung/MBW/mbwSchnellmeldungDruckUtils.ts";
+import { useMbwSchnellmeldungDruckService } from "@/composables/ergebnismeldung/MBW/mbwSchnellmeldungDruckService.ts";
 import pinia from "@/plugins/pinia.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
@@ -208,7 +208,7 @@ const { convertToSixDigitArray } = useNumberFormatter();
 const mockedNow = new Date();
 
 describe("mbwSchnellmeldungDruckUtils.ts", () => {
-  let unitUnderTest: ReturnType<typeof useMbwSchnellmeldungDruckUtils>;
+  let unitUnderTest: ReturnType<typeof useMbwSchnellmeldungDruckService>;
 
   const wahlID = generateRandomString(10);
   const wahlbezirkID = generateRandomString(10);
@@ -216,7 +216,7 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
   beforeEach(() => {
     createTestingPinia({ createSpy: vi.fn, stubActions: false });
     mockIsDseAktiv.value = false;
-    unitUnderTest = useMbwSchnellmeldungDruckUtils(wahlID, wahlbezirkID);
+    unitUnderTest = useMbwSchnellmeldungDruckService(wahlID, wahlbezirkID);
 
     vi.useFakeTimers({
       now: mockedNow,

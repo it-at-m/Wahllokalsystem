@@ -56,7 +56,10 @@ const { toGermanDate, toHhMm } = useDateTimeFormatter();
 const { getErgebnisse } = useErgebnisService();
 const { createWithWahlvorschlagIDAndErgebnis } = useErgebnisTools();
 
-export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
+export function useMbwNiederschriftDruckService(
+  wahlID: string,
+  wahlbezirkID: string
+) {
   const { getAWerteForWahlbezirkAndWahl } = useAWerteService();
   const { getUrnenwahlvorbereitung } = useWahlvorbereitungService();
   const { getStimmabgabevermerke } = useStimmabgabevermerkeService();

@@ -24,7 +24,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-export function useMbwSchnellmeldungDruckUtils(
+export function useMbwSchnellmeldungDruckService(
   wahlID: string,
   wahlbezirkID: string
 ) {

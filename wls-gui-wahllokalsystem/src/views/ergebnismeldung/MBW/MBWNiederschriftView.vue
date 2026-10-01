@@ -74,8 +74,8 @@ import { useBeschlussentscheidungenDruckenTools } from "@/composables/dse/beschl
 import { useBeschlussentscheidungenDruckTemplateTools } from "@/composables/dse/beschlussfassung/beschlussentscheidungenDruckTemplateTools.ts";
 import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
+import { useMbwNiederschriftDruckService } from "@/composables/ergebnismeldung/MBW/mbwNiederschriftDruckService.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
-import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
 import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckBWB.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
@@ -138,7 +138,7 @@ const {
 const {
   buildNiederschriftTemplateFromData: buildNiederschriftTemplateFromDataBWB,
 } = useNiederschriftDruckBWB();
-const { prepareDataForNiederschriftDruck } = useMbtUtilsNiederschrift(
+const { prepareDataForNiederschriftDruck } = useMbwNiederschriftDruckService(
   wahlID,
   currentUserWahlbezirkID
 );

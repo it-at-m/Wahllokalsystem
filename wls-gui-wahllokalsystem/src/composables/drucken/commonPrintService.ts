@@ -40,26 +40,19 @@ export function useCommonPrintService() {
     meldungsArt: MeldungsartEnum,
     wahlbezirkNummer: string
   ) {
+    const date = new Date();
+    const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
+
     if (meldungsArt == MeldungsArtEnum.Schnellmeldung) {
       if (validierungsstatus) {
-        const date = new Date();
-        const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
-
-        if (validierungsstatus === MeldungValidierungsstatusEnum.Valide) {
-          return crypto.randomUUID() + ", " + formattedDateWithTime + " O";
-        } else {
-          return crypto.randomUUID() + ", " + formattedDateWithTime + " M";
-        return `${crypto.randomUUID()}, ${formattedDateWithTime}${
+        const validierungsPrefix =
           validierungsstatus === MeldungValidierungsstatusEnum.Valide
             ? " O"
-            : " M"
-        }`;
+            : " M";
+        return `${crypto.randomUUID()}, ${formattedDateWithTime}${validierungsPrefix}`;
       }
     } else if (meldungsArt == MeldungsArtEnum.Beschlussentscheidungen) {
       if (validierungsstatus) {
-        const date = new Date();
-        const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
-
         if (validierungsstatus === MeldungValidierungsstatusEnum.Valide) {
           return (
             crypto.randomUUID() +

@@ -83,7 +83,7 @@ export function useMbwSchnellmeldungDruckUtils(
         (vorschlag.ergebnisStapelB.ergebnis ?? 0);
     }
 
-    const ungueltigeStimmen = await _getUngueltigeStimmenzettel();
+    const ungueltigeStimmen = await _getUngueltigeStimmzettel();
 
     const stimmenGesamt = gueltigeStimmenGesamt + ungueltigeStimmen;
 
@@ -117,7 +117,7 @@ export function useMbwSchnellmeldungDruckUtils(
     };
   }
 
-  async function _getUngueltigeStimmenzettel() {
+  async function _getUngueltigeStimmzettel() {
     return isDseAktiv.value
       ? _getUngueltigeStimmenStimmzettelByStimmzettel()
       : _getUngueltigeStimmzettelByStapel();

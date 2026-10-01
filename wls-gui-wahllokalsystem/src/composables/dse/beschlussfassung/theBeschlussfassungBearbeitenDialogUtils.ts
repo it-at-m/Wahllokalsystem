@@ -7,7 +7,7 @@ import { storeToRefs } from "pinia";
 import { computed, ref, watch, watchEffect } from "vue";
 
 import { useBeschlussAbstimmungsergebnisTools } from "@/composables/dse/beschlussfassung/beschlussAbstimmungsergebnisTools.ts";
-import { useBeschlussfassungDialogDeailsTools } from "@/composables/dse/beschlussfassung/beschlussfassungDialogDetailsTools.ts";
+import { useBeschlussfassungDialogDetailsTools } from "@/composables/dse/beschlussfassung/beschlussfassungDialogDetailsTools.ts";
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
@@ -27,7 +27,7 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
   const {
     createEmptyBeschlussfassungDialogDetails,
     mergeGruendeAndReturnBeschlusstext,
-  } = useBeschlussfassungDialogDeailsTools();
+  } = useBeschlussfassungDialogDetailsTools();
 
   const abstimmungsergebnis = ref<BeschlussAbstimmungsergebnis>(
     createEmptyAbstimmungsergebnis()

@@ -2,7 +2,7 @@ import type { BeschlussfassungDialogDetails } from "@/types/dse/beschlussfassung
 
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 
-export function useBeschlussfassungDialogDeailsTools() {
+export function useBeschlussfassungDialogDetailsTools() {
   const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
 
   function createEmptyBeschlussfassungDialogDetails(): BeschlussfassungDialogDetails {

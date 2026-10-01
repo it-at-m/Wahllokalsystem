@@ -2,7 +2,7 @@ import { useBeschlussfassungDialogDetailsTestDataFactory } from "@tests/utils/ds
 import { useBeschlussgrundOptionTestDataFactory } from "@tests/utils/dse/BeschlussgrundOptionTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useBeschlussfassungDialogDeailsTools } from "@/composables/dse/beschlussfassung/beschlussfassungDialogDetailsTools.ts";
+import { useBeschlussfassungDialogDetailsTools } from "@/composables/dse/beschlussfassung/beschlussfassungDialogDetailsTools.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getBeschlussgrundEnumValueAsString: vi.fn((v: string) => `Mapped(${v})`),
@@ -17,15 +17,15 @@ vi.mock("@/composables/dse/beschlussfassung/beschlussgrundTools.ts", () => {
   };
 });
 
-describe("useBeschlussfassungDialogDeailsTools.ts", () => {
-  let unitUnderTest: ReturnType<typeof useBeschlussfassungDialogDeailsTools>;
+describe("useBeschlussfassungDialogDetailsTools.ts", () => {
+  let unitUnderTest: ReturnType<typeof useBeschlussfassungDialogDetailsTools>;
   const { prepareBeschlussfassungDialogDetails } =
     useBeschlussfassungDialogDetailsTestDataFactory();
   const { prepareBeschlussgrundOption } =
     useBeschlussgrundOptionTestDataFactory();
 
   beforeEach(() => {
-    unitUnderTest = useBeschlussfassungDialogDeailsTools();
+    unitUnderTest = useBeschlussfassungDialogDetailsTools();
   });
 
   describe("createEmptyBeschlussfassungDialogDetails", () => {

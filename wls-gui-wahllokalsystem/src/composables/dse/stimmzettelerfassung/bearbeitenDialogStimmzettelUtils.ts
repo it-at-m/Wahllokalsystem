@@ -20,7 +20,7 @@ import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
-import {useKandidatTools} from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
 /**
  * Check UI/UX Adr to see the rules:
@@ -127,15 +127,6 @@ export function useBearbeitenDialogStimmzettelUtils(
       summary
     );
   });
-
-  const isLeererStimmzettelPossible = computed(
-    () =>
-      stimmenSummary.value.ungueltigeStimmen +
-        stimmenSummary.value.einzelstimmen +
-        stimmenSummary.value.reststimmen +
-        stimmenSummary.value.streichungen ==
-      0
-  );
 
   const wahlvorschlaegeWithListenkreuz = computed(() =>
     stimmzettel.value.wahlvorschlaege.filter(
@@ -534,7 +525,6 @@ export function useBearbeitenDialogStimmzettelUtils(
     stimmzettel: computed(() => stimmzettel.value),
     stimmenSummary,
     wahlvorschlaegeWithListenkreuz,
-    isLeererStimmzettelPossible,
   };
 }
 export type BearbeitenDialogStimmzettel = ReturnType<

@@ -13,6 +13,7 @@ import { useBearbeitenDialogStimmzettelKandidatUtils } from "@/composables/dse/s
 import { useBearbeitenDialogStimmzettelReststimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelReststimmeUtils.ts";
 import { useBearbeitenDialogStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts";
 import { useBearbeitenDialogStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelWahlvorschlagUtils.ts";
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
@@ -20,7 +21,6 @@ import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { ManagedStimmzettelError } from "@/types/dse/error/ManagedStimmzettelError.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
-import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 
 /**
  * Check UI/UX Adr to see the rules:

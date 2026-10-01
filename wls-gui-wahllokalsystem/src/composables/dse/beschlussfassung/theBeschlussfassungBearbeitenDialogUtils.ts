@@ -6,6 +6,8 @@ import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { computed, ref, watch, watchEffect } from "vue";
 
+import { useBeschlussAbstimmungsergebnisTools } from "@/composables/dse/beschlussfassung/beschlussAbstimmungsergebnisTools.ts";
+import { useBeschlussfassungDialogDeailsTools } from "@/composables/dse/beschlussfassung/beschlussfassungDialogDetailsTools.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
@@ -22,22 +24,18 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
     isStimmzettelGueltigBasedOnVormerkungsgruenden,
   } = useTheBeschlussFassenTabUtils();
   const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
+  const { createEmptyAbstimmungsergebnis } =
+    useBeschlussAbstimmungsergebnisTools();
+  const { createEmptyBeschlussfassungDialogDetails } =
+    useBeschlussfassungDialogDeailsTools();
 
-  const abstimmungsergebnis = ref<BeschlussAbstimmungsergebnis>({
-    stimmenDafuer: null,
-    stimmenDagegen: null,
-    hasWahlvorsteherVotedDafuer: false,
-    abstimmungIsUnentschieden: false,
-    abstimmungIsUngueltig: false,
-  });
+  const abstimmungsergebnis = ref<BeschlussAbstimmungsergebnis>(
+    createEmptyAbstimmungsergebnis()
+  );
 
-  const beschlussDetails = ref<BeschlussfassungDialogDetails>({
-    isGueltig: null,
-    beschlussgruende: [],
-    andererGrund: "",
-    andererGrundChecked: false,
-    beschlussText: "",
-  });
+  const beschlussDetails = ref<BeschlussfassungDialogDetails>(
+    createEmptyBeschlussfassungDialogDetails()
+  );
 
   const stimmzettelGueltigkeitAusBeschluss = ref<StimmzettelGueltigkeitEnum>(
     StimmzettelGueltigkeitEnum.BeschlussAusstehend
@@ -165,23 +163,13 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
   }
 
   function _resetAbstimmungsergebnis() {
-    abstimmungsergebnis.value = {
-      stimmenDafuer: null,
-      stimmenDagegen: null,
-      hasWahlvorsteherVotedDafuer: false,
-      abstimmungIsUnentschieden: false,
-      abstimmungIsUngueltig: false,
-    };
+    abstimmungsergebnis.value = createEmptyAbstimmungsergebnis();
   }
 
   function _resetBeschlussDetails(stimmzettel: PersistedStimmzettel) {
-    beschlussDetails.value = {
-      isGueltig: isStimmzettelGueltigBasedOnVormerkungsgruenden(stimmzettel),
-      beschlussgruende: [],
-      andererGrund: "",
-      andererGrundChecked: false,
-      beschlussText: "",
-    };
+    beschlussDetails.value = createEmptyBeschlussfassungDialogDetails();
+    beschlussDetails.value.isGueltig =
+      isStimmzettelGueltigBasedOnVormerkungsgruenden(stimmzettel);
   }
 
   return {

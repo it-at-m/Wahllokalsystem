@@ -14,6 +14,8 @@ const mockDefinitions = vi.hoisted(() => ({
     .mockReturnValue({ andererGrund: "", beschlussgruende: [] }),
   isStimmzettelGueltigBasedOnVormerkungsgruenden: vi.fn().mockReturnValue(true),
   getBeschlussgrundEnumValueAsString: vi.fn((v: string) => `Mapped(${v})`),
+  createEmptyAbstimmungsergebnis: vi.fn(),
+  createEmptyBeschlussfassungDialogDetails: vi.fn(),
 }));
 
 vi.mock(
@@ -38,6 +40,42 @@ vi.mock("@/composables/dse/beschlussfassung/beschlussgrundTools.ts", () => {
     }),
   };
 });
+vi.mock(
+  import("@/composables/dse/beschlussfassung/beschlussAbstimmungsergebnisTools.ts"),
+  () => {
+    return {
+      useBeschlussAbstimmungsergebnisTools: () => ({
+        createEmptyAbstimmungsergebnis:
+          mockDefinitions.createEmptyAbstimmungsergebnis.mockReturnValue({
+            stimmenDafuer: null,
+            stimmenDagegen: null,
+            hasWahlvorsteherVotedDafuer: false,
+            abstimmungIsUnentschieden: false,
+            abstimmungIsUngueltig: false,
+          }),
+      }),
+    };
+  }
+);
+vi.mock(
+  import("@/composables/dse/beschlussfassung/beschlussfassungDialogDetailsTools.ts"),
+  () => {
+    return {
+      useBeschlussfassungDialogDeailsTools: () => ({
+        createEmptyBeschlussfassungDialogDetails:
+          mockDefinitions.createEmptyBeschlussfassungDialogDetails.mockReturnValue(
+            {
+              isGueltig: null,
+              beschlussgruende: [],
+              andererGrund: "",
+              andererGrundChecked: false,
+              beschlussText: "",
+            }
+          ),
+      }),
+    };
+  }
+);
 
 describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
   const {

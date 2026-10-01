@@ -4,7 +4,6 @@ import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
-import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
@@ -94,7 +93,6 @@ const { createWahlvorschlag, prepareWahlvorschlag, prepareWahlvorschlaege } =
   useWahlvorschlaegeTestDataFactory();
 const { createWahl } = useWahlTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
-useStimmabgabevermerkeTestDataFactory();
 const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
 const mockedNow = new Date();

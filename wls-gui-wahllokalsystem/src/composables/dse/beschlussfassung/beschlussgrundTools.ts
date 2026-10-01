@@ -1,7 +1,10 @@
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 
+import { storeToRefs } from "pinia";
+
 import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 
@@ -19,6 +22,32 @@ export function useBeschlussgrundTools() {
     WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagLeerUndGekennzeichnet,
     WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagUnterschiedlichGekennzeichnet,
   ];
+
+  const beschlussGruende = {
+    common: {
+      gueltig: [
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleIstZweifelsfreiErkennbar,
+        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+        SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+        SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+      ],
+      ungueltig: [
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
+        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+        WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
+        WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
+      ],
+    },
+    bwb: {
+      gueltig: [
+        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagIdentischGekennzeichnet,
+        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagLeerUndGekennzeichnet,
+      ],
+      ungueltig: [
+        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagUnterschiedlichGekennzeichnet,
+      ],
+    },
+  };
 
   function getWahlvorstandBeschlussvorschlaege(isBWB: boolean) {
     if (isBWB) {
@@ -61,11 +90,28 @@ export function useBeschlussgrundTools() {
       : grund;
   }
 
+  function getBeschlussGruendeBasedOnGueltigkeit(isGueltig: boolean) {
+    const { isBWB } = storeToRefs(useUserStore());
+
+    return isGueltig
+      ? isBWB.value
+        ? [...beschlussGruende.common.gueltig, ...beschlussGruende.bwb.gueltig]
+        : beschlussGruende.common.gueltig
+      : isBWB.value
+        ? [
+            ...beschlussGruende.common.ungueltig,
+            ...beschlussGruende.bwb.ungueltig,
+          ]
+        : beschlussGruende.common.ungueltig;
+  }
+
   return {
+    beschlussGruende,
     createBeschlussgrundWithText,
     getWahlvorstandBeschlussvorschlaege,
     sortWahlvorstandBeschlussgruende,
     sortSystemBeschlussgruende,
     getBeschlussgrundEnumValueAsString,
+    getBeschlussGruendeBasedOnGueltigkeit,
   };
 }

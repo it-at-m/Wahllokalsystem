@@ -9,8 +9,9 @@ import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/Sys
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  mapGruendeToBeschlussgrundOptions: (gruende: string[]) =>
-    gruende.map((g) => ({ grund: g, selected: false })),
+  mapGruendeToBeschlussgrundOptions: vi.fn((gruende: string[]) =>
+    gruende.map((g) => ({ grund: g, selected: false }))
+  ),
   setSystemBeschlussgruendeTrueWhenFoundInStimmzettel: vi.fn(),
   setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel: vi.fn(),
   setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList: vi.fn(),
@@ -36,8 +37,12 @@ vi.mock(
 );
 
 const { prepareUser } = useUserTestDataFactory();
-const { createPersistedStimmzettel, preparePersistedStimmzettel } =
-  usePersistedStimmzettelTestDataFactory();
+const {
+  createPersistedStimmzettel,
+  createStimmzettelWahlvorstandBeschlussgrund,
+  createStimmzettelSystemBeschlussgrund,
+  preparePersistedStimmzettel,
+} = usePersistedStimmzettelTestDataFactory();
 
 describe("theBeschlussFassenTabUtils.ts", () => {
   let userStore: ReturnType<typeof useUserStore>;
@@ -54,65 +59,86 @@ describe("theBeschlussFassenTabUtils.ts", () => {
   });
 
   describe("createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit", () => {
-    const commonGueltigGruende = [
-      "Wählerwille ist zweifelsfrei erkennbar (lila Notiz auf dem Stimmzettel)",
-      "Mehr als 3 Stimmen bei mind. einer Person und 80 Stimmen gesamt nicht überschritten",
-      "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
-      "einzelne Stimmen ungültig",
-    ];
-    const commonUngueltigGruende = [
-      "Wählerwille ist nicht zweifelsfrei erkennbar",
-      "zu viele Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
-      "Stimmzettel ist mit einem besonderen Merkmal, Zusatz oder Vorbehalt versehen",
-      "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
-    ];
-    const bwbGueltig = [
-      "Mehrere gleich gekennzeichnete Stimmzettel im Umschlag",
-      "Mehrere Stimmzettel im Umschlag, einer gekennzeichnet, die anderen leer",
-    ];
-    const bwbUngueltig = [
-      "Mehrere unterschiedlich gekennzeichnete Stimmzettel im Umschlag",
-    ];
+    it("should_callMapperAndSettersWithStimmzettelGruende_when_stimmzettelGiven", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .build();
 
-    it.each([
-      {
-        wahlbezirksart: WahlbezirksArtEnum.UWB,
-        isGueltig: true,
-        expectedLength: commonGueltigGruende.length,
-      },
-      {
-        wahlbezirksart: WahlbezirksArtEnum.UWB,
-        isGueltig: false,
-        expectedLength: commonUngueltigGruende.length,
-      },
-      {
-        wahlbezirksart: WahlbezirksArtEnum.BWB,
-        isGueltig: true,
-        expectedLength: commonGueltigGruende.length + bwbGueltig.length,
-      },
-      {
-        wahlbezirksart: WahlbezirksArtEnum.BWB,
-        isGueltig: false,
-        expectedLength: commonUngueltigGruende.length + bwbUngueltig.length,
-      },
-    ])(
-      "should_returnCorrectBeschlussGruende_when_isBwbIs'$isBwb'AndStimmzettelIsGueltigIs'$isGueltig'",
-      ({ wahlbezirksart, isGueltig, expectedLength }) => {
-        userStore.user = prepareUser().wahlbezirksArt(wahlbezirksart).build();
+      const stimmzettel = createPersistedStimmzettel();
+      stimmzettel.systemBeschlussvorschlag = [
+        createStimmzettelSystemBeschlussgrund(),
+      ];
+      stimmzettel.wahlvorstandBeschlussvorschlag = [
+        createStimmzettelWahlvorstandBeschlussgrund(),
+      ];
 
-        mockDefinitions.setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList.mockReturnValue(
-          []
+      mockDefinitions.setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList.mockReturnValue(
+        ""
+      );
+
+      const result =
+        unitUnderTest.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
+          true,
+          stimmzettel
         );
 
-        const result =
-          unitUnderTest.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
-            isGueltig,
-            createPersistedStimmzettel()
-          );
+      expect(
+        mockDefinitions.mapGruendeToBeschlussgrundOptions
+      ).toHaveBeenCalled();
+      expect(
+        mockDefinitions.setSystemBeschlussgruendeTrueWhenFoundInStimmzettel
+      ).toHaveBeenCalledWith(
+        stimmzettel.systemBeschlussvorschlag,
+        result.beschlussgruende
+      );
+      expect(
+        mockDefinitions.setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel
+      ).toHaveBeenCalledWith(
+        stimmzettel.wahlvorstandBeschlussvorschlag,
+        result.beschlussgruende
+      );
+    });
 
-        expect(result.beschlussgruende).toHaveLength(expectedLength);
-      }
-    );
+    it("should_useEmptyArraysForSetters_when_stimmzettelIsUndefined", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .build();
+
+      mockDefinitions.setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList.mockReturnValue(
+        ""
+      );
+
+      const result =
+        unitUnderTest.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
+          true,
+          undefined
+        );
+
+      expect(
+        mockDefinitions.setSystemBeschlussgruendeTrueWhenFoundInStimmzettel
+      ).toHaveBeenCalledWith([], result.beschlussgruende);
+      expect(
+        mockDefinitions.setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel
+      ).toHaveBeenCalledWith([], result.beschlussgruende);
+    });
+
+    it("should_setAndererGrund_fromSetterReturnValue", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .build();
+
+      mockDefinitions.setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList.mockReturnValue(
+        "grund"
+      );
+
+      const result =
+        unitUnderTest.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
+          false,
+          undefined
+        );
+
+      expect(result.andererGrund).toBe("grund");
+    });
 
     it("should_returnEmptyList_when_stimmzettelGueltigkeitIsNull", () => {
       const result =

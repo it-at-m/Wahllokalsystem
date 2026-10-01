@@ -240,7 +240,7 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
   });
 
   describe("prepareDataForSchnellmeldungDruck", () => {
-    it("should_returnErgebnismeldungDruckInput_when_givenWahlStatusAndMeldungsartForStapel", async () => {
+    it("should_returnSchnellmeldungDruckInput_when_givenWahlStatusAndMeldungsartForStapel", async () => {
       const userStore = useUserStore(pinia);
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()

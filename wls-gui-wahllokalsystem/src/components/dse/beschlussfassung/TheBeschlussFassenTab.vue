@@ -3,7 +3,7 @@
     <v-card-text v-if="beschlussDetails">
       <v-row>
         <v-col>
-          <v-radio-group v-model="beschlussDetails.isGueltig">
+          <v-radio-group v-model="beschlussDetails.isStimmzettelGueltig">
             <v-radio
               :value="true"
               class="my-2 full-width-radio"

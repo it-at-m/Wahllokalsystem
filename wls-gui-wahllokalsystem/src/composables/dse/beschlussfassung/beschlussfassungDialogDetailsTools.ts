@@ -3,7 +3,7 @@ import type { BeschlussfassungDialogDetails } from "@/types/dse/beschlussfassung
 export function useBeschlussfassungDialogDeailsTools() {
   function createEmptyBeschlussfassungDialogDetails(): BeschlussfassungDialogDetails {
     return {
-      isGueltig: null,
+      isStimmzettelGueltig: null,
       beschlussgruende: [],
       andererGrund: "",
       andererGrundChecked: false,

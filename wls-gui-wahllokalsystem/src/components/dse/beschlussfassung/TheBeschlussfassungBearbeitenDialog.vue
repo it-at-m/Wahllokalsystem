@@ -100,7 +100,7 @@ function onSaveClicked() {
   if (!stimmzettel.value) return;
   emit("save", {
     ...stimmzettel.value,
-    gueltigkeit: beschlussDetails.value.isGueltig
+    gueltigkeit: beschlussDetails.value.isStimmzettelGueltig
       ? StimmzettelGueltigkeitEnum.Valid
       : StimmzettelGueltigkeitEnum.Invalid,
     beschlussfassung: {

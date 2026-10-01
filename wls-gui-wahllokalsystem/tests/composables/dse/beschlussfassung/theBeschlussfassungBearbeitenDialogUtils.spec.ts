@@ -65,7 +65,7 @@ vi.mock(
         createEmptyBeschlussfassungDialogDetails:
           mockDefinitions.createEmptyBeschlussfassungDialogDetails.mockReturnValue(
             {
-              isGueltig: null,
+              isStimmzettelGueltig: null,
               beschlussgruende: [],
               andererGrund: "",
               andererGrundChecked: false,
@@ -111,7 +111,7 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
       abstimmungIsUngueltig: false,
     });
     expect(unitUnderTest.beschlussDetails.value).toStrictEqual({
-      isGueltig: null,
+      isStimmzettelGueltig: null,
       beschlussgruende: [],
       andererGrund: "",
       andererGrundChecked: false,
@@ -159,7 +159,9 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
       abstimmungIsUnentschieden: true,
       abstimmungIsUngueltig: false,
     });
-    expect(unitUnderTest.beschlussDetails.value.isGueltig).toStrictEqual(true);
+    expect(
+      unitUnderTest.beschlussDetails.value.isStimmzettelGueltig
+    ).toStrictEqual(true);
     expect(unitUnderTest.beschlussDetails.value.beschlussText).toStrictEqual(
       "Beschlusstext"
     );
@@ -233,7 +235,7 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
       "A1"
     );
 
-    // Zweite Rückgabe nach Änderung von isGueltig
+    // Zweite Rückgabe nach Änderung von isStimmzettelGueltig
     mockDefinitions.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit.mockReturnValueOnce(
       {
         andererGrund: "A2",
@@ -244,7 +246,7 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
       }
     );
 
-    unitUnderTest.beschlussDetails.value.isGueltig = true;
+    unitUnderTest.beschlussDetails.value.isStimmzettelGueltig = true;
     await nextTick();
 
     expect(unitUnderTest.beschlussDetails.value.andererGrund).toStrictEqual(

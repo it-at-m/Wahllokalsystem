@@ -95,7 +95,7 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
           abstimmungIsUngueltig: false,
         };
         beschlussDetails.value.beschlussText = beschlussfassung.text;
-        beschlussDetails.value.isGueltig =
+        beschlussDetails.value.isStimmzettelGueltig =
           stimmzettel.value.gueltigkeit == StimmzettelGueltigkeitEnum.Valid;
 
         stimmzettelGueltigkeitAusBeschluss.value =
@@ -108,7 +108,7 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
   );
 
   watch(
-    () => beschlussDetails.value.isGueltig,
+    () => beschlussDetails.value.isStimmzettelGueltig,
     () => _rebuildBeschlussDetailsGruende()
   );
 
@@ -143,7 +143,7 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
   function _rebuildBeschlussDetailsGruende() {
     const gruende =
       createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
-        beschlussDetails.value.isGueltig,
+        beschlussDetails.value.isStimmzettelGueltig,
         stimmzettel.value
       );
     beschlussDetails.value.andererGrund = gruende.andererGrund;
@@ -168,7 +168,7 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
 
   function _resetBeschlussDetails(stimmzettel: PersistedStimmzettel) {
     beschlussDetails.value = createEmptyBeschlussfassungDialogDetails();
-    beschlussDetails.value.isGueltig =
+    beschlussDetails.value.isStimmzettelGueltig =
       isStimmzettelGueltigBasedOnVormerkungsgruenden(stimmzettel);
   }
 

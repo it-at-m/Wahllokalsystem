@@ -14,7 +14,7 @@ describe("useBeschlussfassungDialogDeailsTools.ts", () => {
       const result = unitUnderTest.createEmptyBeschlussfassungDialogDetails();
 
       expect(result).toStrictEqual({
-        isGueltig: null,
+        isStimmzettelGueltig: null,
         beschlussgruende: [],
         andererGrund: "",
         andererGrundChecked: false,

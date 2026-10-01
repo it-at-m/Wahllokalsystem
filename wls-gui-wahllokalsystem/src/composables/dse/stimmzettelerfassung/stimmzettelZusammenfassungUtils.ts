@@ -7,21 +7,16 @@ import { computed } from "vue";
 
 export function useStimmzettelZusammenfassungUtils(
   stimmzettelListe: Ref<PersistedStimmzettel[]>,
-  wahlvorschlaege: Ref<Wahlvorschlag[]>,
-  includeVotesByWahlvorschlag = true
+  wahlvorschlaege: Ref<Wahlvorschlag[]>
 ) {
   const wahlvorschlaegeWithKandidatenErgebnissen = computed(() => {
     return [...wahlvorschlaege.value].map((wahlvorschlag) =>
-      _stimmzettelListeToWahlvorschlagWithKandidatenErgebnissen(
-        wahlvorschlag,
-        includeVotesByWahlvorschlag
-      )
+      _stimmzettelListeToWahlvorschlagWithKandidatenErgebnissen(wahlvorschlag)
     );
   });
 
   function _stimmzettelListeToWahlvorschlagWithKandidatenErgebnissen(
-    wahlvorschlag: Wahlvorschlag,
-    includeVotesByWahlvorschlag: boolean
+    wahlvorschlag: Wahlvorschlag
   ) {
     const wahlvorschlagWithKandidatenErgebnissen = _initResult(wahlvorschlag);
 
@@ -35,8 +30,7 @@ export function useStimmzettelZusammenfassungUtils(
           wahlvorschlagsOrdnungszahl: wahlvorschlag.ordnungszahl,
           ergebnis: _getVotesForKandidatOfWahlvorschlag(
             wahlvorschlag.identifikator,
-            kandidat.identifikator,
-            includeVotesByWahlvorschlag
+            kandidat.identifikator
           ),
           numIndex: null,
         };
@@ -52,8 +46,7 @@ export function useStimmzettelZusammenfassungUtils(
 
   function _getVotesForKandidatOfWahlvorschlag(
     wahlvorschlagId: string,
-    kandidatId: string,
-    includeVotesByWahlvorschlag: boolean
+    kandidatId: string
   ) {
     return stimmzettelListe.value
       .map((stimmzettel) => {
@@ -70,9 +63,9 @@ export function useStimmzettelZusammenfassungUtils(
         if (!kandidat) {
           return 0;
         }
-        return includeVotesByWahlvorschlag
-          ? (kandidat.votesByVoter ?? 0) + (kandidat.votesByWahlvorschlag ?? 0)
-          : (kandidat.votesByVoter ?? 0);
+        return (
+          (kandidat.votesByVoter ?? 0) + (kandidat.votesByWahlvorschlag ?? 0)
+        );
       })
       .reduce((sum, value) => sum + value, 0);
   }

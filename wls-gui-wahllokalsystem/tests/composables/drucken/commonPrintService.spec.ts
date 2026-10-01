@@ -1,5 +1,3 @@
-import type { Wahl } from "@/types/wahl/Wahl.ts";
-
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";

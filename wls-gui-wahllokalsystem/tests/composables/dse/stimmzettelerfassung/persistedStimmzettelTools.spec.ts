@@ -2,7 +2,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { usePersistedStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/PersistedStimmzettelTools.ts";
+import { usePersistedStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/persistedStimmzettelTools.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({

@@ -4,7 +4,7 @@ import type { Ref } from "vue";
 import { computed } from "vue";
 
 import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
-import { usePersistedStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/PersistedStimmzettelTools.ts";
+import { usePersistedStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/persistedStimmzettelTools.ts";
 
 export function useMbwStimmzettelFilterService(
   stimmzettel: Ref<PersistedStimmzettel[]>

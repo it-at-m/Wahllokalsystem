@@ -13,7 +13,7 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  import("@/composables/dse/stimmzettelerfassung/PersistedStimmzettelTools.ts"),
+  import("@/composables/dse/stimmzettelerfassung/persistedStimmzettelTools.ts"),
   () => ({
     usePersistedStimmzettelTools: () => mockDefinitions,
   })

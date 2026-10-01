@@ -26,7 +26,14 @@
       </v-tabs>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
-          <the-beschluss-fassen-tab :stimmzettel="stimmzettel" />
+          <the-beschluss-fassen-tab
+            v-model:beschluss-details="beschlussDetails"
+            v-model:abstimmungsergebnis="abstimmungsergebnis"
+            :stimmzettel-gueltigkeit-aus-beschluss="
+              stimmzettelGueltigkeitAusBeschluss
+            "
+            :is-beschluss-gefasst="isBeschlussGefasst"
+          />
         </v-tabs-window-item>
         <v-tabs-window-item value="two" />
       </v-tabs-window>
@@ -36,6 +43,7 @@
         <base-wls-button-save
           v-if="tab === 'one'"
           save-text="Beschluss speichern"
+          :disabled="isBeschlussSpeichernButtonDisabled"
           @click="onSaveClicked"
         />
       </v-card-actions>
@@ -52,19 +60,28 @@ import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheBeschlussFassenTab from "@/components/dse/beschlussfassung/TheBeschlussFassenTab.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
+import { useTheBeschlussfassungBearbeitenDialogUtils } from "@/composables/dse/beschlussfassung/theBeschlussfassungBearbeitenDialogUtils.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
   required: false,
 });
 
-defineProps<{
-  stimmzettel: PersistedStimmzettel | undefined;
-}>();
+const stimmzettel = defineModel<PersistedStimmzettel | undefined>(
+  "stimmzettel"
+);
+const {
+  abstimmungsergebnis,
+  beschlussDetails,
+  stimmzettelGueltigkeitAusBeschluss,
+  isBeschlussSpeichernButtonDisabled,
+  isBeschlussGefasst,
+} = useTheBeschlussfassungBearbeitenDialogUtils(stimmzettel);
 
 const emit = defineEmits<{
   cancel: [];
-  save: [];
+  save: [stimmzettel: PersistedStimmzettel];
 }>();
 
 const tab = ref("one");
@@ -80,6 +97,17 @@ function onCancelClicked() {
 }
 
 function onSaveClicked() {
-  emit("save");
+  if (!stimmzettel.value) return;
+  emit("save", {
+    ...stimmzettel.value,
+    gueltigkeit: beschlussDetails.value.isStimmzettelGueltig
+      ? StimmzettelGueltigkeitEnum.Valid
+      : StimmzettelGueltigkeitEnum.Invalid,
+    beschlussfassung: {
+      pro: abstimmungsergebnis.value.stimmenDafuer ?? 0,
+      contra: abstimmungsergebnis.value.stimmenDagegen ?? 0,
+      text: beschlussDetails.value.beschlussText,
+    },
+  });
 }
 </script>

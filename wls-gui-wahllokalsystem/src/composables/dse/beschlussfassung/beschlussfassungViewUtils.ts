@@ -1,11 +1,20 @@
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
+
 import { computed, onActivated } from "vue";
 
 import { useAllStimmzettelOfWahlbezirkState } from "@/composables/dse/allStimmzettelOfWahlbezirkState.ts";
+import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+
+const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
+const { isSamePersistedStimmzettel } = useStimmzettelTools();
+const { addNotification } = useUserNotificationService();
 
 export function useBeschlussfassungViewUtils(
   wahlID: string,
@@ -53,11 +62,47 @@ export function useBeschlussfassungViewUtils(
     await Promise.allSettled([loadStimmzettelOfWahlbezirk()]);
   });
 
+  async function saveBeschlussStimmzettel(
+    stimmzettelToSave: PersistedStimmzettel
+  ) {
+    const teamStimmzettelList = await getStimmzettel(
+      wahlID,
+      wahlbezirkID,
+      stimmzettelToSave.teamID,
+      false
+    );
+
+    const stimmzettelIndex = teamStimmzettelList.findIndex((s) =>
+      isSamePersistedStimmzettel(s, stimmzettelToSave)
+    );
+    if (stimmzettelIndex >= 0) {
+      teamStimmzettelList[stimmzettelIndex] = stimmzettelToSave;
+
+      await saveStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        stimmzettelToSave.teamID,
+        teamStimmzettelList
+      );
+      await loadStimmzettelOfWahlbezirk();
+    } else {
+      const stimmzettelkennung = `${stimmzettelToSave.teamID} ${stimmzettelToSave.stimmzettelkennung}`;
+      addNotification(
+        `Fehler beim Speichern des Beschlusses zu Stimmzettel ${stimmzettelkennung}.`,
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw new Error(
+        `Fehler: Stimmzettel mit Kennung ${stimmzettelkennung} nicht gefunden.`
+      );
+    }
+  }
+
   return {
     stimmzettelForBeschlussfassung,
     completedStimmzettelForBeschlussfassung,
     isStimmzettelForBeschlussLoading: isLoading,
     isBeschlussfassungBeendenButtonDisabled,
     isBeschlussBearbeitenDisabled,
+    saveBeschlussStimmzettel,
   };
 }

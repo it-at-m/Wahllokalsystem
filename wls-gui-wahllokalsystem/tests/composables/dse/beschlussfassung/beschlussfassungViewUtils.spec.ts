@@ -10,6 +10,7 @@ import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
@@ -26,6 +27,9 @@ const mockDefinitions = await vi.hoisted(async () => {
     clearActivatedCallbacks: () => activatedCallbacks.splice(0),
     isBeschlussRequired: vi.fn(),
     loadStimmzettelOfWahlbezirk: vi.fn(),
+    getStimmzettel: vi.fn(),
+    saveStimmzettel: vi.fn(),
+    addNotification: vi.fn(),
   };
 });
 
@@ -78,6 +82,23 @@ vi.mock(
       }),
     };
   }
+);
+
+vi.mock("@/composables/dse/stimmzettelerfassung/stimmzettelService.ts", () => ({
+  useStimmzettelService: () => ({
+    getStimmzettel: mockDefinitions.getStimmzettel,
+    saveStimmzettel: mockDefinitions.saveStimmzettel,
+    getAnzahlStimmzettel: vi.fn(),
+  }),
+}));
+
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
 );
 
 describe("beschlussfassungViewUtils.ts", () => {
@@ -299,6 +320,87 @@ describe("beschlussfassungViewUtils.ts", () => {
       workflowStore.electionWorkflowsStates[0].isNiederschriftDone = true;
 
       expect(unitUnderTest.isBeschlussBearbeitenDisabled.value).toBe(true);
+    });
+  });
+
+  describe("saveBeschlussStimmzettel", () => {
+    it("should_loadTeamStimmzettelListUpdateStimmzettelAndSendTeamStimmzettelList_when_calledWithStimmzettelToSave", async () => {
+      const teamID = "TEAM-A";
+      const s1 = preparePersistedStimmzettel()
+        .teamID(teamID)
+        .stimmzettelkennung(1)
+        .build();
+      const s2 = preparePersistedStimmzettel()
+        .teamID(teamID)
+        .stimmzettelkennung(2)
+        .build();
+
+      const stimmzettelToSave = {
+        ...s2,
+        gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
+        beschlussfassung: { pro: 3, contra: 2, text: "beschlossen" },
+      };
+
+      mockDefinitions.getStimmzettel.mockResolvedValue([s1, s2]);
+      mockDefinitions.saveStimmzettel.mockResolvedValue(undefined);
+
+      await unitUnderTest.saveBeschlussStimmzettel(
+        stimmzettelToSave as PersistedStimmzettel
+      );
+
+      expect(mockDefinitions.getStimmzettel.mock.calls[0]).toStrictEqual([
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        false,
+      ]);
+
+      expect(mockDefinitions.saveStimmzettel.mock.calls[0][0]).toBe(wahlID);
+      expect(mockDefinitions.saveStimmzettel.mock.calls[0][1]).toBe(
+        wahlbezirkID
+      );
+      expect(mockDefinitions.saveStimmzettel.mock.calls[0][2]).toBe(teamID);
+      expect(
+        mockDefinitions.loadStimmzettelOfWahlbezirk
+      ).toHaveBeenCalledOnce();
+      const savedList = mockDefinitions.saveStimmzettel.mock.calls[0][3];
+      expect(Array.isArray(savedList)).toBe(true);
+      expect(savedList).toHaveLength(2);
+      expect(savedList[0]).toBe(s1);
+      expect(savedList[1]).toBe(stimmzettelToSave);
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
+    });
+
+    it("should_throwError_when_calledWithStimmzettelNotFoundInTeamStimmzettelList", async () => {
+      const teamID = "TEAM-B";
+      const s1 = preparePersistedStimmzettel()
+        .teamID(teamID)
+        .stimmzettelkennung(10)
+        .build();
+      const s2 = preparePersistedStimmzettel()
+        .teamID(teamID)
+        .stimmzettelkennung(20)
+        .build();
+
+      const toSave = preparePersistedStimmzettel()
+        .teamID("DIFF-TEAM")
+        .stimmzettelkennung(999)
+        .build();
+
+      mockDefinitions.getStimmzettel.mockResolvedValue([s1, s2]);
+
+      await expect(
+        unitUnderTest.saveBeschlussStimmzettel(toSave)
+      ).rejects.toThrow(
+        `Fehler: Stimmzettel mit Kennung ${toSave.teamID} ${toSave.stimmzettelkennung} nicht gefunden.`
+      );
+
+      expect(mockDefinitions.saveStimmzettel).not.toHaveBeenCalled();
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.ERROR],
+      ]);
     });
   });
 });

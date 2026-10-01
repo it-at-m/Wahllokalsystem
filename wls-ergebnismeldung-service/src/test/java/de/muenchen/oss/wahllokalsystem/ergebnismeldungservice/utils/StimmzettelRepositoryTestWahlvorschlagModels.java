@@ -99,7 +99,7 @@ public class StimmzettelRepositoryTestWahlvorschlagModels {
             () ->
                 List.of(
                     createBlankKandidatWithSingleVoteByWahlvorschlag("k1", 1),
-                    createBlankKandidatWithSingleVoteByVoter("k2", 1)))
+                    createBlankKandidatWithSingleVoteByVoter("k2", 1, 2)))
         .toModel();
   }
 

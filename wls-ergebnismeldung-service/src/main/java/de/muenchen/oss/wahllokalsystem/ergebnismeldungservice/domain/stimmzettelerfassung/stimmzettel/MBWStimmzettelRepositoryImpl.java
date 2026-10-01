@@ -19,8 +19,15 @@ public class MBWStimmzettelRepositoryImpl implements MBWStimmzettelRepository {
   }
 
   @Override
-  public List<WahlvorschlagStimmzettelAnzahl> getStapelB(String wahlID, String wahlbezirkID) {
-    return mbwStapelStimmzettelRepository.getStapelB(wahlID, wahlbezirkID);
+  public List<WahlvorschlagStimmzettelAnzahl> getStapelBGroupedByWahlvorschlag(
+      String wahlID, String wahlbezirkID) {
+    return mbwStapelStimmzettelRepository.getStapelBGroupedByWahlvorschlag(wahlID, wahlbezirkID);
+  }
+
+  @Override
+  public List<KandidatStimmenAnzahl> getStapelBGroupedByKandidat(
+      String wahlID, String wahlbezirkID) {
+    return mbwStapelStimmzettelRepository.getStapelBGroupedByKandidat(wahlID, wahlbezirkID);
   }
 
   @Override
@@ -29,12 +36,30 @@ public class MBWStimmzettelRepositoryImpl implements MBWStimmzettelRepository {
   }
 
   @Override
-  public List<KandidatStimmenAnzahl> getStapelBC(String wahlID, String wahlbezirkID) {
-    return mbwStapelStimmzettelRepository.getStapelBC(wahlID, wahlbezirkID);
+  public List<KandidatStimmenAnzahl> getStapelC(String wahlID, String wahlbezirkID) {
+    return mbwStapelStimmzettelRepository.getStapelC(wahlID, wahlbezirkID);
   }
 }
 
 interface MBWStapelStimmzettelRepository extends StimmzettelRepository {
+  String STAPEL_B_CONDITION =
+      """
+                    ( SELECT COUNT(wahlvorschlag)
+                      FROM Wahlvorschlag wahlvorschlag
+                      WHERE wahlvorschlag.stimmzettel = stimmzettel
+                    ) = 1
+                    AND EXISTS (
+                      SELECT kandidat
+                      FROM Kandidat kandidat
+                      WHERE kandidat.wahlvorschlag = selectedWahlvorschlag
+                        AND (
+                          kandidat.discarded = true
+                          OR kandidat.votesByVoter > 0
+                          OR kandidat.invalidVotes > 0
+                        )
+                    )
+            """;
+
   @Query(
       """
                 SELECT selectedWahlvorschlag.wahlvorschlagID AS wahlvorschlagID,
@@ -75,24 +100,34 @@ interface MBWStapelStimmzettelRepository extends StimmzettelRepository {
                 WHERE stimmzettel.id.wahlID = :wahlID
                   AND stimmzettel.id.wahlbezirkID = :wahlbezirkID
                   AND stimmzettel.gueltigkeit = de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit.VALID
-                  AND (
-                    SELECT COUNT(wahlvorschlag)
-                    FROM Wahlvorschlag wahlvorschlag
-                    WHERE wahlvorschlag.stimmzettel = stimmzettel
-                  ) = 1
-                  AND EXISTS (
-                    SELECT kandidat
-                    FROM Kandidat kandidat
-                    WHERE kandidat.wahlvorschlag = selectedWahlvorschlag
-                      AND (
-                        kandidat.discarded = true
-                        OR kandidat.votesByVoter > 0
-                        OR kandidat.invalidVotes > 0
-                      )
-                  )
-                GROUP BY selectedWahlvorschlag.wahlvorschlagID
-                """)
-  List<WahlvorschlagStimmzettelAnzahl> getStapelB(
+                  AND
+                """
+          + STAPEL_B_CONDITION
+          + """
+                        GROUP BY selectedWahlvorschlag.wahlvorschlagID
+                        """)
+  List<WahlvorschlagStimmzettelAnzahl> getStapelBGroupedByWahlvorschlag(
+      @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
+
+  @Query(
+      """
+                SELECT selectedWahlvorschlag.wahlvorschlagID AS wahlvorschlagID,
+                       kandidat.kandidatID.kandidatID AS kandidatID,
+                       SUM(COALESCE(kandidat.votesByVoter, 0) + COALESCE(kandidat.votesByWahlvorschlag, 0)) AS anzahl
+                FROM Stimmzettel stimmzettel
+                JOIN stimmzettel.wahlvorschlaege selectedWahlvorschlag
+                JOIN selectedWahlvorschlag.kandidaten kandidat
+                WHERE stimmzettel.id.wahlID = :wahlID
+                  AND stimmzettel.id.wahlbezirkID = :wahlbezirkID
+                  AND stimmzettel.gueltigkeit = de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelGueltigkeit.VALID
+                  AND
+                """
+          + STAPEL_B_CONDITION
+          + """
+                        GROUP BY selectedWahlvorschlag.wahlvorschlagID,
+                                 kandidat.kandidatID.kandidatID
+                        """)
+  List<KandidatStimmenAnzahl> getStapelBGroupedByKandidat(
       @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
 
   @Query(
@@ -124,20 +159,10 @@ interface MBWStapelStimmzettelRepository extends StimmzettelRepository {
                         FROM Wahlvorschlag wahlvorschlag
                         WHERE wahlvorschlag.stimmzettel = stimmzettel
                       ) > 1
-                      OR EXISTS (
-                        SELECT kandidat
-                        FROM Kandidat kandidat
-                        WHERE kandidat.wahlvorschlag = wahlvorschlag
-                        AND (
-                            kandidat.discarded = true
-                            OR (kandidat.votesByVoter IS NOT NULL AND kandidat.votesByVoter <> 0)
-                            OR (kandidat.invalidVotes IS NOT NULL AND kandidat.invalidVotes <> 0)
-                        )
-                      )
                   )
                 GROUP BY wahlvorschlag.wahlvorschlagID,
                          kandidat.kandidatID.kandidatID
                 """)
-  List<KandidatStimmenAnzahl> getStapelBC(
+  List<KandidatStimmenAnzahl> getStapelC(
       @Param("wahlID") String wahlID, @Param("wahlbezirkID") String wahlbezirkID);
 }

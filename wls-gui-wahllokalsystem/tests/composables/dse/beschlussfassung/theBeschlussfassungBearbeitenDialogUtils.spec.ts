@@ -52,7 +52,7 @@ vi.mock(
   import("@/composables/dse/beschlussfassung/beschlussfassungDialogDetailsTools.ts"),
   () => {
     return {
-      useBeschlussfassungDialogDeailsTools: () => ({
+      useBeschlussfassungDialogDetailsTools: () => ({
         createEmptyBeschlussfassungDialogDetails:
           mockDefinitions.createEmptyBeschlussfassungDialogDetails.mockReturnValue(
             {

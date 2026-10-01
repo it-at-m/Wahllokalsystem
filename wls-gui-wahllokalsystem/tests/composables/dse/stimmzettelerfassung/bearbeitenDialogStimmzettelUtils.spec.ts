@@ -244,6 +244,56 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
     });
   });
 
+  describe("isLeererStimmzettelPossible", () => {
+    it("should_returnTrue_when_stimmzettelHasNoVotesOrStreichung", () => {
+      const managed = useBearbeitenDialogStimmzettelUtils(
+        ref(stimmzettelWithoutValuesSet),
+        mockedWahlId
+      );
+
+      expect(managed.isLeererStimmzettelPossible.value).toStrictEqual(true);
+    });
+
+    it.each([
+      [
+        "einzelstimme",
+        () => {
+          stimmzettelWithoutValuesSet.wahlvorschlaege[0].kandidaten[0].einzelstimmen = 1;
+        },
+      ],
+      [
+        "ungueltigeStimme",
+        () => {
+          stimmzettelWithoutValuesSet.wahlvorschlaege[0].kandidaten[0].ungueltigeStimmen = 1;
+        },
+      ],
+      [
+        "reststimme",
+        () => {
+          stimmzettelWithoutValuesSet.wahlvorschlaege[0].kandidaten[0].reststimmen = 1;
+        },
+      ],
+      [
+        "streichung",
+        () => {
+          stimmzettelWithoutValuesSet.wahlvorschlaege[0].kandidaten[0].durchgestrichen = true;
+        },
+      ],
+    ])(
+      "should_returnFalse_when_stimmzettelHasOneKandidatWith%s",
+      (_, setValue) => {
+        setValue();
+
+        const managed = useBearbeitenDialogStimmzettelUtils(
+          ref(stimmzettelWithoutValuesSet),
+          mockedWahlId
+        );
+
+        expect(managed.isLeererStimmzettelPossible.value).toStrictEqual(false);
+      }
+    );
+  });
+
   describe("kandidatAddEinzelstimmenOrThrow", () => {
     it("should_addVotes_when_kandidatIsPresent", () => {
       const kandidat = prepareDseKandidat()

@@ -126,6 +126,13 @@ export function useBearbeitenDialogStimmzettelUtils(
     );
   });
 
+  const isLeererStimmzettelPossible = computed(() =>
+      (stimmenSummary.value.ungueltigeStimmen
+          + stimmenSummary.value.einzelstimmen
+          + stimmenSummary.value.reststimmen
+          + stimmenSummary.value.streichungen)
+      == 0);
+
   const wahlvorschlaegeWithListenkreuz = computed(() =>
     stimmzettel.value.wahlvorschlaege.filter(
       (wahlvorschlag) => wahlvorschlag.selected
@@ -532,6 +539,7 @@ export function useBearbeitenDialogStimmzettelUtils(
     stimmzettel: computed(() => stimmzettel.value),
     stimmenSummary,
     wahlvorschlaegeWithListenkreuz,
+    isLeererStimmzettelPossible
   };
 }
 export type BearbeitenDialogStimmzettel = ReturnType<

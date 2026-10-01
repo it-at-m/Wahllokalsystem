@@ -95,12 +95,12 @@
                 .value.wahlvorstandBeschlussvorschlag
             "
             :deny-selection-of-stimmzettel-fehlt="
-              stimmzettelManager.bearbeitenDialogStimmzettelUtils
-                .hasAnyValuesSet.value
+              !stimmzettelManager.bearbeitenDialogStimmzettelUtils
+                .isLeererStimmzettelPossible.value
             "
             :deny-selection-of-stimmzettel-leer="
-              stimmzettelManager.bearbeitenDialogStimmzettelUtils
-                .hasAnyValuesSet.value
+              !stimmzettelManager.bearbeitenDialogStimmzettelUtils
+                .isLeererStimmzettelPossible.value
             "
             :team-id="currentUserTeamName"
             :system-beschlussgruende="

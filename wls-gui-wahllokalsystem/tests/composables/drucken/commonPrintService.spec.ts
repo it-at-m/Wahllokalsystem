@@ -1,6 +1,7 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
@@ -14,6 +15,7 @@ const mockDefinitions = vi.hoisted(() => ({
   jsBarcode: vi.fn(),
   toGermanDate: vi.fn(),
   toHhMm: vi.fn(),
+  toDataUrl: vi.fn(),
 }));
 
 vi.mock(import("jsbarcode"), () => ({
@@ -44,24 +46,24 @@ vi.mock(
 );
 
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
+const { prepareWahl } = useWahlTestDataFactory();
 
 describe("commonPrintService.ts", () => {
   const mockedNow = new Date("2026-09-25T12:34:00");
   const mockedDataUrl = "data:image/jpeg;base64,barcode";
   const mockedUuid = "f1cc5a27-8b9e-4c19-927c-98b854f3da0f";
-  const validWahl = {
-    kennzeichen: "BTW26",
-    wahltag: "2026-09-25",
-  } as Wahl;
+  const validWahl = prepareWahl()
+    .wahltag("2026-09-25")
+    .kennzeichen("BTW26")
+    .build();
 
   let unitUnderTest: ReturnType<typeof useCommonPrintService>;
-  let toDataUrl: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     vi.useFakeTimers({ now: mockedNow });
-    toDataUrl = vi.fn().mockReturnValue(mockedDataUrl);
+    mockDefinitions.toDataUrl.mockReturnValue(mockedDataUrl);
     vi.spyOn(document, "createElement").mockReturnValue({
-      toDataURL: toDataUrl,
+      toDataURL: mockDefinitions.toDataUrl,
     } as unknown as HTMLElement);
     vi.spyOn(crypto, "randomUUID").mockReturnValue(mockedUuid);
     mockDefinitions.toGermanDate.mockReturnValue("25.09.2026");
@@ -90,7 +92,9 @@ describe("commonPrintService.ts", () => {
         "BTW2625.09.2026-S-SBZ-12",
         { displayValue: false }
       );
-      expect(toDataUrl).toHaveBeenCalledExactlyOnceWith("image/jpeg");
+      expect(mockDefinitions.toDataUrl).toHaveBeenCalledExactlyOnceWith(
+        "image/jpeg"
+      );
       expect(result).toStrictEqual(mockedDataUrl);
       expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });

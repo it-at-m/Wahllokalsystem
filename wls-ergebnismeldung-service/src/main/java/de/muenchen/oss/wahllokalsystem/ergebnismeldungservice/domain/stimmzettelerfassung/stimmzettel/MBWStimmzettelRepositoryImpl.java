@@ -48,7 +48,7 @@ interface MBWStapelStimmzettelRepository extends StimmzettelRepository {
                       FROM Wahlvorschlag wahlvorschlag
                       WHERE wahlvorschlag.stimmzettel = stimmzettel
                     ) = 1
-                    AND EXISTS (
+                    AND (EXISTS (
                       SELECT kandidat
                       FROM Kandidat kandidat
                       WHERE kandidat.wahlvorschlag = selectedWahlvorschlag
@@ -57,7 +57,8 @@ interface MBWStapelStimmzettelRepository extends StimmzettelRepository {
                           OR kandidat.votesByVoter > 0
                           OR kandidat.invalidVotes > 0
                         )
-                    )
+                      OR stimmzettel.invalideVotes > 0
+                    ))
             """;
 
   @Query(

@@ -89,7 +89,6 @@ export function useMbwSchnellmeldungDruckService(
 
     const footer = createFooter(
       status.schnellmeldung.validierungsstatus,
-      meldungsart,
       wahlbezirkNummer
     );
 

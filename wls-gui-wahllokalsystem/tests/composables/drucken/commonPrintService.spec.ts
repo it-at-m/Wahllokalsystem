@@ -43,7 +43,7 @@ vi.mock(
   })
 );
 
-const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
+const { generateRandomString } = useCommonTestDataFactory();
 const { prepareWahl } = useWahlTestDataFactory();
 
 describe("commonPrintService.ts", () => {
@@ -174,47 +174,11 @@ describe("commonPrintService.ts", () => {
       (value) => value !== MeldungValidierungsstatusEnum.Valide
     );
 
-    it("should_returnFooterWithO_when_schnellmeldungIsValide", () => {
+    it("should_returnFooterWithO_when_meldungValidierungsstatusIsValide", () => {
       const status = MeldungValidierungsstatusEnum.Valide;
       const wahlbezirkNummer = generateRandomString(4);
 
-      const result = unitUnderTest.createFooter(
-        status,
-        MeldungsArtEnum.Schnellmeldung,
-        wahlbezirkNummer
-      );
-
-      expect(result).toStrictEqual(`${mockedUuid}, 25.09.2026 12:34 O`);
-      expect(mockDefinitions.toGermanDate).toHaveBeenCalledExactlyOnceWith(
-        mockedNow
-      );
-      expect(mockDefinitions.toHhMm).toHaveBeenCalledExactlyOnceWith(mockedNow);
-    });
-
-    it.each(nonValideStatus)(
-      "should_returnFooterWithM_when_schnellmeldungIsNotValide",
-      (nonValidStatus) => {
-        const wahlbezirkNummer = generateRandomString(4);
-
-        const result = unitUnderTest.createFooter(
-          nonValidStatus,
-          MeldungsArtEnum.Schnellmeldung,
-          wahlbezirkNummer
-        );
-
-        expect(result).toStrictEqual(`${mockedUuid}, 25.09.2026 12:34 M`);
-      }
-    );
-
-    it("should_returnFooterWithO_when_beschlussentscheidungenIsValide", () => {
-      const status = MeldungValidierungsstatusEnum.Valide;
-      const wahlbezirkNummer = generateRandomString(4);
-
-      const result = unitUnderTest.createFooter(
-        status,
-        MeldungsArtEnum.Beschlussentscheidungen,
-        wahlbezirkNummer
-      );
+      const result = unitUnderTest.createFooter(status, wahlbezirkNummer);
 
       expect(result).toStrictEqual(
         `${mockedUuid}, 25.09.2026 12:34 O ${wahlbezirkNummer}`
@@ -226,13 +190,12 @@ describe("commonPrintService.ts", () => {
     });
 
     it.each(nonValideStatus)(
-      "should_returnFooterWithM_when_beschlussentscheidungenIsNotValide",
+      "should_returnFooterWithM_when_meldungValidierungsstatusIsNotValide",
       (nonValidStatus) => {
         const wahlbezirkNummer = generateRandomString(4);
 
         const result = unitUnderTest.createFooter(
           nonValidStatus,
-          MeldungsArtEnum.Beschlussentscheidungen,
           wahlbezirkNummer
         );
 
@@ -241,15 +204,5 @@ describe("commonPrintService.ts", () => {
         );
       }
     );
-
-    it("should_returnEmptyString_when_meldungsartIsNiederschrift", () => {
-      const result = unitUnderTest.createFooter(
-        getRandomItem(Object.values(MeldungValidierungsstatusEnum)),
-        MeldungsArtEnum.Niederschrift,
-        generateRandomString(4)
-      );
-
-      expect(result).toStrictEqual("");
-    });
   });
 });

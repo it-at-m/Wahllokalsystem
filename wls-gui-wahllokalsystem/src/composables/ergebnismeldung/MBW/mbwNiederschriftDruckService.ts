@@ -142,7 +142,6 @@ export function useMbwNiederschriftDruckService(
     const ereignisse = _getEreignisse();
     const footer = createFooter(
       status.niederschrift.validierungsstatus,
-      meldungsart,
       wahlbezirkNummer
     );
     const niederschriftDruckInputBaseData: NiederschriftDruckInputBase = {

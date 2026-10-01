@@ -285,7 +285,6 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
       expect(result).toStrictEqual(expectedResult);
       expect(mockDefinitions.createFooter).toHaveBeenCalledExactlyOnceWith(
         status.schnellmeldung.validierungsstatus,
-        MeldungsArtEnum.Schnellmeldung,
         mockedValues.mockedWahlbezirkNummer
       );
     });
@@ -339,7 +338,6 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
       expect(result).toStrictEqual(expectedResult);
       expect(mockDefinitions.createFooter).toHaveBeenCalledExactlyOnceWith(
         status.schnellmeldung.validierungsstatus,
-        MeldungsArtEnum.Schnellmeldung,
         mockedValues.mockedWahlbezirkNummer
       );
     });

@@ -241,7 +241,6 @@ async function buildNiederschriftTemplate() {
   if (status.value && wahl) {
     const templateData = await prepareDataForNiederschriftDruck(
       status.value,
-      MeldungsArtEnum.Niederschrift,
       wahl
     );
     if (currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB) {

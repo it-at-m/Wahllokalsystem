@@ -1,4 +1,3 @@
-import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import type { SchnellmeldungDruckInput } from "@/types/ergebnismeldung/common/SchnellmeldungDruckInput.ts";
 import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
@@ -21,6 +20,7 @@ import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -60,7 +60,6 @@ export function useMbwSchnellmeldungDruckService(
   async function prepareDataForSchnellmeldungDruck(
     wahl: Wahl,
     status: Status,
-    meldungsart: MeldungsartEnum,
     wahlbezirkNummer: string
   ): Promise<SchnellmeldungDruckInput> {
     let aWerte = undefined;
@@ -92,6 +91,7 @@ export function useMbwSchnellmeldungDruckService(
       wahlbezirkNummer
     );
 
+    const meldungsart = MeldungsArtEnum.Schnellmeldung;
     const jpegUrl = createBarcode(
       wahl,
       meldungsart,

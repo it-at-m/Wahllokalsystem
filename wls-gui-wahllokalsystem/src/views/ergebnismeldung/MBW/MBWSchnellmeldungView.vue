@@ -74,7 +74,6 @@ import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -173,7 +172,6 @@ async function onDruckenClicked() {
         await prepareDataForSchnellmeldungDruck(
           wahl,
           status,
-          MeldungsArtEnum.Schnellmeldung,
           currentUserWahlbezirkNummer.value
         );
 

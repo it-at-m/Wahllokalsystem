@@ -1,7 +1,6 @@
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
-import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { NiederschriftBeanstandeteWahlbriefe } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftBeanstandeteWahlbriefe";
 import type { NiederschriftDruckInputBase } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBase.ts";
@@ -45,6 +44,7 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 import { Partei } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
@@ -113,13 +113,12 @@ export function useMbwNiederschriftDruckService(
 
   async function prepareDataForNiederschriftDruck(
     status: Status,
-    meldungsart: MeldungsartEnum,
     wahl: Wahl
   ): Promise<NiederschriftDruckInputBWB | NiederschriftDruckInputUWB> {
     const wahltagFormatiert = toGermanDate(wahl.wahltag);
     const barcode = createBarcode(
       wahl,
-      meldungsart,
+      MeldungsArtEnum.Niederschrift,
       currentUserWahlbezirksArt.value,
       currentUserWahlbezirkNummer.value
     );

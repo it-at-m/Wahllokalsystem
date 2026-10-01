@@ -258,7 +258,6 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
       const result = await unitUnderTest.prepareDataForSchnellmeldungDruck(
         mockedValues.mockedWahl,
         status,
-        meldungsArt,
         mockedValues.mockedWahlbezirkNummer
       );
 
@@ -309,7 +308,6 @@ describe("mbwSchnellmeldungDruckUtils.ts", () => {
       const result = await unitUnderTest.prepareDataForSchnellmeldungDruck(
         mockedValues.mockedWahl,
         status,
-        meldungsArt,
         mockedValues.mockedWahlbezirkNummer
       );
 

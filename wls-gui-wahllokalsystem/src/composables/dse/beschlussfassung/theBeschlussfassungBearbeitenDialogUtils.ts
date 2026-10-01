@@ -14,7 +14,7 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
 export function useTheBeschlussfassungBearbeitenDialogUtils(
   stimmzettel: Ref<PersistedStimmzettel | undefined>
 ) {
-  const { anwesendeWahlvorstandsmitgliederAnzahl } = storeToRefs(
+  const { lastSavedAnwesendeWahlvorstandsmitgliederAnzahl } = storeToRefs(
     useWahlvorstandStore()
   );
   const {
@@ -126,7 +126,7 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
       (total < 3 ||
         dafuer < 1 ||
         dagegen < 0 ||
-        total > anwesendeWahlvorstandsmitgliederAnzahl.value ||
+        total > lastSavedAnwesendeWahlvorstandsmitgliederAnzahl.value ||
         dafuer < dagegen);
 
     const unentschieden = stimmenNotNull && !ungueltig && dafuer === dagegen;

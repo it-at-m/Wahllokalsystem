@@ -85,6 +85,8 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
   });
 
   it("should_populateFromBeschlussfassung_when_present", async () => {
+    store.lastSavedAnwesendeWahlvorstandsmitgliederAnzahl = 4;
+
     const beschlussfassung = preparePersistedStimmzettelBeschlussfassung()
       .text("Beschlusstext")
       .pro(2)
@@ -287,6 +289,8 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
 
   describe("abstimmungsergebnis.unentschieden", () => {
     it("should_markUnentschieden_when_stimmenAreEqualAndNotUngueltig", async () => {
+      store.lastSavedAnwesendeWahlvorstandsmitgliederAnzahl = 6;
+
       const stimmzettelRef = ref(
         preparePersistedStimmzettel().beschlussfassung(null).build()
       );
@@ -328,6 +332,8 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
     });
 
     it("should_beFalse_when_beschlussAusstehendAndValuesSelectedAndVotesAreValid", async () => {
+      store.lastSavedAnwesendeWahlvorstandsmitgliederAnzahl = 5;
+
       const stimmzettelRef = ref(
         preparePersistedStimmzettel().beschlussfassung(null).build()
       );
@@ -400,6 +406,8 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
     });
 
     it("should_beFalse_when_beschlussAusstehendAndVotesAreUnentschiedenWithWahlvorsteherVote", async () => {
+      store.lastSavedAnwesendeWahlvorstandsmitgliederAnzahl = 10;
+
       const stimmzettelRef = ref(
         preparePersistedStimmzettel().beschlussfassung(null).build()
       );
@@ -449,6 +457,8 @@ describe("theBeschlussfassungBearbeitenDialogUtils.ts", () => {
     });
 
     it("should_beFalseAndIgnoreThatNoValuesAreSelected_when_beschlussIsAlreadyGefasst", async () => {
+      store.lastSavedAnwesendeWahlvorstandsmitgliederAnzahl = 7;
+
       const beschlussfassung = preparePersistedStimmzettelBeschlussfassung()
         .pro(4)
         .contra(3)

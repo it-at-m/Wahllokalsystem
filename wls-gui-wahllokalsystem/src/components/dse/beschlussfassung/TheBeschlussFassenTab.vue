@@ -95,7 +95,7 @@
             :rules="[
               required,
               minNumber(1),
-              maxNumber(anwesendeWahlvorstandsmitgliederAnzahl),
+              maxNumber(lastSavedAnwesendeWahlvorstandsmitgliederAnzahl),
             ]"
             label="Stimmen dafür"
           />
@@ -117,7 +117,7 @@
             :rules="[
               required,
               minNumber(0),
-              maxNumber(anwesendeWahlvorstandsmitgliederAnzahl),
+              maxNumber(lastSavedAnwesendeWahlvorstandsmitgliederAnzahl),
             ]"
             label="Stimmen dagegen"
           />
@@ -168,7 +168,7 @@
               <li>
                 Es können nicht mehr als
                 <span class="font-weight-bold">
-                  {{ anwesendeWahlvorstandsmitgliederAnzahl }}
+                  {{ lastSavedAnwesendeWahlvorstandsmitgliederAnzahl }}
                 </span>
                 Personen an der Abstimmung teilnehmen.
               </li>
@@ -204,7 +204,7 @@ const { required, minNumber, maxNumber } = useRules();
 
 const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
 const { toText } = useStimmzettelGueltigkeitEnumTools();
-const { anwesendeWahlvorstandsmitgliederAnzahl } = storeToRefs(
+const { lastSavedAnwesendeWahlvorstandsmitgliederAnzahl } = storeToRefs(
   useWahlvorstandStore()
 );
 

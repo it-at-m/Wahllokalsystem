@@ -167,11 +167,12 @@ export function useMbwNiederschriftViewUtils(
 
       // 3. Update status
       if (!niederschriftAlreadyDone) {
+        await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
+
         setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_NIEDERSCHRIFT);
         if (workflowState.value) {
           workflowState.value.isNiederschriftDone = true;
         }
-        await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
       }
       // 4. Forward
       await router.push(getNextRoute());

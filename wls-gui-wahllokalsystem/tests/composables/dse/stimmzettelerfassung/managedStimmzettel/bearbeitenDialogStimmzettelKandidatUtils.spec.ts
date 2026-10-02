@@ -12,16 +12,19 @@ describe("bearbeitenDialogStimmzettelKandidatUtils.ts", () => {
     it("should_findKandidatByOrdnungszahl_when_called", () => {
       const kWithVotes = prepareDseKandidat()
         .ordnungszahl(101)
+        .nennung(3)
         .einzelstimmen(2)
         .durchgestrichen(false)
         .build();
       const kNotStruck = prepareDseKandidat()
         .ordnungszahl(101)
+        .nennung(2)
         .einzelstimmen(null)
         .durchgestrichen(false)
         .build();
       const kStruck = prepareDseKandidat()
         .ordnungszahl(101)
+        .nennung(1)
         .einzelstimmen(null)
         .durchgestrichen(true)
         .build();
@@ -51,6 +54,52 @@ describe("bearbeitenDialogStimmzettelKandidatUtils.ts", () => {
       kWithVotes.durchgestrichen = true;
       expect(tools.getKandidatToAddVotesByOrdnungszahl(101)).toStrictEqual(
         kStruck
+      );
+    });
+
+    it("should_reuseFirstNennung_when_multipleNennungenHaveZeroEinzelstimmen", () => {
+      const kandidatNennung3 = prepareDseKandidat()
+        .ordnungszahl(101)
+        .nennung(3)
+        .einzelstimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const kandidatNennung1 = prepareDseKandidat()
+        .ordnungszahl(101)
+        .nennung(1)
+        .einzelstimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const kandidatNennung2 = prepareDseKandidat()
+        .ordnungszahl(101)
+        .nennung(2)
+        .einzelstimmen(0)
+        .durchgestrichen(false)
+        .build();
+      const stimmzettel = prepareDseStimmzettel()
+        .wahlvorschlaege([
+          prepareDseWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kandidatNennung3, kandidatNennung1, kandidatNennung2])
+            .build(),
+        ])
+        .build();
+      const tools = useBearbeitenDialogStimmzettelKandidatUtils(
+        ref(stimmzettel)
+      );
+
+      expect(tools.getKandidatToAddVotesByOrdnungszahl(101)).toStrictEqual(
+        kandidatNennung1
+      );
+
+      kandidatNennung1.einzelstimmen = 1;
+      expect(tools.getKandidatToAddVotesByOrdnungszahl(101)).toStrictEqual(
+        kandidatNennung1
+      );
+
+      kandidatNennung1.einzelstimmen = null;
+      expect(tools.getKandidatToAddVotesByOrdnungszahl(101)).toStrictEqual(
+        kandidatNennung1
       );
     });
   });

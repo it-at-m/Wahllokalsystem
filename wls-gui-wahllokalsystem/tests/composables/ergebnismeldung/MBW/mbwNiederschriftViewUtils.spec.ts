@@ -264,7 +264,7 @@ describe("mbwNiederschriftViewUtils", () => {
     );
   });
 
-  it("should_showErrorNotification_when_loadingStoredNiederschriftFails", async () => {
+  it("should_showErrorNotification_when_printingNiederschriftFails", async () => {
     mockDefinitions.isStepDone.mockReturnValue(true);
     mockDefinitions.getAusdruckNiederschrift.mockRejectedValue(
       new Error("failed")
@@ -275,7 +275,7 @@ describe("mbwNiederschriftViewUtils", () => {
 
     expect(mockDefinitions.logError).toHaveBeenCalledOnce();
     expect(mockDefinitions.addNotification).toHaveBeenCalledWith(
-      "Fehler beim Laden der bereits gedruckten Niederschrift. Kein Drucken möglich.",
+      "Fehler beim Drucken der Niederschrift.",
       UserNotificationCategoryEnum.ERROR
     );
     expect(unitUnderTest.isDruckenLoading.value).toBe(false);

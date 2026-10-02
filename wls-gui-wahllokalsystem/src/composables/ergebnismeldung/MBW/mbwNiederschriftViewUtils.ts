@@ -135,43 +135,37 @@ export function useMbwNiederschriftViewUtils(
 
   async function onDruckenClicked() {
     isDruckenLoading.value = true;
-    let pdfText: string;
     const niederschriftAlreadyDone = isStepDone(
       wahlID,
       wahlbezirkID,
       MbwStepsEnum.MBW_NIEDERSCHRIFT
     );
 
-    if (niederschriftAlreadyDone) {
-      try {
-        pdfText = await getAusdruckNiederschrift(MeldungsArtEnum.Niederschrift);
-      } catch (e) {
-        logError("mbwUtilsNiederschrift wirft einen Fehler", e);
-        addNotification(
-          "Fehler beim Laden der bereits gedruckten Niederschrift. Kein Drucken möglich.",
-          UserNotificationCategoryEnum.ERROR
-        );
-        isDruckenLoading.value = false;
-        return;
-      }
-    } else {
-      pdfText = await buildNiederschriftTemplate();
-    }
-
     try {
+      // 1. Load or generate template
+      const pdfText = niederschriftAlreadyDone
+        ? await getAusdruckNiederschrift(MeldungsArtEnum.Niederschrift)
+        : await buildNiederschriftTemplate();
+
+      // 2. Open PDF print-layout
       const printWindow = window.open(
         "",
         "",
         "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
       );
 
-      if (printWindow) {
-        printWindow.document.writeln(pdfText);
-        printWindow.document.close();
-        printWindow.print();
-        printWindow.close();
+      if (!printWindow) {
+        throw new Error(
+          "Popup-Blocker verhindert das Öffnen des Druckfensters."
+        );
       }
 
+      printWindow.document.writeln(pdfText);
+      printWindow.document.close();
+      printWindow.print();
+      printWindow.close();
+
+      // 3. Update status
       if (!niederschriftAlreadyDone) {
         setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_NIEDERSCHRIFT);
         if (workflowState.value) {
@@ -179,9 +173,13 @@ export function useMbwNiederschriftViewUtils(
         }
         await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
       }
+      // 4. Forward
       await router.push(getNextRoute());
     } catch (e) {
-      logError("mbwUtilsNiederschrift wirft einen Fehler", e);
+      logError(
+        "Fehler während des Druckvorgangs oder der Datenvorbereitung",
+        e
+      );
       addNotification(
         "Fehler beim Drucken der Niederschrift.",
         UserNotificationCategoryEnum.ERROR

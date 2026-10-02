@@ -285,7 +285,9 @@ describe("mbwNiederschriftViewUtils", () => {
     mockDefinitions.prepareDataForBeschlussentscheidungenDruck.mockReturnValue(
       {}
     );
-    mockDefinitions.buildTemplate.mockReturnValue('<html lang="en">beschluesse</html>');
+    mockDefinitions.buildTemplate.mockReturnValue(
+      '<html lang="en">beschluesse</html>'
+    );
     const unitUnderTest = await createComposable();
 
     await unitUnderTest.onBeschlussentscheidungenDruckenClicked();

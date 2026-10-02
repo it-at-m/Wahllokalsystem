@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.ErfassungTeamStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
@@ -51,7 +52,7 @@ public class TeamStatusService {
     }
 
     stimmzettelerfassungTeamStatusRepository.save(entityToSave);
-    if (ErfassungTeamStatusModel.IN_BEARBEITUNG.equals(erfassungTeamStatusModel)) {
+    if (ErfassungTeamStatus.IN_BEARBEITUNG.equals(entityToSave.getStatus())) {
       stimmzettelerfassungService.registerStimmzettelerfassungStart(
           new BezirkUndWahlID(id.wahlID(), id.wahlbezirkID()));
     }

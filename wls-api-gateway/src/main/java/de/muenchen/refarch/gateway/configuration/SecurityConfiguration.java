@@ -1,5 +1,6 @@
 package de.muenchen.refarch.gateway.configuration;
 
+import de.muenchen.refarch.gateway.filter.UserMdcWebFilter;
 import de.muenchen.refarch.gateway.security.AuthUtils;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -37,7 +39,7 @@ public class SecurityConfiguration {
 
     @Bean
     @Order(0)
-    public SecurityWebFilterChain clientAccessFilterChain(final ServerHttpSecurity http) {
+    public SecurityWebFilterChain clientAccessFilterChain(final ServerHttpSecurity http, UserMdcWebFilter userMdcFilter) {
         http
                 .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/clients/**"))
                 .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec
@@ -46,12 +48,14 @@ public class SecurityConfiguration {
                 .cors(corsSpec -> {
                 })
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+
+        http.addFilterAfter(userMdcFilter, SecurityWebFiltersOrder.AUTHENTICATION);
         return http.build();
     }
 
     @Bean
     @Order(1)
-    public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http) {
+    public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http, UserMdcWebFilter userMdcFilter) {
         val logoutHandler = new DelegatingServerLogoutHandler(
                 new SecurityContextServerLogoutHandler(), new WebSessionServerLogoutHandler());
 
@@ -104,6 +108,7 @@ public class SecurityConfiguration {
                     }
                 }));
 
+        http.addFilterAfter(userMdcFilter, SecurityWebFiltersOrder.AUTHENTICATION);
         return http.build();
     }
 

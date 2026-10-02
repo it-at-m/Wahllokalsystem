@@ -147,9 +147,7 @@ export function useStimmzettelTools() {
 
     const hasUngueltigerSystemGrund = (
       stimmzettel.systemBeschlussvorschlag ?? []
-    ).some((beschlussvorschlag) => {
-      return ungueltigSet.has(beschlussvorschlag.reason);
-    });
+    ).some((beschlussvorschlag) => ungueltigSet.has(beschlussvorschlag.reason));
 
     const hasUngueltigerWahlvorstandGrund = (
       stimmzettel.wahlvorstandBeschlussvorschlag ?? []

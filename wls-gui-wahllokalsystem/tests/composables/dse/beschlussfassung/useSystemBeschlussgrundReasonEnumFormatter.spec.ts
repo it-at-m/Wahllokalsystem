@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts";
+import { useSystemBeschlussgrundReasonEnumFormatter } from "@/composables/dse/beschlussfassung/useSystemBeschlussgrundReasonEnumFormatter.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 
-describe("systemBeschlussgrundReasonEnumTools.ts", () => {
+describe("useSystemBeschlussgrundReasonEnumFormatter.ts", () => {
   const {
     mapSystemBeschlussgrundReasonEnumToText,
     mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText,
-  } = useSystemBeschlussgrundReasonEnumTools();
+  } = useSystemBeschlussgrundReasonEnumFormatter();
 
   describe("mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText", () => {
     it.each([
@@ -25,7 +25,7 @@ describe("systemBeschlussgrundReasonEnumTools.ts", () => {
       ],
       [
         SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
-        "mehr als 80 Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
+        "zu viele Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
       ],
     ])("should_map'%s'CorrectlyToString_when_enumGiven", (input, expected) => {
       expect(

@@ -22,10 +22,10 @@ const SYSTEM_BESCHLUSSGRUND_REASON_ENUM_TO_BESCHLUSSVORSCHLAG_TEXT: Record<
     "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
   EINZELNE_STIMMEN_UNGUELTIG: "einzelne Stimmen ungültig",
   ZU_VIELE_EINZELSTIMMEN_ODER_LISTENKREUZE:
-    "mehr als 80 Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
+    "zu viele Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
 };
 
-export function useSystemBeschlussgrundReasonEnumTools() {
+export function useSystemBeschlussgrundReasonEnumFormatter() {
   function mapSystemBeschlussgrundReasonEnumToText(
     systemBeschlussgrund: SystemBeschlussgrundReasonEnum
   ): string {

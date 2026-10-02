@@ -1,4 +1,5 @@
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
@@ -46,6 +47,7 @@ const mockDefinitions = vi.hoisted(() => ({
   mapPersistedStimmzettelValuesToExistingDseStimmzettel: vi.fn(),
   resetError: vi.fn(),
   resetDseStimmzettel: vi.fn(),
+  hasAnyKennzeichenOrReststimme: vi.fn(),
 }));
 
 vi.mock(
@@ -104,6 +106,20 @@ vi.mock(
   }
 );
 
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/kandidatTools.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useKandidatTools: () => ({
+        ...original.useKandidatTools(),
+        hasAnyKennzeichenOrReststimme:
+          mockDefinitions.hasAnyKennzeichenOrReststimme,
+      }),
+    };
+  }
+);
+
 describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   const mockedWahlId = "wahl-1";
   const {
@@ -129,6 +145,14 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
   });
 
   beforeEach(() => {
+    mockDefinitions.hasAnyKennzeichenOrReststimme.mockImplementation(
+      (kandidat: DseKandidat) =>
+        kandidat.durchgestrichen ||
+        (kandidat.einzelstimmen ?? 0) > 0 ||
+        (kandidat.ungueltigeStimmen ?? 0) > 0 ||
+        (kandidat.reststimmen ?? 0) > 0
+    );
+
     const kdStore = useKopfdatenStore();
     kdStore.kopfdaten = [
       {
@@ -241,6 +265,23 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
       );
 
       expect(managed.hasAnyValuesSet.value).toStrictEqual(true);
+    });
+
+    it("should_callHasAnyKennzeichenOrReststimme_when_kandidatVotesChange", async () => {
+      const stimmzettel = ref(stimmzettelWithoutValuesSet);
+      useBearbeitenDialogStimmzettelUtils(stimmzettel, mockedWahlId);
+      await nextTick();
+      mockDefinitions.hasAnyKennzeichenOrReststimme.mockClear();
+
+      stimmzettel.value.wahlvorschlaege[0].kandidaten[0].einzelstimmen = 1;
+      await nextTick();
+
+      expect(
+        mockDefinitions.hasAnyKennzeichenOrReststimme
+      ).toHaveBeenCalledOnce();
+      expect(
+        mockDefinitions.hasAnyKennzeichenOrReststimme.mock.calls[0][0]
+      ).toBe(stimmzettel.value.wahlvorschlaege[0].kandidaten[0]);
     });
   });
 

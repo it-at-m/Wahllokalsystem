@@ -281,6 +281,29 @@ describe("mbwNiederschriftViewUtils", () => {
     expect(unitUnderTest.isDruckenLoading.value).toBe(false);
   });
 
+  it("should_printStoredNiederschrift_when_niederschriftWasAlreadyPrinted", async () => {
+    mockDefinitions.isStepDone.mockReturnValue(true);
+    mockDefinitions.getAusdruckNiederschrift.mockResolvedValue(
+      '<html lang="en">stored</html>'
+    );
+    const unitUnderTest = await createComposable();
+
+    await unitUnderTest.onDruckenClicked();
+
+    expect(mockDefinitions.getAusdruckNiederschrift).toHaveBeenCalledWith(
+      MeldungsArtEnum.Niederschrift
+    );
+    expect(printWindow.document.writeln).toHaveBeenCalledWith(
+      '<html lang="en">stored</html>'
+    );
+    expect(
+      mockDefinitions.prepareDataForNiederschriftDruck
+    ).not.toHaveBeenCalled();
+    expect(mockDefinitions.setStepDone).not.toHaveBeenCalled();
+    expect(mockDefinitions.sendAusdruckNiederschrift).not.toHaveBeenCalled();
+    expect(routerPush).toHaveBeenCalledWith({ name: "nextRoute" });
+  });
+
   it("should_printAndSendBeschlussentscheidungen_when_wahlExists", async () => {
     mockDefinitions.prepareDataForBeschlussentscheidungenDruck.mockReturnValue(
       {}

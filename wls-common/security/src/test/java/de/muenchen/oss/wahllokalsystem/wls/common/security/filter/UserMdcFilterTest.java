@@ -17,7 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -268,5 +270,22 @@ class UserMdcFilterTest {
         () -> userMdcFilter.doFilterInternal(request, response, filterChain));
 
     assertNull(MDC.get(MDC_USER_KEY));
+  }
+
+  @Test
+  void should_proceedWithoutMdc_when_authIsAnonymousAuthenticationToken() throws ServletException, IOException {
+
+    AnonymousAuthenticationToken anonymousAuth = new AnonymousAuthenticationToken(
+            "key",
+            "anonymousUser",
+            AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS")
+    );
+
+    when(securityContext.getAuthentication()).thenReturn(anonymousAuth);
+
+    userMdcFilter.doFilterInternal(request, response, filterChain);
+
+    verify(filterChain).doFilter(request, response);
+    assertNull(MDC.get(MDC_USER_KEY), "MDC darf bei anonymen Requests nicht befüllt werden!");
   }
 }

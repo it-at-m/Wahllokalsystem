@@ -1,12 +1,12 @@
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
 
-import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts";
+import { useSystemBeschlussgrundReasonEnumMapper } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumMapper.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 
 const { mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText } =
-  useSystemBeschlussgrundReasonEnumTools();
+  useSystemBeschlussgrundReasonEnumMapper();
 
 export function useBeschlussgrundTools() {
   const commonWahlvorstandBeschlussvorschlaege = [

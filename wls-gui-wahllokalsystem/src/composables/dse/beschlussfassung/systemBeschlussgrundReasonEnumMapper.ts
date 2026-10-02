@@ -25,7 +25,7 @@ const SYSTEM_BESCHLUSSGRUND_REASON_ENUM_TO_BESCHLUSSVORSCHLAG_TEXT: Record<
     "zu viele Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
 };
 
-export function useSystemBeschlussgrundReasonEnumTools() {
+export function useSystemBeschlussgrundReasonEnumMapper() {
   function mapSystemBeschlussgrundReasonEnumToText(
     systemBeschlussgrund: SystemBeschlussgrundReasonEnum
   ): string {

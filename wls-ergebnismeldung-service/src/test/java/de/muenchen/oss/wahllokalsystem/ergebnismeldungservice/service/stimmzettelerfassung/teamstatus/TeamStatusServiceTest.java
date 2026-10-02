@@ -265,9 +265,11 @@ class TeamStatusServiceTest {
           .isEqualTo(mockedWlsException);
 
       Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verify(stimmzettelerfassungService)
+          .registerStimmzettelerfassungStart(new BezirkUndWahlID(wahlID, wahlbezirkID));
+
       Mockito.verifyNoInteractions(erfassungTeamStatusModelMapper);
       Mockito.verifyNoInteractions(stimmzettelerfassungTeamStatusRepository);
-      Mockito.verifyNoInteractions(stimmzettelerfassungService);
     }
 
     @Test
@@ -291,9 +293,11 @@ class TeamStatusServiceTest {
       Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
       Mockito.verify(erfassungTeamStatusValidator)
           .isValidOrThrow(ErfassungTeamStatusModel.IN_BEARBEITUNG);
+      Mockito.verify(stimmzettelerfassungService)
+          .registerStimmzettelerfassungStart(new BezirkUndWahlID(wahlID, wahlbezirkID));
+
       Mockito.verifyNoInteractions(erfassungTeamStatusModelMapper);
       Mockito.verifyNoInteractions(stimmzettelerfassungTeamStatusRepository);
-      Mockito.verifyNoInteractions(stimmzettelerfassungService);
     }
   }
 }

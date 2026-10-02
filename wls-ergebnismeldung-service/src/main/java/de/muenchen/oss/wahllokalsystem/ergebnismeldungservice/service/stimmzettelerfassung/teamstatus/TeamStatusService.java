@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
@@ -31,18 +32,31 @@ public class TeamStatusService {
           + " or hasAuthority('WLS_WAHLVORSTAND')"
           + ")")
   @Transactional
-  public void saveTeamStatus(
+  public ErfassungTeamStatusModel saveTeamStatus(
       @P("param") final TeamBezirkUndWahlIDModel id,
       final ErfassungTeamStatusModel erfassungTeamStatusModel) {
     erfassungTeamStatusValidator.isValidOrThrow(id);
     erfassungTeamStatusValidator.isValidOrThrow(erfassungTeamStatusModel);
 
-    val entityToSave = erfassungTeamStatusModelMapper.toEntity(id, erfassungTeamStatusModel);
+    val isStimmzettelErfassungAbgeschlossen =
+        stimmzettelerfassungService.isStimmzettelerfassungAbgeschlossen(
+            erfassungTeamStatusModelMapper.toBezirkUndWahlID(id));
+
+    final StimmzettelerfassungTeamStatus entityToSave;
+    if (isStimmzettelErfassungAbgeschlossen) {
+      entityToSave =
+          erfassungTeamStatusModelMapper.toEntity(id, ErfassungTeamStatusModel.ABGESCHLOSSEN);
+    } else {
+      entityToSave = erfassungTeamStatusModelMapper.toEntity(id, erfassungTeamStatusModel);
+    }
+
     stimmzettelerfassungTeamStatusRepository.save(entityToSave);
     if (ErfassungTeamStatusModel.IN_BEARBEITUNG.equals(erfassungTeamStatusModel)) {
       stimmzettelerfassungService.registerStimmzettelerfassungStart(
           new BezirkUndWahlID(id.wahlID(), id.wahlbezirkID()));
     }
+
+    return erfassungTeamStatusModelMapper.toModel(entityToSave.getStatus());
   }
 
   @PreAuthorize(
@@ -84,11 +98,10 @@ public class TeamStatusService {
       final String wahlID,
       @P("wahlbezirkID") final String wahlbezirkID,
       @P("teamID") final String teamID) {
+    stimmzettelerfassungService.registerStimmzettelerfassungStart(
+        new BezirkUndWahlID(wahlID, wahlbezirkID));
     saveTeamStatus(
         new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
         ErfassungTeamStatusModel.IN_BEARBEITUNG);
-
-    stimmzettelerfassungService.registerStimmzettelerfassungStart(
-        new BezirkUndWahlID(wahlID, wahlbezirkID));
   }
 }

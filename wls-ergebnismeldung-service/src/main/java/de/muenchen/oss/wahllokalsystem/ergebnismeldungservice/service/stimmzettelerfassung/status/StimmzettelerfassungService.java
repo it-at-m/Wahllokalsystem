@@ -23,6 +23,22 @@ public class StimmzettelerfassungService {
   private final ErfassungStatusModelMapper erfassungStatusModelMapper;
 
   @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelerfassungStatus') "
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
+  public boolean isStimmzettelerfassungAbgeschlossen(
+      @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID) {
+    stimmzettelerfassungValidator.validBezirkUndWahlIdOrThrow(
+        bezirkUndWahlID,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.IS_STIMMZETTELERFASSUNG_ABGESCHLOSSEN_PARAMETER_UNVOLLSTAENDIG));
+
+    val erfassungsstatus = stimmzettelerfassungStatusRepository.findById(bezirkUndWahlID);
+    return erfassungsstatus
+        .map(StimmzettelerfassungStatus::isStimmzettelerfassungAbgeschlossen)
+        .orElse(false);
+  }
+
+  @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungStatus')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
   public void saveStimmzettelerfassungStatus(

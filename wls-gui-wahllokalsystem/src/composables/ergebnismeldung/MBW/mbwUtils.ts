@@ -35,7 +35,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   const { wahlenActions } = useWahlenStore();
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
 
-  const { postAusdruck } = useAusdruckService();
+  const { getAusdruck, postAusdruck } = useAusdruckService();
 
   const isErgebnisseSaving = ref<boolean>(false);
   const isSendingSchnellmeldung = ref<boolean>(false);
@@ -212,6 +212,16 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
+  async function getAusdruckNiederschrift(
+    meldungsart: MeldungsartEnum
+  ): Promise<string> {
+    try {
+      return await getAusdruck(wahlbezirkID, wahlID, meldungsart);
+    } catch {
+      throw new Error("Fehler beim Laden des Ausdrucks");
+    }
+  }
+
   async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {
     try {
       return await getErgebnisse(wahlbezirkID, wahlID, stapelArt, false);
@@ -250,5 +260,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     sendAusdruckNiederschrift,
     updateStatusAfterSchnellmeldungDrucken,
     sendNiederschrift,
+    getAusdruckNiederschrift,
   };
 }

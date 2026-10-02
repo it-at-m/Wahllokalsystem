@@ -46,7 +46,7 @@ public class AusdruckController {
             content = {
               @Content(
                   mediaType = "text/html; charset=utf-8",
-                  schema = @Schema(implementation = AusdruckReadDTO.class))
+                  schema = @Schema(implementation = String.class))
             }),
         @ApiResponse(
             responseCode = "204",

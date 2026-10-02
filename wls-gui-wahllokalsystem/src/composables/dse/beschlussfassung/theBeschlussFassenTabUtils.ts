@@ -1,7 +1,5 @@
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
-import { ref } from "vue";
-
 import { useBeschlussgrundOptionTools } from "@/composables/dse/beschlussfassung/beschlussgrundOptionTools.ts";
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 
@@ -24,26 +22,25 @@ export function useTheBeschlussFassenTabUtils() {
 
     const gruendeList =
       getBeschlussGruendeBasedOnGueltigkeit(isStimmzettelGueltig);
-    const beschlussgrundOptions = ref(
-      mapGruendeToBeschlussgrundOptions(gruendeList)
-    );
+    const beschlussgrundOptions =
+      mapGruendeToBeschlussgrundOptions(gruendeList);
 
     setSystemBeschlussgruendeTrueWhenFoundInStimmzettel(
       stimmzettel?.systemBeschlussvorschlag ?? [],
-      beschlussgrundOptions.value
+      beschlussgrundOptions
     );
     setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel(
       stimmzettel?.wahlvorstandBeschlussvorschlag ?? [],
-      beschlussgrundOptions.value
+      beschlussgrundOptions
     );
 
     const andererGrund =
       setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
         stimmzettel?.wahlvorstandBeschlussvorschlag ?? [],
         stimmzettel?.systemBeschlussvorschlag ?? [],
-        beschlussgrundOptions.value
+        beschlussgrundOptions
       );
-    const beschlussgruende = beschlussgrundOptions.value;
+    const beschlussgruende = beschlussgrundOptions;
 
     return {
       andererGrund,

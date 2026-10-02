@@ -273,13 +273,12 @@ class UserMdcFilterTest {
   }
 
   @Test
-  void should_proceedWithoutMdc_when_authIsAnonymousAuthenticationToken() throws ServletException, IOException {
+  void should_proceedWithoutMdc_when_authIsAnonymousAuthenticationToken()
+      throws ServletException, IOException {
 
-    AnonymousAuthenticationToken anonymousAuth = new AnonymousAuthenticationToken(
-            "key",
-            "anonymousUser",
-            AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS")
-    );
+    AnonymousAuthenticationToken anonymousAuth =
+        new AnonymousAuthenticationToken(
+            "key", "anonymousUser", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
 
     when(securityContext.getAuthentication()).thenReturn(anonymousAuth);
 

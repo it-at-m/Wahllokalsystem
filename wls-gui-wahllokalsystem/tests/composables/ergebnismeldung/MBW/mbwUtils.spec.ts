@@ -839,7 +839,7 @@ describe("mbwUtils", () => {
 
   describe("getAusdruckNiederschrift", () => {
     it("should_returnAusdruck_when_ausdruckServiceReturnsAusdruck", async () => {
-      const ausdruck = "<html lang=\"en\">niederschrift</html>";
+      const ausdruck = '<html lang="en">niederschrift</html>';
       mockDefinitions.getAusdruck.mockResolvedValue(ausdruck);
 
       const result = await unitUnderTest.getAusdruckNiederschrift(

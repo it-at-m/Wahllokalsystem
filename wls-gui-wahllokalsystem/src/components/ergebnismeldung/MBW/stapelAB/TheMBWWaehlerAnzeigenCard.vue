@@ -51,7 +51,7 @@
 import { storeToRefs } from "pinia";
 import { computed, onActivated, ref } from "vue";
 
-import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
+import { useBWerteService } from "@/composables/ergebnismeldung/common/bWerteService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { isUWB } = storeToRefs(useUserStore());
@@ -84,7 +84,7 @@ const resultRow = computed(() =>
 );
 
 onActivated(async () => {
-  const { getBWerteForWahlbezirkAndWahl } = useMbwUtils(
+  const { getBWerteForWahlbezirkAndWahl } = useBWerteService(
     props.wahlId,
     props.wahlbezirkId
   );

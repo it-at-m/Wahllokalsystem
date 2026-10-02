@@ -3,6 +3,7 @@ import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/Persist
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
@@ -150,6 +151,37 @@ describe("theBeschlussFassenTabUtils.ts", () => {
         );
 
       expect(result).toStrictEqual({ andererGrund: "", beschlussgruende: [] });
+    });
+
+    it("should_returnUngueltigeBeschlussgruendeAsUnionOfSystemAndWahlvorstandReasons_when_calledForStimmzettelThatIsUngueltig", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .build();
+
+      const stimmzettel = createPersistedStimmzettel();
+      stimmzettel.systemBeschlussvorschlag = [];
+      stimmzettel.wahlvorstandBeschlussvorschlag = [];
+
+      const result =
+        unitUnderTest.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
+          false,
+          stimmzettel
+        );
+
+      expect(
+        mockDefinitions.mapGruendeToBeschlussgrundOptions
+      ).toHaveBeenCalled();
+      expect(
+        mockDefinitions.setSystemBeschlussgruendeTrueWhenFoundInStimmzettel
+      ).toHaveBeenCalledWith([], result.beschlussgruende);
+      expect(
+        mockDefinitions.setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel
+      ).toHaveBeenCalledWith([], result.beschlussgruende);
+
+      const { allBeschlussGruendeUngueltig } = useBeschlussgrundTools();
+      const expected = Array.from(allBeschlussGruendeUngueltig).sort();
+      const actual = result.beschlussgruende.map((o) => o.grund).sort();
+      expect(actual).toStrictEqual(expected);
     });
   });
 });

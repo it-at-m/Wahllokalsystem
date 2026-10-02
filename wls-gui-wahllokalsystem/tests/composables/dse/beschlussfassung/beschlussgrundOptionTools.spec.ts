@@ -10,9 +10,9 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  import("@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts"),
+  import("@/composables/dse/beschlussfassung/useSystemBeschlussgrundReasonEnumFormatter.ts"),
   () => ({
-    useSystemBeschlussgrundReasonEnumTools: () => ({
+    useSystemBeschlussgrundReasonEnumFormatter: () => ({
       mapSystemBeschlussgrundReasonEnumToText: vi.fn(),
       mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText:
         mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText,

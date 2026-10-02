@@ -77,7 +77,7 @@
                 :key="stimmzettel.stimmzettelart"
                 v-model="stimmzettel.anzahl"
                 max-width="15rem"
-                :max-valid="50"
+                :max-valid="1000"
                 :rules="defaultRules"
               />
             </template>

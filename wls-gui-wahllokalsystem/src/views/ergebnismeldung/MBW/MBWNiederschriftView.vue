@@ -99,7 +99,8 @@ const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 const { addNotification } = useUserNotificationService();
 const { hasDoneVorkommnisse } = useEreignisUtils();
 const { getEreignisse } = useEreignisService();
-const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
+const { isStepDone, setStepDone, getElectionWorkflowState } =
+  useWorkflowStore();
 const { getNextRoute } = useNavigationService();
 const { isDseAktiv } = storeToRefs(useInfomanagementStore());
 
@@ -119,8 +120,12 @@ const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 const ereignisse = ref<WahlbezirkEreignisse | null>(null);
 const status = ref<Status | null>(null);
 
-const { isSendingNiederschrift, sendNiederschrift, sendAusdruckNiederschrift } =
-  useMbwUtils(wahlID, currentUserWahlbezirkID);
+const {
+  getAusdruckNiederschrift,
+  isSendingNiederschrift,
+  sendNiederschrift,
+  sendAusdruckNiederschrift,
+} = useMbwUtils(wahlID, currentUserWahlbezirkID);
 const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 const { stimmzettelForBeschlussfassung } = useBeschlussfassungViewUtils(
   wahlID,
@@ -200,8 +205,37 @@ function onKorrigierenClicked() {
 }
 async function onDruckenClicked() {
   isDruckenLoading.value = true;
+  let pdfText: string;
+
+  const niederschriftAlreadyDone = isStepDone(
+    wahlID,
+    currentUserWahlbezirkID,
+    MbwStepsEnum.MBW_NIEDERSCHRIFT
+  );
+
+  //Already printed text
+  if (niederschriftAlreadyDone) {
+    try {
+      pdfText = await getAusdruckNiederschrift(
+          MeldungsArtEnum.Niederschrift
+      );
+    } catch (e) {
+      logError("mbwUtilsNiederschrift wirft einen Fehler", e);
+      addNotification(
+        "Fehler beim Laden der bereits gedruckten Niederschrift. Kein Drucken möglich.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      //Cancel print
+      isDruckenLoading.value = false;
+      return;
+    }
+  }
+  //Create new pdf-Text
+  else {
+    pdfText = await buildNiederschriftTemplate();
+  }
+
   try {
-    const pdfText = await buildNiederschriftTemplate();
     const printWindow = window.open(
       "",
       "",
@@ -215,17 +249,18 @@ async function onDruckenClicked() {
       printWindow.close();
     }
 
-    setStepDone(
-      wahlID,
-      currentUserWahlbezirkID,
-      MbwStepsEnum.MBW_NIEDERSCHRIFT
-    );
-    if (workflowState.value) {
-      workflowState.value.isNiederschriftDone = true;
+    if (!niederschriftAlreadyDone) {
+      setStepDone(
+        wahlID,
+        currentUserWahlbezirkID,
+        MbwStepsEnum.MBW_NIEDERSCHRIFT
+      );
+      if (workflowState.value) {
+        workflowState.value.isNiederschriftDone = true;
+      }
+      await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
     }
     await router.push(getNextRoute());
-
-    await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
   } catch (e) {
     logError("mbwUtilsNiederschrift wirft einen Fehler", e);
     addNotification(

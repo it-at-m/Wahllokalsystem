@@ -11,7 +11,10 @@ import {
   vi,
 } from "vitest";
 
-import { PostAusdruckDokumentartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import {
+  GetAusdruckDokumentartEnum,
+  PostAusdruckDokumentartEnum,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useAusdruckService } from "@/composables/ergebnismeldung/common/ausdruckService.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -20,6 +23,7 @@ const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
   mapMeldungsartEnumToDto: vi.fn(),
   mapToAusdruckWriteDTO: vi.fn(),
+  getAusdruck: vi.fn(),
   postAusdruck: vi.fn(),
 }));
 
@@ -30,6 +34,7 @@ vi.mock(
     return {
       ...(mod as object),
       AusdruckControllerApi: class {
+        getAusdruck = mockDefinitions.getAusdruck;
         postAusdruck = mockDefinitions.postAusdruck;
       },
       Configuration: vi.fn(),
@@ -221,6 +226,62 @@ describe("ausdruckService.ts", () => {
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
+    });
+  });
+
+  describe("getAusdruck", () => {
+    it("should_returnAusdruck_when_apiCallSucceeded", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
+      const ausdruck = generateRandomString(200);
+      mockDefinitions.mapMeldungsartEnumToDto.mockReturnValue(
+        GetAusdruckDokumentartEnum.V1
+      );
+      mockDefinitions.getAusdruck.mockResolvedValue({ data: ausdruck });
+
+      const result = await unitUnderTest.getAusdruck(
+        wahlbezirkID,
+        wahlID,
+        MeldungsArtEnum.Niederschrift
+      );
+
+      expect(result).toStrictEqual(ausdruck);
+      expect(mockDefinitions.getAusdruck).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        GetAusdruckDokumentartEnum.V1
+      );
+      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
+    });
+
+    it("should_sendNotification_when_apiCallSucceededAndNotificationsAreEnabled", async () => {
+      mockDefinitions.getAusdruck.mockResolvedValue({ data: "ausdruck" });
+
+      await unitUnderTest.getAusdruck(
+        "wahlbezirkID",
+        "wahlID",
+        MeldungsArtEnum.Niederschrift,
+        true
+      );
+
+      expect(mockDefinitions.addNotification).toHaveBeenCalledWith(
+        "Bereits gespeicherten Ausdruck erfolgreich geladen",
+        UserNotificationCategoryEnum.SUCCESS
+      );
+    });
+
+    it("should_throwErrorAndSendNoNotification_when_apiCallFailedAndNotificationsAreDisabled", async () => {
+      mockDefinitions.getAusdruck.mockRejectedValue(new Error("api failed"));
+
+      await expect(
+        unitUnderTest.getAusdruck(
+          "wahlbezirkID",
+          "wahlID",
+          MeldungsArtEnum.Niederschrift
+        )
+      ).rejects.toThrowError(new Error("Get ausdruck failed"));
+
+      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });
   });
 });

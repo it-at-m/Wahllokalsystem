@@ -25,6 +25,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getWahlvorschlaege: vi.fn(),
   mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse: vi.fn(),
   getStatus: vi.fn(),
+  getAusdruck: vi.fn(),
   postStatus: vi.fn(),
   postAusdruck: vi.fn(),
 }));
@@ -74,6 +75,7 @@ vi.mock(
   import("@/composables/ergebnismeldung/common/ausdruckService.ts"),
   () => ({
     useAusdruckService: () => ({
+      getAusdruck: mockDefinitions.getAusdruck,
       postAusdruck: mockDefinitions.postAusdruck,
     }),
   })
@@ -832,6 +834,34 @@ describe("mbwUtils", () => {
       );
 
       expect(mockDefinitions.postStatus).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("getAusdruckNiederschrift", () => {
+    it("should_returnAusdruck_when_ausdruckServiceReturnsAusdruck", async () => {
+      const ausdruck = "<html lang=\"en\">niederschrift</html>";
+      mockDefinitions.getAusdruck.mockResolvedValue(ausdruck);
+
+      const result = await unitUnderTest.getAusdruckNiederschrift(
+        MeldungsArtEnum.Niederschrift
+      );
+
+      expect(result).toStrictEqual(ausdruck);
+      expect(mockDefinitions.getAusdruck).toHaveBeenCalledWith(
+        wahlbezirkID,
+        wahlID,
+        MeldungsArtEnum.Niederschrift
+      );
+    });
+
+    it("should_throwError_when_ausdruckServiceThrowsError", async () => {
+      mockDefinitions.getAusdruck.mockRejectedValue(
+        new Error("service failed")
+      );
+
+      await expect(
+        unitUnderTest.getAusdruckNiederschrift(MeldungsArtEnum.Niederschrift)
+      ).rejects.toThrowError(new Error("Fehler beim Laden des Ausdrucks"));
     });
   });
 });

@@ -46,7 +46,8 @@ public class StimmzettelerfassungServiceTest {
     void should_returnFalse_when_noStatusForIdIsGiven() {
       val id = Instancio.create(BezirkUndWahlID.class);
 
-      Mockito.when(stimmzettelerfassungStatusRepository.findById(id)).thenReturn(Optional.empty());
+      Mockito.when(stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(id))
+          .thenReturn(Optional.empty());
 
       val result = unitUnderTest.isStimmzettelerfassungAbgeschlossen(id);
 
@@ -59,7 +60,7 @@ public class StimmzettelerfassungServiceTest {
         boolean mockedEntityPredicateResult) {
       val id = Instancio.create(BezirkUndWahlID.class);
 
-      Mockito.when(stimmzettelerfassungStatusRepository.findById(id))
+      Mockito.when(stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(id))
           .thenReturn(
               Optional.of(
                   new StimmzettelerfassungStatus() {
@@ -194,7 +195,8 @@ public class StimmzettelerfassungServiceTest {
     void should_saveStatusInBearbeitung_when_noStatusExists() {
       val id = Instancio.create(BezirkUndWahlID.class);
 
-      Mockito.when(stimmzettelerfassungStatusRepository.findById(id)).thenReturn(Optional.empty());
+      Mockito.when(stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(id))
+          .thenReturn(Optional.empty());
       Mockito.when(erfassungStatusModelMapper.toEntity(ErfassungStatusModel.STE_BEARBEITUNG))
           .thenReturn(ErfassungStatus.STE_BEARBEITUNG);
 
@@ -210,7 +212,7 @@ public class StimmzettelerfassungServiceTest {
         final ArgumentsAccessor arguments) {
       val id = Instancio.create(BezirkUndWahlID.class);
 
-      Mockito.when(stimmzettelerfassungStatusRepository.findById(id))
+      Mockito.when(stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(id))
           .thenReturn(
               Optional.of(
                   new StimmzettelerfassungStatus(id, arguments.get(0, ErfassungStatus.class))));
@@ -235,7 +237,7 @@ public class StimmzettelerfassungServiceTest {
 
       val mockedInBearbeitungStatus =
           new StimmzettelerfassungStatus(id, ErfassungStatus.STE_BEARBEITUNG);
-      Mockito.when(stimmzettelerfassungStatusRepository.findById(id))
+      Mockito.when(stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(id))
           .thenReturn(Optional.of(mockedInBearbeitungStatus));
 
       unitUnderTest.registerStimmzettelerfassungStart(id);

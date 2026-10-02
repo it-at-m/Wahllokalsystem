@@ -54,19 +54,23 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
   function _findKandidatToAddEinzelstimme(
     kandidatenForListenPosition: DseKandidat[]
   ) {
+    const kandidatenSortedByNennung = [...kandidatenForListenPosition].sort(
+      (kandidat1, kandidat2) => kandidat1.nennung - kandidat2.nennung
+    );
+
     //has any kandidat already uservotes?
-    const kandidatWithEinzelstimmen = kandidatenForListenPosition.find(
-      (kandidat) => kandidat.einzelstimmen !== null
+    const kandidatWithEinzelstimmen = kandidatenSortedByNennung.find(
+      (kandidat) => (kandidat.einzelstimmen ?? 0) > 0
     );
     if (kandidatWithEinzelstimmen) {
       return kandidatWithEinzelstimmen;
     }
 
     //get first unused nennung
-    const firstNennungWithoutDurchstreichung = kandidatenForListenPosition.find(
+    const firstNennungWithoutDurchstreichung = kandidatenSortedByNennung.find(
       (kandidat) => !kandidat.durchgestrichen
     );
-    return firstNennungWithoutDurchstreichung ?? kandidatenForListenPosition[0];
+    return firstNennungWithoutDurchstreichung ?? kandidatenSortedByNennung[0];
   }
 
   function _findKandidatToAddStreichung(

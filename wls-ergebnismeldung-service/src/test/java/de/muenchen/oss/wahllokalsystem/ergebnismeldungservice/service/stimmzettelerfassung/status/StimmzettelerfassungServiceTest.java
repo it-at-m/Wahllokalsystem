@@ -20,6 +20,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -37,6 +38,64 @@ public class StimmzettelerfassungServiceTest {
   @Mock ExceptionFactory exceptionFactory;
 
   @InjectMocks StimmzettelerfassungService unitUnderTest;
+
+  @Nested
+  class IsStimmzettelerfassungAbgeschlossen {
+
+    @Test
+    void should_returnFalse_when_noStatusForIdIsGiven() {
+      val id = Instancio.create(BezirkUndWahlID.class);
+
+      Mockito.when(stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(id))
+          .thenReturn(Optional.empty());
+
+      val result = unitUnderTest.isStimmzettelerfassungAbgeschlossen(id);
+
+      Assertions.assertThat(result).isFalse();
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void should_returnResultOfEntityPredicate_when_statusForIdIsGiven(
+        boolean mockedEntityPredicateResult) {
+      val id = Instancio.create(BezirkUndWahlID.class);
+
+      Mockito.when(stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(id))
+          .thenReturn(
+              Optional.of(
+                  new StimmzettelerfassungStatus() {
+                    @Override
+                    public boolean isStimmzettelerfassungAbgeschlossen() {
+                      return mockedEntityPredicateResult;
+                    }
+                  }));
+
+      val result = unitUnderTest.isStimmzettelerfassungAbgeschlossen(id);
+
+      Assertions.assertThat(result).isEqualTo(mockedEntityPredicateResult);
+    }
+
+    @Test
+    void should_throwException_when_parameterValidationFailed() {
+      val id = Instancio.create(BezirkUndWahlID.class);
+
+      val mockedWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants
+                      .IS_STIMMZETTELERFASSUNG_ABGESCHLOSSEN_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      Mockito.doThrow(mockedWlsException)
+          .when(stimmzettelerfassungValidator)
+          .validBezirkUndWahlIdOrThrow(id, mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.isStimmzettelerfassungAbgeschlossen(id))
+          .isSameAs(mockedWlsException);
+    }
+  }
 
   @Nested
   class SaveStimmzettelerfassungStatus {
@@ -136,7 +195,8 @@ public class StimmzettelerfassungServiceTest {
     void should_saveStatusInBearbeitung_when_noStatusExists() {
       val id = Instancio.create(BezirkUndWahlID.class);
 
-      Mockito.when(stimmzettelerfassungStatusRepository.findById(id)).thenReturn(Optional.empty());
+      Mockito.when(stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(id))
+          .thenReturn(Optional.empty());
       Mockito.when(erfassungStatusModelMapper.toEntity(ErfassungStatusModel.STE_BEARBEITUNG))
           .thenReturn(ErfassungStatus.STE_BEARBEITUNG);
 
@@ -152,7 +212,7 @@ public class StimmzettelerfassungServiceTest {
         final ArgumentsAccessor arguments) {
       val id = Instancio.create(BezirkUndWahlID.class);
 
-      Mockito.when(stimmzettelerfassungStatusRepository.findById(id))
+      Mockito.when(stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(id))
           .thenReturn(
               Optional.of(
                   new StimmzettelerfassungStatus(id, arguments.get(0, ErfassungStatus.class))));
@@ -177,7 +237,7 @@ public class StimmzettelerfassungServiceTest {
 
       val mockedInBearbeitungStatus =
           new StimmzettelerfassungStatus(id, ErfassungStatus.STE_BEARBEITUNG);
-      Mockito.when(stimmzettelerfassungStatusRepository.findById(id))
+      Mockito.when(stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(id))
           .thenReturn(Optional.of(mockedInBearbeitungStatus));
 
       unitUnderTest.registerStimmzettelerfassungStart(id);

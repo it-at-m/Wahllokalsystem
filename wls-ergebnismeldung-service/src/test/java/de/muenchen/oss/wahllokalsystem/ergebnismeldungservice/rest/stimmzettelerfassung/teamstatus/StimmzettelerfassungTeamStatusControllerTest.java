@@ -30,7 +30,7 @@ class StimmzettelerfassungTeamStatusControllerTest {
   class SaveStimmzettelerfassungTeamStatus {
 
     @Test
-    void should_callServiceWithMappedRequest_when_called() {
+    void should_returnDTO_when_serviceGaveResponse() {
       val wahlID = Instancio.create(String.class);
       val wahlbezirkID = Instancio.create(String.class);
       val teamID = Instancio.create(String.class);
@@ -40,11 +40,22 @@ class StimmzettelerfassungTeamStatusControllerTest {
       Mockito.when(erfassungTeamStatusDTOMapper.toModel(requestBody.status()))
           .thenReturn(mockedMappedStatus);
 
-      underTest.saveStimmzettelerfassungTeamStatus(wahlID, wahlbezirkID, teamID, requestBody);
+      val mockedServiceResponse = Instancio.create(ErfassungTeamStatusModel.class);
+      Mockito.when(
+              teamStatusService.saveTeamStatus(
+                  new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID), mockedMappedStatus))
+          .thenReturn(mockedServiceResponse);
 
-      Mockito.verify(teamStatusService)
-          .saveTeamStatus(
-              new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID), mockedMappedStatus);
+      val mockedMappedResponse = Instancio.create(StimmzettelerfassungTeamStatusDTO.class);
+      Mockito.when(
+              erfassungTeamStatusDTOMapper.toStimmzettelerfassungTeamStatusDTO(
+                  mockedServiceResponse))
+          .thenReturn(mockedMappedResponse);
+
+      val result =
+          underTest.saveStimmzettelerfassungTeamStatus(wahlID, wahlbezirkID, teamID, requestBody);
+
+      Assertions.assertThat(result).isEqualTo(mockedMappedResponse);
     }
   }
 

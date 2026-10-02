@@ -151,9 +151,7 @@ export function useStimmzettelTools() {
 
     const hasUngueltigerWahlvorstandGrund = (
       stimmzettel.wahlvorstandBeschlussvorschlag ?? []
-    ).some((beschlussvorschlag) => {
-      return ungueltigSet.has(beschlussvorschlag.text);
-    });
+    ).some((beschlussvorschlag) => ungueltigSet.has(beschlussvorschlag.text));
 
     return !(hasUngueltigerSystemGrund || hasUngueltigerWahlvorstandGrund);
   }

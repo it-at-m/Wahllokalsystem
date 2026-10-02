@@ -3,13 +3,13 @@ import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/Wa
 
 import { storeToRefs } from "pinia";
 
-import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts";
+import { useSystemBeschlussgrundReasonEnumFormatter } from "@/composables/dse/beschlussfassung/useSystemBeschlussgrundReasonEnumFormatter.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 
 const { mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText } =
-  useSystemBeschlussgrundReasonEnumTools();
+  useSystemBeschlussgrundReasonEnumFormatter();
 
 export function useBeschlussgrundTools() {
   const commonWahlvorstandBeschlussvorschlaege = [

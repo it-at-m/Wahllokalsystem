@@ -6,18 +6,21 @@ import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/Sys
 import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText: vi.fn(),
+  getBeschlussgrundEnumValueAsString: vi.fn(),
 }));
 
 vi.mock(
-  import("@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts"),
-  () => ({
-    useSystemBeschlussgrundReasonEnumTools: () => ({
-      mapSystemBeschlussgrundReasonEnumToText: vi.fn(),
-      mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText:
-        mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText,
-    }),
-  })
+  import("@/composables/dse/beschlussfassung/beschlussgrundTools.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useBeschlussgrundTools: () => ({
+        ...original.useBeschlussgrundTools(),
+        getBeschlussgrundEnumValueAsString:
+          mockDefinitions.getBeschlussgrundEnumValueAsString,
+      }),
+    };
+  }
 );
 
 const { preparePersistedStimmzettel } =
@@ -181,7 +184,13 @@ describe("beschlussgrundOptionTools.ts", () => {
         .build();
       const mockedSystemgrundText = "mocked grund";
 
-      mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText.mockReturnValue(
+      mockDefinitions.getBeschlussgrundEnumValueAsString.mockReturnValueOnce(
+        "custom-1"
+      );
+      mockDefinitions.getBeschlussgrundEnumValueAsString.mockReturnValueOnce(
+        "custom-2"
+      );
+      mockDefinitions.getBeschlussgrundEnumValueAsString.mockReturnValueOnce(
         mockedSystemgrundText
       );
 

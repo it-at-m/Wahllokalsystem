@@ -78,7 +78,7 @@ public class UserMdcFilter extends OncePerRequestFilter {
 
     if (principal instanceof OAuth2User oauth) { // generisches OAuth2User (inkl. OIDC)
       Object pref = oauth.getAttribute("preferred_username");
-      if (pref != null) return pref.toString();
+      if (pref != null && !pref.toString().isBlank()) return pref.toString();
       Object username = oauth.getAttribute("username");
       if (username != null) return username.toString();
       Object email = oauth.getAttribute("email");

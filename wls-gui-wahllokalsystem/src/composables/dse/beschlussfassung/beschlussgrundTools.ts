@@ -49,6 +49,11 @@ export function useBeschlussgrundTools() {
     },
   };
 
+  const allBeschlussGruendeUngueltig = new Set<string>([
+    ...beschlussGruende.common.ungueltig,
+    ...beschlussGruende.bwb.ungueltig,
+  ]);
+
   function getWahlvorstandBeschlussvorschlaege(isBWB: boolean) {
     if (isBWB) {
       return [
@@ -106,7 +111,7 @@ export function useBeschlussgrundTools() {
   }
 
   return {
-    beschlussGruende,
+    allBeschlussGruendeUngueltig,
     createBeschlussgrundWithText,
     getWahlvorstandBeschlussvorschlaege,
     sortWahlvorstandBeschlussgruende,

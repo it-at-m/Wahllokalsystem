@@ -13,7 +13,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const {
-  beschlussGruende,
+  allBeschlussGruendeUngueltig,
   sortWahlvorstandBeschlussgruende,
   sortSystemBeschlussgruende,
 } = useBeschlussgrundTools();
@@ -138,20 +138,17 @@ export function useStimmzettelTools() {
   function isStimmzettelGueltigBasedOnVormerkungsgruenden(
     stimmzettel: PersistedStimmzettel
   ) {
-    const ungueltigSet = new Set(
-      [
-        ...beschlussGruende.common.ungueltig,
-        ...beschlussGruende.bwb.ungueltig,
-      ].map((o) => o.toString())
-    );
-
     const hasUngueltigerSystemGrund = (
       stimmzettel.systemBeschlussvorschlag ?? []
-    ).some((beschlussvorschlag) => ungueltigSet.has(beschlussvorschlag.reason));
+    ).some((beschlussvorschlag) =>
+      allBeschlussGruendeUngueltig.has(beschlussvorschlag.reason)
+    );
 
     const hasUngueltigerWahlvorstandGrund = (
       stimmzettel.wahlvorstandBeschlussvorschlag ?? []
-    ).some((beschlussvorschlag) => ungueltigSet.has(beschlussvorschlag.text));
+    ).some((beschlussvorschlag) =>
+      allBeschlussGruendeUngueltig.has(beschlussvorschlag.text)
+    );
 
     return !(hasUngueltigerSystemGrund || hasUngueltigerWahlvorstandGrund);
   }

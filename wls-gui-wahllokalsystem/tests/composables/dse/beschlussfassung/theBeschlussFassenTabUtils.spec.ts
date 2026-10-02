@@ -97,10 +97,14 @@ describe("theBeschlussFassenTabUtils.ts", () => {
       );
     });
 
-    it("should_useEmptyArraysForSetters_when_stimmzettelIsUndefined", () => {
+    it("should_useEmptyArraysForSetters_when_stimmzettelHasUndefinedBeschluesse", () => {
       userStore.user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .build();
+
+      const stimmzettel = createPersistedStimmzettel();
+      stimmzettel.systemBeschlussvorschlag = [];
+      stimmzettel.wahlvorstandBeschlussvorschlag = [];
 
       mockDefinitions.setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList.mockReturnValue(
         ""
@@ -109,7 +113,7 @@ describe("theBeschlussFassenTabUtils.ts", () => {
       const result =
         unitUnderTest.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
           true,
-          undefined
+          stimmzettel
         );
 
       expect(

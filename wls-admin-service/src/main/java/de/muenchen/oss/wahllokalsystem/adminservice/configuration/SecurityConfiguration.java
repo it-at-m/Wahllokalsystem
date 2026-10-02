@@ -4,6 +4,7 @@
  */
 package de.muenchen.oss.wahllokalsystem.adminservice.configuration;
 
+import de.muenchen.oss.wahllokalsystem.adminservice.configuration.filter.UserMdcFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
@@ -33,7 +35,8 @@ public class SecurityConfiguration {
   private String userInfoUri;
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http, UserMdcFilter userMdcFilter)
+      throws Exception {
     http.authorizeHttpRequests(
             (requests) ->
                 requests
@@ -63,6 +66,8 @@ public class SecurityConfiguration {
                             new JwtUserInfoAuthenticationConverter(
                                 new UserInfoAuthoritiesRetriever(
                                     userInfoUri, restTemplateBuilder)))));
+
+    http.addFilterAfter(userMdcFilter, BearerTokenAuthenticationFilter.class);
 
     return http.build();
   }

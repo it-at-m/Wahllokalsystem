@@ -56,6 +56,7 @@
 
 <script setup lang="ts">
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
@@ -67,7 +68,6 @@ import TheBeschlussFassenTab from "@/components/dse/beschlussfassung/TheBeschlus
 import BaseStimmzettelErfassungCardContent from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelErfassungCardContent.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
-import { useWahlvorschlaegeState } from "@/composables/dse/stimmzettelerfassung/wahlvorschlaegeState.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
@@ -77,17 +77,16 @@ const isDialogVisibleModel = defineModel("modelValue", {
 
 const props = defineProps<{
   stimmzettel: PersistedStimmzettel;
+  wahlvorschlaege: Wahlvorschlag[];
 }>();
 
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
-const wahlbezirkID = route.params.wahlbezirkId as string;
 const { currentUserTeamName } = storeToRefs(useUserStore());
-const { wahlvorschlaege } = useWahlvorschlaegeState(wahlID, wahlbezirkID);
 
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
   computed(() => props.stimmzettel.stimmzettelkennung),
-  wahlvorschlaege.value,
+  props.wahlvorschlaege,
   wahlID,
   currentUserTeamName.value
 );

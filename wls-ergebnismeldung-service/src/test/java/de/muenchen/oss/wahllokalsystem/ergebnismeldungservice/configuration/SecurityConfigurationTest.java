@@ -42,11 +42,14 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzette
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelumschlaege.StimmzettelumschlaegeService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.wahlscheine.WahlscheineService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.filter.UserMdcFilter;
+import jakarta.servlet.Filter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -56,8 +59,11 @@ import org.springframework.boot.test.autoconfigure.actuate.observability.AutoCon
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -101,6 +107,8 @@ class SecurityConfigurationTest {
 
   @Autowired MockMvc api;
 
+  @Autowired FilterChainProxy filterChainProxy;
+
   @Test
   void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
     api.perform(get("/")).andExpect(status().isUnauthorized());
@@ -134,6 +142,38 @@ class SecurityConfigurationTest {
   @Test
   void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
     api.perform(get("/webjars/swagger-ui/index.html")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_registerUserMdcFilterAfterBearerTokenFilter_when_bothFiltersRegistered() {
+    List<SecurityFilterChain> chains = filterChainProxy.getFilterChains();
+
+    boolean foundChainWithBothFilters = false;
+    for (SecurityFilterChain chain : chains) {
+      List<Filter> filters = chain.getFilters();
+      int bearerIndex = -1;
+      int userMdcIndex = -1;
+      for (int i = 0; i < filters.size(); i++) {
+        Filter filter = filters.get(i);
+        if (filter instanceof BearerTokenAuthenticationFilter) {
+          bearerIndex = i;
+        }
+        if (filter instanceof UserMdcFilter) {
+          userMdcIndex = i;
+        }
+      }
+      if (bearerIndex != -1 && userMdcIndex != -1) {
+        Assertions.assertThat(userMdcIndex)
+                .as("UserMdcFilter must be registered after BearerTokenAuthenticationFilter")
+                .isGreaterThan(bearerIndex);
+        foundChainWithBothFilters = true;
+        break;
+      }
+    }
+    if (!foundChainWithBothFilters) {
+      Assertions.fail(
+              "No security filter chain contains both BearerTokenAuthenticationFilter and UserMdcFilter");
+    }
   }
 
   @Nested

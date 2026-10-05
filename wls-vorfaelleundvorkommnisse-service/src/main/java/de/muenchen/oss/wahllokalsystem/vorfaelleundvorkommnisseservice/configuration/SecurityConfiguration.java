@@ -4,7 +4,7 @@
  */
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.configuration;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.configuration.filter.UserMdcFilter;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.filter.UserMdcFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;

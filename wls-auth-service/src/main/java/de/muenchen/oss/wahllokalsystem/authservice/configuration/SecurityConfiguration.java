@@ -9,7 +9,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import de.muenchen.oss.wahllokalsystem.authservice.configuration.filter.UserMdcFilter;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.filter.UserMdcFilter;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAConfigurationProperties;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAKeySetting;
 import de.muenchen.oss.wahllokalsystem.authservice.security.AuthUtils;

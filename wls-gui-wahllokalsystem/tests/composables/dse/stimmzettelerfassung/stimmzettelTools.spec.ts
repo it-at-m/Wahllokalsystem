@@ -9,7 +9,8 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useDseStimmzettelTestDataFactory } from "@tests/utils/dse/DseStimmzettelTestDataFactory.ts";
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
-import { describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useSystemBeschlussgrundReasonEnumFormatter } from "@/composables/dse/beschlussfassung/useSystemBeschlussgrundReasonEnumFormatter.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
@@ -73,14 +74,12 @@ const {
 } = useWahlvorschlaegeTestDataFactory();
 
 describe("stimmzettelTools.ts", () => {
-  const {
-    isVorgemerktFuerBeschluss,
-    getVormerkungsgrund,
-    createStimmzettelWithWahlvorschlaege,
-    normalizePersistedStimmzettel,
-    resetDseStimmzettel,
-    isSamePersistedStimmzettel,
-  } = useStimmzettelTools();
+  let unitUnderTest: ReturnType<typeof useStimmzettelTools>;
+
+  beforeEach(() => {
+    setActivePinia(createPinia());
+    unitUnderTest = useStimmzettelTools();
+  });
 
   const { mapSystemBeschlussgrundReasonEnumToText } =
     useSystemBeschlussgrundReasonEnumFormatter();
@@ -89,9 +88,10 @@ describe("stimmzettelTools.ts", () => {
     it("should_createStimmzettelWithInitialValues_when_wahlvorschlaegeAreGiven", () => {
       const uiWahlvorschlaege: Wahlvorschlaege = createWahlvorschlaege();
 
-      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege(
-        uiWahlvorschlaege.wahlvorschlaege
-      );
+      const result: DseStimmzettel =
+        unitUnderTest.createStimmzettelWithWahlvorschlaege(
+          uiWahlvorschlaege.wahlvorschlaege
+        );
 
       const expected: DseStimmzettel = {
         wahlvorstandBeschlussvorschlag: [],
@@ -157,9 +157,8 @@ describe("stimmzettelTools.ts", () => {
         .kandidaten([kandidatWithTwoNennungen])
         .build();
 
-      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([
-        uiWahlvorschlag,
-      ]);
+      const result: DseStimmzettel =
+        unitUnderTest.createStimmzettelWithWahlvorschlaege([uiWahlvorschlag]);
 
       const dseKandidaten = result.wahlvorschlaege[0]
         .kandidaten as DseKandidat[];
@@ -198,9 +197,10 @@ describe("stimmzettelTools.ts", () => {
       const uiWahlvorschlagWithoutKandidaten: UiWahlvorschlag =
         prepareWahlvorschlag().kandidaten(undefined).build();
 
-      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([
-        uiWahlvorschlagWithoutKandidaten,
-      ]);
+      const result: DseStimmzettel =
+        unitUnderTest.createStimmzettelWithWahlvorschlaege([
+          uiWahlvorschlagWithoutKandidaten,
+        ]);
 
       const expectedDseWahlvorschlag: DseWahlvorschlag = {
         wahlvorschlagID: uiWahlvorschlagWithoutKandidaten.identifikator,
@@ -223,10 +223,8 @@ describe("stimmzettelTools.ts", () => {
         .ordnungszahl(20)
         .build();
 
-      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([
-        w1,
-        w2,
-      ]);
+      const result: DseStimmzettel =
+        unitUnderTest.createStimmzettelWithWahlvorschlaege([w1, w2]);
 
       const expectedWahlvorschlaege: DseWahlvorschlag[] = [w1, w2].map((ui) => {
         const dseWahlvorschlag: DseWahlvorschlag = {
@@ -274,7 +272,8 @@ describe("stimmzettelTools.ts", () => {
     });
 
     it("should_createStimmzettelWithEmptyWahlvorschlaege_when_inputIsEmpty", () => {
-      const result: DseStimmzettel = createStimmzettelWithWahlvorschlaege([]);
+      const result: DseStimmzettel =
+        unitUnderTest.createStimmzettelWithWahlvorschlaege([]);
 
       const expected: DseStimmzettel = {
         wahlvorstandBeschlussvorschlag: [],
@@ -296,7 +295,7 @@ describe("stimmzettelTools.ts", () => {
         .wahlvorstandBeschlussvorschlag([])
         .build();
 
-      const vorgemerkt = isVorgemerktFuerBeschluss(stimmzettel);
+      const vorgemerkt = unitUnderTest.isVorgemerktFuerBeschluss(stimmzettel);
 
       expect(vorgemerkt).toBe(false);
     });
@@ -309,7 +308,7 @@ describe("stimmzettelTools.ts", () => {
         .wahlvorstandBeschlussvorschlag([{ text: text1 }, { text: text2 }])
         .build();
 
-      const vorgemerkt = isVorgemerktFuerBeschluss(stimmzettel);
+      const vorgemerkt = unitUnderTest.isVorgemerktFuerBeschluss(stimmzettel);
 
       expect(vorgemerkt).toBe(true);
     });
@@ -326,7 +325,7 @@ describe("stimmzettelTools.ts", () => {
         .systemBeschlussvorschlag([{ reason: reason1 }, { reason: reason2 }])
         .build();
 
-      const vorgemerkt = isVorgemerktFuerBeschluss(stimmzettel);
+      const vorgemerkt = unitUnderTest.isVorgemerktFuerBeschluss(stimmzettel);
 
       expect(vorgemerkt).toBe(true);
     });
@@ -345,7 +344,7 @@ describe("stimmzettelTools.ts", () => {
         ])
         .build();
 
-      const result = getVormerkungsgrund(stimmzettel);
+      const result = unitUnderTest.getVormerkungsgrund(stimmzettel);
 
       expect(result).toStrictEqual(
         `${mapSystemBeschlussgrundReasonEnumToText(systemReason)}, ${wahlvorstandBeschlussvorschlagText}`
@@ -367,7 +366,7 @@ describe("stimmzettelTools.ts", () => {
         .wahlvorstandBeschlussvorschlag([])
         .build();
 
-      const result = getVormerkungsgrund(stimmzettel);
+      const result = unitUnderTest.getVormerkungsgrund(stimmzettel);
 
       expect(result).toStrictEqual(
         `${mapSystemBeschlussgrundReasonEnumToText(systemReason1)}, ${mapSystemBeschlussgrundReasonEnumToText(systemReason2)}`
@@ -385,7 +384,7 @@ describe("stimmzettelTools.ts", () => {
         ])
         .build();
 
-      const result = getVormerkungsgrund(stimmzettel);
+      const result = unitUnderTest.getVormerkungsgrund(stimmzettel);
 
       expect(result).toStrictEqual(
         `${wahlvorstandBeschlussvorschlagText1}, ${wahlvorstandBeschlussvorschlagText2}`
@@ -401,7 +400,7 @@ describe("stimmzettelTools.ts", () => {
         .wahlvorstandBeschlussvorschlag([])
         .build();
 
-      const result = getVormerkungsgrund(stimmzettel);
+      const result = unitUnderTest.getVormerkungsgrund(stimmzettel);
 
       expect(result).toStrictEqual(
         `${mapSystemBeschlussgrundReasonEnumToText(systemReason)}`
@@ -416,7 +415,7 @@ describe("stimmzettelTools.ts", () => {
         ])
         .build();
 
-      const result = getVormerkungsgrund(stimmzettel);
+      const result = unitUnderTest.getVormerkungsgrund(stimmzettel);
 
       expect(result).toStrictEqual(`${wahlvorstandBeschlussvorschlagText}`);
     });
@@ -426,7 +425,7 @@ describe("stimmzettelTools.ts", () => {
         .wahlvorstandBeschlussvorschlag([])
         .build();
 
-      const result = getVormerkungsgrund(stimmzettel);
+      const result = unitUnderTest.getVormerkungsgrund(stimmzettel);
 
       expect(result).toStrictEqual("");
     });
@@ -466,7 +465,7 @@ describe("stimmzettelTools.ts", () => {
         .wahlvorschlaege([wvB, wvA])
         .build();
 
-      const result = normalizePersistedStimmzettel(input);
+      const result = unitUnderTest.normalizePersistedStimmzettel(input);
 
       const expectedNormalizedStimmzettel = {
         stimmzettelkennung: input.stimmzettelkennung,
@@ -513,7 +512,7 @@ describe("stimmzettelTools.ts", () => {
       expectedKandidaten.reststimmen = null;
       expectedKandidaten.durchgestrichen = false;
 
-      const result = resetDseStimmzettel(dseStimmzettel);
+      const result = unitUnderTest.resetDseStimmzettel(dseStimmzettel);
 
       expect(result).toStrictEqual(expectedResetStimmzettel);
     });
@@ -555,10 +554,83 @@ describe("stimmzettelTools.ts", () => {
           .teamID(teamIdMatches ? stimmzettel1.teamID : "B")
           .build();
 
-        expect(isSamePersistedStimmzettel(stimmzettel1, stimmzettel2)).toBe(
-          expected
-        );
+        expect(
+          unitUnderTest.isSamePersistedStimmzettel(stimmzettel1, stimmzettel2)
+        ).toBe(expected);
       }
     );
+  });
+
+  describe("isStimmzettelGueltigBasedOnVormerkungsgruenden", () => {
+    it("should_returnTrue_when_stimmzettelHasNoBeschlussgruende", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag([])
+        .wahlvorstandBeschlussvorschlag([])
+        .build();
+
+      const result =
+        unitUnderTest.isStimmzettelGueltigBasedOnVormerkungsgruenden(
+          stimmzettel
+        );
+
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_stimmzettelHasNoUngueltigeBeschlussgruende", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag([
+          { reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig },
+        ])
+        .wahlvorstandBeschlussvorschlag([
+          {
+            text: "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
+          },
+        ])
+        .build();
+
+      const result =
+        unitUnderTest.isStimmzettelGueltigBasedOnVormerkungsgruenden(
+          stimmzettel
+        );
+
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_stimmzettelHasUngueltigeWahlvorstandBeschlussgruende", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag([])
+        .wahlvorstandBeschlussvorschlag([
+          {
+            text: "Stimmzettel ist nicht amtlich hergestellt (zum Beispiel von einer anderen Gemeinde)",
+          },
+        ])
+        .build();
+
+      const result =
+        unitUnderTest.isStimmzettelGueltigBasedOnVormerkungsgruenden(
+          stimmzettel
+        );
+
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_stimmzettelHasUngueltigeSystemBeschlussgruende", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .systemBeschlussvorschlag([
+          {
+            reason:
+              SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+          },
+        ])
+        .wahlvorstandBeschlussvorschlag([])
+        .build();
+
+      const result =
+        unitUnderTest.isStimmzettelGueltigBasedOnVormerkungsgruenden(
+          stimmzettel
+        );
+
+      expect(result).toStrictEqual(false);
+    });
   });
 });

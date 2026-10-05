@@ -1,256 +1,290 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security.filter;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.Principal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-
-import java.io.IOException;
-import java.security.Principal;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserMdcFilterTest {
 
-    private static final String MDC_USER_KEY = "user";
+  private static final String MDC_USER_KEY = "user";
 
-    @InjectMocks
-    private UserMdcFilter userMdcFilter;
+  @InjectMocks private UserMdcFilter userMdcFilter;
 
-    @Mock
-    private HttpServletRequest request;
+  @Mock private HttpServletRequest request;
 
-    @Mock
-    private HttpServletResponse response;
+  @Mock private HttpServletResponse response;
 
-    @Mock
-    private FilterChain filterChain;
+  @Mock private FilterChain filterChain;
 
-    @Mock
-    private SecurityContext securityContext;
+  @Mock private SecurityContext securityContext;
 
-    @BeforeEach
-    void setUp() {
-        SecurityContextHolder.setContext(securityContext);
-        MDC.clear();
-    }
+  @BeforeEach
+  void setup() {
+    SecurityContextHolder.setContext(securityContext);
+    MDC.clear();
+  }
 
-    @AfterEach
-    void tearDown() {
-        SecurityContextHolder.clearContext();
-        MDC.clear();
-    }
+  @AfterEach
+  void teardown() {
+    SecurityContextHolder.clearContext();
+    MDC.clear();
+  }
 
-    @Nested
-    class DoFilterInternal {
+  @Test
+  void should_proceedWithoutMdc_when_authIsNull() throws ServletException, IOException {
+    when(securityContext.getAuthentication()).thenReturn(null);
 
-        @Test
-        void should_proceedWithoutMdc_when_authIsNull() throws ServletException, IOException {
-            when(securityContext.getAuthentication()).thenReturn(null);
+    userMdcFilter.doFilterInternal(request, response, filterChain);
 
-            userMdcFilter.doFilterInternal(request, response, filterChain);
+    verify(filterChain).doFilter(request, response);
+    assertNull(MDC.get(MDC_USER_KEY));
+  }
 
-            verify(filterChain).doFilter(request, response);
-            assertNull(MDC.get(MDC_USER_KEY));
-        }
+  @Test
+  void should_extractClaimAndSetMdc_when_givenJwtAuthenticationTokenWithPreferredUsername()
+      throws ServletException, IOException {
+    JwtAuthenticationToken mockAuth = mock(JwtAuthenticationToken.class);
+    Jwt mockJwt = mock(Jwt.class);
 
-        @Test
-        void should_extractClaimAndSetMdc_when_givenJwtAuthenticationTokenWithPreferredUsername() throws ServletException, IOException {
-            JwtAuthenticationToken mockAuth = mock(JwtAuthenticationToken.class);
-            Jwt mockJwt = mock(Jwt.class);
+    when(securityContext.getAuthentication()).thenReturn(mockAuth);
+    when(mockAuth.getToken()).thenReturn(mockJwt);
+    when(mockJwt.getClaimAsString("preferred_username")).thenReturn("jwt.user");
 
-            when(securityContext.getAuthentication()).thenReturn(mockAuth);
-            when(mockAuth.getToken()).thenReturn(mockJwt);
-            when(mockJwt.getClaimAsString("preferred_username")).thenReturn("jwt.user");
+    doAnswer(
+            invocation -> {
+              assertEquals("jwt.user", MDC.get(MDC_USER_KEY));
+              return null;
+            })
+        .when(filterChain)
+        .doFilter(request, response);
 
-            doAnswer(invocation -> {
-                assertEquals("jwt.user", MDC.get(MDC_USER_KEY));
-                return null;
-            }).when(filterChain).doFilter(request, response);
+    userMdcFilter.doFilterInternal(request, response, filterChain);
 
-            userMdcFilter.doFilterInternal(request, response, filterChain);
+    verify(filterChain).doFilter(request, response);
+    assertNull(MDC.get(MDC_USER_KEY));
+  }
 
-            verify(filterChain).doFilter(request, response);
-            assertNull(MDC.get(MDC_USER_KEY));
-        }
+  @Test
+  void should_setNameInMdc_when_jwtAuthenticationTokenClaimsAreMissingButNameIsPresent()
+      throws ServletException, IOException {
 
-        @Test
-        void should_setNameInMdc_when_jwtAuthenticationTokenClaimsAreMissingButNameIsPresent() throws ServletException, IOException {
+    JwtAuthenticationToken mockAuth = mock(JwtAuthenticationToken.class);
+    Jwt mockJwt = mock(Jwt.class);
 
-            JwtAuthenticationToken mockAuth = mock(JwtAuthenticationToken.class);
-            Jwt mockJwt = mock(Jwt.class);
+    when(securityContext.getAuthentication()).thenReturn(mockAuth);
+    when(mockAuth.getToken()).thenReturn(mockJwt);
+    when(mockAuth.getName()).thenReturn("jwt.fallback.name");
 
-            when(securityContext.getAuthentication()).thenReturn(mockAuth);
-            when(mockAuth.getToken()).thenReturn(mockJwt);
-            when(mockAuth.getName()).thenReturn("jwt.fallback.name");
+    doAnswer(
+            invocation -> {
+              assertEquals("jwt.fallback.name", MDC.get(MDC_USER_KEY));
+              return null;
+            })
+        .when(filterChain)
+        .doFilter(request, response);
 
-            doAnswer(invocation -> {
-                assertEquals("jwt.fallback.name", MDC.get(MDC_USER_KEY));
-                return null;
-            }).when(filterChain).doFilter(request, response);
+    userMdcFilter.doFilterInternal(request, response, filterChain);
 
-            userMdcFilter.doFilterInternal(request, response, filterChain);
+    assertNull(MDC.get(MDC_USER_KEY));
+  }
 
-            assertNull(MDC.get(MDC_USER_KEY));
-        }
+  @Test
+  void should_setUsernameInMdc_when_principalIsUserDetails() throws ServletException, IOException {
 
-        @Test
-        void should_setUsernameInMdc_when_principalIsUserDetails() throws ServletException, IOException {
+    Authentication mockAuth = mock(Authentication.class);
+    UserDetails mockUserDetails = mock(UserDetails.class);
 
-            Authentication mockAuth = mock(Authentication.class);
-            UserDetails mockUserDetails = mock(UserDetails.class);
+    when(securityContext.getAuthentication()).thenReturn(mockAuth);
+    when(mockAuth.getPrincipal()).thenReturn(mockUserDetails);
+    when(mockUserDetails.getUsername()).thenReturn("details.user");
 
-            when(securityContext.getAuthentication()).thenReturn(mockAuth);
-            when(mockAuth.getPrincipal()).thenReturn(mockUserDetails);
-            when(mockUserDetails.getUsername()).thenReturn("details.user");
+    doAnswer(
+            invocation -> {
+              assertEquals("details.user", MDC.get(MDC_USER_KEY));
+              return null;
+            })
+        .when(filterChain)
+        .doFilter(request, response);
 
-            doAnswer(invocation -> {
-                assertEquals("details.user", MDC.get(MDC_USER_KEY));
-                return null;
-            }).when(filterChain).doFilter(request, response);
+    userMdcFilter.doFilterInternal(request, response, filterChain);
+
+    assertNull(MDC.get(MDC_USER_KEY));
+  }
 
-            userMdcFilter.doFilterInternal(request, response, filterChain);
+  @Test
+  void should_extractAttributeAndSetMdc_when_principalIsOAuth2User()
+      throws ServletException, IOException {
 
-            assertNull(MDC.get(MDC_USER_KEY));
-        }
+    Authentication mockAuth = mock(Authentication.class);
+    OAuth2User mockOAuth2User = mock(OAuth2User.class);
 
-        @Test
-        void should_extractAttributeAndSetMdc_when_principalIsOAuth2User() throws ServletException, IOException {
+    when(securityContext.getAuthentication()).thenReturn(mockAuth);
+    when(mockAuth.getPrincipal()).thenReturn(mockOAuth2User);
+    when(mockOAuth2User.getAttribute("preferred_username")).thenReturn("oauth.preferred");
 
-            Authentication mockAuth = mock(Authentication.class);
-            OAuth2User mockOAuth2User = mock(OAuth2User.class);
+    doAnswer(
+            invocation -> {
+              assertEquals("oauth.preferred", MDC.get(MDC_USER_KEY));
+              return null;
+            })
+        .when(filterChain)
+        .doFilter(request, response);
 
-            when(securityContext.getAuthentication()).thenReturn(mockAuth);
-            when(mockAuth.getPrincipal()).thenReturn(mockOAuth2User);
-            when(mockOAuth2User.getAttribute("preferred_username")).thenReturn("oauth.preferred");
+    userMdcFilter.doFilterInternal(request, response, filterChain);
 
-            doAnswer(invocation -> {
-                assertEquals("oauth.preferred", MDC.get(MDC_USER_KEY));
-                return null;
-            }).when(filterChain).doFilter(request, response);
+    assertNull(MDC.get(MDC_USER_KEY));
+  }
 
-            userMdcFilter.doFilterInternal(request, response, filterChain);
+  @Test
+  void should_extractPreferredUsernameAndSetMdc_when_principalIsOidcUser()
+      throws ServletException, IOException {
 
-            assertNull(MDC.get(MDC_USER_KEY));
-        }
+    Authentication mockAuth = mock(Authentication.class);
+    OidcUser mockOidcUser = mock(OidcUser.class);
 
-        @Test
-        void should_extractPreferredUsernameAndSetMdc_when_principalIsOidcUser() throws ServletException, IOException {
+    when(securityContext.getAuthentication()).thenReturn(mockAuth);
+    when(mockAuth.getPrincipal()).thenReturn(mockOidcUser);
+    when(mockOidcUser.getPreferredUsername()).thenReturn("oidc.user");
 
-            Authentication mockAuth = mock(Authentication.class);
-            OidcUser mockOidcUser = mock(OidcUser.class);
+    doAnswer(
+            invocation -> {
+              assertEquals("oidc.user", MDC.get(MDC_USER_KEY));
+              return null;
+            })
+        .when(filterChain)
+        .doFilter(request, response);
 
-            when(securityContext.getAuthentication()).thenReturn(mockAuth);
-            when(mockAuth.getPrincipal()).thenReturn(mockOidcUser);
-            when(mockOidcUser.getPreferredUsername()).thenReturn("oidc.user");
+    userMdcFilter.doFilterInternal(request, response, filterChain);
 
-            doAnswer(invocation -> {
-                assertEquals("oidc.user", MDC.get(MDC_USER_KEY));
-                return null;
-            }).when(filterChain).doFilter(request, response);
+    assertNull(MDC.get(MDC_USER_KEY));
+  }
 
-            userMdcFilter.doFilterInternal(request, response, filterChain);
+  @Test
+  void should_extractClaimAndSetMdc_when_principalIsPureJwt() throws ServletException, IOException {
+    Authentication mockAuth = mock(Authentication.class);
+    Jwt mockJwt = mock(Jwt.class);
 
-            assertNull(MDC.get(MDC_USER_KEY));
-        }
+    when(securityContext.getAuthentication()).thenReturn(mockAuth);
+    when(mockAuth.getPrincipal()).thenReturn(mockJwt);
 
-        @Test
-        void should_extractClaimAndSetMdc_when_principalIsPureJwt() throws ServletException, IOException {
-            Authentication mockAuth = mock(Authentication.class);
-            Jwt mockJwt = mock(Jwt.class);
+    when(mockJwt.getClaimAsString("preferred_username")).thenReturn(null);
+    when(mockJwt.getClaimAsString("username")).thenReturn(null);
+    when(mockJwt.getClaimAsString("upn")).thenReturn(null);
+    when(mockJwt.getClaimAsString("email")).thenReturn("purejwt.email@test.com");
 
-            when(securityContext.getAuthentication()).thenReturn(mockAuth);
-            when(mockAuth.getPrincipal()).thenReturn(mockJwt);
+    doAnswer(
+            invocation -> {
+              assertEquals("purejwt.email@test.com", MDC.get(MDC_USER_KEY));
+              return null;
+            })
+        .when(filterChain)
+        .doFilter(request, response);
 
-            when(mockJwt.getClaimAsString("preferred_username")).thenReturn(null);
-            when(mockJwt.getClaimAsString("username")).thenReturn(null);
-            when(mockJwt.getClaimAsString("upn")).thenReturn(null);
-            when(mockJwt.getClaimAsString("email")).thenReturn("purejwt.email@test.com");
+    userMdcFilter.doFilterInternal(request, response, filterChain);
 
-            doAnswer(invocation -> {
-                assertEquals("purejwt.email@test.com", MDC.get(MDC_USER_KEY));
-                return null;
-            }).when(filterChain).doFilter(request, response);
+    assertNull(MDC.get(MDC_USER_KEY));
+  }
 
-            userMdcFilter.doFilterInternal(request, response, filterChain);
+  @Test
+  void should_setNameInMdc_when_principalIsPurePrincipalInterface()
+      throws ServletException, IOException {
 
-            assertNull(MDC.get(MDC_USER_KEY));
-        }
+    Authentication mockAuth = mock(Authentication.class);
+    Principal mockPrincipal = mock(Principal.class);
 
-        @Test
-        void should_setNameInMdc_when_principalIsPurePrincipalInterface() throws ServletException, IOException {
+    when(securityContext.getAuthentication()).thenReturn(mockAuth);
+    when(mockAuth.getPrincipal()).thenReturn(mockPrincipal);
+    when(mockPrincipal.getName()).thenReturn("pure.principal");
 
-            Authentication mockAuth = mock(Authentication.class);
-            Principal mockPrincipal = mock(Principal.class);
+    doAnswer(
+            invocation -> {
+              assertEquals("pure.principal", MDC.get(MDC_USER_KEY));
+              return null;
+            })
+        .when(filterChain)
+        .doFilter(request, response);
 
-            when(securityContext.getAuthentication()).thenReturn(mockAuth);
-            when(mockAuth.getPrincipal()).thenReturn(mockPrincipal);
-            when(mockPrincipal.getName()).thenReturn("pure.principal");
+    userMdcFilter.doFilterInternal(request, response, filterChain);
 
-            doAnswer(invocation -> {
-                assertEquals("pure.principal", MDC.get(MDC_USER_KEY));
-                return null;
-            }).when(filterChain).doFilter(request, response);
+    assertNull(MDC.get(MDC_USER_KEY));
+  }
 
-            userMdcFilter.doFilterInternal(request, response, filterChain);
+  @Test
+  void should_setAuthNameInMdc_when_principalTypeIsUnknown() throws ServletException, IOException {
 
-            assertNull(MDC.get(MDC_USER_KEY));
-        }
+    Authentication mockAuth = mock(Authentication.class);
 
-        @Test
-        void should_setAuthNameInMdc_when_principalTypeIsUnknown() throws ServletException, IOException {
+    when(securityContext.getAuthentication()).thenReturn(mockAuth);
+    when(mockAuth.getPrincipal()).thenReturn("UnknownPrincipalType");
+    when(mockAuth.getName()).thenReturn("auth.fallback.name");
 
-            Authentication mockAuth = mock(Authentication.class);
+    doAnswer(
+            invocation -> {
+              assertEquals("auth.fallback.name", MDC.get(MDC_USER_KEY));
+              return null;
+            })
+        .when(filterChain)
+        .doFilter(request, response);
 
-            when(securityContext.getAuthentication()).thenReturn(mockAuth);
-            when(mockAuth.getPrincipal()).thenReturn("UnknownPrincipalType");
-            when(mockAuth.getName()).thenReturn("auth.fallback.name");
+    userMdcFilter.doFilterInternal(request, response, filterChain);
 
-            doAnswer(invocation -> {
-                assertEquals("auth.fallback.name", MDC.get(MDC_USER_KEY));
-                return null;
-            }).when(filterChain).doFilter(request, response);
+    assertNull(MDC.get(MDC_USER_KEY));
+  }
 
-            userMdcFilter.doFilterInternal(request, response, filterChain);
+  @Test
+  void should_stillClearMdc_when_filterChainThrowsException() throws ServletException, IOException {
 
-            assertNull(MDC.get(MDC_USER_KEY));
-        }
+    Authentication mockAuth = mock(Authentication.class);
+    when(securityContext.getAuthentication()).thenReturn(mockAuth);
+    when(mockAuth.getName()).thenReturn("error-user");
 
-        @Test
-        void should_stillClearMdc_when_filterChainThrowsException() throws ServletException, IOException {
+    doThrow(new RuntimeException("Database down!")).when(filterChain).doFilter(request, response);
 
-            Authentication mockAuth = mock(Authentication.class);
-            when(securityContext.getAuthentication()).thenReturn(mockAuth);
-            when(mockAuth.getName()).thenReturn("error-user");
+    assertThrows(
+        RuntimeException.class,
+        () -> userMdcFilter.doFilterInternal(request, response, filterChain));
 
-            doThrow(new RuntimeException("Database down!"))
-                    .when(filterChain).doFilter(request, response);
+    assertNull(MDC.get(MDC_USER_KEY));
+  }
 
+  @Test
+  void should_proceedWithoutMdc_when_authIsAnonymousAuthenticationToken()
+      throws ServletException, IOException {
 
-            assertThrows(RuntimeException.class, () ->
-                    userMdcFilter.doFilterInternal(request, response, filterChain)
-            );
+    AnonymousAuthenticationToken anonymousAuth =
+        new AnonymousAuthenticationToken(
+            "key", "anonymousUser", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
 
-            assertNull(MDC.get(MDC_USER_KEY));
-        }
-    }
+    when(securityContext.getAuthentication()).thenReturn(anonymousAuth);
+
+    userMdcFilter.doFilterInternal(request, response, filterChain);
+
+    verify(filterChain).doFilter(request, response);
+    assertNull(MDC.get(MDC_USER_KEY), "MDC darf bei anonymen Requests nicht befüllt werden!");
+  }
 }

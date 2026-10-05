@@ -9,6 +9,7 @@ import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,6 +49,11 @@ public class UserMdcFilter extends OncePerRequestFilter {
       return null;
     }
 
+    if (auth instanceof AnonymousAuthenticationToken) {
+      LOG.debug("UserMdcFilter: Anonyme Authentifizierung erkannt - wird übersprungen");
+      return null;
+    }
+
     if (auth instanceof JwtAuthenticationToken jwtAuth) {
       Jwt jwt = jwtAuth.getToken();
       if (jwt != null) {
@@ -72,7 +78,7 @@ public class UserMdcFilter extends OncePerRequestFilter {
 
     if (principal instanceof OAuth2User oauth) { // generisches OAuth2User (inkl. OIDC)
       Object pref = oauth.getAttribute("preferred_username");
-      if (pref != null) return pref.toString();
+      if (pref != null && !pref.toString().isBlank()) return pref.toString();
       Object username = oauth.getAttribute("username");
       if (username != null) return username.toString();
       Object email = oauth.getAttribute("email");

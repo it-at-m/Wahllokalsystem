@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { useSystemBeschlussgrundReasonEnumTools } from "@/composables/dse/beschlussfassung/systemBeschlussgrundReasonEnumTools.ts";
+import { useSystemBeschlussgrundReasonEnumFormatter } from "@/composables/dse/beschlussfassung/useSystemBeschlussgrundReasonEnumFormatter.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 
-describe("systemBeschlussgrundReasonEnumTools.ts", () => {
+describe("useSystemBeschlussgrundReasonEnumFormatter.ts", () => {
   const {
     mapSystemBeschlussgrundReasonEnumToText,
     mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText,
-  } = useSystemBeschlussgrundReasonEnumTools();
+  } = useSystemBeschlussgrundReasonEnumFormatter();
 
   describe("mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText", () => {
     it.each([

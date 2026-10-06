@@ -101,47 +101,31 @@ export function useBearbeitenDialogStimmzettelUtils(
       (kandidat) => (kandidat.einzelstimmen ?? 0) > maxEinzelstimmen
     )
   );
-  const hasSystemErrorAnyKandidatWithInvalidVotes = computed(() =>
+
+  const hasAnyValidVotes = computed(() =>
     kandidatenWithValues.value.some(
-      (kandidat) => (kandidat.ungueltigeStimmen ?? 0) > 0
+      (kandidat) =>
+        (kandidat.einzelstimmen ?? 0) > 0 || (kandidat.reststimmen ?? 0) > 0
     )
   );
+
+  const hasAnyInvalidVotes = computed(
+    () =>
+      kandidatenWithValues.value.some(
+        (kandidat) => (kandidat.ungueltigeStimmen ?? 0) > 0
+      ) || (stimmzettel.value.invalideVotes ?? 0) > 0
+  );
+
+  const hasAnyStreichung = computed(() =>
+    kandidatenWithValues.value.some((kandidat) => kandidat.durchgestrichen)
+  );
+
   const hasSystemErrorNoValidVotes = computed(() => {
-    const sumEinzelstimmen = kandidatenWithValues.value.reduce(
-      (sum, k) => sum + (k.einzelstimmen ?? 0),
-      0
-    );
-    const sumReststimmen = kandidatenWithValues.value.reduce(
-      (sum, k) => sum + (k.reststimmen ?? 0),
-      0
-    );
-    const sumInvalidVotes = kandidatenWithValues.value.reduce(
-      (sum, k) => sum + (k.ungueltigeStimmen ?? 0),
-      0
-    );
-    const anyKandidatIsGestrichen = kandidatenWithValues.value.some(
-      (k) => k.durchgestrichen
-    );
-    const anyWahlvorschlagSelected = stimmzettel.value.wahlvorschlaege.some(
-      (wv) => wv.selected
-    );
-    const hasInvalidVotes =
-      sumInvalidVotes + (stimmzettel.value.invalideVotes ?? 0) > 0;
-    const hasValidVotes = sumEinzelstimmen + sumReststimmen > 0;
+    if (hasAnyValidVotes.value) return false;
+    else if (hasAnyInvalidVotes.value) return true;
+    else if (hasAnyStreichung.value) return true;
 
-    const hasOnlyInvalidVotes = hasInvalidVotes && !hasValidVotes;
-    const hasOnlyStreichungen = anyKandidatIsGestrichen && !hasValidVotes;
-    const hasListenkreuzButAllKandidatenGestrichen = anyWahlvorschlagSelected
-      ? stimmzettel.value.wahlvorschlaege
-          .filter((wv) => wv.selected)
-          .every((wv) => wv.kandidaten.every((k) => k.durchgestrichen))
-      : false;
-
-    return hasValidVotes
-      ? false
-      : hasOnlyInvalidVotes ||
-          hasOnlyStreichungen ||
-          hasListenkreuzButAllKandidatenGestrichen;
+    return false;
   });
 
   watchEffect(() => {
@@ -509,10 +493,7 @@ export function useBearbeitenDialogStimmzettelUtils(
   function _updateSystemBeschlussgruendeBasedOnDetectedErrors() {
     const systemBeschlussgruende: SystemBeschlussgrund[] = [];
 
-    if (
-      hasSystemErrorAnyKandidatWithInvalidVotes.value ||
-      (stimmzettel.value.invalideVotes ?? 0) > 0
-    ) {
+    if (hasAnyInvalidVotes.value) {
       systemBeschlussgruende.push({
         reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
       });
@@ -554,7 +535,6 @@ export function useBearbeitenDialogStimmzettelUtils(
     changeHistory,
     hasAnyValuesSet,
     hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen,
-    hasSystemErrorAnyKandidatWithInvalidVotes,
     resetStimmzettelAndHistory,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,

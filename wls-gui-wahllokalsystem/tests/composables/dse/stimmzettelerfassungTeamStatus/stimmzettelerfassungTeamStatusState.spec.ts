@@ -61,7 +61,25 @@ describe("stimmzettelerfassungTeamStatusState.ts", () => {
       expect(mockDefinitions.loadErfassungTeamStatus).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        teamID
+        teamID,
+        true
+      );
+      expect(unitUnderTest.teamStatus.value).toEqual(mockedTeamStatus);
+    });
+
+    it("should_forwardSendNotification_when_loadErfassungTeamStatusIsCalled", async () => {
+      const mockedTeamStatus = createStimmzettelerfassungTeamStatusModel();
+      mockDefinitions.loadErfassungTeamStatus.mockResolvedValue(
+        mockedTeamStatus
+      );
+
+      await unitUnderTest.loadErfassungTeamStatus(false);
+
+      expect(mockDefinitions.loadErfassungTeamStatus).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        false
       );
       expect(unitUnderTest.teamStatus.value).toEqual(mockedTeamStatus);
     });
@@ -74,7 +92,8 @@ describe("stimmzettelerfassungTeamStatusState.ts", () => {
       expect(mockDefinitions.loadErfassungTeamStatus).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        teamID
+        teamID,
+        true
       );
       expect(unitUnderTest.teamStatus.value).toBeNull();
     });
@@ -91,7 +110,8 @@ describe("stimmzettelerfassungTeamStatusState.ts", () => {
       expect(mockDefinitions.loadErfassungTeamStatus).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        teamID
+        teamID,
+        true
       );
       expect(unitUnderTest.teamStatus.value).toEqual(initialTeamStatus);
     });
@@ -112,7 +132,28 @@ describe("stimmzettelerfassungTeamStatusState.ts", () => {
         wahlID,
         wahlbezirkID,
         teamID,
-        teamStatusToSend
+        teamStatusToSend,
+        true
+      );
+      expect(unitUnderTest.teamStatus.value).toEqual(persistedTeamStatus);
+    });
+
+    it("should_forwardSendNotification_when_postErfassungTeamStatusIsCalled", async () => {
+      const teamStatusToSend = createStimmzettelerfassungTeamStatusModel();
+      const persistedTeamStatus = createStimmzettelerfassungTeamStatusModel();
+
+      mockDefinitions.postErfassungTeamStatus.mockResolvedValue(
+        persistedTeamStatus
+      );
+
+      await unitUnderTest.postErfassungTeamStatus(teamStatusToSend, false);
+
+      expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        teamStatusToSend,
+        false
       );
       expect(unitUnderTest.teamStatus.value).toEqual(persistedTeamStatus);
     });
@@ -133,7 +174,8 @@ describe("stimmzettelerfassungTeamStatusState.ts", () => {
         wahlID,
         wahlbezirkID,
         teamID,
-        teamStatusToSend
+        teamStatusToSend,
+        true
       );
       expect(unitUnderTest.teamStatus.value).toEqual(initialTeamStatus);
     });

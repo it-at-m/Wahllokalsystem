@@ -17,22 +17,25 @@ export function useStimmzettelerfassungTeamStatusState(
 
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
 
-  async function loadErfassungTeamStatus() {
+  async function loadErfassungTeamStatus(sendNotification = true) {
     teamStatus.value = await _loadErfassungTeamStatus(
       wahlID,
       wahlbezirkID,
-      teamID
+      teamID,
+      sendNotification
     );
   }
 
   async function postErfassungTeamStatus(
-    teamStatusToSend: StimmzettelerfassungTeamStatus
+    teamStatusToSend: StimmzettelerfassungTeamStatus,
+    sendNotification = true
   ) {
     teamStatus.value = await _postErfassungTeamStatus(
       wahlID,
       wahlbezirkID,
       teamID,
-      teamStatusToSend
+      teamStatusToSend,
+      sendNotification
     );
   }
 

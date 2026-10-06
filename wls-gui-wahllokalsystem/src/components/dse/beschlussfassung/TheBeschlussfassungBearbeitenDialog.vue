@@ -25,7 +25,7 @@
       </v-tabs>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
-          <the-beschluss-fassen-tab :stimmzettel="stimmzettel" />
+          <the-beschluss-fassen-tab :stimmzettel="stimmzettelForBeschlussfassung" />
         </v-tabs-window-item>
         <v-tabs-window-item
           value="two"
@@ -33,10 +33,11 @@
         >
           <v-card>
             <base-stimmzettel-erfassung-card-content
+                v-if="stimmzettelForBeschlussfassung"
               v-model="stimmzettelManager"
               :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
               :wahlvorschlaege="wahlvorschlaege"
-              :stimmzettel="stimmzettel"
+              :stimmzettel="stimmzettelForBeschlussfassung"
             />
           </v-card>
         </v-tabs-window-item>
@@ -59,7 +60,7 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -97,12 +98,17 @@ const emit = defineEmits<{
 }>();
 
 const tab = ref("one");
+const stimmzettelForBeschlussfassung = ref<PersistedStimmzettel>();
 
 const stimmzettelGueltigkeit = computed(
   () =>
     stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
       .gueltigkeit
 );
+
+onMounted(() => {
+  stimmzettelForBeschlussfassung.value = props.stimmzettel;
+});
 
 watch(() => isDialogVisibleModel.value, () => {
   if (isDialogVisibleModel.value) {
@@ -113,7 +119,9 @@ watch(() => isDialogVisibleModel.value, () => {
   }
 });
 
-
+watch(() => tab.value , () => {
+  stimmzettelForBeschlussfassung.value = stimmzettelManager.getStimmzettelSnapshot();
+})
 
 function onCancelClicked() {
   emit("cancel");

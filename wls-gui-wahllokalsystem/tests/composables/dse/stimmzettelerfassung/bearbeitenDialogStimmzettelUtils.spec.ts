@@ -869,6 +869,46 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
     );
   });
 
+  describe("stimmenSummary.ungueltigeStimmen", () => {
+    it("should_includeStimmzettelInvalideVotesInUngueltigeStimmen_when_onlyStimmzettelInvalideVotesAreSet", () => {
+      stimmzettelWithoutValuesSet.invalideVotes = 4;
+
+      const managed = useBearbeitenDialogStimmzettelUtils(
+        ref(stimmzettelWithoutValuesSet),
+        mockedWahlId
+      );
+
+      expect(managed.stimmenSummary.value.ungueltigeStimmen).toBe(4);
+    });
+
+    it("should_sumCandidateInvalidVotesAndStimmzettelInvalideVotes_when_bothAreHigherThanZero", () => {
+      stimmzettelWithoutValuesSet.wahlvorschlaege[0].kandidaten[0].ungueltigeStimmen = 2;
+      stimmzettelWithoutValuesSet.invalideVotes = 3;
+
+      const managed = useBearbeitenDialogStimmzettelUtils(
+        ref(stimmzettelWithoutValuesSet),
+        mockedWahlId
+      );
+
+      expect(managed.stimmenSummary.value.ungueltigeStimmen).toBe(5);
+    });
+
+    it("should_updateUngueltigeStimmen_when_invalideVotesChanges", async () => {
+      const stimmzettel = ref(structuredClone(stimmzettelWithoutValuesSet));
+      const managed = useBearbeitenDialogStimmzettelUtils(
+        stimmzettel,
+        mockedWahlId
+      );
+
+      expect(managed.stimmenSummary.value.ungueltigeStimmen).toBe(0);
+
+      stimmzettel.value.invalideVotes = 7;
+      await nextTick();
+
+      expect(managed.stimmenSummary.value.ungueltigeStimmen).toBe(7);
+    });
+  });
+
   describe("wahlvorschlagAddVotesOrThrow", () => {
     it("should_selectWahlvorschlagAndAssignReststimmen_when_wahlvorschlagIsPresent", () => {
       const k1 = prepareDseKandidat()

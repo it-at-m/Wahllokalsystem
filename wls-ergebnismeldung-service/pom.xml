@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-ergebnismeldung-service</artifactId>
-    <version>0.10.2-SNAPSHOT</version>
+    <version>0.11.2-SNAPSHOT</version>
     <name>wls_ergebnismeldung_service</name>
 
     <properties>
@@ -23,7 +23,7 @@
         <apache.commons.text>1.15.0</apache.commons.text>
         <apache.commons.validator>1.11.0</apache.commons.validator>
         <!-- SonarQube -->
-        <sonar.scanner.version>5.7.0.6970</sonar.scanner.version>
+        <sonar.scanner.version>5.8.0.7211</sonar.scanner.version>
         <!-- TestCoverage -->
         <jacoco.version>0.8.15</jacoco.version>
         <!-- Plugins -->
@@ -172,7 +172,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.11</version>
+            <version>0.2.12</version>
         </dependency>
 
         <!-- wls-common -->
@@ -397,7 +397,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.24.0</version>
+                <version>7.25.0</version>
                 <configuration>
                     <generatorName>java</generatorName>
                     <library>resttemplate</library>

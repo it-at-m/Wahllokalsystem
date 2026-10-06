@@ -17,8 +17,8 @@
         <v-tab value="two"> Stimmzettel anzeigen und bearbeiten </v-tab>
         <v-spacer />
         <base-stimmzettelkennung-strong-text
-          :stimmzettelkennung="stimmzettel.stimmzettelkennung"
-          :team-name="stimmzettel.teamID"
+          :stimmzettelkennung="stimmzettelKennung"
+          :team-name="teamID"
           compact
           class="mr-2"
         />
@@ -26,7 +26,12 @@
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
           <the-beschluss-fassen-tab
-            :stimmzettel="stimmzettelForBeschlussfassung"
+            v-model:beschluss-details="beschlussDetails"
+            v-model:abstimmungsergebnis="abstimmungsergebnis"
+            :stimmzettel-gueltigkeit-aus-beschluss="
+              stimmzettelGueltigkeitAusBeschluss
+            "
+            :is-beschluss-gefasst="isBeschlussGefasst"
           />
         </v-tabs-window-item>
         <v-tabs-window-item
@@ -50,6 +55,7 @@
         <base-wls-button-save
           v-if="tab === 'one'"
           :save-text="saveButtonText"
+          :disabled="isBeschlussSpeichernButtonDisabled"
           @click="onSaveClicked"
         />
       </v-card-actions>
@@ -70,16 +76,21 @@ import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue
 import TheBeschlussFassenTab from "@/components/dse/beschlussfassung/TheBeschlussFassenTab.vue";
 import BaseStimmzettelErfassungCardContent from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelErfassungCardContent.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
+import { useTheBeschlussfassungBearbeitenDialogUtils } from "@/composables/dse/beschlussfassung/theBeschlussfassungBearbeitenDialogUtils.ts";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
   type: Boolean,
   required: false,
 });
 
+const stimmzettel = defineModel<PersistedStimmzettel | undefined>(
+  "stimmzettel"
+);
+
 const props = defineProps<{
-  stimmzettel: PersistedStimmzettel;
   wahlvorschlaege: Wahlvorschlag[];
 }>();
 
@@ -88,7 +99,7 @@ const wahlID = route.params.wahlId as string;
 const { currentUserTeamName } = storeToRefs(useUserStore());
 
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
-  computed(() => props.stimmzettel.stimmzettelkennung),
+  computed(() => stimmzettelKennung.value),
   props.wahlvorschlaege,
   wahlID,
   currentUserTeamName.value
@@ -96,12 +107,26 @@ const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
 
 const emit = defineEmits<{
   cancel: [];
-  save: [];
+  save: [stimmzettel: PersistedStimmzettel];
 }>();
 
 const tab = ref("one");
 const stimmzettelForBeschlussfassung = ref<PersistedStimmzettel>();
 const stimmzettelChanged = ref(false);
+
+const {
+  abstimmungsergebnis,
+  beschlussDetails,
+  stimmzettelGueltigkeitAusBeschluss,
+  isBeschlussSpeichernButtonDisabled,
+  isBeschlussGefasst,
+} = useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelForBeschlussfassung);
+
+const stimmzettelKennung = computed(
+  () => stimmzettel.value?.stimmzettelkennung ?? 0
+);
+
+const teamID = computed(() => stimmzettel.value?.teamID ?? "");
 
 const stimmzettelGueltigkeit = computed(
   () =>
@@ -110,7 +135,9 @@ const stimmzettelGueltigkeit = computed(
 );
 
 onMounted(() => {
-  stimmzettelForBeschlussfassung.value = props.stimmzettel;
+  if (stimmzettel.value) {
+    stimmzettelForBeschlussfassung.value = stimmzettel.value;
+  }
 });
 
 watch(
@@ -119,8 +146,10 @@ watch(
     if (isDialogVisibleModel.value) {
       tab.value = "one";
       stimmzettelChanged.value = false;
-      stimmzettelForBeschlussfassung.value = props.stimmzettel;
-      stimmzettelManager.setActiveStimmzettelWhenEditing(props.stimmzettel);
+      if (stimmzettel.value) {
+        stimmzettelForBeschlussfassung.value = stimmzettel.value;
+        stimmzettelManager.setActiveStimmzettelWhenEditing(stimmzettel.value);
+      }
     }
   }
 );
@@ -149,6 +178,17 @@ function onCancelClicked() {
 }
 
 function onSaveClicked() {
-  emit("save");
+  if (!stimmzettel.value) return;
+  emit("save", {
+    ...stimmzettel.value,
+    gueltigkeit: beschlussDetails.value.isStimmzettelGueltig
+      ? StimmzettelGueltigkeitEnum.Valid
+      : StimmzettelGueltigkeitEnum.Invalid,
+    beschlussfassung: {
+      pro: abstimmungsergebnis.value.stimmenDafuer ?? 0,
+      contra: abstimmungsergebnis.value.stimmenDagegen ?? 0,
+      text: beschlussDetails.value.beschlussText,
+    },
+  });
 }
 </script>

@@ -13,6 +13,7 @@ import { useBearbeitenDialogStimmzettelKandidatUtils } from "@/composables/dse/s
 import { useBearbeitenDialogStimmzettelReststimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelReststimmeUtils.ts";
 import { useBearbeitenDialogStimmzettelUngueltigeStimmeUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelUngueltigeStimmeUtils.ts";
 import { useBearbeitenDialogStimmzettelWahlvorschlagUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettel/bearbeitenDialogStimmzettelWahlvorschlagUtils.ts";
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
 import { useStimmzettelChangeHistory } from "@/composables/dse/stimmzettelerfassung/stimmzettelChangeHistory.ts";
 import { useStimmzettelMapper } from "@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
@@ -35,6 +36,7 @@ export function useBearbeitenDialogStimmzettelUtils(
   maxEinzelstimmen = 3
 ) {
   const changeHistory = useStimmzettelChangeHistory();
+  const { hasAnyKennzeichenOrReststimme } = useKandidatTools();
   const {
     kandidatenOfStimmzettel,
     getKandidatToAddVotesByOrdnungszahl,
@@ -73,7 +75,7 @@ export function useBearbeitenDialogStimmzettelUtils(
   );
 
   const kandidatenWithValues = computed(() =>
-    kandidatenOfStimmzettel.value.filter(_hasKandidatAnyStimmeOrStreichung)
+    kandidatenOfStimmzettel.value.filter(hasAnyKennzeichenOrReststimme)
   );
 
   const countTotalVotes = computed(
@@ -120,10 +122,12 @@ export function useBearbeitenDialogStimmzettelUtils(
       reststimmen: 0,
       streichungen: 0,
     };
-    return kandidatenWithValues.value.reduce(
+    const result = kandidatenWithValues.value.reduce(
       (summary, kandidat) => _updateSummaryByKandidat(summary, kandidat),
       summary
     );
+    result.ungueltigeStimmen += stimmzettel.value.invalideVotes ?? 0;
+    return result;
   });
 
   const wahlvorschlaegeWithListenkreuz = computed(() =>
@@ -387,15 +391,6 @@ export function useBearbeitenDialogStimmzettelUtils(
     deselectWahlvorschlag(wahlvorschlag);
     refreshWahlvorschlaegeVotes();
     changeHistory.registerWahlvorschlagDeselected(wahlvorschlag);
-  }
-
-  function _hasKandidatAnyStimmeOrStreichung(kandidat: DseKandidat) {
-    return (
-      kandidat.einzelstimmen !== null ||
-      kandidat.ungueltigeStimmen ||
-      kandidat.reststimmen ||
-      kandidat.durchgestrichen
-    );
   }
 
   function _updateSummaryByKandidat(

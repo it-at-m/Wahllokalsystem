@@ -36,7 +36,7 @@
     <the-beschlussfassung-bearbeiten-dialog
       v-if="activeStimmzettelForBeschluss"
       v-model="isBearbeitenDialogVisible"
-      :stimmzettel="activeStimmzettelForBeschluss"
+      v-model:stimmzettel="activeStimmzettelForBeschluss"
       :wahlvorschlaege="wahlvorschlaege"
       @cancel="onBeschlussBearbeitenCanceled"
       @save="onBeschlussBearbeitenSaved"
@@ -95,6 +95,7 @@ const {
   isBeschlussfassungBeendenButtonDisabled,
   isBeschlussBearbeitenDisabled,
   completedStimmzettelForBeschlussfassung,
+  saveBeschlussStimmzettel,
 } = useBeschlussfassungViewUtils(wahlID, wahlbezirkID);
 const {
   sendAusdruckBeschlussentscheidungen,
@@ -116,14 +117,14 @@ async function onBeschlussfassungBeendenClicked() {
 function onBeschlussBearbeitenClicked(stimmzettelToEdit: PersistedStimmzettel) {
   activeStimmzettelForBeschluss.value = stimmzettelToEdit;
   isBearbeitenDialogVisible.value = true;
-  // TODO #3271 Beschluss zu einem Stimmzettel speichern
 }
 
 function onBeschlussBearbeitenCanceled() {
   isBearbeitenDialogVisible.value = false;
 }
 
-function onBeschlussBearbeitenSaved() {
+async function onBeschlussBearbeitenSaved(stimmzettel: PersistedStimmzettel) {
+  await saveBeschlussStimmzettel(stimmzettel);
   isBearbeitenDialogVisible.value = false;
 }
 

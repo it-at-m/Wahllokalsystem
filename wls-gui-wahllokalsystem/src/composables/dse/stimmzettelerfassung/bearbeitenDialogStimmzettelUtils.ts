@@ -534,7 +534,6 @@ export function useBearbeitenDialogStimmzettelUtils(
   return {
     changeHistory,
     hasAnyValuesSet,
-    hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen,
     resetStimmzettelAndHistory,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,

@@ -19,22 +19,24 @@ export function useAppUtils() {
   async function initStimmzettelerfassungTeamStatus() {
     try {
       for (const metadata of currentUserWahlMetadata.value) {
-        const teamStatus = await loadErfassungTeamStatus(
+        let teamStatus = await loadErfassungTeamStatus(
           metadata.wahlID,
           metadata.wahlbezirkID,
           currentUserTeamName.value,
           false
         );
         if (!teamStatus) {
-          await postErfassungTeamStatus(
+          teamStatus = await postErfassungTeamStatus(
             metadata.wahlID,
             metadata.wahlbezirkID,
             currentUserTeamName.value,
             { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
             false
           );
-        } else if (
-          StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN == teamStatus.status
+        }
+
+        if (
+          StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN === teamStatus.status
         ) {
           setStepDone(
             metadata.wahlID,

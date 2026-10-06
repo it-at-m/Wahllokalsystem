@@ -106,6 +106,43 @@ export function useBearbeitenDialogStimmzettelUtils(
       (kandidat) => (kandidat.ungueltigeStimmen ?? 0) > 0
     )
   );
+  const hasSystemErrorNoValidVotes = computed(() => {
+    const sumEinzelstimmen = kandidatenWithValues.value.reduce(
+      (sum, k) => sum + (k.einzelstimmen ?? 0),
+      0
+    );
+    const sumReststimmen = kandidatenWithValues.value.reduce(
+      (sum, k) => sum + (k.reststimmen ?? 0),
+      0
+    );
+    const sumInvalidVotes = kandidatenWithValues.value.reduce(
+      (sum, k) => sum + (k.ungueltigeStimmen ?? 0),
+      0
+    );
+    const anyKandidatIsGestrichen = kandidatenWithValues.value.some(
+      (k) => k.durchgestrichen
+    );
+    const anyWahlvorschlagSelected = stimmzettel.value.wahlvorschlaege.some(
+      (wv) => wv.selected
+    );
+    const hasInvalidVotes =
+      sumInvalidVotes + (stimmzettel.value.invalideVotes ?? 0) > 0;
+    const hasValidVotes = sumEinzelstimmen + sumReststimmen > 0;
+
+    const hasOnlyInvalidVotes = hasInvalidVotes && !hasValidVotes;
+    const hasOnlyStreichungen = anyKandidatIsGestrichen && !hasValidVotes;
+    const hasListenkreuzButAllKandidatenGestrichen = anyWahlvorschlagSelected
+      ? stimmzettel.value.wahlvorschlaege
+          .filter((wv) => wv.selected)
+          .every((wv) => wv.kandidaten.every((k) => k.durchgestrichen))
+      : false;
+
+    return hasValidVotes
+      ? false
+      : hasOnlyInvalidVotes ||
+          hasOnlyStreichungen ||
+          hasListenkreuzButAllKandidatenGestrichen;
+  });
 
   watchEffect(() => {
     _updateSystemBeschlussgruendeBasedOnDetectedErrors();
@@ -501,6 +538,12 @@ export function useBearbeitenDialogStimmzettelUtils(
     if (hasSystemErrorToManyListenKreuze.value) {
       systemBeschlussgruende.push({
         reason: SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+      });
+    }
+
+    if (hasSystemErrorNoValidVotes.value) {
+      systemBeschlussgruende.push({
+        reason: SystemBeschlussgrundReasonEnum.KeineGueltigenStimmen,
       });
     }
 

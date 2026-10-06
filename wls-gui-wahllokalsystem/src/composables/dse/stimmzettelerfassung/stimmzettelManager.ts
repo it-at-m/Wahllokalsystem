@@ -29,6 +29,7 @@ export function useStimmzettelManager(
     mapPersistedStimmzettelValuesToExistingDseStimmzettel,
   } = useStimmzettelMapper();
   const stimmzettelBeforeEdit: Ref<PersistedStimmzettel | null> = ref(null);
+  const activeTeamID = ref(teamID);
 
   const managedBearbeitenDialogStimmzettel = ref(
     createStimmzettelWithWahlvorschlaege(wahlvorschlaege)
@@ -53,6 +54,7 @@ export function useStimmzettelManager(
   function setActiveStimmzettelWhenEditing(
     sourceStimmzettel: PersistedStimmzettel
   ) {
+    activeTeamID.value = sourceStimmzettel.teamID;
     stimmzettelBeforeEdit.value = sourceStimmzettel;
     bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
       sourceStimmzettel
@@ -68,11 +70,12 @@ export function useStimmzettelManager(
     return toPersistedStimmzettel(
       managedBearbeitenDialogStimmzettel.value,
       stimmzettelkennung.value,
-      teamID
+      activeTeamID.value
     );
   }
 
   function startNewStimmzettel() {
+    activeTeamID.value = teamID;
     stimmzettelBeforeEdit.value = null;
     managedBearbeitenDialogStimmzettel.value =
       createStimmzettelWithWahlvorschlaege(wahlvorschlaege);
@@ -108,7 +111,7 @@ export function useStimmzettelManager(
     const mappedFromDse: PersistedStimmzettel = toPersistedStimmzettel(
       dseStimmzettel,
       stimmzettelkennung.value,
-      teamID
+      activeTeamID.value
     );
 
     const normA = normalizePersistedStimmzettel(persistedStimmzettel);

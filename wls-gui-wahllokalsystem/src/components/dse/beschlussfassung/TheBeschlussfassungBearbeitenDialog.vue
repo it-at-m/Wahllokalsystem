@@ -68,7 +68,7 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -134,12 +134,6 @@ const stimmzettelGueltigkeit = computed(
       .gueltigkeit
 );
 
-onMounted(() => {
-  if (stimmzettel.value) {
-    stimmzettelForBeschlussfassung.value = stimmzettel.value;
-  }
-});
-
 watch(
   () => isDialogVisibleModel.value,
   () => {
@@ -151,7 +145,8 @@ watch(
         stimmzettelManager.setActiveStimmzettelWhenEditing(stimmzettel.value);
       }
     }
-  }
+  },
+  { immediate: true }
 );
 
 watch(

@@ -122,10 +122,12 @@ export function useBearbeitenDialogStimmzettelUtils(
       reststimmen: 0,
       streichungen: 0,
     };
-    return kandidatenWithValues.value.reduce(
+    const result = kandidatenWithValues.value.reduce(
       (summary, kandidat) => _updateSummaryByKandidat(summary, kandidat),
       summary
     );
+    result.ungueltigeStimmen += stimmzettel.value.invalideVotes ?? 0;
+    return result;
   });
 
   const wahlvorschlaegeWithListenkreuz = computed(() =>

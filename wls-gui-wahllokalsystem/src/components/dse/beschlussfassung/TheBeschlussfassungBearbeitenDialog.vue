@@ -25,7 +25,9 @@
       </v-tabs>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
-          <the-beschluss-fassen-tab :stimmzettel="stimmzettelForBeschlussfassung" />
+          <the-beschluss-fassen-tab
+            :stimmzettel="stimmzettelForBeschlussfassung"
+          />
         </v-tabs-window-item>
         <v-tabs-window-item
           value="two"
@@ -33,7 +35,7 @@
         >
           <v-card>
             <base-stimmzettel-erfassung-card-content
-                v-if="stimmzettelForBeschlussfassung"
+              v-if="stimmzettelForBeschlussfassung"
               v-model="stimmzettelManager"
               :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
               :wahlvorschlaege="wahlvorschlaege"
@@ -47,7 +49,7 @@
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
         <base-wls-button-save
           v-if="tab === 'one'"
-          save-text="Beschluss speichern"
+          :save-text="saveButtonText"
           @click="onSaveClicked"
         />
       </v-card-actions>
@@ -60,7 +62,7 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { storeToRefs } from "pinia";
-import {computed, onMounted, ref, watch} from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -99,6 +101,7 @@ const emit = defineEmits<{
 
 const tab = ref("one");
 const stimmzettelForBeschlussfassung = ref<PersistedStimmzettel>();
+const stimmzettelChanged = ref(false);
 
 const stimmzettelGueltigkeit = computed(
   () =>
@@ -110,18 +113,36 @@ onMounted(() => {
   stimmzettelForBeschlussfassung.value = props.stimmzettel;
 });
 
-watch(() => isDialogVisibleModel.value, () => {
-  if (isDialogVisibleModel.value) {
-    tab.value = "one";
-    stimmzettelManager.setActiveStimmzettelWhenEditing(
-        props.stimmzettel
-    );
+watch(
+  () => isDialogVisibleModel.value,
+  () => {
+    if (isDialogVisibleModel.value) {
+      tab.value = "one";
+      stimmzettelChanged.value = false;
+      stimmzettelForBeschlussfassung.value = props.stimmzettel;
+      stimmzettelManager.setActiveStimmzettelWhenEditing(props.stimmzettel);
+    }
   }
-});
+);
 
-watch(() => tab.value , () => {
-  stimmzettelForBeschlussfassung.value = stimmzettelManager.getStimmzettelSnapshot();
-})
+watch(
+  () => tab.value,
+  () => {
+    stimmzettelChanged.value =
+      !(
+        JSON.stringify(stimmzettelForBeschlussfassung.value) ===
+        JSON.stringify(stimmzettelManager.getStimmzettelSnapshot())
+      ) || stimmzettelChanged.value;
+    stimmzettelForBeschlussfassung.value =
+      stimmzettelManager.getStimmzettelSnapshot();
+  }
+);
+
+const saveButtonText = computed(() =>
+  stimmzettelChanged.value
+    ? "Stimmzettel und Beschluss speichern"
+    : "Beschluss speichern"
+);
 
 function onCancelClicked() {
   emit("cancel");

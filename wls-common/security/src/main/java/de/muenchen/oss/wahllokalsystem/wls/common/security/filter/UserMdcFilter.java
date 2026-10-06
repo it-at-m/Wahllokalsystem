@@ -34,7 +34,7 @@ public class UserMdcFilter extends OncePerRequestFilter {
     try {
       String username = extractUsername();
       LOG.debug("UserMdcFilter: resolved username={}", username);
-      if (username != null && !username.isBlank()) {
+      if (StringUtils.hasText(username)) {
         MDC.put(MDC_USER_KEY, username);
       }
       filterChain.doFilter(request, response);
@@ -66,7 +66,7 @@ public class UserMdcFilter extends OncePerRequestFilter {
           }
         }
       }
-      if (jwtAuth.getName() != null && !jwtAuth.getName().isBlank()) {
+      if (StringUtils.hasText(jwtAuth.getName())) {
         return jwtAuth.getName();
       }
     }
@@ -77,21 +77,21 @@ public class UserMdcFilter extends OncePerRequestFilter {
       return ((UserDetails) principal).getUsername();
     }
 
-    if (principal instanceof OAuth2User oauth) { // generisches OAuth2User (inkl. OIDC)
+    if (principal instanceof OidcUser oidc) {
+      if (StringUtils.hasText(oidc.getPreferredUsername()))
+        return oidc.getPreferredUsername();
+      if (StringUtils.hasText(oidc.getEmail())) return oidc.getEmail();
+      if (StringUtils.hasText(oidc.getName())) return oidc.getName();
+    }
+
+    if (principal instanceof OAuth2User oauth) {
       Object pref = oauth.getAttribute("preferred_username");
       if (pref != null && !pref.toString().isBlank()) return pref.toString();
       Object username = oauth.getAttribute("username");
       if (username != null) return username.toString();
       Object email = oauth.getAttribute("email");
       if (email != null) return email.toString();
-      if (oauth.getName() != null && !oauth.getName().isBlank()) return oauth.getName();
-    }
-
-    if (principal instanceof OidcUser oidc) {
-      if (oidc.getPreferredUsername() != null && !oidc.getPreferredUsername().isBlank())
-        return oidc.getPreferredUsername();
-      if (oidc.getEmail() != null && !oidc.getEmail().isBlank()) return oidc.getEmail();
-      if (oidc.getName() != null && !oidc.getName().isBlank()) return oidc.getName();
+      if (StringUtils.hasText(oauth.getName())) return oauth.getName();
     }
 
     if (principal instanceof Jwt jwt) {
@@ -104,10 +104,10 @@ public class UserMdcFilter extends OncePerRequestFilter {
 
     if (principal instanceof Principal) {
       String n = ((Principal) principal).getName();
-      if (n != null && !n.isBlank()) return n;
+      if (StringUtils.hasText(n)) return n;
     }
 
     String name = auth.getName();
-    return (name == null || name.isBlank()) ? null : name;
+    return (StringUtils.hasText(name)) ? name : null;
   }
 }

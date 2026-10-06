@@ -111,7 +111,7 @@ const emit = defineEmits<{
 }>();
 
 const tab = ref("one");
-const stimmzettelForBeschlussfassung = ref<PersistedStimmzettel>();
+const stimmzettelForBeschlussfassung = ref<PersistedStimmzettel | undefined>();
 const stimmzettelChanged = ref(false);
 
 const {
@@ -178,9 +178,9 @@ function onCancelClicked() {
 }
 
 function onSaveClicked() {
-  if (!stimmzettel.value) return;
+  if (!stimmzettelForBeschlussfassung.value) return;
   emit("save", {
-    ...stimmzettel.value,
+    ...stimmzettelForBeschlussfassung.value,
     gueltigkeit: beschlussDetails.value.isStimmzettelGueltig
       ? StimmzettelGueltigkeitEnum.Valid
       : StimmzettelGueltigkeitEnum.Invalid,

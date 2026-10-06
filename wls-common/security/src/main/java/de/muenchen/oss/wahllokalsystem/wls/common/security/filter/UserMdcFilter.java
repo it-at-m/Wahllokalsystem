@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
@@ -60,7 +61,7 @@ public class UserMdcFilter extends OncePerRequestFilter {
         String[] claims = {"preferred_username", "username", "upn", "email", "sub"};
         for (String c : claims) {
           String v = jwt.getClaimAsString(c);
-          if (v != null && !v.isBlank()) {
+          if (StringUtils.hasText(v)) {
             return v;
           }
         }
@@ -97,7 +98,7 @@ public class UserMdcFilter extends OncePerRequestFilter {
       String[] claims = {"preferred_username", "username", "upn", "email", "sub"};
       for (String c : claims) {
         String v = jwt.getClaimAsString(c);
-        if (v != null && !v.isBlank()) return v;
+        if (StringUtils.hasText(v)) return v;
       }
     }
 

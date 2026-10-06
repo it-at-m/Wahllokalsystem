@@ -104,11 +104,16 @@ const stimmzettelGueltigkeit = computed(
       .gueltigkeit
 );
 
-watch(isDialogVisibleModel, (isVisible) => {
-  if (isVisible) {
+watch(() => isDialogVisibleModel.value, () => {
+  if (isDialogVisibleModel.value) {
     tab.value = "one";
+    stimmzettelManager.setActiveStimmzettelWhenEditing(
+        props.stimmzettel
+    );
   }
 });
+
+
 
 function onCancelClicked() {
   emit("cancel");

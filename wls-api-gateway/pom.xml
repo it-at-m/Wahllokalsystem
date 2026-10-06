@@ -38,7 +38,7 @@
         <maven.compiler.release>${java.version}</maven.compiler.release>
 
         <!-- Core Frameworks -->
-        <spring-cloud-dependencies.version>2025.0.3</spring-cloud-dependencies.version>
+        <spring-cloud-dependencies.version>2025.1.3</spring-cloud-dependencies.version>
         <wls.common.version>1.8.1</wls.common.version>
 
         <!-- Linting & Formatting -->

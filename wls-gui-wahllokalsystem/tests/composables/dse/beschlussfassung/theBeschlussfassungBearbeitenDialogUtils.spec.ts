@@ -25,8 +25,6 @@ vi.mock(
       useTheBeschlussFassenTabUtils: () => ({
         createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit:
           mockDefinitions.createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
-        isStimmzettelGueltigBasedOnVormerkungsgruenden:
-          mockDefinitions.isStimmzettelGueltigBasedOnVormerkungsgruenden,
       }),
     };
   }
@@ -44,6 +42,19 @@ vi.mock(
             abstimmungIsUnentschieden: false,
             abstimmungIsUngueltig: false,
           }),
+      }),
+    };
+  }
+);
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useStimmzettelTools: () => ({
+        ...mod.useStimmzettelTools(),
+        isStimmzettelGueltigBasedOnVormerkungsgruenden:
+          mockDefinitions.isStimmzettelGueltigBasedOnVormerkungsgruenden,
       }),
     };
   }

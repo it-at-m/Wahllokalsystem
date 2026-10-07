@@ -123,6 +123,13 @@ public class InstancioModels {
         .create();
   }
 
+  public static Kandidat createBlankKandidatWithSingleVoteByVoter(
+      final String kandidatID, final int nennung, final int countVotes) {
+    return Instancio.of(createBlankKandidatModel(kandidatID, nennung))
+        .set(field(Kandidat::getVotesByVoter), countVotes)
+        .create();
+  }
+
   public static Kandidat createBlankDiscardedKandidat(final String kandidatID, final int nennung) {
     return Instancio.of(createBlankKandidatModel(kandidatID, nennung))
         .set(field(Kandidat::isDiscarded), true)

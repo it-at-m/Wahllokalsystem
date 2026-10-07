@@ -47,7 +47,8 @@ describe("bedenklicherStimmzettelMapper.ts", () => {
 
     const supplementMappingTestcases = [
       {
-        dtoValue: BedenklicherStimmzettelDTOSupplementsEnum.TooManySingleKandidatVotes,
+        dtoValue:
+          BedenklicherStimmzettelDTOSupplementsEnum.TooManySingleKandidatVotes,
         expectedModelValue: SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES,
       },
       {

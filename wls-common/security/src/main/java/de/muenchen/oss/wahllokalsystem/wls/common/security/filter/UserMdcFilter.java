@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -26,7 +27,7 @@ public class UserMdcFilter extends OncePerRequestFilter {
       final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
       throws ServletException, IOException {
     try {
-      String username = usernameResolver.resolve();
+      val username = usernameResolver.resolve();
       LOG.debug("UserMdcFilter: resolved username={}", username);
       if (StringUtils.hasText(username)) {
         MDC.put(MDC_USER_KEY, username);

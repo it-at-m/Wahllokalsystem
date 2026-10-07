@@ -38,7 +38,7 @@ class StimmzettelerfassungStatusTest {
     }
 
     @Test
-    void should_returnFalse_when_notAllValuesOfEnumAreCoveredByTestCaseArguments() {
+    void should_fail_when_notAllValuesOfEnumAreCoveredByTestCaseArguments() {
       val erfassungStatusEnumValueCoveredByTestcases =
           createTestCases()
               .map(argument -> (ErfassungStatus) (argument.get()[0]))

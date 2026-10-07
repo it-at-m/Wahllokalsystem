@@ -23,7 +23,10 @@
           class="mr-2"
         />
       </v-tabs>
-      <v-tabs-window v-model="tab">
+      <v-tabs-window
+        v-model="tab"
+        class="beschlussfassung-tabs-window flex-grow-1"
+      >
         <v-tabs-window-item value="one">
           <the-beschluss-fassen-tab
             v-model:beschluss-details="beschlussDetails"
@@ -36,9 +39,10 @@
         </v-tabs-window-item>
         <v-tabs-window-item
           value="two"
+          class="h-100"
           eager
         >
-          <v-card>
+          <v-card class="d-flex flex-column h-100">
             <base-stimmzettel-erfassung-card-content
               v-if="stimmzettelForBeschlussfassung"
               v-model="stimmzettelManager"
@@ -49,7 +53,6 @@
           </v-card>
         </v-tabs-window-item>
       </v-tabs-window>
-      <v-spacer />
       <v-card-actions>
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
         <base-wls-button-save
@@ -187,3 +190,9 @@ function onSaveClicked() {
   });
 }
 </script>
+
+<style scoped>
+.beschlussfassung-tabs-window :deep(.v-window__container) {
+  height: 100% !important;
+}
+</style>

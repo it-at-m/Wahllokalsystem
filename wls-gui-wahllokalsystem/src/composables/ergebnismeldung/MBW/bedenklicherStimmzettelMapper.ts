@@ -31,9 +31,8 @@ const SUPPLEMENT_MODEL_ENUM_TO_DTO_ENUM: Record<
 const SUPPLEMENT_MODEL_ENUM_TO_DISPLAY_STRING: Record<SupplementEnum, string> =
   {
     [SupplementEnum.TOO_MANY_LISTENKREUZE]: "Zu viele Listenkreuze",
-    [
-      SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES
-    ]: "Mehr als 3 Stimmen bei einer Kandidatin oder einem Kandidaten",
+    [SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES]:
+      "Mehr als 3 Stimmen bei einer Kandidatin oder einem Kandidaten",
   };
 
 const VALIDITY_DTO_ENUM_TO_MODEL_ENUM: Record<
@@ -60,7 +59,6 @@ const VALIDITY_MODEL_ENUM_TO_DISPLAY_STRING: Record<ValidityEnum, string> = {
   [ValidityEnum.PARTIAL_VALID]: "Teilweise gültig",
   [ValidityEnum.INVALID]: "Komplett ungültig",
 };
-
 
 export function useBedenklicherStimmzettelMapper() {
   function toModel(

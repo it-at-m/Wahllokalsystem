@@ -119,6 +119,9 @@
         >
           Zurücksetzen
         </base-text-button>
+        <base-text-button @click="onLeerenClicked">
+          Stimmzettel leeren
+        </base-text-button>
         <v-spacer />
         <base-text-button
           :disabled="isCancelButtonDisabled"
@@ -337,5 +340,10 @@ function onResetClicked() {
   } else {
     stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory();
   }
+}
+
+function onLeerenClicked() {
+  stimmzettelManager.startNewStimmzettel();
+  void focusCommandProcessingTextField();
 }
 </script>

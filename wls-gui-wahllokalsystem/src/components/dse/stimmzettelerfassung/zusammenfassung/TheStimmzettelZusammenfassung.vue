@@ -51,8 +51,9 @@ import BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen from "@/components/ergeb
 import TheMBWGueltigeStimmenAnzeigenNiederschriftTable from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenNiederschriftTable.vue";
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
+import { useMbwStimmzettelFilterService } from "@/composables/dse/mbwStimmzettelFilterService.ts";
 import { useStimmzettelZusammenfassungUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelZusammenfassungUtils.ts";
-import { useMbwNiederschriftViewUtils } from "@/composables/ergebnismeldung/MBW/theMbwDseNiederschriftViewUtils.ts";
+import { useMbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
@@ -67,10 +68,14 @@ const props = defineProps<{
   wahlvorschlaege: Wahlvorschlag[];
 }>();
 
-const { wahlvorschlaegeErgebnisseStapelAAndB } = useMbwNiederschriftViewUtils(
-  wahlID,
-  wahlbezirkID
-);
+const { stapelASumGroupedByWahlvorschlag, stapelBSumGroupedByWahlvorschlag } =
+  useMbwStimmzettelFilterService(computed(() => props.stimmzettelListe));
+const { wahlvorschlaegeErgebnisseStapelAAndB } =
+  useMbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper(
+    computed(() => props.wahlvorschlaege),
+    stapelASumGroupedByWahlvorschlag,
+    stapelBSumGroupedByWahlvorschlag
+  );
 
 const { wahlvorschlaegeWithKandidatenErgebnissen } =
   useStimmzettelZusammenfassungUtils(

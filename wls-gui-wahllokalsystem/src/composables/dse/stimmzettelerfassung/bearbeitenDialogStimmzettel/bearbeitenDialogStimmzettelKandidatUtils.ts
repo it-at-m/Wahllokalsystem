@@ -21,6 +21,14 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
       : _findKandidatToAddEinzelstimme(kandidatenWithOrdnungszahl);
   }
 
+  function getKandidatToRemoveVotesByOrdnungszahl(ordnungszahl: number) {
+    const kandidatenWithOrdnungszahl =
+      _getKandidatenByOrdnungszahl(ordnungszahl);
+    return kandidatenWithOrdnungszahl.length === 0
+      ? undefined
+      : _findKandidatToRemoveEinzelstimme(kandidatenWithOrdnungszahl);
+  }
+
   function getKandidatToAddVotesForRangeByOrdnungszahl(ordnungszahl: number) {
     const kandidatenWithOrdnungszahl =
       _getKandidatenByOrdnungszahl(ordnungszahl);
@@ -73,6 +81,26 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
     return firstNennungWithoutDurchstreichung ?? kandidatenSortedByNennung[0];
   }
 
+  function _findKandidatToRemoveEinzelstimme(
+    kandidatenForListenPosition: DseKandidat[]
+  ) {
+    const kandidatenSortedByNennung = [...kandidatenForListenPosition].sort(
+      (kandidat1, kandidat2) => kandidat1.nennung - kandidat2.nennung
+    );
+
+    const kandidatWithEinzelstimmenOrUngueltigeStimmen =
+      kandidatenSortedByNennung.find(
+        (kandidat) =>
+          (kandidat.einzelstimmen ?? 0) > 0 ||
+          (kandidat.ungueltigeStimmen ?? 0) > 0
+      );
+    if (kandidatWithEinzelstimmenOrUngueltigeStimmen) {
+      return kandidatWithEinzelstimmenOrUngueltigeStimmen;
+    }
+
+    return kandidatenSortedByNennung[0];
+  }
+
   function _findKandidatToAddStreichung(
     kandidatenForListenPosition: DseKandidat[]
   ) {
@@ -105,6 +133,7 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
   return {
     kandidatenOfStimmzettel,
     getKandidatToAddVotesByOrdnungszahl,
+    getKandidatToRemoveVotesByOrdnungszahl,
     getKandidatToAddVotesForRangeByOrdnungszahl,
     getKandidatForStreichungByOrdnungszahl,
     getKandidatToRemoveStreichungByOrdnungszahl,

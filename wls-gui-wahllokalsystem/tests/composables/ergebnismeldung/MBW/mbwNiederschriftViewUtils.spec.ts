@@ -200,132 +200,140 @@ describe("mbwNiederschriftViewUtils", () => {
     expect(routerPush).toHaveBeenCalledWith({ name: ROUTE_NOTFOUND });
   });
 
-  it("should_showOfflineSyncDialog_when_sendenIsClicked", async () => {
-    const unitUnderTest = await createComposable();
+  describe("onSendenClicked", () => {
+    it("should_showOfflineSyncDialog_when_sendenIsClicked", async () => {
+      const unitUnderTest = await createComposable();
 
-    unitUnderTest.onSendenClicked();
+      unitUnderTest.onSendenClicked();
 
-    expect(unitUnderTest.isOfflineSyncDialogVisible.value).toBe(true);
-  });
-
-  it("should_sendNiederschriftAndReloadStatus_when_syncSucceeded", async () => {
-    const reloadedStatus = { niederschrift: {} } as Status;
-    mockDefinitions.loadStatusByWahlIdAndWahlbezirkId.mockResolvedValue(
-      reloadedStatus
-    );
-    const unitUnderTest = await createComposable();
-    unitUnderTest.onSendenClicked();
-
-    await unitUnderTest.onSyncSuccess();
-
-    expect(unitUnderTest.isOfflineSyncDialogVisible.value).toBe(false);
-    expect(mockDefinitions.sendNiederschrift).toHaveBeenCalledOnce();
-    expect(
-      mockDefinitions.loadStatusByWahlIdAndWahlbezirkId
-    ).toHaveBeenCalledWith(wahlID, wahlbezirkID);
-  });
-
-  it("should_showSyncErrorDialog_when_syncFailed", async () => {
-    const unitUnderTest = await createComposable();
-    unitUnderTest.onSendenClicked();
-
-    unitUnderTest.onSyncError();
-
-    expect(unitUnderTest.isOfflineSyncDialogVisible.value).toBe(false);
-    expect(unitUnderTest.isSyncErrorDialogVisible.value).toBe(true);
-  });
-
-  it("should_printAndStoreNewNiederschrift_when_niederschriftWasNotPrinted", async () => {
-    mockDefinitions.prepareDataForNiederschriftDruck.mockResolvedValue({
-      data: 1,
+      expect(unitUnderTest.isOfflineSyncDialogVisible.value).toBe(true);
     });
-    mockDefinitions.buildNiederschriftTemplateFromDataUWB.mockReturnValue(
-      '<html lang="en">niederschrift</html>'
-    );
-    mockDefinitions.loadStatusByWahlIdAndWahlbezirkId.mockResolvedValue(status);
-    const unitUnderTest = await createComposable();
 
-    await unitUnderTest.onDruckenClicked();
+    it("should_sendNiederschriftAndReloadStatus_when_syncSucceeded", async () => {
+      const reloadedStatus = { niederschrift: {} } as Status;
+      mockDefinitions.loadStatusByWahlIdAndWahlbezirkId.mockResolvedValue(
+        reloadedStatus
+      );
+      const unitUnderTest = await createComposable();
+      unitUnderTest.onSendenClicked();
 
-    expect(
-      mockDefinitions.prepareDataForNiederschriftDruck
-    ).toHaveBeenCalledWith(status, wahl);
-    expect(printWindow.document.writeln).toHaveBeenCalledWith(
-      '<html lang="en">niederschrift</html>'
-    );
-    expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
-      wahlID,
-      wahlbezirkID,
-      MbwStepsEnum.MBW_NIEDERSCHRIFT
-    );
-    expect(mockDefinitions.sendAusdruckNiederschrift).toHaveBeenCalledWith(
-      MeldungsArtEnum.Niederschrift,
-      '<html lang="en">niederschrift</html>'
-    );
+      await unitUnderTest.onSyncSuccess();
+
+      expect(unitUnderTest.isOfflineSyncDialogVisible.value).toBe(false);
+      expect(mockDefinitions.sendNiederschrift).toHaveBeenCalledOnce();
+      expect(
+        mockDefinitions.loadStatusByWahlIdAndWahlbezirkId
+      ).toHaveBeenCalledWith(wahlID, wahlbezirkID);
+    });
+
+    it("should_showSyncErrorDialog_when_syncFailed", async () => {
+      const unitUnderTest = await createComposable();
+      unitUnderTest.onSendenClicked();
+
+      unitUnderTest.onSyncError();
+
+      expect(unitUnderTest.isOfflineSyncDialogVisible.value).toBe(false);
+      expect(unitUnderTest.isSyncErrorDialogVisible.value).toBe(true);
+    });
   });
 
-  it("should_showErrorNotification_when_printingNiederschriftFails", async () => {
-    mockDefinitions.isStepDone.mockReturnValue(true);
-    mockDefinitions.getAusdruckNiederschrift.mockRejectedValue(
-      new Error("failed")
-    );
-    const unitUnderTest = await createComposable();
+  describe("onDruckenClicked", () => {
+    it("should_printAndStoreNewNiederschrift_when_niederschriftWasNotPrinted", async () => {
+      mockDefinitions.prepareDataForNiederschriftDruck.mockResolvedValue({
+        data: 1,
+      });
+      mockDefinitions.buildNiederschriftTemplateFromDataUWB.mockReturnValue(
+        '<html lang="en">niederschrift</html>'
+      );
+      mockDefinitions.loadStatusByWahlIdAndWahlbezirkId.mockResolvedValue(
+        status
+      );
+      const unitUnderTest = await createComposable();
 
-    await unitUnderTest.onDruckenClicked();
+      await unitUnderTest.onDruckenClicked();
 
-    expect(mockDefinitions.logError).toHaveBeenCalledOnce();
-    expect(mockDefinitions.addNotification).toHaveBeenCalledWith(
-      "Fehler beim Drucken der Niederschrift.",
-      UserNotificationCategoryEnum.ERROR
-    );
-    expect(unitUnderTest.isDruckenLoading.value).toBe(false);
+      expect(
+        mockDefinitions.prepareDataForNiederschriftDruck
+      ).toHaveBeenCalledWith(status, wahl);
+      expect(printWindow.document.writeln).toHaveBeenCalledWith(
+        '<html lang="en">niederschrift</html>'
+      );
+      expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        MbwStepsEnum.MBW_NIEDERSCHRIFT
+      );
+      expect(mockDefinitions.sendAusdruckNiederschrift).toHaveBeenCalledWith(
+        MeldungsArtEnum.Niederschrift,
+        '<html lang="en">niederschrift</html>'
+      );
+    });
+
+    it("should_showErrorNotification_when_printingNiederschriftFails", async () => {
+      mockDefinitions.isStepDone.mockReturnValue(true);
+      mockDefinitions.getAusdruckNiederschrift.mockRejectedValue(
+        new Error("failed")
+      );
+      const unitUnderTest = await createComposable();
+
+      await unitUnderTest.onDruckenClicked();
+
+      expect(mockDefinitions.logError).toHaveBeenCalledOnce();
+      expect(mockDefinitions.addNotification).toHaveBeenCalledWith(
+        "Fehler beim Drucken der Niederschrift.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      expect(unitUnderTest.isDruckenLoading.value).toBe(false);
+    });
+
+    it("should_printStoredNiederschrift_when_niederschriftWasAlreadyPrinted", async () => {
+      mockDefinitions.isStepDone.mockReturnValue(true);
+      mockDefinitions.getAusdruckNiederschrift.mockResolvedValue(
+        '<html lang="en">stored</html>'
+      );
+      const unitUnderTest = await createComposable();
+
+      await unitUnderTest.onDruckenClicked();
+
+      expect(mockDefinitions.getAusdruckNiederschrift).toHaveBeenCalledWith(
+        MeldungsArtEnum.Niederschrift
+      );
+      expect(printWindow.document.writeln).toHaveBeenCalledWith(
+        '<html lang="en">stored</html>'
+      );
+      expect(
+        mockDefinitions.prepareDataForNiederschriftDruck
+      ).not.toHaveBeenCalled();
+      expect(mockDefinitions.setStepDone).not.toHaveBeenCalled();
+      expect(mockDefinitions.sendAusdruckNiederschrift).not.toHaveBeenCalled();
+      expect(routerPush).toHaveBeenCalledWith({ name: "nextRoute" });
+    });
   });
 
-  it("should_printStoredNiederschrift_when_niederschriftWasAlreadyPrinted", async () => {
-    mockDefinitions.isStepDone.mockReturnValue(true);
-    mockDefinitions.getAusdruckNiederschrift.mockResolvedValue(
-      '<html lang="en">stored</html>'
-    );
-    const unitUnderTest = await createComposable();
+  describe("onBeschlussentscheidungenDruckenClicked", () => {
+    it("should_printAndSendBeschlussentscheidungen_when_wahlExists", async () => {
+      mockDefinitions.prepareDataForBeschlussentscheidungenDruck.mockReturnValue(
+        {}
+      );
+      mockDefinitions.buildTemplate.mockReturnValue(
+        '<html lang="en">beschluesse</html>'
+      );
+      const unitUnderTest = await createComposable();
 
-    await unitUnderTest.onDruckenClicked();
+      await unitUnderTest.onBeschlussentscheidungenDruckenClicked();
 
-    expect(mockDefinitions.getAusdruckNiederschrift).toHaveBeenCalledWith(
-      MeldungsArtEnum.Niederschrift
-    );
-    expect(printWindow.document.writeln).toHaveBeenCalledWith(
-      '<html lang="en">stored</html>'
-    );
-    expect(
-      mockDefinitions.prepareDataForNiederschriftDruck
-    ).not.toHaveBeenCalled();
-    expect(mockDefinitions.setStepDone).not.toHaveBeenCalled();
-    expect(mockDefinitions.sendAusdruckNiederschrift).not.toHaveBeenCalled();
-    expect(routerPush).toHaveBeenCalledWith({ name: "nextRoute" });
-  });
-
-  it("should_printAndSendBeschlussentscheidungen_when_wahlExists", async () => {
-    mockDefinitions.prepareDataForBeschlussentscheidungenDruck.mockReturnValue(
-      {}
-    );
-    mockDefinitions.buildTemplate.mockReturnValue(
-      '<html lang="en">beschluesse</html>'
-    );
-    const unitUnderTest = await createComposable();
-
-    await unitUnderTest.onBeschlussentscheidungenDruckenClicked();
-
-    expect(printWindow.document.writeln).toHaveBeenCalledWith(
-      '<html lang="en">beschluesse</html>'
-    );
-    expect(
-      mockDefinitions.sendAusdruckBeschlussentscheidungen
-    ).toHaveBeenCalledWith(
-      MeldungsArtEnum.Beschlussentscheidungen,
-      '<html lang="en">beschluesse</html>'
-    );
-    expect(
-      unitUnderTest.isBeschlussentscheidungenDruckenDialogVisble.value
-    ).toBe(true);
+      expect(printWindow.document.writeln).toHaveBeenCalledWith(
+        '<html lang="en">beschluesse</html>'
+      );
+      expect(
+        mockDefinitions.sendAusdruckBeschlussentscheidungen
+      ).toHaveBeenCalledWith(
+        MeldungsArtEnum.Beschlussentscheidungen,
+        '<html lang="en">beschluesse</html>'
+      );
+      expect(
+        unitUnderTest.isBeschlussentscheidungenDruckenDialogVisble.value
+      ).toBe(true);
+    });
   });
 });

@@ -142,12 +142,10 @@ export function useMbwNiederschriftViewUtils(
     );
 
     try {
-      // 1. Load or generate template
       const pdfText = niederschriftAlreadyDone
-        ? await getAusdruckNiederschrift(MeldungsArtEnum.Niederschrift)
+        ? await getAusdruckNiederschrift()
         : await buildNiederschriftTemplate();
 
-      // 2. Open PDF print-layout
       const printWindow = window.open(
         "",
         "",
@@ -165,7 +163,6 @@ export function useMbwNiederschriftViewUtils(
       printWindow.print();
       printWindow.close();
 
-      // 3. Update status
       if (!niederschriftAlreadyDone) {
         await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
 
@@ -174,7 +171,6 @@ export function useMbwNiederschriftViewUtils(
           workflowState.value.isNiederschriftDone = true;
         }
       }
-      // 4. Forward
       await router.push(getNextRoute());
     } catch (e) {
       logError(
@@ -199,9 +195,10 @@ export function useMbwNiederschriftViewUtils(
       if (currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB) {
         // @ts-expect-error correct data is determined by the if check
         return buildNiederschriftTemplateFromDataUWB(templateData);
+      } else {
+        // @ts-expect-error correct data is determined by the if check
+        return buildNiederschriftTemplateFromDataBWB(templateData);
       }
-      // @ts-expect-error correct data is determined by the if check
-      return buildNiederschriftTemplateFromDataBWB(templateData);
     }
     return " ";
   }

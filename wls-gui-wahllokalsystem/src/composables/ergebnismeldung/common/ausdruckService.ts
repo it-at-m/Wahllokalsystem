@@ -64,7 +64,7 @@ export function useAusdruckService() {
       );
       if (sendNotification) {
         addNotification(
-          "Bereits gespeicherten Ausdruck erfolgreich geladen",
+          "Ausdruck erfolgreich geladen",
           UserNotificationCategoryEnum.SUCCESS
         );
       }

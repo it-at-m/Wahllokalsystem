@@ -16,6 +16,7 @@ import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeld
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
@@ -212,11 +213,13 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  async function getAusdruckNiederschrift(
-    meldungsart: MeldungsartEnum
-  ): Promise<string> {
+  async function getAusdruckNiederschrift(): Promise<string> {
     try {
-      return await getAusdruck(wahlbezirkID, wahlID, meldungsart);
+      return await getAusdruck(
+        wahlbezirkID,
+        wahlID,
+        MeldungsArtEnum.Niederschrift
+      );
     } catch {
       throw new Error("Fehler beim Laden des Ausdrucks");
     }

@@ -842,9 +842,7 @@ describe("mbwUtils", () => {
       const ausdruck = '<html lang="en">niederschrift</html>';
       mockDefinitions.getAusdruck.mockResolvedValue(ausdruck);
 
-      const result = await unitUnderTest.getAusdruckNiederschrift(
-        MeldungsArtEnum.Niederschrift
-      );
+      const result = await unitUnderTest.getAusdruckNiederschrift();
 
       expect(result).toStrictEqual(ausdruck);
       expect(mockDefinitions.getAusdruck).toHaveBeenCalledWith(
@@ -860,7 +858,7 @@ describe("mbwUtils", () => {
       );
 
       await expect(
-        unitUnderTest.getAusdruckNiederschrift(MeldungsArtEnum.Niederschrift)
+        unitUnderTest.getAusdruckNiederschrift()
       ).rejects.toThrowError(new Error("Fehler beim Laden des Ausdrucks"));
     });
   });

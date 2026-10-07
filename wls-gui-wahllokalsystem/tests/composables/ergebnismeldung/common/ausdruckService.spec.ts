@@ -265,7 +265,7 @@ describe("ausdruckService.ts", () => {
       );
 
       expect(mockDefinitions.addNotification).toHaveBeenCalledWith(
-        "Bereits gespeicherten Ausdruck erfolgreich geladen",
+        "Ausdruck erfolgreich geladen",
         UserNotificationCategoryEnum.SUCCESS
       );
     });

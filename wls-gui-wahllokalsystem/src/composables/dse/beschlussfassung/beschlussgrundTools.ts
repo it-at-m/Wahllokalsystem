@@ -36,6 +36,7 @@ export function useBeschlussgrundTools() {
         SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
         WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
         WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
+        SystemBeschlussgrundReasonEnum.KeineGueltigenStimmen,
       ],
     },
     bwb: {

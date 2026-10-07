@@ -199,6 +199,7 @@ describe("useBeschlussgrundTools.ts", () => {
         SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
         WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
         WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
+        SystemBeschlussgrundReasonEnum.KeineGueltigenStimmen,
       ];
 
       expect(result).toEqual(expectedResult);
@@ -233,6 +234,7 @@ describe("useBeschlussgrundTools.ts", () => {
         SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
         WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
         WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
+        SystemBeschlussgrundReasonEnum.KeineGueltigenStimmen,
         WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagUnterschiedlichGekennzeichnet,
       ];
 

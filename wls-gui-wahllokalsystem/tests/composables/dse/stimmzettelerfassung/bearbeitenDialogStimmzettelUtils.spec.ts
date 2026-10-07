@@ -1,4 +1,3 @@
-import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
@@ -758,30 +757,10 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
     });
 
     it.each([1, 10])(
-      "should_setSystemBeschlussvorschlagEinzelneStimmenUngueltig_when_anyKandidatHasAtLeastOneInvalidVoteWith'%d'",
-      (countInvalidVotes) => {
-        stimmzettelWithoutValuesSet.wahlvorschlaege[0].kandidaten[0].ungueltigeStimmen =
-          countInvalidVotes;
-
-        const managed = useBearbeitenDialogStimmzettelUtils(
-          ref(stimmzettelWithoutValuesSet),
-          mockedWahlId
-        );
-
-        expect(
-          managed.stimmzettel.value.systemBeschlussvorschlag
-        ).toStrictEqual([
-          {
-            reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
-          } as SystemBeschlussgrund,
-        ]);
-      }
-    );
-
-    it.each([1, 10])(
       "should_setSystemBeschlussvorschlagEinzelneStimmenUngueltig_when_stimmzettelHasAtLeastOneInvalidVoteWith'%d'",
       (countInvalidVotes) => {
         stimmzettelWithoutValuesSet.invalideVotes = countInvalidVotes;
+        stimmzettelWithoutValuesSet.wahlvorschlaege[0].kandidaten[0].einzelstimmen = 1;
 
         const managed = useBearbeitenDialogStimmzettelUtils(
           ref(stimmzettelWithoutValuesSet),
@@ -793,7 +772,7 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
         ).toStrictEqual([
           {
             reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
-          } as SystemBeschlussgrund,
+          },
         ]);
       }
     );
@@ -810,15 +789,59 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
           mockedWahlId
         );
 
-        expect(
-          managed.stimmzettel.value.systemBeschlussvorschlag
-        ).toStrictEqual([
-          {
-            reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
-          } as SystemBeschlussgrund,
-        ]);
+        expect(managed.stimmzettel.value.systemBeschlussvorschlag).toEqual(
+          expect.arrayContaining([
+            {
+              reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+            },
+            {
+              reason: SystemBeschlussgrundReasonEnum.KeineGueltigenStimmen,
+            },
+          ])
+        );
       }
     );
+
+    it("should_setSystemBeschlussvorschlagKeineGueltigenStimmen_when_listenkreuzSetAndAllSelectedWahlvorschlaegeAreStruckThrough", () => {
+      stimmzettelWithoutValuesSet.wahlvorschlaege[0].selected = true;
+      stimmzettelWithoutValuesSet.wahlvorschlaege[0].kandidaten.forEach((k) => {
+        k.durchgestrichen = true;
+        k.einzelstimmen = null;
+        k.reststimmen = null;
+        k.ungueltigeStimmen = null;
+      });
+
+      const managed = useBearbeitenDialogStimmzettelUtils(
+        ref(stimmzettelWithoutValuesSet),
+        mockedWahlId
+      );
+
+      expect(managed.stimmzettel.value.systemBeschlussvorschlag).toContainEqual(
+        {
+          reason: SystemBeschlussgrundReasonEnum.KeineGueltigenStimmen,
+        }
+      );
+    });
+
+    it("should_setSystemBeschlussvorschlagKeineGueltigenStimmen_when_onlyStrikesAndNoVotes", () => {
+      const k = stimmzettelWithoutValuesSet.wahlvorschlaege[0].kandidaten[0];
+      k.durchgestrichen = true;
+      k.einzelstimmen = null;
+      k.reststimmen = null;
+      k.ungueltigeStimmen = null;
+      stimmzettelWithoutValuesSet.invalideVotes = 0;
+
+      const managed = useBearbeitenDialogStimmzettelUtils(
+        ref(stimmzettelWithoutValuesSet),
+        mockedWahlId
+      );
+
+      expect(managed.stimmzettel.value.systemBeschlussvorschlag).toContainEqual(
+        {
+          reason: SystemBeschlussgrundReasonEnum.KeineGueltigenStimmen,
+        }
+      );
+    });
 
     it.each([1, 10])(
       "should_setSystemBeschlussvorschlagZuVieleEinzelstimmenAberImGesamtstimmenlimit_when_stimmzettelAndAnyKandidatHas'%d'MoreEinzelstimmenThanAllowed",
@@ -839,7 +862,7 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
           {
             reason:
               SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
-          } as SystemBeschlussgrund,
+          },
         ]);
       }
     );
@@ -863,7 +886,7 @@ describe("bearbeitenDialogStimmzettelUtils.ts", () => {
           {
             reason:
               SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
-          } as SystemBeschlussgrund,
+          },
         ]);
       }
     );

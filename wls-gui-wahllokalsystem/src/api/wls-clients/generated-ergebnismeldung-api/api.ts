@@ -808,7 +808,8 @@ export const SystemBeschlussgrundDTOReasonEnum = {
     ZuVieleEinzelstimmenAberImGesamtstimmenlimit: 'ZU_VIELE_EINZELSTIMMEN_ABER_IM_GESAMTSTIMMENLIMIT',
     KeineReststimmenvergabeMoeglich: 'KEINE_RESTSTIMMENVERGABE_MOEGLICH',
     EinzelneStimmenUngueltig: 'EINZELNE_STIMMEN_UNGUELTIG',
-    ZuVieleEinzelstimmenOderListenkreuze: 'ZU_VIELE_EINZELSTIMMEN_ODER_LISTENKREUZE'
+    ZuVieleEinzelstimmenOderListenkreuze: 'ZU_VIELE_EINZELSTIMMEN_ODER_LISTENKREUZE',
+    KeineGueltigenStimmenVergeben: 'KEINE_GUELTIGEN_STIMMEN_VERGEBEN'
 } as const;
 
 export type SystemBeschlussgrundDTOReasonEnum = typeof SystemBeschlussgrundDTOReasonEnum[keyof typeof SystemBeschlussgrundDTOReasonEnum];

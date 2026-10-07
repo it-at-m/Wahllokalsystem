@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettele
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamStatusService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class StimmzettelerfassungTeamStatusController extends AbstractController {
 
   private final TeamStatusService teamStatusService;
-  private final StimmzettelerfassungService stimmzettelerfassungService;
   private final ErfassungTeamStatusDTOMapper erfassungTeamStatusDTOMapper;
   private final ErfassungTeamStatusEntryDTOMapper erfassungTeamStatusEntryDTOMapper;
 

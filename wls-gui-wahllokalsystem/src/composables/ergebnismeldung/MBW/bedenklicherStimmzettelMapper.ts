@@ -12,47 +12,55 @@ const SUPPLEMENT_DTO_ENUM_TO_MODEL_ENUM: Record<
   BedenklicherStimmzettelDTOSupplementsEnum,
   SupplementEnum
 > = {
-  TOO_MANY_LISTENKREUZE: SupplementEnum.TOO_MANY_LISTENKREUZE,
-  TOO_MANY_SINGLE_KANDIDAT_VOTES: SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES,
+  [BedenklicherStimmzettelDTOSupplementsEnum.TooManyListenkreuze]:
+    SupplementEnum.TOO_MANY_LISTENKREUZE,
+  [BedenklicherStimmzettelDTOSupplementsEnum.TooManySingleKandidatVotes]:
+    SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES,
 };
+
 const SUPPLEMENT_MODEL_ENUM_TO_DTO_ENUM: Record<
   SupplementEnum,
   BedenklicherStimmzettelDTOSupplementsEnum
 > = {
-  TOO_MANY_LISTENKREUZE: BedenklicherStimmzettelDTOSupplementsEnum.Listenkreuze,
-  TOO_MANY_SINGLE_KANDIDAT_VOTES:
-    BedenklicherStimmzettelDTOSupplementsEnum.SingleKandidatVotes,
+  [SupplementEnum.TOO_MANY_LISTENKREUZE]:
+    BedenklicherStimmzettelDTOSupplementsEnum.TooManyListenkreuze,
+  [SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES]:
+    BedenklicherStimmzettelDTOSupplementsEnum.TooManySingleKandidatVotes,
 };
 
 const SUPPLEMENT_MODEL_ENUM_TO_DISPLAY_STRING: Record<SupplementEnum, string> =
   {
-    TOO_MANY_LISTENKREUZE: "Zu viele Listenkreuze",
-    TOO_MANY_SINGLE_KANDIDAT_VOTES:
-      "Mehr als 3 Stimmen bei einer Kandidatin oder einem Kandidaten",
+    [SupplementEnum.TOO_MANY_LISTENKREUZE]: "Zu viele Listenkreuze",
+    [
+      SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES
+    ]: "Mehr als 3 Stimmen bei einer Kandidatin oder einem Kandidaten",
   };
 
 const VALIDITY_DTO_ENUM_TO_MODEL_ENUM: Record<
   BedenklicherStimmzettelDTOValidityEnum,
   ValidityEnum
 > = {
-  VALID: ValidityEnum.VALID,
-  PARTIAL_VALID: ValidityEnum.PARTIAL_VALID,
-  INVALID: ValidityEnum.INVALID,
+  [BedenklicherStimmzettelDTOValidityEnum.Valid]: ValidityEnum.VALID,
+  [BedenklicherStimmzettelDTOValidityEnum.PartialValid]:
+    ValidityEnum.PARTIAL_VALID,
+  [BedenklicherStimmzettelDTOValidityEnum.Invalid]: ValidityEnum.INVALID,
 };
 const VALIDITY_MODEL_ENUM_TO_DTO_ENUM: Record<
   ValidityEnum,
   BedenklicherStimmzettelDTOValidityEnum
 > = {
-  VALID: BedenklicherStimmzettelDTOValidityEnum.Valid,
-  PARTIAL_VALID: BedenklicherStimmzettelDTOValidityEnum.PartialValid,
-  INVALID: BedenklicherStimmzettelDTOValidityEnum.Invalid,
+  [ValidityEnum.VALID]: BedenklicherStimmzettelDTOValidityEnum.Valid,
+  [ValidityEnum.PARTIAL_VALID]:
+    BedenklicherStimmzettelDTOValidityEnum.PartialValid,
+  [ValidityEnum.INVALID]: BedenklicherStimmzettelDTOValidityEnum.Invalid,
 };
 
 const VALIDITY_MODEL_ENUM_TO_DISPLAY_STRING: Record<ValidityEnum, string> = {
-  VALID: "Gültig",
-  PARTIAL_VALID: "Teilweise gültig",
-  INVALID: "Komplett ungültig",
+  [ValidityEnum.VALID]: "Gültig",
+  [ValidityEnum.PARTIAL_VALID]: "Teilweise gültig",
+  [ValidityEnum.INVALID]: "Komplett ungültig",
 };
+
 
 export function useBedenklicherStimmzettelMapper() {
   function toModel(

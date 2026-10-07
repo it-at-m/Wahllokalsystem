@@ -28,7 +28,7 @@ public class UserMdcFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     try {
       val username = usernameResolver.resolve();
-      LOG.debug("UserMdcFilter: resolved username={}", username);
+      LOG.debug("resolved username={}", username);
       if (StringUtils.hasText(username)) {
         MDC.put(MDC_USER_KEY, username);
       }

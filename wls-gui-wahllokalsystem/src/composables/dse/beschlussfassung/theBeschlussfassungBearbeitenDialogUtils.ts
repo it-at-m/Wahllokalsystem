@@ -9,6 +9,7 @@ import { computed, ref, watch, watchEffect } from "vue";
 import { useBeschlussAbstimmungsergebnisTools } from "@/composables/dse/beschlussfassung/beschlussAbstimmungsergebnisTools.ts";
 import { useBeschlussfassungDialogDetailsTools } from "@/composables/dse/beschlussfassung/beschlussfassungDialogDetailsTools.ts";
 import { useTheBeschlussFassenTabUtils } from "@/composables/dse/beschlussfassung/theBeschlussFassenTabUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
@@ -20,7 +21,6 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
   );
   const {
     createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
-    isStimmzettelGueltigBasedOnVormerkungsgruenden,
   } = useTheBeschlussFassenTabUtils();
   const { createEmptyAbstimmungsergebnis } =
     useBeschlussAbstimmungsergebnisTools();
@@ -28,6 +28,8 @@ export function useTheBeschlussfassungBearbeitenDialogUtils(
     createEmptyBeschlussfassungDialogDetails,
     mergeGruendeAndReturnBeschlusstext,
   } = useBeschlussfassungDialogDetailsTools();
+  const { isStimmzettelGueltigBasedOnVormerkungsgruenden } =
+    useStimmzettelTools();
 
   const abstimmungsergebnis = ref<BeschlussAbstimmungsergebnis>(
     createEmptyAbstimmungsergebnis()

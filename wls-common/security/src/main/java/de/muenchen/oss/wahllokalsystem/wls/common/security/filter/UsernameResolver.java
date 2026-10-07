@@ -20,7 +20,7 @@ public class UsernameResolver {
   public String resolve() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    if (!isUsable(authentication)) {
+    if (isAnonymous(authentication)) {
       return null;
     }
 
@@ -59,10 +59,10 @@ public class UsernameResolver {
     return authentication.getName();
   }
 
-  private boolean isUsable(Authentication authentication) {
-    return authentication != null
-        && authentication.isAuthenticated()
-        && !(authentication instanceof AnonymousAuthenticationToken);
+  private boolean isAnonymous(Authentication authentication) {
+    return authentication == null
+        || !authentication.isAuthenticated()
+        || (authentication instanceof AnonymousAuthenticationToken);
   }
 
   private String extractFromJwt(Jwt jwt) {

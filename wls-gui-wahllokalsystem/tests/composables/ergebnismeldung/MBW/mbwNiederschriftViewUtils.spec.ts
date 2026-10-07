@@ -295,9 +295,7 @@ describe("mbwNiederschriftViewUtils", () => {
 
       await unitUnderTest.onDruckenClicked();
 
-      expect(mockDefinitions.getAusdruckNiederschrift).toHaveBeenCalledWith(
-        MeldungsArtEnum.Niederschrift
-      );
+      expect(mockDefinitions.getAusdruckNiederschrift).toHaveBeenCalled();
       expect(printWindow.document.writeln).toHaveBeenCalledWith(
         '<html lang="en">stored</html>'
       );

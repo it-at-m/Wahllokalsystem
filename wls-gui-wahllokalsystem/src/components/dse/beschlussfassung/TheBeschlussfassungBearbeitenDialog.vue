@@ -1,6 +1,7 @@
 <template>
   <v-dialog
     v-model="isDialogVisibleModel"
+    scrollable
     persistent
     fullscreen
   >
@@ -24,20 +25,22 @@
           class="mr-2"
         />
       </v-tabs>
-      <v-tabs-window v-model="tab">
-        <v-tabs-window-item value="one">
-          <the-beschluss-fassen-tab
-            v-model:beschluss-details="beschlussDetails"
-            v-model:abstimmungsergebnis="abstimmungsergebnis"
-            :stimmzettel-gueltigkeit-aus-beschluss="
-              stimmzettelGueltigkeitAusBeschluss
-            "
-            :is-beschluss-gefasst="isBeschlussGefasst"
-          />
-        </v-tabs-window-item>
-        <v-tabs-window-item value="two" />
-      </v-tabs-window>
-      <v-spacer />
+      <v-card-text class="h-auto overflow-y-auto pa-0">
+        <v-tabs-window v-model="tab">
+          <v-tabs-window-item value="one">
+            <the-beschluss-fassen-tab
+              v-model:beschluss-details="beschlussDetails"
+              v-model:abstimmungsergebnis="abstimmungsergebnis"
+              :stimmzettel-gueltigkeit-aus-beschluss="
+                stimmzettelGueltigkeitAusBeschluss
+              "
+              :is-beschluss-gefasst="isBeschlussGefasst"
+            />
+          </v-tabs-window-item>
+          <v-tabs-window-item value="two" />
+        </v-tabs-window>
+        <v-spacer />
+      </v-card-text>
       <v-card-actions>
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
         <base-wls-button-save

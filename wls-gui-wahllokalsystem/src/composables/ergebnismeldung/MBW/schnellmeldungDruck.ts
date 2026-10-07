@@ -254,7 +254,7 @@ export function useSchnellmeldungDruck() {
                   })
                   .join("")}        
             </table>
-            ${_buildGueltigeUngueltigeAndSumTables(gueltigeStimmenGesamt, ungueltigeStimmen, alleStimmen)}`;
+            ${_buildGueltigeUngueltigeAndSumTables(wahlbezirksArt, gueltigeStimmenGesamt, ungueltigeStimmen, alleStimmen)}`;
   }
 
   function _buildMeldungUebermitteltAndMeldungErstattenBoxUWB(sendOk: boolean) {
@@ -302,6 +302,7 @@ export function useSchnellmeldungDruck() {
   }
 
   function _buildGueltigeUngueltigeAndSumTables(
+    wahlbezirksArt: WahlbezirksArtEnum,
     gueltige: string[],
     ungueltige: string[],
     gesamt: string[]
@@ -353,7 +354,7 @@ export function useSchnellmeldungDruck() {
                 <td class="borderTop_bold borderRight_bold borderBottom_bold backendData noPadding textAlignCenter">${gesamt[5]}</td>
             </tr>
         </table>
-        <div class="paddingLeft">Unterschrift Briefwahlvorsteher*in</div>
+        <div class="paddingLeft">Unterschrift ${wahlbezirksArt == WahlbezirksArtEnum.UWB ? "Wahlvorsteher*in" : "Briefwahlvorsteher*in"}</div>
     </div>`;
   }
 

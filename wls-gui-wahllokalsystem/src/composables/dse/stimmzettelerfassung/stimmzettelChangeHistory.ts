@@ -1,6 +1,6 @@
+import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
+import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 import type { InputHistoryItem } from "@/types/dse/stimmzettelerfassung/InputHistoryItem.ts";
-import type { Kandidat } from "@/types/dse/stimmzettelerfassung/Kandidat.ts";
-import type { Wahlvorschlag } from "@/types/dse/stimmzettelerfassung/Wahlvorschlag.ts";
 
 import { computed, nextTick, ref } from "vue";
 
@@ -9,43 +9,37 @@ import { InputHistoryTypeEnum } from "@/types/dse/stimmzettelerfassung/InputHist
 
 export function useStimmzettelChangeHistory() {
   const changeHistory = ref<InputHistoryItem[]>([]);
-  const lastUsedWahlvorschlag = ref<Wahlvorschlag | null>(null);
-  const lastUsedKandidat = ref<Kandidat | null>(null);
+  const lastUsedWahlvorschlag = ref<DseWahlvorschlag | null>(null);
+  const lastUsedKandidat = ref<DseKandidat | null>(null);
 
   const { createTextVotes, createTextInvalidVotes } = useTextFormatter();
 
   function registerKandidatEinzelstimmenAdded(
-    kandidat: Kandidat,
+    kandidat: DseKandidat,
     count: number
   ) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl} + ${createTextVotes(count)}`,
-        kandidat.name,
-      ],
+      text: [`${kandidat.ordnungszahl} + ${createTextVotes(count)}`],
     });
 
     _updateLatestUsedData(kandidat);
   }
 
   function registerKandidatEinzelstimmenRemoved(
-    kandidat: Kandidat,
+    kandidat: DseKandidat,
     count: number
   ) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl} - ${createTextVotes(count)}`,
-        kandidat.name,
-      ],
+      text: [`${kandidat.ordnungszahl} - ${createTextVotes(count)}`],
     });
 
     _updateLatestUsedData(kandidat);
   }
 
   function registerKandidatEinzelstimmenRangeAdded(
-    kandidaten: Kandidat[],
+    kandidaten: DseKandidat[],
     count: number
   ) {
     const firstKandidat = kandidaten[0];
@@ -61,89 +55,87 @@ export function useStimmzettelChangeHistory() {
   }
 
   function registerKandidatUngueltigeStimmenAdded(
-    kandidat: Kandidat,
+    kandidat: DseKandidat,
     count: number
   ) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.ADD_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl} + ${createTextInvalidVotes(count)}`,
-        kandidat.name,
-      ],
+      text: [`${kandidat.ordnungszahl} + ${createTextInvalidVotes(count)}`],
     });
 
     _updateLatestUsedData(kandidat);
   }
 
   function registerKandidatUngueltigeStimmenRemoved(
-    kandidat: Kandidat,
+    kandidat: DseKandidat,
     count: number
   ) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
-      text: [
-        `${kandidat.ordnungszahl} - ${createTextInvalidVotes(count)}`,
-        kandidat.name,
-      ],
+      text: [`${kandidat.ordnungszahl} - ${createTextInvalidVotes(count)}`],
     });
 
     _updateLatestUsedData(kandidat);
   }
 
-  function registerKandidatStreichungSet(kandidat: Kandidat) {
+  function registerKandidatStreichungSet(kandidat: DseKandidat) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.DISCARD_KANDIDAT,
-      text: [`${kandidat.ordnungszahl}`, kandidat.name],
+      text: [`${kandidat.ordnungszahl} gestrichen`],
     });
 
     _updateLatestUsedData(kandidat);
   }
 
-  function registerKandidatStreichungUnset(kandidat: Kandidat) {
+  function registerKandidatStreichungUnset(kandidat: DseKandidat) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
-      text: [`${kandidat.ordnungszahl}`, kandidat.name],
+      text: [`${kandidat.ordnungszahl} Streichung entfernt`],
     });
 
     _updateLatestUsedData(kandidat);
   }
 
-  function registerKandidatStreichungRangeSet(kandidaten: Kandidat[]) {
+  function registerKandidatStreichungRangeSet(kandidaten: DseKandidat[]) {
     const firstKandidat = kandidaten[0];
     const lastKandidat = kandidaten[kandidaten.length - 1];
     changeHistory.value.push({
       type: InputHistoryTypeEnum.DISCARD_RANGE,
-      text: [`${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl}`],
+      text: [
+        `${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl} gestrichen`,
+      ],
     });
 
     _updateLatestUsedData(lastKandidat);
   }
 
-  function registerKandidatStreichungRangeUnset(kandidaten: Kandidat[]) {
+  function registerKandidatStreichungRangeUnset(kandidaten: DseKandidat[]) {
     const firstKandidat = kandidaten[0];
     const lastKandidat = kandidaten[kandidaten.length - 1];
 
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
-      text: [`${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl}`],
+      text: [
+        `${firstKandidat.ordnungszahl}-${lastKandidat.ordnungszahl} Streichung entfernt`,
+      ],
     });
 
     _updateLatestUsedData(lastKandidat);
   }
 
-  function registerWahlvorschlagSelected(wahlvorschlag: Wahlvorschlag) {
+  function registerWahlvorschlagSelected(wahlvorschlag: DseWahlvorschlag) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
-      text: [`${wahlvorschlag.kurzname}`],
+      text: [`${wahlvorschlag.ordnungszahl} - ${wahlvorschlag.kurzname}`],
     });
 
     _updateLatestUsedData(wahlvorschlag);
   }
 
-  function registerWahlvorschlagDeselected(wahlvorschlag: Wahlvorschlag) {
+  function registerWahlvorschlagDeselected(wahlvorschlag: DseWahlvorschlag) {
     changeHistory.value.push({
       type: InputHistoryTypeEnum.REVOKE_WAHLVORSCHLAG,
-      text: [`${wahlvorschlag.kurzname}`],
+      text: [`${wahlvorschlag.ordnungszahl} - ${wahlvorschlag.kurzname}`],
     });
 
     _updateLatestUsedData(wahlvorschlag);
@@ -156,7 +148,7 @@ export function useStimmzettelChangeHistory() {
   }
 
   async function _updateLatestUsedData(
-    latestUsedData: Kandidat | Wahlvorschlag
+    latestUsedData: DseKandidat | DseWahlvorschlag
   ): Promise<void> {
     lastUsedKandidat.value = null;
     lastUsedWahlvorschlag.value = null;

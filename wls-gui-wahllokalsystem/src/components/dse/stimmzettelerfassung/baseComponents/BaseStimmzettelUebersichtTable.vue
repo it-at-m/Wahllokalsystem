@@ -15,21 +15,7 @@
     </template>
 
     <template #[`item.gueltigkeit`]="{ item }">
-      <v-icon
-        v-if="isVorgemerktFuerBeschluss(item)"
-        icon="$stimmzettelBeschluss"
-        color="info"
-      />
-      <v-icon
-        v-else-if="item.gueltigkeit === StimmzettelGueltigkeitEnum.Valid"
-        icon="$stimmzettelGueltig"
-        color="success"
-      />
-      <v-icon
-        v-else
-        icon="$stimmzettelUngueltig"
-        color="error"
-      />
+      <base-stimmzettel-gueltigkeit-icon :gueltigkeit="item.gueltigkeit" />
     </template>
 
     <template #[`item.vormerkungsgrund`]="{ item }">
@@ -43,7 +29,8 @@
         aria-label="Stimmzettel bearbeiten"
         icon="$edit"
         size="small"
-        variant="text"
+        variant="elevated"
+        :disabled="bearbeitungDisabled"
         @click="onStimmzettelBearbeitenClicked(item)"
       />
     </template>
@@ -51,22 +38,23 @@
 </template>
 
 <script setup lang="ts">
-import type { Stimmzettel } from "@/types/dse/persistedStimmzettel/Stimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { ref } from "vue";
 
-import { useStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelUtils.ts";
+import BaseStimmzettelGueltigkeitIcon from "@/components/dse/BaseStimmzettelGueltigkeitIcon.vue";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import {
   ITEMS_PER_PAGE_TITLE,
   TABLE_LOADING_DATA_STIMMZETTEL,
   TABLE_NO_DATA_TEXT_STIMMZETTEL,
 } from "@/constants.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const props = defineProps<{
   teamId: string;
-  stimmzettelListe: Stimmzettel[];
+  stimmzettelListe: PersistedStimmzettel[];
   stimmzettelLoading: boolean;
+  bearbeitungDisabled: boolean;
 }>();
 const stimmzettelkennungKey = "stimmzettelkennung";
 
@@ -81,10 +69,13 @@ const itemsPerPage = ref(10);
 const sortBy = ref([{ key: stimmzettelkennungKey, order: "desc" }] as const);
 
 const { isVorgemerktFuerBeschluss, getVormerkungsgrund } =
-  useStimmzettelUtils();
+  useStimmzettelTools();
 
-function onStimmzettelBearbeitenClicked(stimmzettel: Stimmzettel) {
-  // Bearbeiten-Funktionalität Platzhalter.
-  console.debug(JSON.stringify(stimmzettel));
+const emit = defineEmits<{
+  stimmzettelBearbeiten: [newValue: PersistedStimmzettel];
+}>();
+
+function onStimmzettelBearbeitenClicked(stimmzettel: PersistedStimmzettel) {
+  emit("stimmzettelBearbeiten", stimmzettel);
 }
 </script>

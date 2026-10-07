@@ -3,7 +3,7 @@ import type { AusdruckWriteDTO } from "@/api/wls-clients/generated-ergebnismeldu
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { PostAusdruckMeldungsartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import { PostAusdruckDokumentartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useAusdruckMapper } from "@/composables/ergebnismeldung/common/ausdruckMapper.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 
@@ -19,11 +19,11 @@ describe("ausdruckMapper.ts", () => {
   describe("meldungsartEnumToDto", () => {
     const testCases = [
       {
-        expectedResult: PostAusdruckMeldungsartEnum.V3,
+        expectedResult: PostAusdruckDokumentartEnum.V3,
         input: MeldungsArtEnum.Schnellmeldung,
       },
       {
-        expectedResult: PostAusdruckMeldungsartEnum.V1,
+        expectedResult: PostAusdruckDokumentartEnum.V1,
         input: MeldungsArtEnum.Niederschrift,
       },
     ];

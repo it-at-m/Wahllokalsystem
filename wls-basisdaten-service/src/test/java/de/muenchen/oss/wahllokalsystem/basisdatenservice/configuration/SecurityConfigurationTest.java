@@ -99,8 +99,8 @@ class SecurityConfigurationTest {
   }
 
   @Test
-  void should_returnOk_when_accessingSwaggerUi() throws Exception {
-    api.perform(get("/swagger-ui/index.html")).andExpect(status().isOk());
+  void should_returnStatusOk_when_accessingSwaggerUi() throws Exception {
+    api.perform(get("/webjars/swagger-ui/index.html")).andExpect(status().isOk());
   }
 
   @Nested

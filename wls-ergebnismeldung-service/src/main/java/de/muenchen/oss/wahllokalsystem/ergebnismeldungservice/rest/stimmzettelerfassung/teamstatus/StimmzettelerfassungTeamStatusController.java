@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettele
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.status.StimmzettelerfassungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus.TeamStatusService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StimmzettelerfassungTeamStatusController extends AbstractController {
 
   private final TeamStatusService teamStatusService;
+  private final StimmzettelerfassungService stimmzettelerfassungService;
   private final ErfassungTeamStatusDTOMapper erfassungTeamStatusDTOMapper;
   private final ErfassungTeamStatusEntryDTOMapper erfassungTeamStatusEntryDTOMapper;
 
@@ -40,7 +43,6 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("teamID") final String teamID,
       @RequestBody final StimmzettelerfassungTeamStatusDTO erfassungTeamStatusDTO) {
-
     teamStatusService.saveTeamStatus(
         new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
         erfassungTeamStatusDTOMapper.toModel(erfassungTeamStatusDTO.status()));
@@ -96,5 +98,20 @@ public class StimmzettelerfassungTeamStatusController extends AbstractController
     final List<StimmzettelerfassungTeamStatusEntryDTO> dtos =
         teamStatusList.stream().map(erfassungTeamStatusEntryDTOMapper::toDTO).toList();
     return ResponseEntity.ok(dtos);
+  }
+
+  @Operation(
+      description =
+          "Setze den Team-Status sowie den Workflowstatus für die digitale Stimmzettelerfassung zurück auf in Bearbeitung")
+  @ApiResponses(
+      value = {@ApiResponse(responseCode = "201", description = "Die Status wurden erfasst")})
+  @PostMapping("/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/status/inBearbeitung")
+  @ResponseStatus(HttpStatus.CREATED)
+  @Transactional
+  public void reopenStimmzettelerfassung(
+      @PathVariable("wahlID") final String wahlID,
+      @PathVariable("wahlbezirkID") final String wahlbezirkID,
+      @PathVariable("teamID") final String teamID) {
+    teamStatusService.reopenStimmzettelerfassung(wahlID, wahlbezirkID, teamID);
   }
 }

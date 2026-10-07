@@ -1,18 +1,35 @@
-import type { ManagedStimmzettel } from "@/composables/dse/stimmzettelerfassung/managedStimmzettel.ts";
+import type { BearbeitenDialogStimmzettel } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+import type { Ref } from "vue";
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
+import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { computed } from "vue";
 
 import { useStimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
 import { CommandExecutionError } from "@/types/dse/error/CommandExecutionError.ts";
 import { UnsupportedCommandError } from "@/types/dse/error/UnsupportedCommandError.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-const mockDefinitions = vi.hoisted(() => ({
-  handlerOneCanHandle: vi.fn(),
-  handlerTwoCanHandle: vi.fn(),
-  handlerOneHandleOrThrow: vi.fn(),
-  handlerTwoHandleOrThrow: vi.fn(),
-}));
+const mockDefinitions = await vi.hoisted(async () => {
+  const { ref } = await import("vue");
+  return {
+    handlerOneCanHandle: vi.fn(),
+    handlerTwoCanHandle: vi.fn(),
+    handlerOneHandleOrThrow: vi.fn(),
+    handlerTwoHandleOrThrow: vi.fn(),
+    mangedStimmzettel: {
+      kandidatAddEinzelstimmenOrThrow: vi.fn(),
+      hasAnyValuesSet: ref(false),
+    },
+    resetStimmzettelAndHistory: vi.fn(),
+    mapPersistedStimmzettelValuesToExistingDseStimmzettel: vi.fn(),
+    normalizePersistedStimmzettel: vi.fn(),
+  };
+});
 
 vi.mock(
   "@/composables/dse/stimmzettelerfassung/command/commandHandlers.ts",
@@ -30,6 +47,47 @@ vi.mock(
     return { COMMAND_HANDLERS: handlers };
   }
 );
+vi.mock(
+  "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts",
+  () => ({
+    useBearbeitenDialogStimmzettelUtils: (
+      stimmzettel: Ref<DseStimmzettel>,
+      wahlID: string
+    ) => {
+      return {
+        kandidatAddEinzelstimmenOrThrow:
+          mockDefinitions.mangedStimmzettel.kandidatAddEinzelstimmenOrThrow,
+        resetStimmzettelAndHistory: mockDefinitions.resetStimmzettelAndHistory,
+        hasAnyValuesSet: mockDefinitions.mangedStimmzettel.hasAnyValuesSet,
+        stimmzettel,
+        wahlID,
+      };
+    },
+  })
+);
+
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelMapper.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useStimmzettelMapper: () => ({
+        ...original.useStimmzettelMapper(),
+        mapPersistedStimmzettelValuesToExistingDseStimmzettel:
+          mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel,
+      }),
+    };
+  }
+);
+
+const { prepareWahlvorschlag, prepareKandidat } =
+  useWahlvorschlaegeTestDataFactory();
+const {
+  createPersistedStimmzettel,
+  preparePersistedStimmzettel,
+  preparePersistedStimmzettelWahlvorschlag,
+  preparePersistedStimmzettelKandidat,
+} = usePersistedStimmzettelTestDataFactory();
 
 describe("stimmzettelManager.ts", () => {
   const dummyWahlvorschlag: Wahlvorschlag = {
@@ -53,8 +111,10 @@ describe("stimmzettelManager.ts", () => {
       mockDefinitions.handlerTwoCanHandle.mockReturnValue(false);
 
       const { parseCommandOrThrowError } = useStimmzettelManager(
+        computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1"
+        "wahl-1",
+        "team A"
       );
 
       parseCommandOrThrowError(command);
@@ -68,7 +128,8 @@ describe("stimmzettelManager.ts", () => {
       const callArgs = mockDefinitions.handlerOneHandleOrThrow.mock.calls[0];
       expect(callArgs[0]).toBe(command);
       expect(
-        (callArgs[1] as ManagedStimmzettel).kandidatAddEinzelstimmenOrThrow
+        (callArgs[1] as BearbeitenDialogStimmzettel)
+          .kandidatAddEinzelstimmenOrThrow
       ).toBeDefined();
 
       expect(mockDefinitions.handlerTwoCanHandle).not.toHaveBeenCalled();
@@ -82,8 +143,10 @@ describe("stimmzettelManager.ts", () => {
       mockDefinitions.handlerTwoCanHandle.mockReturnValue(false);
 
       const { parseCommandOrThrowError } = useStimmzettelManager(
+        computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1"
+        "wahl-1",
+        "team A"
       );
 
       expect(() => parseCommandOrThrowError(command)).toThrow(
@@ -104,8 +167,10 @@ describe("stimmzettelManager.ts", () => {
       });
 
       const { parseCommandOrThrowError } = useStimmzettelManager(
+        computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1"
+        "wahl-1",
+        "team A"
       );
 
       expect(() => parseCommandOrThrowError(command)).toThrow(
@@ -115,6 +180,264 @@ describe("stimmzettelManager.ts", () => {
       expect(mockDefinitions.handlerOneCanHandle).toHaveBeenCalledTimes(1);
       expect(mockDefinitions.handlerOneHandleOrThrow).toHaveBeenCalledTimes(1);
       expect(mockDefinitions.handlerTwoHandleOrThrow).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("startNewStimmzettel", () => {
+    it("should_setNewStimmzettelAndResetHistory_when_called", () => {
+      const unitUnderTest = useStimmzettelManager(
+        computed(() => 1),
+        [dummyWahlvorschlag],
+        "wahl-1",
+        "team A"
+      );
+
+      const stimmzettelBeforeStartNewOne =
+        unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value;
+      stimmzettelBeforeStartNewOne.invalideVotes = 20;
+      unitUnderTest.stimmzettelBeforeEdit.value = createPersistedStimmzettel();
+
+      expect(unitUnderTest.stimmzettelBeforeEdit.value).not.toBeNull();
+      expect(
+        unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value
+      ).not.toBeNull();
+
+      unitUnderTest.startNewStimmzettel();
+
+      expect(unitUnderTest.stimmzettelBeforeEdit.value).toBeNull();
+      expect(
+        unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value
+      ).not.toStrictEqual(stimmzettelBeforeStartNewOne);
+      expect(
+        unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value
+      ).not.toBe(stimmzettelBeforeStartNewOne);
+      expect(mockDefinitions.resetStimmzettelAndHistory).toHaveBeenCalledTimes(
+        1
+      );
+    });
+  });
+
+  describe("setActiveStimmzettelWhenEditing", () => {
+    it("should_updateManagedBearbeitenDialogStimmzettel_when_calledWithPersistedActiveStimmzettel", () => {
+      const stimmzettelKennung = 42;
+      const teamID = "team-1";
+      const wahlvorschlagID = "wv-1";
+      const kandidatID = "k-1";
+
+      const wahlvorschlaege: Wahlvorschlag[] = [
+        prepareWahlvorschlag()
+          .identifikator(wahlvorschlagID)
+          .kandidaten([
+            prepareKandidat()
+              .identifikator(kandidatID)
+              .anzahlNennungen(1)
+              .build(),
+          ])
+          .build(),
+      ];
+
+      const {
+        bearbeitenDialogStimmzettelUtils,
+        setActiveStimmzettelWhenEditing,
+        stimmzettelBeforeEdit,
+      } = useStimmzettelManager(
+        computed(() => stimmzettelKennung),
+        wahlvorschlaege,
+        "wahl-1",
+        teamID
+      );
+
+      const managedBefore = bearbeitenDialogStimmzettelUtils.stimmzettel.value;
+      expect(managedBefore.invalideVotes).toBe(0);
+      expect(managedBefore.wahlvorschlaege[0].selected).toBe(false);
+
+      const managedBeforeKandidat =
+        managedBefore.wahlvorschlaege[0].kandidaten[0];
+      expect(managedBeforeKandidat.einzelstimmen).toBeNull();
+      expect(managedBeforeKandidat.ungueltigeStimmen).toBeNull();
+      expect(managedBeforeKandidat.reststimmen).toBeNull();
+      expect(managedBeforeKandidat.durchgestrichen).toBe(false);
+
+      const activeStimmzettelToBeSet: PersistedStimmzettel =
+        preparePersistedStimmzettel()
+          .stimmzettelkennung(stimmzettelKennung)
+          .teamID(teamID)
+          .invalideVotes(3)
+          .wahlvorschlaege([
+            preparePersistedStimmzettelWahlvorschlag()
+              .wahlvorschlagID(wahlvorschlagID)
+              .selected(true)
+              .kandidaten([
+                preparePersistedStimmzettelKandidat()
+                  .kandidatId(kandidatID)
+                  .nennung(1)
+                  .votesByVoter(5)
+                  .invalidVotes(1)
+                  .votesByWahlvorschlag(2)
+                  .isDiscarded(true)
+                  .build(),
+              ])
+              .build(),
+          ])
+          .build();
+
+      mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockImplementation(
+        (target, source) => {
+          target.invalideVotes = source.invalideVotes;
+
+          target.wahlvorschlaege[0].selected =
+            source.wahlvorschlaege[0].selected;
+
+          target.wahlvorschlaege[0].kandidaten[0].einzelstimmen =
+            source.wahlvorschlaege[0].kandidaten[0].votesByVoter;
+          target.wahlvorschlaege[0].kandidaten[0].ungueltigeStimmen =
+            source.wahlvorschlaege[0].kandidaten[0].invalidVotes;
+          target.wahlvorschlaege[0].kandidaten[0].reststimmen =
+            source.wahlvorschlaege[0].kandidaten[0].votesByWahlvorschlag;
+          target.wahlvorschlaege[0].kandidaten[0].durchgestrichen =
+            source.wahlvorschlaege[0].kandidaten[0].isDiscarded;
+        }
+      );
+
+      expect(stimmzettelBeforeEdit.value).toBeNull();
+      setActiveStimmzettelWhenEditing(activeStimmzettelToBeSet);
+
+      expect(stimmzettelBeforeEdit.value).toStrictEqual(
+        activeStimmzettelToBeSet
+      );
+      const managedAfter = bearbeitenDialogStimmzettelUtils.stimmzettel.value;
+      expect(managedAfter.invalideVotes).toBe(3);
+      expect(managedAfter.wahlvorschlaege[0].selected).toBe(true);
+
+      const managedAfterKandidat =
+        managedAfter.wahlvorschlaege[0].kandidaten[0];
+      expect(managedAfterKandidat.einzelstimmen).toBe(5);
+      expect(managedAfterKandidat.ungueltigeStimmen).toBe(1);
+      expect(managedAfterKandidat.reststimmen).toBe(2);
+      expect(managedAfterKandidat.durchgestrichen).toBe(true);
+
+      expect(mockDefinitions.resetStimmzettelAndHistory).toHaveBeenCalledTimes(
+        1
+      );
+    });
+  });
+
+  describe("hasStimmzettelBeenEdited", () => {
+    beforeEach(() => {
+      mockDefinitions.mapPersistedStimmzettelValuesToExistingDseStimmzettel.mockImplementation(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (target, source) => target
+      );
+      mockDefinitions.normalizePersistedStimmzettel.mockImplementation(
+        (persistedStimmzettel) => persistedStimmzettel
+      );
+    });
+    const stimmzettelKennung = 101;
+    const teamID = "team-x";
+    const wahlvorschlagID = "wv-x";
+    const kandidatID = "k-x";
+    const wahlID = "wahl-1";
+
+    const wahlvorschlaege: Wahlvorschlag[] = [
+      prepareWahlvorschlag()
+        .identifikator(wahlvorschlagID)
+        .kandidaten([
+          prepareKandidat()
+            .identifikator(kandidatID)
+            .anzahlNennungen(1)
+            .build(),
+        ])
+        .build(),
+    ];
+
+    const persistedStimmzettelBeforeEdit: PersistedStimmzettel =
+      preparePersistedStimmzettel()
+        .stimmzettelkennung(stimmzettelKennung)
+        .teamID(teamID)
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .invalideVotes(0)
+        .wahlvorschlaege([])
+        .wahlvorstandBeschlussvorschlag([])
+        .systemBeschlussvorschlag([])
+        .beschlussfassung(null)
+        .build();
+
+    it("should_returnTrue_when_stimmzettelToCompareHaveDifferentValues", () => {
+      const {
+        bearbeitenDialogStimmzettelUtils,
+        setActiveStimmzettelWhenEditing,
+        hasStimmzettelBeenEdited,
+        stimmzettelBeforeEdit,
+      } = useStimmzettelManager(
+        computed(() => stimmzettelKennung),
+        wahlvorschlaege,
+        wahlID,
+        teamID
+      );
+
+      expect(stimmzettelBeforeEdit.value).toBeNull();
+
+      setActiveStimmzettelWhenEditing(persistedStimmzettelBeforeEdit);
+
+      expect(stimmzettelBeforeEdit.value).toStrictEqual(
+        persistedStimmzettelBeforeEdit
+      );
+      expect(hasStimmzettelBeenEdited.value).toBe(false);
+
+      const managed = bearbeitenDialogStimmzettelUtils.stimmzettel.value;
+      managed.wahlvorschlaege[0].kandidaten[0].einzelstimmen = 5;
+
+      expect(hasStimmzettelBeenEdited.value).toBe(true);
+    });
+
+    it("should_returnFalse_when_stimmzettelToCompareHaveSameValues", () => {
+      const {
+        setActiveStimmzettelWhenEditing,
+        hasStimmzettelBeenEdited,
+        stimmzettelBeforeEdit,
+      } = useStimmzettelManager(
+        computed(() => stimmzettelKennung),
+        wahlvorschlaege,
+        wahlID,
+        teamID
+      );
+
+      expect(stimmzettelBeforeEdit.value).toBeNull();
+
+      setActiveStimmzettelWhenEditing(persistedStimmzettelBeforeEdit);
+
+      expect(stimmzettelBeforeEdit.value).toStrictEqual(
+        persistedStimmzettelBeforeEdit
+      );
+      expect(hasStimmzettelBeenEdited.value).toBe(false);
+    });
+
+    it("should_returnFalse_when_stimmzettelToCompareIsNullAndStimmzettelHasNoValuesSet", () => {
+      mockDefinitions.mangedStimmzettel.hasAnyValuesSet.value = false;
+      const { hasStimmzettelBeenEdited, stimmzettelBeforeEdit } =
+        useStimmzettelManager(
+          computed(() => stimmzettelKennung),
+          wahlvorschlaege,
+          wahlID,
+          teamID
+        );
+
+      expect(stimmzettelBeforeEdit.value).toBeNull();
+      expect(hasStimmzettelBeenEdited.value).toBe(false);
+    });
+
+    it("should_returnTrue_when_stimmzettelToCompareIsNullButStimmzettelHasValuesSet", () => {
+      mockDefinitions.mangedStimmzettel.hasAnyValuesSet.value = true;
+      const { hasStimmzettelBeenEdited, stimmzettelBeforeEdit } =
+        useStimmzettelManager(
+          computed(() => stimmzettelKennung),
+          wahlvorschlaege,
+          wahlID,
+          teamID
+        );
+
+      expect(stimmzettelBeforeEdit.value).toBeNull();
+      expect(hasStimmzettelBeenEdited.value).toBe(true);
     });
   });
 });

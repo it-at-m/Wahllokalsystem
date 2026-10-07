@@ -1,0 +1,208 @@
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  addNotification: vi.fn(),
+  jsBarcode: vi.fn(),
+  toGermanDate: vi.fn(),
+  toHhMm: vi.fn(),
+  toDataUrl: vi.fn(),
+}));
+
+vi.mock(import("jsbarcode"), () => ({
+  default: mockDefinitions.jsBarcode,
+}));
+
+vi.mock(
+  import("@/composables/common/dateTimeFormatter.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useDateTimeFormatter: () => ({
+        ...mod.useDateTimeFormatter(),
+        toGermanDate: mockDefinitions.toGermanDate,
+        toHhMm: mockDefinitions.toHhMm,
+      }),
+    };
+  }
+);
+
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
+
+const { generateRandomString } = useCommonTestDataFactory();
+const { prepareWahl } = useWahlTestDataFactory();
+
+describe("commonPrintService.ts", () => {
+  const mockedNow = new Date("2026-09-25T12:34:00");
+  const mockedDataUrl = "data:image/jpeg;base64,barcode";
+  const mockedUuid = "f1cc5a27-8b9e-4c19-927c-98b854f3da0f";
+  const validWahl = prepareWahl()
+    .wahltag("2026-09-25")
+    .kennzeichen("BTW26")
+    .build();
+
+  let unitUnderTest: ReturnType<typeof useCommonPrintService>;
+
+  beforeEach(() => {
+    vi.useFakeTimers({ now: mockedNow });
+    mockDefinitions.toDataUrl.mockReturnValue(mockedDataUrl);
+    vi.spyOn(document, "createElement").mockReturnValue({
+      toDataURL: mockDefinitions.toDataUrl,
+    } as unknown as HTMLElement);
+    vi.spyOn(crypto, "randomUUID").mockReturnValue(mockedUuid);
+    mockDefinitions.toGermanDate.mockReturnValue("25.09.2026");
+    mockDefinitions.toHhMm.mockReturnValue("12:34");
+    unitUnderTest = useCommonPrintService();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    vi.clearAllMocks();
+  });
+
+  describe("createBarcode", () => {
+    it("should_returnJpegBarcode_when_givenValidUwbSchnellmeldung", () => {
+      const result = unitUnderTest.createBarcode(
+        validWahl,
+        MeldungsArtEnum.Schnellmeldung,
+        WahlbezirksArtEnum.UWB,
+        "12"
+      );
+
+      expect(document.createElement).toHaveBeenCalledExactlyOnceWith("canvas");
+      expect(mockDefinitions.jsBarcode).toHaveBeenCalledExactlyOnceWith(
+        expect.anything(),
+        "BTW2625.09.2026-S-SBZ-12",
+        { displayValue: false }
+      );
+      expect(mockDefinitions.toDataUrl).toHaveBeenCalledExactlyOnceWith(
+        "image/jpeg"
+      );
+      expect(result).toStrictEqual(mockedDataUrl);
+      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
+    });
+
+    it("should_useBriefwahlbezirkAndNiederschriftAbbreviations_when_givenBwbAndNiederschrift", () => {
+      unitUnderTest.createBarcode(
+        validWahl,
+        MeldungsArtEnum.Niederschrift,
+        WahlbezirksArtEnum.BWB,
+        "12"
+      );
+
+      expect(mockDefinitions.jsBarcode).toHaveBeenCalledExactlyOnceWith(
+        expect.anything(),
+        "BTW2625.09.2026-N-BWBZ-12",
+        { displayValue: false }
+      );
+    });
+
+    it("should_preserveLeadingZerosInWahlbezirkNumber_when_numberIsNumeric", () => {
+      unitUnderTest.createBarcode(
+        validWahl,
+        MeldungsArtEnum.Schnellmeldung,
+        WahlbezirksArtEnum.UWB,
+        "0012"
+      );
+
+      expect(mockDefinitions.jsBarcode).toHaveBeenCalledWith(
+        expect.anything(),
+        "BTW2625.09.2026-S-SBZ-0012",
+        { displayValue: false }
+      );
+    });
+
+    it.each([
+      ["kennzeichenIsMissing", { ...validWahl, kennzeichen: "" }, "12"],
+      ["wahlbezirkNummerIsNotNumeric", validWahl, "abc"],
+      ["wahlbezirkNummerIsZero", validWahl, "0"],
+    ])(
+      "should_returnEmptyStringAndNotifyWarning_when_%s",
+      (_condition, wahl, wahlbezirkNummer) => {
+        const result = unitUnderTest.createBarcode(
+          wahl,
+          MeldungsArtEnum.Schnellmeldung,
+          WahlbezirksArtEnum.UWB,
+          wahlbezirkNummer
+        );
+
+        expect(result).toStrictEqual("");
+        expect(mockDefinitions.addNotification).toHaveBeenCalledExactlyOnceWith(
+          "Fehler beim Erstellen des Barcodes",
+          UserNotificationCategoryEnum.WARNING
+        );
+        expect(mockDefinitions.jsBarcode).not.toHaveBeenCalled();
+      }
+    );
+
+    it("should_notifyWarning_when_wahltagCannotBeFormatted", () => {
+      mockDefinitions.toGermanDate.mockReturnValue(undefined);
+
+      const result = unitUnderTest.createBarcode(
+        validWahl,
+        MeldungsArtEnum.Schnellmeldung,
+        WahlbezirksArtEnum.UWB,
+        "12"
+      );
+
+      expect(result).toStrictEqual("");
+      expect(mockDefinitions.addNotification).toHaveBeenCalledExactlyOnceWith(
+        "Fehler beim Erstellen des Barcodes",
+        UserNotificationCategoryEnum.WARNING
+      );
+      expect(mockDefinitions.jsBarcode).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("createFooter", () => {
+    const nonValideStatus = Object.values(MeldungValidierungsstatusEnum).filter(
+      (value) => value !== MeldungValidierungsstatusEnum.Valide
+    );
+
+    it("should_returnFooterWithO_when_meldungValidierungsstatusIsValide", () => {
+      const status = MeldungValidierungsstatusEnum.Valide;
+      const wahlbezirkNummer = generateRandomString(4);
+
+      const result = unitUnderTest.createFooter(status, wahlbezirkNummer);
+
+      expect(result).toStrictEqual(
+        `${mockedUuid}, 25.09.2026 12:34 O ${wahlbezirkNummer}`
+      );
+      expect(mockDefinitions.toGermanDate).toHaveBeenCalledExactlyOnceWith(
+        mockedNow
+      );
+      expect(mockDefinitions.toHhMm).toHaveBeenCalledExactlyOnceWith(mockedNow);
+    });
+
+    it.each(nonValideStatus)(
+      "should_returnFooterWithM_when_meldungValidierungsstatusIsNotValide",
+      (nonValidStatus) => {
+        const wahlbezirkNummer = generateRandomString(4);
+
+        const result = unitUnderTest.createFooter(
+          nonValidStatus,
+          wahlbezirkNummer
+        );
+
+        expect(result).toStrictEqual(
+          `${mockedUuid}, 25.09.2026 12:34 M ${wahlbezirkNummer}`
+        );
+      }
+    );
+  });
+});

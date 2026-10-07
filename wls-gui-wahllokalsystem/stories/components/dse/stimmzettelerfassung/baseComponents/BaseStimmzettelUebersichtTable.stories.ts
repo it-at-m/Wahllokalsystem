@@ -1,127 +1,127 @@
-import type { Beschlussgrund } from "@/types/dse/beschlussfassung/Beschlussgrund.ts";
-import type { Stimmzettel } from "@/types/dse/stimmzettelerfassung/Stimmzettel.ts";
+import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
+import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { Meta, StoryFn } from "@storybook/vue3";
 
 import BaseStimmzettelUebersichtTable from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelUebersichtTable.vue";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-function createDummyStimmzettelListe(): Stimmzettel[] {
+function createDummyStimmzettelListe(): DseStimmzettel[] {
   return [
     {
-      stimmzettelkennung: 1,
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
-      stimmzettelkennung: 2,
       wahlvorschlaege: [],
       invalideVotes: 1,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
-      stimmzettelkennung: 3,
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [
+      wahlvorstandBeschlussvorschlag: [
         {
           text: "Stimmzettel zur Beschlussfassung vorgemerkt",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
       ],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
-      stimmzettelkennung: 4,
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [
+      wahlvorstandBeschlussvorschlag: [
         {
           text: "Wählerwille nicht zweifelfrei erkennbar",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
         {
           text: "Kennzeichnung nicht eindeutig zuzuordnen",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
       ],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
-      stimmzettelkennung: 5,
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
-      stimmzettelkennung: 6,
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [
+      wahlvorstandBeschlussvorschlag: [
         {
           text: "Wählerwille nicht zweifelfrei erkennbar",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
         {
           text: "Kennzeichnung nicht eindeutig zuzuordnen",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
       ],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
-      stimmzettelkennung: 7,
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
-      stimmzettelkennung: 8,
       wahlvorschlaege: [],
       invalideVotes: 2,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [
+      wahlvorstandBeschlussvorschlag: [
         {
           text: "Ungültige Kennzeichnung",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
       ],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
-      stimmzettelkennung: 9,
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
-      stimmzettelkennung: 10,
       wahlvorschlaege: [],
       invalideVotes: 0,
       gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-      beschlussvorschlag: [
+      wahlvorstandBeschlussvorschlag: [
         {
           text: "Wählerwille nicht zweifelfrei erkennbar",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
         {
           text: "Sonstige Unklarheit",
-        } as Beschlussgrund,
+        } as WahlvorstandBeschlussgrund,
       ],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
     {
-      stimmzettelkennung: 11,
       wahlvorschlaege: [],
       invalideVotes: 1,
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      beschlussvorschlag: [],
+      wahlvorstandBeschlussvorschlag: [],
+      systemBeschlussvorschlag: [],
       beschlussfassung: null,
     },
   ];

@@ -221,4 +221,79 @@ class TeamStatusServiceTest {
           .toEntryModel(Mockito.any(StimmzettelerfassungTeamStatus.class));
     }
   }
+
+  @Nested
+  class ReopenStimmzettelerfassung {
+
+    @Test
+    void should_reopenTeamAndStimmzettelerfassung_when_parametersAreValid() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val teamID = "teamID";
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID);
+      val entityToSave = Instancio.create(StimmzettelerfassungTeamStatus.class);
+
+      Mockito.when(
+              erfassungTeamStatusModelMapper.toEntity(id, ErfassungTeamStatusModel.IN_BEARBEITUNG))
+          .thenReturn(entityToSave);
+
+      unitUnderTest.reopenStimmzettelerfassung(wahlID, wahlbezirkID, teamID);
+
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verify(erfassungTeamStatusValidator)
+          .isValidOrThrow(ErfassungTeamStatusModel.IN_BEARBEITUNG);
+      Mockito.verify(erfassungTeamStatusModelMapper)
+          .toEntity(id, ErfassungTeamStatusModel.IN_BEARBEITUNG);
+      Mockito.verify(stimmzettelerfassungTeamStatusRepository).save(entityToSave);
+      Mockito.verify(stimmzettelerfassungService, Mockito.times(2))
+          .registerStimmzettelerfassungStart(new BezirkUndWahlID(wahlID, wahlbezirkID));
+    }
+
+    @Test
+    void should_throwExceptionAndNotReopenStimmzettelerfassung_when_validationOfIdFailed() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val teamID = "teamID";
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID);
+      val mockedWlsException =
+          FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
+
+      Mockito.doThrow(mockedWlsException).when(erfassungTeamStatusValidator).isValidOrThrow(id);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.reopenStimmzettelerfassung(wahlID, wahlbezirkID, teamID))
+          .isEqualTo(mockedWlsException);
+
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verifyNoInteractions(erfassungTeamStatusModelMapper);
+      Mockito.verifyNoInteractions(stimmzettelerfassungTeamStatusRepository);
+      Mockito.verifyNoInteractions(stimmzettelerfassungService);
+    }
+
+    @Test
+    void should_throwExceptionAndNotReopenStimmzettelerfassung_when_validationOfStatusFailed() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val teamID = "teamID";
+      val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID);
+      val mockedWlsException =
+          FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
+
+      Mockito.doNothing().when(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.doThrow(mockedWlsException)
+          .when(erfassungTeamStatusValidator)
+          .isValidOrThrow(ErfassungTeamStatusModel.IN_BEARBEITUNG);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.reopenStimmzettelerfassung(wahlID, wahlbezirkID, teamID))
+          .isEqualTo(mockedWlsException);
+
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verify(erfassungTeamStatusValidator)
+          .isValidOrThrow(ErfassungTeamStatusModel.IN_BEARBEITUNG);
+      Mockito.verifyNoInteractions(erfassungTeamStatusModelMapper);
+      Mockito.verifyNoInteractions(stimmzettelerfassungTeamStatusRepository);
+      Mockito.verifyNoInteractions(stimmzettelerfassungService);
+    }
+  }
 }

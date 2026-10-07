@@ -11,6 +11,8 @@ export function useRules() {
       return value.trim().length > 0 || "Feld darf nicht leer sein.";
     } else if (typeof value === "number") {
       return !isNaN(value) || "Feld darf nicht leer sein.";
+    } else if (Array.isArray(value)) {
+      return value.length > 0 || "Feld darf nicht leer sein.";
     }
     return "Feld darf nicht leer sein.";
   };

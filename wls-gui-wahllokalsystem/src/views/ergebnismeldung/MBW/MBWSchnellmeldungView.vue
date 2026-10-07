@@ -1,35 +1,31 @@
 <template>
   <div>
-    <base-ergebnismeldung-cards-container
-      title="Schnellmeldung"
-      subtitle="Kontrolle, Übermittlung und Druck der Schnellmeldung"
-      :is-sending="isSendingSchnellmeldung"
-      :is-korrigieren-active="isKorrigierenValid"
+    <the-mbw-dse-schnellmeldung-card
+      v-if="isDseAktiv"
+      :wahlbezirk-i-d="wahlbezirkID"
+      :wahl-i-d="wahlID"
+      :is-sending-schnellmeldung="isSendingSchnellmeldung"
+      :is-korrigieren-valid="isKorrigierenValid"
       :is-drucken-active="isDruckenActive"
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
       @save="onSendenClicked"
       @edit="onKorrigierenClicked"
       @print="onDruckenClicked"
-    >
-      <the-m-b-w-wahlberechtigte-anzeigen-card
-        :wahlbezirk-id="wahlbezirkID"
-        :wahl-id="wahlID"
-      />
-      <the-m-b-w-waehler-anzeigen-card
-        :wahlbezirk-id="wahlbezirkID"
-        :wahl-id="wahlID"
-      />
-      <the-m-b-w-ungueltige-stimmen-anzeigen-card
-        :wahlbezirk-id="wahlbezirkID"
-        :wahl-id="wahlID"
-      />
-      <the-m-b-w-gueltige-stimmen-anzeigen-card
-        :is-schnellmeldung="true"
-        :wahlbezirk-id="wahlbezirkID"
-        :wahl-id="wahlID"
-      />
-    </base-ergebnismeldung-cards-container>
+    />
+    <the-mbw-stapel-schnellmeldung-card
+      v-else
+      :wahlbezirk-i-d="wahlbezirkID"
+      :wahl-i-d="wahlID"
+      :is-sending-schnellmeldung="isSendingSchnellmeldung"
+      :is-korrigieren-valid="isKorrigierenValid"
+      :is-drucken-active="isDruckenActive"
+      :is-drucken-loading="isDruckenLoading"
+      :is-senden-active="isSendenActive"
+      @save="onSendenClicked"
+      @edit="onKorrigierenClicked"
+      @print="onDruckenClicked"
+    />
     <offline-syncer-dialog
       :is-dialog-visible="isOfflineSyncDialogVisible"
       @sync-success="onSyncSuccess"
@@ -64,22 +60,20 @@ import { computed, onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
-import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
-import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
-import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
-import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
+import TheMbwDseSchnellmeldungCard from "@/components/ergebnismeldung/MBW/TheMbwDseSchnellmeldungCard.vue";
+import TheMbwStapelSchnellmeldungCard from "@/components/ergebnismeldung/MBW/TheMbwStapelSchnellmeldungCard.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
+import { useMbwSchnellmeldungDruckService } from "@/composables/ergebnismeldung/MBW/mbwSchnellmeldungDruckService.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useSchnellmeldungDruck } from "@/composables/ergebnismeldung/MBW/schnellmeldungDruck.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -89,15 +83,20 @@ const router = useRouter();
 const wahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 
+const { isDseAktiv } = storeToRefs(useInfomanagementStore());
+
 const { addNotification } = useUserNotificationService();
 const { wahlenActions } = useWahlenStore();
-const { isBWB } = storeToRefs(useUserStore());
+const { isBWB, currentUserWahlbezirkNummer } = storeToRefs(useUserStore());
 const {
   isSendingSchnellmeldung,
   sendSchnellmeldung,
-  prepareDataForSchnellmeldungDruck,
   updateStatusAfterSchnellmeldungDrucken,
 } = useMbwUtils(wahlID, wahlbezirkID);
+const { prepareDataForSchnellmeldungDruck } = useMbwSchnellmeldungDruckService(
+  wahlID,
+  wahlbezirkID
+);
 const { buildSchnellmeldungTemplateFromData } = useSchnellmeldungDruck();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 const { getNextRoute } = useNavigationService();
@@ -173,7 +172,7 @@ async function onDruckenClicked() {
         await prepareDataForSchnellmeldungDruck(
           wahl,
           status,
-          MeldungsArtEnum.Schnellmeldung
+          currentUserWahlbezirkNummer.value
         );
 
       const printWindow = window.open(

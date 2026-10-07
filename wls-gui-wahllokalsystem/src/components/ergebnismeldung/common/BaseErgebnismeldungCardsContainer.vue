@@ -22,6 +22,13 @@
         @click="$emit('edit')"
       />
       <base-wls-button-save
+        v-if="title === 'Niederschrift'"
+        save-text="Beschlussentscheidungen drucken"
+        prepend-icon="$printer"
+        :loading="isBeschlussentscheidungenDruckenLoading"
+        @click="$emit('printBeschlussentscheidungen')"
+      />
+      <base-wls-button-save
         :save-text="`${title} drucken und weiter`"
         prepend-icon="$printer"
         :disabled="!isDruckenActive"
@@ -44,11 +51,13 @@ defineProps<{
   isDruckenActive: boolean | null | undefined;
   isDruckenLoading: boolean;
   isSendenActive: boolean;
+  isBeschlussentscheidungenDruckenLoading?: boolean;
 }>();
 
 defineEmits<{
   save: [];
   edit: [];
+  printBeschlussentscheidungen: [];
   print: [];
 }>();
 </script>

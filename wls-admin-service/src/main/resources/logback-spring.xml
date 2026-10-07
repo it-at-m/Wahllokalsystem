@@ -44,6 +44,20 @@
             <appender-ref ref="STDOUT" />
         </logger>
 
+        <!-- use debug to see the users authorities -->
+        <logger name="de.muenchen.oss.wahllokalsystem.adminservice.configuration.UserInfoAuthoritiesRetriever"
+                level="debug"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <!-- use debug to see how headers and payload are nfc handled -->
+        <logger name="de.muenchen.oss.wahllokalsystem.adminservice.configuration.nfcconverter"
+                level="debug"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
         <!-- Logger usage -->
         <root level="info">
             <appender-ref ref="STDOUT" />
@@ -88,21 +102,35 @@
 
         <!-- Logger -->
         <logger name="de.muenchen.oss.wahllokalsystem.adminservice"
-                level="info"
+                level="warn"
                 additivity="false">
             <appender-ref ref="JSON_STDOUT" />
         </logger>
 
         <logger name="de.muenchen.allgemein"
-                level="info"
+                level="warn"
                 additivity="false">
             <appender-ref ref="JSON_STDOUT" />
         </logger>
 
         <logger name="org.springframework.web"
-                level="info"
+                level="warn"
                 additivity="false">
             <appender-ref ref="JSON_STDOUT" />
+        </logger>
+
+        <!-- use debug to see the users authorities -->
+        <logger name="de.muenchen.oss.wahllokalsystem.adminservice.configuration.UserInfoAuthoritiesRetriever"
+                level="warn"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <!-- use debug to see how headers and payload are nfc handled -->
+        <logger name="de.muenchen.oss.wahllokalsystem.adminservice.configuration.nfcconverter"
+                level="warn"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
         </logger>
 
         <!-- Logger usage -->

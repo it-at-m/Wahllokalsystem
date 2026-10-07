@@ -26,6 +26,13 @@ export function useStimmzettelerfassungTeamStatusTestDataFactory() {
     );
   }
 
+  function createStimmzettelerfassungTeamStatusEntry(): StimmzettelerfassungTeamStatusEntry {
+    return {
+      status: getRandomItem(Object.values(StimmzettelerfassungTeamStatusEnum)),
+      teamID: generateRandomString(10),
+    };
+  }
+
   function createStimmzettelerfassungTeamStatusModel(
     status: StimmzettelerfassungTeamStatusEnum = StimmzettelerfassungTeamStatusEnum.REGISTRIERT
   ): StimmzettelerfassungTeamStatus {
@@ -67,12 +74,20 @@ export function useStimmzettelerfassungTeamStatusTestDataFactory() {
     );
   }
 
+  function prepareStimmzettelerfassungTeamStatusEntry(): Builder<StimmzettelerfassungTeamStatusEntry> {
+    return proxyBuilder<StimmzettelerfassungTeamStatusEntry>(
+      createStimmzettelerfassungTeamStatusEntry()
+    );
+  }
+
   return {
     createStimmzettelerfassungTeamStatusDTOData,
     createStimmzettelerfassungTeamStatusDtoEnumValue,
+    createStimmzettelerfassungTeamStatusEntry,
     createStimmzettelerfassungTeamStatusModel,
     createStimmzettelerfassungTeamStatusListe,
     prepareStimmzettelerfassungTeamStatusDTO,
     prepareStimmzettelerfassungTeamStatus,
+    prepareStimmzettelerfassungTeamStatusEntry,
   };
 }

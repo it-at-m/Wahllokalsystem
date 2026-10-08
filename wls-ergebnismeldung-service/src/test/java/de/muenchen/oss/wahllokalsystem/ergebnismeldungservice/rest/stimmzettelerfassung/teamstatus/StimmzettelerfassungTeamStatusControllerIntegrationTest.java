@@ -27,6 +27,8 @@ import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -69,18 +71,26 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
 
       val requestBody = Instancio.create(StimmzettelerfassungTeamStatusDTO.class);
 
-      mockMvc
-          .perform(
-              createPostRequest(
-                  id.getWahlID(),
-                  id.getWahlbezirkID(),
-                  id.getTeamID(),
-                  id.getWahlbezirkID(),
-                  id.getTeamID(),
-                  requestBody))
-          .andExpect(status().isCreated());
+      val response =
+          mockMvc
+              .perform(
+                  createPostRequest(
+                      id.getWahlID(),
+                      id.getWahlbezirkID(),
+                      id.getTeamID(),
+                      id.getWahlbezirkID(),
+                      id.getTeamID(),
+                      requestBody))
+              .andExpect(status().isCreated())
+              .andReturn()
+              .getResponse();
 
       val persistedTeamStatusEntity = teamstatusRepository.findById(id).orElse(null);
+
+      val responseBodyAsDTO =
+          objectMapper.readValue(
+              response.getContentAsString(), StimmzettelerfassungTeamStatusDTO.class);
+      Assertions.assertThat(responseBodyAsDTO).isEqualTo(requestBody);
 
       val expectedEntity =
           Instancio.of(StimmzettelerfassungTeamStatus.class)
@@ -301,6 +311,54 @@ public class StimmzettelerfassungTeamStatusControllerIntegrationTest {
       Assertions.assertThat(persistedTeamStatusEntity).isEmpty();
       Assertions.assertThat(persistedWorkflowStatusEntity).isEmpty();
       Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
+    }
+
+    @ParameterizedTest
+    @EnumSource(ErfassungTeamStatusDTO.class)
+    void should_saveAbgeschlossen_when_whenWorkflowStatusIsSteAbgeschlossen(
+        ErfassungTeamStatusDTO teamStatusDTO) throws Exception {
+      val id = Instancio.create(TeamBezirkUndWahlID.class);
+
+      val requestBody =
+          Instancio.of(StimmzettelerfassungTeamStatusDTO.class)
+              .set(field(StimmzettelerfassungTeamStatusDTO::status), teamStatusDTO)
+              .create();
+
+      stimmzettelerfassungStatusRepository.save(
+          new StimmzettelerfassungStatus(
+              new BezirkUndWahlID(id.getWahlID(), id.getWahlbezirkID()),
+              ErfassungStatus.STE_ABGESCHLOSSEN));
+
+      val response =
+          mockMvc
+              .perform(
+                  createPostRequest(
+                      id.getWahlID(),
+                      id.getWahlbezirkID(),
+                      id.getTeamID(),
+                      id.getWahlbezirkID(),
+                      id.getTeamID(),
+                      requestBody))
+              .andExpect(status().isCreated())
+              .andReturn()
+              .getResponse();
+
+      val persistedTeamStatusEntity = teamstatusRepository.findById(id).orElse(null);
+
+      val responseBodyAsDTO =
+          objectMapper.readValue(
+              response.getContentAsString(), StimmzettelerfassungTeamStatusDTO.class);
+      Assertions.assertThat(responseBodyAsDTO.status())
+          .isEqualTo(ErfassungTeamStatusDTO.ABGESCHLOSSEN);
+
+      val expectedEntity =
+          Instancio.of(StimmzettelerfassungTeamStatus.class)
+              .set(field(StimmzettelerfassungTeamStatus::getId), id)
+              .set(
+                  field(StimmzettelerfassungTeamStatus::getStatus),
+                  ErfassungTeamStatus.ABGESCHLOSSEN)
+              .create();
+      Assertions.assertThat(persistedTeamStatusEntity).isEqualTo(expectedEntity);
     }
 
     private MockHttpServletRequestBuilder createPostRequest(

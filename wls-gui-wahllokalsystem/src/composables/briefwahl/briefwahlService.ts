@@ -1,5 +1,6 @@
 import type { BeanstandeteWahlbriefeCreateDTO } from "@/api/wls-clients/generated-briefwahl-api";
 import type { Wahlbriefdaten } from "@/types/briefwahl/Wahlbriefdaten";
+import type { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import {
@@ -82,14 +83,15 @@ export function useBriefwahlService() {
         };
 
         wahlenWithWvzNr.map((wahl) => {
+          const beanstandeteWahlbriefe = wahl.beanstandeteWahlbriefe;
           if (
-            wahl.beanstandeteWahlbriefe &&
-            wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
+            beanstandeteWahlbriefe &&
+            beanstandeteWahlbriefe.every(
+              (grund): grund is ZurueckweisungsgrundEnum => grund !== null
+            )
           ) {
             beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe[wahl.wahlID] =
-              wahl.beanstandeteWahlbriefe.map(
-                (grund) => grund?.toString() ?? ""
-              );
+              beanstandeteWahlbriefe;
           }
         });
 

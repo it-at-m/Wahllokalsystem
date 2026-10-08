@@ -23,11 +23,8 @@ describe("beanstandeteWahlbriefeMapper.ts", () => {
     it("should_returnModel_when_givenDto", () => {
       const wahlID1 = generateRandomString(6);
       const wahlID2 = generateRandomString(6);
-      const gruendeDTO = [
-        "ZUGELASSEN",
-        "UNTERSCHRIFT_FEHLT",
-        "KEIN_ORIGINAL_SCHEIN",
-      ];
+      const gruendeDTO: BeanstandeteWahlbriefeDTO["beanstandeteWahlbriefe"][string] =
+        ["ZUGELASSEN", "UNTERSCHRIFT_FEHLT", "KEIN_ORIGINAL_SCHEIN"];
       const gruendeModel = [
         ZurueckweisungsgrundEnum.Zugelassen,
         ZurueckweisungsgrundEnum.UnterschriftFehlt,

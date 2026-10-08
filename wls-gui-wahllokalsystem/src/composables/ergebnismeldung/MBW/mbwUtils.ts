@@ -214,15 +214,11 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   }
 
   async function getAusdruckNiederschrift(): Promise<string> {
-    try {
-      return await getAusdruck(
-        wahlbezirkID,
-        wahlID,
-        MeldungsArtEnum.Niederschrift
-      );
-    } catch {
-      throw new Error("Fehler beim Laden des Ausdrucks");
-    }
+    return await getAusdruck(
+      wahlbezirkID,
+      wahlID,
+      MeldungsArtEnum.Niederschrift
+    );
   }
 
   async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {

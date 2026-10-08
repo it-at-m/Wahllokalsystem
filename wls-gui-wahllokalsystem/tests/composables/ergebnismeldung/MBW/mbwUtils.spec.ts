@@ -859,7 +859,7 @@ describe("mbwUtils", () => {
 
       await expect(
         unitUnderTest.getAusdruckNiederschrift()
-      ).rejects.toThrowError(new Error("Fehler beim Laden des Ausdrucks"));
+      ).rejects.toThrowError(new Error("service failed"));
     });
   });
 });

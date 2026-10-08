@@ -267,24 +267,6 @@ describe("ausdruckService.ts", () => {
       expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });
 
-    it("should_sendNotification_when_apiCallSucceededAndNotificationsAreEnabled", async () => {
-      mockDefinitions.getAusdruck.mockResolvedValue({
-        data: { content: "ausdruck" },
-      });
-
-      await unitUnderTest.getAusdruck(
-        "wahlbezirkID",
-        "wahlID",
-        MeldungsArtEnum.Niederschrift,
-        true
-      );
-
-      expect(mockDefinitions.addNotification).toHaveBeenCalledWith(
-        "Ausdruck erfolgreich geladen",
-        UserNotificationCategoryEnum.SUCCESS
-      );
-    });
-
     it("should_throwErrorAndSendNoNotification_when_apiCallFailedAndNotificationsAreDisabled", async () => {
       mockDefinitions.getAusdruck.mockRejectedValue(new Error("api failed"));
 

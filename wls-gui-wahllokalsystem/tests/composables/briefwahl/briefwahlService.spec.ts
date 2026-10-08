@@ -20,24 +20,33 @@ const mockDefinitions = vi.hoisted(() => ({
   setBeanstandeteWahlbriefe: vi.fn(),
   getWahlbriefdaten: vi.fn(),
   postWahlbriefdaten: vi.fn(),
-  configurationConstructor: vi.fn(),
   mapDtoToModel: vi.fn(),
   toWahlbriefdatenModel: vi.fn(),
   toWahlbriefdatenWriteDTO: vi.fn(),
   addNotification: vi.fn(),
 }));
 
-vi.mock("@/api/wls-clients/generated-briefwahl-api", () => ({
-  BeanstandeteWahlbriefeControllerApi: class {
-    getBeanstandeteWahlbriefe = mockDefinitions.getBeanstandeteWahlbriefe;
-    setBeanstandeteWahlbriefe = mockDefinitions.setBeanstandeteWahlbriefe;
-  },
-  Configuration: mockDefinitions.configurationConstructor,
-  WahlbriefdatenControllerApi: class {
-    getWahlbriefdaten = mockDefinitions.getWahlbriefdaten;
-    postWahlbriefdaten = mockDefinitions.postWahlbriefdaten;
-  },
-}));
+vi.mock(
+  import("@/api/wls-clients/generated-briefwahl-api"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      ...mod,
+      BeanstandeteWahlbriefeControllerApi: class
+        extends mod.BeanstandeteWahlbriefeControllerApi
+      {
+        getBeanstandeteWahlbriefe = mockDefinitions.getBeanstandeteWahlbriefe;
+        setBeanstandeteWahlbriefe = mockDefinitions.setBeanstandeteWahlbriefe;
+      },
+      WahlbriefdatenControllerApi: class
+        extends mod.WahlbriefdatenControllerApi
+      {
+        getWahlbriefdaten = mockDefinitions.getWahlbriefdaten;
+        postWahlbriefdaten = mockDefinitions.postWahlbriefdaten;
+      },
+    };
+  }
+);
 vi.mock(
   import("@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts"),
   async (importOriginal) => {

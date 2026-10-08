@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-card-title class="d-flex align-center justify-space-between">
-        <span>Statusübersicht Stimmzettelerfassung</span>
+        <span>Statusübersicht Stimmzettelerfassung der Teams</span>
         <div class="d-flex flex-column align-start">
           <base-latest-load-div
             :last-loading-date="lastTeamstatusLoadingTime"

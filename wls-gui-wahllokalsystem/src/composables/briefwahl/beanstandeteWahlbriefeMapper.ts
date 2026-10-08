@@ -1,7 +1,36 @@
 import type { BeanstandeteWahlbriefeDTO } from "@/api/wls-clients/generated-briefwahl-api";
 import type { BeanstandeteWahlbriefe } from "@/types/briefwahl/BeanstandeteWahlbriefe.ts";
 
+import { BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum } from "@/api/wls-clients/generated-briefwahl-api";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
+
+const modelGrundToDtoGrund: Record<
+  ZurueckweisungsgrundEnum,
+  BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum
+> = {
+  [ZurueckweisungsgrundEnum.Zugelassen]:
+    BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.Zugelassen,
+  [ZurueckweisungsgrundEnum.ScheinUngueltig]:
+    BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.ScheinUngueltig,
+  [ZurueckweisungsgrundEnum.KeinOriginalSchein]:
+    BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.KeinOriginalSchein,
+  [ZurueckweisungsgrundEnum.UnterschriftFehlt]:
+    BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.UnterschriftFehlt,
+  [ZurueckweisungsgrundEnum.UmschlagFehlt]:
+    BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.UmschlagFehlt,
+  [ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen]:
+    BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.WahlbriefUndUmschlagOffen,
+  [ZurueckweisungsgrundEnum.ScheineUngleichUmschlaege]:
+    BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.ScheineUngleichUmschlaege,
+  [ZurueckweisungsgrundEnum.UmschlagNichtAmtlich]:
+    BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.UmschlagNichtAmtlich,
+  [ZurueckweisungsgrundEnum.UmschlagGefaehrdetWahlgeheimnis]:
+    BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.UmschlagGefaehrdetWahlgeheimnis,
+  [ZurueckweisungsgrundEnum.GegenstandImUmschlag]:
+    BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.GegenstandImUmschlag,
+  [ZurueckweisungsgrundEnum.NichtWahlberechtigt]:
+    BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.NichtWahlberechtigt,
+};
 
 export function useBeanstandeteWahlbriefeMapper() {
   function toModel(
@@ -85,6 +114,12 @@ export function useBeanstandeteWahlbriefeMapper() {
     }
   }
 
+  function zurueckweisungsgrundEnumToCreateDtoEnum(
+    grund: ZurueckweisungsgrundEnum
+  ): BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum {
+    return modelGrundToDtoGrund[grund];
+  }
+
   function _getEnumValue(value: string): ZurueckweisungsgrundEnum {
     switch (value) {
       case "ZUGELASSEN":
@@ -118,5 +153,6 @@ export function useBeanstandeteWahlbriefeMapper() {
     toModel,
     zurueckweisungsgrundStringToEnumValue,
     zurueckweisungsgrundEnumToDisplayString,
+    zurueckweisungsgrundEnumToCreateDtoEnum,
   };
 }

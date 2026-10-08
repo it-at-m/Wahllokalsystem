@@ -18,90 +18,25 @@ import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction, replaceWithSerializableTypeIfNeeded } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- * 
- * @export
- * @interface BroadcastMessageDTO
- */
 export interface BroadcastMessageDTO {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof BroadcastMessageDTO
-     */
     'wahlbezirkIDs': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof BroadcastMessageDTO
-     */
     'nachricht': string;
 }
-/**
- * 
- * @export
- * @interface MessageDTO
- */
 export interface MessageDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof MessageDTO
-     */
     'oid': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MessageDTO
-     */
     'wahlbezirkID': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MessageDTO
-     */
     'nachricht': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MessageDTO
-     */
     'empfangsZeit': string;
 }
-/**
- * 
- * @export
- * @interface WlsExceptionDTO
- */
 export interface WlsExceptionDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'category': WlsExceptionDTOCategoryEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'code': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'service': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'message': string;
 }
 
@@ -109,7 +44,7 @@ export const WlsExceptionDTOCategoryEnum = {
     F: 'F',
     T: 'T',
     S: 'S',
-    I: 'I'
+    I: 'I',
 } as const;
 
 export type WlsExceptionDTOCategoryEnum = typeof WlsExceptionDTOCategoryEnum[keyof typeof WlsExceptionDTOCategoryEnum];
@@ -117,7 +52,6 @@ export type WlsExceptionDTOCategoryEnum = typeof WlsExceptionDTOCategoryEnum[key
 
 /**
  * BroadcastControllerApi - axios parameter creator
- * @export
  */
 export const BroadcastControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -147,9 +81,8 @@ export const BroadcastControllerApiAxiosParamCreator = function (configuration?:
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -172,7 +105,7 @@ export const BroadcastControllerApiAxiosParamCreator = function (configuration?:
             // verify required parameter 'nachrichtID' is not null or undefined
             assertParamExists('deleteMessage', 'nachrichtID', nachrichtID)
             const localVarPath = `/businessActions/messageRead/{nachrichtID}`
-                .replace(`{${"nachrichtID"}}`, encodeURIComponent(String(nachrichtID)));
+                .replace('{nachrichtID}', encodeURIComponent(String(nachrichtID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -188,8 +121,8 @@ export const BroadcastControllerApiAxiosParamCreator = function (configuration?:
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -210,7 +143,7 @@ export const BroadcastControllerApiAxiosParamCreator = function (configuration?:
             // verify required parameter 'wahlbezirkID' is not null or undefined
             assertParamExists('getMessage', 'wahlbezirkID', wahlbezirkID)
             const localVarPath = `/businessActions/getMessage/{wahlbezirkID}`
-                .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)));
+                .replace('{wahlbezirkID}', encodeURIComponent(String(wahlbezirkID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -226,8 +159,8 @@ export const BroadcastControllerApiAxiosParamCreator = function (configuration?:
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -242,7 +175,6 @@ export const BroadcastControllerApiAxiosParamCreator = function (configuration?:
 
 /**
  * BroadcastControllerApi - functional programming interface
- * @export
  */
 export const BroadcastControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = BroadcastControllerApiAxiosParamCreator(configuration)
@@ -291,7 +223,6 @@ export const BroadcastControllerApiFp = function(configuration?: Configuration) 
 
 /**
  * BroadcastControllerApi - factory interface
- * @export
  */
 export const BroadcastControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = BroadcastControllerApiFp(configuration)
@@ -331,9 +262,6 @@ export const BroadcastControllerApiFactory = function (configuration?: Configura
 
 /**
  * BroadcastControllerApi - object-oriented interface
- * @export
- * @class BroadcastControllerApi
- * @extends {BaseAPI}
  */
 export class BroadcastControllerApi extends BaseAPI {
     /**
@@ -342,7 +270,6 @@ export class BroadcastControllerApi extends BaseAPI {
      * @param {BroadcastMessageDTO} broadcastMessageDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BroadcastControllerApi
      */
     public broadcast(broadcastMessageDTO: BroadcastMessageDTO, options?: RawAxiosRequestConfig) {
         return BroadcastControllerApiFp(this.configuration).broadcast(broadcastMessageDTO, options).then((request) => request(this.axios, this.basePath));
@@ -354,7 +281,6 @@ export class BroadcastControllerApi extends BaseAPI {
      * @param {string} nachrichtID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BroadcastControllerApi
      */
     public deleteMessage(nachrichtID: string, options?: RawAxiosRequestConfig) {
         return BroadcastControllerApiFp(this.configuration).deleteMessage(nachrichtID, options).then((request) => request(this.axios, this.basePath));
@@ -366,7 +292,6 @@ export class BroadcastControllerApi extends BaseAPI {
      * @param {string} wahlbezirkID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof BroadcastControllerApi
      */
     public getMessage(wahlbezirkID: string, options?: RawAxiosRequestConfig) {
         return BroadcastControllerApiFp(this.configuration).getMessage(wahlbezirkID, options).then((request) => request(this.axios, this.basePath));

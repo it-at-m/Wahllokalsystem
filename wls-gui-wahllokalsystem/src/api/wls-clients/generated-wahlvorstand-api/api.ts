@@ -18,96 +18,26 @@ import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction, replaceWithSerializableTypeIfNeeded } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- * 
- * @export
- * @interface WahlvorstandDTO
- */
 export interface WahlvorstandDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorstandDTO
-     */
     'wahlbezirkID': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorstandDTO
-     */
     'anwesenheitBeginn'?: string;
-    /**
-     * 
-     * @type {Array<WahlvorstandsmitgliedDTO>}
-     * @memberof WahlvorstandDTO
-     */
     'wahlvorstandsmitglieder': Array<WahlvorstandsmitgliedDTO>;
 }
-/**
- * 
- * @export
- * @interface WahlvorstandWriteDTO
- */
 export interface WahlvorstandWriteDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorstandWriteDTO
-     */
     'anwesenheitBeginn'?: string;
-    /**
-     * 
-     * @type {Array<WahlvorstandsmitgliedDTO>}
-     * @memberof WahlvorstandWriteDTO
-     */
     'wahlvorstandsmitglieder'?: Array<WahlvorstandsmitgliedDTO>;
 }
-/**
- * 
- * @export
- * @interface WahlvorstandsmitgliedDTO
- */
 export interface WahlvorstandsmitgliedDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorstandsmitgliedDTO
-     */
     'identifikator': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorstandsmitgliedDTO
-     */
     'familienname': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorstandsmitgliedDTO
-     */
     'vorname': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorstandsmitgliedDTO
-     */
     'funktion': WahlvorstandsmitgliedDTOFunktionEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorstandsmitgliedDTO
-     */
     'funktionsname'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof WahlvorstandsmitgliedDTO
-     */
     'anwesend': boolean;
 }
 
@@ -116,40 +46,15 @@ export const WahlvorstandsmitgliedDTOFunktionEnum = {
     Sb: 'SB',
     Swb: 'SWB',
     Ssb: 'SSB',
-    B: 'B'
+    B: 'B',
 } as const;
 
 export type WahlvorstandsmitgliedDTOFunktionEnum = typeof WahlvorstandsmitgliedDTOFunktionEnum[keyof typeof WahlvorstandsmitgliedDTOFunktionEnum];
 
-/**
- * 
- * @export
- * @interface WlsExceptionDTO
- */
 export interface WlsExceptionDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'category': WlsExceptionDTOCategoryEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'code': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'service': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'message': string;
 }
 
@@ -157,7 +62,7 @@ export const WlsExceptionDTOCategoryEnum = {
     F: 'F',
     T: 'T',
     S: 'S',
-    I: 'I'
+    I: 'I',
 } as const;
 
 export type WlsExceptionDTOCategoryEnum = typeof WlsExceptionDTOCategoryEnum[keyof typeof WlsExceptionDTOCategoryEnum];
@@ -165,7 +70,6 @@ export type WlsExceptionDTOCategoryEnum = typeof WlsExceptionDTOCategoryEnum[key
 
 /**
  * WahlvorstandControllerApi - axios parameter creator
- * @export
  */
 export const WahlvorstandControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -180,7 +84,7 @@ export const WahlvorstandControllerApiAxiosParamCreator = function (configuratio
             // verify required parameter 'wahlbezirkID' is not null or undefined
             assertParamExists('getWahlvorstand', 'wahlbezirkID', wahlbezirkID)
             const localVarPath = `/businessActions/wahlvorstand/{wahlbezirkID}`
-                .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)));
+                .replace('{wahlbezirkID}', encodeURIComponent(String(wahlbezirkID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -196,12 +100,12 @@ export const WahlvorstandControllerApiAxiosParamCreator = function (configuratio
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             if (forceupdate != null) {
                 localVarHeaderParameter['forceupdate'] = typeof forceupdate === 'string'
                     ? forceupdate
-                    : JSON.stringify(forceupdate);
+                    : JSON.stringify(forceupdate, replaceWithSerializableTypeIfNeeded);
             }
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -225,7 +129,7 @@ export const WahlvorstandControllerApiAxiosParamCreator = function (configuratio
             // verify required parameter 'wahlvorstandWriteDTO' is not null or undefined
             assertParamExists('postWahlvorstand', 'wahlvorstandWriteDTO', wahlvorstandWriteDTO)
             const localVarPath = `/businessActions/wahlvorstand/{wahlbezirkID}`
-                .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)));
+                .replace('{wahlbezirkID}', encodeURIComponent(String(wahlbezirkID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -241,9 +145,8 @@ export const WahlvorstandControllerApiAxiosParamCreator = function (configuratio
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -260,7 +163,6 @@ export const WahlvorstandControllerApiAxiosParamCreator = function (configuratio
 
 /**
  * WahlvorstandControllerApi - functional programming interface
- * @export
  */
 export const WahlvorstandControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = WahlvorstandControllerApiAxiosParamCreator(configuration)
@@ -296,7 +198,6 @@ export const WahlvorstandControllerApiFp = function(configuration?: Configuratio
 
 /**
  * WahlvorstandControllerApi - factory interface
- * @export
  */
 export const WahlvorstandControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = WahlvorstandControllerApiFp(configuration)
@@ -326,9 +227,6 @@ export const WahlvorstandControllerApiFactory = function (configuration?: Config
 
 /**
  * WahlvorstandControllerApi - object-oriented interface
- * @export
- * @class WahlvorstandControllerApi
- * @extends {BaseAPI}
  */
 export class WahlvorstandControllerApi extends BaseAPI {
     /**
@@ -337,7 +235,6 @@ export class WahlvorstandControllerApi extends BaseAPI {
      * @param {boolean} [forceupdate] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WahlvorstandControllerApi
      */
     public getWahlvorstand(wahlbezirkID: string, forceupdate?: boolean, options?: RawAxiosRequestConfig) {
         return WahlvorstandControllerApiFp(this.configuration).getWahlvorstand(wahlbezirkID, forceupdate, options).then((request) => request(this.axios, this.basePath));
@@ -349,7 +246,6 @@ export class WahlvorstandControllerApi extends BaseAPI {
      * @param {WahlvorstandWriteDTO} wahlvorstandWriteDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WahlvorstandControllerApi
      */
     public postWahlvorstand(wahlbezirkID: string, wahlvorstandWriteDTO: WahlvorstandWriteDTO, options?: RawAxiosRequestConfig) {
         return WahlvorstandControllerApiFp(this.configuration).postWahlvorstand(wahlbezirkID, wahlvorstandWriteDTO, options).then((request) => request(this.axios, this.basePath));

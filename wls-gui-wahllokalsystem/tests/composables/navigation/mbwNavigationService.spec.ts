@@ -175,6 +175,7 @@ describe("mbwNavigationService.ts", () => {
         enabledSteps: [
           MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
           MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
+          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
         ],
         expectedRoute: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
       },

@@ -6,7 +6,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useAppUtils } from "@/composables/appUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -46,8 +48,16 @@ describe("appUtils.ts", () => {
   let unitUnderTest: ReturnType<typeof useAppUtils>;
 
   const { generateRandomString } = useCommonTestDataFactory();
-  const { createStimmzettelerfassungTeamStatusDTOData } =
-    useStimmzettelerfassungTeamStatusTestDataFactory();
+  const {
+    createStimmzettelerfassungTeamStatusDTOData,
+    prepareStimmzettelerfassungTeamStatus,
+  } = useStimmzettelerfassungTeamStatusTestDataFactory();
+
+  const teamStatusValueThatAreNotAbgeschlossen = Object.values(
+    StimmzettelerfassungTeamStatusEnum
+  ).filter(
+    (status) => status !== StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+  );
 
   const wahlMedata = {
     wahlbezirkID: generateRandomString(10),
@@ -80,6 +90,11 @@ describe("appUtils.ts", () => {
       currentUserTeamName.value = teamName;
 
       mockDefinitions.loadErfassungTeamStatus.mockReturnValue(null);
+      mockDefinitions.postErfassungTeamStatus.mockReturnValue(
+        prepareStimmzettelerfassungTeamStatus()
+          .status(StimmzettelerfassungTeamStatusEnum.REGISTRIERT)
+          .build()
+      );
 
       await unitUnderTest.initStimmzettelerfassungTeamStatus();
 
@@ -97,6 +112,98 @@ describe("appUtils.ts", () => {
       ]);
       expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });
+
+    it("should_setStepMbDseSteErfassungDone_when_teamStatusLoadedIsAbgeschlossen", async () => {
+      const { currentUserWahlMetadata, currentUserTeamName } =
+        storeToRefs(useUserStore());
+      // @ts-expect-error: cannot set readonly
+      currentUserWahlMetadata.value = [wahlMedata];
+      // @ts-expect-error: cannot set readonly
+      currentUserTeamName.value = teamName;
+
+      mockDefinitions.loadErfassungTeamStatus.mockReturnValue(
+        prepareStimmzettelerfassungTeamStatus()
+          .status(StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN)
+          .build()
+      );
+
+      await unitUnderTest.initStimmzettelerfassungTeamStatus();
+
+      expect(useWorkflowStore().setStepDone).toHaveBeenCalledExactlyOnceWith(
+        wahlMedata.wahlID,
+        wahlMedata.wahlbezirkID,
+        MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
+      );
+    });
+
+    it.each(teamStatusValueThatAreNotAbgeschlossen)(
+      "should_notSetStepMbDseSteErfassungDone_when_teamStatusLoadedIs'%s'",
+      async (notAbgeschlossenStatus) => {
+        const { currentUserWahlMetadata, currentUserTeamName } =
+          storeToRefs(useUserStore());
+        // @ts-expect-error: cannot set readonly
+        currentUserWahlMetadata.value = [wahlMedata];
+        // @ts-expect-error: cannot set readonly
+        currentUserTeamName.value = teamName;
+
+        mockDefinitions.loadErfassungTeamStatus.mockReturnValue(
+          prepareStimmzettelerfassungTeamStatus()
+            .status(notAbgeschlossenStatus)
+            .build()
+        );
+
+        await unitUnderTest.initStimmzettelerfassungTeamStatus();
+
+        expect(useWorkflowStore().setStepDone).not.toHaveBeenCalled();
+      }
+    );
+
+    it("should_setStepMbDseSteErfassungDone_when_teamStatusAfterSavingIsAbgeschlossen", async () => {
+      const { currentUserWahlMetadata, currentUserTeamName } =
+        storeToRefs(useUserStore());
+      // @ts-expect-error: cannot set readonly
+      currentUserWahlMetadata.value = [wahlMedata];
+      // @ts-expect-error: cannot set readonly
+      currentUserTeamName.value = teamName;
+
+      mockDefinitions.loadErfassungTeamStatus.mockReturnValue(null);
+      mockDefinitions.postErfassungTeamStatus.mockReturnValue(
+        prepareStimmzettelerfassungTeamStatus()
+          .status(StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN)
+          .build()
+      );
+
+      await unitUnderTest.initStimmzettelerfassungTeamStatus();
+
+      expect(useWorkflowStore().setStepDone).toHaveBeenCalledExactlyOnceWith(
+        wahlMedata.wahlID,
+        wahlMedata.wahlbezirkID,
+        MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
+      );
+    });
+
+    it.each(teamStatusValueThatAreNotAbgeschlossen)(
+      "should_notSetStepMbDseSteErfassungDone_when_teamStatusAfterSavingIs'%s'",
+      async (notAbgeschlossenStatus) => {
+        const { currentUserWahlMetadata, currentUserTeamName } =
+          storeToRefs(useUserStore());
+        // @ts-expect-error: cannot set readonly
+        currentUserWahlMetadata.value = [wahlMedata];
+        // @ts-expect-error: cannot set readonly
+        currentUserTeamName.value = teamName;
+
+        mockDefinitions.loadErfassungTeamStatus.mockReturnValue(null);
+        mockDefinitions.postErfassungTeamStatus.mockReturnValue(
+          prepareStimmzettelerfassungTeamStatus()
+            .status(notAbgeschlossenStatus)
+            .build()
+        );
+
+        await unitUnderTest.initStimmzettelerfassungTeamStatus();
+
+        expect(useWorkflowStore().setStepDone).not.toHaveBeenCalled();
+      }
+    );
 
     it("should_notPostTeamStatus_when_loadedStatusIsPressent", async () => {
       const { currentUserWahlMetadata, currentUserTeamName } =
@@ -127,6 +234,11 @@ describe("appUtils.ts", () => {
       currentUserTeamName.value = teamName;
 
       mockDefinitions.loadErfassungTeamStatus.mockReturnValue(null);
+      mockDefinitions.postErfassungTeamStatus.mockReturnValue(
+        prepareStimmzettelerfassungTeamStatus()
+          .status(StimmzettelerfassungTeamStatusEnum.REGISTRIERT)
+          .build()
+      );
 
       await unitUnderTest.initStimmzettelerfassungTeamStatus();
 

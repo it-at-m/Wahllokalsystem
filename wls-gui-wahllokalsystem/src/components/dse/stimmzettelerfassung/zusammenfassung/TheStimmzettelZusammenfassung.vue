@@ -55,7 +55,10 @@ import { useMbwStimmzettelFilterService } from "@/composables/dse/mbwStimmzettel
 import { useStimmzettelZusammenfassungUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelZusammenfassungUtils.ts";
 import { useMbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
+import {
+  isStimmzettelUngueltig,
+  StimmzettelGueltigkeitEnum,
+} from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 const route = useRoute();
@@ -90,12 +93,8 @@ const { wahlvorschlaegeWithKandidatenErgebnissen } =
 
 const ungueltigeStimmen = computed(
   () =>
-    props.stimmzettelListe.filter(
-      (stimmzettel) =>
-        stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Invalid ||
-        stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Leer ||
-        stimmzettel.gueltigkeit ===
-          StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag
+    props.stimmzettelListe.filter((stimmzettel) =>
+      isStimmzettelUngueltig(stimmzettel.gueltigkeit)
     ).length
 );
 </script>

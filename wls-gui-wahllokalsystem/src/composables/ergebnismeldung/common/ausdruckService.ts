@@ -50,5 +50,32 @@ export function useAusdruckService() {
     }
   }
 
-  return { postAusdruck };
+  async function getAusdruck(
+    wahlbezirkID: string,
+    wahlID: string,
+    meldungsart: MeldungsartEnum,
+    sendNotification = false
+  ): Promise<string> {
+    try {
+      const response = await ausdruckControllerApi.getAusdruck(
+        wahlID,
+        wahlbezirkID,
+        meldungsartEnumToDto(meldungsart)
+      );
+      return response.data.content ?? "";
+    } catch {
+      if (sendNotification) {
+        addNotification(
+          `Fehler beim Laden des Ausdrucks der ${meldungsart}`,
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw new Error(`Get ausdruck failed`);
+    }
+  }
+
+  return {
+    postAusdruck,
+    getAusdruck,
+  };
 }

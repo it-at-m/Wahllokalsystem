@@ -343,7 +343,7 @@ function onResetClicked() {
 }
 
 function onLeerenClicked() {
-  stimmzettelManager.startNewStimmzettel();
+  stimmzettelManager.startWithClearedStimmzettel();
   void focusCommandProcessingTextField();
 }
 </script>

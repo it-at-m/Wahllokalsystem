@@ -5,6 +5,7 @@ export const SystemBeschlussgrundReasonEnum = {
   EinzelneStimmenUngueltig: "EINZELNE_STIMMEN_UNGUELTIG",
   ZuVieleEinzelstimmenOderListenkreuze:
     "ZU_VIELE_EINZELSTIMMEN_ODER_LISTENKREUZE",
+  KeineGueltigenStimmen: "KEINE_GUELTIGEN_STIMMEN_VERGEBEN",
 } as const;
 export type SystemBeschlussgrundReasonEnum =
   (typeof SystemBeschlussgrundReasonEnum)[keyof typeof SystemBeschlussgrundReasonEnum];

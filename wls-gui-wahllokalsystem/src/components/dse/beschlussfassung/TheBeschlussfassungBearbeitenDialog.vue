@@ -1,6 +1,7 @@
 <template>
   <v-dialog
     v-model="isDialogVisibleModel"
+    scrollable
     persistent
     fullscreen
   >
@@ -23,36 +24,38 @@
           class="mr-2"
         />
       </v-tabs>
-      <v-tabs-window
-        v-model="tab"
-        class="beschlussfassung-tabs-window flex-grow-1"
-      >
-        <v-tabs-window-item value="one">
-          <the-beschluss-fassen-tab
-            v-model:beschluss-details="beschlussDetails"
-            v-model:abstimmungsergebnis="abstimmungsergebnis"
-            :stimmzettel-gueltigkeit-aus-beschluss="
-              stimmzettelGueltigkeitAusBeschluss
-            "
-            :is-beschluss-gefasst="isBeschlussGefasst"
-          />
-        </v-tabs-window-item>
-        <v-tabs-window-item
-          value="two"
-          class="h-100"
-          eager
+      <v-card-text class="h-auto overflow-y-auto pa-0">
+        <v-tabs-window
+          v-model="tab"
+          class="beschlussfassung-tabs-window flex-grow-1"
         >
-          <v-card class="d-flex flex-column h-100">
-            <base-stimmzettel-erfassung-card-content
-              v-if="stimmzettelForBeschlussfassung"
-              v-model="stimmzettelManager"
-              :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
-              :wahlvorschlaege="wahlvorschlaege"
-              :stimmzettel="stimmzettelForBeschlussfassung"
+          <v-tabs-window-item value="one">
+            <the-beschluss-fassen-tab
+              v-model:beschluss-details="beschlussDetails"
+              v-model:abstimmungsergebnis="abstimmungsergebnis"
+              :stimmzettel-gueltigkeit-aus-beschluss="
+                stimmzettelGueltigkeitAusBeschluss
+              "
+              :is-beschluss-gefasst="isBeschlussGefasst"
             />
-          </v-card>
-        </v-tabs-window-item>
-      </v-tabs-window>
+          </v-tabs-window-item>
+          <v-tabs-window-item
+            value="two"
+            class="h-100"
+            eager
+          >
+            <v-card class="d-flex flex-column h-100">
+              <base-stimmzettel-erfassung-card-content
+                v-if="stimmzettelForBeschlussfassung"
+                v-model="stimmzettelManager"
+                :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
+                :wahlvorschlaege="wahlvorschlaege"
+                :stimmzettel="stimmzettelForBeschlussfassung"
+              />
+            </v-card>
+          </v-tabs-window-item>
+        </v-tabs-window>
+      </v-card-text>
       <v-card-actions>
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
         <base-wls-button-save

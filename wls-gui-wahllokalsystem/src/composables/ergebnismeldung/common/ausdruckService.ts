@@ -68,7 +68,7 @@ export function useAusdruckService() {
           UserNotificationCategoryEnum.SUCCESS
         );
       }
-      return response.data;
+      return response.data.content ?? "";
     } catch {
       if (sendNotification) {
         addNotification(

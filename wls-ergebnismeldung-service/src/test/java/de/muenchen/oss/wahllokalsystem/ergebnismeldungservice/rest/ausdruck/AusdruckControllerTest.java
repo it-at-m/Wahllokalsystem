@@ -10,6 +10,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.D
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.WahlUndBezirkIDUndDokumentartModel;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -38,7 +39,7 @@ class AusdruckControllerTest {
   class GetAusdruck {
 
     @Test
-    void should_returnTextWithHttpStatusOk_when_serviceReturnsData() {
+    void should_returnDTOWithHttpStatusOk_when_serviceReturnsData() {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
       val dokumentartModel = DokumentartModel.V1;
@@ -59,10 +60,10 @@ class AusdruckControllerTest {
 
       val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, dokumentartDTO);
 
-      Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO.content());
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-      Assertions.assertThat(result.getHeaders().get(HttpHeaders.CONTENT_TYPE).get(0))
-          .isEqualTo("text/html; charset=utf-8");
+      Assertions.assertThat(Objects.requireNonNull(result.getHeaders().get(HttpHeaders.CONTENT_TYPE)).getFirst())
+          .isEqualTo("application/json");
     }
 
     @Test

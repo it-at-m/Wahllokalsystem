@@ -686,7 +686,7 @@ export const AusdruckControllerApiAxiosParamCreator = function (configuration?: 
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-            localVarHeaderParameter['Accept'] = 'text/html; charset=utf-8,application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -777,7 +777,7 @@ export const AusdruckControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAusdruck(wahlID: string, wahlbezirkID: string, dokumentart: GetAusdruckDokumentartEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+        async getAusdruck(wahlID: string, wahlbezirkID: string, dokumentart: GetAusdruckDokumentartEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AusdruckReadDTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAusdruck(wahlID, wahlbezirkID, dokumentart, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AusdruckControllerApi.getAusdruck']?.[localVarOperationServerIndex]?.url;
@@ -825,7 +825,7 @@ export const AusdruckControllerApiFactory = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAusdruck(wahlID: string, wahlbezirkID: string, dokumentart: GetAusdruckDokumentartEnum, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+        getAusdruck(wahlID: string, wahlbezirkID: string, dokumentart: GetAusdruckDokumentartEnum, options?: RawAxiosRequestConfig): AxiosPromise<AusdruckReadDTO> {
             return localVarFp.getAusdruck(wahlID, wahlbezirkID, dokumentart, options).then((request) => request(axios, basePath));
         },
         /**

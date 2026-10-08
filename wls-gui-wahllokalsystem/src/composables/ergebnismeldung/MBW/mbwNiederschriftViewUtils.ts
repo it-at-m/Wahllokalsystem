@@ -152,16 +152,12 @@ export function useMbwNiederschriftViewUtils(
         "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
       );
 
-      if (!printWindow) {
-        throw new Error(
-          "Popup-Blocker verhindert das Öffnen des Druckfensters."
-        );
+      if (printWindow) {
+        printWindow.document.writeln(pdfText);
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
       }
-
-      printWindow.document.writeln(pdfText);
-      printWindow.document.close();
-      printWindow.print();
-      printWindow.close();
 
       if (!niederschriftAlreadyDone) {
         await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);

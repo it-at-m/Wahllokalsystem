@@ -1,4 +1,7 @@
-import type { AusdruckWriteDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type {
+  AusdruckReadDTO,
+  AusdruckWriteDTO,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import {
@@ -12,6 +15,7 @@ import {
 } from "vitest";
 
 import {
+  AusdruckReadDTODokumentartEnum,
   GetAusdruckDokumentartEnum,
   PostAusdruckDokumentartEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
@@ -237,7 +241,16 @@ describe("ausdruckService.ts", () => {
       mockDefinitions.mapMeldungsartEnumToDto.mockReturnValue(
         GetAusdruckDokumentartEnum.V1
       );
-      mockDefinitions.getAusdruck.mockResolvedValue({ data: ausdruck });
+      const mockedReadAusdruckDTO: AusdruckReadDTO = {
+        wahlbezirkID,
+        wahlID,
+        dokumentart: AusdruckReadDTODokumentartEnum.V1,
+        content: ausdruck,
+        erstelltAm: new Date().toISOString(),
+      };
+      mockDefinitions.getAusdruck.mockResolvedValue({
+        data: mockedReadAusdruckDTO,
+      });
 
       const result = await unitUnderTest.getAusdruck(
         wahlbezirkID,
@@ -255,7 +268,9 @@ describe("ausdruckService.ts", () => {
     });
 
     it("should_sendNotification_when_apiCallSucceededAndNotificationsAreEnabled", async () => {
-      mockDefinitions.getAusdruck.mockResolvedValue({ data: "ausdruck" });
+      mockDefinitions.getAusdruck.mockResolvedValue({
+        data: { content: "ausdruck" },
+      });
 
       await unitUnderTest.getAusdruck(
         "wahlbezirkID",
@@ -279,7 +294,7 @@ describe("ausdruckService.ts", () => {
           "wahlID",
           MeldungsArtEnum.Niederschrift
         )
-      ).rejects.toThrowError(new Error("Get ausdruck failed"));
+      ).rejects.toThrow(new Error("Get ausdruck failed"));
 
       expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });

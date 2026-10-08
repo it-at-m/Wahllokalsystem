@@ -2,6 +2,7 @@ import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 import type { Router } from "vue-router";
 
+import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
@@ -187,7 +188,7 @@ describe("mbwNiederschriftViewUtils", () => {
       wahlbezirkID,
       router
     );
-    await Promise.resolve();
+    await flushPromises();
     await Promise.resolve();
     return unitUnderTest;
   }

@@ -7,3 +7,17 @@ export const StimmzettelGueltigkeitEnum = {
 } as const;
 export type StimmzettelGueltigkeitEnum =
   (typeof StimmzettelGueltigkeitEnum)[keyof typeof StimmzettelGueltigkeitEnum];
+
+const stimmzettelUngueltigkeit: Record<StimmzettelGueltigkeitEnum, boolean> = {
+  [StimmzettelGueltigkeitEnum.Valid]: false,
+  [StimmzettelGueltigkeitEnum.Invalid]: true,
+  [StimmzettelGueltigkeitEnum.BeschlussAusstehend]: false,
+  [StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag]: true,
+  [StimmzettelGueltigkeitEnum.Leer]: true,
+};
+
+export function isStimmzettelUngueltig(
+  gueltigkeit: StimmzettelGueltigkeitEnum
+) {
+  return stimmzettelUngueltigkeit[gueltigkeit];
+}

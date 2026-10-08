@@ -316,6 +316,27 @@ describe("kandidatTools.ts", () => {
     );
   });
 
+  describe("getTotalEinzelAndUngueltigeStimmen", () => {
+    it.each([
+      [0, null, 0],
+      [0, null, null],
+      [2, 0, 2],
+      [5, 4, 1],
+    ])(
+      "should_return'%d'_when_einzelstimmenIs'%d'AndUngueltigeStimmenIs'%d'",
+      (expectedResult, einzelstimmen, ungueltigeStimmen) => {
+        const kandidat = prepareDseKandidat()
+          .einzelstimmen(einzelstimmen)
+          .ungueltigeStimmen(ungueltigeStimmen)
+          .build();
+
+        expect(
+          unitUnderTest.getTotalEinzelAndUngueltigeStimmen(kandidat)
+        ).toStrictEqual(expectedResult);
+      }
+    );
+  });
+
   describe("getTotalEinzelstimmenOfKandidatenWithSameId", () => {
     it("should_returnTotalOfKandidatenEinzelstimmenWithSameId_when_wahlvorschlagContainsDifferentKandidaten", () => {
       const wahlvorschlag = createDseWahlvorschlag();

@@ -105,7 +105,7 @@ describe("bearbeitenDialogStimmzettelKandidatUtils.ts", () => {
   });
 
   describe("getKandidatToRemoveVotesByOrdnungszahl", () => {
-    it("should_returnKandidatWithEinzelstimmen_when_called", () => {
+    it("should_returnKandidatWithEinzelstimmen_when_kandidatWithEinzelstimmenOrUngueltigenStimmenExists", () => {
       const kWithVotes = prepareDseKandidat()
         .ordnungszahl(101)
         .nennung(2)
@@ -136,7 +136,7 @@ describe("bearbeitenDialogStimmzettelKandidatUtils.ts", () => {
       );
     });
 
-    it("should_returnKandidatWithUngueltigeStimmen_when_noEinzelstimmenPresent", () => {
+    it("should_returnKandidatWithUngueltigenStimmen_when_kandidatWithEinzelstimmenOrUngueltigenStimmenExists", () => {
       const kWithInvalid = prepareDseKandidat()
         .ordnungszahl(101)
         .nennung(1)
@@ -167,7 +167,7 @@ describe("bearbeitenDialogStimmzettelKandidatUtils.ts", () => {
       );
     });
 
-    it("should_returnFirstKandidatByNennung_when_noVotesOrInvalidVotesPresent", () => {
+    it("should_returnFirstKandidatByNennung_when_noKandidatWithEinzelstimmenOrUngueltigenStimmenExists", () => {
       const kNennung3 = prepareDseKandidat()
         .ordnungszahl(101)
         .nennung(3)

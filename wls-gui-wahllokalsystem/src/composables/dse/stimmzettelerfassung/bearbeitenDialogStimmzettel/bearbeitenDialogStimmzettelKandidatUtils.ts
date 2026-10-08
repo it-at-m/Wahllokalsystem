@@ -4,6 +4,11 @@ import type { Ref } from "vue";
 
 import { computed } from "vue";
 
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
+
+const { getTotalEinzelAndUngueltigeStimmen, getUngueltigeStimmenOrZero } =
+  useKandidatTools();
+
 export function useBearbeitenDialogStimmzettelKandidatUtils(
   stimmzettel: Ref<DseStimmzettel>
 ) {
@@ -98,9 +103,7 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
 
     const kandidatWithEinzelstimmenOrUngueltigeStimmen =
       kandidatenSortedByNennung.find(
-        (kandidat) =>
-          (kandidat.einzelstimmen ?? 0) > 0 ||
-          (kandidat.ungueltigeStimmen ?? 0) > 0
+        (kandidat) => getTotalEinzelAndUngueltigeStimmen(kandidat) > 0
       );
     if (kandidatWithEinzelstimmenOrUngueltigeStimmen) {
       return kandidatWithEinzelstimmenOrUngueltigeStimmen;
@@ -117,7 +120,7 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
     );
 
     const kandidatWithUngueltigeStimmen = kandidatenSortedByNennung.find(
-      (kandidat) => (kandidat.ungueltigeStimmen ?? 0) > 0
+      (kandidat) => getUngueltigeStimmenOrZero(kandidat) > 0
     );
     if (kandidatWithUngueltigeStimmen) {
       return kandidatWithUngueltigeStimmen;

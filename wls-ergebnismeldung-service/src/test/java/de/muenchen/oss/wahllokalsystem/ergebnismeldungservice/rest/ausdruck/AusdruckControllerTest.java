@@ -62,7 +62,8 @@ class AusdruckControllerTest {
 
       Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-      Assertions.assertThat(Objects.requireNonNull(result.getHeaders().get(HttpHeaders.CONTENT_TYPE)).getFirst())
+      Assertions.assertThat(
+              Objects.requireNonNull(result.getHeaders().get(HttpHeaders.CONTENT_TYPE)).getFirst())
           .isEqualTo("application/json");
     }
 

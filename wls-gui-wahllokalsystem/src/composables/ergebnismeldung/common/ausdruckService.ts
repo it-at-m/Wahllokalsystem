@@ -62,12 +62,6 @@ export function useAusdruckService() {
         wahlbezirkID,
         meldungsartEnumToDto(meldungsart)
       );
-      if (sendNotification) {
-        addNotification(
-          "Ausdruck erfolgreich geladen",
-          UserNotificationCategoryEnum.SUCCESS
-        );
-      }
       return response.data.content ?? "";
     } catch {
       if (sendNotification) {

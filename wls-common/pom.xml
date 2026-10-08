@@ -30,6 +30,7 @@
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
+        <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
         <wls.github.url>https://github.com/it-at-m/Wahllokalsystem</wls.github.url>
         <wls.github.scm.connection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</wls.github.scm.connection>
     </properties>
@@ -44,6 +45,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${logstash-logback-encoder.version}</version>
+            </dependency>
             <dependency>
                 <!-- Import dependency management from Spring Boot -->
                 <groupId>org.springframework.boot</groupId>
@@ -91,7 +97,6 @@
                             <autoPublish>true</autoPublish>
                             <deploymentName>${project.groupId}:${project.version}</deploymentName>
                             <excludeArtifacts>
-                                <artifact>monitoring</artifact>
                             </excludeArtifacts>
                         </configuration>
                     </plugin>

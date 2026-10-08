@@ -113,8 +113,7 @@ describe("stimmzettelManager.ts", () => {
       const { parseCommandOrThrowError } = useStimmzettelManager(
         computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1",
-        "team A"
+        "wahl-1"
       );
 
       parseCommandOrThrowError(command);
@@ -145,8 +144,7 @@ describe("stimmzettelManager.ts", () => {
       const { parseCommandOrThrowError } = useStimmzettelManager(
         computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1",
-        "team A"
+        "wahl-1"
       );
 
       expect(() => parseCommandOrThrowError(command)).toThrow(
@@ -169,8 +167,7 @@ describe("stimmzettelManager.ts", () => {
       const { parseCommandOrThrowError } = useStimmzettelManager(
         computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1",
-        "team A"
+        "wahl-1"
       );
 
       expect(() => parseCommandOrThrowError(command)).toThrow(
@@ -188,8 +185,7 @@ describe("stimmzettelManager.ts", () => {
       const unitUnderTest = useStimmzettelManager(
         computed(() => 1),
         [dummyWahlvorschlag],
-        "wahl-1",
-        "team A"
+        "wahl-1"
       );
 
       const stimmzettelBeforeStartNewOne =
@@ -202,7 +198,7 @@ describe("stimmzettelManager.ts", () => {
         unitUnderTest.bearbeitenDialogStimmzettelUtils.stimmzettel.value
       ).not.toBeNull();
 
-      unitUnderTest.startNewStimmzettel();
+      unitUnderTest.startNewStimmzettel("team A");
 
       expect(unitUnderTest.stimmzettelBeforeEdit.value).toBeNull();
       expect(
@@ -243,8 +239,7 @@ describe("stimmzettelManager.ts", () => {
       } = useStimmzettelManager(
         computed(() => stimmzettelKennung),
         wahlvorschlaege,
-        "wahl-1",
-        teamID
+        "wahl-1"
       );
 
       const managedBefore = bearbeitenDialogStimmzettelUtils.stimmzettel.value;
@@ -371,8 +366,7 @@ describe("stimmzettelManager.ts", () => {
       } = useStimmzettelManager(
         computed(() => stimmzettelKennung),
         wahlvorschlaege,
-        wahlID,
-        teamID
+        wahlID
       );
 
       expect(stimmzettelBeforeEdit.value).toBeNull();
@@ -398,8 +392,7 @@ describe("stimmzettelManager.ts", () => {
       } = useStimmzettelManager(
         computed(() => stimmzettelKennung),
         wahlvorschlaege,
-        wahlID,
-        teamID
+        wahlID
       );
 
       expect(stimmzettelBeforeEdit.value).toBeNull();
@@ -418,8 +411,7 @@ describe("stimmzettelManager.ts", () => {
         useStimmzettelManager(
           computed(() => stimmzettelKennung),
           wahlvorschlaege,
-          wahlID,
-          teamID
+          wahlID
         );
 
       expect(stimmzettelBeforeEdit.value).toBeNull();
@@ -432,8 +424,7 @@ describe("stimmzettelManager.ts", () => {
         useStimmzettelManager(
           computed(() => stimmzettelKennung),
           wahlvorschlaege,
-          wahlID,
-          teamID
+          wahlID
         );
 
       expect(stimmzettelBeforeEdit.value).toBeNull();

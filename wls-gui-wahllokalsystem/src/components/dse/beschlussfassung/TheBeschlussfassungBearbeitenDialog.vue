@@ -73,7 +73,6 @@
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
-import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
@@ -84,7 +83,6 @@ import BaseStimmzettelErfassungCardContent from "@/components/dse/stimmzettelerf
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useTheBeschlussfassungBearbeitenDialogUtils } from "@/composables/dse/beschlussfassung/theBeschlussfassungBearbeitenDialogUtils.ts";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
@@ -102,13 +100,11 @@ const props = defineProps<{
 
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
-const { currentUserTeamName } = storeToRefs(useUserStore());
 
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
   computed(() => stimmzettelKennung.value),
   props.wahlvorschlaege,
-  wahlID,
-  currentUserTeamName.value
+  wahlID
 );
 
 const emit = defineEmits<{

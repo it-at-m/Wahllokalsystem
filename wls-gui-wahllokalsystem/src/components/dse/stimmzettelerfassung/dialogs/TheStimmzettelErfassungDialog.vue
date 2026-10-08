@@ -91,8 +91,7 @@ const { currentUserTeamName } = storeToRefs(useUserStore());
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
   computed(() => properties.stimmzettel.stimmzettelkennung),
   properties.wahlvorschlaege,
-  wahlID,
-  currentUserTeamName.value
+  wahlID
 );
 
 const emit = defineEmits<{
@@ -210,7 +209,7 @@ function onSavedClickedAndClose() {
 
 function onSavedClickedAndNext() {
   emit("confirmNext", stimmzettelManager.getStimmzettelSnapshot());
-  stimmzettelManager.startNewStimmzettel();
+  stimmzettelManager.startNewStimmzettel(currentUserTeamName.value);
   void focusCommandProcessingTextField();
 }
 

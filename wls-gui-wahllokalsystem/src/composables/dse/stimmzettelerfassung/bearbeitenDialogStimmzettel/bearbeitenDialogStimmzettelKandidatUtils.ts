@@ -29,6 +29,14 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
       : _findKandidatToRemoveEinzelstimme(kandidatenWithOrdnungszahl);
   }
 
+  function getKandidatToRemoveInvalidVotesByOrdnungszahl(ordnungszahl: number) {
+    const kandidatenWithOrdnungszahl =
+      _getKandidatenByOrdnungszahl(ordnungszahl);
+    return kandidatenWithOrdnungszahl.length === 0
+      ? undefined
+      : _findKandidatToRemoveInvalidVotes(kandidatenWithOrdnungszahl);
+  }
+
   function getKandidatToAddVotesForRangeByOrdnungszahl(ordnungszahl: number) {
     const kandidatenWithOrdnungszahl =
       _getKandidatenByOrdnungszahl(ordnungszahl);
@@ -101,6 +109,23 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
     return kandidatenSortedByNennung[0];
   }
 
+  function _findKandidatToRemoveInvalidVotes(
+    kandidatenForListenPosition: DseKandidat[]
+  ) {
+    const kandidatenSortedByNennung = [...kandidatenForListenPosition].sort(
+      (kandidat1, kandidat2) => kandidat1.nennung - kandidat2.nennung
+    );
+
+    const kandidatWithUngueltigeStimmen = kandidatenSortedByNennung.find(
+      (kandidat) => (kandidat.ungueltigeStimmen ?? 0) > 0
+    );
+    if (kandidatWithUngueltigeStimmen) {
+      return kandidatWithUngueltigeStimmen;
+    }
+
+    return kandidatenSortedByNennung[0];
+  }
+
   function _findKandidatToAddStreichung(
     kandidatenForListenPosition: DseKandidat[]
   ) {
@@ -134,6 +159,7 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
     kandidatenOfStimmzettel,
     getKandidatToAddVotesByOrdnungszahl,
     getKandidatToRemoveVotesByOrdnungszahl,
+    getKandidatToRemoveInvalidVotesByOrdnungszahl,
     getKandidatToAddVotesForRangeByOrdnungszahl,
     getKandidatForStreichungByOrdnungszahl,
     getKandidatToRemoveStreichungByOrdnungszahl,

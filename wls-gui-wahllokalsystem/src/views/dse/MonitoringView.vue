@@ -108,7 +108,7 @@ import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringV
 import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
-import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const minWidth = "220px";
 const beschlussfassungStartenDialogVisible = ref(false);
@@ -144,7 +144,7 @@ const abgeschlossenNumberOfTeams = computed(() => {
 
 async function onBeschlussfassungContinueClicked() {
   await router.push({
-    name: DseStepsEnum.DSE_BESCHLUSSFASSUNG,
+    name: MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
     params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
   });
 }

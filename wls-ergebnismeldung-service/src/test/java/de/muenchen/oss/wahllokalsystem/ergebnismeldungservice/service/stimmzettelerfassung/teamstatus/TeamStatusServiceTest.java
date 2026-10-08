@@ -1,5 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.teamstatus;
 
+import static org.instancio.Select.field;
+
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.ErfassungTeamStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.teamstatus.StimmzettelerfassungTeamStatusRepository;
@@ -57,10 +59,24 @@ class TeamStatusServiceTest {
     void should_triggerRegisterStimmzettelerfassungBearbeitung_when_teamStatusIsInBearbeitung() {
       val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
       val statusToSave = ErfassungTeamStatusModel.IN_BEARBEITUNG;
-      val entityToSave = Instancio.create(StimmzettelerfassungTeamStatus.class);
+      val entityToSave =
+          Instancio.of(StimmzettelerfassungTeamStatus.class)
+              .set(
+                  field(StimmzettelerfassungTeamStatus::getStatus),
+                  ErfassungTeamStatus.IN_BEARBEITUNG)
+              .create();
 
       Mockito.when(erfassungTeamStatusModelMapper.toEntity(id, statusToSave))
           .thenReturn(entityToSave);
+
+      val mockedBezirkUndWahlID = new BezirkUndWahlID(id.wahlID(), id.wahlbezirkID());
+      Mockito.when(erfassungTeamStatusModelMapper.toBezirkUndWahlID(id))
+          .thenReturn(mockedBezirkUndWahlID);
+
+      Mockito.when(
+              stimmzettelerfassungService.isStimmzettelerfassungAbgeschlossen(
+                  mockedBezirkUndWahlID))
+          .thenReturn(false);
 
       unitUnderTest.saveTeamStatus(id, statusToSave);
 
@@ -69,7 +85,40 @@ class TeamStatusServiceTest {
       Mockito.verify(erfassungTeamStatusModelMapper).toEntity(id, statusToSave);
       Mockito.verify(stimmzettelerfassungTeamStatusRepository).save(entityToSave);
       Mockito.verify(stimmzettelerfassungService)
-          .registerStimmzettelerfassungStart(new BezirkUndWahlID(id.wahlID(), id.wahlbezirkID()));
+          .registerStimmzettelerfassungStart(mockedBezirkUndWahlID);
+    }
+
+    @Test
+    void
+        should_notTriggerRegisterStimmzettelerfassung_when_teamStatusIsInBearbeitungButErfassungIsAbgeschlossen() {
+      val id = Instancio.create(TeamBezirkUndWahlIDModel.class);
+      val statusToSave = ErfassungTeamStatusModel.IN_BEARBEITUNG;
+      val entityToSave =
+          Instancio.of(StimmzettelerfassungTeamStatus.class)
+              .set(
+                  field(StimmzettelerfassungTeamStatus::getStatus),
+                  ErfassungTeamStatus.ABGESCHLOSSEN)
+              .create();
+
+      Mockito.when(
+              erfassungTeamStatusModelMapper.toEntity(id, ErfassungTeamStatusModel.ABGESCHLOSSEN))
+          .thenReturn(entityToSave);
+
+      val mockedBezirkUndWahlID = new BezirkUndWahlID(id.wahlID(), id.wahlbezirkID());
+      Mockito.when(erfassungTeamStatusModelMapper.toBezirkUndWahlID(id))
+          .thenReturn(mockedBezirkUndWahlID);
+
+      Mockito.when(
+              stimmzettelerfassungService.isStimmzettelerfassungAbgeschlossen(
+                  new BezirkUndWahlID(id.wahlID(), id.wahlbezirkID())))
+          .thenReturn(true);
+
+      unitUnderTest.saveTeamStatus(id, statusToSave);
+
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(statusToSave);
+      Mockito.verify(stimmzettelerfassungTeamStatusRepository).save(entityToSave);
+      Mockito.verifyNoMoreInteractions(stimmzettelerfassungService);
     }
 
     @Test
@@ -231,11 +280,25 @@ class TeamStatusServiceTest {
       val wahlbezirkID = "wahlbezirkID";
       val teamID = "teamID";
       val id = new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID);
-      val entityToSave = Instancio.create(StimmzettelerfassungTeamStatus.class);
+      val entityToSave =
+          Instancio.of(StimmzettelerfassungTeamStatus.class)
+              .set(
+                  field(StimmzettelerfassungTeamStatus::getStatus),
+                  ErfassungTeamStatus.IN_BEARBEITUNG)
+              .create();
 
       Mockito.when(
               erfassungTeamStatusModelMapper.toEntity(id, ErfassungTeamStatusModel.IN_BEARBEITUNG))
           .thenReturn(entityToSave);
+
+      val mockedBezirkUndWahlID = new BezirkUndWahlID(id.wahlID(), id.wahlbezirkID());
+      Mockito.when(erfassungTeamStatusModelMapper.toBezirkUndWahlID(id))
+          .thenReturn(mockedBezirkUndWahlID);
+
+      Mockito.when(
+              stimmzettelerfassungService.isStimmzettelerfassungAbgeschlossen(
+                  new BezirkUndWahlID(id.wahlID(), id.wahlbezirkID())))
+          .thenReturn(false);
 
       unitUnderTest.reopenStimmzettelerfassung(wahlID, wahlbezirkID, teamID);
 
@@ -265,9 +328,11 @@ class TeamStatusServiceTest {
           .isEqualTo(mockedWlsException);
 
       Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
+      Mockito.verify(stimmzettelerfassungService)
+          .registerStimmzettelerfassungStart(new BezirkUndWahlID(wahlID, wahlbezirkID));
+
       Mockito.verifyNoInteractions(erfassungTeamStatusModelMapper);
       Mockito.verifyNoInteractions(stimmzettelerfassungTeamStatusRepository);
-      Mockito.verifyNoInteractions(stimmzettelerfassungService);
     }
 
     @Test
@@ -291,9 +356,11 @@ class TeamStatusServiceTest {
       Mockito.verify(erfassungTeamStatusValidator).isValidOrThrow(id);
       Mockito.verify(erfassungTeamStatusValidator)
           .isValidOrThrow(ErfassungTeamStatusModel.IN_BEARBEITUNG);
+      Mockito.verify(stimmzettelerfassungService)
+          .registerStimmzettelerfassungStart(new BezirkUndWahlID(wahlID, wahlbezirkID));
+
       Mockito.verifyNoInteractions(erfassungTeamStatusModelMapper);
       Mockito.verifyNoInteractions(stimmzettelerfassungTeamStatusRepository);
-      Mockito.verifyNoInteractions(stimmzettelerfassungService);
     }
   }
 }

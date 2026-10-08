@@ -18,7 +18,8 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { toModel } = useBeanstandeteWahlbriefeMapper();
+const { toModel, zurueckweisungsgrundEnumToCreateDtoEnum } =
+  useBeanstandeteWahlbriefeMapper();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 const { addNotification } = useUserNotificationService();
 
@@ -91,7 +92,9 @@ export function useBriefwahlService() {
             )
           ) {
             beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe[wahl.wahlID] =
-              beanstandeteWahlbriefe;
+              beanstandeteWahlbriefe.map(
+                zurueckweisungsgrundEnumToCreateDtoEnum
+              );
           }
         });
 

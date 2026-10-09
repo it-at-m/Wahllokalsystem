@@ -40,6 +40,8 @@ export function useBearbeitenDialogStimmzettelUtils(
   const {
     kandidatenOfStimmzettel,
     getKandidatToAddVotesByOrdnungszahl,
+    getKandidatToRemoveVotesByOrdnungszahl,
+    getKandidatToRemoveInvalidVotesByOrdnungszahl,
     getKandidatToAddVotesForRangeByOrdnungszahl,
     getKandidatForStreichungByOrdnungszahl,
     getKandidatToRemoveStreichungByOrdnungszahl,
@@ -101,11 +103,32 @@ export function useBearbeitenDialogStimmzettelUtils(
       (kandidat) => (kandidat.einzelstimmen ?? 0) > maxEinzelstimmen
     )
   );
-  const hasSystemErrorAnyKandidatWithInvalidVotes = computed(() =>
+
+  const hasAnyValidVotes = computed(() =>
     kandidatenWithValues.value.some(
-      (kandidat) => (kandidat.ungueltigeStimmen ?? 0) > 0
+      (kandidat) =>
+        (kandidat.einzelstimmen ?? 0) > 0 || (kandidat.reststimmen ?? 0) > 0
     )
   );
+
+  const hasAnyInvalidVotes = computed(
+    () =>
+      kandidatenWithValues.value.some(
+        (kandidat) => (kandidat.ungueltigeStimmen ?? 0) > 0
+      ) || (stimmzettel.value.invalideVotes ?? 0) > 0
+  );
+
+  const hasAnyStreichung = computed(() =>
+    kandidatenWithValues.value.some((kandidat) => kandidat.durchgestrichen)
+  );
+
+  const hasSystemErrorNoValidVotes = computed(() => {
+    if (hasAnyValidVotes.value) return false;
+    else if (hasAnyInvalidVotes.value) return true;
+    else if (hasAnyStreichung.value) return true;
+
+    return false;
+  });
 
   watchEffect(() => {
     _updateSystemBeschlussgruendeBasedOnDetectedErrors();
@@ -193,7 +216,7 @@ export function useBearbeitenDialogStimmzettelUtils(
       votesToRemove,
       "Die Anzahl der zu entfernenden Stimmen muss eine ganze Zahl größer 0 sein."
     );
-    const kandidat = getKandidatToAddVotesByOrdnungszahl(ordnungszahl);
+    const kandidat = getKandidatToRemoveVotesByOrdnungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(
         `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
@@ -241,7 +264,8 @@ export function useBearbeitenDialogStimmzettelUtils(
       invalidVotesToRemove,
       "Die Anzahl der zu entfernenden ungültigen Stimmen muss eine ganze Zahl größer 0 sein."
     );
-    const kandidat = getKandidatToAddVotesByOrdnungszahl(ordnungszahl);
+    const kandidat =
+      getKandidatToRemoveInvalidVotesByOrdnungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(
         `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
@@ -472,10 +496,7 @@ export function useBearbeitenDialogStimmzettelUtils(
   function _updateSystemBeschlussgruendeBasedOnDetectedErrors() {
     const systemBeschlussgruende: SystemBeschlussgrund[] = [];
 
-    if (
-      hasSystemErrorAnyKandidatWithInvalidVotes.value ||
-      (stimmzettel.value.invalideVotes ?? 0) > 0
-    ) {
+    if (hasAnyInvalidVotes.value) {
       systemBeschlussgruende.push({
         reason: SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
       });
@@ -504,14 +525,18 @@ export function useBearbeitenDialogStimmzettelUtils(
       });
     }
 
+    if (hasSystemErrorNoValidVotes.value) {
+      systemBeschlussgruende.push({
+        reason: SystemBeschlussgrundReasonEnum.KeineGueltigenStimmen,
+      });
+    }
+
     stimmzettel.value.systemBeschlussvorschlag = systemBeschlussgruende;
   }
 
   return {
     changeHistory,
     hasAnyValuesSet,
-    hasSystemErrorAtLeastOneKandidatWithToManyEinzelstimmen,
-    hasSystemErrorAnyKandidatWithInvalidVotes,
     resetStimmzettelAndHistory,
     kandidatAddEinzelstimmenOrThrow,
     kandidatRemoveEinzelstimmenOrThrow,

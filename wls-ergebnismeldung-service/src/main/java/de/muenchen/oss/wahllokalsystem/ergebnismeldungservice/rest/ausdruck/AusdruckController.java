@@ -45,7 +45,7 @@ public class AusdruckController {
             description = "Es existiert ein Ausdruck",
             content = {
               @Content(
-                  mediaType = "text/html; charset=utf-8",
+                  mediaType = "application/json",
                   schema = @Schema(implementation = AusdruckReadDTO.class))
             }),
         @ApiResponse(
@@ -54,7 +54,7 @@ public class AusdruckController {
             content = {@Content()})
       })
   @GetMapping("{wahlID}/{wahlbezirkID}/{dokumentart}/html")
-  public ResponseEntity<String> getAusdruck(
+  public ResponseEntity<AusdruckReadDTO> getAusdruck(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("dokumentart") final DokumentartDTO dokumentartDTO) {
@@ -68,8 +68,8 @@ public class AusdruckController {
     } else {
       val result = ausdruckDTOMapper.toDTO(ausdruckReadModel.get());
       val responseHeaders = new HttpHeaders();
-      responseHeaders.add(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
-      return new ResponseEntity<>(result.content(), responseHeaders, HttpStatus.OK);
+      responseHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
+      return new ResponseEntity<>(result, responseHeaders, HttpStatus.OK);
     }
   }
 

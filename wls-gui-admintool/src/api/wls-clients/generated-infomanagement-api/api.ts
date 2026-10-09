@@ -18,174 +18,49 @@ import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction, replaceWithSerializableTypeIfNeeded } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- * 
- * @export
- * @interface KennbuchstabenDTO
- */
 export interface KennbuchstabenDTO {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof KennbuchstabenDTO
-     */
     'kennbuchstaben'?: Array<string>;
 }
-/**
- * 
- * @export
- * @interface KennbuchstabenListeDTO
- */
 export interface KennbuchstabenListeDTO {
-    /**
-     * 
-     * @type {Array<KennbuchstabenDTO>}
-     * @memberof KennbuchstabenListeDTO
-     */
     'kennbuchstabenListe'?: Array<KennbuchstabenDTO>;
 }
-/**
- * 
- * @export
- * @interface KennbuchstabenListenDTO
- */
 export interface KennbuchstabenListenDTO {
-    /**
-     * 
-     * @type {Array<KennbuchstabenListeDTO>}
-     * @memberof KennbuchstabenListenDTO
-     */
     'kennbuchstabenListen'?: Array<KennbuchstabenListeDTO>;
 }
-/**
- * 
- * @export
- * @interface KonfigurationDTO
- */
 export interface KonfigurationDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof KonfigurationDTO
-     */
     'schluessel': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KonfigurationDTO
-     */
     'wert'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KonfigurationDTO
-     */
     'beschreibung'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KonfigurationDTO
-     */
     'standardwert'?: string;
 }
-/**
- * 
- * @export
- * @interface KonfigurationSetDTO
- */
 export interface KonfigurationSetDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof KonfigurationSetDTO
-     */
     'wert'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KonfigurationSetDTO
-     */
     'beschreibung'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KonfigurationSetDTO
-     */
     'standardwert'?: string;
 }
-/**
- * 
- * @export
- * @interface KonfigurierterWahltagDTO
- */
 export interface KonfigurierterWahltagDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof KonfigurierterWahltagDTO
-     */
     'wahltag': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KonfigurierterWahltagDTO
-     */
     'wahltagID': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KonfigurierterWahltagDTO
-     */
     'wahltagStatus': KonfigurierterWahltagDTOWahltagStatusEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof KonfigurierterWahltagDTO
-     */
     'nummer': string;
 }
 
 export const KonfigurierterWahltagDTOWahltagStatusEnum = {
     Aktiv: 'AKTIV',
-    Inaktiv: 'INAKTIV'
+    Inaktiv: 'INAKTIV',
 } as const;
 
 export type KonfigurierterWahltagDTOWahltagStatusEnum = typeof KonfigurierterWahltagDTOWahltagStatusEnum[keyof typeof KonfigurierterWahltagDTOWahltagStatusEnum];
 
-/**
- * 
- * @export
- * @interface WlsExceptionDTO
- */
 export interface WlsExceptionDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'category': WlsExceptionDTOCategoryEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'code': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'service': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'message': string;
 }
 
@@ -193,7 +68,7 @@ export const WlsExceptionDTOCategoryEnum = {
     F: 'F',
     T: 'T',
     S: 'S',
-    I: 'I'
+    I: 'I',
 } as const;
 
 export type WlsExceptionDTOCategoryEnum = typeof WlsExceptionDTOCategoryEnum[keyof typeof WlsExceptionDTOCategoryEnum];
@@ -201,7 +76,6 @@ export type WlsExceptionDTOCategoryEnum = typeof WlsExceptionDTOCategoryEnum[key
 
 /**
  * KonfigurationControllerApi - axios parameter creator
- * @export
  */
 export const KonfigurationControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -227,8 +101,8 @@ export const KonfigurationControllerApiAxiosParamCreator = function (configurati
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -248,7 +122,7 @@ export const KonfigurationControllerApiAxiosParamCreator = function (configurati
             // verify required parameter 'key' is not null or undefined
             assertParamExists('getKonfiguration', 'key', key)
             const localVarPath = `/businessActions/konfiguration/{key}`
-                .replace(`{${"key"}}`, encodeURIComponent(String(key)));
+                .replace('{key}', encodeURIComponent(String(key)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -264,8 +138,8 @@ export const KonfigurationControllerApiAxiosParamCreator = function (configurati
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -285,7 +159,7 @@ export const KonfigurationControllerApiAxiosParamCreator = function (configurati
             // verify required parameter 'key' is not null or undefined
             assertParamExists('getKonfigurationUnauthorized', 'key', key)
             const localVarPath = `/businessActions/konfigurationUnauthorized/{key}`
-                .replace(`{${"key"}}`, encodeURIComponent(String(key)));
+                .replace('{key}', encodeURIComponent(String(key)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -301,8 +175,8 @@ export const KonfigurationControllerApiAxiosParamCreator = function (configurati
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -334,8 +208,8 @@ export const KonfigurationControllerApiAxiosParamCreator = function (configurati
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -358,7 +232,7 @@ export const KonfigurationControllerApiAxiosParamCreator = function (configurati
             // verify required parameter 'konfigurationSetDTO' is not null or undefined
             assertParamExists('postKonfiguration', 'konfigurationSetDTO', konfigurationSetDTO)
             const localVarPath = `/businessActions/konfiguration/{key}`
-                .replace(`{${"key"}}`, encodeURIComponent(String(key)));
+                .replace('{key}', encodeURIComponent(String(key)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -374,9 +248,8 @@ export const KonfigurationControllerApiAxiosParamCreator = function (configurati
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -393,7 +266,6 @@ export const KonfigurationControllerApiAxiosParamCreator = function (configurati
 
 /**
  * KonfigurationControllerApi - functional programming interface
- * @export
  */
 export const KonfigurationControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = KonfigurationControllerApiAxiosParamCreator(configuration)
@@ -462,7 +334,6 @@ export const KonfigurationControllerApiFp = function(configuration?: Configurati
 
 /**
  * KonfigurationControllerApi - factory interface
- * @export
  */
 export const KonfigurationControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = KonfigurationControllerApiFp(configuration)
@@ -516,16 +387,12 @@ export const KonfigurationControllerApiFactory = function (configuration?: Confi
 
 /**
  * KonfigurationControllerApi - object-oriented interface
- * @export
- * @class KonfigurationControllerApi
- * @extends {BaseAPI}
  */
 export class KonfigurationControllerApi extends BaseAPI {
     /**
      * Gibt die Objekt mit einer Liste aller Kennbuchstaben zurück.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KonfigurationControllerApi
      */
     public getKennbuchstabenListen(options?: RawAxiosRequestConfig) {
         return KonfigurationControllerApiFp(this.configuration).getKennbuchstabenListen(options).then((request) => request(this.axios, this.basePath));
@@ -536,7 +403,6 @@ export class KonfigurationControllerApi extends BaseAPI {
      * @param {GetKonfigurationKeyEnum} key 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KonfigurationControllerApi
      */
     public getKonfiguration(key: GetKonfigurationKeyEnum, options?: RawAxiosRequestConfig) {
         return KonfigurationControllerApiFp(this.configuration).getKonfiguration(key, options).then((request) => request(this.axios, this.basePath));
@@ -547,7 +413,6 @@ export class KonfigurationControllerApi extends BaseAPI {
      * @param {GetKonfigurationUnauthorizedKeyEnum} key 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KonfigurationControllerApi
      */
     public getKonfigurationUnauthorized(key: GetKonfigurationUnauthorizedKeyEnum, options?: RawAxiosRequestConfig) {
         return KonfigurationControllerApiFp(this.configuration).getKonfigurationUnauthorized(key, options).then((request) => request(this.axios, this.basePath));
@@ -557,7 +422,6 @@ export class KonfigurationControllerApi extends BaseAPI {
      * Gibt alle Konfigurationen zurück.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KonfigurationControllerApi
      */
     public getKonfigurations(options?: RawAxiosRequestConfig) {
         return KonfigurationControllerApiFp(this.configuration).getKonfigurations(options).then((request) => request(this.axios, this.basePath));
@@ -569,16 +433,12 @@ export class KonfigurationControllerApi extends BaseAPI {
      * @param {KonfigurationSetDTO} konfigurationSetDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KonfigurationControllerApi
      */
     public postKonfiguration(key: PostKonfigurationKeyEnum, konfigurationSetDTO: KonfigurationSetDTO, options?: RawAxiosRequestConfig) {
         return KonfigurationControllerApiFp(this.configuration).postKonfiguration(key, konfigurationSetDTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
-/**
- * @export
- */
 export const GetKonfigurationKeyEnum = {
     WlkTimeOut: 'WLK_TIME_OUT',
     Willkommenstext: 'WILLKOMMENSTEXT',
@@ -598,12 +458,9 @@ export const GetKonfigurationKeyEnum = {
     Kennbuchstaben: 'KENNBUCHSTABEN',
     FruehesteEroeffnungszeit: 'FRUEHESTE_EROEFFNUNGSZEIT',
     SpaetesteEroeffnungszeit: 'SPAETESTE_EROEFFNUNGSZEIT',
-    FruehesteSchliessungszeit: 'FRUEHESTE_SCHLIESSUNGSZEIT'
+    FruehesteSchliessungszeit: 'FRUEHESTE_SCHLIESSUNGSZEIT',
 } as const;
 export type GetKonfigurationKeyEnum = typeof GetKonfigurationKeyEnum[keyof typeof GetKonfigurationKeyEnum];
-/**
- * @export
- */
 export const GetKonfigurationUnauthorizedKeyEnum = {
     WlkTimeOut: 'WLK_TIME_OUT',
     Willkommenstext: 'WILLKOMMENSTEXT',
@@ -623,12 +480,9 @@ export const GetKonfigurationUnauthorizedKeyEnum = {
     Kennbuchstaben: 'KENNBUCHSTABEN',
     FruehesteEroeffnungszeit: 'FRUEHESTE_EROEFFNUNGSZEIT',
     SpaetesteEroeffnungszeit: 'SPAETESTE_EROEFFNUNGSZEIT',
-    FruehesteSchliessungszeit: 'FRUEHESTE_SCHLIESSUNGSZEIT'
+    FruehesteSchliessungszeit: 'FRUEHESTE_SCHLIESSUNGSZEIT',
 } as const;
 export type GetKonfigurationUnauthorizedKeyEnum = typeof GetKonfigurationUnauthorizedKeyEnum[keyof typeof GetKonfigurationUnauthorizedKeyEnum];
-/**
- * @export
- */
 export const PostKonfigurationKeyEnum = {
     WlkTimeOut: 'WLK_TIME_OUT',
     Willkommenstext: 'WILLKOMMENSTEXT',
@@ -648,14 +502,13 @@ export const PostKonfigurationKeyEnum = {
     Kennbuchstaben: 'KENNBUCHSTABEN',
     FruehesteEroeffnungszeit: 'FRUEHESTE_EROEFFNUNGSZEIT',
     SpaetesteEroeffnungszeit: 'SPAETESTE_EROEFFNUNGSZEIT',
-    FruehesteSchliessungszeit: 'FRUEHESTE_SCHLIESSUNGSZEIT'
+    FruehesteSchliessungszeit: 'FRUEHESTE_SCHLIESSUNGSZEIT',
 } as const;
 export type PostKonfigurationKeyEnum = typeof PostKonfigurationKeyEnum[keyof typeof PostKonfigurationKeyEnum];
 
 
 /**
  * KonfigurierterWahltagControllerApi - axios parameter creator
- * @export
  */
 export const KonfigurierterWahltagControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -669,7 +522,7 @@ export const KonfigurierterWahltagControllerApiAxiosParamCreator = function (con
             // verify required parameter 'wahltagID' is not null or undefined
             assertParamExists('deleteKonfigurierterWahltag', 'wahltagID', wahltagID)
             const localVarPath = `/businessActions/konfigurierterWahltag/{wahltagID}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -685,8 +538,8 @@ export const KonfigurierterWahltagControllerApiAxiosParamCreator = function (con
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -718,8 +571,8 @@ export const KonfigurierterWahltagControllerApiAxiosParamCreator = function (con
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -751,8 +604,8 @@ export const KonfigurierterWahltagControllerApiAxiosParamCreator = function (con
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -772,7 +625,7 @@ export const KonfigurierterWahltagControllerApiAxiosParamCreator = function (con
             // verify required parameter 'wahltagID' is not null or undefined
             assertParamExists('isWahltagActive', 'wahltagID', wahltagID)
             const localVarPath = `/businessActions/loginCheck/{wahltagID}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -788,8 +641,8 @@ export const KonfigurierterWahltagControllerApiAxiosParamCreator = function (con
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -824,9 +677,8 @@ export const KonfigurierterWahltagControllerApiAxiosParamCreator = function (con
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -843,7 +695,6 @@ export const KonfigurierterWahltagControllerApiAxiosParamCreator = function (con
 
 /**
  * KonfigurierterWahltagControllerApi - functional programming interface
- * @export
  */
 export const KonfigurierterWahltagControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = KonfigurierterWahltagControllerApiAxiosParamCreator(configuration)
@@ -911,7 +762,6 @@ export const KonfigurierterWahltagControllerApiFp = function(configuration?: Con
 
 /**
  * KonfigurierterWahltagControllerApi - factory interface
- * @export
  */
 export const KonfigurierterWahltagControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = KonfigurierterWahltagControllerApiFp(configuration)
@@ -964,9 +814,6 @@ export const KonfigurierterWahltagControllerApiFactory = function (configuration
 
 /**
  * KonfigurierterWahltagControllerApi - object-oriented interface
- * @export
- * @class KonfigurierterWahltagControllerApi
- * @extends {BaseAPI}
  */
 export class KonfigurierterWahltagControllerApi extends BaseAPI {
     /**
@@ -974,7 +821,6 @@ export class KonfigurierterWahltagControllerApi extends BaseAPI {
      * @param {string} wahltagID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KonfigurierterWahltagControllerApi
      */
     public deleteKonfigurierterWahltag(wahltagID: string, options?: RawAxiosRequestConfig) {
         return KonfigurierterWahltagControllerApiFp(this.configuration).deleteKonfigurierterWahltag(wahltagID, options).then((request) => request(this.axios, this.basePath));
@@ -984,7 +830,6 @@ export class KonfigurierterWahltagControllerApi extends BaseAPI {
      * Sucht alle Konfigurierten Wahltage.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KonfigurierterWahltagControllerApi
      */
     public getKonfigurierteWahltage(options?: RawAxiosRequestConfig) {
         return KonfigurierterWahltagControllerApiFp(this.configuration).getKonfigurierteWahltage(options).then((request) => request(this.axios, this.basePath));
@@ -994,7 +839,6 @@ export class KonfigurierterWahltagControllerApi extends BaseAPI {
      * Sucht den Konfigurierten Wahltag.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KonfigurierterWahltagControllerApi
      */
     public getKonfigurierterWahltag(options?: RawAxiosRequestConfig) {
         return KonfigurierterWahltagControllerApiFp(this.configuration).getKonfigurierterWahltag(options).then((request) => request(this.axios, this.basePath));
@@ -1005,7 +849,6 @@ export class KonfigurierterWahltagControllerApi extends BaseAPI {
      * @param {string} wahltagID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KonfigurierterWahltagControllerApi
      */
     public isWahltagActive(wahltagID: string, options?: RawAxiosRequestConfig) {
         return KonfigurierterWahltagControllerApiFp(this.configuration).isWahltagActive(wahltagID, options).then((request) => request(this.axios, this.basePath));
@@ -1016,7 +859,6 @@ export class KonfigurierterWahltagControllerApi extends BaseAPI {
      * @param {KonfigurierterWahltagDTO} konfigurierterWahltagDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KonfigurierterWahltagControllerApi
      */
     public setKonfigurierterWahltag(konfigurierterWahltagDTO: KonfigurierterWahltagDTO, options?: RawAxiosRequestConfig) {
         return KonfigurierterWahltagControllerApiFp(this.configuration).setKonfigurierterWahltag(konfigurierterWahltagDTO, options).then((request) => request(this.axios, this.basePath));

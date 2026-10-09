@@ -116,19 +116,21 @@ export function useStimmzettelerfassungTeamStatusService() {
     const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
     try {
       isSaving.value = true;
-      await stimmzettelerfassungTeamStatusControllerApi.saveStimmzettelerfassungTeamStatus(
-        wahlID,
-        wahlbezirkID,
-        teamID,
-        modelToDto(status),
-        axiosConfigWrapper().requestAsOnlineOnly()
-      );
+      const savedStatus =
+        await stimmzettelerfassungTeamStatusControllerApi.saveStimmzettelerfassungTeamStatus(
+          wahlID,
+          wahlbezirkID,
+          teamID,
+          modelToDto(status),
+          axiosConfigWrapper().requestAsOnlineOnly()
+        );
       if (sendNotification) {
         addNotification(
           `Team-Status für ${wahlname} erfolgreich gespeichert.`,
           UserNotificationCategoryEnum.SUCCESS
         );
       }
+      return dtoToModel(savedStatus.data);
     } catch {
       if (sendNotification) {
         addNotification(

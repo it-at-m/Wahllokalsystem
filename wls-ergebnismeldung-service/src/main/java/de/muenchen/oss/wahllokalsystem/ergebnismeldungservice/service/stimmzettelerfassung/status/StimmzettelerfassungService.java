@@ -12,6 +12,7 @@ import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,24 @@ public class StimmzettelerfassungService {
   private final StimmzettelerfassungValidator stimmzettelerfassungValidator;
   private final ExceptionFactory exceptionFactory;
   private final ErfassungStatusModelMapper erfassungStatusModelMapper;
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelerfassungStatus') "
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
+  @Transactional
+  public boolean isStimmzettelerfassungAbgeschlossen(
+      @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID) {
+    stimmzettelerfassungValidator.validBezirkUndWahlIdOrThrow(
+        bezirkUndWahlID,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.IS_STIMMZETTELERFASSUNG_ABGESCHLOSSEN_PARAMETER_UNVOLLSTAENDIG));
+
+    val erfassungsstatus =
+        stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(bezirkUndWahlID);
+    return erfassungsstatus
+        .map(StimmzettelerfassungStatus::isStimmzettelerfassungAbgeschlossen)
+        .orElse(false);
+  }
 
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_SaveStimmzettelerfassungStatus')"
@@ -41,9 +60,11 @@ public class StimmzettelerfassungService {
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_RegisterStimmzettelerfassungStart')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
+  @Transactional
   public void registerStimmzettelerfassungStart(
       @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID) {
-    val currentStatus = stimmzettelerfassungStatusRepository.findById(bezirkUndWahlID);
+    val currentStatus =
+        stimmzettelerfassungStatusRepository.findByBezirkUndWahlIDForUpdate(bezirkUndWahlID);
     if (currentStatus.isEmpty()
         || !ErfassungStatus.STE_BEARBEITUNG.equals(currentStatus.get().getStatus())) {
       saveStimmzettelerfassungStatus(bezirkUndWahlID, ErfassungStatusModel.STE_BEARBEITUNG);

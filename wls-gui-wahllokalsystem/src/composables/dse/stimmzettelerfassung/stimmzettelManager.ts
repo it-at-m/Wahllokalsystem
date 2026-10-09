@@ -74,6 +74,10 @@ export function useStimmzettelManager(
 
   function startNewStimmzettel() {
     stimmzettelBeforeEdit.value = null;
+    startWithClearedStimmzettel();
+  }
+
+  function startWithClearedStimmzettel() {
     managedBearbeitenDialogStimmzettel.value =
       createStimmzettelWithWahlvorschlaege(wahlvorschlaege);
     bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory();
@@ -121,6 +125,7 @@ export function useStimmzettelManager(
     getStimmzettelSnapshot,
     parseCommandOrThrowError,
     startNewStimmzettel,
+    startWithClearedStimmzettel,
     bearbeitenDialogStimmzettelUtils,
     setActiveStimmzettelWhenEditing,
     hasStimmzettelBeenEdited,

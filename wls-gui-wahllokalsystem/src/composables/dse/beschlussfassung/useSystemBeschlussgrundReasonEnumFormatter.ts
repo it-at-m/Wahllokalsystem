@@ -10,6 +10,7 @@ const SYSTEM_BESCHLUSSGRUND_REASON_ENUM_TO_BESCHLUSSGRUND_TEXT: Record<
   EINZELNE_STIMMEN_UNGUELTIG: "Einzelne Stimmen ungültig",
   ZU_VIELE_EINZELSTIMMEN_ODER_LISTENKREUZE:
     "Zu viele Einzelstimmen oder Listenkreuze",
+  KEINE_GUELTIGEN_STIMMEN_VERGEBEN: "Keine gültigen Stimmen vergeben",
 };
 
 const SYSTEM_BESCHLUSSGRUND_REASON_ENUM_TO_BESCHLUSSVORSCHLAG_TEXT: Record<
@@ -23,6 +24,7 @@ const SYSTEM_BESCHLUSSGRUND_REASON_ENUM_TO_BESCHLUSSVORSCHLAG_TEXT: Record<
   EINZELNE_STIMMEN_UNGUELTIG: "einzelne Stimmen ungültig",
   ZU_VIELE_EINZELSTIMMEN_ODER_LISTENKREUZE:
     "zu viele Einzelstimmen oder mehrere Kopfleistenkreuze ohne Einzelstimmen",
+  KEINE_GUELTIGEN_STIMMEN_VERGEBEN: "Keine gültigen Stimmen vergeben",
 };
 
 export function useSystemBeschlussgrundReasonEnumFormatter() {

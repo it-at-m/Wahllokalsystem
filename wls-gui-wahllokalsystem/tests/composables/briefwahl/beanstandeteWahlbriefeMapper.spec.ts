@@ -1,10 +1,14 @@
-import type { BeanstandeteWahlbriefeDTO } from "@/api/wls-clients/generated-briefwahl-api";
+import type {
+  BeanstandeteWahlbriefeDTO,
+  BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum,
+} from "@/api/wls-clients/generated-briefwahl-api";
 import type { BeanstandeteWahlbriefe } from "@/types/briefwahl/BeanstandeteWahlbriefe.ts";
 
 import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
+import { BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum } from "@/api/wls-clients/generated-briefwahl-api";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
@@ -16,6 +20,7 @@ const {
   toModel,
   zurueckweisungsgrundStringToEnumValue,
   zurueckweisungsgrundEnumToDisplayString,
+  zurueckweisungsgrundEnumToCreateDtoEnum,
 } = useBeanstandeteWahlbriefeMapper();
 
 describe("beanstandeteWahlbriefeMapper.ts", () => {
@@ -23,11 +28,8 @@ describe("beanstandeteWahlbriefeMapper.ts", () => {
     it("should_returnModel_when_givenDto", () => {
       const wahlID1 = generateRandomString(6);
       const wahlID2 = generateRandomString(6);
-      const gruendeDTO = [
-        "ZUGELASSEN",
-        "UNTERSCHRIFT_FEHLT",
-        "KEIN_ORIGINAL_SCHEIN",
-      ];
+      const gruendeDTO: BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum[] =
+        ["ZUGELASSEN", "UNTERSCHRIFT_FEHLT", "KEIN_ORIGINAL_SCHEIN"];
       const gruendeModel = [
         ZurueckweisungsgrundEnum.Zugelassen,
         ZurueckweisungsgrundEnum.UnterschriftFehlt,
@@ -151,6 +153,57 @@ describe("beanstandeteWahlbriefeMapper.ts", () => {
 
     it("should_returnEmptyString_when_givenInvalidEnumValue", () => {
       expect(zurueckweisungsgrundEnumToDisplayString(null)).toBe("");
+    });
+  });
+
+  describe("zurueckweisungsgrundEnumToCreateDtoEnum", () => {
+    it.each([
+      [
+        ZurueckweisungsgrundEnum.Zugelassen,
+        BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.Zugelassen,
+      ],
+      [
+        ZurueckweisungsgrundEnum.ScheinUngueltig,
+        BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.ScheinUngueltig,
+      ],
+      [
+        ZurueckweisungsgrundEnum.KeinOriginalSchein,
+        BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.KeinOriginalSchein,
+      ],
+      [
+        ZurueckweisungsgrundEnum.UnterschriftFehlt,
+        BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.UnterschriftFehlt,
+      ],
+      [
+        ZurueckweisungsgrundEnum.UmschlagFehlt,
+        BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.UmschlagFehlt,
+      ],
+      [
+        ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen,
+        BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.WahlbriefUndUmschlagOffen,
+      ],
+      [
+        ZurueckweisungsgrundEnum.ScheineUngleichUmschlaege,
+        BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.ScheineUngleichUmschlaege,
+      ],
+      [
+        ZurueckweisungsgrundEnum.UmschlagNichtAmtlich,
+        BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.UmschlagNichtAmtlich,
+      ],
+      [
+        ZurueckweisungsgrundEnum.UmschlagGefaehrdetWahlgeheimnis,
+        BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.UmschlagGefaehrdetWahlgeheimnis,
+      ],
+      [
+        ZurueckweisungsgrundEnum.GegenstandImUmschlag,
+        BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.GegenstandImUmschlag,
+      ],
+      [
+        ZurueckweisungsgrundEnum.NichtWahlberechtigt,
+        BeanstandeteWahlbriefeCreateDTOBeanstandeteWahlbriefeEnum.NichtWahlberechtigt,
+      ],
+    ])("should_returnCreateDtoEnum_when_givenModelEnum", (input, expected) => {
+      expect(zurueckweisungsgrundEnumToCreateDtoEnum(input)).toBe(expected);
     });
   });
 });

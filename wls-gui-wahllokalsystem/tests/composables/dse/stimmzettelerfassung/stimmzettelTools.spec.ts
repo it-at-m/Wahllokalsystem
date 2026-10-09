@@ -775,24 +775,45 @@ describe("stimmzettelTools.ts", () => {
     );
   });
 
-  describe("isDeepEqual", () => {
+  describe("isDeepEqualIgnoreGueltigkeit", () => {
     it("should_returnTrue_when_stimmzettelAreTheSame", () => {
       const stimmzettelA = preparePersistedStimmzettel().build();
 
-      const result = unitUnderTest.isDeepEqual(stimmzettelA, stimmzettelA);
+      const result = unitUnderTest.isDeepEqualIgnoreGueltigkeit(
+        stimmzettelA,
+        stimmzettelA
+      );
+
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_stimmzettelAreTheSameButGueltigkeitIsDifferent", () => {
+      const stimmzettelA = preparePersistedStimmzettel()
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .build();
+      const stimmzettelB = stimmzettelA;
+      stimmzettelB.gueltigkeit = StimmzettelGueltigkeitEnum.Invalid;
+
+      const result = unitUnderTest.isDeepEqualIgnoreGueltigkeit(
+        stimmzettelA,
+        stimmzettelB
+      );
 
       expect(result).toStrictEqual(true);
     });
 
     it("should_returnFalse_when_stimmzettelAreDifferent", () => {
       const stimmzettelA = preparePersistedStimmzettel()
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .teamID("teamID-A")
         .build();
       const stimmzettelB = preparePersistedStimmzettel()
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+        .teamID("teamID-B")
         .build();
 
-      const result = unitUnderTest.isDeepEqual(stimmzettelA, stimmzettelB);
+      const result = unitUnderTest.isDeepEqualIgnoreGueltigkeit(
+        stimmzettelA,
+        stimmzettelB
+      );
 
       expect(result).toStrictEqual(false);
     });

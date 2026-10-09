@@ -116,7 +116,7 @@ const {
   isBeschlussGefasst,
 } = useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelForBeschlussfassung);
 
-const { isDeepEqual } = useStimmzettelTools();
+const { isDeepEqualIgnoreGueltigkeit } = useStimmzettelTools();
 
 const stimmzettelKennung = computed(
   () => stimmzettel.value?.stimmzettelkennung ?? 0
@@ -151,7 +151,7 @@ watch(
     if (stimmzettelForBeschlussfassung.value) {
       const stimmzettelSnapshot = stimmzettelManager.getStimmzettelSnapshot();
       stimmzettelChanged.value =
-        !isDeepEqual(
+        !isDeepEqualIgnoreGueltigkeit(
           stimmzettelForBeschlussfassung.value,
           stimmzettelSnapshot
         ) || stimmzettelChanged.value;

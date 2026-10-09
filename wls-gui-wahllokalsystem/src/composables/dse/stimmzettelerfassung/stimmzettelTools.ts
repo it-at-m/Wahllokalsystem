@@ -174,13 +174,21 @@ export function useStimmzettelTools() {
     );
   }
 
-  function isDeepEqual(
+  function isDeepEqualIgnoreGueltigkeit(
     stimmzettelA: PersistedStimmzettel,
     stimmzettelB: PersistedStimmzettel
   ) {
+    const normalizedStimmzettelA = {
+      ...normalizePersistedStimmzettel(stimmzettelA),
+      gueltigkeit: undefined,
+    };
+    const normalizedStimmzettelB = {
+      ...normalizePersistedStimmzettel(stimmzettelB),
+      gueltigkeit: undefined,
+    };
     return (
-      JSON.stringify(normalizePersistedStimmzettel(stimmzettelA)) ===
-      JSON.stringify(normalizePersistedStimmzettel(stimmzettelB))
+      JSON.stringify(normalizedStimmzettelA) ===
+      JSON.stringify(normalizedStimmzettelB)
     );
   }
 
@@ -240,6 +248,6 @@ export function useStimmzettelTools() {
     isSamePersistedStimmzettel,
     isStimmzettelGueltigBasedOnVormerkungsgruenden,
     isStimmzettelEmpty,
-    isDeepEqual,
+    isDeepEqualIgnoreGueltigkeit,
   };
 }

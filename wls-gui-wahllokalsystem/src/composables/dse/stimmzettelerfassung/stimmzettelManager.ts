@@ -19,8 +19,10 @@ export function useStimmzettelManager(
   wahlvorschlaege: Wahlvorschlag[],
   wahlID: string
 ) {
-  const { createStimmzettelWithWahlvorschlaege, isDeepEqual } =
-    useStimmzettelTools();
+  const {
+    createStimmzettelWithWahlvorschlaege,
+    normalizePersistedStimmzettel,
+  } = useStimmzettelTools();
   const {
     toPersistedStimmzettel,
     mapPersistedStimmzettelValuesToExistingDseStimmzettel,
@@ -115,7 +117,10 @@ export function useStimmzettelManager(
       activeTeamID.value
     );
 
-    return isDeepEqual(persistedStimmzettel, mappedFromDse);
+    const normA = normalizePersistedStimmzettel(persistedStimmzettel);
+    const normB = normalizePersistedStimmzettel(mappedFromDse);
+
+    return JSON.stringify(normA) === JSON.stringify(normB);
   }
 
   return {

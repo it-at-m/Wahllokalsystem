@@ -774,4 +774,27 @@ describe("stimmzettelTools.ts", () => {
       }
     );
   });
+
+  describe("isDeepEqual", () => {
+    it("should_returnTrue_when_stimmzettelAreTheSame", () => {
+      const stimmzettelA = preparePersistedStimmzettel().build();
+
+      const result = unitUnderTest.isDeepEqual(stimmzettelA, stimmzettelA);
+
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_stimmzettelAreDifferent", () => {
+      const stimmzettelA = preparePersistedStimmzettel()
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .build();
+      const stimmzettelB = preparePersistedStimmzettel()
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+        .build();
+
+      const result = unitUnderTest.isDeepEqual(stimmzettelA, stimmzettelB);
+
+      expect(result).toStrictEqual(false);
+    });
+  });
 });

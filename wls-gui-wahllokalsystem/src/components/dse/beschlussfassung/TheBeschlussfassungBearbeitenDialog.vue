@@ -74,6 +74,7 @@ import BaseStimmzettelErfassungCardContent from "@/components/dse/stimmzettelerf
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useTheBeschlussfassungBearbeitenDialogUtils } from "@/composables/dse/beschlussfassung/theBeschlussfassungBearbeitenDialogUtils.ts";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisibleModel = defineModel("modelValue", {
@@ -115,6 +116,8 @@ const {
   isBeschlussGefasst,
 } = useTheBeschlussfassungBearbeitenDialogUtils(stimmzettelForBeschlussfassung);
 
+const { isDeepEqual } = useStimmzettelTools();
+
 const stimmzettelKennung = computed(
   () => stimmzettel.value?.stimmzettelkennung ?? 0
 );
@@ -145,13 +148,20 @@ watch(
 watch(
   () => tab.value,
   () => {
-    stimmzettelChanged.value =
-      !(
-        JSON.stringify(stimmzettelForBeschlussfassung.value) ===
-        JSON.stringify(stimmzettelManager.getStimmzettelSnapshot())
-      ) || stimmzettelChanged.value;
-    stimmzettelForBeschlussfassung.value =
-      stimmzettelManager.getStimmzettelSnapshot();
+    if (stimmzettelForBeschlussfassung.value) {
+      const stimmzettelSnapshot = stimmzettelManager.getStimmzettelSnapshot();
+      stimmzettelChanged.value =
+        !isDeepEqual(
+          stimmzettelForBeschlussfassung.value,
+          stimmzettelSnapshot
+        ) || stimmzettelChanged.value;
+      stimmzettelForBeschlussfassung.value = {
+        ...stimmzettelSnapshot,
+        gueltigkeit:
+          stimmzettelForBeschlussfassung.value?.gueltigkeit ??
+          stimmzettelSnapshot.gueltigkeit,
+      };
+    }
   }
 );
 

@@ -174,6 +174,16 @@ export function useStimmzettelTools() {
     );
   }
 
+  function isDeepEqual(
+    stimmzettelA: PersistedStimmzettel,
+    stimmzettelB: PersistedStimmzettel
+  ) {
+    return (
+      JSON.stringify(normalizePersistedStimmzettel(stimmzettelA)) ===
+      JSON.stringify(normalizePersistedStimmzettel(stimmzettelB))
+    );
+  }
+
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DseWahlvorschlag {
     const dseWahlvorschlag: DseWahlvorschlag = {
       wahlvorschlagID: wahlvorschlag.identifikator,
@@ -230,5 +240,6 @@ export function useStimmzettelTools() {
     isSamePersistedStimmzettel,
     isStimmzettelGueltigBasedOnVormerkungsgruenden,
     isStimmzettelEmpty,
+    isDeepEqual,
   };
 }

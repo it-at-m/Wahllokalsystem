@@ -150,7 +150,28 @@ export function useStimmzettelTools() {
       allBeschlussGruendeUngueltig.has(beschlussvorschlag.text)
     );
 
-    return !(hasUngueltigerSystemGrund || hasUngueltigerWahlvorstandGrund);
+    const isLeererStimmzettel =
+      stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Leer ||
+      isStimmzettelEmpty(stimmzettel);
+
+    return !(
+      hasUngueltigerSystemGrund ||
+      hasUngueltigerWahlvorstandGrund ||
+      isLeererStimmzettel
+    );
+  }
+
+  function isStimmzettelEmpty(stimmzettel: PersistedStimmzettel) {
+    return !stimmzettel.wahlvorschlaege.find(
+      (wahlvorschlag) =>
+        wahlvorschlag.selected ||
+        wahlvorschlag.kandidaten.find(
+          (kandidat) =>
+            (kandidat.invalidVotes ?? 0) > 0 ||
+            (kandidat.votesByVoter ?? 0) > 0 ||
+            kandidat.isDiscarded
+        )
+    );
   }
 
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DseWahlvorschlag {
@@ -208,5 +229,6 @@ export function useStimmzettelTools() {
     resetDseStimmzettel,
     isSamePersistedStimmzettel,
     isStimmzettelGueltigBasedOnVormerkungsgruenden,
+    isStimmzettelEmpty,
   };
 }

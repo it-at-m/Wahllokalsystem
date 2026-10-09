@@ -40,6 +40,8 @@ export function useBearbeitenDialogStimmzettelUtils(
   const {
     kandidatenOfStimmzettel,
     getKandidatToAddVotesByOrdnungszahl,
+    getKandidatToRemoveVotesByOrdnungszahl,
+    getKandidatToRemoveInvalidVotesByOrdnungszahl,
     getKandidatToAddVotesForRangeByOrdnungszahl,
     getKandidatForStreichungByOrdnungszahl,
     getKandidatToRemoveStreichungByOrdnungszahl,
@@ -214,7 +216,7 @@ export function useBearbeitenDialogStimmzettelUtils(
       votesToRemove,
       "Die Anzahl der zu entfernenden Stimmen muss eine ganze Zahl größer 0 sein."
     );
-    const kandidat = getKandidatToAddVotesByOrdnungszahl(ordnungszahl);
+    const kandidat = getKandidatToRemoveVotesByOrdnungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(
         `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`
@@ -262,7 +264,8 @@ export function useBearbeitenDialogStimmzettelUtils(
       invalidVotesToRemove,
       "Die Anzahl der zu entfernenden ungültigen Stimmen muss eine ganze Zahl größer 0 sein."
     );
-    const kandidat = getKandidatToAddVotesByOrdnungszahl(ordnungszahl);
+    const kandidat =
+      getKandidatToRemoveInvalidVotesByOrdnungszahl(ordnungszahl);
     if (!kandidat) {
       throw new ManagedStimmzettelError(
         `Kandidat*in mit Ordnungszahl ${ordnungszahl} existiert nicht.`

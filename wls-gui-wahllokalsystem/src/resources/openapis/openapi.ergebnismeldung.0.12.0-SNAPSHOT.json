@@ -22,9 +22,7 @@
   "paths": {
     "/stimmzettelerfassungsWorkflow/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}": {
       "get": {
-        "tags": [
-          "stimmzettelerfassung-controller"
-        ],
+        "tags": ["stimmzettelerfassung-controller"],
         "description": "Lesen des Workflow-Status für die digitale Stimmzettelerfassung",
         "operationId": "getStimmzettelerfassungStatus",
         "parameters": [
@@ -85,9 +83,7 @@
         }
       },
       "post": {
-        "tags": [
-          "stimmzettelerfassung-controller"
-        ],
+        "tags": ["stimmzettelerfassung-controller"],
         "description": "Erfassen des Workflow-Status für die digitale Stimmzettelerfassung",
         "operationId": "saveStimmzettelerfassungStatus",
         "parameters": [
@@ -150,9 +146,7 @@
     },
     "/stimmzettelerfassung/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/stimmzettel": {
       "get": {
-        "tags": [
-          "stimmzettel-controller"
-        ],
+        "tags": ["stimmzettel-controller"],
         "description": "Lesen von Stimmzetteln eines Team in einem Wahlbezirk einer Wahl",
         "operationId": "getStimmzettel",
         "parameters": [
@@ -224,9 +218,7 @@
         }
       },
       "post": {
-        "tags": [
-          "stimmzettel-controller"
-        ],
+        "tags": ["stimmzettel-controller"],
         "description": "Schreiben von Stimmzetteln eines Team in einem Wahlbezirk einer Wahl",
         "operationId": "postStimmzettel",
         "parameters": [
@@ -310,9 +302,7 @@
     },
     "/stimmzettelerfassung/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/status": {
       "get": {
-        "tags": [
-          "stimmzettelerfassung-team-status-controller"
-        ],
+        "tags": ["stimmzettelerfassung-team-status-controller"],
         "description": "Lesen des Team-Status für die digitale Stimmzettelerfassung",
         "operationId": "getStimmzettelerfassungTeamStatus",
         "parameters": [
@@ -381,9 +371,7 @@
         }
       },
       "post": {
-        "tags": [
-          "stimmzettelerfassung-team-status-controller"
-        ],
+        "tags": ["stimmzettelerfassung-team-status-controller"],
         "description": "Erfassen des Team-Status für die digitale Stimmzettelerfassung. Die Antwort enthält den tatsächlich gesetzen Status, welche von weiteren Faktoren abhängt.",
         "operationId": "saveStimmzettelerfassungTeamStatus",
         "parameters": [
@@ -461,9 +449,7 @@
     },
     "/stimmzettelerfassung/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/status/inBearbeitung": {
       "post": {
-        "tags": [
-          "stimmzettelerfassung-team-status-controller"
-        ],
+        "tags": ["stimmzettelerfassung-team-status-controller"],
         "description": "Setze den Team-Status sowie den Workflowstatus für die digitale Stimmzettelerfassung zurück auf in Bearbeitung",
         "operationId": "reopenStimmzettelerfassung",
         "parameters": [
@@ -524,9 +510,7 @@
     },
     "/mbw/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/bedenklicheStimmzettel": {
       "get": {
-        "tags": [
-          "mbw-bedenkliche-stimmzettel-controller"
-        ],
+        "tags": ["mbw-bedenkliche-stimmzettel-controller"],
         "description": "Lesen von bedenklichen Stimmzetteln einer MBW eines Wahlbezirks",
         "operationId": "getBedenklicheStimmzettelByOrderIndexAsc",
         "parameters": [
@@ -590,9 +574,7 @@
         }
       },
       "post": {
-        "tags": [
-          "mbw-bedenkliche-stimmzettel-controller"
-        ],
+        "tags": ["mbw-bedenkliche-stimmzettel-controller"],
         "description": "Erfassen von bedenklichen Stimmzetteln einer MBW für einen Wahlbezirk",
         "operationId": "setBedenklicheStimmzettel",
         "parameters": [
@@ -658,9 +640,7 @@
     },
     "/businessActions/wahlscheine/{wahlID}/{wahlbezirkID}": {
       "get": {
-        "tags": [
-          "wahlscheine-controller"
-        ],
+        "tags": ["wahlscheine-controller"],
         "description": "Lesen der Anzahl an Stimmabgabevermerken mit Wahlschein eines Wahlbezirkes für eine Wahl",
         "operationId": "getWahlscheine",
         "parameters": [
@@ -721,9 +701,7 @@
         }
       },
       "post": {
-        "tags": [
-          "wahlscheine-controller"
-        ],
+        "tags": ["wahlscheine-controller"],
         "description": "Setzen der Anzahl an Stimmabgabevermerken mit Wahlschein eines Wahlbezirkes für eine Wahl",
         "operationId": "postWahlscheine",
         "parameters": [
@@ -786,9 +764,7 @@
     },
     "/businessActions/stimmzettelumschlaege/{wahlID}/{wahlbezirkID}": {
       "get": {
-        "tags": [
-          "stimmzettelumschlaege-controller"
-        ],
+        "tags": ["stimmzettelumschlaege-controller"],
         "description": "Lesen der Anzahl an Stimmzettelumschlaegen eines Wahlbezirkes für eine Wahl",
         "operationId": "getStimmzettelumschlaege",
         "parameters": [
@@ -849,9 +825,7 @@
         }
       },
       "post": {
-        "tags": [
-          "stimmzettelumschlaege-controller"
-        ],
+        "tags": ["stimmzettelumschlaege-controller"],
         "description": "Setzen der Anzahl an Stimmzettelumschlaegen eines Wahlbezirkes für eine Wahl",
         "operationId": "postStimmzettelumschlaege",
         "parameters": [
@@ -914,9 +888,7 @@
     },
     "/businessActions/stimmabgabevermerke/{wahlbezirkID}/{wahlID}/{waehlerverzeichnisNummer}": {
       "get": {
-        "tags": [
-          "stimmabgabevermerke-controller"
-        ],
+        "tags": ["stimmabgabevermerke-controller"],
         "description": "Lesen der Stimmabgabevermerke eines Wahlbezirkes für die Wahl eines Wählerverzeichnisses.",
         "operationId": "getStimmabgabevermerke",
         "parameters": [
@@ -986,9 +958,7 @@
         }
       },
       "post": {
-        "tags": [
-          "stimmabgabevermerke-controller"
-        ],
+        "tags": ["stimmabgabevermerke-controller"],
         "description": "Speichern der Stimmabgabevermerke eines Wahlbezirkes für die Wahl eines Wählerverzeichnisses.",
         "operationId": "postStimmabgabevermerke",
         "parameters": [
@@ -1060,9 +1030,7 @@
     },
     "/businessActions/status/{wahlID}/{wahlbezirkID}": {
       "get": {
-        "tags": [
-          "status-controller"
-        ],
+        "tags": ["status-controller"],
         "description": "Lesen des Bearbeitungsstatus bei der Ergebnisermittlung eines Wahlbezirkes für eine Wahl",
         "operationId": "getStatus",
         "parameters": [
@@ -1123,9 +1091,7 @@
         }
       },
       "post": {
-        "tags": [
-          "status-controller"
-        ],
+        "tags": ["status-controller"],
         "description": "Setzen des Bearbeitungsstatus bei der Ergebnisermittlung eines Wahlbezirkes für eine Wahl",
         "operationId": "setStatus",
         "parameters": [
@@ -1188,9 +1154,7 @@
     },
     "/businessActions/sendErgebnismeldung/{wahlID}/{wahlbezirkID}/{waehlerverzeichnisNummer}/{meldungsart}/{hauptwahlbezirkID}": {
       "post": {
-        "tags": [
-          "ergebnismeldung-controller"
-        ],
+        "tags": ["ergebnismeldung-controller"],
         "description": "Übermitteln einer Ergebnismeldung an das externe System für eine konkrete Wahl eines Wahlbezirkes",
         "operationId": "sendErgebnisse",
         "parameters": [
@@ -1233,10 +1197,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "V1",
-                "V3"
-              ]
+              "enum": ["V1", "V3"]
             }
           },
           {
@@ -1290,9 +1251,7 @@
     },
     "/businessActions/ergebnisse/{wahlbezirkID}/{wahlID}/{stapelart}": {
       "get": {
-        "tags": [
-          "ergebnisse-controller"
-        ],
+        "tags": ["ergebnisse-controller"],
         "description": "Lesen von Ergebnissen eines Wahlbezirks für eine Wahl von einem bestimmten Stapel",
         "operationId": "getErgebnisse",
         "parameters": [
@@ -1415,9 +1374,7 @@
         }
       },
       "post": {
-        "tags": [
-          "ergebnisse-controller"
-        ],
+        "tags": ["ergebnisse-controller"],
         "description": "Setzen von Ergebnissen eines Wahlbezirks für eine Wahl für einen bestimmten Stapel",
         "operationId": "postErgebnisse",
         "parameters": [
@@ -1542,9 +1499,7 @@
     },
     "/businessActions/begruendung/{wahlbezirkID}/{wahlID}/{stapelart}": {
       "get": {
-        "tags": [
-          "begruendung-controller"
-        ],
+        "tags": ["begruendung-controller"],
         "description": "Lesen der Begruendung einer Meldung von einem Wahlbezirk für eine Wahl auf einem bestimmten Stapel",
         "operationId": "getBegruendung",
         "parameters": [
@@ -1667,9 +1622,7 @@
         }
       },
       "post": {
-        "tags": [
-          "begruendung-controller"
-        ],
+        "tags": ["begruendung-controller"],
         "description": "Setzen der Begruendung einer Meldung von einem Wahlbezirk für eine Wahl auf einem bestimmten Stapel",
         "operationId": "postBegruendung",
         "parameters": [
@@ -1794,9 +1747,7 @@
     },
     "/businessActions/awerte/init": {
       "post": {
-        "tags": [
-          "a-werte-controller"
-        ],
+        "tags": ["a-werte-controller"],
         "description": "Asynchrones initialisieren aller A-Werte für die gegebenen Wahlbezirk-IDs.",
         "operationId": "initialiseAWerte",
         "requestBody": {
@@ -1844,9 +1795,7 @@
     },
     "/businessActions/ausdruck/{wahlID}/{wahlbezirkID}/{dokumentart}/html": {
       "get": {
-        "tags": [
-          "ausdruck-controller"
-        ],
+        "tags": ["ausdruck-controller"],
         "description": "Lesen eines Ausdrucks einer bestimmten Dokumentart für einen Wahlbezirk einer Wahl",
         "operationId": "getAusdruck",
         "parameters": [
@@ -1872,11 +1821,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "V1",
-                "V3",
-                "BESCHLUSSENTSCHEIDUNGEN"
-              ]
+              "enum": ["V1", "V3", "BESCHLUSSENTSCHEIDUNGEN"]
             }
           }
         ],
@@ -1920,9 +1865,7 @@
         }
       },
       "post": {
-        "tags": [
-          "ausdruck-controller"
-        ],
+        "tags": ["ausdruck-controller"],
         "description": "Speichern eines Ausdrucks einer bestimmten Dokumentart für einen Wahlbezirk einer Wahl",
         "operationId": "postAusdruck",
         "parameters": [
@@ -1948,11 +1891,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "V1",
-                "V3",
-                "BESCHLUSSENTSCHEIDUNGEN"
-              ]
+              "enum": ["V1", "V3", "BESCHLUSSENTSCHEIDUNGEN"]
             }
           }
         ],
@@ -2005,9 +1944,7 @@
     },
     "/stimmzettelerfassung/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/teamstatus": {
       "get": {
-        "tags": [
-          "stimmzettelerfassung-team-status-controller"
-        ],
+        "tags": ["stimmzettelerfassung-team-status-controller"],
         "description": "Lesen des Team-Status-Liste für die digitale Stimmzettelerfassung",
         "operationId": "getStimmzettelerfassungTeamStatusList",
         "parameters": [
@@ -2073,9 +2010,7 @@
     },
     "/stimmzettelerfassung/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/anzahlStimmzettel": {
       "get": {
-        "tags": [
-          "stimmzettel-controller"
-        ],
+        "tags": ["stimmzettel-controller"],
         "description": "Lesen der Anzahl an Stimmzetteln in einem Wahlbezirk einer Wahl",
         "operationId": "getAnzahlStimmzettel",
         "parameters": [
@@ -2136,9 +2071,7 @@
     },
     "/businessActions/ergebnisse/{wahlbezirkID}/{wahlID}": {
       "get": {
-        "tags": [
-          "ergebnisse-controller"
-        ],
+        "tags": ["ergebnisse-controller"],
         "description": "Lesen von allen Ergebnissen eines Wahlbezirks für eine Wahl",
         "operationId": "getAllErgebnisse",
         "parameters": [
@@ -2201,9 +2134,7 @@
     },
     "/businessActions/awerte/{wahlbezirkID}": {
       "get": {
-        "tags": [
-          "a-werte-controller"
-        ],
+        "tags": ["a-werte-controller"],
         "description": "Laden der Wahlberechtigten (A-Werte) für den Wahlbezirk {wahlbezirkID}.",
         "operationId": "getAWerte",
         "parameters": [
@@ -2258,9 +2189,7 @@
     },
     "/businessActions/ausdruck/{wahlID}/{wahlbezirkID}": {
       "get": {
-        "tags": [
-          "ausdruck-controller"
-        ],
+        "tags": ["ausdruck-controller"],
         "description": "Lesen aller Ausdrucke für einen Wahlbezirk einer Wahl",
         "operationId": "getAllAusdrucke",
         "parameters": [
@@ -2326,9 +2255,7 @@
     },
     "/businessActions/asyncProgress": {
       "get": {
-        "tags": [
-          "async-progress-controller"
-        ],
+        "tags": ["async-progress-controller"],
         "description": "Lesen des Bearbeitungsstandes der Initialisierung der AWerte.",
         "operationId": "getAsyncProgress",
         "responses": {
@@ -2376,16 +2303,10 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": [
-              "STE_BEARBEITUNG",
-              "STE_ABGESCHLOSSEN",
-              "BE_ABGESCHLOSSEN"
-            ]
+            "enum": ["STE_BEARBEITUNG", "STE_ABGESCHLOSSEN", "BE_ABGESCHLOSSEN"]
           }
         },
-        "required": [
-          "status"
-        ]
+        "required": ["status"]
       },
       "BeschlussfassungDTO": {
         "type": "object",
@@ -2402,11 +2323,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "contra",
-          "pro",
-          "text"
-        ]
+        "required": ["contra", "pro", "text"]
       },
       "KandidatDTO": {
         "type": "object",
@@ -2430,10 +2347,7 @@
             "format": "int32"
           }
         },
-        "required": [
-          "discarded",
-          "id"
-        ]
+        "required": ["discarded", "id"]
       },
       "KandidatIdDTO": {
         "type": "object",
@@ -2446,10 +2360,7 @@
             "format": "int32"
           }
         },
-        "required": [
-          "kandidatID",
-          "nennungsNummer"
-        ]
+        "required": ["kandidatID", "nennungsNummer"]
       },
       "StimmzettelOfTeamDTO": {
         "type": "object",
@@ -2494,11 +2405,7 @@
             }
           }
         },
-        "required": [
-          "gueltigkeit",
-          "invalideVotes",
-          "stimmzettelkennung"
-        ]
+        "required": ["gueltigkeit", "invalideVotes", "stimmzettelkennung"]
       },
       "SystemBeschlussgrundDTO": {
         "type": "object",
@@ -2514,9 +2421,7 @@
             ]
           }
         },
-        "required": [
-          "reason"
-        ]
+        "required": ["reason"]
       },
       "WahlvorschlagDTO": {
         "type": "object",
@@ -2534,10 +2439,7 @@
             }
           }
         },
-        "required": [
-          "selected",
-          "wahlvorschlagID"
-        ]
+        "required": ["selected", "wahlvorschlagID"]
       },
       "WahlvorstandBeschlussgrundDTO": {
         "type": "object",
@@ -2546,20 +2448,13 @@
             "type": "string"
           }
         },
-        "required": [
-          "text"
-        ]
+        "required": ["text"]
       },
       "WlsExceptionDTO": {
         "properties": {
           "category": {
             "type": "string",
-            "enum": [
-              "F",
-              "T",
-              "S",
-              "I"
-            ]
+            "enum": ["F", "T", "S", "I"]
           },
           "code": {
             "type": "string"
@@ -2571,12 +2466,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "category",
-          "code",
-          "message",
-          "service"
-        ]
+        "required": ["category", "code", "message", "service"]
       },
       "StimmzettelerfassungTeamStatusDTO": {
         "type": "object",
@@ -2591,9 +2481,7 @@
             ]
           }
         },
-        "required": [
-          "status"
-        ]
+        "required": ["status"]
       },
       "BedenklicherStimmzettelDTO": {
         "type": "object",
@@ -2615,17 +2503,10 @@
           },
           "validity": {
             "type": "string",
-            "enum": [
-              "VALID",
-              "PARTIAL_VALID",
-              "INVALID"
-            ]
+            "enum": ["VALID", "PARTIAL_VALID", "INVALID"]
           }
         },
-        "required": [
-          "orderIndex",
-          "validity"
-        ]
+        "required": ["orderIndex", "validity"]
       },
       "BezirkUndWahlID": {
         "type": "object",
@@ -2641,10 +2522,7 @@
             "minLength": 0
           }
         },
-        "required": [
-          "wahlID",
-          "wahlbezirkID"
-        ]
+        "required": ["wahlID", "wahlbezirkID"]
       },
       "WahlscheineDTO": {
         "type": "object",
@@ -2657,10 +2535,7 @@
             "format": "int64"
           }
         },
-        "required": [
-          "bezirkUndWahlID",
-          "stimmabgabevermerke"
-        ]
+        "required": ["bezirkUndWahlID", "stimmabgabevermerke"]
       },
       "StimmzettelumschlaegeDTO": {
         "type": "object",
@@ -2681,10 +2556,7 @@
             "format": "int64"
           }
         },
-        "required": [
-          "anzahlWaehler",
-          "bezirkUndWahlID"
-        ]
+        "required": ["anzahlWaehler", "bezirkUndWahlID"]
       },
       "EingenommenerWahlscheinDTO": {
         "type": "object",
@@ -2695,17 +2567,10 @@
           },
           "stimmzettelart": {
             "type": "string",
-            "enum": [
-              "GROSS",
-              "KLEIN",
-              "BEIDE"
-            ]
+            "enum": ["GROSS", "KLEIN", "BEIDE"]
           }
         },
-        "required": [
-          "anzahl",
-          "stimmzettelart"
-        ]
+        "required": ["anzahl", "stimmzettelart"]
       },
       "StimmabgabevermerkeDTO": {
         "type": "object",
@@ -2752,17 +2617,10 @@
           },
           "stimmzettelart": {
             "type": "string",
-            "enum": [
-              "GROSS",
-              "KLEIN",
-              "BEIDE"
-            ]
+            "enum": ["GROSS", "KLEIN", "BEIDE"]
           }
         },
-        "required": [
-          "anzahl",
-          "stimmzettelart"
-        ]
+        "required": ["anzahl", "stimmzettelart"]
       },
       "VermerkDTO": {
         "type": "object",
@@ -2779,22 +2637,14 @@
             "uniqueItems": true
           }
         },
-        "required": [
-          "blattnummer",
-          "stimmzettel"
-        ]
+        "required": ["blattnummer", "stimmzettel"]
       },
       "MeldungDTO": {
         "type": "object",
         "properties": {
           "validierungsstatus": {
             "type": "string",
-            "enum": [
-              "NICHT_VALIDIERT",
-              "NICHT_GESENDET",
-              "VALIDE",
-              "INVALIDE"
-            ]
+            "enum": ["NICHT_VALIDIERT", "NICHT_GESENDET", "VALIDE", "INVALIDE"]
           },
           "gedruckt": {
             "type": "boolean"
@@ -2807,10 +2657,7 @@
             "format": "date-time"
           }
         },
-        "required": [
-          "gedruckt",
-          "validierungsstatus"
-        ]
+        "required": ["gedruckt", "validierungsstatus"]
       },
       "StatusDTO": {
         "type": "object",
@@ -2825,11 +2672,7 @@
             "$ref": "#/components/schemas/MeldungDTO"
           }
         },
-        "required": [
-          "bezirkUndWahlID",
-          "niederschrift",
-          "schnellmeldung"
-        ]
+        "required": ["bezirkUndWahlID", "niederschrift", "schnellmeldung"]
       },
       "BezirkUndWahlIDStapelartDTO": {
         "type": "object",
@@ -2898,11 +2741,7 @@
             ]
           }
         },
-        "required": [
-          "stapelart",
-          "wahlID",
-          "wahlbezirkID"
-        ]
+        "required": ["stapelart", "wahlID", "wahlbezirkID"]
       },
       "ErgebnisDTO": {
         "type": "object",
@@ -2926,9 +2765,7 @@
             "format": "int64"
           }
         },
-        "required": [
-          "ergebnis"
-        ]
+        "required": ["ergebnis"]
       },
       "ErgebnisseDTO": {
         "type": "object",
@@ -2943,10 +2780,7 @@
             }
           }
         },
-        "required": [
-          "bezirkUndWahlIDStapelart",
-          "ergebnisse"
-        ]
+        "required": ["bezirkUndWahlIDStapelart", "ergebnisse"]
       },
       "BegruendungDTO": {
         "type": "object",
@@ -2967,9 +2801,7 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "bezirkUndWahlIDStapelart"
-        ]
+        "required": ["bezirkUndWahlIDStapelart"]
       },
       "AusdruckWriteDTO": {
         "type": "object",
@@ -2995,10 +2827,7 @@
             ]
           }
         },
-        "required": [
-          "status",
-          "teamID"
-        ]
+        "required": ["status", "teamID"]
       },
       "AWerteDTO": {
         "type": "object",
@@ -3015,10 +2844,7 @@
             "format": "int64"
           }
         },
-        "required": [
-          "a1",
-          "bezirkUndWahlID"
-        ]
+        "required": ["a1", "bezirkUndWahlID"]
       },
       "AusdruckReadDTO": {
         "type": "object",
@@ -3031,11 +2857,7 @@
           },
           "dokumentart": {
             "type": "string",
-            "enum": [
-              "V1",
-              "V3",
-              "BESCHLUSSENTSCHEIDUNGEN"
-            ]
+            "enum": ["V1", "V3", "BESCHLUSSENTSCHEIDUNGEN"]
           },
           "content": {
             "type": "string"
@@ -3045,12 +2867,7 @@
             "format": "date-time"
           }
         },
-        "required": [
-          "dokumentart",
-          "erstelltAm",
-          "wahlID",
-          "wahlbezirkID"
-        ]
+        "required": ["dokumentart", "erstelltAm", "wahlID", "wahlbezirkID"]
       },
       "AsyncProgressDTO": {
         "type": "object",

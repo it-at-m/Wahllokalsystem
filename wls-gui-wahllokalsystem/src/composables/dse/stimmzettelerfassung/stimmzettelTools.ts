@@ -150,7 +150,46 @@ export function useStimmzettelTools() {
       allBeschlussGruendeUngueltig.has(beschlussvorschlag.text)
     );
 
-    return !(hasUngueltigerSystemGrund || hasUngueltigerWahlvorstandGrund);
+    const isLeererStimmzettel =
+      stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Leer ||
+      isStimmzettelEmpty(stimmzettel);
+
+    return !(
+      hasUngueltigerSystemGrund ||
+      hasUngueltigerWahlvorstandGrund ||
+      isLeererStimmzettel
+    );
+  }
+
+  function isStimmzettelEmpty(stimmzettel: PersistedStimmzettel) {
+    return !stimmzettel.wahlvorschlaege.find(
+      (wahlvorschlag) =>
+        wahlvorschlag.selected ||
+        wahlvorschlag.kandidaten.find(
+          (kandidat) =>
+            (kandidat.invalidVotes ?? 0) > 0 ||
+            (kandidat.votesByVoter ?? 0) > 0 ||
+            kandidat.isDiscarded
+        )
+    );
+  }
+
+  function isDeepEqualIgnoreGueltigkeit(
+    stimmzettelA: PersistedStimmzettel,
+    stimmzettelB: PersistedStimmzettel
+  ) {
+    const normalizedStimmzettelA = {
+      ...normalizePersistedStimmzettel(stimmzettelA),
+      gueltigkeit: undefined,
+    };
+    const normalizedStimmzettelB = {
+      ...normalizePersistedStimmzettel(stimmzettelB),
+      gueltigkeit: undefined,
+    };
+    return (
+      JSON.stringify(normalizedStimmzettelA) ===
+      JSON.stringify(normalizedStimmzettelB)
+    );
   }
 
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DseWahlvorschlag {
@@ -208,5 +247,7 @@ export function useStimmzettelTools() {
     resetDseStimmzettel,
     isSamePersistedStimmzettel,
     isStimmzettelGueltigBasedOnVormerkungsgruenden,
+    isStimmzettelEmpty,
+    isDeepEqualIgnoreGueltigkeit,
   };
 }

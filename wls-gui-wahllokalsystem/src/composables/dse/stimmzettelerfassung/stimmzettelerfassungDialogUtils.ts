@@ -6,14 +6,12 @@ import { useStimmzettelManager } from "@/composables/dse/stimmzettelerfassung/st
 export function useStimmzettelerfassungDialogUtils(
   stimmzettelkennung: ComputedRef<number>,
   wahlvorschlaege: Wahlvorschlag[],
-  wahlID: string,
-  teamID: string
+  wahlID: string
 ) {
   const stimmzettelManager = useStimmzettelManager(
     stimmzettelkennung,
     wahlvorschlaege,
-    wahlID,
-    teamID
+    wahlID
   );
 
   return {

@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card variant="plain">
     <v-card-text v-if="beschlussDetails">
       <v-row>
         <v-col>

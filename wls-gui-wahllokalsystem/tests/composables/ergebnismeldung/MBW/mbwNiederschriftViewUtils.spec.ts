@@ -315,14 +315,12 @@ describe("mbwNiederschriftViewUtils", () => {
 
     it("should_waitForPendingImageDecode_beforePrinting", async () => {
       let resolveImageDecode!: () => void;
+      const decodePromise = new Promise<void>((resolve) => {
+        resolveImageDecode = resolve;
+      });
       const image = {
         complete: false,
-        decode: vi.fn().mockImplementation(
-          () =>
-            new Promise<void>((resolve) => {
-              resolveImageDecode = resolve;
-            })
-        ),
+        decode: vi.fn().mockReturnValue(decodePromise),
       };
       printWindow.document.querySelectorAll.mockReturnValue([image]);
       mockDefinitions.isStepDone.mockReturnValue(true);
@@ -331,9 +329,10 @@ describe("mbwNiederschriftViewUtils", () => {
       );
       const unitUnderTest = await createComposable();
 
-      await unitUnderTest.onDruckenClicked();
-
+      // start printing but don't await - assert that printing hasn't happened yet
+      unitUnderTest.onDruckenClicked();
       expect(printWindow.print).not.toHaveBeenCalled();
+      // resolve the pending decode so printing can continue
       resolveImageDecode();
       await flushPromises();
 

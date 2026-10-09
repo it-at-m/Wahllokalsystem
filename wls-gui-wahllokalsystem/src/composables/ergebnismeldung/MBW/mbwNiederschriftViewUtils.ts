@@ -166,10 +166,9 @@ export function useMbwNiederschriftViewUtils(
               })
         );
 
-        Promise.all(imagePromises).then(() => {
-          printWindow.print();
-          printWindow.close();
-        });
+        await Promise.all(imagePromises);
+        printWindow.print();
+        printWindow.close();
       }
 
       if (!niederschriftAlreadyDone) {

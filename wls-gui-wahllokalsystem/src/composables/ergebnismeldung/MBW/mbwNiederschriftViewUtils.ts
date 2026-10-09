@@ -14,6 +14,7 @@ import { useMbwNiederschriftDruckService } from "@/composables/ergebnismeldung/M
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckBWB.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
+import { usePrintUtils } from "@/composables/ergebnismeldung/MBW/printUtils.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
@@ -69,6 +70,7 @@ export function useMbwNiederschriftViewUtils(
     prepareDataForBeschlussentscheidungenDruck,
   } = useBeschlussentscheidungenDruckenTools(wahlID, wahlbezirkID);
   const { buildTemplate } = useBeschlussentscheidungenDruckTemplateTools();
+  const { printInWindow } = usePrintUtils();
   const {
     buildNiederschriftTemplateFromData: buildNiederschriftTemplateFromDataUWB,
   } = useNiederschriftDruckUWB();
@@ -146,18 +148,7 @@ export function useMbwNiederschriftViewUtils(
         ? await getAusdruckNiederschrift()
         : await buildNiederschriftTemplate();
 
-      const printWindow = window.open(
-        "",
-        "",
-        "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
-      );
-
-      if (printWindow) {
-        printWindow.document.writeln(pdfText);
-        printWindow.document.close();
-        printWindow.print();
-        printWindow.close();
-      }
+      await printInWindow(pdfText);
 
       if (!niederschriftAlreadyDone) {
         await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
@@ -209,18 +200,8 @@ export function useMbwNiederschriftViewUtils(
             stimmzettelForBeschlussfassung.value
           )
         );
-        const printWindow = window.open(
-          "",
-          "",
-          "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
-        );
 
-        if (printWindow) {
-          printWindow.document.writeln(pdfText);
-          printWindow.document.close();
-          printWindow.print();
-          printWindow.close();
-        }
+        await printInWindow(pdfText);
 
         isBeschlussentscheidungenDruckenDialogVisble.value = true;
         await sendAusdruckBeschlussentscheidungen(

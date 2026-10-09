@@ -66,6 +66,7 @@ import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwSchnellmeldungDruckService } from "@/composables/ergebnismeldung/MBW/mbwSchnellmeldungDruckService.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
+import { usePrintUtils } from "@/composables/ergebnismeldung/MBW/printUtils.ts";
 import { useSchnellmeldungDruck } from "@/composables/ergebnismeldung/MBW/schnellmeldungDruck.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
@@ -98,6 +99,7 @@ const { prepareDataForSchnellmeldungDruck } = useMbwSchnellmeldungDruckService(
   wahlbezirkID
 );
 const { buildSchnellmeldungTemplateFromData } = useSchnellmeldungDruck();
+const { printInWindow } = usePrintUtils();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 const { getNextRoute } = useNavigationService();
 const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
@@ -175,18 +177,7 @@ async function onDruckenClicked() {
           currentUserWahlbezirkNummer.value
         );
 
-      const printWindow = window.open(
-        "",
-        "",
-        "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
-      );
-
-      if (printWindow) {
-        printWindow.document.body.innerHTML =
-          buildSchnellmeldungTemplateFromData(data);
-        printWindow.print();
-        printWindow.close();
-
+      if (await printInWindow(buildSchnellmeldungTemplateFromData(data))) {
         await updateStatusAfterSchnellmeldungDrucken();
 
         setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_SCHNELLMELDUNG);

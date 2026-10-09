@@ -155,8 +155,21 @@ export function useMbwNiederschriftViewUtils(
       if (printWindow) {
         printWindow.document.writeln(pdfText);
         printWindow.document.close();
-        printWindow.print();
-        printWindow.close();
+
+        const images = printWindow.document.querySelectorAll("img");
+
+        const imagePromises = Array.from(images).map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : img.decode().catch(() => {
+                return;
+              })
+        );
+
+        Promise.all(imagePromises).then(() => {
+          printWindow.print();
+          printWindow.close();
+        });
       }
 
       if (!niederschriftAlreadyDone) {

@@ -157,7 +157,11 @@ describe("mbwNiederschriftViewUtils", () => {
   const workflowState = { isNiederschriftDone: false };
   const printWindow = {
     close: vi.fn(),
-    document: { close: vi.fn(), writeln: vi.fn() },
+    document: {
+      close: vi.fn(),
+      writeln: vi.fn(),
+      querySelectorAll: vi.fn().mockReturnValue([]),
+    },
     print: vi.fn(),
   };
 

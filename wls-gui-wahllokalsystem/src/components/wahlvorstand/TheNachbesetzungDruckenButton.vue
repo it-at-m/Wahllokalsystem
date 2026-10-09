@@ -20,7 +20,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
-const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
+const { sendWahlvorstand } = useWahlvorstandStore();
 const { buildTemplateFromData } = useWahlvorstandNachbesetzungsDruck();
 const { toTimeWithHoursAndOptionalMinutes, toGermanDateWithLongMonth } =
   useDateTimeFormatter();
@@ -32,7 +32,6 @@ const { wahlenActions } = useWahlenStore();
 
 async function onNachbesetzungDruckenClicked() {
   await sendWahlvorstand();
-  await loadWahlvorstand();
   _openPrintDialog();
 }
 

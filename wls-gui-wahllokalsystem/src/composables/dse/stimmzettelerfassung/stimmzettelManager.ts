@@ -17,8 +17,7 @@ const { logDebug } = useLogging("stimmzettelManager");
 export function useStimmzettelManager(
   stimmzettelkennung: ComputedRef<number>,
   wahlvorschlaege: Wahlvorschlag[],
-  wahlID: string,
-  teamID: string
+  wahlID: string
 ) {
   const {
     createStimmzettelWithWahlvorschlaege,
@@ -29,6 +28,7 @@ export function useStimmzettelManager(
     mapPersistedStimmzettelValuesToExistingDseStimmzettel,
   } = useStimmzettelMapper();
   const stimmzettelBeforeEdit: Ref<PersistedStimmzettel | null> = ref(null);
+  const activeTeamID = ref<string | null>(null);
 
   const managedBearbeitenDialogStimmzettel = ref(
     createStimmzettelWithWahlvorschlaege(wahlvorschlaege)
@@ -53,6 +53,7 @@ export function useStimmzettelManager(
   function setActiveStimmzettelWhenEditing(
     sourceStimmzettel: PersistedStimmzettel
   ) {
+    activeTeamID.value = sourceStimmzettel.teamID;
     stimmzettelBeforeEdit.value = sourceStimmzettel;
     bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
       sourceStimmzettel
@@ -68,12 +69,17 @@ export function useStimmzettelManager(
     return toPersistedStimmzettel(
       managedBearbeitenDialogStimmzettel.value,
       stimmzettelkennung.value,
-      teamID
+      activeTeamID.value
     );
   }
 
-  function startNewStimmzettel() {
+  function startNewStimmzettel(teamID: string) {
+    activeTeamID.value = teamID;
     stimmzettelBeforeEdit.value = null;
+    startWithClearedStimmzettel();
+  }
+
+  function startWithClearedStimmzettel() {
     managedBearbeitenDialogStimmzettel.value =
       createStimmzettelWithWahlvorschlaege(wahlvorschlaege);
     bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory();
@@ -108,7 +114,7 @@ export function useStimmzettelManager(
     const mappedFromDse: PersistedStimmzettel = toPersistedStimmzettel(
       dseStimmzettel,
       stimmzettelkennung.value,
-      teamID
+      activeTeamID.value
     );
 
     const normA = normalizePersistedStimmzettel(persistedStimmzettel);
@@ -121,6 +127,7 @@ export function useStimmzettelManager(
     getStimmzettelSnapshot,
     parseCommandOrThrowError,
     startNewStimmzettel,
+    startWithClearedStimmzettel,
     bearbeitenDialogStimmzettelUtils,
     setActiveStimmzettelWhenEditing,
     hasStimmzettelBeenEdited,

@@ -111,6 +111,7 @@ export function useKandidatTools() {
 
   return {
     getEinzelstimmenOrZero,
+    getTotalEinzelAndUngueltigeStimmen,
     getTotalEinzelAndUngueltigeStimmenOfKandidatenWithSameId,
     getTotalEinzelstimmenOfKandidatenWithSameId,
     getUngueltigeStimmenOrZero,

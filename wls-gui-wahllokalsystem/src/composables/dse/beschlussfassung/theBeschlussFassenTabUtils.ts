@@ -8,6 +8,7 @@ const {
   setSystemBeschlussgruendeTrueWhenFoundInStimmzettel,
   setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel,
   setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
+  setSystemBeschlussgrundKeineGueltigenStimmen,
 } = useBeschlussgrundOptionTools();
 
 export function useTheBeschlussFassenTabUtils() {
@@ -31,6 +32,10 @@ export function useTheBeschlussFassenTabUtils() {
     );
     setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel(
       stimmzettel?.wahlvorstandBeschlussvorschlag ?? [],
+      beschlussgrundOptions
+    );
+    setSystemBeschlussgrundKeineGueltigenStimmen(
+      stimmzettel,
       beschlussgrundOptions
     );
 

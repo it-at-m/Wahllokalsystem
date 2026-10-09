@@ -159,11 +159,7 @@ export function useMbwNiederschriftViewUtils(
         const images = printWindow.document.querySelectorAll("img");
 
         const imagePromises = Array.from(images).map((img) =>
-          img.complete
-            ? Promise.resolve()
-            : img.decode().catch(() => {
-                return;
-              })
+          img.decode ? img.decode().catch(() => {}) : Promise.resolve()
         );
 
         await Promise.all(imagePromises);

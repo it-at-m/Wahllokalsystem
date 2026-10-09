@@ -43,6 +43,7 @@
         :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
         :wahlvorschlaege="wahlvorschlaege"
         :stimmzettel="stimmzettelForBeschlussfassung"
+        :deny-selection-of-stimmzettel-fehlt="true"
         class="v-card-text"
         :style="{ display: tab === 'two' ? 'flex' : 'none !important' }"
       />

@@ -82,8 +82,7 @@
             .wahlvorstandBeschlussvorschlag
         "
         :deny-selection-of-stimmzettel-fehlt="
-          stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
-            .value
+          isSelectionOfStimmzettelFehltDenied
         "
         :deny-selection-of-stimmzettel-leer="
           stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
@@ -139,6 +138,11 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  denySelectionOfStimmzettelFehlt: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const changeHistory = computed(
@@ -156,6 +160,12 @@ const latestChangedWahlvorschlagId = computed<string | null>(
 );
 const latestChangedKandidat = computed<DseKandidat | null>(
   () => changeHistory.value.lastUsedKandidat.value ?? null
+);
+const isSelectionOfStimmzettelFehltDenied = computed(
+  () =>
+    props.denySelectionOfStimmzettelFehlt ||
+    stimmzettelManager.value.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
+      .value
 );
 
 const COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME =

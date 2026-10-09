@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>security</artifactId>
-    <version>1.8.2-SNAPSHOT</version>
+    <version>1.9.0-SNAPSHOT</version>
     <name>wls-common-security</name>
     <description>Uebergreifende Security Aspekte</description>
     <url>${wls.github.url}</url>
@@ -86,6 +86,10 @@
             <artifactId>testing</artifactId>
             <version>1.8.2-SNAPSHOT</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
         </dependency>
     </dependencies>
 

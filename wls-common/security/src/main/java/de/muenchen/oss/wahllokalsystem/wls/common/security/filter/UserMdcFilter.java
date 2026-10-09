@@ -23,7 +23,9 @@ public class UserMdcFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(
-      final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
+      final HttpServletRequest request,
+      final HttpServletResponse response,
+      final FilterChain filterChain)
       throws ServletException, IOException {
     try {
       val username = usernameResolver.resolve();

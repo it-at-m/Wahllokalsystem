@@ -16,6 +16,7 @@ const mockDefinitions = vi.hoisted(() => ({
   setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel: vi.fn(),
   setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList: vi.fn(),
   mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText: vi.fn(),
+  setSystemBeschlussgrundKeineGueltigenStimmen: vi.fn(),
 }));
 
 vi.mock(
@@ -31,6 +32,8 @@ vi.mock(
           mockDefinitions.setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel,
         setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList:
           mockDefinitions.setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
+        setSystemBeschlussgrundKeineGueltigenStimmen:
+          mockDefinitions.setSystemBeschlussgrundKeineGueltigenStimmen,
       }),
     };
   }

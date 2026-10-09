@@ -57,8 +57,7 @@ export const Default: Story = {
     stimmzettelManager: useStimmzettelManager(
       computed(() => 1),
       create5WahlvorschlaegeWith10KandidatenEach(),
-      "wahlID",
-      "team A"
+      "wahlID"
     ),
   },
 };

@@ -5,8 +5,11 @@
     persistent
     fullscreen
   >
-    <v-card>
-      <v-tabs v-model="tab">
+    <v-card class="h-screen">
+      <v-tabs
+        v-model="tab"
+        class="flex-shrink-0"
+      >
         <v-tab value="one">
           <v-icon
             icon="$stimmzettelBeschluss"
@@ -24,38 +27,25 @@
           class="mr-2"
         />
       </v-tabs>
-      <v-card-text class="h-auto overflow-y-auto pa-0">
-        <v-tabs-window
-          v-model="tab"
-          class="beschlussfassung-tabs-window flex-grow-1"
-        >
-          <v-tabs-window-item value="one">
-            <the-beschluss-fassen-tab
-              v-model:beschluss-details="beschlussDetails"
-              v-model:abstimmungsergebnis="abstimmungsergebnis"
-              :stimmzettel-gueltigkeit-aus-beschluss="
-                stimmzettelGueltigkeitAusBeschluss
-              "
-              :is-beschluss-gefasst="isBeschlussGefasst"
-            />
-          </v-tabs-window-item>
-          <v-tabs-window-item
-            value="two"
-            class="h-100"
-            eager
-          >
-            <v-card class="d-flex flex-column h-100">
-              <base-stimmzettel-erfassung-card-content
-                v-if="stimmzettelForBeschlussfassung"
-                v-model="stimmzettelManager"
-                :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
-                :wahlvorschlaege="wahlvorschlaege"
-                :stimmzettel="stimmzettelForBeschlussfassung"
-              />
-            </v-card>
-          </v-tabs-window-item>
-        </v-tabs-window>
-      </v-card-text>
+      <the-beschluss-fassen-tab
+        v-if="tab === 'one'"
+        v-model:beschluss-details="beschlussDetails"
+        v-model:abstimmungsergebnis="abstimmungsergebnis"
+        :stimmzettel-gueltigkeit-aus-beschluss="
+          stimmzettelGueltigkeitAusBeschluss
+        "
+        :is-beschluss-gefasst="isBeschlussGefasst"
+        class="v-card-text"
+      />
+      <base-stimmzettel-erfassung-card-content
+        v-if="stimmzettelForBeschlussfassung"
+        v-model="stimmzettelManager"
+        :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
+        :wahlvorschlaege="wahlvorschlaege"
+        :stimmzettel="stimmzettelForBeschlussfassung"
+        class="v-card-text"
+        :style="{ display: tab === 'two' ? 'flex' : 'none !important' }"
+      />
       <v-card-actions>
         <base-text-button @click="onCancelClicked">Abbrechen</base-text-button>
         <base-wls-button-save
@@ -189,9 +179,3 @@ function onSaveClicked() {
   });
 }
 </script>
-
-<style scoped>
-.beschlussfassung-tabs-window :deep(.v-window__container) {
-  height: 100% !important;
-}
-</style>

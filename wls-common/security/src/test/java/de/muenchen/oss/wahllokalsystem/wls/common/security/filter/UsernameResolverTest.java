@@ -3,21 +3,24 @@ package de.muenchen.oss.wahllokalsystem.wls.common.security.filter;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.security.Principal;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
@@ -29,15 +32,23 @@ class UsernameResolverTest {
   @Mock private SecurityContext securityContext;
   @Mock private Authentication authentication;
 
+  @Mock private Appender<ILoggingEvent> mockAppender;
+  @Captor private ArgumentCaptor<ILoggingEvent> logEventCaptor;
+  private Logger logger;
+
   @BeforeEach
   void setup() {
     usernameResolver = new UsernameResolver();
     SecurityContextHolder.setContext(securityContext);
+
+    logger = (Logger) LoggerFactory.getLogger(UsernameResolver.class);
+    logger.addAppender(mockAppender);
   }
 
   @AfterEach
   void teardown() {
     SecurityContextHolder.clearContext();
+    logger.detachAppender(mockAppender);
   }
 
   private void mockAuthenticated(Authentication auth) {
@@ -48,9 +59,18 @@ class UsernameResolverTest {
   }
 
   @Test
-  void should_returnNull_when_authIsNull() {
+  void should_returnNullAndLogWarning_when_authIsNull() {
     mockAuthenticated(null);
+
     assertNull(usernameResolver.resolve());
+
+    verify(mockAppender).doAppend(logEventCaptor.capture());
+    ILoggingEvent logEvent = logEventCaptor.getValue();
+
+    assertEquals(Level.WARN, logEvent.getLevel());
+    assertEquals(
+        "Authentifizierung fehlgeschlagen: SecurityContext enthält kein Authentication-Objekt.",
+        logEvent.getFormattedMessage());
   }
 
   @Test
@@ -63,160 +83,74 @@ class UsernameResolverTest {
   }
 
   @Test
-  void should_extractPreferredUsername_when_principalIsOidcUser() {
-    OidcUser mockOidcUser = mock(OidcUser.class);
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn(mockOidcUser);
-    when(mockOidcUser.getPreferredUsername()).thenReturn("oidc.user");
-
-    assertEquals("oidc.user", usernameResolver.resolve());
-  }
-
-  @Test
-  void should_extractAttribute_when_principalIsOAuth2User() {
-    OAuth2User mockOAuth2User = mock(OAuth2User.class);
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn(mockOAuth2User);
-    when(mockOAuth2User.getAttribute("preferred_username")).thenReturn("oauth.preferred");
-
-    assertEquals("oauth.preferred", usernameResolver.resolve());
-  }
-
-  @Test
-  void should_extractClaim_when_principalIsPureJwt() {
-    Jwt mockJwt = mock(Jwt.class);
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn(mockJwt);
-
-    when(mockJwt.getClaimAsString("preferred_username")).thenReturn(null);
-    when(mockJwt.getClaimAsString("username")).thenReturn(null);
-    when(mockJwt.getClaimAsString("upn")).thenReturn(null);
-
-    when(mockJwt.getClaimAsString("email")).thenReturn("purejwt.email@test.com");
-
-    assertEquals("purejwt.email@test.com", usernameResolver.resolve());
-  }
-
-  @Test
-  void should_extractClaim_when_givenJwtAuthenticationToken() {
+  void should_extractUsernameClaim_when_givenJwtAuthenticationToken() {
     JwtAuthenticationToken mockAuth = mock(JwtAuthenticationToken.class);
     Jwt mockJwt = mock(Jwt.class);
     mockAuthenticated(mockAuth);
     when(mockAuth.getToken()).thenReturn(mockJwt);
-    when(mockJwt.getClaimAsString("preferred_username")).thenReturn("jwt.user");
+    when(mockJwt.getClaimAsString("username")).thenReturn("jwt.user");
 
     assertEquals("jwt.user", usernameResolver.resolve());
   }
 
   @Test
-  void should_setUsername_when_principalIsUserDetails() {
-    UserDetails mockUserDetails = mock(UserDetails.class);
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn(mockUserDetails);
-    when(mockUserDetails.getUsername()).thenReturn("details.user");
-
-    assertEquals("details.user", usernameResolver.resolve());
-  }
-
-  @Test
-  void should_setName_when_principalIsPurePrincipalInterface() {
-    Principal mockPrincipal = mock(Principal.class);
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn(mockPrincipal);
-    when(mockPrincipal.getName()).thenReturn("pure.principal");
-
-    assertEquals("pure.principal", usernameResolver.resolve());
-  }
-
-  @Test
-  void should_setAuthName_when_principalTypeIsUnknown() {
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn("UnknownPrincipalType");
-    when(authentication.getName()).thenReturn("auth.fallback.name");
-
-    assertEquals("auth.fallback.name", usernameResolver.resolve());
-  }
-
-  @Test
-  void should_fallbackToEmail_when_oidcUserPreferredUsernameIsBlank() {
-    OidcUser mockOidcUser = mock(OidcUser.class);
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn(mockOidcUser);
-
-    when(mockOidcUser.getPreferredUsername()).thenReturn("   ");
-    when(mockOidcUser.getEmail()).thenReturn("fallback.email@test.com");
-
-    assertEquals("fallback.email@test.com", usernameResolver.resolve());
-  }
-
-  @Test
-  void should_fallbackToName_when_oidcUserPreferredUsernameAndEmailAreNull() {
-    OidcUser mockOidcUser = mock(OidcUser.class);
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn(mockOidcUser);
-
-    when(mockOidcUser.getPreferredUsername()).thenReturn(null);
-    when(mockOidcUser.getEmail()).thenReturn(null);
-    when(mockOidcUser.getName()).thenReturn("fallback.name");
-
-    assertEquals("fallback.name", usernameResolver.resolve());
-  }
-
-  @Test
-  void should_fallbackToUsernameAttribute_when_oauth2UserPreferredUsernameIsNull() {
-    OAuth2User mockOAuth2User = mock(OAuth2User.class);
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn(mockOAuth2User);
-
-    when(mockOAuth2User.getAttribute("preferred_username")).thenReturn(null);
-    when(mockOAuth2User.getAttribute("username")).thenReturn("oauth.username.fallback");
-    when(mockOAuth2User.getAttribute("email")).thenReturn("should.not.be.chosen@test.com");
-
-    assertEquals("oauth.username.fallback", usernameResolver.resolve());
-  }
-
-  @Test
-  void should_fallbackToGetName_when_allOAuth2UserAttributesAreMissing() {
-    OAuth2User mockOAuth2User = mock(OAuth2User.class);
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn(mockOAuth2User);
-
-    when(mockOAuth2User.getAttribute("preferred_username")).thenReturn(null);
-    when(mockOAuth2User.getAttribute("username")).thenReturn(null);
-    when(mockOAuth2User.getAttribute("email")).thenReturn(null);
-
-    when(mockOAuth2User.getName()).thenReturn("oauth.technical.id.123");
-
-    assertEquals("oauth.technical.id.123", usernameResolver.resolve());
-  }
-
-  @Test
-  void should_respectClaimPriorityOrder_when_principalIsPureJwt() {
+  void should_fallbackToSubClaim_when_usernameClaimIsMissing() {
+    JwtAuthenticationToken mockAuth = mock(JwtAuthenticationToken.class);
     Jwt mockJwt = mock(Jwt.class);
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn(mockJwt);
+    mockAuthenticated(mockAuth);
 
-    when(mockJwt.getClaimAsString("preferred_username")).thenReturn(null);
+    when(mockAuth.getToken()).thenReturn(mockJwt);
     when(mockJwt.getClaimAsString("username")).thenReturn(null);
-
-    when(mockJwt.getClaimAsString("upn")).thenReturn("user.upn@domain.local");
-
-    assertEquals("user.upn@domain.local", usernameResolver.resolve());
-  }
-
-  @Test
-  void should_fallbackToSubClaim_when_allOtherJwtClaimsAreMissing() {
-    Jwt mockJwt = mock(Jwt.class);
-    mockAuthenticated(authentication);
-    when(authentication.getPrincipal()).thenReturn(mockJwt);
-
-    when(mockJwt.getClaimAsString("preferred_username")).thenReturn(null);
-    when(mockJwt.getClaimAsString("username")).thenReturn(null);
-    when(mockJwt.getClaimAsString("upn")).thenReturn(null);
-    when(mockJwt.getClaimAsString("email")).thenReturn(null);
-
     when(mockJwt.getClaimAsString("sub")).thenReturn("25983741-efab-4122");
 
     assertEquals("25983741-efab-4122", usernameResolver.resolve());
+  }
+
+  @Test
+  void should_fallbackToAuthName_when_allJwtClaimsAreMissing() {
+    JwtAuthenticationToken mockAuth = mock(JwtAuthenticationToken.class);
+    Jwt mockJwt = mock(Jwt.class);
+    mockAuthenticated(mockAuth);
+
+    when(mockAuth.getToken()).thenReturn(mockJwt);
+    when(mockJwt.getClaimAsString("username")).thenReturn(null);
+    when(mockJwt.getClaimAsString("sub")).thenReturn(null);
+    when(mockAuth.getName()).thenReturn("fallback.jwt.name");
+
+    assertEquals("fallback.jwt.name", usernameResolver.resolve());
+  }
+
+  @Test
+  void should_returnNullAndLogWarning_when_jwtAuthenticationTokenContainsNoToken() {
+    JwtAuthenticationToken mockAuth = mock(JwtAuthenticationToken.class);
+    mockAuthenticated(mockAuth);
+    when(mockAuth.getToken()).thenReturn(null);
+
+    assertNull(usernameResolver.resolve());
+
+    verify(mockAppender).doAppend(logEventCaptor.capture());
+    ILoggingEvent logEvent = logEventCaptor.getValue();
+
+    assertEquals(Level.WARN, logEvent.getLevel());
+    assertEquals(
+        "Nicht unterstützter Authentifizierungstyp: JwtAuthenticationToken enthält keinen Token.",
+        logEvent.getFormattedMessage());
+  }
+
+  @Test
+  void should_returnAuthNameAndLogWarning_when_authTypeIsUnknown() {
+    mockAuthenticated(authentication);
+    when(authentication.getName()).thenReturn("auth.fallback.name");
+
+    assertEquals("auth.fallback.name", usernameResolver.resolve());
+
+    verify(mockAppender).doAppend(logEventCaptor.capture());
+    ILoggingEvent logEvent = logEventCaptor.getValue();
+
+    assertEquals(Level.WARN, logEvent.getLevel());
+
+    String expectedPrefix =
+        "Nicht unterstützter Authentifizierungstyp: " + authentication.getClass().getName();
+    assertEquals(expectedPrefix, logEvent.getFormattedMessage());
   }
 }

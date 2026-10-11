@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useStimmzettelerfassungBeendenDialogUtils } from "@/composables/dse/stimmzettelerfassung/StimmzettelerfassungBeendenDialogUtils.ts";
 import { ROUTE_FINISHED } from "@/constants.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
-import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
@@ -190,7 +190,7 @@ describe("StimmzettelerfassungBeendenDialogUtils.ts", () => {
       mockDefinitions.hasRoleSchriftfuehrungValue.value = true;
       mockDefinitions.currentUserTeamNameValue.value = "TEAM-SONSTIG";
       mockDefinitions.getNextRoute.mockReturnValue({
-        name: DseStepsEnum.DSE_MONITORING,
+        name: MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
         params: { wahlId, wahlbezirkId },
       });
       mockDefinitions.synchronizeOfflineData.mockResolvedValue({
@@ -202,7 +202,7 @@ describe("StimmzettelerfassungBeendenDialogUtils.ts", () => {
 
       expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalled();
       expect(mockDefinitions.routerPush).toHaveBeenCalledWith({
-        name: DseStepsEnum.DSE_MONITORING,
+        name: MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
         params: { wahlId, wahlbezirkId },
       });
       expect(mockDefinitions.closeDialogCallback).toHaveBeenCalledTimes(1);

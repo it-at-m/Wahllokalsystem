@@ -64,6 +64,7 @@ import TheMbwDseSchnellmeldungCard from "@/components/ergebnismeldung/MBW/TheMbw
 import TheMbwStapelSchnellmeldungCard from "@/components/ergebnismeldung/MBW/TheMbwStapelSchnellmeldungCard.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
+import { useMbwSchnellmeldungDruckService } from "@/composables/ergebnismeldung/MBW/mbwSchnellmeldungDruckService.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useSchnellmeldungDruck } from "@/composables/ergebnismeldung/MBW/schnellmeldungDruck.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
@@ -73,7 +74,6 @@ import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -87,13 +87,16 @@ const { isDseAktiv } = storeToRefs(useInfomanagementStore());
 
 const { addNotification } = useUserNotificationService();
 const { wahlenActions } = useWahlenStore();
-const { isBWB } = storeToRefs(useUserStore());
+const { isBWB, currentUserWahlbezirkNummer } = storeToRefs(useUserStore());
 const {
   isSendingSchnellmeldung,
   sendSchnellmeldung,
-  prepareDataForSchnellmeldungDruck,
   updateStatusAfterSchnellmeldungDrucken,
 } = useMbwUtils(wahlID, wahlbezirkID);
+const { prepareDataForSchnellmeldungDruck } = useMbwSchnellmeldungDruckService(
+  wahlID,
+  wahlbezirkID
+);
 const { buildSchnellmeldungTemplateFromData } = useSchnellmeldungDruck();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 const { getNextRoute } = useNavigationService();
@@ -169,7 +172,7 @@ async function onDruckenClicked() {
         await prepareDataForSchnellmeldungDruck(
           wahl,
           status,
-          MeldungsArtEnum.Schnellmeldung
+          currentUserWahlbezirkNummer.value
         );
 
       const printWindow = window.open(

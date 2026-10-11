@@ -5,12 +5,14 @@
       :stimmzettel-liste="stimmzettelListe"
       :stimmzettel-loading="isStimmzettelLoading"
       class="mt-3"
-      :bearbeitung-disabled="isStatusLoading || hasTeamFinishedErfassung"
+      :bearbeitung-disabled="
+        isStatusLoading || hasTeamFinishedErfassung || isElectionFinished
+      "
       @stimmzettel-bearbeiten="onStimmzettelBearbeitenClicked"
     />
     <v-card-actions v-if="!isStatusLoading">
       <div
-        v-if="!hasTeamFinishedErfassung"
+        v-if="!hasTeamFinishedErfassung && !isElectionFinished"
         class="d-flex w-100"
       >
         <base-text-button
@@ -35,7 +37,7 @@
         </base-text-button>
       </div>
       <div
-        v-else
+        v-else-if="!isElectionFinished"
         class="w-100"
       >
         <base-feedback-card
@@ -95,6 +97,7 @@ import TheStimmzettelErfassungDialog from "@/components/dse/stimmzettelerfassung
 import TheStimmzettelkennungDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelkennungDialog.vue";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const props = defineProps<{
@@ -207,5 +210,9 @@ async function onStimmzettelBearbeitenClicked(
 const hasTeamFinishedErfassung = computed(
   () =>
     teamStatus.value?.status == StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+);
+
+const isElectionFinished = computed(() =>
+  useWorkflowStore().isElectionFinished(wahlID, wahlbezirkID)
 );
 </script>

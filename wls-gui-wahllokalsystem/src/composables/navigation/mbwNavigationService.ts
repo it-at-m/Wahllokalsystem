@@ -176,7 +176,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           : false,
       },
       {
-        title: `Monitoring`,
+        title: `Statusübersicht Teams`,
         targetRoute: _createMbwRoute(
           MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
           wahlID,
@@ -184,7 +184,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
         ),
         disabled: mbwWorkflow.value
           ? !mbwWorkflow.value.stepsDone[
-              MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
+              MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
             ]
           : false,
       },

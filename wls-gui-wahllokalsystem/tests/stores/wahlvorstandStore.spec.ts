@@ -445,6 +445,35 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(true);
     });
+
+    it("should_setLastSavedAnwesendeWahlvorstandsmitgliederAnzahl_when_wahlvorstandIsSent", async () => {
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+          .anwesend(true)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(true)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(false)
+          .build(),
+      ];
+
+      const mockedDatetime = new Date();
+
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        Promise.resolve({ updateDatetime: mockedDatetime })
+      );
+
+      await unitUnderTest.sendWahlvorstand();
+
+      expect(
+        unitUnderTest.lastSavedAnwesendeWahlvorstandsmitgliederAnzahl
+      ).toStrictEqual(2);
+    });
   });
 
   describe("initWahlvorstand", () => {
@@ -747,6 +776,9 @@ describe("wahlvorstandStore.ts", () => {
         (mitglieder: Wahlvorstandsmitglied[]) =>
           mitglieder.every((mitglied) => !mitglied.anwesend)
       );
+      expect(
+        unitUnderTest.lastSavedAnwesendeWahlvorstandsmitgliederAnzahl
+      ).toStrictEqual(0);
       expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
     });
   });

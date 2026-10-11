@@ -118,6 +118,8 @@ export function usePersistedStimmzettelTestDataFactory() {
     createPersistedStimmzettelKandidat,
     createPersistedStimmzettelWahlvorschlag,
     createPersistedStimmzettel,
+    createStimmzettelWahlvorstandBeschlussgrund,
+    createStimmzettelSystemBeschlussgrund,
     preparePersistedStimmzettel,
     preparePersistedStimmzettelBeschlussfassung,
     preparePersistedStimmzettelBeschlussgrund,

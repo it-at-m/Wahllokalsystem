@@ -2,7 +2,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { usePersistedStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/PersistedStimmzettelTools.ts";
+import { usePersistedStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/persistedStimmzettelTools.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -159,7 +159,7 @@ describe("persistedStimmzettelTools.ts", () => {
     it("should_returnTrue_when_stimmzettelIsValidAndContainsNotOnlyReststimmen", () => {
       const stimmzettel = preparePersistedStimmzettel()
         .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
-        .invalideVotes(generateRandomNumber(2))
+        .invalideVotes(0)
         .wahlvorschlaege([
           preparePersistedStimmzettelWahlvorschlag()
             .kandidaten([
@@ -174,6 +174,46 @@ describe("persistedStimmzettelTools.ts", () => {
       mockDefinitions.hasOnlyReststimme.mockReturnValueOnce(true);
       mockDefinitions.hasOnlyReststimme.mockReturnValueOnce(true);
       mockDefinitions.hasOnlyReststimme.mockReturnValueOnce(false);
+
+      expect(unitUnderTest.matchesMBWStapelB(stimmzettel)).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_validStimmzettelWithOneWahlvorschlagHavingOnlyReststimmenWithoutAnyNonCandidateInvalideVote", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .invalideVotes(0)
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .kandidaten([
+              createPersistedStimmzettelKandidat(),
+              createPersistedStimmzettelKandidat(),
+              createPersistedStimmzettelKandidat(),
+            ])
+            .build(),
+        ])
+        .build();
+
+      mockDefinitions.hasOnlyReststimme.mockReturnValue(true);
+
+      expect(unitUnderTest.matchesMBWStapelB(stimmzettel)).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_validStimmzettelWithOneWahlvorschlagHavingOnlyReststimmenButAtLeastOneNonCandidateInvalideVote", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .invalideVotes(generateRandomNumber(2))
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .kandidaten([
+              createPersistedStimmzettelKandidat(),
+              createPersistedStimmzettelKandidat(),
+              createPersistedStimmzettelKandidat(),
+            ])
+            .build(),
+        ])
+        .build();
+
+      mockDefinitions.hasOnlyReststimme.mockReturnValue(true);
 
       expect(unitUnderTest.matchesMBWStapelB(stimmzettel)).toStrictEqual(true);
     });
@@ -195,39 +235,21 @@ describe("persistedStimmzettelTools.ts", () => {
       }
     );
 
-    it.each([
-      {
-        text: "multipleWahlvorschlaegeArePresent",
-        gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-        wahlvorschlaegeCount: 2,
-        hasOnlyReststimme: false,
-      },
-      {
-        text: "kandidatHasOnlyReststimme",
-        gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-        wahlvorschlaegeCount: 1,
-        hasOnlyReststimme: true,
-      },
-    ])(
-      "should_returnFalse_when_$text",
-      ({ gueltigkeit, wahlvorschlaegeCount, hasOnlyReststimme }) => {
-        const stimmzettel = preparePersistedStimmzettel()
-          .gueltigkeit(gueltigkeit)
-          .wahlvorschlaege(
-            Array.from({ length: wahlvorschlaegeCount }, () =>
-              preparePersistedStimmzettelWahlvorschlag()
-                .kandidaten([preparePersistedStimmzettelKandidat().build()])
-                .build()
-            )
+    it("should_returnFalse_when_validStimmzettelWithMultipleWahlvorschlaegeArePresent", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .wahlvorschlaege(
+          Array.from({ length: 2 }, () =>
+            preparePersistedStimmzettelWahlvorschlag()
+              .kandidaten([preparePersistedStimmzettelKandidat().build()])
+              .build()
           )
-          .build();
-        mockDefinitions.hasOnlyReststimme.mockReturnValue(hasOnlyReststimme);
+        )
+        .build();
+      mockDefinitions.hasOnlyReststimme.mockReturnValue(true);
 
-        expect(unitUnderTest.matchesMBWStapelB(stimmzettel)).toStrictEqual(
-          false
-        );
-      }
-    );
+      expect(unitUnderTest.matchesMBWStapelB(stimmzettel)).toStrictEqual(false);
+    });
 
     it.each(nonValidGueltigkeiten)(
       "should_returnFalse_whenGueltigkeitIs%s",
@@ -255,96 +277,61 @@ describe("persistedStimmzettelTools.ts", () => {
     );
   });
 
-  describe("matchesMBWStapelBC", () => {
-    it("should_returnTrue_when_stimmzettelIsValidButDoesNotMatchStapelAWithInvalideVotes", () => {
-      const stimmzettel = preparePersistedStimmzettel()
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
-        .invalideVotes(1)
-        .wahlvorschlaege([
-          preparePersistedStimmzettelWahlvorschlag()
-            .kandidaten([preparePersistedStimmzettelKandidat().build()])
-            .build(),
-        ])
-        .build();
-      mockDefinitions.hasOnlyReststimme.mockReturnValue(true);
-
-      expect(unitUnderTest.matchesMBWStapelBC(stimmzettel)).toStrictEqual(true);
-    });
-
-    it("should_returnTrue_when_stimmzettelIsValidButDoesNotMatchStapelAWithMoreThanOneWahlvorschlagWithOnlyReststimmen", () => {
-      const stimmzettel = preparePersistedStimmzettel()
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
-        .invalideVotes(0)
-        .wahlvorschlaege([
-          createPersistedStimmzettelWahlvorschlag(),
-          createPersistedStimmzettelWahlvorschlag(),
-        ])
-        .build();
-      mockDefinitions.hasOnlyReststimme.mockReturnValue(true);
-
-      expect(unitUnderTest.matchesMBWStapelBC(stimmzettel)).toStrictEqual(true);
-    });
-
-    it("should_returnTrue_when_stimmzettelIsValidButDoesNotMatchStapelAWithMoreOneWahlvorschlagButNotOnlyReststimmen", () => {
-      const stimmzettel = preparePersistedStimmzettel()
-        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
-        .invalideVotes(0)
-        .wahlvorschlaege([
-          createPersistedStimmzettelWahlvorschlag(),
-          createPersistedStimmzettelWahlvorschlag(),
-        ])
-        .build();
-      mockDefinitions.hasOnlyReststimme.mockReturnValue(false);
-
-      expect(unitUnderTest.matchesMBWStapelBC(stimmzettel)).toStrictEqual(true);
-    });
-
+  describe("matchesMBWStapelC", () => {
     it.each(nonValidGueltigkeiten)(
-      "should_returnFalse_when_stimmzettelDoesNotMatchStapelAButIsNotValidWith%s",
-      (nonValidGueltigkeit) => {
+      "should_returnFalse_when_stimmzettelIs%s",
+      (nonValidGuelktigkeit) => {
         const stimmzettel = preparePersistedStimmzettel()
-          .gueltigkeit(nonValidGueltigkeit)
-          .invalideVotes(1)
-          .wahlvorschlaege([
-            preparePersistedStimmzettelWahlvorschlag()
-              .kandidaten([preparePersistedStimmzettelKandidat().build()])
-              .build(),
-          ])
+          .gueltigkeit(nonValidGuelktigkeit)
           .build();
-        mockDefinitions.hasOnlyReststimme.mockReturnValue(true);
 
-        expect(unitUnderTest.matchesMBWStapelBC(stimmzettel)).toStrictEqual(
+        expect(unitUnderTest.matchesMBWStapelC(stimmzettel)).toStrictEqual(
           false
         );
       }
     );
 
-    it.each([
-      {
-        text: "stimmzettelMatchesStapelA",
-        gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-        invalideVotes: 0,
-      },
-      {
-        text: "stimmzettelIsNotValid",
-        gueltigkeit: StimmzettelGueltigkeitEnum.Invalid,
-        invalideVotes: 1,
-      },
-    ])("should_returnFalse_when_$text", ({ gueltigkeit, invalideVotes }) => {
+    it("should_returnFalse_when_validStimmzettelHasNoWahlvorschlag", () => {
       const stimmzettel = preparePersistedStimmzettel()
-        .gueltigkeit(gueltigkeit)
-        .invalideVotes(invalideVotes)
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .wahlvorschlaege([])
+        .build();
+
+      expect(unitUnderTest.matchesMBWStapelC(stimmzettel)).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_validStimmzettelHasOneWahlvorschlag", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .wahlvorschlaege([createPersistedStimmzettelWahlvorschlag()])
+        .build();
+
+      expect(unitUnderTest.matchesMBWStapelC(stimmzettel)).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_validStimmzettelHasTwoWahlvorschlaege", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
         .wahlvorschlaege([
-          preparePersistedStimmzettelWahlvorschlag()
-            .kandidaten([preparePersistedStimmzettelKandidat().build()])
-            .build(),
+          createPersistedStimmzettelWahlvorschlag(),
+          createPersistedStimmzettelWahlvorschlag(),
         ])
         .build();
-      mockDefinitions.hasOnlyReststimme.mockReturnValue(true);
 
-      expect(unitUnderTest.matchesMBWStapelBC(stimmzettel)).toStrictEqual(
-        false
-      );
+      expect(unitUnderTest.matchesMBWStapelC(stimmzettel)).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_validStimmzettelHasTwoOrMoreWahlvorschlaege", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .wahlvorschlaege(
+          Array.from({ length: 2 + generateRandomNumber(2) }, () =>
+            createPersistedStimmzettelWahlvorschlag()
+          )
+        )
+        .build();
+
+      expect(unitUnderTest.matchesMBWStapelC(stimmzettel)).toStrictEqual(true);
     });
   });
 

@@ -481,14 +481,25 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
 
       const model = createStimmzettelerfassungTeamStatusModel();
       const dto = createStimmzettelerfassungTeamStatusDTOData();
+      const apiResponseDTO = createStimmzettelerfassungTeamStatusDTOData();
+      const apiResponseModel = createStimmzettelerfassungTeamStatusModel();
       mockDefinitions.modelToDto.mockReturnValue(dto);
+      mockDefinitions.dtoToModel.mockReturnValue(apiResponseModel);
       mockDefinitions.saveStimmzettelerfassungTeamStatus.mockResolvedValue({
+        data: apiResponseDTO,
         status: 201,
       });
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
-      await postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, true);
+      const result = await postErfassungTeamStatus(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        model,
+        true
+      );
 
+      expect(result).toStrictEqual(apiResponseModel);
       expect(mockDefinitions.requestAsOnlineOnly).toHaveBeenCalledTimes(1);
       expect(mockDefinitions.modelToDto.mock.calls).toStrictEqual([[model]]);
       expect(

@@ -81,11 +81,17 @@ public class AusdruckControllerIntegrationTest {
               .andExpect(status().isOk())
               .andReturn()
               .getResponse();
-      val responseBodyAsByteArray = response.getContentAsString();
+      val responseBodyAsDTO =
+          objectMapper.readValue(response.getContentAsString(), AusdruckReadDTO.class);
 
-      Assertions.assertThat(response.getHeader("Content-Type"))
-          .isEqualTo("text/html; charset=utf-8");
-      Assertions.assertThat(responseBodyAsByteArray).isEqualTo(content);
+      val expectedResponseBody = ausdruckDTOMapper.toDTO(ausdruckModelMapper.toModel(entityToFind));
+
+      Assertions.assertThat(response.getHeader("Content-Type")).isEqualTo("application/json");
+      Assertions.assertThat(responseBodyAsDTO)
+          .usingRecursiveComparison()
+          .withComparatorForType(
+              TimePrecisionComparators.INSTANT_PRECISION_MILLISECONDS, Instant.class)
+          .isEqualTo(expectedResponseBody);
     }
 
     @Test

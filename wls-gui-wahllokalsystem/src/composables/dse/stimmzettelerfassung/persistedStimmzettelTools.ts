@@ -21,18 +21,19 @@ export function usePersistedStimmzettelTools() {
     return (
       stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Valid &&
       stimmzettel.wahlvorschlaege.length === 1 &&
-      stimmzettel.wahlvorschlaege.every((wahlvorschlag) =>
-        wahlvorschlag.kandidaten.some(
-          (kandidat) => !hasOnlyReststimme(kandidat)
-        )
-      )
+      (stimmzettel.invalideVotes > 0 ||
+        stimmzettel.wahlvorschlaege.every((wahlvorschlag) =>
+          wahlvorschlag.kandidaten.some(
+            (kandidat) => !hasOnlyReststimme(kandidat)
+          )
+        ))
     );
   }
 
-  function matchesMBWStapelBC(stimmzettel: PersistedStimmzettel) {
+  function matchesMBWStapelC(stimmzettel: PersistedStimmzettel) {
     return (
       stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Valid &&
-      !matchesMBWStapelA(stimmzettel)
+      stimmzettel.wahlvorschlaege.length > 1
     );
   }
 
@@ -56,7 +57,7 @@ export function usePersistedStimmzettelTools() {
   return {
     matchesMBWStapelA,
     matchesMBWStapelB,
-    matchesMBWStapelBC,
+    matchesMBWStapelC,
     matchesMBWStapelDUngueltig,
     matchesMBWStapelEUngueltig,
   };

@@ -35,6 +35,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   const lastLoading = ref<Date | null>(null);
   const lastSending = ref<Date | null>(null);
   const wahlvorstand = ref<Wahlvorstand>(createEmptyWahlvorstand());
+  const lastSavedAnwesendeWahlvorstandsmitgliederAnzahl = ref<number>(0);
 
   const isSchriftfuehrerAnwesend = computed<boolean>(() =>
     wahlvorstand.value.wahlvorstandsmitglieder.some(
@@ -47,9 +48,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     )
   );
   const isMindestanwesenheitErreicht = computed<boolean>(() => {
-    const anwesend = wahlvorstand.value.wahlvorstandsmitglieder.filter(
-      (mitglied) => mitglied.anwesend
-    ).length;
+    const anwesend = _getAnwesendeWahlvorstandsmitgliederAnzahl();
 
     const isWahlGeschlossen = isUWB.value
       ? schliessungsuhrzeitState.value.schliessungsuhrzeitSent
@@ -89,6 +88,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     wahlvorstand.value.wahlvorstandsmitglieder.forEach(
       (wahlvorstandsMitglied) => (wahlvorstandsMitglied.anwesend = false)
     );
+    lastSavedAnwesendeWahlvorstandsmitgliederAnzahl.value = 0;
     isWahlvorstandErfasst.value = false;
   }
 
@@ -101,6 +101,9 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
       );
       isWahlvorstandErfasst.value = true;
       lastSending.value = updateDatetime;
+
+      lastSavedAnwesendeWahlvorstandsmitgliederAnzahl.value =
+        _getAnwesendeWahlvorstandsmitgliederAnzahl();
     } finally {
       isSaving.value = false;
     }
@@ -137,6 +140,12 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     }
   }
 
+  function _getAnwesendeWahlvorstandsmitgliederAnzahl() {
+    return wahlvorstand.value.wahlvorstandsmitglieder.filter(
+      (mitglied) => mitglied.anwesend
+    ).length;
+  }
+
   return {
     isMindestanwesenheitErreicht,
     isSchriftfuehrerAnwesend,
@@ -147,6 +156,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     isLoading,
     isSaving,
     wahlvorstand,
+    lastSavedAnwesendeWahlvorstandsmitgliederAnzahl,
     initWahlvorstand,
     changeAnwesendOfMitglied,
     forceLoadWahlvorstand,

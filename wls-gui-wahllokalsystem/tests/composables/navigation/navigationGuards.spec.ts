@@ -14,6 +14,7 @@ import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
@@ -86,6 +87,8 @@ describe("navigationGuards.ts", () => {
     requireRoleSchriftfuehrung,
     requiresWorkflowStatusStimmzettelerfassungAbgeschlossen,
     requiresStimmzettelErfassungTeamStatusAbgeschlossen,
+    requiresIsDseAktiv,
+    requiresIsDseInaktiv,
   } = useNavigationGuards();
 
   describe("isStepDoneInElectionState", () => {
@@ -959,5 +962,43 @@ describe("navigationGuards.ts", () => {
       ).toStrictEqual([wahlId, wahlbezirkId, teamId, false]);
       expect(result).toStrictEqual(false);
     });
+  });
+
+  describe("requiresIsDseAktiv", () => {
+    it.each([true, false])(
+      "should_returnSameValue_when_dseIsAktivIs%s",
+      async (isDseAktiv) => {
+        const to = {} as unknown as RouteLocationNormalized;
+
+        // @ts-expect-error: cannot set readonly
+        useInfomanagementStore().isDseAktiv = isDseAktiv;
+        const result = await requiresIsDseAktiv(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+        expect(result).toStrictEqual(isDseAktiv);
+      }
+    );
+  });
+
+  describe("requiresIsNotDseAktiv", () => {
+    it.each([true, false])(
+      "should_returnNegatedValue_when_dseIsAktivIs%s",
+      async (isDseAktiv) => {
+        const to = {} as unknown as RouteLocationNormalized;
+
+        // @ts-expect-error: cannot set readonly
+        useInfomanagementStore().isDseAktiv = isDseAktiv;
+        const result = await requiresIsDseInaktiv(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+        expect(result).toStrictEqual(!isDseAktiv);
+      }
+    );
   });
 });

@@ -23,7 +23,9 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
       stimmzettelerfassungTeamState.isTeamStatusListLoading,
       stimmzettelerfassungState.isWorkflowStatusLoading,
       stimmzettelerfassungTeamState.teamstatusList,
-      stimmzettelerfassungState.workflowStatus
+      stimmzettelerfassungState.workflowStatus,
+      wahlID,
+      wahlbezirkID
     );
 
   async function onMonitoringSynchronisierenClicked() {

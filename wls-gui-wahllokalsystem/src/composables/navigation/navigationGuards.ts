@@ -5,6 +5,7 @@ import type {
 
 import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
 import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
@@ -78,6 +79,12 @@ export function useNavigationGuards() {
 
   const requiresIsNachlieferungsbezirk: NavigationGuard = () =>
     useUserStore().isNachlieferungsbezirk;
+
+  const requiresIsDseAktiv: NavigationGuard = () =>
+    useInfomanagementStore().isDseAktiv;
+
+  const requiresIsDseInaktiv: NavigationGuard = () =>
+    !useInfomanagementStore().isDseAktiv;
 
   const requireRoleErfassungteam: NavigationGuard = () =>
     useUserStore().hasRoleErfassungsteam;
@@ -183,6 +190,8 @@ export function useNavigationGuards() {
     requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
     requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
     requiresIsNachlieferungsbezirk,
+    requiresIsDseAktiv,
+    requiresIsDseInaktiv,
     requireRoleErfassungteam,
     requireRoleSchriftfuehrung,
     requiresStimmzettelErfassungTeamStatusAbgeschlossen,

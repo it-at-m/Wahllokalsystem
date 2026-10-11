@@ -26,8 +26,8 @@ describe("bedenklicherStimmzettelMapper.ts", () => {
     it("should_createModel_when_dtoIsGiven", () => {
       const dtoToMap = prepareBedenklicherStimmzettelDTO()
         .supplements([
-          BedenklicherStimmzettelDTOSupplementsEnum.SingleKandidatVotes,
-          BedenklicherStimmzettelDTOSupplementsEnum.Listenkreuze,
+          BedenklicherStimmzettelDTOSupplementsEnum.TooManySingleKandidatVotes,
+          BedenklicherStimmzettelDTOSupplementsEnum.TooManyListenkreuze,
         ])
         .validity(BedenklicherStimmzettelDTOValidityEnum.PartialValid)
         .build();
@@ -47,11 +47,12 @@ describe("bedenklicherStimmzettelMapper.ts", () => {
 
     const supplementMappingTestcases = [
       {
-        dtoValue: BedenklicherStimmzettelDTOSupplementsEnum.SingleKandidatVotes,
+        dtoValue:
+          BedenklicherStimmzettelDTOSupplementsEnum.TooManySingleKandidatVotes,
         expectedModelValue: SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES,
       },
       {
-        dtoValue: BedenklicherStimmzettelDTOSupplementsEnum.Listenkreuze,
+        dtoValue: BedenklicherStimmzettelDTOSupplementsEnum.TooManyListenkreuze,
         expectedModelValue: SupplementEnum.TOO_MANY_LISTENKREUZE,
       },
     ];
@@ -141,8 +142,8 @@ describe("bedenklicherStimmzettelMapper.ts", () => {
       const expectedResult: BedenklicherStimmzettelDTO = {
         orderIndex: modelToMap.orderIndex,
         supplements: [
-          BedenklicherStimmzettelDTOSupplementsEnum.Listenkreuze,
-          BedenklicherStimmzettelDTOSupplementsEnum.SingleKandidatVotes,
+          BedenklicherStimmzettelDTOSupplementsEnum.TooManyListenkreuze,
+          BedenklicherStimmzettelDTOSupplementsEnum.TooManySingleKandidatVotes,
         ],
         validity: BedenklicherStimmzettelDTOValidityEnum.Valid,
       };
@@ -153,12 +154,12 @@ describe("bedenklicherStimmzettelMapper.ts", () => {
       {
         modelValue: SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES,
         expectedDTOValue:
-          BedenklicherStimmzettelDTOSupplementsEnum.SingleKandidatVotes,
+          BedenklicherStimmzettelDTOSupplementsEnum.TooManySingleKandidatVotes,
       },
       {
         modelValue: SupplementEnum.TOO_MANY_LISTENKREUZE,
         expectedDTOValue:
-          BedenklicherStimmzettelDTOSupplementsEnum.Listenkreuze,
+          BedenklicherStimmzettelDTOSupplementsEnum.TooManyListenkreuze,
       },
     ];
     it.each(supplementMappingTestcases)(

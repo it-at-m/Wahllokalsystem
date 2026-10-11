@@ -60,6 +60,14 @@ export const ErrorWithAdditionalFeedbackAndAction: Story = {
   },
 };
 
+export const HiddenIcon: Story = {
+  args: {
+    title: "Titel zu einer Info",
+    type: InputFeedbackTypeEnum.information,
+    hideIcon: true,
+  },
+};
+
 export const Information: Story = {
   args: {
     title: "Titel zu einem Hinweis",

@@ -30,7 +30,7 @@
       <v-card-text>
         <the-m-b-w-gueltige-stimmen-anzeigen-niederschrift-table
           :wahlvorschlaege-kandidaten-ergebnisse="
-            wahlvorschlaegeWithKandidatenErgebnissenStapelAAndB
+            wahlvorschlaegeWithKandidatenErgebnissenStapelBC
           "
           :ergebnisse-and-wahlvorschlaege="wahlvorschlaegeErgebnisseStapelAAndB"
         />
@@ -86,25 +86,21 @@ const emit = defineEmits<{
 const { hasDoneVorkommnisse } = useEreignisUtils();
 
 const {
-  stapelA,
   stapelB,
-  stapelBC,
+  stapelC,
   stapelDUngueltig,
   stapelEUngueltig,
   wahlvorschlaege,
   wahlvorschlaegeErgebnisseStapelAAndB,
 } = useMbwNiederschriftViewUtils(props.wahlID, props.wahlbezirkID);
-const {
-  wahlvorschlaegeWithKandidatenErgebnissen:
-    wahlvorschlaegeWithKandidatenErgebnissenStapelAAndB,
-} = useStimmzettelZusammenfassungUtils(
-  computed(() => [...stapelA.value, ...stapelB.value]),
-  wahlvorschlaege
-);
+
 const {
   wahlvorschlaegeWithKandidatenErgebnissen:
     wahlvorschlaegeWithKandidatenErgebnissenStapelBC,
-} = useStimmzettelZusammenfassungUtils(stapelBC, wahlvorschlaege);
+} = useStimmzettelZusammenfassungUtils(
+  computed(() => [...stapelB.value, ...stapelC.value]),
+  wahlvorschlaege
+);
 
 const ungueltigeStimmen = computed(() => stapelDUngueltig.value.length);
 const ungueltigeStimmzettelNachBeschluss = computed(

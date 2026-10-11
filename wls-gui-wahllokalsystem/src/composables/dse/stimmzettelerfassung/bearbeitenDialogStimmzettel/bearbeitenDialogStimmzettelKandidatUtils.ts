@@ -4,6 +4,11 @@ import type { Ref } from "vue";
 
 import { computed } from "vue";
 
+import { useKandidatTools } from "@/composables/dse/stimmzettelerfassung/kandidatTools.ts";
+
+const { getTotalEinzelAndUngueltigeStimmen, getUngueltigeStimmenOrZero } =
+  useKandidatTools();
+
 export function useBearbeitenDialogStimmzettelKandidatUtils(
   stimmzettel: Ref<DseStimmzettel>
 ) {
@@ -19,6 +24,22 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
     return kandidatenWithOrdnungszahl.length === 0
       ? undefined
       : _findKandidatToAddEinzelstimme(kandidatenWithOrdnungszahl);
+  }
+
+  function getKandidatToRemoveVotesByOrdnungszahl(ordnungszahl: number) {
+    const kandidatenWithOrdnungszahl =
+      _getKandidatenByOrdnungszahl(ordnungszahl);
+    return kandidatenWithOrdnungszahl.length === 0
+      ? undefined
+      : _findKandidatToRemoveEinzelstimme(kandidatenWithOrdnungszahl);
+  }
+
+  function getKandidatToRemoveInvalidVotesByOrdnungszahl(ordnungszahl: number) {
+    const kandidatenWithOrdnungszahl =
+      _getKandidatenByOrdnungszahl(ordnungszahl);
+    return kandidatenWithOrdnungszahl.length === 0
+      ? undefined
+      : _findKandidatToRemoveInvalidVotes(kandidatenWithOrdnungszahl);
   }
 
   function getKandidatToAddVotesForRangeByOrdnungszahl(ordnungszahl: number) {
@@ -54,19 +75,58 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
   function _findKandidatToAddEinzelstimme(
     kandidatenForListenPosition: DseKandidat[]
   ) {
+    const kandidatenSortedByNennung = [...kandidatenForListenPosition].sort(
+      (kandidat1, kandidat2) => kandidat1.nennung - kandidat2.nennung
+    );
+
     //has any kandidat already uservotes?
-    const kandidatWithEinzelstimmen = kandidatenForListenPosition.find(
-      (kandidat) => kandidat.einzelstimmen !== null
+    const kandidatWithEinzelstimmen = kandidatenSortedByNennung.find(
+      (kandidat) => (kandidat.einzelstimmen ?? 0) > 0
     );
     if (kandidatWithEinzelstimmen) {
       return kandidatWithEinzelstimmen;
     }
 
     //get first unused nennung
-    const firstNennungWithoutDurchstreichung = kandidatenForListenPosition.find(
+    const firstNennungWithoutDurchstreichung = kandidatenSortedByNennung.find(
       (kandidat) => !kandidat.durchgestrichen
     );
-    return firstNennungWithoutDurchstreichung ?? kandidatenForListenPosition[0];
+    return firstNennungWithoutDurchstreichung ?? kandidatenSortedByNennung[0];
+  }
+
+  function _findKandidatToRemoveEinzelstimme(
+    kandidatenForListenPosition: DseKandidat[]
+  ) {
+    const kandidatenSortedByNennung = [...kandidatenForListenPosition].sort(
+      (kandidat1, kandidat2) => kandidat1.nennung - kandidat2.nennung
+    );
+
+    const kandidatWithEinzelstimmenOrUngueltigeStimmen =
+      kandidatenSortedByNennung.find(
+        (kandidat) => getTotalEinzelAndUngueltigeStimmen(kandidat) > 0
+      );
+    if (kandidatWithEinzelstimmenOrUngueltigeStimmen) {
+      return kandidatWithEinzelstimmenOrUngueltigeStimmen;
+    }
+
+    return kandidatenSortedByNennung[0];
+  }
+
+  function _findKandidatToRemoveInvalidVotes(
+    kandidatenForListenPosition: DseKandidat[]
+  ) {
+    const kandidatenSortedByNennung = [...kandidatenForListenPosition].sort(
+      (kandidat1, kandidat2) => kandidat1.nennung - kandidat2.nennung
+    );
+
+    const kandidatWithUngueltigeStimmen = kandidatenSortedByNennung.find(
+      (kandidat) => getUngueltigeStimmenOrZero(kandidat) > 0
+    );
+    if (kandidatWithUngueltigeStimmen) {
+      return kandidatWithUngueltigeStimmen;
+    }
+
+    return kandidatenSortedByNennung[0];
   }
 
   function _findKandidatToAddStreichung(
@@ -101,6 +161,8 @@ export function useBearbeitenDialogStimmzettelKandidatUtils(
   return {
     kandidatenOfStimmzettel,
     getKandidatToAddVotesByOrdnungszahl,
+    getKandidatToRemoveVotesByOrdnungszahl,
+    getKandidatToRemoveInvalidVotesByOrdnungszahl,
     getKandidatToAddVotesForRangeByOrdnungszahl,
     getKandidatForStreichungByOrdnungszahl,
     getKandidatToRemoveStreichungByOrdnungszahl,

@@ -17,7 +17,7 @@ export function useMbwNiederschriftViewUtils(
     stapelASumGroupedByWahlvorschlag,
     stapelB,
     stapelBSumGroupedByWahlvorschlag,
-    stapelBC,
+    stapelC,
     stapelDUngueltig,
     stapelEUngueltig,
   } = useMbwStimmzettelFilterService(stimmzettelOfWahlbezirk);
@@ -39,7 +39,7 @@ export function useMbwNiederschriftViewUtils(
     wahlvorschlaegeErgebnisseStapelAAndB,
     stapelA,
     stapelB,
-    stapelBC,
+    stapelC,
     stapelDUngueltig,
     stapelEUngueltig,
   };

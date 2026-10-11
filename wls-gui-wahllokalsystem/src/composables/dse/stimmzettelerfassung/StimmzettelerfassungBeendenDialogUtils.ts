@@ -2,7 +2,7 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusService.ts";
-import { useWithInProgress } from "@/composables/experimental/indexedDBV2/inProgress.ts";
+import { useWithInProgress } from "@/composables/experimental/indexedDBV2/shared/inProgress.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import router from "@/plugins/router.ts";

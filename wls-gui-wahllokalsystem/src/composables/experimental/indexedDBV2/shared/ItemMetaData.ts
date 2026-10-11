@@ -1,4 +1,4 @@
-import type { FetchStateEnum } from "@/composables/experimental/indexedDBV2/fetchStateEnum.ts";
+import type { FetchStateEnum } from "@/composables/experimental/indexedDBV2/shared/fetchStateEnum.ts";
 
 export interface ItemMetaData {
   fetchState: FetchStateEnum;

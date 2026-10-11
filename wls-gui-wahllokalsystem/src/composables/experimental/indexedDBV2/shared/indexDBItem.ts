@@ -1,7 +1,7 @@
-import type { FetchStateEnum } from "@/composables/experimental/indexedDBV2/fetchStateEnum.ts";
-import type { ItemMetaData } from "@/composables/experimental/indexedDBV2/ItemMetaData.ts";
+import type { FetchStateEnum } from "@/composables/experimental/indexedDBV2/shared/fetchStateEnum.ts";
+import type { ItemMetaData } from "@/composables/experimental/indexedDBV2/shared/ItemMetaData.ts";
 
-import { isItemMetaData } from "@/composables/experimental/indexedDBV2/ItemMetaData.ts";
+import { isItemMetaData } from "@/composables/experimental/indexedDBV2/shared/ItemMetaData.ts";
 
 export interface IndexedDBItem<KEY_TYPE, ITEM_TYPE> {
   item: ITEM_TYPE;

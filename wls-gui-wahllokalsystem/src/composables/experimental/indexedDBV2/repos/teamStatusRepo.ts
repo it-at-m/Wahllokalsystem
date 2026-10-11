@@ -1,11 +1,11 @@
-import type { FetchStateEnum } from "@/composables/experimental/indexedDBV2/fetchStateEnum.ts";
-import type { IndexedDBItem } from "@/composables/experimental/indexedDBV2/indexDBItem.ts";
+import type { FetchStateEnum } from "@/composables/experimental/indexedDBV2/shared/fetchStateEnum.ts";
+import type { IndexedDBItem } from "@/composables/experimental/indexedDBV2/shared/indexDBItem.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import localforage from "localforage";
 
-import { isTransfered } from "@/composables/experimental/indexedDBV2/fetchStateEnum.ts";
-import { createIndexedDBItem } from "@/composables/experimental/indexedDBV2/indexDBItem.ts";
+import { isTransfered } from "@/composables/experimental/indexedDBV2/shared/fetchStateEnum.ts";
+import { createIndexedDBItem } from "@/composables/experimental/indexedDBV2/shared/indexDBItem.ts";
 
 type TeamStatusIndexedDBItem = IndexedDBItem<
   string,

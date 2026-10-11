@@ -1,10 +1,10 @@
 import type { SyncTask } from "@/composables/experimental/experimentalStimmzettelService.ts";
-import type { ChangedIndexDBItem } from "@/composables/experimental/indexedDBV2/changedIndexDBItem.ts";
+import type { ChangedIndexDBItem } from "@/composables/experimental/indexedDBV2/shared/changedIndexDBItem.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
-import { FetchStateEnum } from "@/composables/experimental/indexedDBV2/fetchStateEnum.ts";
-import { useTeamStatusRepo } from "@/composables/experimental/indexedDBV2/teamStatusRepo.ts";
+import { useTeamStatusRepo } from "@/composables/experimental/indexedDBV2/repos/teamStatusRepo.ts";
+import { FetchStateEnum } from "@/composables/experimental/indexedDBV2/shared/fetchStateEnum.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { useStimmzettelerfassungTeamStatusTools } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";

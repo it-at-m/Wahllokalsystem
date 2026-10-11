@@ -1,13 +1,13 @@
 import type { SyncTask } from "@/composables/experimental/experimentalStimmzettelService.ts";
 import type { ChangedIndexDBItem } from "@/composables/experimental/indexedDBV2/shared/changedIndexDBItem.ts";
-import type { DataProviderGetOptions } from "@/composables/experimental/indexedDBV2/shared/DataProviderGetOptions.ts";
-import type { DataProviderOptionRequireSuccessfulSent } from "@/composables/experimental/indexedDBV2/shared/DataProviderOptionRequireSuccessfulSent.ts";
+import type { DataServiceOptionForceRefresh } from "@/composables/experimental/indexedDBV2/shared/DataServiceOptionForceRefresh.ts";
+import type { DataServiceOptionRequireSuccessfulSent } from "@/composables/experimental/indexedDBV2/shared/DataServiceOptionRequireSuccessfulSent.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
 import { useTeamStatusRepo } from "@/composables/experimental/indexedDBV2/repos/teamStatusRepo.ts";
-import { getDefaultDataProviderGetOptions } from "@/composables/experimental/indexedDBV2/shared/DataProviderGetOptions.ts";
-import { getDefaultDataProviderOptionRequireSuccessfulSent } from "@/composables/experimental/indexedDBV2/shared/DataProviderOptionRequireSuccessfulSent.ts";
+import { getDefaultDataServiceOptionForceRefresh } from "@/composables/experimental/indexedDBV2/shared/DataServiceOptionForceRefresh.ts";
+import { getDefaultDataServiceOptionRequireSuccessfulSent } from "@/composables/experimental/indexedDBV2/shared/DataServiceOptionRequireSuccessfulSent.ts";
 import { FetchStateEnum } from "@/composables/experimental/indexedDBV2/shared/fetchStateEnum.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -20,7 +20,7 @@ export function useStimmzettelerfassungTeamStatusDataService(
   wahlID: string,
   wahlbezirkID: string
 ) {
-  const auszaehlungRepo = useTeamStatusRepo(wahlID, wahlbezirkID);
+  const teamStatusRepo = useTeamStatusRepo(wahlID, wahlbezirkID);
 
   const { addNotification } = useUserNotificationService();
   const fetchService = useStimmzettelerfassungTeamStatusFetchService();
@@ -36,7 +36,7 @@ export function useStimmzettelerfassungTeamStatusDataService(
       teamID,
       false
     );
-    const replacedValue = await auszaehlungRepo.replaceTeamStatus(
+    const replacedValue = await teamStatusRepo.replaceTeamStatus(
       teamID,
       teamStatus,
       FetchStateEnum.DONE
@@ -53,9 +53,9 @@ export function useStimmzettelerfassungTeamStatusDataService(
       wahlbezirkID,
       true
     );
-    await auszaehlungRepo.deleteAllItems();
+    await teamStatusRepo.deleteAllItems();
     teamStatusList.forEach((teamStatus) =>
-      auszaehlungRepo.setTeamStatus(
+      teamStatusRepo.setTeamStatus(
         teamStatus.teamID,
         createWithStatus(teamStatus.status),
         FetchStateEnum.DONE
@@ -65,7 +65,7 @@ export function useStimmzettelerfassungTeamStatusDataService(
 
   async function getTasksToSync(): Promise<SyncTask[]> {
     const dirtyTeamStatusRequests =
-      await auszaehlungRepo.getDirtyTeamStatusRequests();
+      await teamStatusRepo.getDirtyTeamStatusRequests();
     return dirtyTeamStatusRequests
       .filter((item) => item.item !== null)
       .map((item) => ({
@@ -77,7 +77,7 @@ export function useStimmzettelerfassungTeamStatusDataService(
   async function getTeamStatusOfAllTeams(): Promise<
     Map<string, StimmzettelerfassungTeamStatus>
   > {
-    const allStatusValues = await auszaehlungRepo.getAllTeamStatus();
+    const allStatusValues = await teamStatusRepo.getAllTeamStatus();
 
     const result = new Map<string, StimmzettelerfassungTeamStatus>();
     allStatusValues.forEach((item) => {
@@ -88,25 +88,25 @@ export function useStimmzettelerfassungTeamStatusDataService(
 
   async function getTeamStatusOfTeam(
     teamID: string,
-    options?: Partial<DataProviderGetOptions>
+    options?: Partial<DataServiceOptionForceRefresh>
   ): Promise<StimmzettelerfassungTeamStatus | null> {
-    const defaultOptions = getDefaultDataProviderGetOptions();
+    const defaultOptions = getDefaultDataServiceOptionForceRefresh();
     const mergedOptions = { ...defaultOptions, ...options };
 
     if (mergedOptions.forceRefresh) {
       await _fetchAndStoreResult(teamID);
     }
 
-    const storedItem = await auszaehlungRepo.getTeamStatus(teamID);
+    const storedItem = await teamStatusRepo.getTeamStatus(teamID);
     return storedItem?.item ?? null;
   }
 
   async function setStatus(
     teamID: string,
     status: StimmzettelerfassungTeamStatusEnum,
-    options?: Partial<DataProviderOptionRequireSuccessfulSent>
+    options?: Partial<DataServiceOptionRequireSuccessfulSent>
   ) {
-    const defaultOptions = getDefaultDataProviderOptionRequireSuccessfulSent();
+    const defaultOptions = getDefaultDataServiceOptionRequireSuccessfulSent();
     const mergedOptions = { ...defaultOptions, ...options };
 
     const statusToSend = createWithStatus(status);
@@ -116,7 +116,7 @@ export function useStimmzettelerfassungTeamStatusDataService(
       await _setStatusOfflineFirst(teamID, statusToSend);
     }
 
-    const storedItem = await auszaehlungRepo.getTeamStatus(teamID);
+    const storedItem = await teamStatusRepo.getTeamStatus(teamID);
     return storedItem?.item ?? null;
   }
 
@@ -135,7 +135,7 @@ export function useStimmzettelerfassungTeamStatusDataService(
           registeredStatus,
           false
         );
-        await auszaehlungRepo.setTeamStatus(
+        await teamStatusRepo.setTeamStatus(
           teamID,
           registeredStatus,
           FetchStateEnum.DONE
@@ -172,7 +172,7 @@ export function useStimmzettelerfassungTeamStatusDataService(
     teamID: string,
     status: StimmzettelerfassungTeamStatus
   ) {
-    await auszaehlungRepo.setTeamStatus(teamID, status, FetchStateEnum.PENDING);
+    await teamStatusRepo.setTeamStatus(teamID, status, FetchStateEnum.PENDING);
 
     _sendAndStoreResult(teamID, status);
   }
@@ -188,7 +188,7 @@ export function useStimmzettelerfassungTeamStatusDataService(
       status,
       true
     );
-    await auszaehlungRepo.setTeamStatus(teamID, status, FetchStateEnum.DONE);
+    await teamStatusRepo.setTeamStatus(teamID, status, FetchStateEnum.DONE);
   }
 
   async function _fetchAndStoreResult(teamID: string) {
@@ -198,11 +198,7 @@ export function useStimmzettelerfassungTeamStatusDataService(
       teamID,
       false
     );
-    await auszaehlungRepo.setTeamStatus(
-      teamID,
-      teamStatus,
-      FetchStateEnum.DONE
-    );
+    await teamStatusRepo.setTeamStatus(teamID, teamStatus, FetchStateEnum.DONE);
   }
 
   async function _sendAndStoreResult(
@@ -212,10 +208,10 @@ export function useStimmzettelerfassungTeamStatusDataService(
     return fetchService
       .postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, status, false)
       .then(() =>
-        auszaehlungRepo.setTeamStatus(teamID, status, FetchStateEnum.DONE)
+        teamStatusRepo.setTeamStatus(teamID, status, FetchStateEnum.DONE)
       )
       .catch(() =>
-        auszaehlungRepo.setTeamStatus(teamID, status, FetchStateEnum.ERROR)
+        teamStatusRepo.setTeamStatus(teamID, status, FetchStateEnum.ERROR)
       );
   }
 

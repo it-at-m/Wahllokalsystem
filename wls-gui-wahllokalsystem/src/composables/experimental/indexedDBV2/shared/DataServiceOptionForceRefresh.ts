@@ -1,9 +1,9 @@
 //TODO welche Options sind noch denkbar? clearOnFailure; clearBeforeRefresh, ..., defaultWhenFailed
-export interface DataProviderGetOptions {
+export interface DataServiceOptionForceRefresh {
   forceRefresh: boolean;
 }
 
-export function getDefaultDataProviderGetOptions(): DataProviderGetOptions {
+export function getDefaultDataServiceOptionForceRefresh(): DataServiceOptionForceRefresh {
   return {
     forceRefresh: false,
   };

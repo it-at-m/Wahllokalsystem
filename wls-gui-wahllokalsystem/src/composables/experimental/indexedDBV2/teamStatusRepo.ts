@@ -1,4 +1,3 @@
-import type { SyncTask } from "@/composables/experimental/experimentalStimmzettelService.ts";
 import type { FetchStateEnum } from "@/composables/experimental/indexedDBV2/fetchStateEnum.ts";
 import type { IndexedDBItem } from "@/composables/experimental/indexedDBV2/indexDBItem.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";

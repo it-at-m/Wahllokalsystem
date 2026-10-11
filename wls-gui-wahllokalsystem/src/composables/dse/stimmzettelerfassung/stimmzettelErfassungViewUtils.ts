@@ -6,7 +6,7 @@ import { computed, onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewButtonStateUtils.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusDataService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusDataService.ts";
 import { useWithInProgress } from "@/composables/experimental/indexedDBV2/shared/inProgress.ts";
 
 const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelTools();
@@ -17,7 +17,7 @@ export function useStimmzettelErfassungViewUtils(
   wahlbezirkID: string,
   teamID: string
 ) {
-  const statusService = useStimmzettelerfassungTeamStatusService(
+  const statusService = useStimmzettelerfassungTeamStatusDataService(
     wahlID,
     wahlbezirkID
   );

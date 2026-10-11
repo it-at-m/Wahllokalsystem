@@ -12,7 +12,7 @@ import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfas
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-export function useStimmzettelerfassungTeamStatusService(
+export function useStimmzettelerfassungTeamStatusDataService(
   wahlID: string,
   wahlbezirkID: string
 ) {

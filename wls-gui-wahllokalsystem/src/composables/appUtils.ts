@@ -1,6 +1,6 @@
 import { storeToRefs } from "pinia";
 
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusDataService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusDataService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -14,7 +14,7 @@ export function useAppUtils() {
   async function initStimmzettelerfassungTeamStatus() {
     try {
       for (const metadata of currentUserWahlMetadata.value) {
-        const teamStatusService = useStimmzettelerfassungTeamStatusService(
+        const teamStatusService = useStimmzettelerfassungTeamStatusDataService(
           metadata.wahlID,
           metadata.wahlbezirkID
         );

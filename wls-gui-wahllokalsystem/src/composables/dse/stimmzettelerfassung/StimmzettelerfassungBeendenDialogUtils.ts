@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusService.ts";
+import { useStimmzettelerfassungTeamStatusDataService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusDataService.ts";
 import { useWithInProgress } from "@/composables/experimental/indexedDBV2/shared/inProgress.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
@@ -25,7 +25,7 @@ export function useStimmzettelerfassungBeendenDialogUtils(
   const { synchronizeOfflineData } = useDataSyncStore();
   const { currentUserTeamName } = storeToRefs(useUserStore());
 
-  const teamStatusService = useStimmzettelerfassungTeamStatusService(
+  const teamStatusService = useStimmzettelerfassungTeamStatusDataService(
     wahlId,
     wahlbezirkId
   );

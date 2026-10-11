@@ -7,6 +7,7 @@ import type { RepoMetaData } from "@/composables/experimental/indexedDBV2/shared
 
 import localforage from "localforage";
 
+import { useLogging } from "@/composables/common/logging.ts";
 import { isTransfered } from "@/composables/experimental/indexedDBV2/shared/fetchStateEnum.ts";
 import { metaDataKey } from "@/composables/experimental/indexedDBV2/shared/RepoMetaData.ts";
 
@@ -21,8 +22,10 @@ export function useAbstractRepo<KEY_TYPE, ITEM_TYPE>(
     name: "wahldb",
     storeName: storeName,
   });
+  const logging = useLogging("abstractRepo");
 
   async function deleteAll() {
+    logging.logDebug("deleteAll");
     await stimmzettelRepo.iterate(async (value, key) => {
       if (key !== metaDataKey) {
         await stimmzettelRepo.removeItem(key);
@@ -33,7 +36,9 @@ export function useAbstractRepo<KEY_TYPE, ITEM_TYPE>(
   }
 
   async function deleteByKeyPredicate(predicate: (key: KEY_TYPE) => boolean) {
+    logging.logDebug("deleteByKeyPredicate");
     const itemsToDelete = await getByKeyPredicate(predicate);
+    logging.logDebug("itemsToDelete", itemsToDelete);
     await Promise.allSettled(
       itemsToDelete.map((item) =>
         stimmzettelRepo.removeItem(
@@ -46,27 +51,34 @@ export function useAbstractRepo<KEY_TYPE, ITEM_TYPE>(
   async function getByKey(
     key: KEY_TYPE
   ): Promise<IndexedDBItem<ITEM_TYPE> | null> {
+    logging.logDebug("getByKey", key);
     const indexDBItem = await stimmzettelRepo.getItem(
       options.keyProvider.createLocalforageKey(key)
     );
+    logging.logDebug("getByKey result", indexDBItem);
     return indexDBItem as IndexedDBItem<ITEM_TYPE>;
   }
 
   async function getByKeyPredicate(
     predicate: (key: KEY_TYPE) => boolean
   ): Promise<IndexedDBItemWithKey<KEY_TYPE, ITEM_TYPE>[]> {
+    logging.logDebug("getByKeyPredicate");
     const allItems = await getAllItems();
-    return allItems.filter(
+
+    const filteredItems = allItems.filter(
       (item) => item.key !== metaDataKey && predicate(item.key)
     );
+    logging.logDebug("getByKeyPredicate result", filteredItems);
+    return filteredItems;
   }
 
   async function getAllItems(): Promise<
     IndexedDBItemWithKey<KEY_TYPE, ITEM_TYPE>[]
   > {
+    logging.logDebug("getAllItems");
     const allItems: IndexedDBItemWithKey<KEY_TYPE, ITEM_TYPE>[] = [];
     await stimmzettelRepo.iterate(
-      async (value: IndexedDBItem<ITEM_TYPE>, key: string) => {
+      (value: IndexedDBItem<ITEM_TYPE>, key: string) => {
         if (key !== metaDataKey) {
           allItems.push({
             key: options.keyProvider.readLocalforageKey(key),
@@ -75,6 +87,7 @@ export function useAbstractRepo<KEY_TYPE, ITEM_TYPE>(
         }
       }
     );
+    logging.logDebug("getAllItems result", allItems);
     return allItems;
   }
 
@@ -87,7 +100,7 @@ export function useAbstractRepo<KEY_TYPE, ITEM_TYPE>(
       .filter((item) => item.item !== null);
   }
 
-  async function hasAnyData(): Promise<boolean> {
+  async function hadAnyData(): Promise<boolean> {
     const metaData = await _getMetaData();
     return metaData?.hasSavedAnyData ?? false;
   }
@@ -96,6 +109,7 @@ export function useAbstractRepo<KEY_TYPE, ITEM_TYPE>(
     key: KEY_TYPE,
     value: IndexedDBItem<ITEM_TYPE> | null
   ) {
+    logging.logDebug("setByKey", key, value);
     await stimmzettelRepo.setItem(
       options.keyProvider.createLocalforageKey(key),
       value
@@ -121,7 +135,7 @@ export function useAbstractRepo<KEY_TYPE, ITEM_TYPE>(
     getByKey,
     getByKeyPredicate,
     getDirtyItems,
-    hasAnyData,
+    hadAnyData,
     setByKey,
   };
 }

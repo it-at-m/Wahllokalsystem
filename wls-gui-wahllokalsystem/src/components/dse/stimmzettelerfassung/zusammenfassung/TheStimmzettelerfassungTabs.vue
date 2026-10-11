@@ -35,7 +35,7 @@ import { useRoute } from "vue-router";
 
 import TheStimmzettelUebersicht from "@/components/dse/stimmzettelerfassung/zusammenfassung/TheStimmzettelUebersicht.vue";
 import TheStimmzettelZusammenfassung from "@/components/dse/stimmzettelerfassung/zusammenfassung/TheStimmzettelZusammenfassung.vue";
-import { useStimmzettelState } from "@/composables/dse/stimmzettelerfassung/stimmzettelState.ts";
+import { useTheStimmzettelerfassungTabUtils } from "@/composables/dse/stimmzettelerfassung/theStimmzettelerfassungTabUtils.ts";
 import { useWahlvorschlaegeState } from "@/composables/dse/stimmzettelerfassung/wahlvorschlaegeState.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
@@ -51,7 +51,7 @@ const {
   savedStimmzettel,
   hasStimmzettel,
   saveOrUpdateStimmzettel,
-} = useStimmzettelState(wahlID, wahlbezirkID, teamID);
+} = useTheStimmzettelerfassungTabUtils(wahlID, wahlbezirkID, teamID);
 
 const { wahlvorschlaege } = useWahlvorschlaegeState(wahlID, wahlbezirkID);
 

@@ -3,6 +3,7 @@ import type { StimmzettelRepoKey } from "@/composables/experimental/indexedDBV2/
 import type { DataServiceOptionForceRefresh } from "@/composables/experimental/indexedDBV2/shared/DataServiceOptionForceRefresh.ts";
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
+import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
 import { useStimmzettelRepo } from "@/composables/experimental/indexedDBV2/repos/stimmzettel/stimmzettelRepo.ts";
 import { getDefaultDataServiceOptionForceRefresh } from "@/composables/experimental/indexedDBV2/shared/DataServiceOptionForceRefresh.ts";
@@ -13,6 +14,8 @@ export function useStimmzettelDataService(
   wahlID: string,
   wahlbezirkID: string
 ) {
+  const logging = useLogging("useStimmzettelDataService");
+
   const stimmzettelRepo = useStimmzettelRepo(wahlID, wahlbezirkID);
   const stimmzettelService = useStimmzettelService();
 
@@ -28,7 +31,7 @@ export function useStimmzettelDataService(
     });
   }
 
-  async function getStimmzettel(
+  async function getStimmzettelOfTeam(
     teamID: string,
     options?: Partial<DataServiceOptionForceRefresh>
   ): Promise<PersistedStimmzettel[]> {
@@ -36,16 +39,17 @@ export function useStimmzettelDataService(
     const mergedOptions = { ...defaultOptions, ...options };
 
     if (mergedOptions.forceRefresh) {
-      await stimmzettelRepo.deleteByKeyPredicate(
-        _createKeyPredicateTeamIdIsEqualTo(teamID)
-      );
-      await _fetchAndStoreResult(teamID);
+      await _replaceStoredStimmzettelOfTeam(teamID);
     }
 
     const stimmzettelItems = await stimmzettelRepo.getByKeyPredicate(
       _createKeyPredicateTeamIdIsEqualTo(teamID)
     );
     return stimmzettelItems.map((item) => item.item);
+  }
+
+  async function loadStimmzettelOfTeam(teamID: string) {
+    await _replaceStoredStimmzettelOfTeam(teamID);
   }
 
   async function setStimmzettel(stimmzettel: PersistedStimmzettel) {
@@ -67,7 +71,10 @@ export function useStimmzettelDataService(
   function _createKeyPredicateTeamIdIsEqualTo(
     teamID: string
   ): (key: StimmzettelRepoKey) => boolean {
-    return (key: StimmzettelRepoKey) => key.teamID === teamID;
+    return (key: StimmzettelRepoKey) => {
+      logging.logDebug("createKeyPredicateTeamIdIsEqualTo", key, teamID);
+      return key.teamID === teamID;
+    };
   }
 
   async function _sendAndStoreResult(stimmzettel: PersistedStimmzettel) {
@@ -101,9 +108,18 @@ export function useStimmzettelDataService(
     );
   }
 
+  async function _replaceStoredStimmzettelOfTeam(teamID: string) {
+    await stimmzettelRepo.deleteByKeyPredicate(
+      _createKeyPredicateTeamIdIsEqualTo(teamID)
+    );
+    await _fetchAndStoreResult(teamID);
+  }
+
   return {
-    getStimmzettel,
+    hasAnyDataLoaded: stimmzettelRepo.hadAnyData,
+    getStimmzettelOfTeam,
     getTasksToSync,
+    loadStimmzettelOfTeam,
     setStimmzettel,
   };
 }

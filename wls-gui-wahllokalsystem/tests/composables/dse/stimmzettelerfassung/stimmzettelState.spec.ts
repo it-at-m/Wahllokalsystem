@@ -4,7 +4,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useStimmzettelState } from "@/composables/dse/stimmzettelerfassung/stimmzettelState.ts";
+import { useTheStimmzettelerfassungTabUtils } from "@/composables/dse/stimmzettelerfassung/theStimmzettelerfassungTabUtils.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
@@ -46,7 +46,7 @@ vi.mock(
     return {
       useStimmzettelService: () => ({
         ...mod.useStimmzettelService(),
-        getStimmzettel: mockDefinitions.getStimmzettel,
+        getStimmzettelOfTeam: mockDefinitions.getStimmzettel,
         saveStimmzettel: mockDefinitions.saveStimmzettel,
       }),
     };
@@ -75,10 +75,10 @@ describe("stimmzettelState", () => {
   const mockedWahlbezirkId = generateRandomString(10);
   const mockedTeamId = generateRandomString(10);
 
-  let unitUnderTest: ReturnType<typeof useStimmzettelState>;
+  let unitUnderTest: ReturnType<typeof useTheStimmzettelerfassungTabUtils>;
 
   beforeEach(() => {
-    unitUnderTest = useStimmzettelState(
+    unitUnderTest = useTheStimmzettelerfassungTabUtils(
       mockedWahlId,
       mockedWahlbezirkId,
       mockedTeamId

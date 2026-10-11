@@ -1,5 +1,8 @@
 import type { FetchStateEnum } from "@/composables/experimental/indexedDBV2/shared/fetchStateEnum.ts";
-import type { IndexedDBItem } from "@/composables/experimental/indexedDBV2/shared/indexDBItem.ts";
+import type {
+  IndexedDBItem,
+  IndexedDBItemWithKey,
+} from "@/composables/experimental/indexedDBV2/shared/indexDBItem.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import localforage from "localforage";
@@ -7,7 +10,9 @@ import localforage from "localforage";
 import { isTransfered } from "@/composables/experimental/indexedDBV2/shared/fetchStateEnum.ts";
 import { createIndexedDBItem } from "@/composables/experimental/indexedDBV2/shared/indexDBItem.ts";
 
-type TeamStatusIndexedDBItem = IndexedDBItem<
+type TeamStatusIndexedDBItem = IndexedDBItem<StimmzettelerfassungTeamStatus>;
+
+type TeamStatusIndexedDBItemWithKey = IndexedDBItemWithKey<
   string,
   StimmzettelerfassungTeamStatus
 >;
@@ -24,12 +29,15 @@ export function useTeamStatusRepo(wahlID: string, wahlbezirkID: string) {
   }
 
   //TODO wir sollten Meta-Daten speichern ob Daten mal gelesen wurden. Wenn nicht wäre ein return `null` gut, sonst ein empty-Array?
-  async function getAllTeamStatus(): Promise<TeamStatusIndexedDBItem[]> {
-    const result: TeamStatusIndexedDBItem[] = [];
-    await dbInstance.iterate((value: TeamStatusIndexedDBItem) => {
+  async function getAllTeamStatus(): Promise<TeamStatusIndexedDBItemWithKey[]> {
+    const result: TeamStatusIndexedDBItemWithKey[] = [];
+    await dbInstance.iterate((value: TeamStatusIndexedDBItem, key: string) => {
       //TODO validate
       if (value.item) {
-        result.push(value);
+        result.push({
+          key,
+          ...value,
+        });
       }
     });
 
@@ -47,7 +55,7 @@ export function useTeamStatusRepo(wahlID: string, wahlbezirkID: string) {
     teamStatus: StimmzettelerfassungTeamStatus | null,
     fetchState: FetchStateEnum
   ): Promise<void> {
-    const indexedDBItem = createIndexedDBItem(teamID, teamStatus, fetchState);
+    const indexedDBItem = createIndexedDBItem(teamStatus, fetchState);
     await _setItem(teamID, indexedDBItem);
   }
 
@@ -56,8 +64,7 @@ export function useTeamStatusRepo(wahlID: string, wahlbezirkID: string) {
     teamStatus: StimmzettelerfassungTeamStatus | null,
     fetchState: FetchStateEnum
   ): Promise<TeamStatusIndexedDBItem | null> {
-    const oldIndexedDBItem =
-      await _getItem<StimmzettelerfassungTeamStatus>(teamID);
+    const oldIndexedDBItem = await _getItem(teamID);
     await setTeamStatus(teamID, teamStatus, fetchState);
     return oldIndexedDBItem;
   }
@@ -69,13 +76,18 @@ export function useTeamStatusRepo(wahlID: string, wahlbezirkID: string) {
       .filter((item) => item.item !== null);
   }
 
-  async function _getItem<T>(
+  async function _getItem(
     key: string
-  ): Promise<IndexedDBItem<string, T> | null> {
-    return (await dbInstance.getItem(key)) as IndexedDBItem<string, T>;
+  ): Promise<IndexedDBItem<StimmzettelerfassungTeamStatus> | null> {
+    return (await dbInstance.getItem(
+      key
+    )) as IndexedDBItem<StimmzettelerfassungTeamStatus>;
   }
 
-  async function _setItem<T>(key: string, value: T): Promise<void> {
+  async function _setItem(
+    key: string,
+    value: IndexedDBItem<StimmzettelerfassungTeamStatus | null>
+  ): Promise<void> {
     await dbInstance.setItem(key, value);
   }
 

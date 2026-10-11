@@ -1,9 +1,11 @@
 import type { SyncTask } from "@/composables/experimental/experimentalStimmzettelService.ts";
 import type { ChangedIndexDBItem } from "@/composables/experimental/indexedDBV2/shared/changedIndexDBItem.ts";
+import type { DataProviderGetOptions } from "@/composables/experimental/indexedDBV2/shared/DataProviderGetOptions.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
 import { useTeamStatusRepo } from "@/composables/experimental/indexedDBV2/repos/teamStatusRepo.ts";
+import { getDefaultDataProviderGetOptions } from "@/composables/experimental/indexedDBV2/shared/DataProviderGetOptions.ts";
 import { FetchStateEnum } from "@/composables/experimental/indexedDBV2/shared/fetchStateEnum.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -59,8 +61,16 @@ export function useStimmzettelerfassungTeamStatusDataService(
   }
 
   async function getTeamStatus(
-    teamID: string
+    teamID: string,
+    options?: Partial<DataProviderGetOptions>
   ): Promise<StimmzettelerfassungTeamStatus | null> {
+    const defaultOptions = getDefaultDataProviderGetOptions();
+    const mergedOptions = { ...defaultOptions, ...options };
+
+    if (mergedOptions.forceRefresh) {
+      await _fetchAndStoreResult(teamID);
+    }
+
     const storedItem = await auszaehlungRepo.getTeamStatus(teamID);
     return storedItem?.item ?? null;
   }
@@ -93,20 +103,7 @@ export function useStimmzettelerfassungTeamStatusDataService(
 
   async function initTeamStatus(teamID: string) {
     try {
-      const teamStatus = await fetchService.loadErfassungTeamStatus(
-        wahlID,
-        wahlbezirkID,
-        teamID,
-        false
-      );
-
-      if (teamStatus) {
-        await auszaehlungRepo.setTeamStatus(
-          teamID,
-          teamStatus,
-          FetchStateEnum.DONE
-        );
-      }
+      const teamStatus = await getTeamStatus(teamID, { forceRefresh: true });
 
       if (!teamStatus) {
         const registeredStatus = createRegistriert();
@@ -147,6 +144,20 @@ export function useStimmzettelerfassungTeamStatusDataService(
     await auszaehlungRepo.setTeamStatus(teamID, status, FetchStateEnum.PENDING);
 
     _sendAndStoreResult(teamID, status);
+  }
+
+  async function _fetchAndStoreResult(teamID: string) {
+    const teamStatus = await fetchService.loadErfassungTeamStatus(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      false
+    );
+    await auszaehlungRepo.setTeamStatus(
+      teamID,
+      teamStatus,
+      FetchStateEnum.DONE
+    );
   }
 
   async function _sendAndStoreResult(

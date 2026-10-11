@@ -57,7 +57,7 @@ export function useStimmzettelerfassungTeamStatusDataService(
     teamStatusList.forEach((teamStatus) =>
       auszaehlungRepo.setTeamStatus(
         teamStatus.teamID,
-        teamStatus,
+        createWithStatus(teamStatus.status),
         FetchStateEnum.DONE
       )
     );

@@ -119,7 +119,9 @@ export const useIndexDB = () => {
       },
 
       async clearIndexDBWhenOwnerNotMatches(owner: string) {
-        const userFromIDB = await localforage.getItem<string>(OWNER_DB_KEY);
+        logDebug("clearIndexDBWhenOwnerNotMatches", owner);
+        const userFromIDB = await this.dbInstance.getItem<string>(OWNER_DB_KEY);
+        logDebug("userFromIDB", userFromIDB);
         if (userFromIDB !== owner) {
           try {
             await this.dbInstance.dropInstance({ name: indexedDBConfig.name });

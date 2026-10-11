@@ -13,7 +13,7 @@ type TeamStatusIndexedDBItem = IndexedDBItem<
   StimmzettelerfassungTeamStatus
 >;
 
-export function useAuszaehlungRepo(wahlID: string, wahlbezirkID: string) {
+export function useTeamStatusRepo(wahlID: string, wahlbezirkID: string) {
   const dbInstance = localforage.createInstance({
     driver: localforage.INDEXEDDB,
     name: "wahldb",

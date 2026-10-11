@@ -3,8 +3,8 @@ import type { ChangedIndexDBItem } from "@/composables/experimental/indexedDBV2/
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
-import { useAuszaehlungRepo } from "@/composables/experimental/indexedDBV2/AuszaehlungRepo.ts";
 import { FetchStateEnum } from "@/composables/experimental/indexedDBV2/fetchStateEnum.ts";
+import { useTeamStatusRepo } from "@/composables/experimental/indexedDBV2/teamStatusRepo.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { useStimmzettelerfassungTeamStatusTools } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
@@ -16,7 +16,7 @@ export function useStimmzettelerfassungTeamStatusService(
   wahlID: string,
   wahlbezirkID: string
 ) {
-  const auszaehlungRepo = useAuszaehlungRepo(wahlID, wahlbezirkID);
+  const auszaehlungRepo = useTeamStatusRepo(wahlID, wahlbezirkID);
 
   const { addNotification } = useUserNotificationService();
   const fetchService = useStimmzettelerfassungTeamStatusFetchService();

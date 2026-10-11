@@ -8,6 +8,7 @@ import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/s
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useStimmzettelerfassungTeamStatusDataService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusDataService.ts";
 import { useWithInProgress } from "@/composables/experimental/indexedDBV2/shared/inProgress.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelTools();
 const { createWrappedFunction } = useWithInProgress();
@@ -22,10 +23,10 @@ export function useStimmzettelErfassungViewUtils(
     wahlbezirkID
   );
   const wrappedGetTeamStatus = createWrappedFunction(
-    statusService.getTeamStatus
+    statusService.getTeamStatusOfTeam
   );
   const wrappedRefreshTeamStatus = createWrappedFunction(
-    statusService.refreshTeamStatus
+    statusService.refreshTeamStatusOfTeam
   );
 
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
@@ -56,12 +57,19 @@ export function useStimmzettelErfassungViewUtils(
   }
 
   async function setStatusInBearbeitung() {
-    await statusService.setStatusInBearbeitung(teamID);
+    await statusService.setStatus(
+      teamID,
+      StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+      { requireSuccessfulSent: true }
+    );
     teamStatus.value = await wrappedGetTeamStatus.run(teamID);
   }
 
   async function sendStatusUnterbrochen() {
-    await statusService.setStatusUnterbrochen(teamID);
+    await statusService.setStatus(
+      teamID,
+      StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
+    );
     teamStatus.value = await wrappedGetTeamStatus.run(teamID);
   }
 

@@ -19,6 +19,11 @@ export function useTeamStatusRepo(wahlID: string, wahlbezirkID: string) {
     storeName: `teamStatus_${wahlID}_${wahlbezirkID}`,
   });
 
+  async function deleteAllItems(): Promise<void> {
+    await dbInstance.clear();
+  }
+
+  //TODO wir sollten Meta-Daten speichern ob Daten mal gelesen wurden. Wenn nicht wäre ein return `null` gut, sonst ein empty-Array?
   async function getAllTeamStatus(): Promise<TeamStatusIndexedDBItem[]> {
     const result: TeamStatusIndexedDBItem[] = [];
     await dbInstance.iterate((value: TeamStatusIndexedDBItem) => {
@@ -75,7 +80,9 @@ export function useTeamStatusRepo(wahlID: string, wahlbezirkID: string) {
   }
 
   return {
+    deleteAllItems,
     getDirtyTeamStatusRequests,
+    getAllTeamStatus,
     getTeamStatus,
     replaceTeamStatus,
     setTeamStatus,

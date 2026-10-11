@@ -3,7 +3,7 @@ import type {
   RouteLocationNormalizedGeneric,
 } from "vue-router";
 
-import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
+import { useStimmzettelerfassungTeamStatusDataService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusDataService.ts";
 import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -112,15 +112,12 @@ export function useNavigationGuards() {
         return false;
       }
 
-      const { loadErfassungTeamStatus } =
-        useStimmzettelerfassungTeamStatusFetchService();
+      const { getTeamStatusOfTeam } =
+        useStimmzettelerfassungTeamStatusDataService(wahlId, wahlbezirkId);
 
       try {
-        const status = await loadErfassungTeamStatus(
-          wahlId,
-          wahlbezirkId,
-          useUserStore().currentUserTeamName,
-          false
+        const status = await getTeamStatusOfTeam(
+          useUserStore().currentUserTeamName
         );
         return (
           status?.status === StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN

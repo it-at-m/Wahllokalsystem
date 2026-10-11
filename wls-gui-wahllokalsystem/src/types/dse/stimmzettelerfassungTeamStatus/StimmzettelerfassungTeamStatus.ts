@@ -6,22 +6,22 @@ export interface StimmzettelerfassungTeamStatus {
 
 export function useStimmzettelerfassungTeamStatusTools() {
   function createAbgeschlossen() {
-    return _createWithStatus(StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN);
+    return createWithStatus(StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN);
   }
 
   function createRegistriert() {
-    return _createWithStatus(StimmzettelerfassungTeamStatusEnum.REGISTRIERT);
+    return createWithStatus(StimmzettelerfassungTeamStatusEnum.REGISTRIERT);
   }
 
   function createInBearbeitung() {
-    return _createWithStatus(StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG);
+    return createWithStatus(StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG);
   }
 
   function createUnterbrochen() {
-    return _createWithStatus(StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN);
+    return createWithStatus(StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN);
   }
 
-  function _createWithStatus(
+  function createWithStatus(
     status: StimmzettelerfassungTeamStatusEnum
   ): StimmzettelerfassungTeamStatus {
     return {
@@ -34,5 +34,6 @@ export function useStimmzettelerfassungTeamStatusTools() {
     createInBearbeitung,
     createRegistriert,
     createUnterbrochen,
+    createWithStatus,
   };
 }

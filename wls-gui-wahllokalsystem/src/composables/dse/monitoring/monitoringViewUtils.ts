@@ -2,7 +2,7 @@ import { storeToRefs } from "pinia";
 import { onActivated } from "vue";
 
 import { useMonitoringViewBeschlussfassungButtonsUtils } from "@/composables/dse/monitoring/monitoringViewBeschlussfassungButtonsUtils.ts";
-import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
+import { useStimmzettelerfassungTeamStatusDataService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusDataService.ts";
 import { useStimmzettelerfassungTeamStatusListState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts";
 import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
@@ -16,13 +16,16 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     wahlID,
     wahlbezirkID
   );
-  const stimmzettelerfassungTeamState =
+  const stimmzettelerfassungTeamListState =
     useStimmzettelerfassungTeamStatusListState(wahlID, wahlbezirkID);
+  const { reopenStimmzettelerfassung: reopenErfassungForTeam } =
+    useStimmzettelerfassungTeamStatusDataService(wahlID, wahlbezirkID);
+
   const monitoringViewBeschlussfassungButtonProperties =
     useMonitoringViewBeschlussfassungButtonsUtils(
-      stimmzettelerfassungTeamState.isTeamStatusListLoading,
+      stimmzettelerfassungTeamListState.isTeamStatusListLoading,
       stimmzettelerfassungState.isWorkflowStatusLoading,
-      stimmzettelerfassungTeamState.teamstatusList,
+      stimmzettelerfassungTeamListState.teamstatusList,
       stimmzettelerfassungState.workflowStatus,
       wahlID,
       wahlbezirkID
@@ -44,12 +47,7 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     const { currentUserTeamName } = storeToRefs(useUserStore());
     const { getNextRoute } = useNavigationService();
 
-    await useStimmzettelerfassungTeamStatusFetchService().reopenStimmzettelerfassung(
-      wahlID,
-      wahlbezirkID,
-      teamID,
-      true
-    );
+    await reopenErfassungForTeam(teamID);
 
     setStepDone(
       wahlID,
@@ -82,14 +80,14 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   }
 
   async function _loadTeamstatusListe() {
-    await stimmzettelerfassungTeamState.loadTeamStatusListe();
+    await stimmzettelerfassungTeamListState.loadTeamStatusListe();
   }
 
   return {
     onMonitoringSynchronisierenClicked,
     reopenStimmzettelerfassung,
 
-    ...stimmzettelerfassungTeamState,
+    ...stimmzettelerfassungTeamListState,
     ...stimmzettelerfassungState,
     ...monitoringViewBeschlussfassungButtonProperties,
   };

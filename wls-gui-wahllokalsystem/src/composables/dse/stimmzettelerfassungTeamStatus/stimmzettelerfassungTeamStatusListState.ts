@@ -1,15 +1,16 @@
+import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEntry.ts";
 
 import { readonly, ref } from "vue";
 
-import { useStimmzettelerfassungTeamStatusFetchService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusFetchService.ts";
+import { useStimmzettelerfassungTeamStatusDataService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelErfassungTeamStatusDataService.ts";
 
 export function useStimmzettelerfassungTeamStatusListState(
   wahlID: string,
   wahlbezirkID: string
 ) {
-  const { loadErfassungTeamStatusListe } =
-    useStimmzettelerfassungTeamStatusFetchService();
+  const { refreshTeamStatusOfAllTeams, getTeamStatusOfAllTeams } =
+    useStimmzettelerfassungTeamStatusDataService(wahlID, wahlbezirkID);
 
   const teamstatusList = ref<StimmzettelerfassungTeamStatusEntry[]>([]);
   const isTeamStatusListLoading = ref(false);
@@ -18,11 +19,19 @@ export function useStimmzettelerfassungTeamStatusListState(
   async function loadTeamStatusListe() {
     try {
       isTeamStatusListLoading.value = true;
-      const loaded = await loadErfassungTeamStatusListe(
-        wahlID,
-        wahlbezirkID,
-        true
+      await refreshTeamStatusOfAllTeams();
+
+      const statusOfAllTeams = await getTeamStatusOfAllTeams();
+      const loaded: StimmzettelerfassungTeamStatusEntry[] = [];
+      statusOfAllTeams.forEach(
+        (status: StimmzettelerfassungTeamStatus, teamID: string) => {
+          loaded.push({
+            teamID,
+            status: status.status,
+          });
+        }
       );
+
       if (loaded) {
         teamstatusList.value = loaded;
         lastTeamstatusLoadingTime.value = new Date();

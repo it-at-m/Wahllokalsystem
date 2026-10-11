@@ -9,6 +9,7 @@ import router from "@/plugins/router.ts";
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -30,7 +31,7 @@ export function useStimmzettelerfassungBeendenDialogUtils(
     wahlbezirkId
   );
   const wrappedPostTeamErfassungDone = createWrappedFunction(
-    teamStatusService.setStatusAbgeschlossen
+    teamStatusService.setStatus
   );
 
   const isSyncWidgetVisible = ref(false);
@@ -54,7 +55,11 @@ export function useStimmzettelerfassungBeendenDialogUtils(
       );
       return;
     }
-    await wrappedPostTeamErfassungDone.run(currentUserTeamName.value);
+    await wrappedPostTeamErfassungDone.run(
+      currentUserTeamName.value,
+      StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN,
+      { requireSuccessfulSent: true }
+    );
 
     await _navigateToNextView();
 

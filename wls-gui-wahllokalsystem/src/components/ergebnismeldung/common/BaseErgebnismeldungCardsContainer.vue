@@ -16,6 +16,7 @@
         @click="$emit('save')"
       />
       <base-wls-button-save
+        v-if="title !== 'Niederschrift'"
         :save-text="`${title} korrigieren`"
         prepend-icon="$edit"
         :disabled="!isKorrigierenActive"
@@ -47,7 +48,7 @@ defineProps<{
   title: string;
   subtitle: string;
   isSending: boolean;
-  isKorrigierenActive: boolean | null | undefined;
+  isKorrigierenActive?: boolean | null | undefined;
   isDruckenActive: boolean | null | undefined;
   isDruckenLoading: boolean;
   isSendenActive: boolean;

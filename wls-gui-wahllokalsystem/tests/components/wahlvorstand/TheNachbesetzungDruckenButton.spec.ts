@@ -19,14 +19,12 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  loadWahlvorstand: vi.fn(),
   sendWahlvorstand: vi.fn(),
 }));
 vi.mock("@/stores/wahlvorstandStore.ts", () => ({
   useWahlvorstandStore: () => ({
     wahlvorstand: ref(createWahlvorstand()),
     sendWahlvorstand: mockDefinitions.sendWahlvorstand,
-    loadWahlvorstand: mockDefinitions.loadWahlvorstand,
   }),
 }));
 
@@ -83,7 +81,7 @@ describe("TheNachbesetzungDruckenButton.vue", () => {
 
   describe(COMPONENT_EVENT_TESTS, () => {
     describe("onNachbesetzungDruckenClicked", () => {
-      it("should_saveAndLoadWahlvorstandAndOpenNewWindow_when_clicked", async () => {
+      it("should_saveWahlvorstandAndOpenNewWindow_when_clicked", async () => {
         const userStore = useUserStore();
         userStore.setUser(
           prepareUser()
@@ -106,12 +104,8 @@ describe("TheNachbesetzungDruckenButton.vue", () => {
         await flushPromises(); // wait for all async operations to be executed
 
         mockDefinitions.sendWahlvorstand.mockResolvedValue(Promise.resolve());
-        mockDefinitions.loadWahlvorstand.mockResolvedValue(
-          createWahlvorstand()
-        );
 
         expect(mockDefinitions.sendWahlvorstand).toHaveBeenCalled();
-        expect(mockDefinitions.loadWahlvorstand).toHaveBeenCalled();
         expect(window.open).toHaveBeenCalled();
         expect(mockedWindow.print).toHaveBeenCalled();
 

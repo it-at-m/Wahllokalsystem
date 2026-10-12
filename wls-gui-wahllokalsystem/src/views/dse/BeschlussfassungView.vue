@@ -34,8 +34,10 @@
       </v-card-actions>
     </v-card>
     <the-beschlussfassung-bearbeiten-dialog
+      v-if="activeStimmzettelForBeschluss"
       v-model="isBearbeitenDialogVisible"
       v-model:stimmzettel="activeStimmzettelForBeschluss"
+      :wahlvorschlaege="wahlvorschlaege"
       @cancel="onBeschlussBearbeitenCanceled"
       @save="onBeschlussBearbeitenSaved"
     />
@@ -60,6 +62,7 @@ import TheBeschlussfassungBearbeitenDialog from "@/components/dse/beschlussfassu
 import { useBeschlussentscheidungenDruckenTools } from "@/composables/dse/beschlussfassung/beschlussentscheidungenDruckenTools.ts";
 import { useBeschlussentscheidungenDruckTemplateTools } from "@/composables/dse/beschlussfassung/beschlussentscheidungenDruckTemplateTools.ts";
 import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
+import { useWahlvorschlaegeState } from "@/composables/dse/stimmzettelerfassung/wahlvorschlaegeState.ts";
 import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
@@ -98,6 +101,7 @@ const {
   sendAusdruckBeschlussentscheidungen,
   prepareDataForBeschlussentscheidungenDruck,
 } = useBeschlussentscheidungenDruckenTools(wahlID, wahlbezirkID);
+const { wahlvorschlaege } = useWahlvorschlaegeState(wahlID, wahlbezirkID);
 const { buildTemplate } = useBeschlussentscheidungenDruckTemplateTools();
 
 async function onBeschlussfassungBeendenClicked() {

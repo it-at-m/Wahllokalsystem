@@ -16,6 +16,7 @@ import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeld
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
@@ -35,7 +36,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   const { wahlenActions } = useWahlenStore();
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
 
-  const { postAusdruck } = useAusdruckService();
+  const { getAusdruck, postAusdruck } = useAusdruckService();
 
   const isErgebnisseSaving = ref<boolean>(false);
   const isSendingSchnellmeldung = ref<boolean>(false);
@@ -212,6 +213,14 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
+  async function getAusdruckNiederschrift(): Promise<string> {
+    return await getAusdruck(
+      wahlbezirkID,
+      wahlID,
+      MeldungsArtEnum.Niederschrift
+    );
+  }
+
   async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {
     try {
       return await getErgebnisse(wahlbezirkID, wahlID, stapelArt, false);
@@ -250,5 +259,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     sendAusdruckNiederschrift,
     updateStatusAfterSchnellmeldungDrucken,
     sendNiederschrift,
+    getAusdruckNiederschrift,
   };
 }

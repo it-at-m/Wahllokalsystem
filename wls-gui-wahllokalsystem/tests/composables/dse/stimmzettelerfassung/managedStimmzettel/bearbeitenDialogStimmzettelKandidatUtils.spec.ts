@@ -104,6 +104,107 @@ describe("bearbeitenDialogStimmzettelKandidatUtils.ts", () => {
     });
   });
 
+  describe("getKandidatToRemoveVotesByOrdnungszahl", () => {
+    it("should_returnKandidatWithEinzelstimmen_when_kandidatWithEinzelstimmenOrUngueltigenStimmenExists", () => {
+      const kWithVotes = prepareDseKandidat()
+        .ordnungszahl(101)
+        .nennung(2)
+        .einzelstimmen(3)
+        .ungueltigeStimmen(0)
+        .build();
+      const kNoVotesLowerNennung = prepareDseKandidat()
+        .ordnungszahl(101)
+        .nennung(1)
+        .einzelstimmen(0)
+        .ungueltigeStimmen(0)
+        .build();
+
+      const stimmzettel = prepareDseStimmzettel()
+        .wahlvorschlaege([
+          prepareDseWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kWithVotes, kNoVotesLowerNennung])
+            .build(),
+        ])
+        .build();
+
+      const tools = useBearbeitenDialogStimmzettelKandidatUtils(
+        ref(stimmzettel)
+      );
+      expect(tools.getKandidatToRemoveVotesByOrdnungszahl(101)).toStrictEqual(
+        kWithVotes
+      );
+    });
+
+    it("should_returnKandidatWithUngueltigenStimmen_when_kandidatWithEinzelstimmenOrUngueltigenStimmenExists", () => {
+      const kWithInvalid = prepareDseKandidat()
+        .ordnungszahl(101)
+        .nennung(1)
+        .einzelstimmen(0)
+        .ungueltigeStimmen(2)
+        .build();
+      const kOther = prepareDseKandidat()
+        .ordnungszahl(101)
+        .nennung(2)
+        .einzelstimmen(0)
+        .ungueltigeStimmen(0)
+        .build();
+
+      const stimmzettel = prepareDseStimmzettel()
+        .wahlvorschlaege([
+          prepareDseWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kOther, kWithInvalid])
+            .build(),
+        ])
+        .build();
+
+      const tools = useBearbeitenDialogStimmzettelKandidatUtils(
+        ref(stimmzettel)
+      );
+      expect(tools.getKandidatToRemoveVotesByOrdnungszahl(101)).toStrictEqual(
+        kWithInvalid
+      );
+    });
+
+    it("should_returnFirstKandidatByNennung_when_noKandidatWithEinzelstimmenOrUngueltigenStimmenExists", () => {
+      const kNennung3 = prepareDseKandidat()
+        .ordnungszahl(101)
+        .nennung(3)
+        .einzelstimmen(0)
+        .ungueltigeStimmen(0)
+        .build();
+      const kNennung1 = prepareDseKandidat()
+        .ordnungszahl(101)
+        .nennung(1)
+        .einzelstimmen(null)
+        .ungueltigeStimmen(null)
+        .build();
+      const kNennung2 = prepareDseKandidat()
+        .ordnungszahl(101)
+        .nennung(2)
+        .einzelstimmen(0)
+        .ungueltigeStimmen(null)
+        .build();
+
+      const stimmzettel = prepareDseStimmzettel()
+        .wahlvorschlaege([
+          prepareDseWahlvorschlag()
+            .ordnungszahl(1)
+            .kandidaten([kNennung3, kNennung1, kNennung2])
+            .build(),
+        ])
+        .build();
+
+      const tools = useBearbeitenDialogStimmzettelKandidatUtils(
+        ref(stimmzettel)
+      );
+      expect(tools.getKandidatToRemoveVotesByOrdnungszahl(101)).toStrictEqual(
+        kNennung1
+      );
+    });
+  });
+
   describe("getKandidatToAddVotesForRangeByOrdnungszahl", () => {
     it("should_returnAllKandidatenInRange_when_called", () => {
       const k1 = prepareDseKandidat().ordnungszahl(101).nennung(2).build();

@@ -18,223 +18,48 @@ import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction, replaceWithSerializableTypeIfNeeded } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- * 
- * @export
- * @interface AsyncProgressDTO
- */
 export interface AsyncProgressDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof AsyncProgressDTO
-     */
     'forWahltag'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AsyncProgressDTO
-     */
     'wahlNummer'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AsyncProgressDTO
-     */
     'lastStartTime'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AsyncProgressDTO
-     */
     'lastFinishTime'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof AsyncProgressDTO
-     */
     'wahlvorschlaegeLoadingActive'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof AsyncProgressDTO
-     */
     'wahlvorschlaegeTotal'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof AsyncProgressDTO
-     */
     'wahlvorschlageFinished'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof AsyncProgressDTO
-     */
     'wahlvorschlaegeNext'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof AsyncProgressDTO
-     */
     'referendumLoadingActive'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof AsyncProgressDTO
-     */
     'referendumVorlagenTotal'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof AsyncProgressDTO
-     */
     'referendumVorlagenFinished'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof AsyncProgressDTO
-     */
     'referendumVorlagenNext'?: string;
 }
-/**
- * 
- * @export
- * @interface FarbeDTO
- */
 export interface FarbeDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof FarbeDTO
-     */
     'r': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FarbeDTO
-     */
     'g': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FarbeDTO
-     */
     'b': number;
 }
-/**
- * 
- * @export
- * @interface KandidatDTO
- */
 export interface KandidatDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof KandidatDTO
-     */
     'identifikator': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KandidatDTO
-     */
     'name': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof KandidatDTO
-     */
     'listenposition': number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof KandidatDTO
-     */
     'direktkandidat': boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof KandidatDTO
-     */
     'tabellenSpalteInNiederschrift': number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof KandidatDTO
-     */
     'einzelbewerber': boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof KandidatDTO
-     */
     'anzahlNennungen': number;
 }
-/**
- * 
- * @export
- * @interface KopfdatenDTO
- */
 export interface KopfdatenDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof KopfdatenDTO
-     */
     'wahlID': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KopfdatenDTO
-     */
     'wahlbezirkID': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KopfdatenDTO
-     */
     'gemeinde': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KopfdatenDTO
-     */
     'stimmzettelgebietsart': KopfdatenDTOStimmzettelgebietsartEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof KopfdatenDTO
-     */
     'stimmzettelgebietsnummer': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KopfdatenDTO
-     */
     'stimmzettelgebietsname': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KopfdatenDTO
-     */
     'wahlname': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof KopfdatenDTO
-     */
     'wahlbezirknummer': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof KopfdatenDTO
-     */
     'maximalErlaubteStimmenProWaehler'?: number;
 }
 
@@ -242,151 +67,36 @@ export const KopfdatenDTOStimmzettelgebietsartEnum = {
     Sb: 'SB',
     Sg: 'SG',
     Sk: 'SK',
-    Wk: 'WK'
+    Wk: 'WK',
 } as const;
 
 export type KopfdatenDTOStimmzettelgebietsartEnum = typeof KopfdatenDTOStimmzettelgebietsartEnum[keyof typeof KopfdatenDTOStimmzettelgebietsartEnum];
 
-/**
- * 
- * @export
- * @interface ReferendumoptionDTO
- */
 export interface ReferendumoptionDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof ReferendumoptionDTO
-     */
     'id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ReferendumoptionDTO
-     */
     'name': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ReferendumoptionDTO
-     */
     'position'?: number;
 }
-/**
- * 
- * @export
- * @interface ReferendumvorlageDTO
- */
 export interface ReferendumvorlageDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof ReferendumvorlageDTO
-     */
     'wahlvorschlagID': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ReferendumvorlageDTO
-     */
     'ordnungszahl': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ReferendumvorlageDTO
-     */
     'kurzname': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ReferendumvorlageDTO
-     */
     'frage': string;
-    /**
-     * 
-     * @type {Array<ReferendumoptionDTO>}
-     * @memberof ReferendumvorlageDTO
-     */
     'referendumoptionen': Array<ReferendumoptionDTO>;
 }
-/**
- * 
- * @export
- * @interface ReferendumvorlagenDTO
- */
 export interface ReferendumvorlagenDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof ReferendumvorlagenDTO
-     */
     'stimmzettelgebietID': string;
-    /**
-     * 
-     * @type {Array<ReferendumvorlageDTO>}
-     * @memberof ReferendumvorlagenDTO
-     */
     'referendumvorlage': Array<ReferendumvorlageDTO>;
 }
-/**
- * 
- * @export
- * @interface WahlDTO
- */
 export interface WahlDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlDTO
-     */
     'wahlID': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlDTO
-     */
     'name': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof WahlDTO
-     */
     'reihenfolge': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof WahlDTO
-     */
     'waehlerverzeichnisNummer': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlDTO
-     */
     'wahltag': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlDTO
-     */
     'wahlart': WahlDTOWahlartEnum;
-    /**
-     * 
-     * @type {FarbeDTO}
-     * @memberof WahlDTO
-     */
     'farbe': FarbeDTO;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlDTO
-     */
     'nummer'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlDTO
-     */
     'kennzeichen': string;
 }
 
@@ -401,190 +111,50 @@ export const WahlDTOWahlartEnum = {
     Obw: 'OBW',
     Srw: 'SRW',
     Svw: 'SVW',
-    Ve: 'VE'
+    Ve: 'VE',
 } as const;
 
 export type WahlDTOWahlartEnum = typeof WahlDTOWahlartEnum[keyof typeof WahlDTOWahlartEnum];
 
-/**
- * 
- * @export
- * @interface WahlbezirkDTO
- */
 export interface WahlbezirkDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlbezirkDTO
-     */
     'wahlbezirkID': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlbezirkDTO
-     */
     'wahltag': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlbezirkDTO
-     */
     'nummer': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlbezirkDTO
-     */
     'wahlbezirkart': WahlbezirkDTOWahlbezirkartEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlbezirkDTO
-     */
     'wahlnummer': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlbezirkDTO
-     */
     'wahlID': string;
 }
 
 export const WahlbezirkDTOWahlbezirkartEnum = {
     Uwb: 'UWB',
-    Bwb: 'BWB'
+    Bwb: 'BWB',
 } as const;
 
 export type WahlbezirkDTOWahlbezirkartEnum = typeof WahlbezirkDTOWahlbezirkartEnum[keyof typeof WahlbezirkDTOWahlbezirkartEnum];
 
-/**
- * 
- * @export
- * @interface WahltagDTO
- */
 export interface WahltagDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WahltagDTO
-     */
     'wahltagID': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahltagDTO
-     */
     'wahltag': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahltagDTO
-     */
     'beschreibung'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahltagDTO
-     */
     'nummer'?: string;
 }
-/**
- * 
- * @export
- * @interface WahlvorschlaegeDTO
- */
 export interface WahlvorschlaegeDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorschlaegeDTO
-     */
     'wahlID': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorschlaegeDTO
-     */
     'wahlbezirkID': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorschlaegeDTO
-     */
     'stimmzettelgebietID': string;
-    /**
-     * 
-     * @type {Array<WahlvorschlagDTO>}
-     * @memberof WahlvorschlaegeDTO
-     */
     'wahlvorschlaege': Array<WahlvorschlagDTO>;
 }
-/**
- * 
- * @export
- * @interface WahlvorschlagDTO
- */
 export interface WahlvorschlagDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorschlagDTO
-     */
     'identifikator': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof WahlvorschlagDTO
-     */
     'ordnungszahl': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof WahlvorschlagDTO
-     */
     'kurzname': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof WahlvorschlagDTO
-     */
     'erhaeltStimmen': boolean;
-    /**
-     * 
-     * @type {Array<KandidatDTO>}
-     * @memberof WahlvorschlagDTO
-     */
     'kandidaten'?: Array<KandidatDTO>;
 }
-/**
- * 
- * @export
- * @interface WlsExceptionDTO
- */
 export interface WlsExceptionDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'category': WlsExceptionDTOCategoryEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'code': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'service': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof WlsExceptionDTO
-     */
     'message': string;
 }
 
@@ -592,7 +162,7 @@ export const WlsExceptionDTOCategoryEnum = {
     F: 'F',
     T: 'T',
     S: 'S',
-    I: 'I'
+    I: 'I',
 } as const;
 
 export type WlsExceptionDTOCategoryEnum = typeof WlsExceptionDTOCategoryEnum[keyof typeof WlsExceptionDTOCategoryEnum];
@@ -600,7 +170,6 @@ export type WlsExceptionDTOCategoryEnum = typeof WlsExceptionDTOCategoryEnum[key
 
 /**
  * AsyncProgressControllerApi - axios parameter creator
- * @export
  */
 export const AsyncProgressControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -626,8 +195,8 @@ export const AsyncProgressControllerApiAxiosParamCreator = function (configurati
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -642,7 +211,6 @@ export const AsyncProgressControllerApiAxiosParamCreator = function (configurati
 
 /**
  * AsyncProgressControllerApi - functional programming interface
- * @export
  */
 export const AsyncProgressControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AsyncProgressControllerApiAxiosParamCreator(configuration)
@@ -663,7 +231,6 @@ export const AsyncProgressControllerApiFp = function(configuration?: Configurati
 
 /**
  * AsyncProgressControllerApi - factory interface
- * @export
  */
 export const AsyncProgressControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AsyncProgressControllerApiFp(configuration)
@@ -681,16 +248,12 @@ export const AsyncProgressControllerApiFactory = function (configuration?: Confi
 
 /**
  * AsyncProgressControllerApi - object-oriented interface
- * @export
- * @class AsyncProgressControllerApi
- * @extends {BaseAPI}
  */
 export class AsyncProgressControllerApi extends BaseAPI {
     /**
      * Abrufen des Fortschrittes bei der Importierung der Wahltermindaten.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AsyncProgressControllerApi
      */
     public getAsyncProgress(options?: RawAxiosRequestConfig) {
         return AsyncProgressControllerApiFp(this.configuration).getAsyncProgress(options).then((request) => request(this.axios, this.basePath));
@@ -701,7 +264,6 @@ export class AsyncProgressControllerApi extends BaseAPI {
 
 /**
  * HandbuchControllerApi - axios parameter creator
- * @export
  */
 export const HandbuchControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -718,8 +280,8 @@ export const HandbuchControllerApiAxiosParamCreator = function (configuration?: 
             // verify required parameter 'wahlbezirksart' is not null or undefined
             assertParamExists('getHandbuch', 'wahlbezirksart', wahlbezirksart)
             const localVarPath = `/businessActions/handbuch/{wahltagID}/{wahlbezirksart}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)))
-                .replace(`{${"wahlbezirksart"}}`, encodeURIComponent(String(wahlbezirksart)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)))
+                .replace('{wahlbezirksart}', encodeURIComponent(String(wahlbezirksart)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -735,8 +297,8 @@ export const HandbuchControllerApiAxiosParamCreator = function (configuration?: 
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -759,8 +321,8 @@ export const HandbuchControllerApiAxiosParamCreator = function (configuration?: 
             // verify required parameter 'wahlbezirksart' is not null or undefined
             assertParamExists('setHandbuch', 'wahlbezirksart', wahlbezirksart)
             const localVarPath = `/businessActions/handbuch/{wahltagID}/{wahlbezirksart}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)))
-                .replace(`{${"wahlbezirksart"}}`, encodeURIComponent(String(wahlbezirksart)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)))
+                .replace('{wahlbezirksart}', encodeURIComponent(String(wahlbezirksart)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -776,8 +338,8 @@ export const HandbuchControllerApiAxiosParamCreator = function (configuration?: 
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -792,7 +354,6 @@ export const HandbuchControllerApiAxiosParamCreator = function (configuration?: 
 
 /**
  * HandbuchControllerApi - functional programming interface
- * @export
  */
 export const HandbuchControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = HandbuchControllerApiAxiosParamCreator(configuration)
@@ -828,7 +389,6 @@ export const HandbuchControllerApiFp = function(configuration?: Configuration) {
 
 /**
  * HandbuchControllerApi - factory interface
- * @export
  */
 export const HandbuchControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = HandbuchControllerApiFp(configuration)
@@ -858,9 +418,6 @@ export const HandbuchControllerApiFactory = function (configuration?: Configurat
 
 /**
  * HandbuchControllerApi - object-oriented interface
- * @export
- * @class HandbuchControllerApi
- * @extends {BaseAPI}
  */
 export class HandbuchControllerApi extends BaseAPI {
     /**
@@ -869,7 +426,6 @@ export class HandbuchControllerApi extends BaseAPI {
      * @param {GetHandbuchWahlbezirksartEnum} wahlbezirksart 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof HandbuchControllerApi
      */
     public getHandbuch(wahltagID: string, wahlbezirksart: GetHandbuchWahlbezirksartEnum, options?: RawAxiosRequestConfig) {
         return HandbuchControllerApiFp(this.configuration).getHandbuch(wahltagID, wahlbezirksart, options).then((request) => request(this.axios, this.basePath));
@@ -881,34 +437,26 @@ export class HandbuchControllerApi extends BaseAPI {
      * @param {SetHandbuchWahlbezirksartEnum} wahlbezirksart 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof HandbuchControllerApi
      */
     public setHandbuch(wahltagID: string, wahlbezirksart: SetHandbuchWahlbezirksartEnum, options?: RawAxiosRequestConfig) {
         return HandbuchControllerApiFp(this.configuration).setHandbuch(wahltagID, wahlbezirksart, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
-/**
- * @export
- */
 export const GetHandbuchWahlbezirksartEnum = {
     Uwb: 'UWB',
-    Bwb: 'BWB'
+    Bwb: 'BWB',
 } as const;
 export type GetHandbuchWahlbezirksartEnum = typeof GetHandbuchWahlbezirksartEnum[keyof typeof GetHandbuchWahlbezirksartEnum];
-/**
- * @export
- */
 export const SetHandbuchWahlbezirksartEnum = {
     Uwb: 'UWB',
-    Bwb: 'BWB'
+    Bwb: 'BWB',
 } as const;
 export type SetHandbuchWahlbezirksartEnum = typeof SetHandbuchWahlbezirksartEnum[keyof typeof SetHandbuchWahlbezirksartEnum];
 
 
 /**
  * KopfdatenControllerApi - axios parameter creator
- * @export
  */
 export const KopfdatenControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -925,8 +473,8 @@ export const KopfdatenControllerApiAxiosParamCreator = function (configuration?:
             // verify required parameter 'wahlbezirkID' is not null or undefined
             assertParamExists('getKopfdaten', 'wahlbezirkID', wahlbezirkID)
             const localVarPath = `/businessActions/kopfdaten/{wahlID}/{wahlbezirkID}`
-                .replace(`{${"wahlID"}}`, encodeURIComponent(String(wahlID)))
-                .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)));
+                .replace('{wahlID}', encodeURIComponent(String(wahlID)))
+                .replace('{wahlbezirkID}', encodeURIComponent(String(wahlbezirkID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -942,8 +490,8 @@ export const KopfdatenControllerApiAxiosParamCreator = function (configuration?:
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -958,7 +506,6 @@ export const KopfdatenControllerApiAxiosParamCreator = function (configuration?:
 
 /**
  * KopfdatenControllerApi - functional programming interface
- * @export
  */
 export const KopfdatenControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = KopfdatenControllerApiAxiosParamCreator(configuration)
@@ -981,7 +528,6 @@ export const KopfdatenControllerApiFp = function(configuration?: Configuration) 
 
 /**
  * KopfdatenControllerApi - factory interface
- * @export
  */
 export const KopfdatenControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = KopfdatenControllerApiFp(configuration)
@@ -1001,9 +547,6 @@ export const KopfdatenControllerApiFactory = function (configuration?: Configura
 
 /**
  * KopfdatenControllerApi - object-oriented interface
- * @export
- * @class KopfdatenControllerApi
- * @extends {BaseAPI}
  */
 export class KopfdatenControllerApi extends BaseAPI {
     /**
@@ -1012,7 +555,6 @@ export class KopfdatenControllerApi extends BaseAPI {
      * @param {string} wahlbezirkID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KopfdatenControllerApi
      */
     public getKopfdaten(wahlID: string, wahlbezirkID: string, options?: RawAxiosRequestConfig) {
         return KopfdatenControllerApiFp(this.configuration).getKopfdaten(wahlID, wahlbezirkID, options).then((request) => request(this.axios, this.basePath));
@@ -1023,7 +565,6 @@ export class KopfdatenControllerApi extends BaseAPI {
 
 /**
  * NachlieferungsbezirkeControllerApi - axios parameter creator
- * @export
  */
 export const NachlieferungsbezirkeControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -1040,8 +581,8 @@ export const NachlieferungsbezirkeControllerApiAxiosParamCreator = function (con
             // verify required parameter 'wahlbezirkID' is not null or undefined
             assertParamExists('isNachlieferungsbezirk', 'wahlbezirkID', wahlbezirkID)
             const localVarPath = `/businessActions/nachlieferungsbezirke/{wahltagID}/{wahlbezirkID}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)))
-                .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)))
+                .replace('{wahlbezirkID}', encodeURIComponent(String(wahlbezirkID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1057,8 +598,8 @@ export const NachlieferungsbezirkeControllerApiAxiosParamCreator = function (con
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1078,7 +619,7 @@ export const NachlieferungsbezirkeControllerApiAxiosParamCreator = function (con
             // verify required parameter 'wahltagID' is not null or undefined
             assertParamExists('setNachlieferungsbezirke', 'wahltagID', wahltagID)
             const localVarPath = `/businessActions/nachlieferungsbezirke/{wahltagID}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1094,8 +635,8 @@ export const NachlieferungsbezirkeControllerApiAxiosParamCreator = function (con
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1110,7 +651,6 @@ export const NachlieferungsbezirkeControllerApiAxiosParamCreator = function (con
 
 /**
  * NachlieferungsbezirkeControllerApi - functional programming interface
- * @export
  */
 export const NachlieferungsbezirkeControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = NachlieferungsbezirkeControllerApiAxiosParamCreator(configuration)
@@ -1145,7 +685,6 @@ export const NachlieferungsbezirkeControllerApiFp = function(configuration?: Con
 
 /**
  * NachlieferungsbezirkeControllerApi - factory interface
- * @export
  */
 export const NachlieferungsbezirkeControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = NachlieferungsbezirkeControllerApiFp(configuration)
@@ -1174,9 +713,6 @@ export const NachlieferungsbezirkeControllerApiFactory = function (configuration
 
 /**
  * NachlieferungsbezirkeControllerApi - object-oriented interface
- * @export
- * @class NachlieferungsbezirkeControllerApi
- * @extends {BaseAPI}
  */
 export class NachlieferungsbezirkeControllerApi extends BaseAPI {
     /**
@@ -1185,7 +721,6 @@ export class NachlieferungsbezirkeControllerApi extends BaseAPI {
      * @param {string} wahlbezirkID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NachlieferungsbezirkeControllerApi
      */
     public isNachlieferungsbezirk(wahltagID: string, wahlbezirkID: string, options?: RawAxiosRequestConfig) {
         return NachlieferungsbezirkeControllerApiFp(this.configuration).isNachlieferungsbezirk(wahltagID, wahlbezirkID, options).then((request) => request(this.axios, this.basePath));
@@ -1196,7 +731,6 @@ export class NachlieferungsbezirkeControllerApi extends BaseAPI {
      * @param {string} wahltagID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof NachlieferungsbezirkeControllerApi
      */
     public setNachlieferungsbezirke(wahltagID: string, options?: RawAxiosRequestConfig) {
         return NachlieferungsbezirkeControllerApiFp(this.configuration).setNachlieferungsbezirke(wahltagID, options).then((request) => request(this.axios, this.basePath));
@@ -1207,7 +741,6 @@ export class NachlieferungsbezirkeControllerApi extends BaseAPI {
 
 /**
  * ReferendumvorlagenControllerApi - axios parameter creator
- * @export
  */
 export const ReferendumvorlagenControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -1224,8 +757,8 @@ export const ReferendumvorlagenControllerApiAxiosParamCreator = function (config
             // verify required parameter 'wahlbezirkID' is not null or undefined
             assertParamExists('getReferendumvorlagen', 'wahlbezirkID', wahlbezirkID)
             const localVarPath = `/businessActions/referendumvorlagen/{wahlID}/{wahlbezirkID}`
-                .replace(`{${"wahlID"}}`, encodeURIComponent(String(wahlID)))
-                .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)));
+                .replace('{wahlID}', encodeURIComponent(String(wahlID)))
+                .replace('{wahlbezirkID}', encodeURIComponent(String(wahlbezirkID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1241,8 +774,8 @@ export const ReferendumvorlagenControllerApiAxiosParamCreator = function (config
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1257,7 +790,6 @@ export const ReferendumvorlagenControllerApiAxiosParamCreator = function (config
 
 /**
  * ReferendumvorlagenControllerApi - functional programming interface
- * @export
  */
 export const ReferendumvorlagenControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ReferendumvorlagenControllerApiAxiosParamCreator(configuration)
@@ -1280,7 +812,6 @@ export const ReferendumvorlagenControllerApiFp = function(configuration?: Config
 
 /**
  * ReferendumvorlagenControllerApi - factory interface
- * @export
  */
 export const ReferendumvorlagenControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = ReferendumvorlagenControllerApiFp(configuration)
@@ -1300,9 +831,6 @@ export const ReferendumvorlagenControllerApiFactory = function (configuration?: 
 
 /**
  * ReferendumvorlagenControllerApi - object-oriented interface
- * @export
- * @class ReferendumvorlagenControllerApi
- * @extends {BaseAPI}
  */
 export class ReferendumvorlagenControllerApi extends BaseAPI {
     /**
@@ -1311,7 +839,6 @@ export class ReferendumvorlagenControllerApi extends BaseAPI {
      * @param {string} wahlbezirkID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ReferendumvorlagenControllerApi
      */
     public getReferendumvorlagen(wahlID: string, wahlbezirkID: string, options?: RawAxiosRequestConfig) {
         return ReferendumvorlagenControllerApiFp(this.configuration).getReferendumvorlagen(wahlID, wahlbezirkID, options).then((request) => request(this.axios, this.basePath));
@@ -1322,7 +849,6 @@ export class ReferendumvorlagenControllerApi extends BaseAPI {
 
 /**
  * UngueltigeWahlscheineControllerApi - axios parameter creator
- * @export
  */
 export const UngueltigeWahlscheineControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -1339,8 +865,8 @@ export const UngueltigeWahlscheineControllerApiAxiosParamCreator = function (con
             // verify required parameter 'wahlbezirksart' is not null or undefined
             assertParamExists('getUngueltigeWahlscheine', 'wahlbezirksart', wahlbezirksart)
             const localVarPath = `/businessActions/ungueltigews/{wahltagID}/{wahlbezirksart}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)))
-                .replace(`{${"wahlbezirksart"}}`, encodeURIComponent(String(wahlbezirksart)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)))
+                .replace('{wahlbezirksart}', encodeURIComponent(String(wahlbezirksart)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1356,8 +882,8 @@ export const UngueltigeWahlscheineControllerApiAxiosParamCreator = function (con
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1380,8 +906,8 @@ export const UngueltigeWahlscheineControllerApiAxiosParamCreator = function (con
             // verify required parameter 'wahlbezirksart' is not null or undefined
             assertParamExists('setUngueltigeWahlscheine', 'wahlbezirksart', wahlbezirksart)
             const localVarPath = `/businessActions/ungueltigews/{wahltagID}/{wahlbezirksart}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)))
-                .replace(`{${"wahlbezirksart"}}`, encodeURIComponent(String(wahlbezirksart)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)))
+                .replace('{wahlbezirksart}', encodeURIComponent(String(wahlbezirksart)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1397,8 +923,8 @@ export const UngueltigeWahlscheineControllerApiAxiosParamCreator = function (con
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1413,7 +939,6 @@ export const UngueltigeWahlscheineControllerApiAxiosParamCreator = function (con
 
 /**
  * UngueltigeWahlscheineControllerApi - functional programming interface
- * @export
  */
 export const UngueltigeWahlscheineControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UngueltigeWahlscheineControllerApiAxiosParamCreator(configuration)
@@ -1449,7 +974,6 @@ export const UngueltigeWahlscheineControllerApiFp = function(configuration?: Con
 
 /**
  * UngueltigeWahlscheineControllerApi - factory interface
- * @export
  */
 export const UngueltigeWahlscheineControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = UngueltigeWahlscheineControllerApiFp(configuration)
@@ -1479,9 +1003,6 @@ export const UngueltigeWahlscheineControllerApiFactory = function (configuration
 
 /**
  * UngueltigeWahlscheineControllerApi - object-oriented interface
- * @export
- * @class UngueltigeWahlscheineControllerApi
- * @extends {BaseAPI}
  */
 export class UngueltigeWahlscheineControllerApi extends BaseAPI {
     /**
@@ -1490,7 +1011,6 @@ export class UngueltigeWahlscheineControllerApi extends BaseAPI {
      * @param {GetUngueltigeWahlscheineWahlbezirksartEnum} wahlbezirksart 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof UngueltigeWahlscheineControllerApi
      */
     public getUngueltigeWahlscheine(wahltagID: string, wahlbezirksart: GetUngueltigeWahlscheineWahlbezirksartEnum, options?: RawAxiosRequestConfig) {
         return UngueltigeWahlscheineControllerApiFp(this.configuration).getUngueltigeWahlscheine(wahltagID, wahlbezirksart, options).then((request) => request(this.axios, this.basePath));
@@ -1502,34 +1022,26 @@ export class UngueltigeWahlscheineControllerApi extends BaseAPI {
      * @param {SetUngueltigeWahlscheineWahlbezirksartEnum} wahlbezirksart 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof UngueltigeWahlscheineControllerApi
      */
     public setUngueltigeWahlscheine(wahltagID: string, wahlbezirksart: SetUngueltigeWahlscheineWahlbezirksartEnum, options?: RawAxiosRequestConfig) {
         return UngueltigeWahlscheineControllerApiFp(this.configuration).setUngueltigeWahlscheine(wahltagID, wahlbezirksart, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
-/**
- * @export
- */
 export const GetUngueltigeWahlscheineWahlbezirksartEnum = {
     Uwb: 'UWB',
-    Bwb: 'BWB'
+    Bwb: 'BWB',
 } as const;
 export type GetUngueltigeWahlscheineWahlbezirksartEnum = typeof GetUngueltigeWahlscheineWahlbezirksartEnum[keyof typeof GetUngueltigeWahlscheineWahlbezirksartEnum];
-/**
- * @export
- */
 export const SetUngueltigeWahlscheineWahlbezirksartEnum = {
     Uwb: 'UWB',
-    Bwb: 'BWB'
+    Bwb: 'BWB',
 } as const;
 export type SetUngueltigeWahlscheineWahlbezirksartEnum = typeof SetUngueltigeWahlscheineWahlbezirksartEnum[keyof typeof SetUngueltigeWahlscheineWahlbezirksartEnum];
 
 
 /**
  * WahlbezirkeControllerApi - axios parameter creator
- * @export
  */
 export const WahlbezirkeControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -1543,7 +1055,7 @@ export const WahlbezirkeControllerApiAxiosParamCreator = function (configuration
             // verify required parameter 'wahltagID' is not null or undefined
             assertParamExists('getWahlbezirke', 'wahltagID', wahltagID)
             const localVarPath = `/businessActions/wahlbezirke/{wahltagID}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1559,8 +1071,8 @@ export const WahlbezirkeControllerApiAxiosParamCreator = function (configuration
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1575,7 +1087,6 @@ export const WahlbezirkeControllerApiAxiosParamCreator = function (configuration
 
 /**
  * WahlbezirkeControllerApi - functional programming interface
- * @export
  */
 export const WahlbezirkeControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = WahlbezirkeControllerApiAxiosParamCreator(configuration)
@@ -1597,7 +1108,6 @@ export const WahlbezirkeControllerApiFp = function(configuration?: Configuration
 
 /**
  * WahlbezirkeControllerApi - factory interface
- * @export
  */
 export const WahlbezirkeControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = WahlbezirkeControllerApiFp(configuration)
@@ -1616,9 +1126,6 @@ export const WahlbezirkeControllerApiFactory = function (configuration?: Configu
 
 /**
  * WahlbezirkeControllerApi - object-oriented interface
- * @export
- * @class WahlbezirkeControllerApi
- * @extends {BaseAPI}
  */
 export class WahlbezirkeControllerApi extends BaseAPI {
     /**
@@ -1626,7 +1133,6 @@ export class WahlbezirkeControllerApi extends BaseAPI {
      * @param {string} wahltagID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WahlbezirkeControllerApi
      */
     public getWahlbezirke(wahltagID: string, options?: RawAxiosRequestConfig) {
         return WahlbezirkeControllerApiFp(this.configuration).getWahlbezirke(wahltagID, options).then((request) => request(this.axios, this.basePath));
@@ -1637,7 +1143,6 @@ export class WahlbezirkeControllerApi extends BaseAPI {
 
 /**
  * WahlenControllerApi - axios parameter creator
- * @export
  */
 export const WahlenControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -1651,7 +1156,7 @@ export const WahlenControllerApiAxiosParamCreator = function (configuration?: Co
             // verify required parameter 'wahltagID' is not null or undefined
             assertParamExists('getWahlen', 'wahltagID', wahltagID)
             const localVarPath = `/businessActions/wahlen/{wahltagID}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1667,8 +1172,8 @@ export const WahlenControllerApiAxiosParamCreator = function (configuration?: Co
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1691,7 +1196,7 @@ export const WahlenControllerApiAxiosParamCreator = function (configuration?: Co
             // verify required parameter 'wahlDTO' is not null or undefined
             assertParamExists('postWahlen', 'wahlDTO', wahlDTO)
             const localVarPath = `/businessActions/wahlen/{wahltagID}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1707,9 +1212,8 @@ export const WahlenControllerApiAxiosParamCreator = function (configuration?: Co
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1743,8 +1247,8 @@ export const WahlenControllerApiAxiosParamCreator = function (configuration?: Co
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1759,7 +1263,6 @@ export const WahlenControllerApiAxiosParamCreator = function (configuration?: Co
 
 /**
  * WahlenControllerApi - functional programming interface
- * @export
  */
 export const WahlenControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = WahlenControllerApiAxiosParamCreator(configuration)
@@ -1805,7 +1308,6 @@ export const WahlenControllerApiFp = function(configuration?: Configuration) {
 
 /**
  * WahlenControllerApi - factory interface
- * @export
  */
 export const WahlenControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = WahlenControllerApiFp(configuration)
@@ -1842,9 +1344,6 @@ export const WahlenControllerApiFactory = function (configuration?: Configuratio
 
 /**
  * WahlenControllerApi - object-oriented interface
- * @export
- * @class WahlenControllerApi
- * @extends {BaseAPI}
  */
 export class WahlenControllerApi extends BaseAPI {
     /**
@@ -1852,7 +1351,6 @@ export class WahlenControllerApi extends BaseAPI {
      * @param {string} wahltagID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WahlenControllerApi
      */
     public getWahlen(wahltagID: string, options?: RawAxiosRequestConfig) {
         return WahlenControllerApiFp(this.configuration).getWahlen(wahltagID, options).then((request) => request(this.axios, this.basePath));
@@ -1864,7 +1362,6 @@ export class WahlenControllerApi extends BaseAPI {
      * @param {Array<WahlDTO>} wahlDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WahlenControllerApi
      */
     public postWahlen(wahltagID: string, wahlDTO: Array<WahlDTO>, options?: RawAxiosRequestConfig) {
         return WahlenControllerApiFp(this.configuration).postWahlen(wahltagID, wahlDTO, options).then((request) => request(this.axios, this.basePath));
@@ -1874,7 +1371,6 @@ export class WahlenControllerApi extends BaseAPI {
      * Setzt die Attribute Farbe, Reihenfolge und Waehlerverzeichnis der vorhandenen Wahlen auf die Standardwerte.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WahlenControllerApi
      */
     public resetWahlen(options?: RawAxiosRequestConfig) {
         return WahlenControllerApiFp(this.configuration).resetWahlen(options).then((request) => request(this.axios, this.basePath));
@@ -1885,7 +1381,6 @@ export class WahlenControllerApi extends BaseAPI {
 
 /**
  * WahltageControllerApi - axios parameter creator
- * @export
  */
 export const WahltageControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -1911,8 +1406,8 @@ export const WahltageControllerApiAxiosParamCreator = function (configuration?: 
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1927,7 +1422,6 @@ export const WahltageControllerApiAxiosParamCreator = function (configuration?: 
 
 /**
  * WahltageControllerApi - functional programming interface
- * @export
  */
 export const WahltageControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = WahltageControllerApiAxiosParamCreator(configuration)
@@ -1948,7 +1442,6 @@ export const WahltageControllerApiFp = function(configuration?: Configuration) {
 
 /**
  * WahltageControllerApi - factory interface
- * @export
  */
 export const WahltageControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = WahltageControllerApiFp(configuration)
@@ -1966,16 +1459,12 @@ export const WahltageControllerApiFactory = function (configuration?: Configurat
 
 /**
  * WahltageControllerApi - object-oriented interface
- * @export
- * @class WahltageControllerApi
- * @extends {BaseAPI}
  */
 export class WahltageControllerApi extends BaseAPI {
     /**
      * Laden der Liste der Wahltage, aufsteigend sortiert nach Wahltag-Datum und nicht länger als 3 Monate in der Vergangenheit.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WahltageControllerApi
      */
     public getWahltage(options?: RawAxiosRequestConfig) {
         return WahltageControllerApiFp(this.configuration).getWahltage(options).then((request) => request(this.axios, this.basePath));
@@ -1986,7 +1475,6 @@ export class WahltageControllerApi extends BaseAPI {
 
 /**
  * WahltermindatenControllerApi - axios parameter creator
- * @export
  */
 export const WahltermindatenControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -2000,7 +1488,7 @@ export const WahltermindatenControllerApiAxiosParamCreator = function (configura
             // verify required parameter 'wahltagID' is not null or undefined
             assertParamExists('deleteWahltermindaten', 'wahltagID', wahltagID)
             const localVarPath = `/businessActions/wahltermindaten/{wahltagID}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2016,8 +1504,8 @@ export const WahltermindatenControllerApiAxiosParamCreator = function (configura
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2037,7 +1525,7 @@ export const WahltermindatenControllerApiAxiosParamCreator = function (configura
             // verify required parameter 'wahltagID' is not null or undefined
             assertParamExists('putWahltermindaten', 'wahltagID', wahltagID)
             const localVarPath = `/businessActions/wahltermindaten/{wahltagID}`
-                .replace(`{${"wahltagID"}}`, encodeURIComponent(String(wahltagID)));
+                .replace('{wahltagID}', encodeURIComponent(String(wahltagID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2053,8 +1541,8 @@ export const WahltermindatenControllerApiAxiosParamCreator = function (configura
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2069,7 +1557,6 @@ export const WahltermindatenControllerApiAxiosParamCreator = function (configura
 
 /**
  * WahltermindatenControllerApi - functional programming interface
- * @export
  */
 export const WahltermindatenControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = WahltermindatenControllerApiAxiosParamCreator(configuration)
@@ -2103,7 +1590,6 @@ export const WahltermindatenControllerApiFp = function(configuration?: Configura
 
 /**
  * WahltermindatenControllerApi - factory interface
- * @export
  */
 export const WahltermindatenControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = WahltermindatenControllerApiFp(configuration)
@@ -2131,9 +1617,6 @@ export const WahltermindatenControllerApiFactory = function (configuration?: Con
 
 /**
  * WahltermindatenControllerApi - object-oriented interface
- * @export
- * @class WahltermindatenControllerApi
- * @extends {BaseAPI}
  */
 export class WahltermindatenControllerApi extends BaseAPI {
     /**
@@ -2141,7 +1624,6 @@ export class WahltermindatenControllerApi extends BaseAPI {
      * @param {string} wahltagID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WahltermindatenControllerApi
      */
     public deleteWahltermindaten(wahltagID: string, options?: RawAxiosRequestConfig) {
         return WahltermindatenControllerApiFp(this.configuration).deleteWahltermindaten(wahltagID, options).then((request) => request(this.axios, this.basePath));
@@ -2152,7 +1634,6 @@ export class WahltermindatenControllerApi extends BaseAPI {
      * @param {string} wahltagID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WahltermindatenControllerApi
      */
     public putWahltermindaten(wahltagID: string, options?: RawAxiosRequestConfig) {
         return WahltermindatenControllerApiFp(this.configuration).putWahltermindaten(wahltagID, options).then((request) => request(this.axios, this.basePath));
@@ -2163,7 +1644,6 @@ export class WahltermindatenControllerApi extends BaseAPI {
 
 /**
  * WahlvorschlaegeControllerApi - axios parameter creator
- * @export
  */
 export const WahlvorschlaegeControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -2180,8 +1660,8 @@ export const WahlvorschlaegeControllerApiAxiosParamCreator = function (configura
             // verify required parameter 'wahlbezirkID' is not null or undefined
             assertParamExists('getWahlvorschlaege', 'wahlbezirkID', wahlbezirkID)
             const localVarPath = `/businessActions/wahlvorschlaege/{wahlID}/{wahlbezirkID}`
-                .replace(`{${"wahlID"}}`, encodeURIComponent(String(wahlID)))
-                .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)));
+                .replace('{wahlID}', encodeURIComponent(String(wahlID)))
+                .replace('{wahlbezirkID}', encodeURIComponent(String(wahlbezirkID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2197,8 +1677,8 @@ export const WahlvorschlaegeControllerApiAxiosParamCreator = function (configura
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            localVarHeaderParameter['Accept'] = '*/*,application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2213,7 +1693,6 @@ export const WahlvorschlaegeControllerApiAxiosParamCreator = function (configura
 
 /**
  * WahlvorschlaegeControllerApi - functional programming interface
- * @export
  */
 export const WahlvorschlaegeControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = WahlvorschlaegeControllerApiAxiosParamCreator(configuration)
@@ -2236,7 +1715,6 @@ export const WahlvorschlaegeControllerApiFp = function(configuration?: Configura
 
 /**
  * WahlvorschlaegeControllerApi - factory interface
- * @export
  */
 export const WahlvorschlaegeControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = WahlvorschlaegeControllerApiFp(configuration)
@@ -2256,9 +1734,6 @@ export const WahlvorschlaegeControllerApiFactory = function (configuration?: Con
 
 /**
  * WahlvorschlaegeControllerApi - object-oriented interface
- * @export
- * @class WahlvorschlaegeControllerApi
- * @extends {BaseAPI}
  */
 export class WahlvorschlaegeControllerApi extends BaseAPI {
     /**
@@ -2267,7 +1742,6 @@ export class WahlvorschlaegeControllerApi extends BaseAPI {
      * @param {string} wahlbezirkID 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WahlvorschlaegeControllerApi
      */
     public getWahlvorschlaege(wahlID: string, wahlbezirkID: string, options?: RawAxiosRequestConfig) {
         return WahlvorschlaegeControllerApiFp(this.configuration).getWahlvorschlaege(wahlID, wahlbezirkID, options).then((request) => request(this.axios, this.basePath));

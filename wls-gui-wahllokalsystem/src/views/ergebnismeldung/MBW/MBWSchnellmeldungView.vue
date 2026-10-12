@@ -63,10 +63,10 @@ import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import TheMbwDseSchnellmeldungCard from "@/components/ergebnismeldung/MBW/TheMbwDseSchnellmeldungCard.vue";
 import TheMbwStapelSchnellmeldungCard from "@/components/ergebnismeldung/MBW/TheMbwStapelSchnellmeldungCard.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
+import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwSchnellmeldungDruckService } from "@/composables/ergebnismeldung/MBW/mbwSchnellmeldungDruckService.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
-import { usePrintUtils } from "@/composables/ergebnismeldung/MBW/printUtils.ts";
 import { useSchnellmeldungDruck } from "@/composables/ergebnismeldung/MBW/schnellmeldungDruck.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
@@ -99,7 +99,7 @@ const { prepareDataForSchnellmeldungDruck } = useMbwSchnellmeldungDruckService(
   wahlbezirkID
 );
 const { buildSchnellmeldungTemplateFromData } = useSchnellmeldungDruck();
-const { printInWindow } = usePrintUtils();
+const { printInWindow } = useCommonPrintService();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 const { getNextRoute } = useNavigationService();
 const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();

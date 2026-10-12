@@ -6,6 +6,7 @@ import { storeToRefs } from "pinia";
 import { computed, onActivated, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
+import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
 import { useBeschlussentscheidungenDruckenTools } from "@/composables/dse/beschlussfassung/beschlussentscheidungenDruckenTools.ts";
 import { useBeschlussentscheidungenDruckTemplateTools } from "@/composables/dse/beschlussfassung/beschlussentscheidungenDruckTemplateTools.ts";
 import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
@@ -14,7 +15,6 @@ import { useMbwNiederschriftDruckService } from "@/composables/ergebnismeldung/M
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckBWB.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
-import { usePrintUtils } from "@/composables/ergebnismeldung/MBW/printUtils.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
@@ -70,7 +70,7 @@ export function useMbwNiederschriftViewUtils(
     prepareDataForBeschlussentscheidungenDruck,
   } = useBeschlussentscheidungenDruckenTools(wahlID, wahlbezirkID);
   const { buildTemplate } = useBeschlussentscheidungenDruckTemplateTools();
-  const { printInWindow } = usePrintUtils();
+  const { printInWindow } = useCommonPrintService();
   const {
     buildNiederschriftTemplateFromData: buildNiederschriftTemplateFromDataUWB,
   } = useNiederschriftDruckUWB();

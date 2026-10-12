@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 
 import { useTestDruck } from "@/composables/basisdaten/testDruck.ts";
-import { usePrintUtils } from "@/composables/ergebnismeldung/MBW/printUtils.ts";
+import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { TEAMVIEWER_URL } from "@/constants.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
@@ -9,7 +9,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 export function useHelpIconCallbacks() {
   const { buildTemplate } = useTestDruck();
-  const { printInWindow } = usePrintUtils();
+  const { printInWindow } = useCommonPrintService();
   const { addNotification } = useUserNotificationService();
   const { waehlerverzeichnisUrl, wahlraumUrl } = storeToRefs(
     useInfomanagementStore()

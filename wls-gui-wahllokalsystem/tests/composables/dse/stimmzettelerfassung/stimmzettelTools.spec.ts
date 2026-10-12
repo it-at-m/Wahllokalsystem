@@ -64,6 +64,7 @@ const { createDseStimmzettel, prepareDseStimmzettel } =
 const {
   preparePersistedStimmzettel,
   preparePersistedStimmzettelWahlvorschlag,
+  preparePersistedStimmzettelKandidat,
 } = usePersistedStimmzettelTestDataFactory();
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
 const {
@@ -562,10 +563,14 @@ describe("stimmzettelTools.ts", () => {
   });
 
   describe("isStimmzettelGueltigBasedOnVormerkungsgruenden", () => {
-    it("should_returnTrue_when_stimmzettelHasNoBeschlussgruende", () => {
+    it("should_returnTrue_when_stimmzettelHasNoBeschlussgruendeAndIsNotLeer", () => {
       const stimmzettel = preparePersistedStimmzettel()
         .systemBeschlussvorschlag([])
         .wahlvorstandBeschlussvorschlag([])
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag().selected(true).build(),
+        ])
         .build();
 
       const result =
@@ -585,6 +590,10 @@ describe("stimmzettelTools.ts", () => {
           {
             text: "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
           },
+        ])
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag().selected(true).build(),
         ])
         .build();
 
@@ -629,6 +638,182 @@ describe("stimmzettelTools.ts", () => {
         unitUnderTest.isStimmzettelGueltigBasedOnVormerkungsgruenden(
           stimmzettel
         );
+
+      expect(result).toStrictEqual(false);
+    });
+  });
+
+  describe("isStimmzettelEmpty", () => {
+    it("should_returnTrue_when_stimmzettelIsEmpty", () => {
+      const stimmzettel = preparePersistedStimmzettel()
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .selected(false)
+            .kandidaten([
+              preparePersistedStimmzettelKandidat()
+                .invalidVotes(0)
+                .votesByVoter(0)
+                .isDiscarded(false)
+                .build(),
+            ])
+            .build(),
+        ])
+        .build();
+
+      const result = unitUnderTest.isStimmzettelEmpty(stimmzettel);
+
+      expect(result).toStrictEqual(true);
+    });
+
+    it.each([
+      preparePersistedStimmzettel()
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .selected(true)
+            .kandidaten([
+              preparePersistedStimmzettelKandidat()
+                .invalidVotes(0)
+                .votesByVoter(0)
+                .isDiscarded(false)
+                .build(),
+            ])
+            .build(),
+        ])
+        .build(),
+      preparePersistedStimmzettel()
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .selected(false)
+            .kandidaten([
+              preparePersistedStimmzettelKandidat()
+                .invalidVotes(0)
+                .votesByVoter(0)
+                .isDiscarded(true)
+                .build(),
+            ])
+            .build(),
+        ])
+        .build(),
+      preparePersistedStimmzettel()
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .selected(false)
+            .kandidaten([
+              preparePersistedStimmzettelKandidat()
+                .invalidVotes(1)
+                .votesByVoter(0)
+                .isDiscarded(false)
+                .build(),
+            ])
+            .build(),
+        ])
+        .build(),
+      preparePersistedStimmzettel()
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .selected(false)
+            .kandidaten([
+              preparePersistedStimmzettelKandidat()
+                .invalidVotes(0)
+                .votesByVoter(1)
+                .isDiscarded(false)
+                .build(),
+            ])
+            .build(),
+        ])
+        .build(),
+      preparePersistedStimmzettel()
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .selected(false)
+            .kandidaten([
+              preparePersistedStimmzettelKandidat()
+                .invalidVotes(0)
+                .votesByVoter(0)
+                .isDiscarded(false)
+                .build(),
+              preparePersistedStimmzettelKandidat()
+                .invalidVotes(1)
+                .votesByVoter(1)
+                .isDiscarded(false)
+                .build(),
+            ])
+            .build(),
+        ])
+        .build(),
+      preparePersistedStimmzettel()
+        .wahlvorschlaege([
+          preparePersistedStimmzettelWahlvorschlag()
+            .selected(false)
+            .kandidaten([
+              preparePersistedStimmzettelKandidat()
+                .invalidVotes(0)
+                .votesByVoter(0)
+                .isDiscarded(false)
+                .build(),
+            ])
+            .build(),
+          preparePersistedStimmzettelWahlvorschlag()
+            .selected(true)
+            .kandidaten([
+              preparePersistedStimmzettelKandidat()
+                .invalidVotes(0)
+                .votesByVoter(0)
+                .isDiscarded(false)
+                .build(),
+            ])
+            .build(),
+        ])
+        .build(),
+    ])(
+      "should_returnFalse_when_stimmzettelHasValuesSelected",
+      (stimmzettel) => {
+        const result = unitUnderTest.isStimmzettelEmpty(stimmzettel);
+
+        expect(result).toStrictEqual(false);
+      }
+    );
+  });
+
+  describe("isDeepEqualIgnoreGueltigkeit", () => {
+    it("should_returnTrue_when_stimmzettelAreTheSame", () => {
+      const stimmzettelA = preparePersistedStimmzettel().build();
+
+      const result = unitUnderTest.isDeepEqualIgnoreGueltigkeit(
+        stimmzettelA,
+        stimmzettelA
+      );
+
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_stimmzettelAreTheSameButGueltigkeitIsDifferent", () => {
+      const stimmzettelA = preparePersistedStimmzettel()
+        .gueltigkeit(StimmzettelGueltigkeitEnum.Valid)
+        .build();
+      const stimmzettelB = stimmzettelA;
+      stimmzettelB.gueltigkeit = StimmzettelGueltigkeitEnum.Invalid;
+
+      const result = unitUnderTest.isDeepEqualIgnoreGueltigkeit(
+        stimmzettelA,
+        stimmzettelB
+      );
+
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_stimmzettelAreDifferent", () => {
+      const stimmzettelA = preparePersistedStimmzettel()
+        .teamID("teamID-A")
+        .build();
+      const stimmzettelB = preparePersistedStimmzettel()
+        .teamID("teamID-B")
+        .build();
+
+      const result = unitUnderTest.isDeepEqualIgnoreGueltigkeit(
+        stimmzettelA,
+        stimmzettelB
+      );
 
       expect(result).toStrictEqual(false);
     });

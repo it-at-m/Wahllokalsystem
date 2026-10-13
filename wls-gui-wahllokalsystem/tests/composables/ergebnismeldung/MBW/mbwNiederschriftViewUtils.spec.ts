@@ -157,7 +157,11 @@ describe("mbwNiederschriftViewUtils", () => {
   const workflowState = { isNiederschriftDone: false };
   const printWindow = {
     close: vi.fn(),
-    document: { close: vi.fn(), writeln: vi.fn() },
+    document: {
+      close: vi.fn(),
+      writeln: vi.fn(),
+      querySelectorAll: vi.fn().mockReturnValue([]),
+    },
     print: vi.fn(),
   };
 
@@ -173,6 +177,7 @@ describe("mbwNiederschriftViewUtils", () => {
     );
     routerPush.mockResolvedValue(undefined);
     currentUserWahlbezirksArt.value = WahlbezirksArtEnum.UWB;
+    printWindow.document.querySelectorAll.mockReturnValue([]);
     vi.spyOn(window, "open").mockReturnValue(printWindow as unknown as Window);
   });
 
@@ -306,6 +311,50 @@ describe("mbwNiederschriftViewUtils", () => {
       expect(mockDefinitions.setStepDone).not.toHaveBeenCalled();
       expect(mockDefinitions.sendAusdruckNiederschrift).not.toHaveBeenCalled();
       expect(routerPush).toHaveBeenCalledWith({ name: "nextRoute" });
+    });
+
+    it("should_waitForPendingImageDecode_beforePrinting", async () => {
+      let resolveImageDecode!: () => void;
+      const decodePromise = new Promise<void>((resolve) => {
+        resolveImageDecode = resolve;
+      });
+      const image = {
+        complete: false,
+        decode: vi.fn().mockReturnValue(decodePromise),
+      };
+      printWindow.document.querySelectorAll.mockReturnValue([image]);
+      mockDefinitions.isStepDone.mockReturnValue(true);
+      mockDefinitions.getAusdruckNiederschrift.mockResolvedValue(
+        '<html lang="en">stored</html>'
+      );
+      const unitUnderTest = await createComposable();
+
+      // start printing but don't await - assert that printing hasn't happened yet
+      unitUnderTest.onDruckenClicked();
+      expect(printWindow.print).not.toHaveBeenCalled();
+      // resolve the pending decode so printing can continue
+      resolveImageDecode();
+      await flushPromises();
+
+      expect(printWindow.print).toHaveBeenCalledOnce();
+    });
+
+    it("should_printWhenImageDecodeFails", async () => {
+      const image = {
+        complete: false,
+        decode: vi.fn().mockRejectedValue(new Error("decode failed")),
+      };
+      printWindow.document.querySelectorAll.mockReturnValue([image]);
+      mockDefinitions.isStepDone.mockReturnValue(true);
+      mockDefinitions.getAusdruckNiederschrift.mockResolvedValue(
+        '<html lang="en">stored</html>'
+      );
+      const unitUnderTest = await createComposable();
+
+      await unitUnderTest.onDruckenClicked();
+      await flushPromises();
+
+      expect(printWindow.print).toHaveBeenCalledOnce();
     });
   });
 

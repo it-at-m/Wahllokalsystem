@@ -50,14 +50,6 @@ class UsernameResolverTest {
     SecurityContextHolder.clearContext();
     logger.detachAppender(mockAppender);
   }
-
-  private void mockAuthenticated(Authentication auth) {
-    when(securityContext.getAuthentication()).thenReturn(auth);
-    if (auth != null) {
-      when(auth.isAuthenticated()).thenReturn(true);
-    }
-  }
-
   @Test
   void should_returnNullAndLogWarning_when_authIsNull() {
     mockAuthenticated(null);
@@ -152,5 +144,12 @@ class UsernameResolverTest {
     String expectedPrefix =
         "Nicht unterstützter Authentifizierungstyp: " + authentication.getClass().getName();
     assertEquals(expectedPrefix, logEvent.getFormattedMessage());
+  }
+
+  private void mockAuthenticated(Authentication auth) {
+    when(securityContext.getAuthentication()).thenReturn(auth);
+    if (auth != null) {
+      when(auth.isAuthenticated()).thenReturn(true);
+    }
   }
 }

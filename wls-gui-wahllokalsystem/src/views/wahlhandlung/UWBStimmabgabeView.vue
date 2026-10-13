@@ -1,6 +1,5 @@
 <template>
   <v-card>
-    <the-ungueltige-wahlscheine-verify-card />
     <base-wahlschliessung-card
       :type="
         isVorfaelleMaintained
@@ -15,7 +14,6 @@
 import { storeToRefs } from "pinia";
 
 import BaseWahlschliessungCard from "@/components/wahlhandlung/BaseWahlschliessungCard.vue";
-import TheUngueltigeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUngueltigeWahlscheineVerifyCard.vue";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 

@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security.filter;
 
+import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -28,12 +29,6 @@ public class UsernameResolver {
     }
 
     if (authentication instanceof JwtAuthenticationToken jwtAuthentication) {
-      if (jwtAuthentication.getToken() == null) {
-        log.warn(
-            "Nicht unterstützter Authentifizierungstyp: JwtAuthenticationToken enthält keinen Token.");
-        return null;
-      }
-
       return firstNonBlank(
           extractFromJwt(jwtAuthentication.getToken()), jwtAuthentication.getName());
     }
@@ -60,13 +55,7 @@ public class UsernameResolver {
   }
 
   private String firstNonBlank(String... values) {
-    for (String value : values) {
-      if (hasText(value)) {
-        return value;
-      }
-    }
-
-    return null;
+    return Arrays.stream(values).filter(this::hasText).findFirst().orElse(null);
   }
 
   private boolean hasText(String value) {

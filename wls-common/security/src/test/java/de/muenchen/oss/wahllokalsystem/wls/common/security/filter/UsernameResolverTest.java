@@ -112,21 +112,6 @@ class UsernameResolverTest {
   }
 
   @Test
-  void should_returnNullAndLogWarning_when_jwtAuthenticationTokenContainsNoToken() {
-    JwtAuthenticationToken mockAuth = mock(JwtAuthenticationToken.class);
-    mockAuthenticated(mockAuth);
-    when(mockAuth.getToken()).thenReturn(null);
-
-    Assertions.assertThat(usernameResolver.resolve()).isNull();
-
-    verify(mockAppender).doAppend(logEventCaptor.capture());
-    ILoggingEvent logEvent = logEventCaptor.getValue();
-
-    Assertions.assertThat(logEvent.getLevel()).isEqualTo(Level.WARN);
-    Assertions.assertThat(logEvent.getFormattedMessage()).isEqualTo("Nicht unterstützter Authentifizierungstyp: JwtAuthenticationToken enthält keinen Token.");
-  }
-
-  @Test
   void should_returnAuthNameAndLogWarning_when_authTypeIsUnknown() {
     mockAuthenticated(authentication);
     when(authentication.getName()).thenReturn("auth.fallback.name");

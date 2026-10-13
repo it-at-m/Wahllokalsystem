@@ -16,8 +16,14 @@
                 <pattern>
                     %date{yyyy.MM.dd HH:mm:ss.SSS} | ${springAppName} | user: %X{user} | TraceId: %X{traceId:-} | SpanId: %X{spanId:-}] | %level | [%thread] | %logger{0} | [%file : %line] - %msg%n
                 </pattern>
+                <mdc/>
             </encoder>
         </appender>
+        <logger name="de.muenchen.oss.wahllokalsystem.wls.common.monitoring.logging.RequestMdcLoggingAspect"
+                level="DEBUG"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
 
         <!-- Logger -->
         <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice"
@@ -109,12 +115,18 @@
                             }
                         </pattern>
                     </pattern>
+                    <mdc/>
                     <stackTrace>
                         <fieldName>stacktrace</fieldName>
                     </stackTrace>
                 </providers>
             </encoder>
         </appender>
+        <logger name="de.muenchen.oss.wahllokalsystem.wls.common.monitoring.logging.RequestMdcLoggingAspect"
+                level="DEBUG"
+                additivity="false">
+            <appender-ref ref="JSON_STDOUT" />
+        </logger>
 
         <!-- Logger -->
         <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice"

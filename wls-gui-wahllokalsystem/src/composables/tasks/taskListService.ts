@@ -20,7 +20,6 @@ import { useDseWorkflowStatusTaskFactory } from "@/composables/tasks/taskFactori
 import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
 import { useUrnenwahlSchliessungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts";
-import { useWaehlerTaskFactory } from "@/composables/tasks/taskFactories/waehlerTaskFactory.ts";
 import { useWaehlverzeichnisTaskFactory } from "@/composables/tasks/taskFactories/waehlverzeichnisTaskFactory.ts";
 import { useWahlbriefeTaskFactory } from "@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
@@ -58,7 +57,6 @@ export function useTaskListService() {
   const { createTasks: createErgebnisseTasks } = useErgebnisseTaskFactory();
   const { createTasks: createStimmzettelumschlaegeTasks } =
     useStimmzettelumschlaegeTaskFactory();
-  const { createTasks: createWaehlerTasks } = useWaehlerTaskFactory();
   const { createTasks: createEreignisseTasks } = useEreignisseTaskFactory();
   const { createTasks: createBegruendungTasks } = useBegruendungTaskFactory();
   const { createTasks: createAWerteTasks } = useAWerteTaskFactory();
@@ -92,7 +90,6 @@ export function useTaskListService() {
       ...createEreignisseTasks(taskFactoryData),
       ...createStimmabgabevermerkeTasks(taskFactoryData),
       ...createStimmzettelumschlaegeTasks(taskFactoryData),
-      ...createWaehlerTasks(taskFactoryData),
       ...createBegruendungTasks(taskFactoryData),
       ...createAWerteTasks(taskFactoryData),
       ...createHandbuchTasks(taskFactoryData),

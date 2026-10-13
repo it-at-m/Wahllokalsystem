@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.wls.common.security.filter;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -51,6 +52,7 @@ class UsernameResolverTest {
     SecurityContextHolder.clearContext();
     logger.detachAppender(mockAppender);
   }
+
   @Test
   void should_returnNullAndLogWarning_when_authIsNull() {
     mockAuthenticated(null);
@@ -61,7 +63,9 @@ class UsernameResolverTest {
     ILoggingEvent logEvent = logEventCaptor.getValue();
 
     Assertions.assertThat(logEvent.getLevel()).isEqualTo(Level.WARN);
-    Assertions.assertThat(logEvent.getFormattedMessage()).isEqualTo("Authentifizierung fehlgeschlagen: SecurityContext enthält kein Authentication-Objekt.");
+    Assertions.assertThat(logEvent.getFormattedMessage())
+        .isEqualTo(
+            "Authentifizierung fehlgeschlagen: SecurityContext enthält kein Authentication-Objekt.");
   }
 
   @Test
@@ -71,6 +75,20 @@ class UsernameResolverTest {
             "key", "anonymousUser", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
     when(securityContext.getAuthentication()).thenReturn(anonymousAuth);
     Assertions.assertThat(usernameResolver.resolve()).isNull();
+  }
+
+  @Test
+  void should_prioritizeJwtClaimOverAuthenticationName_when_bothArePresent() {
+    JwtAuthenticationToken mockAuth = mock(JwtAuthenticationToken.class);
+    Jwt mockJwt = mock(Jwt.class);
+    mockAuthenticated(mockAuth);
+
+    when(mockAuth.getToken()).thenReturn(mockJwt);
+
+    when(mockJwt.getClaimAsString("username")).thenReturn("prioritized.jwt.user");
+    when(mockAuth.getName()).thenReturn("fallback.jwt.name");
+
+    Assertions.assertThat(usernameResolver.resolve()).isEqualTo("prioritized.jwt.user");
   }
 
   @Test

@@ -1,13 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security.filter;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 @ExtendWith(MockitoExtension.class)
 class UserMdcFilterTest {
@@ -27,11 +27,6 @@ class UserMdcFilterTest {
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
   @Mock private FilterChain filterChain;
-
-  @BeforeEach
-  void setup() {
-    MDC.clear();
-  }
 
   @AfterEach
   void teardown() {
@@ -46,7 +41,7 @@ class UserMdcFilterTest {
     userMdcFilter.doFilterInternal(request, response, filterChain);
 
     verify(filterChain).doFilter(request, response);
-    assertNull(MDC.get(MDC_USER_KEY));
+    Assertions.assertThat(MDC.get(MDC_USER_KEY)).isNull();
   }
 
   @Test
@@ -57,7 +52,7 @@ class UserMdcFilterTest {
     doAnswer(
             invocation -> {
               // Überprüfen, dass der User WÄHREND der Filterkette im MDC existiert
-              assertEquals("test.user", MDC.get(MDC_USER_KEY));
+              Assertions.assertThat(MDC.get(MDC_USER_KEY)).isEqualTo("test.user");
               return null;
             })
         .when(filterChain)
@@ -66,8 +61,7 @@ class UserMdcFilterTest {
     userMdcFilter.doFilterInternal(request, response, filterChain);
 
     verify(filterChain).doFilter(request, response);
-    // Überprüfen, dass nach dem Request der MDC wieder sauber ist
-    assertNull(MDC.get(MDC_USER_KEY));
+    Assertions.assertThat(MDC.get(MDC_USER_KEY)).isNull();
   }
 
   @Test
@@ -75,11 +69,10 @@ class UserMdcFilterTest {
     when(usernameResolver.resolve()).thenReturn("error.user");
     doThrow(new RuntimeException("Filter crash!")).when(filterChain).doFilter(request, response);
 
-    assertThrows(
-        RuntimeException.class,
-        () -> userMdcFilter.doFilterInternal(request, response, filterChain));
+    Assertions.assertThatThrownBy(
+            () -> userMdcFilter.doFilterInternal(request, response, filterChain))
+            .isInstanceOf(RuntimeException.class);
 
-    // Der finally-Block muss gegriffen haben
-    assertNull(MDC.get(MDC_USER_KEY));
+    Assertions.assertThat(MDC.get(MDC_USER_KEY)).isNull();
   }
 }

@@ -10,7 +10,6 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   createTasksKonfigurationsparameter: vi.fn(),
-  createTasksUngueltigeWahlscheine: vi.fn(),
   createWaehlerverzeichnisTasks: vi.fn(),
   createTasksWahlvorstand: vi.fn(),
   createTasksEroeffnungsuhrzeit: vi.fn(),
@@ -41,15 +40,6 @@ vi.mock(
   () => ({
     useKonfigurationsparameterTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksKonfigurationsparameter,
-    })),
-  })
-);
-
-vi.mock(
-  import("@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts"),
-  () => ({
-    useUngueltigeWahlscheineTaskFactory: vi.fn().mockImplementation(() => ({
-      createTasks: mockDefinitions.createTasksUngueltigeWahlscheine,
     })),
   })
 );
@@ -302,7 +292,6 @@ describe("taskListService.ts", () => {
 
       const expectedTaskNames = [
         "Waehlerverzeichnis",
-        "UngültigeWahlscheine",
         "Wahlvorstand",
         "Eröffnungsuhrzeit",
         "Urnenwahl Schließungsuhrzeit",
@@ -378,7 +367,6 @@ describe("taskListService.ts", () => {
 
       // only uwb
       mockDefinitions.createWaehlerverzeichnisTasks.mockReturnValue([]);
-      mockDefinitions.createTasksUngueltigeWahlscheine.mockReturnValue([]);
       mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit.mockReturnValue(
         []
       );
@@ -414,12 +402,6 @@ describe("taskListService.ts", () => {
       mockDefinitions.createWaehlerverzeichnisTasks.mockReturnValue([
         {
           name: "Waehlerverzeichnis",
-          callback: () => Promise.resolve(),
-        },
-      ]);
-      mockDefinitions.createTasksUngueltigeWahlscheine.mockReturnValue([
-        {
-          name: "UngültigeWahlscheine",
           callback: () => Promise.resolve(),
         },
       ]);

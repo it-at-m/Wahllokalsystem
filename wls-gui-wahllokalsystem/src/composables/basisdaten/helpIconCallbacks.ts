@@ -1,6 +1,7 @@
 import { storeToRefs } from "pinia";
 
 import { useTestDruck } from "@/composables/basisdaten/testDruck.ts";
+import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { TEAMVIEWER_URL } from "@/constants.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
@@ -8,6 +9,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 export function useHelpIconCallbacks() {
   const { buildTemplate } = useTestDruck();
+  const { printInWindow } = useCommonPrintService();
   const { addNotification } = useUserNotificationService();
   const { waehlerverzeichnisUrl, wahlraumUrl } = storeToRefs(
     useInfomanagementStore()
@@ -46,18 +48,8 @@ export function useHelpIconCallbacks() {
     }
   }
 
-  function printTestdruck() {
-    const printWindow = window.open(
-      "",
-      "",
-      "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
-    );
-
-    if (printWindow) {
-      printWindow.document.body.innerHTML = buildTemplate();
-      printWindow.print();
-      printWindow.close();
-    } else {
+  async function printTestdruck() {
+    if (!(await printInWindow(buildTemplate()))) {
       addNotification(
         "Druck-Popup blockiert. Bitte erlauben Sie alle Popups für diese Seite",
         UserNotificationCategoryEnum.WARNING

@@ -6,6 +6,7 @@ import { storeToRefs } from "pinia";
 import { computed, onActivated, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
+import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
 import { useBeschlussentscheidungenDruckenTools } from "@/composables/dse/beschlussfassung/beschlussentscheidungenDruckenTools.ts";
 import { useBeschlussentscheidungenDruckTemplateTools } from "@/composables/dse/beschlussfassung/beschlussentscheidungenDruckTemplateTools.ts";
 import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
@@ -44,7 +45,6 @@ export function useMbwNiederschriftViewUtils(
   const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
   const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 
-  const isKorrigierenValid = ref<null | boolean>();
   const isBeschlussentscheidungenDruckenLoading = ref(false);
   const isDruckenLoading = ref(false);
   const isNiederschriftSendenClicked = ref(false);
@@ -69,6 +69,7 @@ export function useMbwNiederschriftViewUtils(
     prepareDataForBeschlussentscheidungenDruck,
   } = useBeschlussentscheidungenDruckenTools(wahlID, wahlbezirkID);
   const { buildTemplate } = useBeschlussentscheidungenDruckTemplateTools();
+  const { printInWindow } = useCommonPrintService();
   const {
     buildNiederschriftTemplateFromData: buildNiederschriftTemplateFromDataUWB,
   } = useNiederschriftDruckUWB();
@@ -129,10 +130,6 @@ export function useMbwNiederschriftViewUtils(
     isSyncErrorDialogVisible.value = true;
   }
 
-  function onKorrigierenClicked() {
-    // to be implemented
-  }
-
   async function onDruckenClicked() {
     isDruckenLoading.value = true;
     const niederschriftAlreadyDone = isStepDone(
@@ -146,18 +143,7 @@ export function useMbwNiederschriftViewUtils(
         ? await getAusdruckNiederschrift()
         : await buildNiederschriftTemplate();
 
-      const printWindow = window.open(
-        "",
-        "",
-        "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
-      );
-
-      if (printWindow) {
-        printWindow.document.writeln(pdfText);
-        printWindow.document.close();
-        printWindow.print();
-        printWindow.close();
-      }
+      await printInWindow(pdfText);
 
       if (!niederschriftAlreadyDone) {
         await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
@@ -209,18 +195,8 @@ export function useMbwNiederschriftViewUtils(
             stimmzettelForBeschlussfassung.value
           )
         );
-        const printWindow = window.open(
-          "",
-          "",
-          "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
-        );
 
-        if (printWindow) {
-          printWindow.document.writeln(pdfText);
-          printWindow.document.close();
-          printWindow.print();
-          printWindow.close();
-        }
+        await printInWindow(pdfText);
 
         isBeschlussentscheidungenDruckenDialogVisble.value = true;
         await sendAusdruckBeschlussentscheidungen(
@@ -244,14 +220,12 @@ export function useMbwNiederschriftViewUtils(
     isBeschlussentscheidungenDruckenLoading,
     isDruckenActive,
     isDruckenLoading,
-    isKorrigierenValid,
     isOfflineSyncDialogVisible,
     isSendenActive,
     isSendingNiederschrift,
     isSyncErrorDialogVisible,
     onBeschlussentscheidungenDruckenClicked,
     onDruckenClicked,
-    onKorrigierenClicked,
     onSendenClicked,
     onSyncError,
     onSyncSuccess,

@@ -1,12 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security.filter;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,15 +55,13 @@ class UsernameResolverTest {
   void should_returnNullAndLogWarning_when_authIsNull() {
     mockAuthenticated(null);
 
-    assertNull(usernameResolver.resolve());
+    Assertions.assertThat(usernameResolver.resolve()).isNull();
 
     verify(mockAppender).doAppend(logEventCaptor.capture());
     ILoggingEvent logEvent = logEventCaptor.getValue();
 
-    assertEquals(Level.WARN, logEvent.getLevel());
-    assertEquals(
-        "Authentifizierung fehlgeschlagen: SecurityContext enthält kein Authentication-Objekt.",
-        logEvent.getFormattedMessage());
+    Assertions.assertThat(logEvent.getLevel()).isEqualTo(Level.WARN);
+    Assertions.assertThat(logEvent.getFormattedMessage()).isEqualTo("Authentifizierung fehlgeschlagen: SecurityContext enthält kein Authentication-Objekt.");
   }
 
   @Test
@@ -71,7 +70,7 @@ class UsernameResolverTest {
         new AnonymousAuthenticationToken(
             "key", "anonymousUser", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
     when(securityContext.getAuthentication()).thenReturn(anonymousAuth);
-    assertNull(usernameResolver.resolve());
+    Assertions.assertThat(usernameResolver.resolve()).isNull();
   }
 
   @Test
@@ -82,7 +81,7 @@ class UsernameResolverTest {
     when(mockAuth.getToken()).thenReturn(mockJwt);
     when(mockJwt.getClaimAsString("username")).thenReturn("jwt.user");
 
-    assertEquals("jwt.user", usernameResolver.resolve());
+    Assertions.assertThat(usernameResolver.resolve()).isEqualTo("jwt.user");
   }
 
   @Test
@@ -95,7 +94,7 @@ class UsernameResolverTest {
     when(mockJwt.getClaimAsString("username")).thenReturn(null);
     when(mockJwt.getClaimAsString("sub")).thenReturn("25983741-efab-4122");
 
-    assertEquals("25983741-efab-4122", usernameResolver.resolve());
+    Assertions.assertThat(usernameResolver.resolve()).isEqualTo("25983741-efab-4122");
   }
 
   @Test
@@ -109,7 +108,7 @@ class UsernameResolverTest {
     when(mockJwt.getClaimAsString("sub")).thenReturn(null);
     when(mockAuth.getName()).thenReturn("fallback.jwt.name");
 
-    assertEquals("fallback.jwt.name", usernameResolver.resolve());
+    Assertions.assertThat(usernameResolver.resolve()).isEqualTo("fallback.jwt.name");
   }
 
   @Test
@@ -118,15 +117,13 @@ class UsernameResolverTest {
     mockAuthenticated(mockAuth);
     when(mockAuth.getToken()).thenReturn(null);
 
-    assertNull(usernameResolver.resolve());
+    Assertions.assertThat(usernameResolver.resolve()).isNull();
 
     verify(mockAppender).doAppend(logEventCaptor.capture());
     ILoggingEvent logEvent = logEventCaptor.getValue();
 
-    assertEquals(Level.WARN, logEvent.getLevel());
-    assertEquals(
-        "Nicht unterstützter Authentifizierungstyp: JwtAuthenticationToken enthält keinen Token.",
-        logEvent.getFormattedMessage());
+    Assertions.assertThat(logEvent.getLevel()).isEqualTo(Level.WARN);
+    Assertions.assertThat(logEvent.getFormattedMessage()).isEqualTo("Nicht unterstützter Authentifizierungstyp: JwtAuthenticationToken enthält keinen Token.");
   }
 
   @Test
@@ -134,16 +131,16 @@ class UsernameResolverTest {
     mockAuthenticated(authentication);
     when(authentication.getName()).thenReturn("auth.fallback.name");
 
-    assertEquals("auth.fallback.name", usernameResolver.resolve());
+    Assertions.assertThat(usernameResolver.resolve()).isEqualTo("auth.fallback.name");
 
     verify(mockAppender).doAppend(logEventCaptor.capture());
     ILoggingEvent logEvent = logEventCaptor.getValue();
 
-    assertEquals(Level.WARN, logEvent.getLevel());
+    Assertions.assertThat(logEvent.getLevel()).isEqualTo(Level.WARN);
 
     String expectedPrefix =
         "Nicht unterstützter Authentifizierungstyp: " + authentication.getClass().getName();
-    assertEquals(expectedPrefix, logEvent.getFormattedMessage());
+    Assertions.assertThat(logEvent.getFormattedMessage()).isEqualTo(expectedPrefix);
   }
 
   private void mockAuthenticated(Authentication auth) {

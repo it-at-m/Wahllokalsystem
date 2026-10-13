@@ -9,11 +9,7 @@
         <v-col cols="7">
           <base-date-input
             v-model="dateOnly"
-            :rules="[
-              required,
-              dateNotInFuture,
-              dateGreaterOrEqual(currentUserWahltag),
-            ]"
+            :rules="[required, dateNotInFuture]"
           />
         </v-col>
         <v-col cols="5"><base-time-input v-model="timeOnly" /></v-col>
@@ -47,7 +43,6 @@ import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { EreignisPayload } from "@/types/vorfaelleundvorkommnisse/EreignisPayload.ts";
 import type { PropType } from "vue";
 
-import { storeToRefs } from "pinia";
 import { computed, watch } from "vue";
 
 import BaseDateInput from "@/components/common/inputs/BaseDateInput.vue";
@@ -56,11 +51,8 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 import { useDateTimeSyncer } from "@/composables/common/dateTimeSyncer.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 
-const { required, maxLength, minLength, dateNotInFuture, dateGreaterOrEqual } =
-  useRules();
-const { currentUserWahltag } = storeToRefs(useUserStore());
+const { required, maxLength, minLength, dateNotInFuture } = useRules();
 const { toHhMm, toGermanDate } = useDateTimeFormatter();
 
 const maxLengthForEreignisBeschreibung = MAX_LENGTH_FOR_TEXT_INPUT;

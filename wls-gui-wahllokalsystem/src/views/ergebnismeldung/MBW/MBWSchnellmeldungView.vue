@@ -5,12 +5,10 @@
       :wahlbezirk-i-d="wahlbezirkID"
       :wahl-i-d="wahlID"
       :is-sending-schnellmeldung="isSendingSchnellmeldung"
-      :is-korrigieren-valid="isKorrigierenValid"
       :is-drucken-active="isDruckenActive"
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
       @save="onSendenClicked"
-      @edit="onKorrigierenClicked"
       @print="onDruckenClicked"
     />
     <the-mbw-stapel-schnellmeldung-card
@@ -18,12 +16,10 @@
       :wahlbezirk-i-d="wahlbezirkID"
       :wahl-i-d="wahlID"
       :is-sending-schnellmeldung="isSendingSchnellmeldung"
-      :is-korrigieren-valid="isKorrigierenValid"
       :is-drucken-active="isDruckenActive"
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
       @save="onSendenClicked"
-      @edit="onKorrigierenClicked"
       @print="onDruckenClicked"
     />
     <offline-syncer-dialog
@@ -102,8 +98,6 @@ const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 const { getNextRoute } = useNavigationService();
 const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 
-// button logic to be implemented
-const isKorrigierenValid = ref<null | boolean>();
 const isDruckenLoading = ref<boolean>(false);
 const isSchnellmeldungSendenClicked = ref<boolean>(false);
 
@@ -157,10 +151,6 @@ async function onSyncSuccess() {
 function onSyncError() {
   isOfflineSyncDialogVisible.value = false;
   isUebermitteltErrorDialogVisible.value = true;
-}
-
-function onKorrigierenClicked() {
-  // to be implemented
 }
 
 async function onDruckenClicked() {

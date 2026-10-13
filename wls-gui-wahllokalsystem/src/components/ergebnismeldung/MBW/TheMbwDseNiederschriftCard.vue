@@ -7,7 +7,6 @@
     :is-drucken-loading="isDruckenLoading"
     :is-senden-active="isSendenActive"
     @save="onSave"
-    @edit="onEdit"
     @print="onPrint"
   >
     <the-m-b-w-wahlberechtigte-anzeigen-card
@@ -107,10 +106,6 @@ const ungueltigeStimmzettelNachBeschluss = computed(
 
 function onSave() {
   emit("save");
-}
-
-function onEdit() {
-  emit("edit");
 }
 
 function onPrint() {

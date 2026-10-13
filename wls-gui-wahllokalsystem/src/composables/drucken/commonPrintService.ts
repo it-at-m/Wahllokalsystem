@@ -4,6 +4,7 @@ import type { Wahl } from "@/types/wahl/Wahl.ts";
 import JsBarcode from "jsbarcode";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useMeldungValidierungsstatusEnumMapper } from "@/composables/ergebnismeldung/common/MeldungValidierungsstatusEnumMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
@@ -13,6 +14,7 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 export function useCommonPrintService() {
   const { toGermanDate, toHhMm } = useDateTimeFormatter();
+  const { logError } = useLogging("commonPrintService");
   const { addNotification } = useUserNotificationService();
   const { enumToShortAlias } = useMeldungValidierungsstatusEnumMapper();
 
@@ -49,6 +51,26 @@ export function useCommonPrintService() {
     return `${crypto.randomUUID()}, ${formattedDateWithTime} ${meldungValidierungsstatusShortAlias} ${wahlbezirkNummer}`;
   }
 
+  async function printInWindow(printContent: string) {
+    const printWindow = window.open(
+      "",
+      "",
+      "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
+    );
+
+    if (printWindow) {
+      printWindow.document.writeln(printContent);
+      printWindow.document.close();
+
+      await _fetchImages(printWindow);
+      printWindow.print();
+      printWindow.close();
+      return true;
+    }
+
+    return false;
+  }
+
   function _createBarcodeString(
     wahl: Wahl,
     meldungsart: MeldungsartEnum,
@@ -74,8 +96,25 @@ export function useCommonPrintService() {
     }
   }
 
+  async function _fetchImages(printWindow: Window) {
+    const images = printWindow.document.querySelectorAll("img");
+
+    // Chrome/Chromium requires images to be fully loaded and ready in the DOM before printing.
+    // Otherwise, they might be missing or blank in the generated PDF layout.
+    const imagePromises = Array.from(images).map((img) =>
+      img.decode
+        ? img.decode().catch(() => {
+            logError("Image konnte nicht dekodiert werden: " + img.src);
+          })
+        : Promise.resolve()
+    );
+
+    await Promise.all(imagePromises);
+  }
+
   return {
     createBarcode,
     createFooter,
+    printInWindow,
   };
 }

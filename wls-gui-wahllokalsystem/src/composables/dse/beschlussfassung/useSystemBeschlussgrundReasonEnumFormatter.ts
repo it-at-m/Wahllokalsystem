@@ -18,7 +18,7 @@ const SYSTEM_BESCHLUSSGRUND_REASON_ENUM_TO_BESCHLUSSVORSCHLAG_TEXT: Record<
   string
 > = {
   ZU_VIELE_EINZELSTIMMEN_ABER_IM_GESAMTSTIMMENLIMIT:
-    "Mehr als 3 Stimmen bei mind. einer Person und 80 Stimmen gesamt nicht überschritten",
+    "Mehr als 3 Stimmen bei mind. einer Person und maximal erlaubte Gesamtstimmen nicht überschritten",
   KEINE_RESTSTIMMENVERGABE_MOEGLICH:
     "keine Reststimmenvergabe möglich, Einzelstimmen und mehrere Kopfleistenkreuze",
   EINZELNE_STIMMEN_UNGUELTIG: "einzelne Stimmen ungültig",

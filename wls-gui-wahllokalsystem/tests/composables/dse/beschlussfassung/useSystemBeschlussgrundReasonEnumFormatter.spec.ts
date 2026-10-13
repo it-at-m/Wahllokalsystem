@@ -13,7 +13,7 @@ describe("useSystemBeschlussgrundReasonEnumFormatter.ts", () => {
     it.each([
       [
         SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
-        "Mehr als 3 Stimmen bei mind. einer Person und 80 Stimmen gesamt nicht überschritten",
+        "Mehr als 3 Stimmen bei mind. einer Person und maximal erlaubte Gesamtstimmen nicht überschritten",
       ],
       [
         SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,

@@ -45,7 +45,6 @@ export function useMbwNiederschriftViewUtils(
   const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
   const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 
-  const isKorrigierenValid = ref<null | boolean>();
   const isBeschlussentscheidungenDruckenLoading = ref(false);
   const isDruckenLoading = ref(false);
   const isNiederschriftSendenClicked = ref(false);
@@ -129,10 +128,6 @@ export function useMbwNiederschriftViewUtils(
   function onSyncError() {
     isOfflineSyncDialogVisible.value = false;
     isSyncErrorDialogVisible.value = true;
-  }
-
-  function onKorrigierenClicked() {
-    // to be implemented
   }
 
   async function onDruckenClicked() {
@@ -225,14 +220,12 @@ export function useMbwNiederschriftViewUtils(
     isBeschlussentscheidungenDruckenLoading,
     isDruckenActive,
     isDruckenLoading,
-    isKorrigierenValid,
     isOfflineSyncDialogVisible,
     isSendenActive,
     isSendingNiederschrift,
     isSyncErrorDialogVisible,
     onBeschlussentscheidungenDruckenClicked,
     onDruckenClicked,
-    onKorrigierenClicked,
     onSendenClicked,
     onSyncError,
     onSyncSuccess,

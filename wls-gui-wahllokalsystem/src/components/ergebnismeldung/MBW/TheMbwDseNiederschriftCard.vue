@@ -3,12 +3,10 @@
     title="Niederschrift"
     subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
     :is-sending="isSendingNiederschrift"
-    :is-korrigieren-active="isKorrigierenValid"
     :is-drucken-active="isDruckenActive"
     :is-drucken-loading="isDruckenLoading"
     :is-senden-active="isSendenActive"
     @save="onSave"
-    @edit="onEdit"
     @print="onPrint"
   >
     <the-m-b-w-wahlberechtigte-anzeigen-card
@@ -70,7 +68,6 @@ const props = defineProps<{
   wahlbezirkID: string;
   wahlID: string;
   isSendingNiederschrift: boolean;
-  isKorrigierenValid: boolean | null | undefined;
   isDruckenActive: boolean | undefined;
   isDruckenLoading: boolean;
   isSendenActive: boolean;
@@ -109,10 +106,6 @@ const ungueltigeStimmzettelNachBeschluss = computed(
 
 function onSave() {
   emit("save");
-}
-
-function onEdit() {
-  emit("edit");
 }
 
 function onPrint() {

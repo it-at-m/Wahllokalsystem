@@ -52,6 +52,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   createBarcode: vi.fn(),
   createFooter: vi.fn(),
+  printInWindow: vi.fn(),
   getBedenklicheStimmzettel: vi.fn(),
 }));
 
@@ -60,6 +61,7 @@ vi.mock(import("@/composables/drucken/commonPrintService.ts"), () => ({
   useCommonPrintService: () => ({
     createBarcode: mockDefinitions.createBarcode,
     createFooter: mockDefinitions.createFooter,
+    printInWindow: mockDefinitions.printInWindow,
   }),
 }));
 

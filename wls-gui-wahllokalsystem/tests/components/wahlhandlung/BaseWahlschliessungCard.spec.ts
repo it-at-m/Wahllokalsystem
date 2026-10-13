@@ -29,7 +29,6 @@ import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts
 const mockDefinitions = vi.hoisted(() => ({
   postUrnenwahlSchliessungsuhrzeit: vi.fn(),
   resetAllAnwesenheiten: vi.fn(),
-  sendWaehler: vi.fn(),
 }));
 
 vi.mock(
@@ -49,11 +48,6 @@ vi.mock(
 vi.mock("@/stores/wahlvorstandStore.ts", () => ({
   useWahlvorstandStore: () => ({
     resetAllAnwesenheiten: mockDefinitions.resetAllAnwesenheiten,
-  }),
-}));
-vi.mock("@/stores/monitoringStore.ts", () => ({
-  useMonitoringStore: () => ({
-    sendWaehler: mockDefinitions.sendWaehler,
   }),
 }));
 
@@ -229,7 +223,6 @@ describe("BaseWahlschliessungCard.vue", () => {
       );
 
       expect(sendUhrzeitSpy).toHaveBeenCalled();
-      expect(mockDefinitions.sendWaehler).toHaveBeenCalled();
       expect(mockDefinitions.resetAllAnwesenheiten).toHaveBeenCalled();
     });
   });

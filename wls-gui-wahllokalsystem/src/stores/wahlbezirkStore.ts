@@ -1,6 +1,5 @@
 import type { Wahlbriefdaten } from "@/types/briefwahl/Wahlbriefdaten";
 import type { PflegeWaehlerverzeichnis } from "@/types/wahlbezirk/PflegeWaehlerverzeichnis.ts";
-import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlhandlung/Urnenwahlvorbereitung.ts";
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
 import type { Ref } from "vue";
@@ -8,7 +7,6 @@ import type { Ref } from "vue";
 import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 
-import { useUngueltigeWahlscheineService } from "@/composables/basisdaten/ungueltigeWahlscheineService.ts";
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
@@ -32,14 +30,9 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     getUrnenwahlvorbereitung,
     getBriefwahlvorbereitung,
   } = useWahlvorbereitungService();
-  const { getUngueltigeWahlscheine } = useUngueltigeWahlscheineService();
   const { getWahlbriefdaten, postWahlbriefdaten } = useBriefwahlService();
-  const {
-    currentUserWahlbezirkID,
-    currentUserWahltagID,
-    currentUserWahlbezirksArt,
-    currentUserHauptWahlID,
-  } = storeToRefs(useUserStore());
+  const { currentUserWahlbezirkID, currentUserHauptWahlID } =
+    storeToRefs(useUserStore());
   const {
     createDefaultPflegeWaehlerverzeichnis,
     getWaehlerverzeichnis,
@@ -294,64 +287,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     },
   };
 
-  /* --- ungueltigeWahlscheine --- */
-  const ungueltigeWahlscheineState: Ref<{
-    ungueltigeWahlscheine: UngueltigerWahlschein[];
-    ungueltigeWahlscheineIsLoading: boolean;
-    ungueltigeWahlscheineLoadingFailed: boolean;
-  }> = ref({
-    ungueltigeWahlscheine: [],
-    ungueltigeWahlscheineIsLoading: false,
-    ungueltigeWahlscheineLoadingFailed: false,
-  });
-
-  const ungueltigeWahlscheineGetter = computed(() => ({
-    ungueltigeWahlscheineIsEmpty:
-      ungueltigeWahlscheineState.value.ungueltigeWahlscheine.length === 0,
-  }));
-
-  const ungueltigeWahlscheineActions = {
-    getUngueltigerWahlscheinByWahlscheinnummer:
-      function getUngueltigerWahlscheinByWahlscheinnummer(
-        wahlscheinNummer: string
-      ) {
-        return (
-          ungueltigeWahlscheineState.value.ungueltigeWahlscheine.find(
-            (ungueltigerWahlschein) =>
-              ungueltigerWahlschein.wahlscheinnummer === wahlscheinNummer
-          ) ?? null
-        );
-      },
-    initUngueltigeWahlscheine: async function initUngueltigeWahlscheine(
-      sendNotification = true
-    ) {
-      ungueltigeWahlscheineState.value.ungueltigeWahlscheine =
-        await getUngueltigeWahlscheine(
-          currentUserWahltagID.value,
-          currentUserWahlbezirksArt.value,
-          sendNotification
-        );
-    },
-    loadUngueltigeWahlscheine: async function loadUngueltigeWahlscheine() {
-      ungueltigeWahlscheineState.value.ungueltigeWahlscheineIsLoading = true;
-      ungueltigeWahlscheineState.value.ungueltigeWahlscheineLoadingFailed = false;
-      ungueltigeWahlscheineState.value.ungueltigeWahlscheine = [];
-
-      try {
-        ungueltigeWahlscheineState.value.ungueltigeWahlscheine =
-          await getUngueltigeWahlscheine(
-            currentUserWahltagID.value,
-            currentUserWahlbezirksArt.value,
-            true
-          );
-      } catch {
-        ungueltigeWahlscheineState.value.ungueltigeWahlscheineLoadingFailed = true;
-      } finally {
-        ungueltigeWahlscheineState.value.ungueltigeWahlscheineIsLoading = false;
-      }
-    },
-  };
-
   /* --- wahlbriefDaten --- */
   const wahlbriefDatenState: Ref<{
     wahlbriefDaten: Wahlbriefdaten;
@@ -427,9 +362,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     urnenwahlVorbereitungActions,
     briefwahlVorbereitungState,
     briefwahlVorbereitungActions,
-    ungueltigeWahlscheineState,
-    ungueltigeWahlscheineGetter,
-    ungueltigeWahlscheineActions,
     wahlbriefDatenState,
     wahlbriefDatenActions,
   };

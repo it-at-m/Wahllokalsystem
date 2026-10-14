@@ -63,7 +63,7 @@
       @cancel="onStimmzettelkennungCanceled"
     />
     <the-stimmzettel-erfassung-dialog
-      v-if="activeStimmzettel"
+      v-if="isErfassungsDialogPreloaded"
       :ref="STIMMZETTEL_ERFASSUNG_DIALOG_TEMPLATE_REF_NAME"
       v-model="isErfassungsDialogVisible"
       :stimmzettel="activeStimmzettel"
@@ -85,7 +85,14 @@
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
-import { computed, useTemplateRef } from "vue";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  useTemplateRef,
+} from "vue";
 import { useRoute } from "vue-router";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
@@ -118,6 +125,9 @@ const userStore = useUserStore();
 const teamID = userStore.currentUserTeamName || "";
 const wahlID = (route.params.wahlId as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
+const isErfassungsDialogPreloaded = ref(false);
+let idleCallbackId: number | undefined;
+let preloadTimeoutId: number | undefined;
 
 const templateRefStimmzettelBeendenDialog = useTemplateRef<
   InstanceType<typeof TheStimmzettelerfassungBeendenDialog>
@@ -151,6 +161,33 @@ const startNewStimmzettelButtonText = computed(() =>
     : "Starten"
 );
 
+onMounted(() => {
+  // Defer dialog preloading to an idle phase to prevent blocking the initial page render.
+  if (window.requestIdleCallback) {
+    idleCallbackId = window.requestIdleCallback(
+      () => {
+        isErfassungsDialogPreloaded.value = true;
+      },
+      { timeout: 1_000 }
+    );
+  } else {
+    // Fallback for browsers lacking requestIdleCallback support
+    // Defers execution to the end of the event loop to allow the initial render to finish.
+    preloadTimeoutId = window.setTimeout(() => {
+      isErfassungsDialogPreloaded.value = true;
+    });
+  }
+});
+
+onBeforeUnmount(() => {
+  if (idleCallbackId !== undefined) {
+    window.cancelIdleCallback(idleCallbackId);
+  }
+  if (preloadTimeoutId !== undefined) {
+    window.clearTimeout(preloadTimeoutId);
+  }
+});
+
 function onErfassungStartenClicked() {
   isKennungsDialogVisible.value = true;
 }
@@ -159,6 +196,7 @@ async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
   await ensureStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
   startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
+  await preloadErfassungsDialog();
   if (isErfassungsDialogVisible.value) {
     templateRefStimmzettelErfassenDialog.value?.focusCommandProcessingTextField();
   } else {
@@ -204,7 +242,15 @@ async function onStimmzettelBearbeitenClicked(
   await ensureStatusInBearbeitung();
 
   activeStimmzettel.value = stimmzettel;
+  await preloadErfassungsDialog();
   isErfassungsDialogVisible.value = true;
+}
+
+async function preloadErfassungsDialog() {
+  if (!isErfassungsDialogPreloaded.value) {
+    isErfassungsDialogPreloaded.value = true;
+    await nextTick();
+  }
 }
 
 const hasTeamFinishedErfassung = computed(

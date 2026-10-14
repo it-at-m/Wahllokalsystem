@@ -2,7 +2,10 @@ import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/Persist
 import { useStimmzettelDTOTestDataFactory } from "@tests/utils/dse/StimmzettelDTOTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
+import { REQUEST_HEADER_OFFLINE_STRATEGY } from "@/constants.ts";
+import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { createStimmzettelOfTeamDTO } = useStimmzettelDTOTestDataFactory();
@@ -60,6 +63,7 @@ vi.mock(
 describe("stimmzettelService.ts", () => {
   const { getStimmzettel, saveStimmzettel, getAnzahlStimmzettel } =
     useStimmzettelService();
+  const { axiosConfigWrapper } = useCommonApiUtils();
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -100,6 +104,56 @@ describe("stimmzettelService.ts", () => {
         teamID,
       ]);
 
+      expect(mockDefinitions.mapDtoToModel.mock.calls).toStrictEqual([
+        [dto1, teamID],
+        [dto2, teamID],
+      ]);
+    });
+
+    it("should_fetchOnlineAndStoreOffline_when_forceRefreshIsTrue", async () => {
+      const wahlID = "wahlID";
+      const wahlbezirkID = "wahlbezirkID";
+      const teamID = "teamID";
+
+      const dto1 = createStimmzettelOfTeamDTO();
+      const dto2 = createStimmzettelOfTeamDTO();
+      mockDefinitions.getStimmzettel.mockResolvedValue({
+        status: 200,
+        data: [dto1, dto2],
+      });
+
+      const model1 = createPersistedStimmzettel();
+      const model2 = createPersistedStimmzettel();
+      mockDefinitions.mapDtoToModel
+        .mockReturnValueOnce(model1)
+        .mockReturnValueOnce(model2);
+
+      const result = await getStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        true,
+        true
+      );
+
+      expect(result).toStrictEqual([model1, model2]);
+      expect(mockDefinitions.getStimmzettel.mock.calls).toStrictEqual([
+        [
+          wahlID,
+          wahlbezirkID,
+          teamID,
+          axiosConfigWrapper().requestAsOnlineOnly(),
+        ],
+      ]);
+      expect(mockDefinitions.postStimmzettel.mock.calls).toStrictEqual([
+        [
+          wahlID,
+          wahlbezirkID,
+          teamID,
+          [dto1, dto2],
+          axiosConfigWrapper().requestAsSaveOfflineOnly(),
+        ],
+      ]);
       expect(mockDefinitions.mapDtoToModel.mock.calls).toStrictEqual([
         [dto1, teamID],
         [dto2, teamID],

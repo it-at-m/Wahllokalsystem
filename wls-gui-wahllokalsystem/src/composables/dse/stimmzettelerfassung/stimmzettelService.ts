@@ -28,14 +28,14 @@ export function useStimmzettelService() {
     wahlID: string,
     wahlbezirkID: string,
     teamID: string,
-    sendNotification = true
+    sendNotification = true,
+    forceRefresh = false
   ): Promise<PersistedStimmzettel[]> {
     try {
-      const response = await stimmzettelControllerApi.getStimmzettel(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
+      const response = forceRefresh
+        ? await _fetchStimmzettelOnlineAndStore(wahlID, wahlbezirkID, teamID)
+        : await _fetchStimmzettelOfflineFirst(wahlID, wahlbezirkID, teamID);
+
       const responseData = getNullOn204OrElseResponseData(response);
       return (
         responseData?.map((stimmzettelDTO) =>
@@ -108,6 +108,39 @@ export function useStimmzettelService() {
       }
       throw error;
     }
+  }
+
+  async function _fetchStimmzettelOfflineFirst(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string
+  ) {
+    return await stimmzettelControllerApi.getStimmzettel(
+      wahlID,
+      wahlbezirkID,
+      teamID
+    );
+  }
+
+  async function _fetchStimmzettelOnlineAndStore(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string
+  ) {
+    const response = await stimmzettelControllerApi.getStimmzettel(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      axiosConfigWrapper().requestAsOnlineOnly()
+    );
+    await stimmzettelControllerApi.postStimmzettel(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      response.data,
+      axiosConfigWrapper().requestAsSaveOfflineOnly()
+    );
+    return response;
   }
 
   return {

@@ -20,7 +20,7 @@
             </encoder>
         </appender>
         <logger name="de.muenchen.oss.wahllokalsystem.wls.common.monitoring.logging.RequestMdcLoggingAspect"
-                level="DEBUG"
+                level="debug"
                 additivity="false">
             <appender-ref ref="STDOUT" />
         </logger>
@@ -123,7 +123,7 @@
             </encoder>
         </appender>
         <logger name="de.muenchen.oss.wahllokalsystem.wls.common.monitoring.logging.RequestMdcLoggingAspect"
-                level="DEBUG"
+                level="trace"
                 additivity="false">
             <appender-ref ref="JSON_STDOUT" />
         </logger>

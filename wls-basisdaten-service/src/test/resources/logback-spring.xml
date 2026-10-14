@@ -17,7 +17,7 @@
         </encoder>
     </appender>
     <logger name="de.muenchen.oss.wahllokalsystem.wls.common.monitoring.logging.RequestMdcLoggingAspect"
-            level="DEBUG"
+            level="debug"
             additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>

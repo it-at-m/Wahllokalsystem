@@ -11,10 +11,17 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>
-                %date{yyyy.MM.dd HH:mm:ss.SSS} | ${springAppName} | TraceId: %X{traceId:-} | SpanId: %X{spanId:-}] | %level | [%thread] | %logger{0} | [%file : %line] - %msg%n
+                %date{yyyy.MM.dd HH:mm:ss.SSS} | ${springAppName} | usr: %X{user} | TraceId: %X{traceId:-} | SpanId: %X{spanId:-}] | %level | [%thread] | %logger{0} | [%file : %line] - %msg%n
             </pattern>
         </encoder>
+        <mdc/>
     </appender>
+
+    <logger name="de.muenchen.oss.wahllokalsystem.wls.common.monitoring.logging.RequestMdcLoggingAspect"
+            level="debug"
+            additivity="false">
+        <appender-ref ref="JSON_STDOUT" />
+    </logger>
 
     <!-- Logger -->
     <logger name="de.muenchen.oss.wahllokalsystem.infomanagementservice"

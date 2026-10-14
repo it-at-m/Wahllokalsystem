@@ -33,6 +33,10 @@ const mockDefinitions = vi.hoisted(() => ({
     .fn()
     .mockName("fetchButStoreRequestAsDirtyOnNotOk"),
   onlyStoreRequestHandler: vi.fn().mockName("onlyStoreRequestHandler"),
+  onlineOnlyAndReplaceStoredValueRequestHandler: vi
+    .fn()
+    .mockName("onlineOnlyAndReplaceStoredValueRequestHandler"),
+  fetchPostAndStoreOnSuccess: vi.fn().mockName("fetchPostAndStoreOnSuccess"),
 }));
 
 vi.mock(import("@/composables/api/requestStrategies.ts"), () => ({
@@ -45,7 +49,10 @@ vi.mock(import("@/composables/api/requestStrategies.ts"), () => ({
     unhandledFetch: mockDefinitions.unhandledFetch,
     fetchButStoreRequestAsDirtyOnNotOk:
       mockDefinitions.fetchButStoreRequestAsDirtyOnNotOk,
+    fetchPostAndStoreOnSuccess: mockDefinitions.fetchPostAndStoreOnSuccess,
     onlyStoreRequestHandler: mockDefinitions.onlyStoreRequestHandler,
+    onlineOnlyAndReplaceStoredValueRequestHandler:
+      mockDefinitions.onlineOnlyAndReplaceStoredValueRequestHandler,
   })),
 }));
 
@@ -89,6 +96,16 @@ describe("requestStrategyManager.ts", () => {
           strategy:
             FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL,
           expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_AND_STORE_ON_SUCCESS,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy: FetchStrategiesEnum.STRATEGY_REFRESH_OFFLINE_DATA,
+          expectedCalledMock:
+            mockDefinitions.onlineOnlyAndReplaceStoredValueRequestHandler,
         },
         {
           strategy: FetchStrategiesEnum.STRATEGY_SAVE_OFFLINE_ONLY,
@@ -140,6 +157,15 @@ describe("requestStrategyManager.ts", () => {
             mockDefinitions.fetchButStoreRequestAsDirtyOnNotOk,
         },
         {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_AND_STORE_ON_SUCCESS,
+          expectedCalledMock: mockDefinitions.fetchPostAndStoreOnSuccess,
+        },
+        {
+          strategy: FetchStrategiesEnum.STRATEGY_REFRESH_OFFLINE_DATA,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
           strategy: FetchStrategiesEnum.STRATEGY_SAVE_OFFLINE_ONLY,
           expectedCalledMock: mockDefinitions.onlyStoreRequestHandler,
         },
@@ -185,6 +211,15 @@ describe("requestStrategyManager.ts", () => {
         {
           strategy:
             FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_AND_STORE_ON_SUCCESS,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy: FetchStrategiesEnum.STRATEGY_REFRESH_OFFLINE_DATA,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
         {
@@ -236,6 +271,15 @@ describe("requestStrategyManager.ts", () => {
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
         {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_AND_STORE_ON_SUCCESS,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy: FetchStrategiesEnum.STRATEGY_REFRESH_OFFLINE_DATA,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
           strategy: FetchStrategiesEnum.STRATEGY_SAVE_OFFLINE_ONLY,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
@@ -284,6 +328,15 @@ describe("requestStrategyManager.ts", () => {
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
         {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_AND_STORE_ON_SUCCESS,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy: FetchStrategiesEnum.STRATEGY_REFRESH_OFFLINE_DATA,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
           strategy: FetchStrategiesEnum.STRATEGY_SAVE_OFFLINE_ONLY,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
@@ -329,6 +382,15 @@ describe("requestStrategyManager.ts", () => {
         {
           strategy:
             FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_AND_STORE_ON_SUCCESS,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy: FetchStrategiesEnum.STRATEGY_REFRESH_OFFLINE_DATA,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
         {

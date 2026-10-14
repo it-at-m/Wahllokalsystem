@@ -13,7 +13,9 @@ const { logDebug } = useLogging("requestStrategyManager");
 const {
   onlineFirstGetRequestHandler,
   onlineFirstPostRequestHandler,
+  onlineOnlyAndReplaceStoredValueRequestHandler,
   fetchButStoreRequestAsDirtyOnNotOk,
+  fetchPostAndStoreOnSuccess,
   offlineFirstGetRequestHandler,
   onlyStoreRequestHandler,
   unhandledFetch,
@@ -38,7 +40,13 @@ export function useRequestStrategyManager() {
     STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL: new Map([
       ["POST", fetchButStoreRequestAsDirtyOnNotOk],
     ]),
+    STRATEGY_POST_ONLINE_ONLY_AND_STORE_ON_SUCCESS: new Map([
+      ["POST", fetchPostAndStoreOnSuccess],
+    ]),
     STRATEGY_SAVE_OFFLINE_ONLY: new Map([["POST", onlyStoreRequestHandler]]),
+    STRATEGY_REFRESH_OFFLINE_DATA: new Map([
+      ["GET", onlineOnlyAndReplaceStoredValueRequestHandler],
+    ]),
   };
 
   function _findStrategy(request: Request): FetchStrategiesEnum {

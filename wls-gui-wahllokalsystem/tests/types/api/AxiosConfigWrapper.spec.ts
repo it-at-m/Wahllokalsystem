@@ -96,4 +96,26 @@ describe("AxiosConfigWrapper", () => {
       ).toStrictEqual(FetchStrategiesEnum.STRATEGY_OFFLINE_FIRST);
     });
   });
+
+  describe("requestAsSaveOfflineOnly", () => {
+    it("should_setFetchStrategySaveOfflineOnly_when_called", () => {
+      const wrapper = new AxiosConfigWrapper();
+      wrapper.requestAsSaveOfflineOnly();
+
+      expect(
+        wrapper.headers?.get(REQUEST_HEADER_OFFLINE_STRATEGY)
+      ).toStrictEqual(FetchStrategiesEnum.STRATEGY_SAVE_OFFLINE_ONLY);
+    });
+
+    it("should_replaceOldHeader_when_called", async () => {
+      const wrapper = new AxiosConfigWrapper();
+      wrapper.headers?.set(REQUEST_HEADER_OFFLINE_STRATEGY, "sthElse");
+
+      wrapper.requestAsSaveOfflineOnly();
+
+      expect(
+        wrapper.headers?.get(REQUEST_HEADER_OFFLINE_STRATEGY)
+      ).toStrictEqual(FetchStrategiesEnum.STRATEGY_SAVE_OFFLINE_ONLY);
+    });
+  });
 });

@@ -72,6 +72,7 @@ export function useRequestStrategies() {
 
     const dbKey = options.request.url;
     try {
+      await _storeRequest(dbKey, options.request, true);
       const response = await fetch(options.request.clone());
       logDebug(`response has status ${response.status}`);
 
@@ -86,6 +87,21 @@ export function useRequestStrategies() {
       logError("Error fetching remote data:", error);
       await _storeRequest(dbKey, options.request, true);
       return createResponseNotFoundWithoutResponseBody();
+    }
+  }
+
+  async function onlyStoreRequestHandler(options: RouteHandlerCallbackOptions) {
+    log(
+      `onlyStoreRequestHandler - ${options.request.method} request identified - uri: ${options.url}`
+    );
+
+    const dbKey = options.request.url;
+    try {
+      await _storeRequest(dbKey, options.request, false);
+      return createResponseOkWithoutResponseBody();
+    } catch (error) {
+      logError("Error store data in indexedDB:", error);
+      return createResponseInternalServerErrorWithoutResponseBody();
     }
   }
 
@@ -198,6 +214,7 @@ export function useRequestStrategies() {
     offlineFirstGetRequestHandler,
     onlineFirstGetRequestHandler,
     onlineFirstPostRequestHandler,
+    onlyStoreRequestHandler,
     fetchButStoreRequestAsDirtyOnNotOk,
   };
 }

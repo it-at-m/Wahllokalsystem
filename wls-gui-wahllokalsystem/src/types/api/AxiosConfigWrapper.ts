@@ -25,6 +25,11 @@ export class AxiosConfigWrapper implements AxiosRequestConfig {
     return this;
   }
 
+  public requestAsSaveOfflineOnly() {
+    this.withFetchStrategy(FetchStrategiesEnum.STRATEGY_SAVE_OFFLINE_ONLY);
+    return this;
+  }
+
   public requestAsOfflineFirst() {
     this.withFetchStrategy(FetchStrategiesEnum.STRATEGY_OFFLINE_FIRST);
     return this;

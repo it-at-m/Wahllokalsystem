@@ -55,6 +55,7 @@ describe("requestStrategies.ts", () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   afterAll(() => {
@@ -228,15 +229,25 @@ describe("requestStrategies.ts", () => {
         mockedContentType
       );
 
-      const expectedIndexDBValue = prepareIndexDBValue()
+      const expectedIndexDBValueBeforeFetch = prepareIndexDBValue()
+        .data(requestBody)
+        .contentType(requestContentType)
+        .dirty(true)
+        .timestamp(mockedNow.getTime())
+        .build();
+      delete expectedIndexDBValueBeforeFetch.httpStatus;
+
+      const expectedIndexDBValueAfterFetch = prepareIndexDBValue()
         .data(requestBody)
         .contentType(requestContentType)
         .dirty(false)
         .timestamp(mockedNow.getTime())
         .build();
-      delete expectedIndexDBValue.httpStatus;
+      delete expectedIndexDBValueAfterFetch.httpStatus;
+
       expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
-        [callbackOptions.request.url, expectedIndexDBValue],
+        [callbackOptions.request.url, expectedIndexDBValueBeforeFetch],
+        [callbackOptions.request.url, expectedIndexDBValueAfterFetch],
       ]);
     });
 
@@ -261,15 +272,25 @@ describe("requestStrategies.ts", () => {
       expect(result.status).toStrictEqual(404);
       expect(await result.text()).toStrictEqual("");
 
-      const expectedIndexDBValue = prepareIndexDBValue()
+      const expectedIndexDBValueBeforeFetch = prepareIndexDBValue()
         .data(requestBody)
         .contentType(requestContentType)
         .dirty(true)
         .timestamp(mockedNow.getTime())
         .build();
-      delete expectedIndexDBValue.httpStatus;
+      delete expectedIndexDBValueBeforeFetch.httpStatus;
+
+      const expectedIndexDBValueAfterFetch = prepareIndexDBValue()
+        .data(requestBody)
+        .contentType(requestContentType)
+        .dirty(true)
+        .timestamp(mockedNow.getTime())
+        .build();
+      delete expectedIndexDBValueAfterFetch.httpStatus;
+
       expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
-        [callbackOptions.request.url, expectedIndexDBValue],
+        [callbackOptions.request.url, expectedIndexDBValueBeforeFetch],
+        [callbackOptions.request.url, expectedIndexDBValueAfterFetch],
       ]);
     });
 
@@ -294,16 +315,77 @@ describe("requestStrategies.ts", () => {
       expect(result.status).toStrictEqual(200);
       expect(await result.text()).toStrictEqual("");
 
-      const expectedIndexDBValue = prepareIndexDBValue()
+      const expectedIndexDBValueBeforeFetch = prepareIndexDBValue()
         .data(requestBody)
         .contentType(requestContentType)
         .dirty(true)
+        .timestamp(mockedNow.getTime())
+        .build();
+      delete expectedIndexDBValueBeforeFetch.httpStatus;
+
+      const expectedIndexDBValueAfterFetch = prepareIndexDBValue()
+        .data(requestBody)
+        .contentType(requestContentType)
+        .dirty(true)
+        .timestamp(mockedNow.getTime())
+        .build();
+      delete expectedIndexDBValueAfterFetch.httpStatus;
+      expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
+        [callbackOptions.request.url, expectedIndexDBValueBeforeFetch],
+        [callbackOptions.request.url, expectedIndexDBValueAfterFetch],
+      ]);
+    });
+  });
+
+  describe("onlyStoreRequestHandler", () => {
+    it("should_sendDataAsCleanToIndexedDB_when_called", async () => {
+      const requestBody = generateRandomString(50);
+      const requestContentType = generateRandomString(10);
+      const callbackOptions = createRouteHandlerCallbackOptions(
+        "POST",
+        requestBody,
+        new Headers({
+          "Content-Type": requestContentType,
+        })
+      );
+
+      const result =
+        await unitUnderTest.onlyStoreRequestHandler(callbackOptions);
+
+      expect(result.status).toStrictEqual(200);
+      expect(await result.text()).toStrictEqual("");
+
+      const expectedIndexDBValue = prepareIndexDBValue()
+        .data(requestBody)
+        .contentType(requestContentType)
+        .dirty(false)
         .timestamp(mockedNow.getTime())
         .build();
       delete expectedIndexDBValue.httpStatus;
       expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
         [callbackOptions.request.url, expectedIndexDBValue],
       ]);
+    });
+
+    it("should_returnInternalServerError_when_savingToIndexedDBFailed", async () => {
+      const requestBody = generateRandomString(50);
+      const requestContentType = generateRandomString(10);
+      const callbackOptions = createRouteHandlerCallbackOptions(
+        "POST",
+        requestBody,
+        new Headers({
+          "Content-Type": requestContentType,
+        })
+      );
+
+      const mockedStoreError = new Error("saving item failed");
+      mockDefinitions.storeItem.mockRejectedValue(mockedStoreError);
+
+      const result =
+        await unitUnderTest.onlyStoreRequestHandler(callbackOptions);
+
+      expect(result.status).toStrictEqual(500);
+      expect(await result.text()).toStrictEqual("");
     });
   });
 

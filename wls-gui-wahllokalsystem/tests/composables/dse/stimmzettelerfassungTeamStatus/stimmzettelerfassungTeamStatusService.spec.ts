@@ -182,9 +182,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       expect(result).toEqual(mappedModel);
       expect(
         mockDefinitions.getStimmzettelerfassungTeamStatus.mock.calls
-      ).toStrictEqual([
-        [wahlID, wahlbezirkID, teamID],
-      ]);
+      ).toStrictEqual([[wahlID, wahlbezirkID, teamID]]);
       expect(mockDefinitions.dtoToModel.mock.calls.length).toBe(1);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         "Team-Status 'REGISTRIERT' für MBW erfolgreich geladen.",
@@ -207,13 +205,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
         mockedResponse.data
       );
 
-      await loadErfassungTeamStatus(
-        wahlID,
-        wahlbezirkID,
-        teamID,
-        false,
-        true
-      );
+      await loadErfassungTeamStatus(wahlID, wahlbezirkID, teamID, false, true);
 
       expect(
         mockDefinitions.getStimmzettelerfassungTeamStatus
@@ -365,9 +357,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       expect(result).toStrictEqual([model1, model2]);
       expect(
         mockDefinitions.getStimmzettelerfassungTeamStatusList.mock.calls
-      ).toStrictEqual([
-        [wahlID, wahlbezirkID],
-      ]);
+      ).toStrictEqual([[wahlID, wahlbezirkID]]);
       expect(mockDefinitions.dtoEntryToModelEntry.mock.calls).toEqual([
         [dto1],
         [dto2],
@@ -570,14 +560,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
       expect(mockDefinitions.modelToDto.mock.calls).toStrictEqual([[model]]);
       expect(
         mockDefinitions.saveStimmzettelerfassungTeamStatus.mock.calls
-      ).toStrictEqual([
-        [
-          wahlID,
-          wahlbezirkID,
-          teamID,
-          dto,
-        ],
-      ]);
+      ).toStrictEqual([[wahlID, wahlbezirkID, teamID, dto]]);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         "Team-Status für MBW erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS,

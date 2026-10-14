@@ -106,6 +106,7 @@ export function useRequestStrategies() {
       }
       return fetchedResponse;
     } catch (error) {
+      logError("Error fetching data:", error);
       return createResponseInternalServerErrorWithoutResponseBody();
     }
   }

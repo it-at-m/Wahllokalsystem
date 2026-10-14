@@ -162,17 +162,13 @@ const startNewStimmzettelButtonText = computed(() =>
 );
 
 onMounted(() => {
-  // Defer dialog preloading to an idle phase to prevent blocking the initial page render.
+  // Mount the dialog shell only when the browser is idle. Its ballot content preloads in batches.
   if (window.requestIdleCallback) {
-    idleCallbackId = window.requestIdleCallback(
-      () => {
-        isErfassungsDialogPreloaded.value = true;
-      },
-      { timeout: 1_000 }
-    );
+    idleCallbackId = window.requestIdleCallback(() => {
+      isErfassungsDialogPreloaded.value = true;
+    });
   } else {
-    // Fallback for browsers lacking requestIdleCallback support
-    // Defers execution to the end of the event loop to allow the initial render to finish.
+    // Fallback for browsers lacking requestIdleCallback support. The dialog shell is lightweight.
     preloadTimeoutId = window.setTimeout(() => {
       isErfassungsDialogPreloaded.value = true;
     });

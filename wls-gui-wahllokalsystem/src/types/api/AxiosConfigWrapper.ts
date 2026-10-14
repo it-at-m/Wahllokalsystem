@@ -25,6 +25,13 @@ export class AxiosConfigWrapper implements AxiosRequestConfig {
     return this;
   }
 
+  public requestAsPostOnlineOnlyAndStoreOnSuccess() {
+    this.withFetchStrategy(
+      FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_AND_STORE_ON_SUCCESS
+    );
+    return this;
+  }
+
   public requestAsSaveOfflineOnly() {
     this.withFetchStrategy(FetchStrategiesEnum.STRATEGY_SAVE_OFFLINE_ONLY);
     return this;
@@ -32,6 +39,11 @@ export class AxiosConfigWrapper implements AxiosRequestConfig {
 
   public requestAsOfflineFirst() {
     this.withFetchStrategy(FetchStrategiesEnum.STRATEGY_OFFLINE_FIRST);
+    return this;
+  }
+
+  public requestAsForceRefresh() {
+    this.withFetchStrategy(FetchStrategiesEnum.STRATEGY_REFRESH_OFFLINE_DATA);
     return this;
   }
 

@@ -337,6 +337,53 @@ describe("requestStrategies.ts", () => {
     });
   });
 
+  describe("onlineOnlyAndReplaceStoredValueRequestHandler", () => {
+    it.each(["response body as string", null])(
+      "should_fetchAndReplaceStoredResponseInIndexDB_when_fetchWasSuccessful",
+      async (responseBody) => {
+        await verifyThatFetchedResponseIsStored(
+          responseBody,
+          unitUnderTest.onlineOnlyAndReplaceStoredValueRequestHandler
+        );
+      }
+    );
+
+    it("should_returnResponseWithoutStoring_when_fetchResponseWasNotOk", async () => {
+      const callbackOptions = createRouteHandlerCallbackOptions();
+      const mockedResponse = new Response("response was not ok", {
+        status: 400,
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+      });
+      mockDefinitions.fetch.mockResolvedValue(mockedResponse);
+
+      const result =
+        await unitUnderTest.onlineOnlyAndReplaceStoredValueRequestHandler(
+          callbackOptions
+        );
+
+      expect(result).toBe(mockedResponse);
+      expect(mockDefinitions.storeItem).not.toHaveBeenCalled();
+    });
+
+    it("should_returnInternalServerErrorWithoutStoring_when_fetchThrowsError", async () => {
+      const callbackOptions = createRouteHandlerCallbackOptions();
+      mockDefinitions.fetch.mockRejectedValue(
+        new Error("mocked failed api call")
+      );
+
+      const result =
+        await unitUnderTest.onlineOnlyAndReplaceStoredValueRequestHandler(
+          callbackOptions
+        );
+
+      expect(result.status).toStrictEqual(500);
+      expect(await result.text()).toStrictEqual("");
+      expect(mockDefinitions.storeItem).not.toHaveBeenCalled();
+    });
+  });
+
   describe("onlyStoreRequestHandler", () => {
     it("should_sendDataAsCleanToIndexedDB_when_called", async () => {
       const requestBody = generateRandomString(50);

@@ -185,6 +185,9 @@ class StimmzettelServiceTest {
 
       val mockedWlsException =
           FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
+      Mockito.doNothing()
+          .when(stimmzettelValidator)
+          .validOrThrow(Mockito.any(TeamBezirkUndWahlIDModel.class));
       Mockito.doThrow(mockedWlsException)
           .when(stimmzettelValidator)
           .validOrThrow(stimmzettelToSave);

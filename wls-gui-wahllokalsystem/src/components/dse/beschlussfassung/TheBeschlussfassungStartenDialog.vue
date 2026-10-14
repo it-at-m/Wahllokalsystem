@@ -11,7 +11,11 @@
     @confirm="onConfirmClicked"
   >
     <v-skeleton-loader
-      v-if="isAnzahlStimmzettelLoading || stimmzettelCount === null"
+      v-if="
+        isAnzahlStimmzettelLoading ||
+        stimmzettelCount === null ||
+        stimmzettelumschlaegeCount === null
+      "
       type="text"
     />
     <div v-else>

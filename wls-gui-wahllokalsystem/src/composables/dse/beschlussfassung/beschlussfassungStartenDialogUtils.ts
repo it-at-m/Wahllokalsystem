@@ -23,7 +23,10 @@ export function useBeschlussfassungStartenDialogUtils() {
   const isAnzahlStimmzettelLoading = ref(false);
 
   const isConfirmButtonInLoadingState = computed(
-    () => isAnzahlStimmzettelLoading.value || stimmzettelCount.value === null
+    () =>
+      isAnzahlStimmzettelLoading.value ||
+      stimmzettelCount.value === null ||
+      stimmzettelumschlaegeCount.value === null
   );
 
   async function updateWorkflowStatusAndNavigate(
@@ -58,7 +61,7 @@ export function useBeschlussfassungStartenDialogUtils() {
           false
         );
         stimmzettelumschlaegeCount.value =
-          loadedStimmzettelumschlaege?.anzahlWaehler || 0;
+          loadedStimmzettelumschlaege?.anzahlWaehler || null;
       }
     } finally {
       isAnzahlStimmzettelLoading.value = false;

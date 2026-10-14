@@ -311,6 +311,27 @@ class StimmzettelServiceSecurityTest {
           .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave))
           .isInstanceOf(AccessDeniedException.class);
     }
+
+    @Test
+    void should_getAccess_when_teamIDIsNotMatchingButUserHasWahlvorstandAuthority() {
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
+      val stimmzettelToSave = Instancio.create(StimmzettelOfTeamModel.class);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(ownerModel.wahlbezirkID()), Mockito.any()))
+          .thenReturn(true);
+      Mockito.when(
+              teamIDPermissionEvaluator.tokenUserteamIdMatches(
+                  Mockito.eq(ownerModel.teamID()), Mockito.any()))
+          .thenReturn(false);
+
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              new String[] {Authorities.SERVICE_WRITE_STIMMZETEL}, "WLS_WAHLVORSTAND"));
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave));
+    }
   }
 
   @Nested

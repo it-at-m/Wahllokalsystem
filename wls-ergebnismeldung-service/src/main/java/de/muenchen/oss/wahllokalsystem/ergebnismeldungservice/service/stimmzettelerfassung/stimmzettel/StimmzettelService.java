@@ -63,7 +63,10 @@ public class StimmzettelService {
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_WriteStimmzettelOfTeam')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
-          + " and @teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)")
+          + " and ("
+          + "@teamIDPermissionEvaluator.tokenUserteamIdMatches(#param.teamID(), authentication)"
+          + " or hasAuthority('WLS_WAHLVORSTAND')"
+          + ")")
   @Transactional
   public void saveStimmzettel(
       @P("param") final TeamBezirkUndWahlIDModel stimmzettelOwner,

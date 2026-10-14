@@ -31,6 +31,7 @@ vi.mock(
       getStimmzettel: mockDefinitions.getStimmzettel,
       saveStimmzettel: vi.fn(),
       getAnzahlStimmzettel: vi.fn(),
+      saveSingleStimmzettel: vi.fn(),
     }),
   })
 );

@@ -86,7 +86,7 @@ export function useRequestStrategies() {
     } catch (error) {
       logError("Error fetching remote data:", error);
       await _storeRequest(dbKey, options.request, true);
-      return createResponseNotFoundWithoutResponseBody();
+      return createResponseOkWithoutResponseBody();
     }
   }
 

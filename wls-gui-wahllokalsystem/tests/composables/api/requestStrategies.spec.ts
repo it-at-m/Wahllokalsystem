@@ -269,7 +269,7 @@ describe("requestStrategies.ts", () => {
       const result =
         await unitUnderTest.onlineFirstPostRequestHandler(callbackOptions);
 
-      expect(result.status).toStrictEqual(404);
+      expect(result.status).toStrictEqual(200);
       expect(await result.text()).toStrictEqual("");
 
       const expectedIndexDBValueBeforeFetch = prepareIndexDBValue()

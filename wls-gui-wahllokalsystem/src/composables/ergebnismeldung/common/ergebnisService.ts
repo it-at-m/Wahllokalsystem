@@ -172,7 +172,7 @@ export function useErgebnisService() {
       SendErgebnisseMeldungsartEnum.V3,
       hauptwahlbezirkID,
       undefined,
-      axiosConfigWrapper().requestAsOnlineOnly()
+      axiosConfigWrapper().requestAsPostOnlineOnlyButDirtyOnFail()
     );
 
     if (sendNotification) {

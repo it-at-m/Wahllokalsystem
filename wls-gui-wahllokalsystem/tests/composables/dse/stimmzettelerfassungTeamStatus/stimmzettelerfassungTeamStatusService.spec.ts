@@ -280,7 +280,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
   });
 
   describe("loadErfassungTeamStatusListe", () => {
-    it("should_callApiAndReturnMappedList_and_showSuccessNotification", async () => {
+    it("should_callApiAndReturnMappedList_when_statusAreAvailable", async () => {
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
 
@@ -330,12 +330,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
         [dto1],
         [dto2],
       ]);
-      expect(mockDefinitions.addNotification.mock.calls).toEqual([
-        [
-          "Status der Teams wurden aktualisiert",
-          UserNotificationCategoryEnum.SUCCESS,
-        ],
-      ]);
     });
 
     it("should_returnEmptyList_when_apiReturns204NoContent", async () => {
@@ -361,12 +355,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
 
       expect(result).toStrictEqual([]);
       expect(mockDefinitions.dtoEntryToModelEntry.mock.calls.length).toBe(0);
-      expect(mockDefinitions.addNotification.mock.calls).toEqual([
-        [
-          "Status der Teams wurden aktualisiert",
-          UserNotificationCategoryEnum.SUCCESS,
-        ],
-      ]);
     });
 
     it("should_notShowNotification_when_sendNotificationIsFalse", async () => {

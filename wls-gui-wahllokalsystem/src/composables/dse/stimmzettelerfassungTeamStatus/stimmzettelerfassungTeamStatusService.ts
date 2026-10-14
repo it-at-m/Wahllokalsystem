@@ -82,17 +82,9 @@ export function useStimmzettelerfassungTeamStatusService() {
         );
       const responseData = getNullOn204OrElseResponseData(response);
 
-      const result =
-        responseData?.map((teamStatusDTO) =>
+      return responseData?.map((teamStatusDTO) =>
           dtoEntryToModelEntry(teamStatusDTO)
-        ) ?? [];
-      if (sendNotification) {
-        addNotification(
-          `Status der Teams wurden aktualisiert`,
-          UserNotificationCategoryEnum.SUCCESS
-        );
-      }
-      return result;
+      ) ?? [];
     } catch {
       const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
       if (sendNotification) {

@@ -12,7 +12,6 @@ import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWaehlerverzeichnisService } from "@/composables/wahlhandlung/waehlerverzeichnisService.ts";
 import { useWahlvorbereitungService } from "@/composables/wahlhandlung/wahlvorbereitungService.ts";
-import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -42,7 +41,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const { waehlerverzeichnisActions } = useWahlenStore();
   const { isValidDate } = useDateTimeUtils();
   const { wahlenState } = storeToRefs(useWahlenStore());
-  const { sendWaehler } = useMonitoringStore();
 
   /* --- eroeffnungsuhrzeit --- */
   const eroeffnungsuhrzeitState: Ref<{
@@ -117,7 +115,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
               currentUserWahlbezirkID.value,
               schliessungszeitToSave
             );
-            await sendWaehler();
             schliessungsuhrzeitState.value.schliessungsuhrzeitSent =
               schliessungszeitToSave;
           } finally {

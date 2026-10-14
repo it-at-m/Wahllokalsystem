@@ -72,6 +72,7 @@ export function useRequestStrategies() {
 
     const dbKey = options.request.url;
     try {
+      await _storeRequest(dbKey, options.request, true);
       const response = await fetch(options.request.clone());
       logDebug(`response has status ${response.status}`);
 

@@ -55,6 +55,7 @@ describe("requestStrategies.ts", () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   afterAll(() => {
@@ -228,15 +229,25 @@ describe("requestStrategies.ts", () => {
         mockedContentType
       );
 
-      const expectedIndexDBValue = prepareIndexDBValue()
+      const expectedIndexDBValueBeforeFetch = prepareIndexDBValue()
+        .data(requestBody)
+        .contentType(requestContentType)
+        .dirty(true)
+        .timestamp(mockedNow.getTime())
+        .build();
+      delete expectedIndexDBValueBeforeFetch.httpStatus;
+
+      const expectedIndexDBValueAfterFetch = prepareIndexDBValue()
         .data(requestBody)
         .contentType(requestContentType)
         .dirty(false)
         .timestamp(mockedNow.getTime())
         .build();
-      delete expectedIndexDBValue.httpStatus;
+      delete expectedIndexDBValueAfterFetch.httpStatus;
+
       expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
-        [callbackOptions.request.url, expectedIndexDBValue],
+        [callbackOptions.request.url, expectedIndexDBValueBeforeFetch],
+        [callbackOptions.request.url, expectedIndexDBValueAfterFetch],
       ]);
     });
 
@@ -261,15 +272,25 @@ describe("requestStrategies.ts", () => {
       expect(result.status).toStrictEqual(404);
       expect(await result.text()).toStrictEqual("");
 
-      const expectedIndexDBValue = prepareIndexDBValue()
+      const expectedIndexDBValueBeforeFetch = prepareIndexDBValue()
         .data(requestBody)
         .contentType(requestContentType)
         .dirty(true)
         .timestamp(mockedNow.getTime())
         .build();
-      delete expectedIndexDBValue.httpStatus;
+      delete expectedIndexDBValueBeforeFetch.httpStatus;
+
+      const expectedIndexDBValueAfterFetch = prepareIndexDBValue()
+        .data(requestBody)
+        .contentType(requestContentType)
+        .dirty(true)
+        .timestamp(mockedNow.getTime())
+        .build();
+      delete expectedIndexDBValueAfterFetch.httpStatus;
+
       expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
-        [callbackOptions.request.url, expectedIndexDBValue],
+        [callbackOptions.request.url, expectedIndexDBValueBeforeFetch],
+        [callbackOptions.request.url, expectedIndexDBValueAfterFetch],
       ]);
     });
 
@@ -294,15 +315,24 @@ describe("requestStrategies.ts", () => {
       expect(result.status).toStrictEqual(200);
       expect(await result.text()).toStrictEqual("");
 
-      const expectedIndexDBValue = prepareIndexDBValue()
+      const expectedIndexDBValueBeforeFetch = prepareIndexDBValue()
         .data(requestBody)
         .contentType(requestContentType)
         .dirty(true)
         .timestamp(mockedNow.getTime())
         .build();
-      delete expectedIndexDBValue.httpStatus;
+      delete expectedIndexDBValueBeforeFetch.httpStatus;
+
+      const expectedIndexDBValueAfterFetch = prepareIndexDBValue()
+        .data(requestBody)
+        .contentType(requestContentType)
+        .dirty(true)
+        .timestamp(mockedNow.getTime())
+        .build();
+      delete expectedIndexDBValueAfterFetch.httpStatus;
       expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
-        [callbackOptions.request.url, expectedIndexDBValue],
+        [callbackOptions.request.url, expectedIndexDBValueBeforeFetch],
+        [callbackOptions.request.url, expectedIndexDBValueAfterFetch],
       ]);
     });
   });

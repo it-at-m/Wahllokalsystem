@@ -3,12 +3,10 @@
     title="Schnellmeldung"
     subtitle="Kontrolle, Übermittlung und Druck der Schnellmeldung"
     :is-sending="isSendingSchnellmeldung"
-    :is-korrigieren-active="isKorrigierenValid"
     :is-drucken-active="isDruckenActive"
     :is-drucken-loading="isDruckenLoading"
     :is-senden-active="isSendenActive"
     @save="onSave"
-    @edit="onEdit"
     @print="onPrint"
   >
     <the-m-b-w-wahlberechtigte-anzeigen-card
@@ -42,7 +40,6 @@ defineProps<{
   wahlbezirkID: string;
   wahlID: string;
   isSendingSchnellmeldung: boolean;
-  isKorrigierenValid: boolean | null | undefined;
   isDruckenActive: boolean;
   isDruckenLoading: boolean;
   isSendenActive: boolean;
@@ -50,16 +47,11 @@ defineProps<{
 
 const emit = defineEmits<{
   save: [];
-  edit: [];
   print: [];
 }>();
 
 function onSave() {
   emit("save");
-}
-
-function onEdit() {
-  emit("edit");
 }
 
 function onPrint() {

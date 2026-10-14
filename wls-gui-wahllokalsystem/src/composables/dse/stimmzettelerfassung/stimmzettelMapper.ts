@@ -51,7 +51,7 @@ export function useStimmzettelMapper() {
   function toPersistedStimmzettel(
     manageableStimmzettel: DseStimmzettel,
     stimmzettelkennung: number,
-    teamID: string
+    teamID: string | null
   ): PersistedStimmzettel {
     const mappedWahlvorschlaege: PersistedWahlvorschlag[] =
       manageableStimmzettel.wahlvorschlaege
@@ -79,7 +79,7 @@ export function useStimmzettelMapper() {
         );
 
     return {
-      teamID: teamID,
+      teamID: teamID ?? "",
       stimmzettelkennung: stimmzettelkennung,
       gueltigkeit: manageableStimmzettel.gueltigkeit,
       invalideVotes: manageableStimmzettel.invalideVotes ?? 0,

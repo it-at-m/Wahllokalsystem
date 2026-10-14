@@ -6,7 +6,6 @@
       :wahl-i-d="wahlID"
       :ereignisse="ereignisse"
       :is-sending-niederschrift="isSendingNiederschrift"
-      :is-korrigieren-valid="isKorrigierenValid"
       :is-drucken-active="isDruckenActive"
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
@@ -14,7 +13,6 @@
         isBeschlussentscheidungenDruckenLoading
       "
       @save="onSendenClicked"
-      @edit="onKorrigierenClicked"
       @print-beschlussentscheidungen="onBeschlussentscheidungenDruckenClicked"
       @print="onDruckenClicked"
     />
@@ -24,12 +22,10 @@
       :wahl-i-d="wahlID"
       :ereignisse="ereignisse"
       :is-sending-niederschrift="isSendingNiederschrift"
-      :is-korrigieren-valid="isKorrigierenValid"
       :is-drucken-active="isDruckenActive"
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
       @save="onSendenClicked"
-      @edit="onKorrigierenClicked"
       @print="onDruckenClicked"
     />
     <offline-syncer-dialog
@@ -79,7 +75,6 @@ const {
   isBeschlussentscheidungenDruckenLoading,
   isDruckenActive,
   isDruckenLoading,
-  isKorrigierenValid,
   isOfflineSyncDialogVisible,
   isSendenActive,
   isSendingNiederschrift,
@@ -87,7 +82,6 @@ const {
   isBeschlussentscheidungenDruckenDialogVisble,
   onBeschlussentscheidungenDruckenClicked,
   onDruckenClicked,
-  onKorrigierenClicked,
   onSendenClicked,
   onSyncError,
   onSyncSuccess,

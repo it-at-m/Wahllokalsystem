@@ -93,7 +93,7 @@ bereits gestrichenen Nennung hinzugefügt werden, als ungültige Stimmen erfasst
 
 </details>
 
-> [!IMPORTANT] Entfernen einer Streichung wandelt ungültige Stimmen nicht un gültige um
+> [!IMPORTANT] Entfernen einer Streichung wandelt ungültige Stimmen nicht ungültige um
 > Wenn ein/e Kandidat\*in mit 3 Einzelstimmen gestrichen wird, werden diese gültigen Stimmen in ungültige
 > umgewandelt. Wird die Streichung nun wieder entfernt bleiben die Stimmen ungültig und müssen ggf. manuell wieder
 > zu gültigen gemacht werden.
@@ -238,7 +238,7 @@ Stimmen ergibt sich aus der Summe der vergebenen Einzelstimmen und sonstigen ung
 
 Die Vergabe der Reststimmen erfolgt entsprechend der Listenposition innerhalb des Wahlvorschlags, beginnend bei der ersten
 Position. Ein/eine Kandidat\*in kann nur Reststimmen erhalten, wenn er/sie noch keine Stimmen erhalten hat
-oder er/sie nicht gestrichen wurden. Gibt es für Kandidat\*innen mehrere Nennungen, kann ein/eine Kandidat\*in außerdem
+und er/sie nicht gestrichen wurde. Gibt es für Kandidat\*innen mehrere Nennungen, kann ein/eine Kandidat\*in außerdem
 nur Reststimmen bekommen, wenn er/sie noch nicht die maximal erlaubte Menge an Stimmen erreicht hat.
 
 <details><summary>Beispiele</summary>

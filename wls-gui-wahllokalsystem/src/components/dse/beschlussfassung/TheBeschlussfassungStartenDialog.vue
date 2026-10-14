@@ -39,8 +39,8 @@ import { computed, watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassung/beschlussfassungStartenDialogUtils.ts";
-import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
 import router from "@/plugins/router.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const isDialogVisible = defineModel("modelValue", {
   type: Boolean,
@@ -88,7 +88,7 @@ function closeDialog() {
 async function cancelDialog() {
   if (!isStimmzettelCountAndStimmzettelumschlaegeCountEqual.value) {
     await router.push({
-      name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
+      name: MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
       params: { wahlId: props.wahlId, wahlbezirkId: props.wahlbezirkId },
     });
   }

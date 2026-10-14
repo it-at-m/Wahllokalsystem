@@ -38,7 +38,7 @@ describe("TheStimmzettelErfassungDialog.performance", () => {
   });
 
   performanceIt(
-    "should_reportPreloadedDialogOpenDuration_forLargeStimmzettel",
+    "should_preloadDialogInTime_when_openedWithLargeStimmzettel",
     async () => {
       const pinia = createTestingPinia({
         createSpy: vi.fn,
@@ -88,6 +88,7 @@ describe("TheStimmzettelErfassungDialog.performance", () => {
         `Preloaded dialog open: ${durationInMilliseconds.toFixed(2)} ms for ${WAHLVORSCHLAG_COUNT} Wahlvorschlaege and ${kandidatCount} Kandidaturen.`
       );
 
+      expect(durationInMilliseconds).toBeLessThan(3000);
       expect(document.body.textContent).toContain("Kurzbefehl");
       wrapper.unmount();
     },

@@ -15,6 +15,7 @@ const {
   onlineFirstPostRequestHandler,
   fetchButStoreRequestAsDirtyOnNotOk,
   offlineFirstGetRequestHandler,
+  onlyStoreRequestHandler,
   unhandledFetch,
 } = useRequestStrategies();
 
@@ -37,6 +38,7 @@ export function useRequestStrategyManager() {
     STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL: new Map([
       ["POST", fetchButStoreRequestAsDirtyOnNotOk],
     ]),
+    STRATEGY_SAVE_OFFLINE_ONLY: new Map([["POST", onlyStoreRequestHandler]]),
   };
 
   function _findStrategy(request: Request): FetchStrategiesEnum {

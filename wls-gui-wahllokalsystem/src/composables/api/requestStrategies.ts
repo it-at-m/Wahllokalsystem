@@ -89,6 +89,21 @@ export function useRequestStrategies() {
     }
   }
 
+  async function onlyStoreRequestHandler(options: RouteHandlerCallbackOptions) {
+    log(
+      `onlyStoreRequestHandler - ${options.request.method} request identified - uri: ${options.url}`
+    );
+
+    const dbKey = options.request.url;
+    try {
+      await _storeRequest(dbKey, options.request, false);
+      return createResponseOkWithoutResponseBody();
+    } catch (error) {
+      logError("Error store data in indexedDB:", error);
+      return createResponseInternalServerErrorWithoutResponseBody();
+    }
+  }
+
   async function fetchButStoreRequestAsDirtyOnNotOk(
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
@@ -198,6 +213,7 @@ export function useRequestStrategies() {
     offlineFirstGetRequestHandler,
     onlineFirstGetRequestHandler,
     onlineFirstPostRequestHandler,
+    onlyStoreRequestHandler,
     fetchButStoreRequestAsDirtyOnNotOk,
   };
 }

@@ -307,6 +307,58 @@ describe("requestStrategies.ts", () => {
     });
   });
 
+  describe("onlyStoreRequestHandler", () => {
+    it("should_sendDataAsCleanToIndexedDB_when_called", async () => {
+      const requestBody = generateRandomString(50);
+      const requestContentType = generateRandomString(10);
+      const callbackOptions = createRouteHandlerCallbackOptions(
+        "POST",
+        requestBody,
+        new Headers({
+          "Content-Type": requestContentType,
+        })
+      );
+
+      const result =
+        await unitUnderTest.onlyStoreRequestHandler(callbackOptions);
+
+      expect(result.status).toStrictEqual(200);
+      expect(await result.text()).toStrictEqual("");
+
+      const expectedIndexDBValue = prepareIndexDBValue()
+        .data(requestBody)
+        .contentType(requestContentType)
+        .dirty(false)
+        .timestamp(mockedNow.getTime())
+        .build();
+      delete expectedIndexDBValue.httpStatus;
+      expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
+        [callbackOptions.request.url, expectedIndexDBValue],
+      ]);
+    });
+
+    it("should_returnInternalServerError_when_savingToIndexedDBFailed", async () => {
+      const requestBody = generateRandomString(50);
+      const requestContentType = generateRandomString(10);
+      const callbackOptions = createRouteHandlerCallbackOptions(
+        "POST",
+        requestBody,
+        new Headers({
+          "Content-Type": requestContentType,
+        })
+      );
+
+      const mockedStoreError = new Error("saving item failed");
+      mockDefinitions.storeItem.mockRejectedValue(mockedStoreError);
+
+      const result =
+        await unitUnderTest.onlyStoreRequestHandler(callbackOptions);
+
+      expect(result.status).toStrictEqual(500);
+      expect(await result.text()).toStrictEqual("");
+    });
+  });
+
   describe("fetchButStoreRequestAsDirtyOnNotOk", () => {
     it("should_fetchRequestAndNotStore_when_fetchWasSuccessful", async () => {
       const requestBody = generateRandomString(50);

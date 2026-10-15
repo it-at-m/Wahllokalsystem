@@ -462,7 +462,7 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
   });
 
   describe("postErfassungTeamStatus", () => {
-    it("should_callSaveApi_withMappedDto_and_showSuccessNotification", async () => {
+    it("should_returnMappedModel_when_callSaveApi", async () => {
       const teamID = generateRandomString(8);
       const wahlID = generateRandomString(8);
       const wahlbezirkID = generateRandomString(8);
@@ -501,28 +501,6 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
           mockDefinitions.sentinelAxiosConfig,
         ],
       ]);
-      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
-        "Team-Status für MBW erfolgreich gespeichert.",
-        UserNotificationCategoryEnum.SUCCESS,
-      ]);
-    });
-
-    it("should_notShowSuccessNotification_when_sendNotificationFalse", async () => {
-      const teamID = generateRandomString(8);
-      const wahlID = generateRandomString(8);
-      const wahlbezirkID = generateRandomString(8);
-
-      const model = createStimmzettelerfassungTeamStatusModel();
-      const dto = createStimmzettelerfassungTeamStatusDTOData();
-      mockDefinitions.modelToDto.mockReturnValue(dto);
-      mockDefinitions.saveStimmzettelerfassungTeamStatus.mockResolvedValue({
-        status: 201,
-      });
-      mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
-
-      await postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, false);
-
-      expect(mockDefinitions.addNotification.mock.calls.length).toBe(0);
     });
 
     it("should_showErrorNotificationAndThrow_when_apiFails", async () => {

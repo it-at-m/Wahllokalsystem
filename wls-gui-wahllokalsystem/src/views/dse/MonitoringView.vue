@@ -65,13 +65,16 @@
       <v-card-actions>
         <base-button-refresh
           :active="isRefreshBtnActive"
-          :loading="isTeamStatusListLoading"
+          :is-disabled="isTeamBeingReopened"
+          :loading="isMonitoringStatusLoading"
           @click="onAktualisierenClicked"
         />
         <base-text-button
           v-if="isBeschlussfassungStartenBtnVisible"
           :active="isBeschlussfassungBtnActive"
-          :is-disabled="isMoveOnToBeschlussfassungDisabled"
+          :is-disabled="
+          isMoveOnToBeschlussfassungDisabled || isTeamBeingReopened
+          "
           :loading="isWorkflowStatusLoading"
           @click="onBeschlussfassungStartenClicked"
           >Beschlussfassung starten</base-text-button
@@ -79,7 +82,9 @@
         <base-text-button
           v-if="isBeschlussfassungContinueBtnVisible"
           :active="isBeschlussfassungBtnActive"
-          :is-disabled="isMoveOnToBeschlussfassungDisabled"
+          :is-disabled="
+            isMoveOnToBeschlussfassungDisabled || isTeamBeingReopened
+          "
           :loading="isWorkflowStatusLoading"
           @click="onBeschlussfassungContinueClicked"
           >Beschlussfassung fortsetzen</base-text-button
@@ -112,6 +117,7 @@ import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const minWidth = "220px";
 const beschlussfassungStartenDialogVisible = ref(false);
+const isTeamBeingReopened = ref(false);
 
 const route = useRoute();
 const wahlID = (route.params.wahlId as string) || "";
@@ -133,6 +139,10 @@ const {
 const { isElectionFinished } = useWorkflowStore();
 
 const isRefreshBtnActive = computed(() => !isBeschlussfassungBtnActive.value);
+
+const isMonitoringStatusLoading = computed(
+  () => isTeamStatusListLoading.value || isWorkflowStatusLoading.value
+);
 
 const totalNumberOfTeams = computed(() => teamstatusList.value.length);
 
@@ -158,6 +168,11 @@ async function onAktualisierenClicked() {
 }
 
 async function onOpenStimmzettelerfassungClicked(teamID: string) {
-  await reopenStimmzettelerfassung(teamID);
+  try {
+    isTeamBeingReopened.value = true;
+    await reopenStimmzettelerfassung(teamID);
+  } finally {
+    isTeamBeingReopened.value = false;
+  }
 }
 </script>

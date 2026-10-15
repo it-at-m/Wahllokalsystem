@@ -55,10 +55,7 @@ import { useMbwStimmzettelFilterService } from "@/composables/dse/mbwStimmzettel
 import { useStimmzettelZusammenfassungUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelZusammenfassungUtils.ts";
 import { useMbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import {
-  isStimmzettelUngueltig,
-  StimmzettelGueltigkeitEnum,
-} from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
+import { isStimmzettelUngueltig } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 const route = useRoute();
@@ -71,8 +68,12 @@ const props = defineProps<{
   wahlvorschlaege: Wahlvorschlag[];
 }>();
 
-const { stapelASumGroupedByWahlvorschlag, stapelBSumGroupedByWahlvorschlag } =
-  useMbwStimmzettelFilterService(computed(() => props.stimmzettelListe));
+const {
+  stapelASumGroupedByWahlvorschlag,
+  stapelBSumGroupedByWahlvorschlag,
+  stapelB,
+  stapelC,
+} = useMbwStimmzettelFilterService(computed(() => props.stimmzettelListe));
 const { wahlvorschlaegeErgebnisseStapelAAndB } =
   useMbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper(
     computed(() => props.wahlvorschlaege),
@@ -82,12 +83,7 @@ const { wahlvorschlaegeErgebnisseStapelAAndB } =
 
 const { wahlvorschlaegeWithKandidatenErgebnissen } =
   useStimmzettelZusammenfassungUtils(
-    computed(() =>
-      props.stimmzettelListe.filter(
-        (stimmzettel) =>
-          stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Valid
-      )
-    ),
+    computed(() => [...stapelB.value, ...stapelC.value]),
     computed(() => props.wahlvorschlaege)
   );
 

@@ -93,7 +93,7 @@ bereits gestrichenen Nennung hinzugefügt werden, als ungültige Stimmen erfasst
 
 </details>
 
-> [!IMPORTANT] Entfernen einer Streichung wandelt ungültige Stimmen nicht ungültige um
+> [!IMPORTANT] Entfernen einer Streichung wandelt ungültige Stimmen nicht in gültige um
 > Wenn ein/e Kandidat\*in mit 3 Einzelstimmen gestrichen wird, werden diese gültigen Stimmen in ungültige
 > umgewandelt. Wird die Streichung nun wieder entfernt bleiben die Stimmen ungültig und müssen ggf. manuell wieder
 > zu gültigen gemacht werden.

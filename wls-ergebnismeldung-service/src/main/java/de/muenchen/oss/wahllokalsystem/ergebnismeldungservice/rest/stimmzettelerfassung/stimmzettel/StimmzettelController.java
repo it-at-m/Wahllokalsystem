@@ -77,14 +77,12 @@ public class StimmzettelController {
         new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID), modelValuesToSave);
   }
 
-  @Operation(description = "Schreiben von Stimmzetteln eines Team in einem Wahlbezirk einer Wahl")
+  @Operation(
+      description =
+          "Schreiben eines konkreten Stimmzettels eines Team in einem Wahlbezirk einer Wahl")
   @ApiResponses(
       value = {
-        @ApiResponse(responseCode = "201", description = "Die Stimmzettel wurden gespeichert"),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Die Daten der übermittelten Stimmzettel sind widersprüchlich",
-            content = {@Content(schema = @Schema(implementation = WlsExceptionDTO.class))})
+        @ApiResponse(responseCode = "201", description = "Der Stimmzettel wurde gespeichert"),
       })
   @PostMapping(
       "wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/stimmzettel/{stimmzettelkennung}")

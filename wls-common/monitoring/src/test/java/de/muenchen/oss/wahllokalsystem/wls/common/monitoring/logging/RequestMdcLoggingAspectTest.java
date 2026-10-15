@@ -114,7 +114,7 @@ class RequestMdcLoggingAspectTest {
   }
 
   @Test
-  void should_fillMdcWithArguments_when_levelIsTrace() {
+  void should_fillMdcWithValues_when_levelIsTrace() {
     aspectLogger.setLevel(Level.TRACE);
 
     dummyController.requestWithFachlichParametersAndBody("wert1", new TestDto("123", "Wahllokal"));

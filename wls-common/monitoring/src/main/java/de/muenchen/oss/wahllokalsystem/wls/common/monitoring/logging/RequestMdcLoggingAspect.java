@@ -46,21 +46,21 @@ public class RequestMdcLoggingAspect {
     }
 
     Map<String, String> backupMdcContext = MDC.getCopyOfContextMap();
-    Object[] args = joinPoint.getArgs();
+    Object[] parameterValues = joinPoint.getArgs();
 
     String[] parameterNames =
         parameterNameCache.computeIfAbsent(method, this::resolveParameterNamesViaSpring);
 
     try {
       if (log.isTraceEnabled()) {
-        fillMdcWithArguments(parameterNames, args);
+        fillMdcWithValues(parameterNames, parameterValues);
         log.trace("MDC erfolgreich mit Request-Payloads befüllt für: {}()", methodName);
       }
 
       return joinPoint.proceed();
 
     } catch (Throwable ex) {
-      fillMdcWithArguments(parameterNames, args);
+      fillMdcWithValues(parameterNames, parameterValues);
       log.error(
           "Fehler bei der Verarbeitung im Controller {} -> {}(). Ursache: {}",
           className,
@@ -126,17 +126,24 @@ public class RequestMdcLoggingAspect {
     return names;
   }
 
-  private void fillMdcWithArguments(String[] parameterNames, Object[] args) {
-    if (parameterNames != null && args != null) {
-      for (int i = 0; i < args.length; i++) {
+  private void fillMdcWithValues(String[] parameterNames, Object[] parameterValues) {
+    if (parameterNames == null || parameterValues == null) return;
+    int limit = Math.min(parameterNames.length, parameterValues.length);
+    for (int i = 0; i < limit; i++) {
+      try {
         String paramName = parameterNames[i];
-        Object argValue = args[i];
-
-        if (argValue != null && !isTechnicalClass(argValue.getClass())) {
+        Object paramValue = parameterValues[i];
+        if (paramValue != null && !isTechnicalClass(paramValue.getClass())) {
           String mdcKey = "req.arg." + paramName;
-          String serializedValue = serializeArgument(argValue);
+          String serializedValue = serializeValue(paramValue);
           MDC.put(mdcKey, serializedValue);
         }
+      } catch (Throwable t) {
+        // Fehler beim MDC-Befüllen darf nicht den Requestfluss stören oder abbrechen
+        log.warn(
+            "MDC-Befüllung für Parameter an Index {} fehlgeschlagen. Ursache: {}",
+            i,
+            t.getMessage());
       }
     }
   }
@@ -154,14 +161,23 @@ public class RequestMdcLoggingAspect {
         || className.startsWith("org.springframework.security.core.");
   }
 
-  private String serializeArgument(Object arg) {
+  private String serializeValue(Object paramValue) {
     try {
-      if (arg instanceof String || arg instanceof Number || arg instanceof Boolean) {
-        return arg.toString();
+      if (paramValue == null) {
+        return "null";
       }
-      return objectMapper.writeValueAsString(arg);
-    } catch (Exception e) {
-      return "[Serialization Failed: " + e.getMessage() + "]";
+      if (paramValue instanceof String
+          || paramValue instanceof Number
+          || paramValue instanceof Boolean) {
+        return paramValue.toString();
+      }
+      return objectMapper.writeValueAsString(paramValue);
+    } catch (Throwable t) {
+      return "[Serialization Failed: "
+          + t.getClass().getSimpleName()
+          + " - "
+          + t.getMessage()
+          + "]";
     }
   }
 }

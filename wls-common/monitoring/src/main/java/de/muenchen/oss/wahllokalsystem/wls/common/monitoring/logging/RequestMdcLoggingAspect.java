@@ -39,16 +39,16 @@ public class RequestMdcLoggingAspect {
     val signature = (MethodSignature) joinPoint.getSignature();
     Method method = signature.getMethod();
     val className = signature.getDeclaringType().getSimpleName();
-    String methodName = signature.getName();
+    val methodName = signature.getName();
 
     if (log.isDebugEnabled()) {
       log.debug("Eingehender Request in Controller: {} -> {}()", className, methodName);
     }
 
     Map<String, String> backupMdcContext = MDC.getCopyOfContextMap();
-    Object[] parameterValues = joinPoint.getArgs();
+    val parameterValues = joinPoint.getArgs();
 
-    String[] parameterNames =
+    val parameterNames =
         parameterNameCache.computeIfAbsent(method, this::resolveParameterNamesViaSpring);
 
     try {
@@ -149,16 +149,40 @@ public class RequestMdcLoggingAspect {
   }
 
   private boolean isTechnicalClass(Class<?> clazz) {
+    if (clazz == null) {
+      return true;
+    }
+
+    if (java.security.Principal.class.isAssignableFrom(clazz)
+        || jakarta.servlet.ServletRequest.class.isAssignableFrom(clazz)
+        || jakarta.servlet.ServletResponse.class.isAssignableFrom(clazz)
+        || org.springframework.http.HttpEntity.class.isAssignableFrom(clazz)
+        || org.springframework.validation.BindingResult.class.isAssignableFrom(clazz)
+        || org.springframework.ui.Model.class.isAssignableFrom(clazz)
+        || org.springframework.web.bind.support.SessionStatus.class.isAssignableFrom(clazz)) {
+      return true;
+    }
+
+    try {
+      if (org.springframework.security.core.Authentication.class.isAssignableFrom(clazz)) {
+        return true;
+      }
+    } catch (NoClassDefFoundError ignored) {
+      // Spring Security ist in diesem Laufzeit-Modul nicht geladen
+    }
+
     String className = clazz.getName();
-    return className.startsWith("jakarta.servlet.")
+    if (className.startsWith("jakarta.servlet.")
         || className.startsWith("javax.servlet.")
         || className.startsWith("org.springframework.ui.")
         || className.startsWith("org.springframework.validation.")
         || className.startsWith("org.springframework.web.bind.support.")
-        || className.startsWith("org.springframework.web.util.")
-        || className.startsWith("org.springframework.http.HttpEntity")
-        || className.startsWith("java.security.Principal")
-        || className.startsWith("org.springframework.security.core.");
+        || className.startsWith("org.springframework.web.util.")) {
+      return true;
+    }
+    return className.contains("$$EnhancerBySpringCGLIB")
+        || className.contains("$MockitoMock")
+        || className.contains("Proxy");
   }
 
   private String serializeValue(Object paramValue) {

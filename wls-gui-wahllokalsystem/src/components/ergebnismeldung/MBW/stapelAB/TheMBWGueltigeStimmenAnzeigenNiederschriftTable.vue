@@ -26,7 +26,7 @@
           Stapel a + b
         </th>
         <th class="font-weight-bold text-right smallText">
-          Gültig kumulierte und panaschierte
+          kumulierte und panaschierte
         </th>
       </tr>
     </thead>

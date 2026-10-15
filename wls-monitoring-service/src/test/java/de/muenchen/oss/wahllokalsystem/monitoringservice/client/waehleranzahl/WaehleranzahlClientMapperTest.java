@@ -37,7 +37,7 @@ public class WaehleranzahlClientMapperTest {
 
       val expectedWahlbeteiligungsMeldungDTO =
           new WahlbeteiligungsMeldungDTO()
-              .wahlID(null)
+              .wahlID(wahlID)
               .wahlbezirkID(wahlbezirkID)
               .anzahlWaehler(anzahlWahler)
               .meldeZeitpunkt(meldeZeitpunkt);

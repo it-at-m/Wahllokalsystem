@@ -1,19 +1,19 @@
 <template>
   <div v-if="wahlbezirkIdForWahl">
     <the-o-b-w-scores-list-group
-      v-if="wahl.wahlart === WahlWahlartEnum.Obw"
+      v-if="hasRoleSchriftfuehrung && wahl.wahlart === WahlWahlartEnum.Obw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
     />
     <the-s-r-w-scores-list-group
-      v-if="wahl.wahlart === WahlWahlartEnum.Srw"
+      v-if="hasRoleSchriftfuehrung && wahl.wahlart === WahlWahlartEnum.Srw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
     />
     <the-b-a-w-scores-list-group
-      v-if="wahl.wahlart === WahlWahlartEnum.Baw"
+      v-if="hasRoleSchriftfuehrung && wahl.wahlart === WahlWahlartEnum.Baw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
@@ -48,8 +48,10 @@ import {
   SUBTITLE_AUSZAEHLUNG_ERFASST,
   SUBTITLE_AUSZAEHLUNG_IN_ARBEIT,
 } from "@/constants.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const props = defineProps({
@@ -60,13 +62,16 @@ const props = defineProps({
 });
 
 const { getStimmzettelTermForWahl } = useTextFormatter();
-const { isElectionFinished } = useWorkflowStore();
+const { isElectionFinished, isStepDone } = useWorkflowStore();
 const {
   isAnzahlWahlscheineErfasst,
   isStimmabgabevermerkeErfasst,
   isWahlvorstandErfasst,
 } = storeToRefs(useWorkflowStore());
 const { isBWB, isUWB } = storeToRefs(useUserStore());
+const { isDseAktiv } = storeToRefs(useInfomanagementStore());
+const { hasRoleSchriftfuehrung, hasRoleErfassungsteam } =
+  storeToRefs(useUserStore());
 
 const titleStimmenZaehlen = computed(
   () => `Zählen der ${getStimmzettelTermForWahl(props.wahl)}`
@@ -77,6 +82,9 @@ const wahlbezirkIdForWahl = computed(() =>
 );
 
 const isMBWAuszaehlungDisabled = computed(() => {
+  if (isDseAktiv.value && hasRoleErfassungsteam.value) {
+    return false;
+  }
   if (isUWB.value) {
     return !isWahlvorstandErfasst.value || !isStimmabgabevermerkeErfasst.value;
   } else {
@@ -84,12 +92,23 @@ const isMBWAuszaehlungDisabled = computed(() => {
   }
 });
 
-const isMBWAuszaehlungFinished = computed(() =>
-  isElectionFinished(props.wahl.wahlID, wahlbezirkIdForWahl.value ?? "")
+const isMBWAuszaehlungFinished = computed(
+  () =>
+    isElectionFinished(props.wahl.wahlID, wahlbezirkIdForWahl.value ?? "") ||
+    (isDseAktiv.value &&
+      hasRoleErfassungsteam.value &&
+      isStepDone(
+        props.wahl.wahlID,
+        wahlbezirkIdForWahl.value ?? "",
+        MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
+      ))
 );
 
 const disabledMessagePreviousStepsRequired = computed(() => {
   if (!isWahlvorstandErfasst.value) {
+    if (isDseAktiv.value && !hasRoleSchriftfuehrung.value) {
+      return "";
+    }
     return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
   }
   if (isBWB.value && !isAnzahlWahlscheineErfasst.value) {

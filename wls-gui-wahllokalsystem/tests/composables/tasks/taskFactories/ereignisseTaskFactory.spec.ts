@@ -15,7 +15,7 @@ vi.mock("@/stores/ereignisStore.ts", () => ({
 }));
 
 describe("ereignisseTaskFactory.ts", () => {
-  const { createTaskFactoryContext } = useTasksTestDataFactory();
+  const { prepareTaskFactoryContext } = useTasksTestDataFactory();
   const { createTasks } = useEreignisseTaskFactory();
 
   beforeEach(() => {
@@ -23,24 +23,41 @@ describe("ereignisseTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    it("should_returnTaskList_when_calledIndependentlyOfContext", () => {
-      const taskFactoryContext = createTaskFactoryContext();
+    describe("userHasRoleSchriftfuehrung", () => {
+      it("should_returnTaskList_when_userHasRoleSchriftfuehrung", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(true)
+          .build();
 
-      const result = createTasks(taskFactoryContext);
+        const result = createTasks(taskFactoryContext);
 
-      expect(result.length).toStrictEqual(1);
+        expect(result.length).toStrictEqual(1);
+      });
+
+      it("should_haveExpectedCallback_when_userHasRoleSchriftfuehrung", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(true)
+          .build();
+        mockDefinitions.loadEreignisse.mockReturnValue(Promise.resolve());
+
+        const result = createTasks(taskFactoryContext);
+
+        expect(result.length).toStrictEqual(1);
+
+        result[0]?.callback();
+        expect(mockDefinitions.loadEreignisse).toHaveBeenCalledOnce();
+      });
     });
+  });
 
-    it("should_haveExpectedCallback_when_calledIndependentlyOfContext", () => {
-      const taskFactoryContext = createTaskFactoryContext();
-      mockDefinitions.loadEreignisse.mockReturnValue(Promise.resolve());
+  describe("userHasNotRoleSchriftfuehrung", () => {
+    it("should_returnEmptyList_when_userHasNotRoleSchriftfuehrung", () => {
+      const taskFactoryContext = prepareTaskFactoryContext()
+        .isSchriftfuehrung(false)
+        .build();
 
       const result = createTasks(taskFactoryContext);
-
-      expect(result.length).toStrictEqual(1);
-
-      result[0]?.callback();
-      expect(mockDefinitions.loadEreignisse).toHaveBeenCalledOnce();
+      expect(result.length).toStrictEqual(0);
     });
   });
 });

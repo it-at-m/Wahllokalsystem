@@ -26,6 +26,9 @@ spring:
     hibernate:
       ddl-auto: validate
       naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        generate_statistics: false # when true, enable logger org.hibernate.engine.internal.StatisticalLoggingSessionEventListener with debug
 
   servlet:
     multipart:

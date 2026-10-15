@@ -1,17 +1,17 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.awerte.AWerte;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnis;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.AWerteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnisDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.UngueltigeStimmzettelDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,22 +32,22 @@ public class Mapping {
     return aoueaiAWerte;
   }
 
-  public Set<ErgebnisDTO> toDtoErgebnisseSet(final List<Ergebnisse> ergebnisse) {
+  public Set<ErgebnisDTO> toDtoErgebnisseSet(final Collection<ErgebnisseModel> ergebnisse) {
     Set<ErgebnisDTO> ergebnisSet = new HashSet<>();
 
     ergebnisse.forEach(
         ergebnisList -> {
-          Stapelart stapelart = ergebnisList.getBezirkUndWahlIDStapelart().getStapelart();
+          val stapelart = ergebnisList.stapelart();
           ergebnisList
-              .getErgebnisse()
+              .ergebnisse()
               .forEach(
                   ergebnis -> {
                     ErgebnisDTO aoueaiErgebnis = new ErgebnisDTO();
-                    aoueaiErgebnis.setErgebnis(ergebnis.getErgebnis());
-                    aoueaiErgebnis.setKandidatID(ergebnis.getKandidatID());
-                    aoueaiErgebnis.setWahlvorschlagID(ergebnis.getWahlvorschlagID());
+                    aoueaiErgebnis.setErgebnis(ergebnis.ergebnis());
+                    aoueaiErgebnis.setKandidatID(ergebnis.kandidatID());
+                    aoueaiErgebnis.setWahlvorschlagID(ergebnis.wahlvorschlagID());
 
-                    val wahlvorschlagsordnungszahl = ergebnis.getWahlvorschlagsordnungszahl();
+                    val wahlvorschlagsordnungszahl = ergebnis.wahlvorschlagsordnungszahl();
                     if (wahlvorschlagsordnungszahl == null) {
                       log.warn(
                           "toAoueaiErgebnisseSet 4.1.1  fehler - wahlvorschlagsordnungszahl is null");
@@ -74,13 +74,14 @@ public class Mapping {
     return null;
   }
 
-  public Set<UngueltigeStimmzettelDTO> toDtoSet(final List<Ergebnisse> ungueltigeErgebnisse) {
+  public Set<UngueltigeStimmzettelDTO> toDtoSet(
+      final Collection<ErgebnisseModel> ungueltigeErgebnisse) {
     Set<UngueltigeStimmzettelDTO> ungueltigeStimmzettelSet = new HashSet<>();
     ungueltigeErgebnisse.forEach(
         ungueltigesErgebnis -> {
-          Stapelart stapelart = ungueltigesErgebnis.getBezirkUndWahlIDStapelart().getStapelart();
+          val stapelart = ungueltigesErgebnis.stapelart();
           ungueltigesErgebnis
-              .getErgebnisse()
+              .ergebnisse()
               .forEach(ergebnis -> ungueltigeStimmzettelSet.add(toDto(ergebnis, stapelart)));
         });
     return ungueltigeStimmzettelSet;
@@ -93,10 +94,11 @@ public class Mapping {
     };
   }
 
-  private UngueltigeStimmzettelDTO toDto(final Ergebnis ergebnis, final Stapelart stapelart) {
+  private UngueltigeStimmzettelDTO toDto(
+      final ErgebnisModel ergebnis, final StapelartModel stapelart) {
     UngueltigeStimmzettelDTO ungueltigeStimmzettel = new UngueltigeStimmzettelDTO();
-    ungueltigeStimmzettel.setWahlvorschlagID(ergebnis.getWahlvorschlagID());
-    ungueltigeStimmzettel.setAnzahl(ergebnis.getErgebnis());
+    ungueltigeStimmzettel.setWahlvorschlagID(ergebnis.wahlvorschlagID());
+    ungueltigeStimmzettel.setAnzahl(ergebnis.ergebnis());
     ungueltigeStimmzettel.setStimmenart(stapelart.name());
     return ungueltigeStimmzettel;
   }

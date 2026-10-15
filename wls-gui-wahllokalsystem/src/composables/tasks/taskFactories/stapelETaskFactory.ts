@@ -3,9 +3,12 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
+import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
+
+const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
 
 export function useStapelETaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
@@ -24,7 +27,5 @@ export function useStapelETaskFactory(): TaskFactory {
     }));
   }
 
-  return {
-    createTasks,
-  };
+  return whenUserIsSchriftfuehrung(createTasks);
 }

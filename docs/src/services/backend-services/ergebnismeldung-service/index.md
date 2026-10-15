@@ -96,7 +96,66 @@ Ausnahme hierbei sind die bedenklichen Stimmzettel (Stapel E) der MBW, die als e
 Zu Wahlergebnissen können Begründungen verfasst werden, in denen festgehalten wird, wieso ein Wahlergebnis trotz
 Abweichungen in der Anzahl der Stimmen gespeichert wird.
 
+### Lesen und Schreiben von Stimmzetteln
+
+Die von Wähler\*Innen hinterlassenen Kennzeichen auf einem Stimmzettel können verwaltet werden. Im Unterschied zu den
+Ergebnissen, die auf Stapeln aufbauen, hat man hier Rohdaten, welche erst später für die Übermittlung
+summiert werden.
+
+Das Primärteam, welches in der Anwendung alle Funktionen verwenden kann – in der Regel Team `A` bzw. das Team mit
+dem/der Schriftführer*In – darf auch die Stimmzettel von anderen Teams lesen und Schreiben. Das ist zum Beispiel
+notwendig, um die Beschlüsse zu fassen.
+
+### Lesen und Schreiben vom Status der Stimmzettelerfassung
+
+Der Bearbeitungsstand der Stimmzettelfassung eines Wahlbezirkes einer Wahl wird damit verwaltet. Siehe dazu die
+[Statusbeschreibung](/dse/#neue-statuswerte).
+
+### Lesen und Schreiben vom Status eines Teams bei der Stimmzettelerfassung
+
+Der Bearbeitungsstand eines Teams, Schriftführung oder Erfassungsteam, bei der Stimmzettelfassung eines Wahlbezirkes einer Wahl
+wird damit verwaltet. Siehe dazu die [Statusbeschreibung](/dse/#neue-statuswerte).
+
+Das Primärteam, welches in der Anwendung alle Funktionen verwenden kann – in der Regel Team `A`
+bzw. das Team mit dem/der Schriftführer\*In – darf auch den Status von anderen Teams setzen. Das ist zum Beispiel
+notwendig, um die Erfassung für ein Erfassungsteam freizuschalten.
+
 ### Übermittlung einer Ergebnismeldung
 
 Eine Ergebnismeldung kann eine Schnellmeldung oder eine Niederschrift sein, welche an das externe System übermittelt wird.
 Die Ergebnismeldung aggregiert die zuvor erfassten Daten wie zum Beispiel die Ergebnisse und Stimmabgabevermerke.
+
+Je nach Wahlart bestehen die gültigen und ungültigen Stimmen aus unterschiedlichen Stapeln. Die Stimmzettel
+werden nach bestimmten Regeln den Stapeln zugeordnet.
+
+#### MBW
+
+##### Stapel A
+
+Auf diesem Stapel befinden sich alle gültigen Stimmzettel, die genau ein Listenkreuz haben und sonst keine Kennzeichen.
+
+##### Stapel B
+
+Auf diesem Stapel befinden sich alle gültigen Stimmzettel, bei denen die Stimmabgabe bei genau einem Wahlvorschlag
+erfolgte, aber zusätzlich noch weitere Kennzeichen (z. B. Streichungen, Einzelstimmen) bei dem Wahlvorschlag vorhanden sind.
+
+Stimmzettel, die nur ein Listenkreuz haben, bei denen es jedoch durch weitere Kennzeichen zu ungültigen Stimmen kam,
+die keinem/keiner konkreten Kandidaten/Kandidatin zugewiesen werden konnten, sind ebenfalls auf diesem Stapel.
+
+##### Stapel C
+
+Auf diesem Stapel sind alle gültigen Stimmzettel, bei denen die Stimmen auf mehr als einen Wahlvorschlag entfallen.
+
+Ob dies über Listenkreuze, Einzelstimmen, Streichungen oder ungültige Stimmen bei Nennungen erfolgte, ist dabei nicht
+von Bedeutung.
+
+##### Stapel D
+
+Auf diesem Stapel landen alle ungültigen Stimmzettel.
+
+##### Stapel E
+
+Bei der Erfassung nach Stapeln gibt es zusätzlich den Stapel E. Über die Stimmzettel wird ein Beschluss gefasst, und anschließend
+werden die Stimmzettel den entsprechenden Stapeln zugewiesen.
+Bei der [DSE](/dse/index) erfolgt die [Beschlussfassung](/dse/#neue-statuswerte) nach dem Erfassen der Stimmzettel.
+Ein Stapel E wird bei der DSE nicht explizit ausgewiesen.

@@ -9,7 +9,7 @@ import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import { useCommonTestDataFactory } from "../common/CommonTestDataFactory";
 
-const { generateRandomString, generateRandomNumber } =
+const { generateRandomString, generateRandomNumber, generateRandomBoolean } =
   useCommonTestDataFactory();
 
 export function useTasksTestDataFactory() {
@@ -24,6 +24,8 @@ export function useTasksTestDataFactory() {
 
   function createTaskFactoryContext(): TaskFactoryContext {
     return {
+      isSchriftfuehrung: generateRandomBoolean(),
+      isErfassungsteam: generateRandomBoolean(),
       extendedWahlMetaData: [createExtendedWahlMetaData()],
       wahlbezirkArt: WahlbezirksArtEnum.BWB,
     };

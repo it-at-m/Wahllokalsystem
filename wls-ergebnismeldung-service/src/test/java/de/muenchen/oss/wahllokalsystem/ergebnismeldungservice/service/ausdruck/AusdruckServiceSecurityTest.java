@@ -48,7 +48,7 @@ class AusdruckServiceSecurityTest {
       SecurityUtils.runWith(Authorities.SERVICE_GET_AUSDRUCK);
 
       val idModel =
-          new WahlUndBezirkIDUndMeldungsartModel("wahlbezirkID", "wahlID", MeldungsartModel.V1);
+          new WahlUndBezirkIDUndDokumentartModel("wahlbezirkID", "wahlID", DokumentartModel.V1);
 
       Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getAusdruck(idModel));
     }
@@ -60,7 +60,7 @@ class AusdruckServiceSecurityTest {
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
           .thenReturn(true);
       val idModel =
-          new WahlUndBezirkIDUndMeldungsartModel("wahlbezirkID", "wahlID", MeldungsartModel.V1);
+          new WahlUndBezirkIDUndDokumentartModel("wahlbezirkID", "wahlID", DokumentartModel.V1);
 
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.getAusdruck(idModel))
@@ -73,7 +73,7 @@ class AusdruckServiceSecurityTest {
       SecurityUtils.runWith(Authorities.SERVICE_GET_AUSDRUCK);
 
       val idModel =
-          new WahlUndBezirkIDUndMeldungsartModel("wahlbezirkID", "wahlID", MeldungsartModel.V1);
+          new WahlUndBezirkIDUndDokumentartModel("wahlbezirkID", "wahlID", DokumentartModel.V1);
 
       Mockito.when(
               bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
@@ -144,7 +144,7 @@ class AusdruckServiceSecurityTest {
       val wahlbezirkID = "wahlbezirkID";
       val ausdruckModel =
           new AusdruckWriteModel(
-              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, "wahlID", MeldungsartModel.V1),
+              new WahlUndBezirkIDUndDokumentartModel(wahlbezirkID, "wahlID", DokumentartModel.V1),
               "content");
 
       Mockito.when(
@@ -163,7 +163,7 @@ class AusdruckServiceSecurityTest {
       val wahlbezirkID = "wahlbezirkID";
       val ausdruckModel =
           new AusdruckWriteModel(
-              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, "wahlID", MeldungsartModel.V1),
+              new WahlUndBezirkIDUndDokumentartModel(wahlbezirkID, "wahlID", DokumentartModel.V1),
               "content");
 
       Mockito.when(
@@ -181,7 +181,7 @@ class AusdruckServiceSecurityTest {
       val wahlbezirkID = "wahlbezirkID";
       val ausdruckModel =
           new AusdruckWriteModel(
-              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, "wahlID", MeldungsartModel.V1),
+              new WahlUndBezirkIDUndDokumentartModel(wahlbezirkID, "wahlID", DokumentartModel.V1),
               "content");
 
       Mockito.when(

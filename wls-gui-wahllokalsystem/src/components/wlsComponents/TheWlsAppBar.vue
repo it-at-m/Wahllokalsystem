@@ -19,7 +19,7 @@
             class="navbar-text mx-2"
             style="white-space: nowrap"
           >
-            Wahlbezirk {{ wahlbezirknummer }}
+            Wahlbezirk {{ wahlbezirknummer }} - Team {{ currentUserTeamName }}
           </span>
         </v-col>
         <v-col
@@ -30,13 +30,6 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
-          <the-waehleranzahl-count-button
-            v-if="
-              eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent !== undefined &&
-              schliessungsuhrzeitState.schliessungsuhrzeitSent === undefined &&
-              isUWB
-            "
-          />
           <wls-clock class="navbar-text mx-2 mt-1" />
           <the-wls-online-offline-menu />
           <the-app-support-menu />
@@ -92,7 +85,6 @@ import { computed, nextTick, ref, watch } from "vue";
 import TheAppSupportMenu from "@/components/basisdaten/TheAppSupportMenu.vue";
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
-import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
 import TheRootNavigationList from "@/components/navigation/TheRootNavigationList.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOfflineMenu.vue";
@@ -102,18 +94,14 @@ import { useLogoutService } from "@/composables/user/logoutService.ts";
 import { createLogoutRoute } from "@/plugins/router/commonRoutes.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-
-const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
-  storeToRefs(useWahlbezirkStore());
 
 const { toGermanDate } = useDateTimeFormatter();
 const {
   user,
+  currentUserTeamName,
   currentUserWahltag,
   currentUserWahlbezirkNummer,
   currentUserWahlbezirkID,
-  isUWB,
   isUserLoggedIn,
 } = storeToRefs(useUserStore());
 const { hasAllTasksRun } = storeToRefs(useInitTaskManagerStore());
@@ -137,7 +125,11 @@ function onLogoutClicked() {
 
 async function onSyncSuccess() {
   isOfflineSyncDialogVisible.value = false;
-  await logout(currentUserWahlbezirkID.value, createLogoutRoute());
+  await logout(
+    currentUserWahlbezirkID.value,
+    currentUserTeamName.value,
+    createLogoutRoute()
+  );
 }
 
 function onSyncError() {

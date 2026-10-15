@@ -68,161 +68,184 @@ describe("mbwWahlvorschlaegeAndErgebnisseTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    it("should_createTasksOnlyForMBW_when_contextWithMBWIsGiven", () => {
-      const extendedWahlMetaData = Object.values(WahlWahlartEnum).map(
-        (wahlArt) => prepareExtendedWahlMetaData().wahlArt(wahlArt).build()
-      );
-      const mbwMetaData = extendedWahlMetaData.find(
-        (metaData) => metaData.wahlArt === WahlWahlartEnum.Mbw
-      );
-      const taskFactoryContext = prepareTaskFactoryContext()
-        .extendedWahlMetaData(extendedWahlMetaData)
-        .build();
-      const result = unitUnderTest.createTasks(taskFactoryContext);
-
-      expect(result.length).toStrictEqual(1);
-      expect(result[0].name).toStrictEqual(
-        `Wahlvorschläge und Ergebnisse - ${mbwMetaData?.wahlName}`
-      );
-    });
-
-    it("should_createNoTasks_when_contextWithoutMBWIsGiven", () => {
-      const extendedWahlMetaData = Object.values(WahlWahlartEnum)
-        .filter((wahlArt) => wahlArt !== WahlWahlartEnum.Mbw)
-        .map((wahlArt) =>
-          prepareExtendedWahlMetaData().wahlArt(wahlArt).build()
+    describe("userHasRoleSchriftfuehrung", () => {
+      it("should_createTasksOnlyForMBW_when_contextWithMBWIsGiven", () => {
+        const extendedWahlMetaData = Object.values(WahlWahlartEnum).map(
+          (wahlArt) => prepareExtendedWahlMetaData().wahlArt(wahlArt).build()
         );
-      const taskFactoryContext = prepareTaskFactoryContext()
-        .extendedWahlMetaData(extendedWahlMetaData)
-        .build();
-      const result = unitUnderTest.createTasks(taskFactoryContext);
+        const mbwMetaData = extendedWahlMetaData.find(
+          (metaData) => metaData.wahlArt === WahlWahlartEnum.Mbw
+        );
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .extendedWahlMetaData(extendedWahlMetaData)
+          .isSchriftfuehrung(true)
+          .build();
+        const result = unitUnderTest.createTasks(taskFactoryContext);
 
-      expect(result.length).toStrictEqual(0);
-    });
-
-    it("should_createNoTasks_when_contextIsEmpty", () => {
-      const taskFactoryContext = prepareTaskFactoryContext()
-        .extendedWahlMetaData([])
-        .build();
-      const result = unitUnderTest.createTasks(taskFactoryContext);
-
-      expect(result.length).toStrictEqual(0);
-    });
-
-    it("should_loadWahlvorschlaegeAndErgebnisse_when_mbwIsGiven", async () => {
-      const mbwMetaData = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Mbw)
-        .build();
-      const taskToRun = unitUnderTest.createTasks(
-        prepareTaskFactoryContext().extendedWahlMetaData([mbwMetaData]).build()
-      )[0];
-
-      mockDefinitions.loadErgebnisseByStapelArt.mockImplementation(() =>
-        Promise.resolve()
-      );
-      mockDefinitions.loadWahlvorschlaege.mockImplementation(() =>
-        Promise.resolve()
-      );
-
-      await taskToRun.callback();
-
-      expect(mockDefinitions.loadWahlvorschlaege.mock.calls).toStrictEqual([
-        [mbwMetaData.wahlID, mbwMetaData.wahlbezirkID],
-      ]);
-
-      const mbwStapel = getStapelForWahlart(mbwMetaData.wahlArt);
-      mbwStapel.forEach((stapel) => {
-        expect(mockDefinitions.loadErgebnisseByStapelArt).toHaveBeenCalledWith(
-          mbwMetaData.wahlID,
-          stapel,
-          false
+        expect(result.length).toStrictEqual(1);
+        expect(result[0].name).toStrictEqual(
+          `Wahlvorschläge und Ergebnisse - ${mbwMetaData?.wahlName}`
         );
       });
-      expect(
-        mockDefinitions.loadErgebnisseByStapelArt.mock.calls.length
-      ).toStrictEqual(mbwStapel.length);
+
+      it("should_createNoTasks_when_contextWithoutMBWIsGiven", () => {
+        const extendedWahlMetaData = Object.values(WahlWahlartEnum)
+          .filter((wahlArt) => wahlArt !== WahlWahlartEnum.Mbw)
+          .map((wahlArt) =>
+            prepareExtendedWahlMetaData().wahlArt(wahlArt).build()
+          );
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .extendedWahlMetaData(extendedWahlMetaData)
+          .isSchriftfuehrung(true)
+          .build();
+        const result = unitUnderTest.createTasks(taskFactoryContext);
+
+        expect(result.length).toStrictEqual(0);
+      });
+
+      it("should_createNoTasks_when_contextIsEmpty", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .extendedWahlMetaData([])
+          .isSchriftfuehrung(true)
+          .build();
+        const result = unitUnderTest.createTasks(taskFactoryContext);
+
+        expect(result.length).toStrictEqual(0);
+      });
+
+      it("should_loadWahlvorschlaegeAndErgebnisse_when_mbwIsGiven", async () => {
+        const mbwMetaData = prepareExtendedWahlMetaData()
+          .wahlArt(WahlWahlartEnum.Mbw)
+          .build();
+        const taskToRun = unitUnderTest.createTasks(
+          prepareTaskFactoryContext()
+            .extendedWahlMetaData([mbwMetaData])
+            .isSchriftfuehrung(true)
+            .build()
+        )[0];
+
+        mockDefinitions.loadErgebnisseByStapelArt.mockImplementation(() =>
+          Promise.resolve()
+        );
+        mockDefinitions.loadWahlvorschlaege.mockImplementation(() =>
+          Promise.resolve()
+        );
+
+        await taskToRun.callback();
+
+        expect(mockDefinitions.loadWahlvorschlaege.mock.calls).toStrictEqual([
+          [mbwMetaData.wahlID, mbwMetaData.wahlbezirkID],
+        ]);
+
+        const mbwStapel = getStapelForWahlart(mbwMetaData.wahlArt);
+        mbwStapel.forEach((stapel) => {
+          expect(
+            mockDefinitions.loadErgebnisseByStapelArt
+          ).toHaveBeenCalledWith(mbwMetaData.wahlID, stapel, false);
+        });
+        expect(
+          mockDefinitions.loadErgebnisseByStapelArt.mock.calls.length
+        ).toStrictEqual(mbwStapel.length);
+      });
+
+      it("should_setStepDone_when_ergebnisseForAllKandidatenExist", async () => {
+        const mbwMetaData = prepareExtendedWahlMetaData()
+          .wahlArt(WahlWahlartEnum.Mbw)
+          .build();
+        const taskToRun = unitUnderTest.createTasks(
+          prepareTaskFactoryContext()
+            .extendedWahlMetaData([mbwMetaData])
+            .isSchriftfuehrung(true)
+            .build()
+        )[0];
+
+        mockDefinitions.loadErgebnisseByStapelArt.mockImplementation(() =>
+          Promise.resolve()
+        );
+        mockDefinitions.loadWahlvorschlaege.mockImplementation(() =>
+          Promise.resolve()
+        );
+
+        const mockedErgebnisse = prepareErgebnisse()
+          .ergebnisse([createErgebnis(), createErgebnis(), createErgebnis()])
+          .build();
+        mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+          mockedErgebnisse
+        );
+
+        const mockeWahlvorschlaege = prepareWahlvorschlaege()
+          .wahlvorschlaege([
+            prepareWahlvorschlag()
+              .kandidaten([createKandidat(), createKandidat()])
+              .build(),
+            prepareWahlvorschlag().kandidaten([createKandidat()]).build(),
+          ])
+          .build();
+        mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockReturnValue(
+          mockeWahlvorschlaege
+        );
+
+        await taskToRun.callback();
+
+        expect(mockDefinitions.setStepDone.mock.calls).toStrictEqual([
+          [
+            mbwMetaData.wahlID,
+            mbwMetaData.wahlbezirkID,
+            MbwStepsEnum.MBW_STAPEL_BC,
+          ],
+        ]);
+      });
+
+      it("should_notSetStepDone_when_ergebnisseNotForAllKandidatenExist", async () => {
+        const mbwMetaData = prepareExtendedWahlMetaData()
+          .wahlArt(WahlWahlartEnum.Mbw)
+          .build();
+        const taskToRun = unitUnderTest.createTasks(
+          prepareTaskFactoryContext()
+            .extendedWahlMetaData([mbwMetaData])
+            .isSchriftfuehrung(true)
+            .build()
+        )[0];
+
+        mockDefinitions.loadErgebnisseByStapelArt.mockImplementation(() =>
+          Promise.resolve()
+        );
+        mockDefinitions.loadWahlvorschlaege.mockImplementation(() =>
+          Promise.resolve()
+        );
+
+        const mockedErgebnisse = prepareErgebnisse()
+          .ergebnisse([createErgebnis(), createErgebnis(), createErgebnis()])
+          .build();
+        mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+          mockedErgebnisse
+        );
+
+        const mockeWahlvorschlaege = prepareWahlvorschlaege()
+          .wahlvorschlaege([
+            prepareWahlvorschlag().kandidaten([createKandidat()]).build(),
+            prepareWahlvorschlag().kandidaten([createKandidat()]).build(),
+          ])
+          .build();
+        mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockReturnValue(
+          mockeWahlvorschlaege
+        );
+
+        await taskToRun.callback();
+
+        expect(mockDefinitions.setStepDone.mock.calls.length).toStrictEqual(0);
+      });
     });
 
-    it("should_setStepDone_when_ergebnisseForAllKandidatenExist", async () => {
-      const mbwMetaData = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Mbw)
-        .build();
-      const taskToRun = unitUnderTest.createTasks(
-        prepareTaskFactoryContext().extendedWahlMetaData([mbwMetaData]).build()
-      )[0];
+    describe("userHasNotRoleSchriftfuehrung", () => {
+      it("should_createNoTasks_when_called", async () => {
+        const context = prepareTaskFactoryContext()
+          .isSchriftfuehrung(false)
+          .build();
 
-      mockDefinitions.loadErgebnisseByStapelArt.mockImplementation(() =>
-        Promise.resolve()
-      );
-      mockDefinitions.loadWahlvorschlaege.mockImplementation(() =>
-        Promise.resolve()
-      );
-
-      const mockedErgebnisse = prepareErgebnisse()
-        .ergebnisse([createErgebnis(), createErgebnis(), createErgebnis()])
-        .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
-        mockedErgebnisse
-      );
-
-      const mockeWahlvorschlaege = prepareWahlvorschlaege()
-        .wahlvorschlaege([
-          prepareWahlvorschlag()
-            .kandidaten([createKandidat(), createKandidat()])
-            .build(),
-          prepareWahlvorschlag().kandidaten([createKandidat()]).build(),
-        ])
-        .build();
-      mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockReturnValue(
-        mockeWahlvorschlaege
-      );
-
-      await taskToRun.callback();
-
-      expect(mockDefinitions.setStepDone.mock.calls).toStrictEqual([
-        [
-          mbwMetaData.wahlID,
-          mbwMetaData.wahlbezirkID,
-          MbwStepsEnum.MBW_STAPEL_BC,
-        ],
-      ]);
-    });
-
-    it("should_notSetStepDone_when_ergebnisseNotForAllKandidatenExist", async () => {
-      const mbwMetaData = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Mbw)
-        .build();
-      const taskToRun = unitUnderTest.createTasks(
-        prepareTaskFactoryContext().extendedWahlMetaData([mbwMetaData]).build()
-      )[0];
-
-      mockDefinitions.loadErgebnisseByStapelArt.mockImplementation(() =>
-        Promise.resolve()
-      );
-      mockDefinitions.loadWahlvorschlaege.mockImplementation(() =>
-        Promise.resolve()
-      );
-
-      const mockedErgebnisse = prepareErgebnisse()
-        .ergebnisse([createErgebnis(), createErgebnis(), createErgebnis()])
-        .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
-        mockedErgebnisse
-      );
-
-      const mockeWahlvorschlaege = prepareWahlvorschlaege()
-        .wahlvorschlaege([
-          prepareWahlvorschlag().kandidaten([createKandidat()]).build(),
-          prepareWahlvorschlag().kandidaten([createKandidat()]).build(),
-        ])
-        .build();
-      mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockReturnValue(
-        mockeWahlvorschlaege
-      );
-
-      await taskToRun.callback();
-
-      expect(mockDefinitions.setStepDone.mock.calls.length).toStrictEqual(0);
+        const result = unitUnderTest.createTasks(context);
+        expect(result.length).toStrictEqual(0);
+      });
     });
   });
 });

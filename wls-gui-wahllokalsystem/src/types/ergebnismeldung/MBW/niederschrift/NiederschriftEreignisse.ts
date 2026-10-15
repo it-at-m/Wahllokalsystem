@@ -1,4 +1,4 @@
-import type { NiederschriftEreignis } from "./NiederschriftEreignis";
+import type { NiederschriftEreignis } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftEreignis.ts";
 
 export interface NiederschriftEreignisse {
   hasEreignisse: boolean;

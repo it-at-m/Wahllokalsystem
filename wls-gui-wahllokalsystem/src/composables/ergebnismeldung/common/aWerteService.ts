@@ -1,3 +1,5 @@
+import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
+
 import {
   AWerteControllerApi,
   Configuration,
@@ -41,7 +43,29 @@ export function useAWerteService() {
     }
   }
 
+  async function getAWerteForWahlbezirkAndWahl(
+    wahlbezirkID: string,
+    wahlID: string
+  ): Promise<AWerte> {
+    let aWerte;
+    try {
+      aWerte = await getAWerte(wahlbezirkID, false);
+    } catch {
+      throw new Error(`Fehler beim Laden der AWerte`);
+    }
+
+    const filteredAWert = aWerte.find(
+      ({ bezirkUndWahlID }) => bezirkUndWahlID.wahlID === wahlID
+    );
+
+    if (!filteredAWert) {
+      throw new Error(`Kein AWert gefunden für wahlID: ${wahlID}`);
+    }
+    return filteredAWert;
+  }
+
   return {
     getAWerte,
+    getAWerteForWahlbezirkAndWahl,
   };
 }

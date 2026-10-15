@@ -17,4 +17,5 @@ public record UserModel(
     WahlbezirksartModel wahlbezirksArt,
     String pin,
     @NotNull Set<String> authorities,
-    String wbid_wahlnummer) {}
+    String wbid_wahlnummer,
+    String teamID) {}

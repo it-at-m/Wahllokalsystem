@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Ausdruck;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Meldungsart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Dokumentart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndDokumentart;
 import java.time.Instant;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -28,13 +28,13 @@ class AusdruckModelMapperTest {
     void should_returnAusdruckReadModel_when_givenAusdruckEntity() {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsart = Meldungsart.V1;
-      val meldungsartModel = MeldungsartModel.V1;
+      val dokumentart = Dokumentart.V1;
+      val dokumentartModel = DokumentartModel.V1;
       val content = "Testausdruck";
       val erstelltAm = Instant.now();
       val ausdruckEntity =
           new Ausdruck(
-              new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart),
+              new WahlUndBezirkIDUndDokumentart(wahlbezirkID, wahlID, dokumentart),
               content,
               erstelltAm);
 
@@ -42,7 +42,7 @@ class AusdruckModelMapperTest {
 
       val expectedResult =
           new AusdruckReadModel(
-              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsartModel),
+              new WahlUndBezirkIDUndDokumentartModel(wahlbezirkID, wahlID, dokumentartModel),
               content,
               erstelltAm);
 
@@ -50,16 +50,16 @@ class AusdruckModelMapperTest {
     }
 
     @ParameterizedTest
-    @EnumSource(Meldungsart.class)
-    void should_mapToEnumWithSameName_when_givenEntityMeldungsartEnumValue(
-        final Meldungsart meldungsart) {
+    @EnumSource(Dokumentart.class)
+    void should_mapToEnumWithSameName_when_givenEntityDokumentartEnumValue(
+        final Dokumentart dokumentart) {
       val entityToMap =
-          new Ausdruck(new WahlUndBezirkIDUndMeldungsart(null, null, meldungsart), null, null);
+          new Ausdruck(new WahlUndBezirkIDUndDokumentart(null, null, dokumentart), null, null);
 
       val result = unitUnderTest.toModel(entityToMap);
 
-      Assertions.assertThat(result.wahlUndBezirkIDUndMeldungsartModel().meldungsart().name())
-          .isEqualTo(meldungsart.name());
+      Assertions.assertThat(result.wahlUndBezirkIDUndDokumentartModel().dokumentart().name())
+          .isEqualTo(DokumentartModel.valueOf(dokumentart.name()).name());
     }
   }
 
@@ -75,20 +75,20 @@ class AusdruckModelMapperTest {
     void should_returnAusdruckEntity_when_givenAusdruckWriteModel() {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsart = Meldungsart.V1;
-      val meldungsartModel = MeldungsartModel.V1;
+      val dokumentart = Dokumentart.V1;
+      val dokumentartModel = DokumentartModel.V1;
       val content = "Testausdruck";
       val erstelltAm = Instant.now();
       val ausdruckModel =
           new AusdruckWriteModel(
-              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsartModel),
+              new WahlUndBezirkIDUndDokumentartModel(wahlbezirkID, wahlID, dokumentartModel),
               content);
 
       val result = unitUnderTest.toEntity(ausdruckModel, erstelltAm);
 
       val expectedResult =
           new Ausdruck(
-              new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart),
+              new WahlUndBezirkIDUndDokumentart(wahlbezirkID, wahlID, dokumentart),
               content,
               erstelltAm);
 
@@ -96,17 +96,17 @@ class AusdruckModelMapperTest {
     }
 
     @ParameterizedTest
-    @EnumSource(MeldungsartModel.class)
-    void should_mapToEnumWithSameName_when_givenModelMeldungsartEnumValue(
-        final MeldungsartModel meldungsartModel) {
+    @EnumSource(DokumentartModel.class)
+    void should_mapToEnumWithSameName_when_givenModelDokumentartEnumValue(
+        final DokumentartModel dokumentartModel) {
       val modelToMap =
           new AusdruckWriteModel(
-              new WahlUndBezirkIDUndMeldungsartModel(null, null, meldungsartModel), null);
+              new WahlUndBezirkIDUndDokumentartModel(null, null, dokumentartModel), null);
 
       val result = unitUnderTest.toEntity(modelToMap, Instant.now());
 
-      Assertions.assertThat(result.getWahlUndBezirkIDUndMeldungsart().getMeldungsart().name())
-          .isEqualTo(meldungsartModel.name());
+      Assertions.assertThat(result.getWahlUndBezirkIDUndDokumentart().getDokumentart().name())
+          .isEqualTo(dokumentartModel.name());
     }
   }
 }

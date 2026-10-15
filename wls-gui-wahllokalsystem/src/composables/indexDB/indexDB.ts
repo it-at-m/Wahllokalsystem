@@ -100,7 +100,7 @@ export const useIndexDB = () => {
           } else {
             await localforage.setItem(key, {
               ...data,
-              data: await encrypt(data.data?.toString(), this.cryptoKey),
+              data: await encrypt(data.data, this.cryptoKey),
             });
           }
         } catch (error) {

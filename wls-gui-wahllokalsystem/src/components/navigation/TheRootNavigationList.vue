@@ -6,28 +6,32 @@
       :to="routeWithName(ROUTES_HOME)"
     />
     <v-list-item
+      v-if="hasRoleSchriftfuehrung"
       title="Wahlvorstand"
       :to="routeWithName(ROUTE_WAHLVORSTAND)"
     />
     <the-b-w-b-election-list-group
-      v-if="isBWB"
+      v-if="hasRoleSchriftfuehrung && isBWB"
       :disabled="!isWahlvorstandErfasst"
       :disabled-message="
         isWahlvorstandErfasst ? '' : DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED
       "
     />
     <the-u-w-b-election-list-group
-      v-if="isUWB"
+      v-if="hasRoleSchriftfuehrung && isUWB"
       :disabled="!isWahlvorstandErfasst"
       :disabled-message="
         isWahlvorstandErfasst ? '' : DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED
       "
     />
     <v-list-item
+      v-if="hasRoleSchriftfuehrung"
       title="Ereignisse"
       :to="routeWithName(ROUTE_EREIGNISSE)"
     />
-    <the-scores-list-items />
+    <the-scores-list-items
+      v-if="hasRoleSchriftfuehrung || (hasRoleErfassungsteam && isDseAktiv)"
+    />
   </v-list>
 </template>
 
@@ -45,10 +49,14 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { routeWithName } = useNavigationService();
 const { isUWB, isBWB } = storeToRefs(useUserStore());
 const { isWahlvorstandErfasst } = storeToRefs(useWorkflowStore());
+const { isDseAktiv } = storeToRefs(useInfomanagementStore());
+const { hasRoleSchriftfuehrung, hasRoleErfassungsteam } =
+  storeToRefs(useUserStore());
 </script>

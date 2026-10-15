@@ -29,12 +29,14 @@ class WahllokalZustandServiceTest {
     @Test
     void should_notThrowException_when_wahlbezirkIDIsGiven() {
       val wahlbezirkID = "wahlbezirkID";
+      val teamID = "B";
       val mockedWlsException = FachlicheWlsException.withCode("123").buildWithMessage("Abc");
       Mockito.when(
               exceptionFactory.createFachlicheWlsException(
                   ExceptionConstants.POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG))
           .thenReturn(mockedWlsException);
-      Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postLastSeen(wahlbezirkID));
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.postLastSeen(wahlbezirkID, teamID));
     }
   }
 
@@ -44,13 +46,14 @@ class WahllokalZustandServiceTest {
     @Test
     void should_notThrowException_when_wahlbezirkIDIsGiven() {
       val wahlbezirkID = "wahlbezirkID";
+      val teamID = "B";
       val mockedWlsException = FachlicheWlsException.withCode("123").buildWithMessage("Abc");
       Mockito.when(
               exceptionFactory.createFachlicheWlsException(
                   ExceptionConstants.POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
           .thenReturn(mockedWlsException);
       Assertions.assertThatNoException()
-          .isThrownBy(() -> unitUnderTest.postLetzteAbmeldung(wahlbezirkID));
+          .isThrownBy(() -> unitUnderTest.postLetzteAbmeldung(wahlbezirkID, teamID));
     }
   }
 

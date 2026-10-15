@@ -51,12 +51,20 @@ export function useWahlvorschlagUtils() {
       (a, b) => a.wahlvorschlag.ordnungszahl - b.wahlvorschlag.ordnungszahl
     );
   }
+  function sortKandidatenByListenPositionInplace(wahlvorschlag: Wahlvorschlag) {
+    if (wahlvorschlag.kandidaten) {
+      wahlvorschlag.kandidaten = [...wahlvorschlag.kandidaten].sort(
+        compareKandidatenByListenPosition
+      );
+    }
+  }
 
   return {
     compareKandidatenByListenPosition,
     getWahlvorschlagTitle,
     getFirstKandidatNameOrEmptyString,
     getKandidatLaufendeNummer,
+    sortKandidatenByListenPositionInplace,
     sortWahlvorschlaegeByOrdnungszahl,
     sortMbwErgebnisseAndWahlvorschlagByOrdnungszahl,
   };

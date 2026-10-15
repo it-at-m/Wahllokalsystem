@@ -50,7 +50,7 @@ public class SecurityConfiguration {
                         // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
                         PathPatternRequestMatcher.withDefaults().matcher("/actuator/metrics"),
                         PathPatternRequestMatcher.withDefaults().matcher("/v3/api-docs/**"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/webjars/swagger-ui/**"),
                         PathPatternRequestMatcher.withDefaults()
                             .matcher("/businessActions/loginCheck/**"),
                         PathPatternRequestMatcher.withDefaults()

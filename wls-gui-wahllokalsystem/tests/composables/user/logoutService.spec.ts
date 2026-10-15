@@ -78,6 +78,7 @@ describe("logoutService.ts", () => {
   let unitUnderTest: ReturnType<typeof useLogoutService>;
 
   const WAHLBEZIRK_ID = "wahlbezirkID";
+  const TEAM_ID = "teamID";
   const NAVIGATION_TARGET = "ROUTE";
 
   beforeEach(() => {
@@ -111,10 +112,11 @@ describe("logoutService.ts", () => {
         return Promise.resolve({ ok: true });
       });
 
-      await unitUnderTest.logout(WAHLBEZIRK_ID, NAVIGATION_TARGET);
+      await unitUnderTest.logout(WAHLBEZIRK_ID, TEAM_ID, NAVIGATION_TARGET);
 
       expect(mockDefinitions.postLetzteAbmeldung).toHaveBeenCalledWith(
         WAHLBEZIRK_ID,
+        TEAM_ID,
         axiosConfigWrapper().requestAsOnlineOnly()
       );
       expect(mockDefinitions.fetch).toHaveBeenCalledTimes(2);
@@ -133,7 +135,7 @@ describe("logoutService.ts", () => {
       const mockedGetLogoutUrlError = new Error("mocked get logout url failed");
       mockDefinitions.getLogoutUrl.mockRejectedValue(mockedGetLogoutUrlError);
 
-      await unitUnderTest.logout(WAHLBEZIRK_ID, NAVIGATION_TARGET);
+      await unitUnderTest.logout(WAHLBEZIRK_ID, TEAM_ID, NAVIGATION_TARGET);
 
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
@@ -161,7 +163,7 @@ describe("logoutService.ts", () => {
         }
       });
 
-      await unitUnderTest.logout(WAHLBEZIRK_ID, NAVIGATION_TARGET);
+      await unitUnderTest.logout(WAHLBEZIRK_ID, TEAM_ID, NAVIGATION_TARGET);
 
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
@@ -189,7 +191,7 @@ describe("logoutService.ts", () => {
         }
       });
 
-      await unitUnderTest.logout(WAHLBEZIRK_ID, NAVIGATION_TARGET);
+      await unitUnderTest.logout(WAHLBEZIRK_ID, TEAM_ID, NAVIGATION_TARGET);
 
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
@@ -202,7 +204,7 @@ describe("logoutService.ts", () => {
         Promise.reject(new Error("no logout url"))
       );
 
-      await unitUnderTest.logout(WAHLBEZIRK_ID, NAVIGATION_TARGET);
+      await unitUnderTest.logout(WAHLBEZIRK_ID, TEAM_ID, NAVIGATION_TARGET);
       expect(mockDefinitions.postLetzteAbmeldung).not.toHaveBeenCalled();
     });
   });

@@ -1,0 +1,1 @@
+ALTER TABLE Wlsuser MODIFY (teamID NULL);

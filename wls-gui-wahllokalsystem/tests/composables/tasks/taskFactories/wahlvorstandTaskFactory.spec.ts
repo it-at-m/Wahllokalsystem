@@ -15,7 +15,7 @@ vi.mock("@/stores/wahlvorstandStore.ts", () => ({
 }));
 
 describe("wahlvorstandTaskFactory.ts", () => {
-  const { createTaskFactoryContext } = useTasksTestDataFactory();
+  const { prepareTaskFactoryContext } = useTasksTestDataFactory();
   const { createTasks } = useWahlvorstandTaskFactory();
 
   beforeEach(() => {
@@ -23,24 +23,41 @@ describe("wahlvorstandTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    it("should_returnTaskList_when_calledIndependentlyOfContext", () => {
-      const taskFactoryContext = createTaskFactoryContext();
+    describe("userHasRoleSchriftfuehrung", () => {
+      it("should_returnTaskList_when_calledIndependentlyOfContext", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(true)
+          .build();
 
-      const result = createTasks(taskFactoryContext);
+        const result = createTasks(taskFactoryContext);
 
-      expect(result.length).toStrictEqual(1);
+        expect(result.length).toStrictEqual(1);
+      });
+
+      it("should_haveExpectedCallback_when_calledIndependentlyOfContext", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(true)
+          .build();
+        mockDefinitions.initWahlvorstand.mockReturnValue(Promise.resolve());
+
+        const result = createTasks(taskFactoryContext);
+
+        expect(result.length).toStrictEqual(1);
+
+        result[0]?.callback();
+        expect(mockDefinitions.initWahlvorstand).toHaveBeenCalledOnce();
+      });
     });
+  });
 
-    it("should_haveExpectedCallback_when_calledIndependentlyOfContext", () => {
-      const taskFactoryContext = createTaskFactoryContext();
-      mockDefinitions.initWahlvorstand.mockReturnValue(Promise.resolve());
+  describe("userHasNotRoleSchriftfuehrung", () => {
+    it("should_returnEmptyList_when_called", () => {
+      const taskFactoryContext = prepareTaskFactoryContext()
+        .isSchriftfuehrung(false)
+        .build();
 
       const result = createTasks(taskFactoryContext);
-
-      expect(result.length).toStrictEqual(1);
-
-      result[0]?.callback();
-      expect(mockDefinitions.initWahlvorstand).toHaveBeenCalledOnce();
+      expect(result.length).toStrictEqual(0);
     });
   });
 });

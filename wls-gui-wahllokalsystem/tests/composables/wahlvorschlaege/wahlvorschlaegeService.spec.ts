@@ -7,6 +7,8 @@ import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvor
 const mockDefinitions = vi.hoisted(() => ({
   getWahlvorschlaege: vi.fn(),
   toModel: vi.fn(),
+  sortWahlvorschlaegeByOrdnungszahl: vi.fn(),
+  sortKandidatenByListenPositionInplace: vi.fn(),
   configurationConstructor: vi.fn(),
 }));
 
@@ -23,6 +25,21 @@ vi.mock(
       toModel: mockDefinitions.toModel,
     }),
   })
+);
+vi.mock(
+  import("@/composables/wahlvorschlaege/wahlvorschlagUtils.ts"),
+  async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+      useWahlvorschlagUtils: () => ({
+        ...original.useWahlvorschlagUtils(),
+        sortWahlvorschlaegeByOrdnungszahl:
+          mockDefinitions.sortWahlvorschlaegeByOrdnungszahl,
+        sortKandidatenByListenPositionInplace:
+          mockDefinitions.sortKandidatenByListenPositionInplace,
+      }),
+    };
+  }
 );
 
 const { generateRandomString } = useCommonTestDataFactory();
@@ -60,6 +77,15 @@ describe("wahlvorschlaegeService.ts", () => {
       expect(mockDefinitions.toModel).toHaveBeenCalledWith(
         mockedWahlvorschlaegeDto
       );
+      expect(
+        mockDefinitions.sortWahlvorschlaegeByOrdnungszahl.mock.calls
+      ).toStrictEqual([[mockedWahlvorschlaegeModel]]);
+      expect(
+        mockDefinitions.sortKandidatenByListenPositionInplace.mock.calls.length
+      ).toStrictEqual(mockedWahlvorschlaegeModel.wahlvorschlaege.length);
+      expect(
+        mockDefinitions.sortKandidatenByListenPositionInplace
+      ).toHaveBeenCalledWith(...mockedWahlvorschlaegeModel.wahlvorschlaege);
     });
 
     it("should_throwError_when_apiCallFailed", async () => {

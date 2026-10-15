@@ -10,7 +10,6 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   createTasksKonfigurationsparameter: vi.fn(),
-  createTasksUngueltigeWahlscheine: vi.fn(),
   createWaehlerverzeichnisTasks: vi.fn(),
   createTasksWahlvorstand: vi.fn(),
   createTasksEroeffnungsuhrzeit: vi.fn(),
@@ -20,7 +19,6 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksStimmabgabevermerke: vi.fn(),
   createTasksStimmzettelumschlaege: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
-  createTasksWaehler: vi.fn(),
   createTasksEreignisse: vi.fn(),
   createTasksBegruendung: vi.fn(),
   createTasksAWerte: vi.fn(),
@@ -33,6 +31,8 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksErgebnisse: vi.fn(),
   createMbwWahlvorschlaegeAndErgebnisseTasks: vi.fn(),
   createTasksStapelE: vi.fn(),
+  createDseWorkflowStatusTasks: vi.fn(),
+  createDseStimmzettelTasks: vi.fn(),
 }));
 
 vi.mock(
@@ -40,24 +40,6 @@ vi.mock(
   () => ({
     useKonfigurationsparameterTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksKonfigurationsparameter,
-    })),
-  })
-);
-
-vi.mock(
-  import("@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts"),
-  () => ({
-    useUngueltigeWahlscheineTaskFactory: vi.fn().mockImplementation(() => ({
-      createTasks: mockDefinitions.createTasksUngueltigeWahlscheine,
-    })),
-  })
-);
-
-vi.mock(
-  import("@/composables/tasks/taskFactories/waehlerTaskFactory.ts"),
-  () => ({
-    useWaehlerTaskFactory: vi.fn().mockImplementation(() => ({
-      createTasks: mockDefinitions.createTasksWaehler,
     })),
   })
 );
@@ -249,6 +231,24 @@ vi.mock(
   })
 );
 
+vi.mock(
+  import("@/composables/tasks/taskFactories/stimmzettelerfassungStatusTaskFactory.ts"),
+  () => ({
+    useDseWorkflowStatusTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createDseWorkflowStatusTasks,
+    })),
+  })
+);
+
+vi.mock(
+  import("@/composables/tasks/taskFactories/dseStimmzettelTaskFactory.ts"),
+  () => ({
+    useDSEStimmzettelTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createDseStimmzettelTasks,
+    })),
+  })
+);
+
 describe("taskListService.ts", () => {
   let unitUnderTest: ReturnType<typeof useTaskListService>;
   const { generateRandomString, generateRandomNumber } =
@@ -292,7 +292,6 @@ describe("taskListService.ts", () => {
 
       const expectedTaskNames = [
         "Waehlerverzeichnis",
-        "UngültigeWahlscheine",
         "Wahlvorstand",
         "Eröffnungsuhrzeit",
         "Urnenwahl Schließungsuhrzeit",
@@ -302,7 +301,6 @@ describe("taskListService.ts", () => {
         "Ereignisse",
         `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
         "Stimmzettel " + mockedWahl.name,
-        "Wahlbeteiligung",
         "Begruendung Stimmzettel für " + mockedWahl.name,
         "AWerte",
         "Handbuch",
@@ -310,6 +308,8 @@ describe("taskListService.ts", () => {
         "Wahlvorbereitung",
         "MBW Tasks",
         "Stapel E Tasks",
+        "DSE-Workflow-Status - " + mockedWahl.name,
+        "Stimmzettel für " + mockedWahl.name,
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -350,6 +350,8 @@ describe("taskListService.ts", () => {
         "Zugelassene Wahlbriefe",
         "MBW Tasks",
         "Stapel E Tasks",
+        "DSE-Workflow-Status - " + mockedWahl.name,
+        "Stimmzettel für " + mockedWahl.name,
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -365,12 +367,10 @@ describe("taskListService.ts", () => {
 
       // only uwb
       mockDefinitions.createWaehlerverzeichnisTasks.mockReturnValue([]);
-      mockDefinitions.createTasksUngueltigeWahlscheine.mockReturnValue([]);
       mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit.mockReturnValue(
         []
       );
       mockDefinitions.createTasksStimmabgabevermerke.mockReturnValue([]);
-      mockDefinitions.createTasksWaehler.mockReturnValue([]);
       mockDefinitions.createTasksAWerte.mockReturnValue([]);
 
       // only bwb
@@ -405,12 +405,6 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
-      mockDefinitions.createTasksUngueltigeWahlscheine.mockReturnValue([
-        {
-          name: "UngültigeWahlscheine",
-          callback: () => Promise.resolve(),
-        },
-      ]);
       mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit.mockReturnValue([
         {
           name: "Urnenwahl Schließungsuhrzeit",
@@ -422,9 +416,6 @@ describe("taskListService.ts", () => {
           name: `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
           callback: () => Promise.resolve(),
         },
-      ]);
-      mockDefinitions.createTasksWaehler.mockReturnValue([
-        { name: "Wahlbeteiligung", callback: () => Promise.resolve() },
       ]);
       mockDefinitions.createTasksAWerte.mockReturnValue([
         {
@@ -527,6 +518,18 @@ describe("taskListService.ts", () => {
       mockDefinitions.createTasksStapelE.mockReturnValue([
         {
           name: "Stapel E Tasks",
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createDseWorkflowStatusTasks.mockReturnValue([
+        {
+          name: "DSE-Workflow-Status - " + mockedWahl.name,
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createDseStimmzettelTasks.mockReturnValue([
+        {
+          name: "Stimmzettel für " + mockedWahl.name,
           callback: () => Promise.resolve(),
         },
       ]);

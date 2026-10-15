@@ -3,7 +3,11 @@ import type { RouteRecordRawWithoutName } from "@/types/navigation/RouteRecordRa
 import { type RouteRecordRaw } from "vue-router";
 
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
+import { allGuards, anyGuard } from "@/composables/navigation/routerUtils.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
+import BeschlussfassungView from "@/views/dse/BeschlussfassungView.vue";
+import MonitoringView from "@/views/dse/MonitoringView.vue";
+import StimmzettelerfassungView from "@/views/dse/StimmzettelerfassungView.vue";
 import ErfassungStimmzettelView from "@/views/ergebnismeldung/common/ErfassungStimmzettelView.vue";
 import MBWNiederschriftView from "@/views/ergebnismeldung/MBW/MBWNiederschriftView.vue";
 import MBWSchnellmeldungView from "@/views/ergebnismeldung/MBW/MBWSchnellmeldungView.vue";
@@ -19,9 +23,15 @@ const {
   requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
   requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
   requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+  requiresIsDseAktiv,
+  requiresIsDseInaktiv,
+  requireRoleSchriftfuehrung,
+  requireRoleErfassungteam,
 } = useNavigationGuards();
 const BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM =
   "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
+
+const BASE_PATH_DSE = "/MBW/DSE/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
 
 const auszaehlungPrerequisiteGuards = [
   permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
@@ -37,7 +47,43 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
       "/auszaehlungStimmzettel",
     component: ErfassungStimmzettelView,
-    beforeEnter: [...auszaehlungPrerequisiteGuards],
+    beforeEnter: [...auszaehlungPrerequisiteGuards, requireRoleSchriftfuehrung],
+  },
+  [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: {
+    path: BASE_PATH_DSE + "/stimmzettelerfassung",
+    component: StimmzettelerfassungView,
+    beforeEnter: anyGuard(
+      // Conditions ROLE Schriftfuerer
+      allGuards(
+        requiresIsDseAktiv,
+        isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+        requireRoleSchriftfuehrung
+      ),
+      // Conditions ROLE Erfassungsteam
+      allGuards(requiresIsDseAktiv, requireRoleErfassungteam)
+    ),
+  },
+  [MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS]: {
+    path: BASE_PATH_DSE + "/monitoring",
+    component: MonitoringView,
+    beforeEnter: [
+      requireRoleSchriftfuehrung,
+      requiresIsDseAktiv,
+      isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+    ],
+  },
+  [MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG]: {
+    path: BASE_PATH_DSE + "/beschlussfassung",
+    component: BeschlussfassungView,
+    beforeEnter: [
+      requireRoleSchriftfuehrung,
+      requiresIsDseAktiv,
+      isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+      isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG),
+      isStepDoneInElectionState(
+        MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+      ),
+    ],
   },
   [MbwStepsEnum.MBW_STAPEL_E]: {
     path:
@@ -45,6 +91,8 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
     component: MBWStapelEView,
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,
+      requireRoleSchriftfuehrung,
+      requiresIsDseInaktiv,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
     ],
   },
@@ -55,6 +103,8 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
     component: MBWStapelDView,
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,
+      requireRoleSchriftfuehrung,
+      requiresIsDseInaktiv,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_E),
     ],
@@ -66,6 +116,8 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
     component: MBWStapelAandBView,
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,
+      requireRoleSchriftfuehrung,
+      requiresIsDseInaktiv,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_E),
       isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG),
@@ -78,10 +130,24 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
     component: MBWSchnellmeldungView,
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,
+      requireRoleSchriftfuehrung,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
-      isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_E),
-      isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG),
-      isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_A_AND_B),
+      anyGuard(
+        // Conditions DSE
+        allGuards(
+          isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG),
+          isStepDoneInElectionState(
+            MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+          ),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG)
+        ),
+        // Conditions Stapelerfassung
+        allGuards(
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_E),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_A_AND_B)
+        )
+      ),
     ],
   },
   [MbwStepsEnum.MBW_STAPEL_BC]: {
@@ -90,6 +156,8 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
     component: MBWStapelBCView,
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,
+      requireRoleSchriftfuehrung,
+      requiresIsDseInaktiv,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_E),
       isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG),
@@ -104,12 +172,26 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
     component: MBWNiederschriftView,
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,
+      requireRoleSchriftfuehrung,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
-      isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_E),
-      isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG),
-      isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_A_AND_B),
       isStepDoneInElectionState(MbwStepsEnum.MBW_SCHNELLMELDUNG),
-      isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_BC),
+      anyGuard(
+        // Conditions DSE
+        allGuards(
+          isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG),
+          isStepDoneInElectionState(
+            MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+          ),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG)
+        ),
+        // Conditions Stapelerfassung
+        allGuards(
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_E),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_A_AND_B),
+          isStepDoneInElectionState(MbwStepsEnum.MBW_STAPEL_BC)
+        )
+      ),
     ],
   },
 };

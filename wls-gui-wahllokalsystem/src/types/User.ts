@@ -5,6 +5,7 @@ export interface User {
   username: string;
   email: string | undefined;
   userEnabled: boolean;
+  teamName: string;
   wahltagID: string;
   wahltag: string;
   wahlbezirkID: string;
@@ -21,6 +22,7 @@ export function createUserLocalDevelopment(): User {
     username: "Local Development User",
     email: undefined,
     userEnabled: true,
+    teamName: "A",
     wahltagID: "wahltagID",
     wahltag: "2026-01-01",
     wahlbezirkID: "wahlbezirkID",

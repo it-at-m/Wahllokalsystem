@@ -77,8 +77,8 @@
                 :key="stimmzettel.stimmzettelart"
                 v-model="stimmzettel.anzahl"
                 max-width="15rem"
-                :max-valid="50"
-                :rules="[required]"
+                :max-valid="1000"
+                :rules="defaultRules"
               />
             </template>
           </td>
@@ -149,6 +149,8 @@ onMounted(() => {
 const isDeleteDialogVisible = ref(false);
 const rowSize = ref<number | null>(null);
 const maxRowSize = 999;
+
+const defaultRules = [required];
 
 const contextThatPreventDeletion = computed(() => {
   let blattnummern: number[] = [];

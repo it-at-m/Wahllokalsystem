@@ -16,10 +16,11 @@
         @click="$emit('save')"
       />
       <base-wls-button-save
-        :save-text="`${title} korrigieren`"
-        prepend-icon="$edit"
-        :disabled="!isKorrigierenActive"
-        @click="$emit('edit')"
+        v-if="title === 'Niederschrift'"
+        save-text="Beschlussentscheidungen drucken"
+        prepend-icon="$printer"
+        :loading="isBeschlussentscheidungenDruckenLoading"
+        @click="$emit('printBeschlussentscheidungen')"
       />
       <base-wls-button-save
         :save-text="`${title} drucken und weiter`"
@@ -40,15 +41,15 @@ defineProps<{
   title: string;
   subtitle: string;
   isSending: boolean;
-  isKorrigierenActive: boolean | null | undefined;
   isDruckenActive: boolean | null | undefined;
   isDruckenLoading: boolean;
   isSendenActive: boolean;
+  isBeschlussentscheidungenDruckenLoading?: boolean;
 }>();
 
 defineEmits<{
   save: [];
-  edit: [];
+  printBeschlussentscheidungen: [];
   print: [];
 }>();
 </script>

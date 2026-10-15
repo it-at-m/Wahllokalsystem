@@ -18,6 +18,11 @@ spring:
       - classpath:db/migrations/{vendor}
   h2.console.enabled: false
 
+  jpa:
+    properties:
+      hibernate:
+        generate_statistics: false # when true, enable logger org.hibernate.engine.internal.StatisticalLoggingSessionEventListener with debug
+
   security:
     oauth2:
       resourceserver:

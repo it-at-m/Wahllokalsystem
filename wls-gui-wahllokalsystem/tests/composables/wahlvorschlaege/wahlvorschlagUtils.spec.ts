@@ -233,4 +233,61 @@ describe("wahlvorschlagUtils.ts", () => {
       ]);
     });
   });
+
+  describe("sortKandidatenByListenPositionInplace", () => {
+    it("should_keepOrder_when_kandidatenAreSortedAscending", () => {
+      const kandidat1 = prepareKandidat().listenposition(1).build();
+      const kandidat2 = prepareKandidat().listenposition(2).build();
+      const kandidat3 = prepareKandidat().listenposition(3).build();
+      const wahlvorschlag = prepareWahlvorschlag()
+        .kandidaten([kandidat1, kandidat2, kandidat3])
+        .build();
+
+      unitUnderTest.sortKandidatenByListenPositionInplace(wahlvorschlag);
+
+      expect(wahlvorschlag.kandidaten).toStrictEqual([
+        kandidat1,
+        kandidat2,
+        kandidat3,
+      ]);
+    });
+
+    it("should_createOrder_when_kandidatenAreNotSortedAscending", () => {
+      const kandidat1 = prepareKandidat().listenposition(3).build();
+      const kandidat2 = prepareKandidat().listenposition(2).build();
+      const kandidat3 = prepareKandidat().listenposition(1).build();
+      const wahlvorschlag = prepareWahlvorschlag()
+        .kandidaten([kandidat1, kandidat2, kandidat3])
+        .build();
+
+      unitUnderTest.sortKandidatenByListenPositionInplace(wahlvorschlag);
+
+      expect(wahlvorschlag.kandidaten).toStrictEqual([
+        kandidat3,
+        kandidat2,
+        kandidat1,
+      ]);
+    });
+
+    it("should_updateOrder_when_kandidatenAreNotCompletlySortedAscending", () => {
+      const kandidat1 = prepareKandidat().listenposition(1).build();
+      const kandidat2 = prepareKandidat().listenposition(4).build();
+      const kandidat3 = prepareKandidat().listenposition(2).build();
+      const kandidat4 = prepareKandidat().listenposition(3).build();
+      const kandidat5 = prepareKandidat().listenposition(5).build();
+      const wahlvorschlag = prepareWahlvorschlag()
+        .kandidaten([kandidat1, kandidat2, kandidat3, kandidat4, kandidat5])
+        .build();
+
+      unitUnderTest.sortKandidatenByListenPositionInplace(wahlvorschlag);
+
+      expect(wahlvorschlag.kandidaten).toStrictEqual([
+        kandidat1,
+        kandidat3,
+        kandidat4,
+        kandidat2,
+        kandidat5,
+      ]);
+    });
+  });
 });

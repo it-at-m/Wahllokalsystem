@@ -36,21 +36,25 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
   }
 
   @Override
-  public void postLastSeen(final String wahlbezirkID, LocalDateTime zuletztGesehen)
-      throws WlsException {
-    WahllokalZustandDTO wahllokalZustandDTO = new WahllokalZustandDTO();
-    wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-    wahllokalZustandDTO.setZuletztGesehen(zuletztGesehen);
-    postWahllokalZustand(wahllokalZustandDTO);
+  public void postLastSeen(
+      final String wahlbezirkID, final String teamID, final LocalDateTime zuletztGesehen) {
+    try {
+      wahllokalzustandControllerApi.saveWahllokalZustandLastSeen(
+          wahlbezirkID, teamID, zuletztGesehen);
+    } catch (final Exception exception) {
+      log.warn("Last Seen nicht gesendet. Exception: {}", exception.getMessage());
+    }
   }
 
   @Override
-  public void postLetzteAbmeldung(String wahlbezirkID, LocalDateTime letzteAbmeldung)
-      throws WlsException {
-    WahllokalZustandDTO wahllokalZustandDTO = new WahllokalZustandDTO();
-    wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-    wahllokalZustandDTO.setLetzteAbmeldung(letzteAbmeldung);
-    postWahllokalZustand(wahllokalZustandDTO);
+  public void postLetzteAbmeldung(
+      String wahlbezirkID, final String teamID, final LocalDateTime letzteAbmeldung) {
+    try {
+      wahllokalzustandControllerApi.saveWahllokalZustandLetzteAbmeldung(
+          wahlbezirkID, teamID, letzteAbmeldung);
+    } catch (final Exception exception) {
+      log.warn("Letzte Abmeldung nicht gesendet. Exception: {}", exception.getMessage());
+    }
   }
 
   @Override

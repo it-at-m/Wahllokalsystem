@@ -78,6 +78,21 @@ describe("userMapper.ts", () => {
       { invalid: "Blank", value: " " },
       { invalid: "Null", value: null },
       { invalid: "Undefined", value: undefined },
+    ])(`should_throwError_when_userHas'$invalid'TeamID`, async ({ value }) => {
+      const invalidDto = prepareUserDTO()
+        .teamID(value as string)
+        .build();
+
+      expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
+        "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: teamID"
+      );
+    });
+
+    it.each([
+      { invalid: "Empty", value: "" },
+      { invalid: "Blank", value: " " },
+      { invalid: "Null", value: null },
+      { invalid: "Undefined", value: undefined },
     ])(
       "should_throwError_when_userHas'$invalid'WahltagId",
       async ({ value }) => {

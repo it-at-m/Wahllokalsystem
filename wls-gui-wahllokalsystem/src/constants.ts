@@ -31,7 +31,8 @@ export const TEAMVIEWER_URL = "KioskControlHandler:teamviewer://";
 export const REQUEST_HEADER_OFFLINE_STRATEGY = "X-WLS-SW-STRATEGY";
 export const HTTP_HEADER_CONTENT_TYPE = "content-type";
 
-const WLS_SERVICE_API_URL = "/api/";
+export const WLS_SERVICE_API_BASEPATH_NAME = "api";
+const WLS_SERVICE_API_URL = `/${WLS_SERVICE_API_BASEPATH_NAME}/`;
 
 export const BROADCAST_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "broadcast-service";
@@ -76,4 +77,13 @@ export const SUBTITLE_WAEHLERANZAHL_ERFASST = "Wähleranzahl erfasst";
 export const SUBTITLE_AUSZAEHLUNG_IN_ARBEIT = "Auszählung in Arbeit";
 export const SUBTITLE_AUSZAEHLUNG_ERFASST = "Abgeschlossen";
 
+export const TITEL_SONDERFAELLE = "Ungültige";
+
 export const SAVE_CONTINUE = "Speichern und Weiter";
+export const ITEMS_PER_PAGE_TITLE = "Stimmzettel pro Seite";
+export const TABLE_NO_DATA_TEXT_STIMMZETTEL = "Noch keine Stimmzettel erfasst";
+export const TABLE_NO_DATA_TEXT_BESCHLUSSFASSUNG =
+  "Noch keine Stimmzettel für die Beschlussfassung vorgemerkt";
+export const TABLE_LOADING_DATA_STIMMZETTEL = "Stimmzettel werden geladen";
+
+export const WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL = 100;

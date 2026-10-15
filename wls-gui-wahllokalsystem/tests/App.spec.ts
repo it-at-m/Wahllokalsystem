@@ -32,6 +32,7 @@ const mockDefinitions = vi.hoisted(() => ({
   postBeanstandeteWahlbriefe: vi.fn(),
   getBeanstandeteWahlbriefe: vi.fn(),
   syncPin: vi.fn(),
+  initStimmzettelerfassungTeamStatus: vi.fn(),
 }));
 
 vi.mock(import("@/composables/wahl/wahlService.ts"), () => ({
@@ -66,6 +67,12 @@ vi.mock(
     }),
   })
 );
+vi.mock(import("@/composables/appUtils.ts"), () => ({
+  useAppUtils: () => ({
+    initStimmzettelerfassungTeamStatus:
+      mockDefinitions.initStimmzettelerfassungTeamStatus,
+  }),
+}));
 vi.mock(
   import("@/composables/serviceWorker/serviceWorkerUtils.ts"),
   async (importOriginal) => {
@@ -154,10 +161,9 @@ describe("App", () => {
       router.push = vi.fn();
 
       const store = useUserStore();
-      store.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
+      store.user.authorities = [""]; //empty default mapping for schriftfuehrung
       const now = new Date();
-      // @ts-expect-error: cannot set readonly
-      store.currentUserWahltag = `${now.getFullYear() + 1}-12-31`;
+      store.user.wahltag = `${now.getFullYear() + 1}-12-31`;
       useInfomanagementStore().konfigurationsparameter = [
         prepareKonfigurationsparameter()
           .schluessel("MELDUNGSZEIT_ANWESENHEIT_CHECK")
@@ -244,6 +250,14 @@ describe("App", () => {
       await flushPromises();
 
       expect(initTasks).toHaveBeenCalled();
+    });
+
+    it("should_callInitStimmzettelerfassungTeamStatus_when_mounted", async () => {
+      await flushPromises();
+
+      expect(
+        mockDefinitions.initStimmzettelerfassungTeamStatus
+      ).toHaveBeenCalled();
     });
 
     it("should_callStopBroadcastMessageInterval_when_unmounted", async () => {

@@ -42,7 +42,7 @@ jobs:
       service: "wls-gui-<frontend-name>"
 ```
 
-```yml {1,6-7,13} [wls-gui-&ltfrontend-name&gt_pull-request.yml]
+```yml {1,6-7,15} [wls-gui-&ltfrontend-name&gt_pull-request.yml]
 name: verify pull request gui <frontend-name>
 
 on:
@@ -77,6 +77,84 @@ on:
       tag:
         required: false
         description: 'optional: gittag'
+```
+
+:::
+
+## Releases
+
+Zusätzlich muss die neue GUI im Workflow `populate-release-pr.yml`, sowie im passenden PR-Template ergänzt werden:
+::: code-group
+
+```yml {23,31} [.github/workflows/populate-release-pr.yml]
+name: Populate Release PR Links
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  # ...
+
+jobs:
+  populate-links:
+    # ...
+    steps:
+      - name: Update PR with Release Links
+        uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const services = [
+              // further services,
+              'wls-gui-wahllokalsystem',
+              'wls-gui-<frontend-name>'
+            ];
+
+            // (... more code ... )
+            
+              const serviceHeadings = {
+                // further services,
+                'wls-gui-wahllokalsystem': 'Wahllokalsystem GUI',
+                'wls-gui-<frontend-name>': '<frontend-name> GUI'
+              };
+
+            // (... more code ... )
+```
+
+```md {17-20,30-31} [.github/PULL_REQUEST_TEMPLATE/release-pr.md]
+# Beschreibung:
+
+Releases für den Sprint XX erstellt.
+---
+<!-- backend services -->
+
+# Frontend GUI Releases
+
+<!-- further frontend guis -->
+
+## Wahllokalsystem GUI
+
+- [Release-Notes][wls-gui-wahllokalsystem-release]
+- [Image-Tag][wls-gui-wahllokalsystem-image]
+
+
+## <frontend-name> GUI
+
+- [Release-Notes][wls-gui-<frontend-name>-release]
+- [Image-Tag][wls-gui-<frontend-name>-image]
+---
+
+<!-- Platzhalter für Release-Links - werden automatisch gefüllt -->
+
+<!-- backend Services -->
+<!-- Frontend GUIs -->
+<!-- further guis -->
+[wls-gui-wahllokalsystem-release]: #
+[wls-gui-wahllokalsystem-image]: #
+[wls-gui-<frontend-name>-release]: #
+[wls-gui-<frontend-name>-image]: #
 ```
 
 :::

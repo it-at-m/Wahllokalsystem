@@ -2,14 +2,15 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ausdruck;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.MeldungsartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.DokumentartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckReadModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckWriteModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.WahlUndBezirkIDUndMeldungsartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.DokumentartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.WahlUndBezirkIDUndDokumentartModel;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -30,47 +31,50 @@ class AusdruckControllerTest {
 
   @Mock AusdruckDTOMapper ausdruckDTOMapper;
 
+  @Mock DokumentartDTOMapper dokumentartDTOMapper;
+
   @InjectMocks AusdruckController unitUnderTest;
 
   @Nested
   class GetAusdruck {
 
     @Test
-    void should_returnTextWithHttpStatusOk_when_serviceReturnsData() {
+    void should_returnDTOWithHttpStatusOk_when_serviceReturnsData() {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsArtModel = MeldungsartModel.V1;
-      val meldungsArtDto = MeldungsartDTO.V1;
+      val dokumentartModel = DokumentartModel.V1;
+      val dokumentartDTO = DokumentartDTO.V1;
       val content = "Testcontent";
       val erstelltAm = Instant.now();
 
-      val idModel = new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsArtModel);
+      val idModel = new WahlUndBezirkIDUndDokumentartModel(wahlbezirkID, wahlID, dokumentartModel);
       val mockedServiceResponse = new AusdruckReadModel(idModel, content, erstelltAm);
       val mockedServiceResponseAsDTO =
-          new AusdruckReadDTO(wahlbezirkID, wahlID, meldungsArtDto, content, erstelltAm);
+          new AusdruckReadDTO(wahlbezirkID, wahlID, dokumentartDTO, content, erstelltAm);
 
       Mockito.when(ausdruckService.getAusdruck(idModel))
           .thenReturn(Optional.of(mockedServiceResponse));
       Mockito.when(ausdruckDTOMapper.toDTO(mockedServiceResponse))
           .thenReturn(mockedServiceResponseAsDTO);
+      Mockito.when(dokumentartDTOMapper.toModel(dokumentartDTO)).thenReturn(dokumentartModel);
 
-      val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArtModel);
+      val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, dokumentartDTO);
 
-      Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO.content());
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-      Assertions.assertThat(result.getHeaders().get(HttpHeaders.CONTENT_TYPE).get(0))
-          .isEqualTo("text/html; charset=utf-8");
+      Assertions.assertThat(
+              Objects.requireNonNull(result.getHeaders().get(HttpHeaders.CONTENT_TYPE)).getFirst())
+          .isEqualTo("application/json");
     }
 
     @Test
     void should_returnNullBodyWithHttpStatusNotFound_when_serviceReturnsEmptyOptional() {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsArtModel = MeldungsartModel.V1;
+      val dokumentartDTO = DokumentartDTO.V1;
 
       Mockito.when(ausdruckService.getAusdruck(any())).thenReturn(Optional.empty());
-
-      val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArtModel);
+      val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, dokumentartDTO);
 
       Assertions.assertThat(result.getBody()).isNull();
       Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -89,20 +93,20 @@ class AusdruckControllerTest {
 
       val mockedAusdruckeModel1 =
           new AusdruckReadModel(
-              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V1),
+              new WahlUndBezirkIDUndDokumentartModel(wahlbezirkID, wahlID, DokumentartModel.V1),
               content,
               erstelltAm);
       val mockedAusdruckeModel2 =
           new AusdruckReadModel(
-              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V3),
+              new WahlUndBezirkIDUndDokumentartModel(wahlbezirkID, wahlID, DokumentartModel.V3),
               content,
               erstelltAm);
       val mockedServiceModel = List.of(mockedAusdruckeModel1, mockedAusdruckeModel2);
 
       val mockedAusdruckReadDTO1 =
-          new AusdruckReadDTO(wahlbezirkID, wahlID, MeldungsartDTO.V1, content, erstelltAm);
+          new AusdruckReadDTO(wahlbezirkID, wahlID, DokumentartDTO.V1, content, erstelltAm);
       val mockedAusdruckReadDTO2 =
-          new AusdruckReadDTO(wahlbezirkID, wahlID, MeldungsartDTO.V3, content, erstelltAm);
+          new AusdruckReadDTO(wahlbezirkID, wahlID, DokumentartDTO.V3, content, erstelltAm);
       val mockedMappedServiceDTO = List.of(mockedAusdruckReadDTO1, mockedAusdruckReadDTO2);
 
       Mockito.when(ausdruckService.getAllAusdrucke(wahlID, wahlbezirkID))
@@ -127,17 +131,17 @@ class AusdruckControllerTest {
     void should_callServiceWithAusdruckWriteModel_when_calledWithData() {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val meldungsArtModel = MeldungsartModel.V1;
+      val dokumentartModel = DokumentartModel.V1;
 
       val content = "Testcontent";
-      val idModel = new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsArtModel);
+      val idModel = new WahlUndBezirkIDUndDokumentartModel(wahlbezirkID, wahlID, dokumentartModel);
       val ausdruckWriteDTO = new AusdruckWriteDTO(content);
 
       val mockedAusdruckModel = new AusdruckWriteModel(idModel, content);
       Mockito.when(ausdruckDTOMapper.toModel(ausdruckWriteDTO, idModel))
           .thenReturn(mockedAusdruckModel);
 
-      unitUnderTest.postAusdruck(wahlID, wahlbezirkID, meldungsArtModel, ausdruckWriteDTO);
+      unitUnderTest.postAusdruck(wahlID, wahlbezirkID, dokumentartModel, ausdruckWriteDTO);
 
       Mockito.verify(ausdruckService).saveAusdruck(mockedAusdruckModel);
     }

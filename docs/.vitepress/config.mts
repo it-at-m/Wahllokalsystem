@@ -15,6 +15,9 @@ const PATH_MICROSERVICE_GENERATION = PATH_GUIDES + "new-microservice/";
 const PATH_SYSSPEC = PATH_TECHNIK + "systemspecification/";
 const PATH_SYSSPEC_BACKEND = PATH_SYSSPEC + "backend/";
 const PATH_TESTCONCEPTS = PATH_TECHNIK + "testconcepts/";
+const PATH_DSE = "/dse/";
+const PATH_DSE_PROZESS = PATH_DSE + "prozess/";
+const PATH_DSE_ERFASSUNG = PATH_DSE + "stimmzettelerfassung/";
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -32,7 +35,7 @@ export default withMermaid({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "About", link: "/about/" },
-      { text: "DSE", link: "/dse/" },
+      { text: "DSE", link: PATH_DSE },
       { text: "Services", link: "/services/" },
       { text: "Technik", link: `${PATH_TECHNIK}get_started` },
     ],
@@ -48,6 +51,14 @@ export default withMermaid({
     },
 
     sidebar: {
+      [PATH_DSE]: [
+        { text: "Prozess", link: `${PATH_DSE_PROZESS}`, collapsed: false },
+        {
+          text: "Stimmzettelerfassung",
+          link: `${PATH_DSE_ERFASSUNG}`,
+          collapsed: false,
+        },
+      ],
       [PATH_TECHNIK]: [
         {
           text: "Getting Started",
@@ -133,6 +144,10 @@ export default withMermaid({
               link: `${PATH_ADR}adr-time-format.md`,
             },
             {
+              text: "Verzicht auf Annotation von HttpStatus OK bei Controllern",
+              link: `${PATH_ADR}adr-keine-annotation-von-default-http-status-ok.md`,
+            },
+            {
               text: "UI/UX",
               link: `${PATH_ADR_UI}`,
               collapsed: true,
@@ -172,6 +187,14 @@ export default withMermaid({
                 {
                   text: "Anzeige der Buttons bei unvollständigen Formularen",
                   link: `${PATH_ADR_UI}adr009-button-status.md`,
+                },
+                {
+                  text: "Vergabe von Stimmen auf dem Stimmzettel",
+                  link: `${PATH_ADR_UI}adr010-dse-stimmvergabe-stimmen-ergaenzen.md`,
+                },
+                {
+                  text: "Farbschema der Eingabehistorie",
+                  link: `${PATH_ADR_UI}adr011-dse-farbschema-eingabehistorie.md`,
                 },
               ],
             },
@@ -214,6 +237,14 @@ export default withMermaid({
             },
             { text: "Datenbankzugriff", link: `${PATH_GUIDES}db-access.md` },
             {
+              text: "Erfasste Nutzerdaten bereinigen",
+              link: `${PATH_GUIDES}user-data-cleanup.md`,
+            },
+            {
+              text: "Stimmzettel duplizieren",
+              link: `${PATH_GUIDES}duplicate-stimmzettel.md`,
+            },
+            {
               text: "Microservice anlegen",
               link: `${PATH_MICROSERVICE_GENERATION}`,
               collapsed: true,
@@ -229,10 +260,6 @@ export default withMermaid({
               ],
             },
             { text: "Mock-Server", link: `${PATH_GUIDES}mock-server.md` },
-            {
-              text: "ArchUnit Rules Testen",
-              link: `${PATH_GUIDES}archunit-rule-tests.md`,
-            },
             {
               text: "Aktualisierung von Images",
               link: `${PATH_GUIDES}update-images.md`,

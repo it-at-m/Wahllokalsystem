@@ -1,17 +1,19 @@
 export function useCryptoUtils() {
   const algorithm = { name: "AES-GCM", iv: new Uint8Array(16) };
 
-  async function encrypt(data: string | undefined, key: CryptoKey | null) {
+  async function encrypt(data: string | ArrayBuffer, key: CryptoKey | null) {
     if (!key) {
       throw new Error(
         "Verschlüsselung kann ohne CryptoKey nicht durchgeführt werden."
       );
     }
-    return await crypto.subtle.encrypt(
-      algorithm,
-      key,
-      new TextEncoder().encode(data)
-    );
+    let bufferToEncrypt: BufferSource | undefined;
+    if (typeof data === "string") {
+      bufferToEncrypt = new TextEncoder().encode(data);
+    } else {
+      bufferToEncrypt = data;
+    }
+    return await crypto.subtle.encrypt(algorithm, key, bufferToEncrypt);
   }
 
   async function decrypt(
@@ -29,11 +31,9 @@ export function useCryptoUtils() {
     } else {
       dataBuffer = data ?? new ArrayBuffer();
     }
-    const result =
-      dataBuffer.byteLength === 0
-        ? new ArrayBuffer()
-        : await crypto.subtle.decrypt(algorithm, key, dataBuffer);
-    return new TextDecoder("utf-8").decode(result);
+    return dataBuffer.byteLength === 0
+      ? new ArrayBuffer()
+      : await crypto.subtle.decrypt(algorithm, key, dataBuffer);
   }
 
   async function importKey(password: string) {

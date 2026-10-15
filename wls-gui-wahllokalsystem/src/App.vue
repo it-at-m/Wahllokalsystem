@@ -21,11 +21,11 @@
     <the-testseite-drucken-dialog v-if="showTestdruckDialog" />
     <the-broadcast-read-confirmation-dialog />
     <the-wahlvorstand-anwesenheits-check-popup-dialog
-      v-if="isUWB && isTimeToCheckAnwesenheitInFuture"
+      v-if="isUWB && hasRoleSchriftfuehrung && isTimeToCheckAnwesenheitInFuture"
       data-test="wahlvorstand-anwesenheits-check-popup-dialog"
     />
     <the-wahlschluss-check-popup-dialog
-      v-if="isTimeToCheckWahlschlussInFuture"
+      v-if="hasRoleSchriftfuehrung && isTimeToCheckWahlschlussInFuture"
     />
   </v-app>
 </template>
@@ -39,6 +39,7 @@ import TheWahlschlussCheckPopupDialog from "@/components/wahlhandlung/TheWahlsch
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDruckenDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
+import { useAppUtils } from "@/composables/appUtils.ts";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
@@ -68,6 +69,8 @@ const { isTodayOrFuture } = useDateTimeUtils();
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
+const { initStimmzettelerfassungTeamStatus } = useAppUtils();
+
 const isTimeToCheckAnwesenheitInFuture = computed(() =>
   dateTimeToCheckAnwesenheit.value
     ? isTodayOrFuture(dateTimeToCheckAnwesenheit.value)
@@ -92,10 +95,11 @@ onMounted(async () => {
     isOfflineCacheReady.value = await awaitServiceWorkerActive();
     await syncPin();
     await wahlenActions.initWahlen();
-    if (isBWB.value) {
+    if (isBWB.value && hasRoleSchriftfuehrung.value) {
       await initIsNachlieferungsbezirk();
     }
     await useKopfdatenStore().initKopfdaten();
+    await initStimmzettelerfassungTeamStatus();
     await initTasks();
 
     showTestdruckDialog.value = true;

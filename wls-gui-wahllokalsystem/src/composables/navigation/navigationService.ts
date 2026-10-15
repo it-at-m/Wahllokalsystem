@@ -17,9 +17,11 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import {
   MBWNextStepImpl,
   NullNextStepImpl,
@@ -46,6 +48,7 @@ export function useNavigationService() {
   const workflowStore = useWorkflowStore();
   const wahlenStore = useWahlenStore();
   const userStore = useUserStore();
+  const infomanagementStore = useInfomanagementStore();
 
   function routeWithName(routeName: string): RouteLocationAsRelativeGeneric {
     return {
@@ -64,64 +67,133 @@ export function useNavigationService() {
   }
 
   function getNextRoute(): RouteLocationAsRelativeGeneric {
-    // check all elections in their order
-    const metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
-      (wahlMetaData) =>
-        !workflowStore.isElectionFinished(
-          wahlMetaData.wahlID,
-          wahlMetaData.wahlbezirkID
-        )
-    );
+    //No valid role
+    if (
+      !userStore.hasRoleSchriftfuehrung &&
+      (!userStore.hasRoleErfassungsteam || !infomanagementStore.isDseAktiv)
+    ) {
+      return routeWithName(ROUTES_HOME);
+    }
 
+    // check all elections in their order
+    let metaDataOfFirstUnfinishedElection;
+
+    // DSE Erfassungsteam
+    if (userStore.hasRoleErfassungsteam) {
+      metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
+        (wahlMetaData) =>
+          !workflowStore.isStepDone(
+            wahlMetaData.wahlID,
+            wahlMetaData.wahlbezirkID,
+            MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG
+          )
+      );
+    }
+    // Schriftführung (DSE & Stapelbearbeitung)
+    else if (userStore.hasRoleSchriftfuehrung) {
+      metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
+        (wahlMetaData) =>
+          !workflowStore.isElectionFinished(
+            wahlMetaData.wahlID,
+            wahlMetaData.wahlbezirkID
+          )
+      );
+    }
+
+    //no not-finished election found
     if (!metaDataOfFirstUnfinishedElection) {
       return routeWithName(ROUTE_FINISHED);
     }
 
     // check if a non election specific step is next
-    if (!workflowStore.isWahlvorstandErfasst) {
+    if (
+      !workflowStore.isWahlvorstandErfasst &&
+      userStore.hasRoleSchriftfuehrung
+    ) {
       return routeWithName(ROUTE_WAHLVORSTAND);
     }
 
     // check wahlbriefzulassung steps (BWB)
-    if (userStore.isBWB && !workflowStore.isWahleroeffnungErfasst) {
+    if (
+      userStore.isBWB &&
+      userStore.hasRoleSchriftfuehrung &&
+      !workflowStore.isWahleroeffnungErfasst
+    ) {
       return routeWithName(ROUTE_BEGINN_STIMMABGABE);
     }
-    if (userStore.isBWB && !workflowStore.isWahlumgebungErfasst) {
+    if (
+      userStore.isBWB &&
+      userStore.hasRoleSchriftfuehrung &&
+      !workflowStore.isWahlumgebungErfasst
+    ) {
       return routeWithName(ROUTE_WAHLUMGEBUNG);
     }
-    if (userStore.isBWB && !workflowStore.isWahlbriefeErfassenErfasst) {
+    if (
+      userStore.isBWB &&
+      userStore.hasRoleSchriftfuehrung &&
+      !workflowStore.isWahlbriefeErfassenErfasst
+    ) {
       return routeWithName(ROUTE_ERFASSUNG_WAHLBRIEFE);
     }
-    if (userStore.isBWB && !workflowStore.isWahlbriefeZulassenErfasst) {
+    if (
+      userStore.isBWB &&
+      userStore.hasRoleSchriftfuehrung &&
+      !workflowStore.isWahlbriefeZulassenErfasst
+    ) {
       return routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN);
     }
     if (
       userStore.isBWB &&
       userStore.isNachlieferungsbezirk &&
+      userStore.hasRoleSchriftfuehrung &&
       !workflowStore.isNachlieferungenBearbeitenErfasst
     ) {
       return routeWithName(ROUTE_NACHLIEFERUNGEN_BEARBEITEN);
     }
 
     // check wahlhandlung steps (UWB)
-    if (userStore.isUWB && !workflowStore.isWahlumgebungErfasst) {
+    if (
+      userStore.isUWB &&
+      userStore.hasRoleSchriftfuehrung &&
+      !workflowStore.isWahlumgebungErfasst
+    ) {
       return routeWithName(ROUTE_WAHLUMGEBUNG);
     }
-    if (userStore.isUWB && !workflowStore.isWaehlerverzeichnisErfasst) {
+    if (
+      userStore.isUWB &&
+      userStore.hasRoleSchriftfuehrung &&
+      !workflowStore.isWaehlerverzeichnisErfasst
+    ) {
       return routeWithName(ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS);
     }
-    if (userStore.isUWB && !workflowStore.isWahleroeffnungErfasst) {
+    if (
+      userStore.isUWB &&
+      userStore.hasRoleSchriftfuehrung &&
+      !workflowStore.isWahleroeffnungErfasst
+    ) {
       return routeWithName(ROUTE_BEGINN_STIMMABGABE);
     }
-    if (userStore.isUWB && !workflowStore.isStimmabgabeErfasst) {
+    if (
+      userStore.isUWB &&
+      userStore.hasRoleSchriftfuehrung &&
+      !workflowStore.isStimmabgabeErfasst
+    ) {
       return routeWithName(ROUTE_STIMMABGABE);
     }
 
     // check auszählung steps
-    if (userStore.isBWB && !workflowStore.isAnzahlWahlscheineErfasst) {
+    if (
+      userStore.isBWB &&
+      userStore.hasRoleSchriftfuehrung &&
+      !workflowStore.isAnzahlWahlscheineErfasst
+    ) {
       return routeWithName(ROUTE_WAHLSCHEINE);
     }
-    if (userStore.isUWB && !workflowStore.isStimmabgabevermerkeErfasst) {
+    if (
+      userStore.isUWB &&
+      userStore.hasRoleSchriftfuehrung &&
+      !workflowStore.isStimmabgabevermerkeErfasst
+    ) {
       return routeWithName(ROUTE_STIMMABGABEVERMERKE);
     }
 

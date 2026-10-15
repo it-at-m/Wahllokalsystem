@@ -44,7 +44,8 @@ public class User extends BaseEntity {
             user.getWahlbezirksArt(),
             user.getPin(),
             user.getAuthorities(),
-            user.getWbid_wahlnummer());
+            user.getWbid_wahlnummer(),
+            user.getTeamID());
     copy.setId(user.getId());
 
     return copy;
@@ -83,4 +84,6 @@ public class User extends BaseEntity {
   private Set<Authority> authorities;
 
   @ToString.Include private String wbid_wahlnummer;
+
+  @ToString.Include private String teamID;
 }

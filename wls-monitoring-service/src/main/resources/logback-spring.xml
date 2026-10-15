@@ -19,30 +19,19 @@
             </encoder>
         </appender>
 
-        <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem.monitoringservice"
-                level="debug"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
-        <logger name="de.muenchen.allgemein"
-                level="debug"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
-        <logger name="org.springframework.cache"
-                level="trace"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
-        <logger name="org.springframework.web"
-                level="debug"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
+        <!-- Logger: only set levels; appenders are configured on the root logger -->
+        <logger name="de.muenchen.oss.wahllokalsystem.monitoringservice" level="debug" />
+        <logger name="de.muenchen.allgemein" level="debug" />
+        <logger name="org.springframework.cache" level="trace" />
+        <logger name="org.springframework.web" level="debug" />
+        <!-- use debug to see the users authorities -->
+        <logger name="de.muenchen.oss.wahllokalsystem.monitoringservice.configuration.UserInfoAuthoritiesRetriever" level="debug" />
+        <!-- use debug to see how headers and payload are nfc handled -->
+        <logger name="de.muenchen.oss.wahllokalsystem.monitoringservice.configuration.nfcconverter" level="debug" />
+        <!-- use debug to see sql queries logged -->
+        <logger name="org.hibernate.SQL" level="debug" />
+        <!-- requires spring.jpa.properties.hibernate.generate_statistics=true -->
+        <logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" level="debug" />
 
         <!-- Logger usage -->
         <root level="info">
@@ -86,24 +75,17 @@
             </encoder>
         </appender>
 
-        <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem.monitoringservice"
-                level="info"
-                additivity="false">
-            <appender-ref ref="JSON_STDOUT" />
-        </logger>
-
-        <logger name="de.muenchen.allgemein"
-                level="info"
-                additivity="false">
-            <appender-ref ref="JSON_STDOUT" />
-        </logger>
-
-        <logger name="org.springframework.web"
-                level="info"
-                additivity="false">
-            <appender-ref ref="JSON_STDOUT" />
-        </logger>
+        <!-- Logger: only set levels; appenders are configured on the root logger -->
+        <logger name="de.muenchen.oss.wahllokalsystem.monitoringservice" level="warn" />
+        <logger name="de.muenchen.allgemein" level="warn" />
+        <logger name="org.springframework.web" level="warn" />
+        <!-- set to debug locally if needed to see authorities -->
+        <logger name="de.muenchen.oss.wahllokalsystem.monitoringservice.configuration.UserInfoAuthoritiesRetriever" level="warn" />
+        <!-- set to debug locally if needed to see NFC handling -->
+        <logger name="de.muenchen.oss.wahllokalsystem.monitoringservice.configuration.nfcconverter" level="warn" />
+        <!-- sql and hibernate statistics -->
+        <logger name="org.hibernate.SQL" level="warn" />
+        <logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" level="warn" />
 
         <!-- Logger usage -->
         <root level="info">

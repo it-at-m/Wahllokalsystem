@@ -6,20 +6,51 @@ import type {
 
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
+import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
 import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  loadDseWorkflowStatus: vi.fn(),
+  loadErfassungTeamStatus: vi.fn(),
+}));
+
+vi.mock(
+  "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts",
+  () => ({
+    useDseWorkflowStatusService: () => ({
+      loadDseWorkflowStatus: mockDefinitions.loadDseWorkflowStatus,
+    }),
+  })
+);
+vi.mock(
+  "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts",
+  () => ({
+    useStimmzettelerfassungTeamStatusService: () => ({
+      loadErfassungTeamStatus: mockDefinitions.loadErfassungTeamStatus,
+    }),
+  })
+);
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
+const { prepareStimmzettelerfassungStatus } =
+  useStimmzettelerfassungStatusTestDataFactory();
+const { prepareStimmzettelerfassungTeamStatus } =
+  useStimmzettelerfassungTeamStatusTestDataFactory();
 
 describe("navigationGuards.ts", () => {
   const DUMMY_TO = {} as unknown as RouteLocationNormalized;
@@ -52,6 +83,12 @@ describe("navigationGuards.ts", () => {
     requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
     requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
     requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+    requireRoleErfassungteam,
+    requireRoleSchriftfuehrung,
+    requiresWorkflowStatusStimmzettelerfassungAbgeschlossen,
+    requiresStimmzettelErfassungTeamStatusAbgeschlossen,
+    requiresIsDseAktiv,
+    requiresIsDseInaktiv,
   } = useNavigationGuards();
 
   describe("isStepDoneInElectionState", () => {
@@ -715,5 +752,253 @@ describe("navigationGuards.ts", () => {
       );
       expect(result).toStrictEqual(true);
     });
+  });
+
+  describe("requireRoleErfassungteam", () => {
+    it("should_returnTrue_when_userHasRoleErfassungsTeam", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleErfassungsteam = true;
+      expect(
+        requireRoleErfassungteam(DUMMY_TO, DUMMY_FROM, DUMMY_NEXT_GUARD)
+      ).toStrictEqual(true);
+    });
+    it("should_returnFalse_when_userHasNoRoleErfassungsTeam", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleErfassungsteam = false;
+      expect(
+        requireRoleErfassungteam(DUMMY_TO, DUMMY_FROM, DUMMY_NEXT_GUARD)
+      ).toStrictEqual(false);
+    });
+  });
+
+  describe("requireRoleSchriftfuehrung", () => {
+    it("should_returnTrue_when_userHasRoleSchriftfuehrung", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleSchriftfuehrung = true;
+      expect(
+        requireRoleSchriftfuehrung(DUMMY_TO, DUMMY_FROM, DUMMY_NEXT_GUARD)
+      ).toStrictEqual(true);
+    });
+    it("should_returnFalse_when_userHasNoRoleSchriftfuehrung", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().hasRoleSchriftfuehrung = false;
+      expect(
+        requireRoleSchriftfuehrung(DUMMY_TO, DUMMY_FROM, DUMMY_NEXT_GUARD)
+      ).toStrictEqual(false);
+    });
+  });
+
+  describe("requiresWorkflowStatusStimmzettelerfassungAbgeschlossen", () => {
+    it("should_returnTrue_when_stimmzettelErfassungStatusIsSteAbgeschlossen", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      mockDefinitions.loadDseWorkflowStatus.mockReturnValue(
+        prepareStimmzettelerfassungStatus()
+          .status(StimmzettelerfassungStatusEnum.SteAbgeschlossen)
+          .build()
+      );
+
+      const result =
+        await requiresWorkflowStatusStimmzettelerfassungAbgeschlossen(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+      expect(mockDefinitions.loadDseWorkflowStatus.mock.calls[0]).toStrictEqual(
+        [wahlId, wahlbezirkId, false]
+      );
+      expect(result).toStrictEqual(true);
+    });
+    it("should_returnTrue_when_stimmzettelErfassungStatusIsBeAbgeschlossen", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      mockDefinitions.loadDseWorkflowStatus.mockReturnValue(
+        prepareStimmzettelerfassungStatus()
+          .status(StimmzettelerfassungStatusEnum.BeAbgeschlossen)
+          .build()
+      );
+
+      const result =
+        await requiresWorkflowStatusStimmzettelerfassungAbgeschlossen(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+      expect(mockDefinitions.loadDseWorkflowStatus.mock.calls[0]).toStrictEqual(
+        [wahlId, wahlbezirkId, false]
+      );
+      expect(result).toStrictEqual(true);
+    });
+    it("should_returnFalse_when_stimmzettelErfassungStatusIsInBearbeitung", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      mockDefinitions.loadDseWorkflowStatus.mockReturnValue(
+        prepareStimmzettelerfassungStatus()
+          .status(StimmzettelerfassungStatusEnum.SteBearbeitung)
+          .build()
+      );
+
+      const result =
+        await requiresWorkflowStatusStimmzettelerfassungAbgeschlossen(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+      expect(mockDefinitions.loadDseWorkflowStatus.mock.calls[0]).toStrictEqual(
+        [wahlId, wahlbezirkId, false]
+      );
+      expect(result).toStrictEqual(false);
+    });
+    it("should_returnFalse_when_stimmzettelErfassungStatusIsNull", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      mockDefinitions.loadDseWorkflowStatus.mockReturnValue(null);
+
+      const result =
+        await requiresWorkflowStatusStimmzettelerfassungAbgeschlossen(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+      expect(mockDefinitions.loadDseWorkflowStatus.mock.calls[0]).toStrictEqual(
+        [wahlId, wahlbezirkId, false]
+      );
+      expect(result).toStrictEqual(false);
+    });
+  });
+
+  describe("requiresStimmzettelErfassungTeamStatusAbgeschlossen", () => {
+    it("should_returnTrue_when_stimmzettelErfassungTeamStatusIsAbgeschlossen", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const teamId = "A";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      // @ts-expect-error: cannot set readonly
+      useUserStore().currentUserTeamName = teamId;
+
+      mockDefinitions.loadErfassungTeamStatus.mockReturnValue(
+        prepareStimmzettelerfassungTeamStatus()
+          .status(StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN)
+          .build()
+      );
+
+      const result = await requiresStimmzettelErfassungTeamStatusAbgeschlossen(
+        to,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+
+      expect(
+        mockDefinitions.loadErfassungTeamStatus.mock.calls[0]
+      ).toStrictEqual([wahlId, wahlbezirkId, teamId, false]);
+      expect(result).toStrictEqual(true);
+    });
+    it("should_returnFalse_when_stimmzettelErfassungTeamStatusIsNotAbgeschlossen", async () => {
+      const wahlId = "wahlId";
+      const wahlbezirkId = "wahlbezirkId";
+      const teamId = "A";
+      const to = {
+        params: {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        },
+      } as unknown as RouteLocationNormalized;
+
+      // @ts-expect-error: cannot set readonly
+      useUserStore().currentUserTeamName = teamId;
+
+      mockDefinitions.loadErfassungTeamStatus.mockReturnValue(
+        prepareStimmzettelerfassungTeamStatus()
+          .status(StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG)
+          .build()
+      );
+
+      const result = await requiresStimmzettelErfassungTeamStatusAbgeschlossen(
+        to,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+
+      expect(
+        mockDefinitions.loadErfassungTeamStatus.mock.calls[0]
+      ).toStrictEqual([wahlId, wahlbezirkId, teamId, false]);
+      expect(result).toStrictEqual(false);
+    });
+  });
+
+  describe("requiresIsDseAktiv", () => {
+    it.each([true, false])(
+      "should_returnSameValue_when_dseIsAktivIs%s",
+      async (isDseAktiv) => {
+        const to = {} as unknown as RouteLocationNormalized;
+
+        // @ts-expect-error: cannot set readonly
+        useInfomanagementStore().isDseAktiv = isDseAktiv;
+        const result = await requiresIsDseAktiv(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+        expect(result).toStrictEqual(isDseAktiv);
+      }
+    );
+  });
+
+  describe("requiresIsNotDseAktiv", () => {
+    it.each([true, false])(
+      "should_returnNegatedValue_when_dseIsAktivIs%s",
+      async (isDseAktiv) => {
+        const to = {} as unknown as RouteLocationNormalized;
+
+        // @ts-expect-error: cannot set readonly
+        useInfomanagementStore().isDseAktiv = isDseAktiv;
+        const result = await requiresIsDseInaktiv(
+          to,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+
+        expect(result).toStrictEqual(!isDseAktiv);
+      }
+    );
   });
 });

@@ -1,0 +1,6 @@
+ALTER TABLE Wlsuser
+    ADD COLUMN teamID VARCHAR(255);
+
+UPDATE Wlsuser
+SET teamID = 'A'
+WHERE teamID IS NULL;

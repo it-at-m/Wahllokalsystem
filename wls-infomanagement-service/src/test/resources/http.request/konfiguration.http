@@ -17,12 +17,27 @@ Content-Type: application/json
   "standardwert": "neuer Standardwert"
 }
 
+### POST konfiguration DSE_AKTIV
+POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfiguration/DSE_AKTIV
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wert": "true",
+  "beschreibung": "true or false; 1 or 0",
+  "standardwert": "true"
+}
+
 ### get konfiguration FRUEHESTE_EROEFFNUNGSZEIT
 GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfiguration/FRUEHESTE_EROEFFNUNGSZEIT
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### get KENNBUCHSTABEN
 GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/kennbuchstaben
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### get DSE_AKTIV
+GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfiguration/DSE_AKTIV
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### get wilkommenstext as anonymous

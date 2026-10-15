@@ -1,0 +1,1 @@
+ALTER TABLE Beschlussgrund RENAME TO WahlvorstandBeschlussgrund;

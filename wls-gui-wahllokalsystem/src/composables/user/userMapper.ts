@@ -8,6 +8,7 @@ export function useUserMapper() {
 
     _assertIsNotBlank(userDto.username, "username");
     _assertIsNotUndefinedOrNull(userDto.userEnabled, "userEnabled");
+    _assertIsNotBlank(userDto.teamID, "teamID");
     _assertIsNotBlank(userDto.wahltagID, "wahltagID");
     _assertIsNotBlank(userDto.wahltag, "wahltag");
     _assertIsNotBlank(userDto.wahlbezirkID, "wahlbezirkID");
@@ -26,6 +27,7 @@ export function useUserMapper() {
     return {
       username: userDto.username,
       email: userDto.email,
+      teamName: userDto.teamID,
       userEnabled: userDto.userEnabled,
       wahltagID: userDto.wahltagID,
       wahltag: userDto.wahltag,
@@ -35,7 +37,7 @@ export function useUserMapper() {
       pin: userDto.pin,
       authorities: userDto.authorities,
       wahlMetaData: _parseWbIdWahlnummer(userDto.wbid_wahlnummer),
-    } as User;
+    };
 
     function _assertIsNotBlank(
       value: string | undefined | null,

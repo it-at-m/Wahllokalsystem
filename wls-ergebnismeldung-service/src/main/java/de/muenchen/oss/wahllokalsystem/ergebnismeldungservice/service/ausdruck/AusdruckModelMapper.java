@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Ausdruck;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndDokumentart;
 import java.time.Instant;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,15 +9,15 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface AusdruckModelMapper {
 
-  @Mapping(target = "wahlUndBezirkIDUndMeldungsartModel", source = "wahlUndBezirkIDUndMeldungsart")
+  @Mapping(target = "wahlUndBezirkIDUndDokumentartModel", source = "wahlUndBezirkIDUndDokumentart")
   AusdruckReadModel toModel(Ausdruck entity);
 
   @Mapping(
-      target = "wahlUndBezirkIDUndMeldungsart",
-      source = "model.wahlUndBezirkIDUndMeldungsartModel")
+      target = "wahlUndBezirkIDUndDokumentart",
+      source = "model.wahlUndBezirkIDUndDokumentartModel")
   Ausdruck toEntity(AusdruckWriteModel model, Instant erstelltAm);
 
-  WahlUndBezirkIDUndMeldungsartModel toModel(WahlUndBezirkIDUndMeldungsart entity);
+  WahlUndBezirkIDUndDokumentartModel toModel(WahlUndBezirkIDUndDokumentart entity);
 
-  WahlUndBezirkIDUndMeldungsart toEntity(WahlUndBezirkIDUndMeldungsartModel model);
+  WahlUndBezirkIDUndDokumentart toEntity(WahlUndBezirkIDUndDokumentartModel model);
 }

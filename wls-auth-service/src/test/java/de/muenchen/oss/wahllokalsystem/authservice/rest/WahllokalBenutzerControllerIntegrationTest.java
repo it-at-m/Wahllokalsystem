@@ -125,16 +125,19 @@ class WahllokalBenutzerControllerIntegrationTest {
       val oldUser1 = new User();
       oldUser1.setUsername("oldUser1");
       oldUser1.setWahltagID(wahltagID);
+      oldUser1.setTeamID("");
       val oldUser1Saved = userRepository.save(oldUser1);
 
       val oldUser2 = new User();
       oldUser2.setUsername("oldUser2");
       oldUser2.setWahltagID(wahltagID);
+      oldUser2.setTeamID("");
       val oldUser2Saved = userRepository.save(oldUser2);
 
       val oldUserToKeep = new User();
       oldUserToKeep.setUsername("userToKeep");
       oldUserToKeep.setWahltagID("other" + wahltagID);
+      oldUserToKeep.setTeamID("");
       val oldUserToKeepSaved = userRepository.save(oldUserToKeep);
 
       val wahltag = LocalDate.now();
@@ -219,6 +222,7 @@ class WahllokalBenutzerControllerIntegrationTest {
 
     user.setUsername(username);
     user.setWahltagID(wahltagID);
+    user.setTeamID("");
 
     return user;
   }

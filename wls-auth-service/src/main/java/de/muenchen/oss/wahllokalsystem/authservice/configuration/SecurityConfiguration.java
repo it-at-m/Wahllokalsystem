@@ -42,6 +42,8 @@ import org.springframework.security.config.annotation.web.configurers.LogoutConf
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
@@ -117,7 +119,7 @@ public class SecurityConfiguration {
                         // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
                         PathPatternRequestMatcher.withDefaults().matcher("/actuator/metrics"),
                         PathPatternRequestMatcher.withDefaults().matcher("/v3/api-docs/**"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/webjars/swagger-ui/**"),
                         PathPatternRequestMatcher.withDefaults().matcher("/"),
                         PathPatternRequestMatcher.withDefaults().matcher("/home"),
                         PathPatternRequestMatcher.withDefaults().matcher("/css/*"),
@@ -153,6 +155,13 @@ public class SecurityConfiguration {
   public RegisteredClientRepository registeredClientRepository(
       final JdbcOperations jdbcOperations) {
     return new JdbcRegisteredClientRepository(jdbcOperations);
+  }
+
+  @Bean
+  public OAuth2AuthorizationService authorizationService(
+      final JdbcOperations jdbcOperations,
+      final RegisteredClientRepository registeredClientRepository) {
+    return new JdbcOAuth2AuthorizationService(jdbcOperations, registeredClientRepository);
   }
 
   @Bean

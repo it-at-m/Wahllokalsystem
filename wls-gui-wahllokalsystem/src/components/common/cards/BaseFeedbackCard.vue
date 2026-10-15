@@ -12,6 +12,7 @@
     <v-card-text>
       <div class="d-flex align-center">
         <v-icon
+          v-if="!hideIcon"
           :color="iconColor"
           class="mr-5"
           :icon="icon"
@@ -51,6 +52,7 @@ const slots = useSlots();
 const props = defineProps<{
   title: string;
   type: InputFeedbackTypeEnum;
+  hideIcon?: boolean;
 }>();
 
 const icon = computed(() => getIconForInputFeedbackType(props.type));

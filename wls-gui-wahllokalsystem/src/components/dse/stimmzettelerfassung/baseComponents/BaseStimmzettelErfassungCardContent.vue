@@ -127,7 +127,7 @@ const stimmzettelManager = defineModel("modelValue", {
 
 const props = defineProps({
   stimmzettel: {
-    type: Object as PropType<PersistedStimmzettel | null>,
+    type: [Object, null] as PropType<PersistedStimmzettel | null>,
     required: true,
   },
   wahlvorschlaege: {

@@ -126,7 +126,6 @@ const teamID = userStore.currentUserTeamName || "";
 const wahlID = (route.params.wahlId as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 const isErfassungsDialogPreloaded = ref(false);
-let idleCallbackId: number | undefined;
 let preloadTimeoutId: number | undefined;
 
 const templateRefStimmzettelBeendenDialog = useTemplateRef<
@@ -160,26 +159,15 @@ const startNewStimmzettelButtonText = computed(() =>
     ? "Fortsetzen"
     : "Starten"
 );
-
 onMounted(() => {
-  // Mount the dialog shell only when the browser is idle. Its ballot content preloads in batches.
-  if (window.requestIdleCallback) {
-    idleCallbackId = window.requestIdleCallback(() => {
-      isErfassungsDialogPreloaded.value = true;
-    });
-  } else {
-    // Fallback for browsers lacking requestIdleCallback support. The dialog shell is lightweight.
-    preloadTimeoutId = window.setTimeout(() => {
-      isErfassungsDialogPreloaded.value = true;
-    });
-  }
+  // Mount the dialog shell with simple timeout - main page renders without blocking
+  preloadTimeoutId = window.setTimeout(() => {
+    isErfassungsDialogPreloaded.value = true;
+  }, 50); // Minimal delay to ensure the correct render order
 });
 
 onBeforeUnmount(() => {
-  if (idleCallbackId !== undefined) {
-    window.cancelIdleCallback(idleCallbackId);
-  }
-  if (preloadTimeoutId !== undefined) {
+  if (preloadTimeoutId) {
     window.clearTimeout(preloadTimeoutId);
   }
 });
@@ -245,6 +233,7 @@ async function onStimmzettelBearbeitenClicked(
 async function preloadErfassungsDialog() {
   if (!isErfassungsDialogPreloaded.value) {
     isErfassungsDialogPreloaded.value = true;
+    // update dialog DOM
     await nextTick();
   }
 }

@@ -45,8 +45,7 @@ werden entsprechend markiert und mit einem oder mehreren `Vormerkungsgründen` v
 Um eine möglichst intuitive Erfassung der Stimmen des Stimmzettels zu ermöglichen, haben wir
 [Regeln](/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen) definiert.
 
-Zur schnelleren Erfassung können spezielle [Kurzbefehle](/dse/stimmzettelerfassung/index#kurzbefehle-fur-die-erfassung)
-verwendet werden.
+Für die Erfassung werden spezielle [Kurzbefehle](/dse/stimmzettelerfassung/index#kurzbefehle-fur-die-erfassung) verwendet.
 
 ### (3) Stimmzettel ablegen
 

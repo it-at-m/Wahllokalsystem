@@ -20,6 +20,9 @@ export function useStimmzettelErfassungViewUtils(
 ) {
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
   const isStatusLoading = ref(false);
+  const statusBeingWritten = ref<StimmzettelerfassungTeamStatusEnum | null>(
+    null
+  );
   const activeStimmzettel: Ref<PersistedStimmzettel | null> = ref(null);
 
   //DialogVisibilityState
@@ -89,14 +92,19 @@ export function useStimmzettelErfassungViewUtils(
     const newStatus: StimmzettelerfassungTeamStatus = {
       status: statusToChange,
     };
-    await erfassungTeamStatusService.postErfassungTeamStatus(
-      wahlID,
-      wahlbezirkID,
-      teamID,
-      newStatus,
-      sendNotification
-    );
-    teamStatus.value = newStatus;
+    statusBeingWritten.value = statusToChange;
+    try {
+      await erfassungTeamStatusService.postErfassungTeamStatus(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        newStatus,
+        sendNotification
+      );
+      teamStatus.value = newStatus;
+    } finally {
+      statusBeingWritten.value = null;
+    }
   }
 
   return {
@@ -106,6 +114,7 @@ export function useStimmzettelErfassungViewUtils(
     isErfassungsDialogVisible,
     isKennungsDialogVisible,
     isStatusLoading: readonly(isStatusLoading),
+    statusBeingWritten: readonly(statusBeingWritten),
 
     //actions
     ensureStatusInBearbeitung,

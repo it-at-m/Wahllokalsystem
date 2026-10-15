@@ -82,9 +82,11 @@ export function useStimmzettelerfassungTeamStatusService() {
         );
       const responseData = getNullOn204OrElseResponseData(response);
 
-      return responseData?.map((teamStatusDTO) =>
+      return (
+        responseData?.map((teamStatusDTO) =>
           dtoEntryToModelEntry(teamStatusDTO)
-      ) ?? [];
+        ) ?? []
+      );
     } catch {
       const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
       if (sendNotification) {
@@ -116,12 +118,7 @@ export function useStimmzettelerfassungTeamStatusService() {
           modelToDto(status),
           axiosConfigWrapper().requestAsOnlineOnly()
         );
-      if (sendNotification) {
-        addNotification(
-          `Team-Status für ${wahlname} erfolgreich gespeichert.`,
-          UserNotificationCategoryEnum.SUCCESS
-        );
-      }
+
       return dtoToModel(savedStatus.data);
     } catch {
       if (sendNotification) {

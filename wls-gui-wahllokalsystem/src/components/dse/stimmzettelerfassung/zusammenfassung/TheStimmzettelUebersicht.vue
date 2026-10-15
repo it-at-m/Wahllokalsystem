@@ -3,27 +3,50 @@
     <base-stimmzettel-uebersicht-table
       :team-id="teamId"
       :stimmzettel-liste="stimmzettelListe"
-      :stimmzettel-loading="isStimmzettelLoading"
+      :stimmzettel-loading="isStimmzettelLoading || isWahlvorschlaegeLoading"
       class="mt-3"
       :bearbeitung-disabled="
-        isStatusLoading || hasTeamFinishedErfassung || isElectionFinished
+        isStatusLoading ||
+        statusBeingWritten !== null ||
+        hasTeamFinishedErfassung ||
+        isElectionFinished
       "
       @stimmzettel-bearbeiten="onStimmzettelBearbeitenClicked"
     />
-    <v-card-actions v-if="!isStatusLoading">
+    <v-card-actions>
       <div
         v-if="!hasTeamFinishedErfassung && !isElectionFinished"
         class="d-flex w-100"
       >
         <base-text-button
           :active="startenBtnActive"
+          :is-disabled="
+            isAnotherStatusBeingWritten(
+              StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+            )
+          "
+          :loading="
+            isStatusLoading ||
+            statusBeingWritten ===
+              StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+          "
           class="mr-5"
           @click="onErfassungStartenClicked"
         >
           {{ startNewStimmzettelButtonText }}
         </base-text-button>
         <base-text-button
-          :is-disabled="unterbrechenBtnIsDisabled"
+          :is-disabled="
+            unterbrechenBtnIsDisabled ||
+            isAnotherStatusBeingWritten(
+              StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
+            )
+          "
+          :loading="
+            isStatusLoading ||
+            statusBeingWritten ===
+              StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
+          "
           @click="onErfassungUnterbrechenClicked"
         >
           Unterbrechen
@@ -31,6 +54,8 @@
         <base-text-button
           class="ms-auto"
           :active="beendenBtnActive"
+          :is-disabled="statusBeingWritten !== null"
+          :loading="isStatusLoading"
           @click="onErfassungBeendenClicked"
         >
           Beenden
@@ -50,6 +75,7 @@
           <base-button-refresh
             active
             class="ml-5"
+            :loading="isStatusLoading"
             @click="onErfassungAktualisierenClicked"
           />
         </base-feedback-card>
@@ -104,6 +130,7 @@ const props = defineProps<{
   teamId: string;
   stimmzettelListe: PersistedStimmzettel[];
   isStimmzettelLoading: boolean;
+  isWahlvorschlaegeLoading: boolean;
   hasStimmzettel: boolean;
   wahlvorschlaege: Wahlvorschlag[];
   saveStimmzettel: (stimmzettel: PersistedStimmzettel) => Promise<void>;
@@ -134,6 +161,7 @@ const {
   isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
+  statusBeingWritten,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
   ensureStatusInBearbeitung,
@@ -150,6 +178,14 @@ const startNewStimmzettelButtonText = computed(() =>
     ? "Fortsetzen"
     : "Starten"
 );
+
+function isAnotherStatusBeingWritten(
+  status: StimmzettelerfassungTeamStatusEnum
+) {
+  return (
+    statusBeingWritten.value !== null && statusBeingWritten.value !== status
+  );
+}
 
 function onErfassungStartenClicked() {
   isKennungsDialogVisible.value = true;

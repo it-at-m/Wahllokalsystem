@@ -11,6 +11,7 @@ import ch.qos.logback.core.read.ListAppender;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootTest(
@@ -52,7 +54,9 @@ class RequestMdcLoggingAspectTest {
     // Simuliert einen Request, der neben fachlichen Daten auch technische Framework-Klassen
     // injiziert bekommt
     public String requestContainingTechnicalFrameworkClasses(
-        @PathVariable("param") String param, HttpServletRequest request, Principal principal) {
+        @PathVariable("param") String param,
+        @RequestParam(value = "request", required = false) HttpServletRequest request,
+        @RequestParam(value = "principal", required = false) Principal principal) {
       return "success-tech";
     }
 
@@ -156,8 +160,12 @@ class RequestMdcLoggingAspectTest {
     // Fachliche Parameter müssen da sein
     assertThat(mdcContext.get("req.arg.param")).isEqualTo("wert1");
     // Technische Klassen dürfen NICHT im MDC auftauchen (Blacklist-Schutz)
-    assertThat(mdcContext.containsKey("req.arg.request")).isFalse();
-    assertThat(mdcContext.containsKey("req.arg.principal")).isFalse();
+    List<String> argumentKeysInMdc =
+        mdcContext.keySet().stream().filter(key -> key.startsWith("req.arg.")).toList();
+    assertThat(argumentKeysInMdc)
+        .as(
+            "Es dürfen keine technischen Parameter (weder mit echtem Namen noch als argX) im MDC landen")
+        .containsExactly("req.arg.param");
   }
 
   @Test

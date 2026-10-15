@@ -19,7 +19,6 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksStimmabgabevermerke: vi.fn(),
   createTasksStimmzettelumschlaege: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
-  createTasksWaehler: vi.fn(),
   createTasksEreignisse: vi.fn(),
   createTasksBegruendung: vi.fn(),
   createTasksAWerte: vi.fn(),
@@ -41,15 +40,6 @@ vi.mock(
   () => ({
     useKonfigurationsparameterTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksKonfigurationsparameter,
-    })),
-  })
-);
-
-vi.mock(
-  import("@/composables/tasks/taskFactories/waehlerTaskFactory.ts"),
-  () => ({
-    useWaehlerTaskFactory: vi.fn().mockImplementation(() => ({
-      createTasks: mockDefinitions.createTasksWaehler,
     })),
   })
 );
@@ -311,7 +301,6 @@ describe("taskListService.ts", () => {
         "Ereignisse",
         `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
         "Stimmzettel " + mockedWahl.name,
-        "Wahlbeteiligung",
         "Begruendung Stimmzettel für " + mockedWahl.name,
         "AWerte",
         "Handbuch",
@@ -382,7 +371,6 @@ describe("taskListService.ts", () => {
         []
       );
       mockDefinitions.createTasksStimmabgabevermerke.mockReturnValue([]);
-      mockDefinitions.createTasksWaehler.mockReturnValue([]);
       mockDefinitions.createTasksAWerte.mockReturnValue([]);
 
       // only bwb
@@ -428,9 +416,6 @@ describe("taskListService.ts", () => {
           name: `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
           callback: () => Promise.resolve(),
         },
-      ]);
-      mockDefinitions.createTasksWaehler.mockReturnValue([
-        { name: "Wahlbeteiligung", callback: () => Promise.resolve() },
       ]);
       mockDefinitions.createTasksAWerte.mockReturnValue([
         {

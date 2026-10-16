@@ -66,6 +66,7 @@ import BaseSaveButtonWithActionMenu from "@/components/common/buttons/BaseSaveBu
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseStimmzettelErfassungCardContent from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelErfassungCardContent.vue";
 import TheStimmzettelErfassungCancelConfirmationDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungCancelConfirmationDialog.vue";
+import { useCloneTools } from "@/composables/common/cloneTools.ts";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -86,6 +87,7 @@ const wahlID = route.params.wahlId as string;
 
 const { currentUserTeamName } = storeToRefs(useUserStore());
 
+const { cloneStructured } = useCloneTools();
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
   computed(() => stimmzettelkennung.value),
   properties.wahlvorschlaege,
@@ -227,7 +229,11 @@ function showDialog(
   } else {
     stimmzettelkennung.value =
       stimmzettelToApplyOrKennungOfNext.stimmzettelkennung;
-    stimmzettelManager.startEditStimmzettel(stimmzettelToApplyOrKennungOfNext);
+    const copyOfStimmzettel = cloneStructured(
+      stimmzettelToApplyOrKennungOfNext
+    );
+    copyOfStimmzettel.beschlussfassung = null;
+    stimmzettelManager.startEditStimmzettel(copyOfStimmzettel);
     currentAction.value = confirmActions.saveAndClose;
   }
   isDialogVisibleModel.value = true;

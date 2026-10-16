@@ -15,11 +15,11 @@ Füge die Library `monitoring-x.y.z` in deiner pom.xml hinzu:
 ## Logger & MDC in logback-spring.xml konfigurieren
 
 Die Steuerung des Aspekts und die Ausgabe der MDC-Werte erfolgen vollständig in deiner Logback-Konfiguration.
-Füge das <mdc/>-Tag in den Appender ein und definiere den Logger für den Aspekt mit additivity="false".
+Füge das `<mdc/>`-Tag in den Appender ein und definiere den Logger für den Aspekt.
 
 Beispiel:
 
-```
+```js {11,14}
 <configuration>
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
     <springProfile name="plainTextLogging">
@@ -39,11 +39,11 @@ Beispiel:
 
 ## Log-Level Verhalten des Aspekts:
 
-• DEBUG: Loggt nur den Methodeneingang. Der MDC bleibt aus Performance-Gründen leer.
-• TRACE: Befüllt den MDC bei jedem erfolgreichen Request vollständig mit den Payloads.
-• ERROR (Automatisch): Tritt im Controller ein Fehler auf, befüllt der Aspekt den MDC immer mit den Payloads und schreibt ein Error-Log – völlig unabhängig davon, welches Level du oben im Logger definiert hast.
+* debug: Loggt nur den Methodeneingang. Der MDC bleibt aus Performance-Gründen leer.
+* trace: Befüllt den MDC bei jedem erfolgreichen Request vollständig mit den Payloads.
+* error: (Automatisch): Tritt im Controller ein Fehler auf, befüllt der Aspekt den MDC immer mit den Payloads und schreibt ein Error-Log – völlig unabhängig davon, welches Level oben im Logger definiert wurde.
 
-::: info Technische Schutzmechanismen
+::: info Technische Schutzmechanismen {important-note="true"}
 * **Filterung:** Technische Klassen (`HttpServletRequest`, `Principal`, Spring Security `Authentication`, Mockito-Mocks) werden automatisch ignoriert.
 * **Absturzsicher:** Zyklische Objektbeziehungen (z. B. JPA-Entitäten) werden bei der Serialisierung abgefangen und bringen den Request niemals zum Absturz.
 :::

@@ -45,3 +45,16 @@ html .newProcessStep > rect {
   padding: 5px 0 0 15px; /* top right bottom left */
   margin: 10px 0;
 }
+
+.custom-block.info[important-note="true"] {
+  position: relative;
+  padding-left: 44px !important;
+}
+
+.custom-block.info[important-note="true"]::before {
+  content: "💡";
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  font-size: 1.2rem;
+}

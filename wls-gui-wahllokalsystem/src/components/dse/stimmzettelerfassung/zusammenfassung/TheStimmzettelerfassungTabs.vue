@@ -10,8 +10,10 @@
           :team-id="teamID"
           :stimmzettel-liste="savedStimmzettel"
           :is-stimmzettel-loading="isStimmzettelLoading"
+          :is-wahlvorschlaege-loading="isWahlvorschlaegeLoading"
           :wahlvorschlaege="wahlvorschlaege"
           :has-stimmzettel="hasStimmzettel"
+          :load-wahlvorschlaege="loadWahlvorschlaege"
           :save-stimmzettel="saveOrUpdateStimmzettel"
           class="mt-3"
         />
@@ -53,7 +55,8 @@ const {
   saveOrUpdateStimmzettel,
 } = useStimmzettelState(wahlID, wahlbezirkID, teamID);
 
-const { wahlvorschlaege } = useWahlvorschlaegeState(wahlID, wahlbezirkID);
+const { isWahlvorschlaegeLoading, loadWahlvorschlaege, wahlvorschlaege } =
+  useWahlvorschlaegeState(wahlID, wahlbezirkID);
 
 const tab = ref("one");
 </script>

@@ -161,7 +161,7 @@ watch(
   () => [props.isWahlvorschlaegeLoading, props.wahlvorschlaege.length] as const,
   async ([isLoading, numberOfWahlvorschlaege]) => {
     if (!isLoading && numberOfWahlvorschlaege > 0) {
-      await preloadErfassungsDialog();
+      await enableErfassungsDialog();
     }
   },
   { immediate: true }
@@ -175,7 +175,7 @@ async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
   await ensureStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
   startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
-  await preloadErfassungsDialog();
+  await enableErfassungsDialog();
   if (isErfassungsDialogVisible.value) {
     templateRefStimmzettelErfassenDialog.value?.focusCommandProcessingTextField();
   } else {
@@ -221,11 +221,11 @@ async function onStimmzettelBearbeitenClicked(
   await ensureStatusInBearbeitung();
 
   activeStimmzettel.value = stimmzettel;
-  await preloadErfassungsDialog();
+  await enableErfassungsDialog();
   isErfassungsDialogVisible.value = true;
 }
 
-async function preloadErfassungsDialog() {
+async function enableErfassungsDialog() {
   if (!isErfassungsDialogPreloaded.value) {
     isErfassungsDialogPreloaded.value = true;
   }

@@ -1,6 +1,7 @@
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
@@ -15,6 +16,8 @@ const mockDefinitions = vi.hoisted(() => ({
   getNextRoute: vi.fn(),
   routeWithName: vi.fn(),
   routeWithNameAndParams: vi.fn(),
+  getStimmzettelumschlaege: vi.fn(),
+  getWahlOrUndefinedById: vi.fn(),
 }));
 
 vi.mock(import("@/composables/navigation/navigationService.ts"), () => ({
@@ -49,12 +52,34 @@ vi.mock(
   }
 );
 
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
+      }),
+    };
+  }
+);
+
+vi.mock("@/stores/wahlenStore.ts", () => ({
+  useWahlenStore: () => ({
+    wahlenActions: {
+      getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
+    },
+  }),
+}));
+
 router.push = mockDefinitions.routerPush;
 
 describe("beschlussfassungStartenDialogUtils.ts", () => {
   const { generateRandomNumber } = useCommonTestDataFactory();
   const { prepareStimmzettelerfassungStatus } =
     useStimmzettelerfassungStatusTestDataFactory();
+  const { prepareWahl } = useWahlTestDataFactory();
 
   let unitUnderTest: ReturnType<typeof useBeschlussfassungStartenDialogUtils>;
 
@@ -106,6 +131,12 @@ describe("beschlussfassungStartenDialogUtils.ts", () => {
       const anzahlStimmzettel = generateRandomNumber(2);
 
       mockDefinitions.getAnzahlStimmzettel.mockResolvedValue(anzahlStimmzettel);
+      mockDefinitions.getWahlOrUndefinedById.mockResolvedValue(
+        prepareWahl().build()
+      );
+      mockDefinitions.getStimmzettelumschlaege.mockResolvedValue({
+        anzahlWaehler: anzahlStimmzettel,
+      });
       await unitUnderTest.loadAnzahlStimmzettel(wahlID, wahlbezirkID);
 
       expect(unitUnderTest.isConfirmButtonInLoadingState.value).toStrictEqual(
@@ -161,8 +192,14 @@ describe("beschlussfassungStartenDialogUtils.ts", () => {
   describe("loadAnzahlStimmzettel", () => {
     it("should_loadAnzahlStimmzettelAndUpdateLoadingState_when_called", async () => {
       const anzahlStimmzettel = generateRandomNumber(2);
+      const wahl = prepareWahl().build();
 
       mockDefinitions.getAnzahlStimmzettel.mockResolvedValue(anzahlStimmzettel);
+
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(wahl);
+      mockDefinitions.getStimmzettelumschlaege.mockResolvedValue({
+        anzahlWaehler: anzahlStimmzettel,
+      });
 
       const spyOnIsAnzahlStimmzettelLoading = vi.spyOn(
         unitUnderTest.isAnzahlStimmzettelLoading,
@@ -180,7 +217,13 @@ describe("beschlussfassungStartenDialogUtils.ts", () => {
       expect(mockDefinitions.getAnzahlStimmzettel.mock.calls).toStrictEqual([
         [wahlID, wahlbezirkID],
       ]);
+      expect(mockDefinitions.getStimmzettelumschlaege.mock.calls).toStrictEqual(
+        [[wahl, wahlbezirkID, "", false]]
+      );
       expect(unitUnderTest.stimmzettelCount.value).toStrictEqual(
+        anzahlStimmzettel
+      );
+      expect(unitUnderTest.stimmzettelumschlaegeCount.value).toStrictEqual(
         anzahlStimmzettel
       );
       expect(unitUnderTest.isAnzahlStimmzettelLoading.value).toStrictEqual(

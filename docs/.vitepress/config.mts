@@ -272,6 +272,10 @@ export default withMermaid({
               text: "Zertifikate für SSL erstellen",
               link: `${PATH_GUIDES}generate certs for ssl.md`,
             },
+            {
+              text: "Logging Requests in Controller",
+              link: `${PATH_GUIDES}request-mdc-logging.md`,
+            },
           ],
         },
         {

@@ -27,9 +27,23 @@ const mockDefinitions = await vi.hoisted(async () => {
     },
     resetStimmzettelAndHistory: vi.fn(),
     mapPersistedStimmzettelValuesToExistingDseStimmzettel: vi.fn(),
-    normalizePersistedStimmzettel: vi.fn(),
+    isDeepEqualIgnoreGueltigkeit: vi.fn(),
   };
 });
+
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useStimmzettelTools: () => ({
+        ...mod.useStimmzettelTools(),
+        isDeepEqualIgnoreGueltigkeit:
+          mockDefinitions.isDeepEqualIgnoreGueltigkeit,
+      }),
+    };
+  }
+);
 
 vi.mock(
   "@/composables/dse/stimmzettelerfassung/command/commandHandlers.ts",
@@ -323,9 +337,6 @@ describe("stimmzettelManager.ts", () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         (target, source) => target
       );
-      mockDefinitions.normalizePersistedStimmzettel.mockImplementation(
-        (persistedStimmzettel) => persistedStimmzettel
-      );
     });
     const stimmzettelKennung = 101;
     const teamID = "team-x";
@@ -358,6 +369,8 @@ describe("stimmzettelManager.ts", () => {
         .build();
 
     it("should_returnTrue_when_stimmzettelToCompareHaveDifferentValues", () => {
+      mockDefinitions.isDeepEqualIgnoreGueltigkeit.mockReturnValue(false);
+
       const {
         bearbeitenDialogStimmzettelUtils,
         startEditStimmzettel,
@@ -376,15 +389,12 @@ describe("stimmzettelManager.ts", () => {
       expect(stimmzettelBeforeEdit.value).toStrictEqual(
         persistedStimmzettelBeforeEdit
       );
-      expect(hasStimmzettelBeenEdited.value).toBe(false);
-
-      const managed = bearbeitenDialogStimmzettelUtils.stimmzettel.value;
-      managed.wahlvorschlaege[0].kandidaten[0].einzelstimmen = 5;
-
       expect(hasStimmzettelBeenEdited.value).toBe(true);
     });
 
     it("should_returnFalse_when_stimmzettelToCompareHaveSameValues", () => {
+      mockDefinitions.isDeepEqualIgnoreGueltigkeit.mockReturnValue(true);
+
       const {
         startEditStimmzettel,
         hasStimmzettelBeenEdited,

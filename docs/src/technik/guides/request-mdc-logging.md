@@ -5,13 +5,15 @@ Diese Bibliothek aus `wls-common/monitoring` befüllt den MDC (Mapped Diagnostic
 ## Dependency hinzufügen
 
 Füge die Library `monitoring-x.y.z` in deiner pom.xml hinzu:
-```
+
+```xml
 <dependency>
     <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
     <artifactId>monitoring</artifactId>
     <version>x.y.z</version>
 </dependency>
 ```
+
 ## Logger & MDC in logback-spring.xml konfigurieren
 
 Die Steuerung des Aspekts und die Ausgabe der MDC-Werte erfolgen vollständig in deiner Logback-Konfiguration.
@@ -37,15 +39,14 @@ Beispiel:
 </configuration>
 ```
 
-## Log-Level Verhalten des Aspekts:
+## Log-Level Verhalten des Aspekts
 
 * debug: Loggt nur den Methodeneingang. Der MDC bleibt aus Performance-Gründen leer.
 * trace: Befüllt den MDC bei jedem erfolgreichen Request vollständig mit den Payloads.
 * error: (Automatisch): Tritt im Controller ein Fehler auf, befüllt der Aspekt den MDC immer mit den Payloads und schreibt ein Error-Log – völlig unabhängig davon, welches Level oben im Logger definiert wurde.
 
 ::: info Technische Schutzmechanismen {important-note="true"}
+
 * **Filterung:** Technische Klassen (`HttpServletRequest`, `Principal`, Spring Security `Authentication`, Mockito-Mocks) werden automatisch ignoriert.
 * **Absturzsicher:** Zyklische Objektbeziehungen (z. B. JPA-Entitäten) werden bei der Serialisierung abgefangen und bringen den Request niemals zum Absturz.
 :::
-
-

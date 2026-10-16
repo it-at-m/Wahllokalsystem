@@ -372,7 +372,6 @@ describe("stimmzettelManager.ts", () => {
       mockDefinitions.isDeepEqualIgnoreGueltigkeit.mockReturnValue(false);
 
       const {
-        bearbeitenDialogStimmzettelUtils,
         startEditStimmzettel,
         hasStimmzettelBeenEdited,
         stimmzettelBeforeEdit,

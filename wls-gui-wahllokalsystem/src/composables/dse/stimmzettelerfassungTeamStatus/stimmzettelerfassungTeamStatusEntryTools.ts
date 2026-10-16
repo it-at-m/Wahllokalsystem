@@ -2,7 +2,7 @@ import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzette
 
 export function useStimmzettelerfassungTeamStatusEntryTools() {
   const EQUAL = 0;
-  const SMALER_THAN = -1;
+  const SMALLER_THAN = -1;
   const GREATER_THAN = 1;
 
   function compareByTeamID(
@@ -13,7 +13,7 @@ export function useStimmzettelerfassungTeamStatusEntryTools() {
       return EQUAL;
     }
 
-    return entryA.teamID > entryB.teamID ? GREATER_THAN : SMALER_THAN;
+    return entryA.teamID > entryB.teamID ? GREATER_THAN : SMALLER_THAN;
   }
 
   return { compareByTeamID };

@@ -152,6 +152,21 @@ public class RequestMdcLoggingAspect {
     if (clazz == null) {
       return true;
     }
+    String className = clazz.getName();
+    if (className.startsWith("jakarta.servlet.")
+        || className.startsWith("javax.servlet.")
+        || className.startsWith("org.springframework.ui.")
+        || className.startsWith("org.springframework.validation.")
+        || className.startsWith("org.springframework.web.bind.support.")
+        || className.startsWith("org.springframework.web.util.")
+        || className.contains("org.springframework.security.")) {
+      return true;
+    }
+    if (className.contains("$$EnhancerBySpringCGLIB")
+        || className.contains("$MockitoMock")
+        || className.contains("Proxy")) {
+      return true;
+    }
 
     if (java.security.Principal.class.isAssignableFrom(clazz)
         || jakarta.servlet.ServletRequest.class.isAssignableFrom(clazz)
@@ -171,18 +186,7 @@ public class RequestMdcLoggingAspect {
       // Spring Security ist in diesem Laufzeit-Modul nicht geladen
     }
 
-    String className = clazz.getName();
-    if (className.startsWith("jakarta.servlet.")
-        || className.startsWith("javax.servlet.")
-        || className.startsWith("org.springframework.ui.")
-        || className.startsWith("org.springframework.validation.")
-        || className.startsWith("org.springframework.web.bind.support.")
-        || className.startsWith("org.springframework.web.util.")) {
-      return true;
-    }
-    return className.contains("$$EnhancerBySpringCGLIB")
-        || className.contains("$MockitoMock")
-        || className.contains("Proxy");
+    return false;
   }
 
   private String serializeValue(Object paramValue) {

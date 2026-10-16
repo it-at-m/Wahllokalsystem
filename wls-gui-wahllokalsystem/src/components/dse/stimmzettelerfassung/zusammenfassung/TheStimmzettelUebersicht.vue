@@ -69,8 +69,6 @@
     <the-stimmzettel-erfassung-dialog
       v-if="isErfassungsDialogPreloaded"
       :ref="STIMMZETTEL_ERFASSUNG_DIALOG_TEMPLATE_REF_NAME"
-      v-model="isErfassungsDialogVisible"
-      :stimmzettel="activeStimmzettel"
       :wahlvorschlaege="wahlvorschlaege"
       @cancel="onStimmzettelErfassungCanceled"
       @confirm-close="onStimmzettelErfassungConfirmed"
@@ -135,16 +133,13 @@ const templateRefStimmzettelErfassenDialog = useTemplateRef<
 
 const {
   teamStatus,
-  activeStimmzettel,
   beendenBtnActive,
-  isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
   ensureStatusInBearbeitung,
   sendStatusUnterbrochen,
-  startNewEmptyStimmzettelWithStimmzettelkennung,
   reloadTeamStatus,
 } = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
 
@@ -174,18 +169,13 @@ function onErfassungStartenClicked() {
 async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
   await ensureStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
-  startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
   await enableErfassungsDialog();
-  if (isErfassungsDialogVisible.value) {
-    templateRefStimmzettelErfassenDialog.value?.focusCommandProcessingTextField();
-  } else {
-    isErfassungsDialogVisible.value = true;
-  }
+  templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettelKennung);
 }
 
 function onStimmzettelkennungCanceled() {
   isKennungsDialogVisible.value = false;
-  isErfassungsDialogVisible.value = false;
+  templateRefStimmzettelErfassenDialog.value?.closeDialog();
 }
 
 async function onErfassungUnterbrechenClicked() {
@@ -201,13 +191,13 @@ async function onErfassungAktualisierenClicked() {
 }
 
 async function onStimmzettelErfassungCanceled() {
-  isErfassungsDialogVisible.value = false;
+  templateRefStimmzettelErfassenDialog.value?.closeDialog();
 }
 async function onStimmzettelErfassungConfirmed(
   confirmedStimmzettel: PersistedStimmzettel
 ) {
   await props.saveStimmzettel(confirmedStimmzettel);
-  isErfassungsDialogVisible.value = false;
+  templateRefStimmzettelErfassenDialog.value?.closeDialog();
 }
 async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
   confirmedStimmzettel: PersistedStimmzettel
@@ -219,10 +209,8 @@ async function onStimmzettelBearbeitenClicked(
   stimmzettel: PersistedStimmzettel
 ) {
   await ensureStatusInBearbeitung();
-
-  activeStimmzettel.value = stimmzettel;
   await enableErfassungsDialog();
-  isErfassungsDialogVisible.value = true;
+  templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettel);
 }
 
 async function enableErfassungsDialog() {

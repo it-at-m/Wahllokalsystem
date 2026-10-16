@@ -7,8 +7,8 @@ Diese Bibliothek aus `wls-common/monitoring` befüllt den MDC (Mapped Diagnostic
 Füge die Library `monitoring-x.y.z` in deiner pom.xml hinzu:
 ```
 <dependency>
-    <groupId>de.deinunternehmen</groupId>
-    <artifactId>request-mdc-logging-starter</artifactId>
+    <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+    <artifactId>monitoring</artifactId>
     <version>x.y.z</version>
 </dependency>
 ```

@@ -58,7 +58,7 @@ describe("TheStimmzettelErfassungDialog", () => {
             default: () =>
               h(TheStimmzettelErfassungDialog, {
                 modelValue: isDialogVisible.value,
-                "onUpdate:modelValue": (visible) => {
+                "onUpdate:modelValue": (visible: boolean | undefined) => {
                   isDialogVisible.value = visible ?? false;
                 },
                 stimmzettel: activeStimmzettel.value,

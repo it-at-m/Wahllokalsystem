@@ -111,7 +111,6 @@ const props = defineProps<{
   isWahlvorschlaegeLoading: boolean;
   hasStimmzettel: boolean;
   wahlvorschlaege: Wahlvorschlag[];
-  loadWahlvorschlaege: () => Promise<void>;
   saveStimmzettel: (stimmzettel: PersistedStimmzettel) => Promise<void>;
 }>();
 
@@ -173,7 +172,6 @@ function onErfassungStartenClicked() {
 }
 
 async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
-  await props.loadWahlvorschlaege();
   await ensureStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
   startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
@@ -220,7 +218,6 @@ async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
 async function onStimmzettelBearbeitenClicked(
   stimmzettel: PersistedStimmzettel
 ) {
-  await props.loadWahlvorschlaege();
   await ensureStatusInBearbeitung();
 
   activeStimmzettel.value = stimmzettel;
@@ -231,9 +228,9 @@ async function onStimmzettelBearbeitenClicked(
 async function preloadErfassungsDialog() {
   if (!isErfassungsDialogPreloaded.value) {
     isErfassungsDialogPreloaded.value = true;
-    // update dialog DOM
-    await nextTick();
   }
+  // update dialog DOM
+  await nextTick();
 }
 
 const hasTeamFinishedErfassung = computed(

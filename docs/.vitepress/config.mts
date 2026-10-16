@@ -148,6 +148,10 @@ export default withMermaid({
               link: `${PATH_ADR}adr-keine-annotation-von-default-http-status-ok.md`,
             },
             {
+              text: "Health-Checks ohne DB- und LDAP-Verbindung",
+              link: `${PATH_ADR}adr-health-checks-ohne-db-ldap.md`,
+            },
+            {
               text: "UI/UX",
               link: `${PATH_ADR_UI}`,
               collapsed: true,

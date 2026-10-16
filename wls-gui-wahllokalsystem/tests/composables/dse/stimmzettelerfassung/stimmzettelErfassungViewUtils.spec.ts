@@ -1,8 +1,6 @@
-import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -15,7 +13,6 @@ const mockDefinitions = await vi.hoisted(async () => {
   return {
     loadErfassungTeamStatus: vi.fn(),
     postErfassungTeamStatus: vi.fn(),
-    getEmptyStimmzettelWithStimmzettelkennung: vi.fn(),
     logError: vi.fn(),
     onActivated: vi.fn(),
 
@@ -55,20 +52,6 @@ vi.mock(
   }
 );
 
-vi.mock(
-  import("@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts"),
-  async (importOriginal) => {
-    const mod = await importOriginal();
-    return {
-      useStimmzettelTools: () => ({
-        ...mod.useStimmzettelTools(),
-        getEmptyStimmzettelWithStimmzettelkennung:
-          mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung,
-      }),
-    };
-  }
-);
-
 vi.mock(import("@/composables/common/logging.ts"), async (importOriginal) => {
   const mod = await importOriginal();
   return {
@@ -80,10 +63,7 @@ vi.mock(import("@/composables/common/logging.ts"), async (importOriginal) => {
 });
 
 describe("stimmzettelErfassungViewUtils.ts", () => {
-  const { generateRandomString, generateRandomNumber } =
-    useCommonTestDataFactory();
-  const { preparePersistedStimmzettel } =
-    usePersistedStimmzettelTestDataFactory();
+  const { generateRandomString } = useCommonTestDataFactory();
   const { createStimmzettelerfassungTeamStatusModel } =
     useStimmzettelerfassungTeamStatusTestDataFactory();
 
@@ -109,7 +89,6 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
   describe("initial state", () => {
     it("should_haveInitialDialogVisibilityFalse_when_initialized", () => {
       expect(unitUnderTest.isKennungsDialogVisible.value).toBe(false);
-      expect(unitUnderTest.isErfassungsDialogVisible.value).toBe(false);
     });
 
     it("should_haveInitialTeamStatusAndStatusLoading_when_initialized", () => {
@@ -178,31 +157,6 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       expect(unitUnderTest.teamStatus.value).toStrictEqual(null);
 
       spyOnIsStatusLoadingSetter.mockRestore();
-    });
-
-    describe("startNewEmptyStimmzettelWithStimmzettelkennung", () => {
-      it("should_setActiveStimmzettel_when_calledWithKennung", () => {
-        const mockedKennung = generateRandomNumber(3);
-        const mockedEmptyStimmzettel: PersistedStimmzettel =
-          preparePersistedStimmzettel()
-            .stimmzettelkennung(mockedKennung)
-            .build();
-
-        mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung.mockReturnValue(
-          mockedEmptyStimmzettel
-        );
-
-        unitUnderTest.startNewEmptyStimmzettelWithStimmzettelkennung(
-          mockedKennung
-        );
-
-        expect(
-          mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung
-        ).toHaveBeenCalledWith(mockedKennung);
-        expect(unitUnderTest.activeStimmzettel.value).toStrictEqual(
-          mockedEmptyStimmzettel
-        );
-      });
     });
 
     describe("ensureStatusInBearbeitung", () => {

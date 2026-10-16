@@ -1,17 +1,12 @@
-import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
-import type { Ref } from "vue";
 
 import { onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewButtonStateUtils.ts";
-import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
-
-const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelTools();
 
 export function useStimmzettelErfassungViewUtils(
   wahlID: string,
@@ -20,11 +15,9 @@ export function useStimmzettelErfassungViewUtils(
 ) {
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
   const isStatusLoading = ref(false);
-  const activeStimmzettel: Ref<PersistedStimmzettel | null> = ref(null);
 
   //DialogVisibilityState
   const isKennungsDialogVisible = ref(false);
-  const isErfassungsDialogVisible = ref(false);
 
   const buttonUtils = useStimmzettelErfassungViewButtonStateUtils(teamStatus);
 
@@ -34,13 +27,6 @@ export function useStimmzettelErfassungViewUtils(
   });
 
   //Public functions
-  function startNewEmptyStimmzettelWithStimmzettelkennung(
-    stimmzettelkennung: number
-  ) {
-    activeStimmzettel.value =
-      getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung);
-  }
-
   async function ensureStatusInBearbeitung(sendNotification = false) {
     if (
       teamStatus.value?.status !==
@@ -101,16 +87,13 @@ export function useStimmzettelErfassungViewUtils(
 
   return {
     //Props
-    activeStimmzettel,
     teamStatus: readonly(teamStatus),
-    isErfassungsDialogVisible,
     isKennungsDialogVisible,
     isStatusLoading: readonly(isStatusLoading),
 
     //actions
     ensureStatusInBearbeitung,
     sendStatusUnterbrochen,
-    startNewEmptyStimmzettelWithStimmzettelkennung,
     reloadTeamStatus,
 
     //imported functions

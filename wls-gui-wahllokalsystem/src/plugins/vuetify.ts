@@ -21,6 +21,7 @@ import {
   mdiDiameterVariant,
   mdiEmail,
   mdiEqual,
+  mdiEyeOutline,
   mdiFileDocumentOutline,
   mdiHelpCircleOutline,
   mdiHome,
@@ -114,6 +115,7 @@ export default createVuetify({
       slideLeft: mdiArrowLeftDropCircle,
       slideRight: mdiArrowRightDropCircle,
       beschlussAbstimmung: mdiPoll,
+      view: mdiEyeOutline,
     },
     sets: {
       mdi,

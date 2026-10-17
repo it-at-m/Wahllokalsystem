@@ -26,11 +26,20 @@
 
     <template #[`item.actions`]="{ item }">
       <v-btn
+        v-if="bearbeitungDisabled"
+        aria-label="Stimmzettel ansehen"
+        icon="$view"
+        size="small"
+        variant="elevated"
+        class="ms-2"
+        @click="onStimmzettelViewClicked(item)"
+      />
+      <v-btn
+        v-else
         aria-label="Stimmzettel bearbeiten"
         icon="$edit"
         size="small"
         variant="elevated"
-        :disabled="bearbeitungDisabled"
         @click="onStimmzettelBearbeitenClicked(item)"
       />
     </template>
@@ -73,9 +82,14 @@ const { isVorgemerktFuerBeschluss, getVormerkungsgrund } =
 
 const emit = defineEmits<{
   stimmzettelBearbeiten: [newValue: PersistedStimmzettel];
+  stimmzettelAnsehen: [newValue: PersistedStimmzettel];
 }>();
 
 function onStimmzettelBearbeitenClicked(stimmzettel: PersistedStimmzettel) {
   emit("stimmzettelBearbeiten", stimmzettel);
+}
+
+function onStimmzettelViewClicked(stimmzettel: PersistedStimmzettel) {
+  emit("stimmzettelAnsehen", stimmzettel);
 }
 </script>

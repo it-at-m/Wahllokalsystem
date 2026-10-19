@@ -101,7 +101,7 @@
           v-model="stimmzettelWahlvorstandBeschlussgruende"
           :items="wahlvorstandBeschlussvorschlaegeItems"
           class="combobox-as-textarea mt-1"
-          :disabled="isReadonly"
+          :readonly="isReadonly"
           multiple
           chips
           closable-chips

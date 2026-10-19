@@ -82,7 +82,7 @@ export function useBeschlussfassungStartenDialogUtils(
   }
 
   async function _refreshForeignStimmzettel() {
-    await stimmzettelerfassungTeamState.loadTeamStatusListe();
+    await stimmzettelerfassungTeamState.loadTeamStatusListe(true);
     const otherTeamsIDs = stimmzettelerfassungTeamState.teamstatusList.value
       .map((entry) => entry.teamID)
       .filter((teamID) => teamID !== currentUserTeamName.value);

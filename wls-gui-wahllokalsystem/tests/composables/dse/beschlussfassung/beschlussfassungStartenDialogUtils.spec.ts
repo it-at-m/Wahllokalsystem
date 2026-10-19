@@ -288,7 +288,9 @@ describe("beschlussfassungStartenDialogUtils.ts", () => {
 
       await unitUnderTest.continueProcessAfterForceRefreshOfForeignStimmzettel();
 
-      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledOnce();
+      expect(
+        mockDefinitions.loadTeamStatusListe
+      ).toHaveBeenCalledExactlyOnceWith(true);
       expect(mockDefinitions.getStimmzettel.mock.calls).toStrictEqual([
         [wahlID, wahlbezirkID, foreignTeamID, false, true],
         [wahlID, wahlbezirkID, anotherForeignTeamID, false, true],

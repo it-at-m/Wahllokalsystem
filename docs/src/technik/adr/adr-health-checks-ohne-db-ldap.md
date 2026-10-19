@@ -13,6 +13,8 @@ Unsere Services werden über Health-Checks überwacht. Bisher flossen dabei auch
 
 Um diese negativen Effekte zu vermeiden, sollen DB- und LDAP-Konnektivität nicht länger den allgemeinen Health-Status bestimmen.
 
+Sollte die Verbindung zur Datenbank oder LDAP unterbrochen sein, erfolgt automatisch ein Reconnect sobald die Dienste wieder zur Verfügung stehen. Ein Neustart des Services ist dafür nicht notwendig.
+
 ## Entscheidung
 
 - In allen Services wird der Datenbank-Health-Check deaktiviert: `management.health.db.enabled: false`.

@@ -11,6 +11,7 @@
     "
     :is-confirm-loading="isConfirmButtonInLoadingState"
     :cancel-disabled="isAnzahlStimmzettelLoading"
+    :is-confirm-active="false"
     @cancel="cancelDialog"
     @confirm="onConfirmClicked"
   >

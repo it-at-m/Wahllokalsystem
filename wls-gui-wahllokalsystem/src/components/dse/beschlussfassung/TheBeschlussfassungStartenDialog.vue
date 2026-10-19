@@ -4,7 +4,11 @@
     dialogtitle="Bitte die Vollständigkeit der Stimmzettelerfassung prüfen"
     confirmtext="Weiter zur Beschlussfassung"
     :canceltext="cancelText"
-    icon="$information"
+    :icon="
+      isStimmzettelCountAndStimmzettelumschlaegeCountEqual
+        ? '$information'
+        : '$warning'
+    "
     :is-confirm-loading="isConfirmButtonInLoadingState"
     :cancel-disabled="isAnzahlStimmzettelLoading"
     @cancel="cancelDialog"
@@ -28,9 +32,14 @@
         Bitte bestätigen Sie, dass alle Papier-Stimmzettel aus dem gemeinsamen
         Erfassungsvorrat korrekt erfasst wurden.
       </div>
-      <div v-else>
-        Als Anzahl der Stimmzettel wurde vor der Stimmzettelerfassung jedoch
-        {{ stimmzettelumschlaegeCount }} angegeben.
+      <div
+        v-else
+        class="text-warning"
+      >
+        Die Anzahl der gezählten Stimmzettel ({{ stimmzettelumschlaegeCount }})
+        unterscheidet sich um
+        {{ Math.abs(stimmzettelCount - stimmzettelumschlaegeCount) }} von der
+        Anzahl der erfassten Stimzettel ({{ stimmzettelCount }})
       </div>
     </div>
   </base-dialog>
@@ -82,7 +91,7 @@ const isStimmzettelCountAndStimmzettelumschlaegeCountEqual = computed(
 const cancelText = computed(() =>
   isStimmzettelCountAndStimmzettelumschlaegeCountEqual.value
     ? "Beschlussfassung nicht starten"
-    : "Zur Erfassung der Stimmzettelanzahl"
+    : "Stimmzettelanzahl korrigieren"
 );
 
 function closeDialog() {

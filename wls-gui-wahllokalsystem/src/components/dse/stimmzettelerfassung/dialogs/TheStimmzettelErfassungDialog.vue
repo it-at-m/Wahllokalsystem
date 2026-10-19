@@ -1,6 +1,7 @@
 <template>
   <v-dialog
     v-model="isDialogVisibleModel"
+    eager
     persistent
     fullscreen
   >
@@ -10,7 +11,7 @@
     >
       <v-card-title>
         Erfassung Stimmzettel Nummer {{ currentUserTeamName }}
-        {{ stimmzettel.stimmzettelkennung }}
+        {{ stimmzettel?.stimmzettelkennung }}
       </v-card-title>
       <base-stimmzettel-erfassung-card-content
         :ref="BASE_CONTENT_TEMPLATE_REF_NAME"
@@ -44,7 +45,7 @@
       <the-stimmzettel-erfassung-cancel-confirmation-dialog
         :visible="isCancelConfirmationDialogVisible"
         :team-name="currentUserTeamName"
-        :stimmzettelkennung="stimmzettel.stimmzettelkennung"
+        :stimmzettelkennung="stimmzettel?.stimmzettelkennung ?? 0"
         @confirm="onCancelConfirmationDialogConfirmed"
         @cancel="onCancelConfirmationDialogCancelled"
       />
@@ -77,8 +78,8 @@ const isDialogVisibleModel = defineModel("modelValue", {
 
 const properties = defineProps({
   stimmzettel: {
-    type: Object as PropType<PersistedStimmzettel>,
-    required: true,
+    type: Object as PropType<PersistedStimmzettel | null>,
+    default: null,
   },
   wahlvorschlaege: {
     type: Array as PropType<Wahlvorschlag[]>,
@@ -92,7 +93,7 @@ const wahlID = route.params.wahlId as string;
 const { currentUserTeamName } = storeToRefs(useUserStore());
 
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
-  computed(() => properties.stimmzettel.stimmzettelkennung),
+  computed(() => properties.stimmzettel?.stimmzettelkennung ?? 0),
   properties.wahlvorschlaege,
   wahlID
 );
@@ -128,14 +129,16 @@ watch(
   () => isDialogVisibleModel.value,
   () => {
     if (isDialogVisibleModel.value) {
-      stimmzettelManager.setActiveStimmzettelWhenEditing(
-        properties.stimmzettel
-      );
+      if (properties.stimmzettel) {
+        stimmzettelManager.setActiveStimmzettelWhenEditing(
+          properties.stimmzettel
+        );
 
-      currentAction.value = stimmzettelManager.bearbeitenDialogStimmzettelUtils
-        .hasAnyValuesSet.value
-        ? actions[1]
-        : actions[0];
+        currentAction.value = stimmzettelManager
+          .bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
+          ? actions[1]
+          : actions[0];
+      }
     }
     void focusCommandProcessingTextField();
   },

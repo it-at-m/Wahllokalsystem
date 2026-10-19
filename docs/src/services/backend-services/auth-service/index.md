@@ -49,6 +49,15 @@ erDiagram
 > [!IMPORTANT]
 > Der Benutzername liegt in der Datenbank nur verschlüsselt vor.
 
+### Benutzerrollen {#benutzerrollen}
+
+| Fachliche Rolle        | Technische Authority | Rechteumfang                                                                               |
+|------------------------|----------------------|--------------------------------------------------------------------------------------------|
+| Schriftführung         | WLS_WAHLVORSTAND     | Umfassende Rechte für lesende und schreibende Tätigkeiten für den Betrieb eines Wahllokals |
+| Administration         | MONITORING_HELPDESK  | Umfassende Rechte zur Verwaltung der Wahltage und Wahldaten                                |
+| Erfassungsteam         | ERFASSUNGSTEAM       | Eingeschränkte Rechte zur Stimmzettelerfassung (nur in der [DSE](../../../dse/))           |
+| technische Admin-Rolle | ROLE_ADMIN_ADMIN     | Verwaltung von Wahltagsdaten und Wahllokalbenutzenden                                      |
+
 ## Zusätzliche Claims
 
 Neben den [Standardclaims](https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims) werden durch

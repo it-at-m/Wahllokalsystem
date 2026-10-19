@@ -84,6 +84,8 @@ oder `Run Configurations` (IntelliJ) ausgeführt werden.
 | wls_mbw_erf_bwb | test     | Ein Benutzerkonto mit der Rolle Erfassungsteam für eine Migrationsbeiratswahl und der WahlbezirksArt BWB (Briefwahl)        |
 | wls_mbw_erf_uwb | test     | Ein Benutzerkonto mit der Rolle Erfassungsteam für eine Migrationsbeiratswahl und der WahlbezirksArt UWB (Urnenwahl)        |
 
+-> zur [Rollenbeschreibung](../../services/backend-services/auth-service/index#benutzerrollen)
+
 > [!CAUTION]
 > Für die Anmeldung am WLS muss das Benutzerkonto die Rolle `WLS_WAHLVORSTAND` haben.
 > Für die Anmeldung am Admintool muss das Benutzerkonto die Rolle `MONITORING_HELPDESK` haben.

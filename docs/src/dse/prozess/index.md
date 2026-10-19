@@ -64,7 +64,8 @@ dokumentiert, wird der Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschloss
 
 ## Neue Statuswerte {#neue-statuswerte}
 
-Mit dem neuen Prozess wurden neue Statuswerte für die einzelnen Erfassungsteams sowie Wahlbezirke eingeführt:
+Mit dem neuen Prozess und der neuen [Rolle Erfassungsteam](../../services/backend-services/auth-service/index#benutzerrollen)
+wurden neue Statuswerte für die einzelnen Erfassungsteams sowie Wahlbezirke eingeführt:
 
 ```mermaid
 stateDiagram-v2 

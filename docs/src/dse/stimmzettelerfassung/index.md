@@ -237,9 +237,9 @@ Stimmen ergibt sich aus der Summe der vergebenen Einzelstimmen und sonstigen ung
 </details>
 
 Die Vergabe der Reststimmen erfolgt entsprechend der Listenposition innerhalb des Wahlvorschlags, beginnend bei der ersten
-Position. Eine kandidierende Person kann nur Reststimmen erhalten, wenn er/sie noch keine Stimmen erhalten hat
-und er/sie nicht gestrichen wurde. Gibt es für kandidierende Personen mehrere Nennungen, können sie
-nur Reststimmen bekommen, wenn sie noch nicht die maximal erlaubte Menge an Stimmen erreicht haben.
+Position. Eine kandidierende Person mit nur einer Nennung kann nur Reststimmen erhalten, wenn er/sie noch keine Stimmen erhalten hat
+und er/sie nicht gestrichen wurde. Gibt es für kandidierende Personen mehrere Nennungen, können sie nur Reststimmen bekommen,
+wenn sie noch nicht die maximal erlaubte Menge an Stimmen erreicht haben.
 
 <details><summary>Beispiele</summary>
 

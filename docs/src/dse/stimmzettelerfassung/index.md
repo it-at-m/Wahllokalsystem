@@ -68,7 +68,7 @@ können nur entfernt werden, wenn mindestens die angegebene Menge an ungültigen
 
 > [!NOTE] Entfernen von Einzelstimmen
 > Bei einer Wahl dürfen je Kandidat\*in maximal 3 Stimmen vergeben werden. Der/die Wähler\*in hat eine 5 bei
-> einem/r Kandidat\*in eingetragen und möchte nun 3 davon wieder entfernen.
+> einem/einer Kandidat\*in eingetragen und möchte nun 3 davon wieder entfernen.
 >
 > Es sind 3 gültige und 2 ungültige Stimmen vorhanden. Nach der Entfernung von 3 Stimmen, angefangen bei den
 > ungültigen, sind noch 2 gültige Stimmen übrig.

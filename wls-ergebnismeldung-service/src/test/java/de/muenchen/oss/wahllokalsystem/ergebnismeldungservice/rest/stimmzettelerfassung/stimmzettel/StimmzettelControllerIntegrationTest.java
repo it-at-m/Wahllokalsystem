@@ -369,6 +369,150 @@ public class StimmzettelControllerIntegrationTest {
   }
 
   @Nested
+  class PostSingleStimmzettel {
+
+    @Test
+    void should_addNewStimmzettel_when_notExist() throws Exception {
+      val wahlID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+      val teamID = Instancio.create(String.class);
+      val stimmzettelkennung = 1;
+      val stimmzettelToSave = Instancio.create(SingleStimmzettelDTO.class);
+
+      api.perform(
+              createRequest(wahlID, wahlbezirkID, teamID, stimmzettelkennung, stimmzettelToSave))
+          .andExpect(status().isCreated());
+
+      transactionTemplate.executeWithoutResult(
+          status -> {
+            val savedStimmzettel =
+                stimmzettelRepository.findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
+                    wahlbezirkID, wahlID, teamID);
+            val expectedSavedStimmzettel =
+                stimmzettelModelMapper.toEntity(
+                    new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
+                    stimmzettelDTOMapper.toModel(stimmzettelToSave, stimmzettelkennung));
+            Assertions.assertThat(savedStimmzettel)
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .ignoringFieldsOfTypes(UUID.class)
+                .isEqualTo(List.of(expectedSavedStimmzettel));
+          });
+    }
+
+    @Test
+    void should_replaceExistingStimmzettelAndKeepOtherStimmzettel_when_stimmzettelExists()
+        throws Exception {
+      val wahlID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+      val teamID = Instancio.create(String.class);
+      val stimmzettelkennung = 1;
+      val existingStimmzettelToReplace =
+          createStimmzettelEntity(wahlbezirkID, wahlID, teamID, stimmzettelkennung);
+      val existingStimmzettelToKeep = createStimmzettelEntity(wahlbezirkID, wahlID, teamID, 2);
+      stimmzettelRepository.saveAll(
+          List.of(existingStimmzettelToReplace, existingStimmzettelToKeep));
+
+      val stimmzettelToSave = Instancio.create(SingleStimmzettelDTO.class);
+
+      api.perform(
+              createRequest(wahlID, wahlbezirkID, teamID, stimmzettelkennung, stimmzettelToSave))
+          .andExpect(status().isCreated());
+
+      transactionTemplate.executeWithoutResult(
+          status -> {
+            val savedStimmzettel =
+                stimmzettelRepository.findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
+                    wahlbezirkID, wahlID, teamID);
+            val expectedSavedStimmzettel =
+                stimmzettelModelMapper.toEntity(
+                    new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID),
+                    stimmzettelDTOMapper.toModel(stimmzettelToSave, stimmzettelkennung));
+            Assertions.assertThat(savedStimmzettel)
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .ignoringFieldsOfTypes(UUID.class)
+                .isEqualTo(List.of(expectedSavedStimmzettel, existingStimmzettelToKeep));
+          });
+    }
+
+    @Test
+    void should_returnInternalServerErrorAndKeepExistingStimmzettel_when_savingFailed()
+        throws Exception {
+      val wahlID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+      val teamID = Instancio.create(String.class);
+      val stimmzettelkennung = 1;
+      val existingStimmzettel =
+          createStimmzettelEntity(wahlbezirkID, wahlID, teamID, stimmzettelkennung);
+      stimmzettelRepository.save(existingStimmzettel);
+
+      val stimmzettelToSave = Instancio.create(SingleStimmzettelDTO.class);
+      Mockito.doThrow(new RuntimeException("mocked repo exception"))
+          .when(stimmzettelRepository)
+          .save(Mockito.any(Stimmzettel.class));
+
+      val performedRequest =
+          api.perform(
+                  createRequest(
+                      wahlID, wahlbezirkID, teamID, stimmzettelkennung, stimmzettelToSave))
+              .andExpect(status().isInternalServerError())
+              .andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              performedRequest.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+      val expectedWlsException =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              "999",
+              serviceIDFormatter.getId(),
+              "Ursache: class java.lang.RuntimeException, Nachricht: mocked repo exception");
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsException);
+
+      transactionTemplate.executeWithoutResult(
+          status -> {
+            val savedStimmzettel =
+                stimmzettelRepository.findByIdWahlbezirkIDAndIdWahlIDAndIdTeamID(
+                    wahlbezirkID, wahlID, teamID);
+            Assertions.assertThat(savedStimmzettel)
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .ignoringFieldsOfTypes(UUID.class)
+                .isEqualTo(List.of(existingStimmzettel));
+          });
+    }
+
+    private MockHttpServletRequestBuilder createRequest(
+        final String wahlID,
+        final String wahlbezirkID,
+        final String teamID,
+        final Integer stimmzettelkennung,
+        final SingleStimmzettelDTO requestBody)
+        throws Exception {
+      val uri =
+          UriComponentsBuilder.fromUriString(
+                  "/stimmzettelerfassung/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/stimmzettel/{stimmzettelkennung}")
+              .buildAndExpand(wahlID, wahlbezirkID, teamID, stimmzettelkennung)
+              .toUriString();
+      return MockMvcRequestBuilders.post(uri)
+          .with(csrf())
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(
+                          "Ergebnismeldung_BUSINESSACTION_WriteStimmzettelOfTeam"))
+                  .jwt(
+                      jwt -> {
+                        jwt.claim("wahlbezirkID", wahlbezirkID);
+                        jwt.claim("teamID", teamID);
+                      }))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(requestBody));
+    }
+  }
+
+  @Nested
   class GetAnzahlStimmzettel {
 
     @Test

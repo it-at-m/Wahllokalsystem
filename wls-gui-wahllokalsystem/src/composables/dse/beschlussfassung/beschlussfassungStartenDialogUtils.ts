@@ -6,10 +6,12 @@ import { computed, readonly, ref } from "vue";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
 import { useStimmzettelerfassungTeamStatusListState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts";
 import { useDseWorkflowStatusService } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusService.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import router from "@/plugins/router.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
@@ -25,12 +27,15 @@ export function useBeschlussfassungStartenDialogUtils(
   const { getAnzahlStimmzettel, getStimmzettel } = useStimmzettelService();
   const { getNextRoute } = useNavigationService();
   const { setStepDone } = useWorkflowStore();
+  const { getStimmzettelumschlaege } = useErgebnisService();
+  const { wahlenActions } = useWahlenStore();
   const { currentUserTeamName } = storeToRefs(useUserStore());
 
   const stimmzettelerfassungTeamState =
     useStimmzettelerfassungTeamStatusListState(wahlID, wahlbezirkID);
 
   const stimmzettelCount = ref<number | null>(null);
+  const stimmzettelumschlaegeCount = ref<number | null>(null);
   const isAnzahlStimmzettelLoading = ref(false);
   const isUpdatingForeignStimmzettel = ref(false);
 
@@ -38,6 +43,7 @@ export function useBeschlussfassungStartenDialogUtils(
     () =>
       isAnzahlStimmzettelLoading.value ||
       stimmzettelCount.value === null ||
+      stimmzettelumschlaegeCount.value === null ||
       isUpdatingForeignStimmzettel.value
   );
 
@@ -63,6 +69,18 @@ export function useBeschlussfassungStartenDialogUtils(
     try {
       stimmzettelCount.value = null;
       stimmzettelCount.value = await getAnzahlStimmzettel(wahlId, wahlbezirkId);
+      stimmzettelumschlaegeCount.value = null;
+      const wahl = wahlenActions.getWahlOrUndefinedById(wahlId);
+      if (wahl) {
+        const loadedStimmzettelumschlaege = await getStimmzettelumschlaege(
+          wahl,
+          wahlbezirkId,
+          "",
+          false
+        );
+        stimmzettelumschlaegeCount.value =
+          loadedStimmzettelumschlaege?.anzahlWaehler || null;
+      }
     } finally {
       isAnzahlStimmzettelLoading.value = false;
     }
@@ -108,6 +126,7 @@ export function useBeschlussfassungStartenDialogUtils(
     isAnzahlStimmzettelLoading: readonly(isAnzahlStimmzettelLoading),
     isConfirmButtonInLoadingState,
     stimmzettelCount: readonly(stimmzettelCount),
+    stimmzettelumschlaegeCount: readonly(stimmzettelumschlaegeCount),
 
     loadAnzahlStimmzettel,
     continueProcessAfterForceRefreshOfForeignStimmzettel,

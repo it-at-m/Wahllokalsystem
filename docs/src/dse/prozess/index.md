@@ -40,7 +40,7 @@ das Auffinden der von der wählenden Person gesetzten Stimmen.
 
 In diesem Schritt erfolgt die Erfassung der Stimmzettel im System. Der Stimmzettelerfassungs-Workflow-Status wird
 auf `(e) STE in Bearbeitung` gesetzt. Stimmzettel, über die der gesamte Wahlvorstand einen Beschluss fassen muss,
-werden entsprechend markiert und mit einem oder mehreren `Vormerkungsgründen` versehen.
+werden im System mit einem oder mehreren `Vormerkungsgründen` versehen und für die Beschlussfassung zur Seite gelegt.
 
 Um eine möglichst intuitive Erfassung der Stimmen des Stimmzettels zu ermöglichen, haben wir
 [Regeln](/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen) definiert.

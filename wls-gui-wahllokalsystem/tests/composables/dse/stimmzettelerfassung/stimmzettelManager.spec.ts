@@ -375,6 +375,7 @@ describe("stimmzettelManager.ts", () => {
         startEditStimmzettel,
         hasStimmzettelBeenEdited,
         stimmzettelBeforeEdit,
+        getStimmzettelSnapshot,
       } = useStimmzettelManager(
         computed(() => stimmzettelKennung),
         wahlvorschlaege,
@@ -389,6 +390,11 @@ describe("stimmzettelManager.ts", () => {
         persistedStimmzettelBeforeEdit
       );
       expect(hasStimmzettelBeenEdited.value).toBe(true);
+      expect(
+        mockDefinitions.isDeepEqualIgnoreGueltigkeit.mock.calls
+      ).toStrictEqual([
+        [stimmzettelBeforeEdit.value, getStimmzettelSnapshot()],
+      ]);
     });
 
     it("should_returnFalse_when_stimmzettelToCompareHaveSameValues", () => {
@@ -398,6 +404,7 @@ describe("stimmzettelManager.ts", () => {
         startEditStimmzettel,
         hasStimmzettelBeenEdited,
         stimmzettelBeforeEdit,
+        getStimmzettelSnapshot,
       } = useStimmzettelManager(
         computed(() => stimmzettelKennung),
         wahlvorschlaege,
@@ -412,6 +419,11 @@ describe("stimmzettelManager.ts", () => {
         persistedStimmzettelBeforeEdit
       );
       expect(hasStimmzettelBeenEdited.value).toBe(false);
+      expect(
+        mockDefinitions.isDeepEqualIgnoreGueltigkeit.mock.calls
+      ).toStrictEqual([
+        [stimmzettelBeforeEdit.value, getStimmzettelSnapshot()],
+      ]);
     });
 
     it("should_returnFalse_when_stimmzettelToCompareIsNullAndStimmzettelHasNoValuesSet", () => {

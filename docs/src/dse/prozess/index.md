@@ -49,8 +49,9 @@ Für die Erfassung werden spezielle [Kurzbefehle](/dse/stimmzettelerfassung/inde
 
 ### (3) Stimmzettel ablegen
 
-Die erfassten Stimmzettel werden entsprechend der Regeln der Wahl für die Ablage vorbereitet. Stimmzettel, über die noch
-ein Beschluss zu fassen ist, landen so auf einem separaten Stapel.
+Die im System erfassten Stimmzettel werden anschließend, entsprechend der Regeln der Wahl, nach 
+[Stapeln](/about/index#usecase-stimmen-zaehlen) sortiert. Stimmzettel, über die noch ein Beschluss zu fassen ist, landen
+so für die weitere Bearbeitung auf einem separaten Stapel.
 
 ### (4) Beschlüsse zu Stimmzetteln fassen {#beschluesse-erfassen}
 

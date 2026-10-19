@@ -56,6 +56,7 @@
                 StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN ||
               isElectionFinished(wahlID, wahlbezirkID)
             "
+            :is-wieder-offnen-in-progress="item.teamID === teamBeingReopened"
             @open-stimmzettelerfassung="
               onOpenStimmzettelerfassungClicked(item.teamID)
             "
@@ -65,7 +66,7 @@
       <v-card-actions>
         <base-button-refresh
           :active="isRefreshBtnActive"
-          :is-disabled="isTeamBeingReopened"
+          :is-disabled="isAnyTeamBeingReopened"
           :loading="isMonitoringStatusLoading"
           @click="onAktualisierenClicked"
         />
@@ -73,7 +74,7 @@
           v-if="isBeschlussfassungStartenBtnVisible"
           :active="isBeschlussfassungBtnActive"
           :is-disabled="
-          isMoveOnToBeschlussfassungDisabled || isTeamBeingReopened
+            isMoveOnToBeschlussfassungDisabled || isAnyTeamBeingReopened
           "
           :loading="isWorkflowStatusLoading"
           @click="onBeschlussfassungStartenClicked"
@@ -83,7 +84,7 @@
           v-if="isBeschlussfassungContinueBtnVisible"
           :active="isBeschlussfassungBtnActive"
           :is-disabled="
-            isMoveOnToBeschlussfassungDisabled || isTeamBeingReopened
+            isMoveOnToBeschlussfassungDisabled || isAnyTeamBeingReopened
           "
           :loading="isWorkflowStatusLoading"
           @click="onBeschlussfassungContinueClicked"
@@ -117,7 +118,7 @@ import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const minWidth = "220px";
 const beschlussfassungStartenDialogVisible = ref(false);
-const isTeamBeingReopened = ref(false);
+const teamBeingReopened = ref<string | null>(null);
 
 const route = useRoute();
 const wahlID = (route.params.wahlId as string) || "";
@@ -138,6 +139,7 @@ const {
 } = useMonitoringViewUtils(wahlID, wahlbezirkID);
 const { isElectionFinished } = useWorkflowStore();
 
+const isAnyTeamBeingReopened = computed(() => teamBeingReopened.value !== null);
 const isRefreshBtnActive = computed(() => !isBeschlussfassungBtnActive.value);
 
 const isMonitoringStatusLoading = computed(
@@ -169,10 +171,10 @@ async function onAktualisierenClicked() {
 
 async function onOpenStimmzettelerfassungClicked(teamID: string) {
   try {
-    isTeamBeingReopened.value = true;
+    teamBeingReopened.value = teamID;
     await reopenStimmzettelerfassung(teamID);
   } finally {
-    isTeamBeingReopened.value = false;
+    teamBeingReopened.value = null;
   }
 }
 </script>

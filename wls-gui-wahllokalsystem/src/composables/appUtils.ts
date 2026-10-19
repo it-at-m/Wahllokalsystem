@@ -31,7 +31,8 @@ export function useAppUtils() {
             metadata.wahlbezirkID,
             currentUserTeamName.value,
             { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
-            false
+            false,
+            true
           );
         }
 

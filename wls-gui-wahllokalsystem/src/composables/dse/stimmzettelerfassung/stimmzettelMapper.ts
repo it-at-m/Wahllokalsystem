@@ -1,6 +1,7 @@
 import type {
   BeschlussfassungDTO,
   KandidatDTO,
+  SingleStimmzettelDTO,
   StimmzettelOfTeamDTO,
   SystemBeschlussgrundDTO,
   WahlvorschlagDTO,
@@ -101,6 +102,36 @@ export function useStimmzettelMapper() {
       gueltigkeit: model.gueltigkeit,
       invalideVotes: model.invalideVotes,
       stimmzettelkennung: model.stimmzettelkennung,
+      wahlvorschlaege:
+        model.wahlvorschlaege.length > 0
+          ? model.wahlvorschlaege.map((wahlvorschlag) =>
+              _wahlvorschlagModelToDto(wahlvorschlag)
+            )
+          : undefined,
+      beschlussfassung: model.beschlussfassung
+        ? _beschlussfassungModelToDto(model.beschlussfassung)
+        : undefined,
+      wahlvorstandBeschlussvorschlag:
+        model.wahlvorstandBeschlussvorschlag.length > 0
+          ? model.wahlvorstandBeschlussvorschlag.map((beschlussgrund) =>
+              _wahlvorstandBeschlussgrundModelToDto(beschlussgrund)
+            )
+          : undefined,
+      systemBeschlussvorschlag:
+        model.systemBeschlussvorschlag.length > 0
+          ? model.systemBeschlussvorschlag.map((beschlussgrund) =>
+              _systemBeschlussgrundModelToDto(beschlussgrund)
+            )
+          : undefined,
+    };
+  }
+
+  function toSingleStimmzettelDTO(
+    model: PersistedStimmzettel
+  ): SingleStimmzettelDTO {
+    return {
+      gueltigkeit: model.gueltigkeit,
+      invalideVotes: model.invalideVotes,
       wahlvorschlaege:
         model.wahlvorschlaege.length > 0
           ? model.wahlvorschlaege.map((wahlvorschlag) =>
@@ -278,6 +309,7 @@ export function useStimmzettelMapper() {
     toModel,
     toPersistedStimmzettel,
     toDTO,
+    toSingleStimmzettelDTO,
     mapPersistedStimmzettelValuesToExistingDseStimmzettel,
   };
 }

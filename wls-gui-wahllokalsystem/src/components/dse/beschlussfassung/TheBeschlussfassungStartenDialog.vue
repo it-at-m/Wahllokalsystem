@@ -73,8 +73,12 @@ const {
   stimmzettelCount,
   stimmzettelumschlaegeCount,
   loadAnzahlStimmzettel,
-  updateWorkflowStatusAndNavigate,
-} = useBeschlussfassungStartenDialogUtils();
+  continueProcessAfterForceRefreshOfForeignStimmzettel,
+} = useBeschlussfassungStartenDialogUtils(
+  props.wahlId,
+  props.wahlbezirkId,
+  closeDialog
+);
 
 watch(
   () => isDialogVisible.value,
@@ -110,7 +114,6 @@ async function cancelDialog() {
 }
 
 async function onConfirmClicked() {
-  await updateWorkflowStatusAndNavigate(props.wahlId, props.wahlbezirkId);
-  closeDialog();
+  await continueProcessAfterForceRefreshOfForeignStimmzettel();
 }
 </script>

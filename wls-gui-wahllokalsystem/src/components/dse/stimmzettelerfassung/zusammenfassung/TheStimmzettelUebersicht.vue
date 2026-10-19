@@ -112,6 +112,7 @@ const props = defineProps<{
   hasStimmzettel: boolean;
   wahlvorschlaege: Wahlvorschlag[];
   saveStimmzettel: (stimmzettel: PersistedStimmzettel) => Promise<void>;
+  forceRefreshStimmzettel: () => Promise<void>;
 }>();
 
 const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
@@ -146,7 +147,12 @@ const {
   sendStatusUnterbrochen,
   startNewEmptyStimmzettelWithStimmzettelkennung,
   reloadTeamStatus,
-} = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
+} = useStimmzettelErfassungViewUtils(
+  wahlID,
+  wahlbezirkID,
+  teamID,
+  props.forceRefreshStimmzettel
+);
 
 const startNewStimmzettelButtonText = computed(() =>
   props.hasStimmzettel ||

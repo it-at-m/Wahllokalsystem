@@ -1,3 +1,5 @@
+import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEntry.ts";
+
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelerfassungStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungStatusTestDataFactory.ts";
@@ -7,10 +9,14 @@ import { ref } from "vue";
 
 import { useBeschlussfassungStartenDialogUtils } from "@/composables/dse/beschlussfassung/beschlussfassungStartenDialogUtils.ts";
 import router from "@/plugins/router.ts";
+import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getAnzahlStimmzettel: vi.fn(),
+  getStimmzettel: vi.fn(),
+  loadTeamStatusListe: vi.fn(),
   saveDseWorkflowStatus: vi.fn(),
   routerPush: vi.fn(),
   getNextRoute: vi.fn(),
@@ -18,6 +24,8 @@ const mockDefinitions = vi.hoisted(() => ({
   routeWithNameAndParams: vi.fn(),
   getStimmzettelumschlaege: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
+  closeDialog: vi.fn(),
+  addNotification: vi.fn(),
 }));
 
 vi.mock(import("@/composables/navigation/navigationService.ts"), () => ({
@@ -47,9 +55,32 @@ vi.mock(
       useStimmzettelService: () => ({
         ...original.useStimmzettelService(),
         getAnzahlStimmzettel: mockDefinitions.getAnzahlStimmzettel,
+        getStimmzettel: mockDefinitions.getStimmzettel,
       }),
     };
   }
+);
+
+const mockedTeamStatusListRef = ref<StimmzettelerfassungTeamStatusEntry[]>([]);
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts"),
+  () => ({
+    useStimmzettelerfassungTeamStatusListState: () => ({
+      teamstatusList: mockedTeamStatusListRef,
+      loadTeamStatusListe: mockDefinitions.loadTeamStatusListe,
+      lastTeamstatusLoadingTime: ref(new Date()),
+      isTeamStatusListLoading: ref(true),
+    }),
+  })
+);
+
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
 );
 
 vi.mock(
@@ -85,12 +116,25 @@ describe("beschlussfassungStartenDialogUtils.ts", () => {
 
   const wahlID = "wahlID";
   const wahlbezirkID = "wahlbezirkID";
+  const currentUserTeamID = "currentUserTeamID";
 
   beforeEach(() => {
     createTestingPinia({
       createSpy: vi.fn,
+      initialState: {
+        user: {
+          user: {
+            teamName: currentUserTeamID,
+          },
+        },
+      },
     });
-    unitUnderTest = useBeschlussfassungStartenDialogUtils();
+    mockedTeamStatusListRef.value = [];
+    unitUnderTest = useBeschlussfassungStartenDialogUtils(
+      wahlID,
+      wahlbezirkID,
+      mockDefinitions.closeDialog
+    );
   });
 
   afterEach(() => {
@@ -262,6 +306,100 @@ describe("beschlussfassungStartenDialogUtils.ts", () => {
       expect(unitUnderTest.isAnzahlStimmzettelLoading.value).toStrictEqual(
         false
       );
+    });
+  });
+
+  describe("continueProcessAfterForceRefreshOfForeignStimmzettel", () => {
+    it("should_refreshForeignTeamsAndContinueProcess_when_refreshWasSuccessful", async () => {
+      const foreignTeamID = "foreignTeamID";
+      const anotherForeignTeamID = "anotherForeignTeamID";
+      mockedTeamStatusListRef.value = [
+        {
+          teamID: currentUserTeamID,
+          status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT,
+        },
+        {
+          teamID: foreignTeamID,
+          status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT,
+        },
+        {
+          teamID: anotherForeignTeamID,
+          status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT,
+        },
+      ];
+      mockDefinitions.getStimmzettel.mockResolvedValue([]);
+
+      await unitUnderTest.continueProcessAfterForceRefreshOfForeignStimmzettel();
+
+      expect(
+        mockDefinitions.loadTeamStatusListe
+      ).toHaveBeenCalledExactlyOnceWith(true);
+      expect(mockDefinitions.getStimmzettel.mock.calls).toStrictEqual([
+        [wahlID, wahlbezirkID, foreignTeamID, false, true],
+        [wahlID, wahlbezirkID, anotherForeignTeamID, false, true],
+      ]);
+      expect(mockDefinitions.saveDseWorkflowStatus).toHaveBeenCalledOnce();
+      expect(mockDefinitions.routerPush).toHaveBeenCalledOnce();
+      expect(mockDefinitions.closeDialog).toHaveBeenCalledOnce();
+    });
+
+    it("should_disableConfirmButton_when_refreshIsInProgress", async () => {
+      mockDefinitions.getStimmzettelumschlaege.mockResolvedValue({
+        anzahlWaehler: generateRandomNumber(2),
+      });
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
+        prepareWahl().build()
+      );
+
+      let resolveTeamStatusLoading: () => void = () => undefined;
+      mockDefinitions.loadTeamStatusListe.mockReturnValue(
+        new Promise<void>((resolve) => {
+          resolveTeamStatusLoading = resolve;
+        })
+      );
+      mockDefinitions.getStimmzettel.mockResolvedValue([]);
+      mockDefinitions.getAnzahlStimmzettel.mockResolvedValue(
+        generateRandomNumber(2)
+      );
+      await unitUnderTest.loadAnzahlStimmzettel(wahlID, wahlbezirkID);
+
+      const continueProcessPromise =
+        unitUnderTest.continueProcessAfterForceRefreshOfForeignStimmzettel();
+
+      expect(unitUnderTest.isConfirmButtonInLoadingState.value).toStrictEqual(
+        true
+      );
+
+      resolveTeamStatusLoading();
+      await continueProcessPromise;
+
+      expect(unitUnderTest.isConfirmButtonInLoadingState.value).toStrictEqual(
+        false
+      );
+    });
+
+    it("should_showErrorAndNotContinueProcess_when_refreshFailed", async () => {
+      const foreignTeamID = "foreignTeamID";
+      const mockedRefreshError = new Error("refresh failed");
+      mockedTeamStatusListRef.value = [
+        {
+          teamID: foreignTeamID,
+          status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT,
+        },
+      ];
+      mockDefinitions.getStimmzettel.mockRejectedValue(mockedRefreshError);
+
+      await expect(
+        unitUnderTest.continueProcessAfterForceRefreshOfForeignStimmzettel()
+      ).rejects.toThrow(mockedRefreshError);
+
+      expect(mockDefinitions.addNotification).toHaveBeenCalledWith(
+        "Stimmzettel konnten nicht synchronisiert werden. Bitte versuchen Sie es später erneut.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      expect(mockDefinitions.saveDseWorkflowStatus).not.toHaveBeenCalled();
+      expect(mockDefinitions.routerPush).not.toHaveBeenCalled();
+      expect(mockDefinitions.closeDialog).not.toHaveBeenCalled();
     });
   });
 });

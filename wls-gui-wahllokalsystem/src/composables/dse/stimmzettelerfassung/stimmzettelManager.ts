@@ -39,7 +39,7 @@ export function useStimmzettelManager(
 
   const hasStimmzettelBeenEdited = computed<boolean>(() => {
     if (stimmzettelBeforeEdit.value) {
-      return !_isDeepEqual(
+      return !_isDeepEqualIgnoreGueltigkeit(
         stimmzettelBeforeEdit.value,
         managedBearbeitenDialogStimmzettel.value
       );
@@ -103,7 +103,7 @@ export function useStimmzettelManager(
     );
   }
 
-  function _isDeepEqual(
+  function _isDeepEqualIgnoreGueltigkeit(
     persistedStimmzettel: PersistedStimmzettel,
     dseStimmzettel: DseStimmzettel
   ): boolean {

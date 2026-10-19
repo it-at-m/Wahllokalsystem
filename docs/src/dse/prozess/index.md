@@ -33,7 +33,8 @@ Die separate Übermittlung einer Schnellmeldung und Niederschrift hat wahlrechtl
 ### (1) Stimmzettel vorbereiten
 
 In diesem Schritt erfolgen vorbereitende Maßnahmen, um die Erfassung zu erleichtern. Der Stimmzettel wird z.B. vollständig
-entfaltet, und es werden Markierungen vorgenommen, die zeigen, wo man Stimmen findet.
+entfaltet, und es werden vom Wahlhelfer-Team Markierungen angebracht. Diese Maßnahmen erleichtern im weiteren Verlauf der Auszählung
+das Auffinden der von der wählenden Person gesetzten Stimmen.
 
 ### (2) Stimmzettel erfassen {#stimmzettel-erfassen}
 

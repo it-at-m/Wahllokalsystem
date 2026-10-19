@@ -23,7 +23,6 @@ const mockDefinitions = vi.hoisted(() => ({
   getUrnenwahlvorbereitung: vi.fn(),
   getBriefwahlvorbereitung: vi.fn(),
   getWahlbriefdaten: vi.fn(),
-  sendWaehler: vi.fn(),
 }));
 
 const { createPflegeWaehlerverzeichnis } =
@@ -82,11 +81,6 @@ vi.mock(
     };
   }
 );
-vi.mock("@/stores/monitoringStore.ts", () => ({
-  useMonitoringStore: () => ({
-    sendWaehler: mockDefinitions.sendWaehler,
-  }),
-}));
 
 const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();
@@ -497,7 +491,6 @@ describe("wahlbezirkStore.ts", () => {
       expect(
         unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeit?.getTime()
       ).toStrictEqual(schliessungsuhrzeit.getTime());
-      expect(mockDefinitions.sendWaehler).toHaveBeenCalled();
     });
 
     it("should_notUpdateSchliessungsUhrzeitSent_when_postUrnenwahlSchliessungsuhrzeitFails", async () => {

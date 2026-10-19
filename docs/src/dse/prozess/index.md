@@ -24,12 +24,11 @@ flowchart TD
     class S3,S4,S5,S6 newProcessStep;
 ```
 
-Mit dem Schritt `Stimmzettel vorbereiten` beginnt der neue Prozess. Mit dem Schritt `Schnellmeldung ans Wahlamt übermitteln`
-ist man wieder im gewohnten Prozess.
-
-Die separate Übermittlung einer Schnellmeldung und Niederschrift hat wahlrechtliche Gründe.
-
 ## Neuer Prozess zur DSE
+
+Die nummerierten Schritte 1 `Stimmzettel vorbereiten` bis 4 `Beschlüsse zu Stimmzetteln fassen` weichen vom
+[gewohnten "Stapelbildungs"-Prozess](/about/index#usecase-stimmen-zaehlen) ab und werden im folgenden näher erläutert.
+Die separate Übermittlung einer Schnellmeldung und Niederschrift hat wahlrechtliche Gründe.
 
 ### (1) Stimmzettel vorbereiten
 

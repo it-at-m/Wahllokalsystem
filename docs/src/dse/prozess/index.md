@@ -38,8 +38,8 @@ das Auffinden der von der wählenden Person gesetzten Stimmen.
 
 ### (2) Stimmzettel erfassen {#stimmzettel-erfassen}
 
-In diesem Schritt erfolgt die Erfassung der Stimmzettel im System. Der Stimmzettelerfassungs-Workflow-Status wird
-auf `(e) STE in Bearbeitung` gesetzt. Stimmzettel, über die der gesamte Wahlvorstand einen Beschluss fassen muss,
+In diesem Schritt erfolgt die Erfassung der Stimmzettel im System. Der [Stimmzettelerfassungs-Workflow-Status](#neue-statuswerte)
+wird auf `(e) STE in Bearbeitung` gesetzt. Stimmzettel, über die der gesamte Wahlvorstand einen Beschluss fassen muss,
 werden im System mit einem oder mehreren `Vormerkungsgründen` versehen und für die Beschlussfassung zur Seite gelegt.
 
 Um eine möglichst intuitive Erfassung der Stimmen des Stimmzettels zu ermöglichen, haben wir
@@ -49,20 +49,20 @@ Für die Erfassung werden spezielle [Kurzbefehle](/dse/stimmzettelerfassung/inde
 
 ### (3) Stimmzettel ablegen
 
-Die im System erfassten Stimmzettel werden anschließend, entsprechend der Regeln der Wahl, nach 
+Die im System erfassten Stimmzettel werden anschließend, entsprechend der Regeln der Wahl, nach
 [Stapeln](/about/index#usecase-stimmen-zaehlen) sortiert. Stimmzettel, über die noch ein Beschluss zu fassen ist, landen
 so für die weitere Bearbeitung auf einem separaten Stapel.
 
 ### (4) Beschlüsse zu Stimmzetteln fassen {#beschluesse-erfassen}
 
-Sind alle Teams mit der Erfassung fertig und der Stimmzettelerfassungs-Workflow-Status `(f) STE abgeschlossen` wurde
-erfolgreich übermittelt, startet die Beschlussdokumentation. Der Wahlvorstand fasst die Beschlüsse zu den zuvor
+Sind alle Teams mit der Erfassung fertig und der [Stimmzettelerfassungs-Workflow-Status](#neue-statuswerte) `(f) STE abgeschlossen`
+wurde erfolgreich übermittelt, startet die Beschlussdokumentation. Der Wahlvorstand fasst die Beschlüsse zu den zuvor
 markierten Stimmzetteln und überträgt die Ergebnisse ins System. Eine Zusammenfassung mehrerer
 `Vormerkungsgründe` stellt einen `Beschlussvorschlag` dar, über welchen im Gremium abgestimmt wird. Der Vorschlag,
 der am Ende die Abstimmung gewinnt, wird als `Entscheidungsgrund` gespeichert. Sind alle Beschlüsse vollständig im System
 dokumentiert, wird der Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschlossen` gespeichert.
 
-## Neue Statuswerte
+## Neue Statuswerte {#neue-statuswerte}
 
 Mit dem neuen Prozess wurden neue Statuswerte für die einzelnen Erfassungsteams sowie Wahlbezirke eingeführt:
 

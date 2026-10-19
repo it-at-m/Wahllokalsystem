@@ -335,6 +335,25 @@ describe("requestStrategies.ts", () => {
         [callbackOptions.request.url, expectedIndexDBValueAfterFetch],
       ]);
     });
+
+    it("should_returnInternalServerError_when_savingPreFetchRequestFailed", async () => {
+      const requestBody = generateRandomString(50);
+      const requestContentType = generateRandomString(10);
+      const callbackOptions = createRouteHandlerCallbackOptions(
+        "POST",
+        requestBody,
+        new Headers({
+          "Content-Type": requestContentType,
+        })
+      );
+
+      const mockedStoreItemError = new Error("storing item failed");
+      mockDefinitions.storeItem.mockRejectedValue(mockedStoreItemError);
+
+      const result =
+        await unitUnderTest.onlineFirstPostRequestHandler(callbackOptions);
+      expect(result.status).toStrictEqual(500);
+    });
   });
 
   describe("onlineOnlyAndReplaceStoredValueRequestHandler", () => {

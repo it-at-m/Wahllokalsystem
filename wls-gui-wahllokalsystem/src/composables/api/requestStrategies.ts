@@ -71,8 +71,15 @@ export function useRequestStrategies() {
     );
 
     const dbKey = options.request.url;
+
     try {
       await _storeRequest(dbKey, options.request, true);
+    } catch (error) {
+      logError("Error fetching remote data:", error);
+      return createResponseInternalServerErrorWithoutResponseBody();
+    }
+
+    try {
       const response = await fetch(options.request.clone());
       logDebug(`response has status ${response.status}`);
 

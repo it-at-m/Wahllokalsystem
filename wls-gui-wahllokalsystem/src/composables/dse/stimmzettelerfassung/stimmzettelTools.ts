@@ -34,21 +34,6 @@ export function useStimmzettelTools() {
     };
   }
 
-  function getEmptyStimmzettelWithStimmzettelkennung(
-    stimmzettelkennung: number
-  ): PersistedStimmzettel {
-    return {
-      stimmzettelkennung: stimmzettelkennung,
-      teamID: useUserStore().currentUserTeamName,
-      gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      invalideVotes: 0,
-      beschlussfassung: null,
-      wahlvorstandBeschlussvorschlag: [],
-      systemBeschlussvorschlag: [],
-      wahlvorschlaege: [],
-    };
-  }
-
   function isBeschlussRequired(stimmzettel: PersistedStimmzettel) {
     return (
       stimmzettel.gueltigkeit ===
@@ -239,7 +224,6 @@ export function useStimmzettelTools() {
 
   return {
     createStimmzettelWithWahlvorschlaege,
-    getEmptyStimmzettelWithStimmzettelkennung,
     isBeschlussRequired,
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,

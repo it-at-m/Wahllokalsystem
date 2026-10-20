@@ -221,9 +221,7 @@ async function onStimmzettelBearbeitenClicked(
 }
 async function onStimmzettelAnsehenClicked(stimmzettel: PersistedStimmzettel) {
   await enableErfassungsDialog();
-  templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettel, {
-    readonly: true,
-  });
+  templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettel, true);
 }
 
 async function enableErfassungsDialog() {

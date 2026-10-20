@@ -238,10 +238,9 @@ function onLeerenClicked() {
 
 function showDialog(
   stimmzettelToEditOrKennungOfNew: PersistedStimmzettel | number,
-  options?: { readonly?: boolean }
+  readonly = false
 ) {
-  const selectedOptions = { readonly: false, ...options };
-  isReadonly.value = selectedOptions.readonly;
+  isReadonly.value = readonly;
 
   if (typeof stimmzettelToEditOrKennungOfNew === "number") {
     stimmzettelkennung.value = stimmzettelToEditOrKennungOfNew;

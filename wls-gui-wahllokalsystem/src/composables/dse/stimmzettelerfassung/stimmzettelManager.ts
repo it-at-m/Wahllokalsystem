@@ -39,9 +39,14 @@ export function useStimmzettelManager(
 
   const hasStimmzettelBeenEdited = computed<boolean>(() => {
     if (stimmzettelBeforeEdit.value) {
-      return !_isDeepEqualIgnoreGueltigkeit(
-        stimmzettelBeforeEdit.value,
-        managedBearbeitenDialogStimmzettel.value
+      const mappedFromDse: PersistedStimmzettel = toPersistedStimmzettel(
+        managedBearbeitenDialogStimmzettel.value,
+        stimmzettelkennung.value,
+        activeTeamID.value
+      );
+      return !isDeepEqualIgnoreGueltigkeit(
+        mappedFromDse,
+        stimmzettelBeforeEdit.value
       );
     } else {
       return bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value;
@@ -101,19 +106,6 @@ export function useStimmzettelManager(
       commandString,
       bearbeitenDialogStimmzettelUtils
     );
-  }
-
-  function _isDeepEqualIgnoreGueltigkeit(
-    persistedStimmzettel: PersistedStimmzettel,
-    dseStimmzettel: DseStimmzettel
-  ): boolean {
-    const mappedFromDse: PersistedStimmzettel = toPersistedStimmzettel(
-      dseStimmzettel,
-      stimmzettelkennung.value,
-      activeTeamID.value
-    );
-
-    return isDeepEqualIgnoreGueltigkeit(mappedFromDse, persistedStimmzettel);
   }
 
   return {

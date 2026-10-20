@@ -311,9 +311,10 @@ describe("stimmzettelManager.ts", () => {
       expect(stimmzettelBeforeEdit.value).toBeNull();
       startEditStimmzettel(activeStimmzettelToBeSet);
 
-      expect(stimmzettelBeforeEdit.value).toStrictEqual(
-        activeStimmzettelToBeSet
-      );
+      expect(stimmzettelBeforeEdit.value).toStrictEqual({
+        ...activeStimmzettelToBeSet,
+        beschlussfassung: null,
+      });
       const managedAfter = bearbeitenDialogStimmzettelUtils.stimmzettel.value;
       expect(managedAfter.invalideVotes).toBe(3);
       expect(managedAfter.wahlvorschlaege[0].selected).toBe(true);

@@ -87,7 +87,6 @@ const wahlID = route.params.wahlId as string;
 
 const { currentUserTeamName } = storeToRefs(useUserStore());
 
-const { cloneStructured } = useCloneTools();
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
   computed(() => stimmzettelkennung.value),
   properties.wahlvorschlaege,
@@ -229,9 +228,7 @@ function showDialog(
   } else {
     stimmzettelkennung.value =
       stimmzettelToEditOrKennungOfNew.stimmzettelkennung;
-    const copyOfStimmzettel = cloneStructured(stimmzettelToEditOrKennungOfNew);
-    copyOfStimmzettel.beschlussfassung = null;
-    stimmzettelManager.startEditStimmzettel(copyOfStimmzettel);
+    stimmzettelManager.startEditStimmzettel(stimmzettelToEditOrKennungOfNew);
     currentAction.value = confirmActions.saveAndClose;
   }
   isDialogVisible.value = true;

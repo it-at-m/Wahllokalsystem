@@ -5,6 +5,7 @@ import type { ComputedRef, Ref } from "vue";
 
 import { computed, ref } from "vue";
 
+import { useCloneTools } from "@/composables/common/cloneTools.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useBearbeitenDialogStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 import { COMMAND_HANDLERS } from "@/composables/dse/stimmzettelerfassung/command/commandHandlers.ts";
@@ -21,6 +22,7 @@ export function useStimmzettelManager(
 ) {
   const { createStimmzettelWithWahlvorschlaege, isDeepEqualIgnoreGueltigkeit } =
     useStimmzettelTools();
+  const { cloneStructured } = useCloneTools();
   const {
     toPersistedStimmzettel,
     mapPersistedStimmzettelValuesToExistingDseStimmzettel,
@@ -61,16 +63,19 @@ export function useStimmzettelManager(
     );
   }
 
-  function startEditStimmzettel(stimmzettelToSet: PersistedStimmzettel) {
-    stimmzettelBeforeEdit.value = stimmzettelToSet;
+  function startEditStimmzettel(stimmzettelToEdit: PersistedStimmzettel) {
+    const copyOfStimmzettelToEdit = cloneStructured(stimmzettelToEdit);
+    copyOfStimmzettelToEdit.beschlussfassung = null;
+
+    stimmzettelBeforeEdit.value = copyOfStimmzettelToEdit;
     bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
-      stimmzettelToSet
+      copyOfStimmzettelToEdit
     );
-    activeTeamID.value = stimmzettelToSet.teamID;
+    activeTeamID.value = copyOfStimmzettelToEdit.teamID;
 
     mapPersistedStimmzettelValuesToExistingDseStimmzettel(
       managedBearbeitenDialogStimmzettel.value,
-      stimmzettelToSet
+      copyOfStimmzettelToEdit
     );
   }
 

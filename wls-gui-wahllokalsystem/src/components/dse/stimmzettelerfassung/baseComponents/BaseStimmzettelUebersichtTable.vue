@@ -31,7 +31,6 @@
         icon="$view"
         size="small"
         variant="elevated"
-        class="ms-2"
         @click="onStimmzettelViewClicked(item)"
       />
       <v-btn

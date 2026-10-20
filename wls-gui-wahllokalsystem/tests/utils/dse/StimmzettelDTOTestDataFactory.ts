@@ -2,6 +2,7 @@ import type {
   BeschlussfassungDTO,
   KandidatDTO,
   KandidatIdDTO,
+  SingleStimmzettelDTO,
   StimmzettelOfTeamDTO,
   SystemBeschlussgrundDTO,
   WahlvorschlagDTO,
@@ -74,6 +75,31 @@ export function useStimmzettelDTOTestDataFactory() {
     };
   }
 
+  function createSingleStimmzettelDTO(): SingleStimmzettelDTO {
+    return {
+      invalideVotes: generateRandomNumber(6),
+      gueltigkeit: getRandomItem(
+        Object.values(StimmzettelOfTeamDTOGueltigkeitEnum)
+      ),
+      beschlussfassung: createStimmzettelBeschlussfassungDTO(),
+      systemBeschlussvorschlag: [
+        createStimmzettelSystemBeschlussgrundDto(),
+        createStimmzettelSystemBeschlussgrundDto(),
+        createStimmzettelSystemBeschlussgrundDto(),
+      ],
+      wahlvorstandBeschlussvorschlag: [
+        createStimmzettelWahlvorstandBeschlussgrundDTO(),
+        createStimmzettelWahlvorstandBeschlussgrundDTO(),
+        createStimmzettelWahlvorstandBeschlussgrundDTO(),
+      ],
+      wahlvorschlaege: [
+        createStimmzettelWahlvorschlagDTO(),
+        createStimmzettelWahlvorschlagDTO(),
+        createStimmzettelWahlvorschlagDTO(),
+      ],
+    };
+  }
+
   function createStimmzettelOfTeamDTO(): StimmzettelOfTeamDTO {
     return {
       stimmzettelkennung: generateRandomNumber(6),
@@ -104,6 +130,10 @@ export function useStimmzettelDTOTestDataFactory() {
     return proxyBuilder<StimmzettelOfTeamDTO>(createStimmzettelOfTeamDTO());
   }
 
+  function prepareSingleStimmzettelDTO(): Builder<SingleStimmzettelDTO> {
+    return proxyBuilder<SingleStimmzettelDTO>(createSingleStimmzettelDTO());
+  }
+
   function prepareStimmzettelBeschlussfassungDTO(): Builder<BeschlussfassungDTO> {
     return proxyBuilder<BeschlussfassungDTO>(
       createStimmzettelBeschlussfassungDTO()
@@ -131,6 +161,7 @@ export function useStimmzettelDTOTestDataFactory() {
   return {
     createStimmzettelOfTeamDTO,
     createStimmzettelKandidatDTO,
+    prepareSingleStimmzettelDTO,
     prepareStimmzettelOfTeamDTO,
     prepareStimmzettelBeschlussfassungDTO,
     prepareStimmzettelBeschlussgrundDTO,

@@ -128,6 +128,7 @@ function mountOverview({
       hasStimmzettel: false,
       wahlvorschlaege,
       saveStimmzettel: vi.fn(),
+      forceRefreshStimmzettel: vi.fn(),
     },
     global: {
       plugins: [vuetify],

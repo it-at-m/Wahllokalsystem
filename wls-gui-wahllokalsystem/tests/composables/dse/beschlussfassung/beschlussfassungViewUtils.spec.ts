@@ -29,6 +29,7 @@ const mockDefinitions = await vi.hoisted(async () => {
     loadStimmzettelOfWahlbezirk: vi.fn(),
     getStimmzettel: vi.fn(),
     saveStimmzettel: vi.fn(),
+    saveSingleStimmzettel: vi.fn(),
     addNotification: vi.fn(),
   };
 });
@@ -88,6 +89,7 @@ vi.mock("@/composables/dse/stimmzettelerfassung/stimmzettelService.ts", () => ({
   useStimmzettelService: () => ({
     getStimmzettel: mockDefinitions.getStimmzettel,
     saveStimmzettel: mockDefinitions.saveStimmzettel,
+    saveSingleStimmzettel: mockDefinitions.saveSingleStimmzettel,
     getAnzahlStimmzettel: vi.fn(),
   }),
 }));
@@ -355,11 +357,9 @@ describe("beschlussfassungViewUtils.ts", () => {
         false,
       ]);
 
-      expect(mockDefinitions.saveStimmzettel.mock.calls[0][0]).toBe(wahlID);
-      expect(mockDefinitions.saveStimmzettel.mock.calls[0][1]).toBe(
-        wahlbezirkID
-      );
-      expect(mockDefinitions.saveStimmzettel.mock.calls[0][2]).toBe(teamID);
+      expect(mockDefinitions.saveStimmzettel.mock.calls).toStrictEqual([
+        [wahlID, wahlbezirkID, teamID, [s1, stimmzettelToSave], true, true],
+      ]);
       expect(
         mockDefinitions.loadStimmzettelOfWahlbezirk
       ).toHaveBeenCalledOnce();
@@ -368,6 +368,9 @@ describe("beschlussfassungViewUtils.ts", () => {
       expect(savedList).toHaveLength(2);
       expect(savedList[0]).toBe(s1);
       expect(savedList[1]).toBe(stimmzettelToSave);
+      expect(mockDefinitions.saveSingleStimmzettel.mock.calls).toStrictEqual([
+        [wahlID, wahlbezirkID, teamID, stimmzettelToSave, false],
+      ]);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
@@ -398,6 +401,7 @@ describe("beschlussfassungViewUtils.ts", () => {
       );
 
       expect(mockDefinitions.saveStimmzettel).not.toHaveBeenCalled();
+      expect(mockDefinitions.saveSingleStimmzettel).not.toHaveBeenCalled();
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);

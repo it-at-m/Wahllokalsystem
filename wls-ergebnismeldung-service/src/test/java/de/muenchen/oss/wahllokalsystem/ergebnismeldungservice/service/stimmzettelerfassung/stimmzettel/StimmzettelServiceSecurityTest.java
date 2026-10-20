@@ -234,6 +234,107 @@ class StimmzettelServiceSecurityTest {
   }
 
   @Nested
+  class SaveSingleStimmzettel {
+
+    @Test
+    void should_getAccess_when_allRequiredAuthoritiesArePresentAndIDsAreMatching() {
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
+      val stimmzettelToSave = Instancio.create(StimmzettelOfTeamModel.class);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(ownerModel.wahlbezirkID()), Mockito.any()))
+          .thenReturn(true);
+      Mockito.when(
+              teamIDPermissionEvaluator.tokenUserteamIdMatches(
+                  Mockito.eq(ownerModel.teamID()), Mockito.any()))
+          .thenReturn(true);
+
+      SecurityUtils.runWith(Authorities.SERVICE_WRITE_STIMMZETEL);
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave));
+    }
+
+    @Test
+    void
+        should_throwAccessDeniedException_when_requiredAuthorityIsGivenButWahlbezirkIDIsNotMatching() {
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
+      val stimmzettelToSave = Instancio.create(StimmzettelOfTeamModel.class);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(ownerModel.wahlbezirkID()), Mockito.any()))
+          .thenReturn(false);
+
+      SecurityUtils.runWith(Authorities.SERVICE_WRITE_STIMMZETEL);
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_throwAccessDeniedException_when_requiredAuthorityIsGivenButTeamIDIsNotMatching() {
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
+      val stimmzettelToSave = Instancio.create(StimmzettelOfTeamModel.class);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(ownerModel.wahlbezirkID()), Mockito.any()))
+          .thenReturn(true);
+      Mockito.when(
+              teamIDPermissionEvaluator.tokenUserteamIdMatches(
+                  Mockito.eq(ownerModel.teamID()), Mockito.any()))
+          .thenReturn(false);
+
+      SecurityUtils.runWith(Authorities.SERVICE_WRITE_STIMMZETEL);
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_throwAccessDeniedException_when_requiredAuthorityIsNotGivenButIDsAreMatching() {
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
+      val stimmzettelToSave = Instancio.create(StimmzettelOfTeamModel.class);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(ownerModel.wahlbezirkID()), Mockito.any()))
+          .thenReturn(true);
+      Mockito.when(
+              teamIDPermissionEvaluator.tokenUserteamIdMatches(
+                  Mockito.eq(ownerModel.teamID()), Mockito.any()))
+          .thenReturn(true);
+
+      SecurityUtils.runWith();
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_getAccess_when_teamIDIsNotMatchingButUserHasWahlvorstandAuthority() {
+      val ownerModel = Instancio.create(TeamBezirkUndWahlIDModel.class);
+      val stimmzettelToSave = Instancio.create(StimmzettelOfTeamModel.class);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(ownerModel.wahlbezirkID()), Mockito.any()))
+          .thenReturn(true);
+      Mockito.when(
+              teamIDPermissionEvaluator.tokenUserteamIdMatches(
+                  Mockito.eq(ownerModel.teamID()), Mockito.any()))
+          .thenReturn(false);
+
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              new String[] {Authorities.SERVICE_WRITE_STIMMZETEL}, "WLS_WAHLVORSTAND"));
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.saveStimmzettel(ownerModel, stimmzettelToSave));
+    }
+  }
+
+  @Nested
   class GetAnzahlStimmzettel {
 
     @Test

@@ -18,13 +18,14 @@ export function useStimmzettelerfassungTeamStatusListState(
   const isTeamStatusListLoading = ref(false);
   const lastTeamstatusLoadingTime = ref<Date>();
 
-  async function loadTeamStatusListe() {
+  async function loadTeamStatusListe(forceRefresh = false) {
     try {
       isTeamStatusListLoading.value = true;
       const loaded = await loadErfassungTeamStatusListe(
         wahlID,
         wahlbezirkID,
-        true
+        true,
+        forceRefresh
       );
       if (loaded) {
         loaded.sort(compareByTeamID);

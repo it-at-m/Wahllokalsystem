@@ -6,7 +6,8 @@ import { computed, onActivated, readonly, ref } from "vue";
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 
-const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
+const { getStimmzettel, saveStimmzettel, saveSingleStimmzettel } =
+  useStimmzettelService();
 const { isSamePersistedStimmzettel } = useStimmzettelTools();
 
 export function useStimmzettelState(
@@ -20,8 +21,12 @@ export function useStimmzettelState(
   const hasStimmzettel = computed(() => savedStimmzettel.value.length > 0);
 
   onActivated(async () => {
-    await _loadStimmzettel();
+    await _loadStimmzettel(false);
   });
+
+  async function forceRefreshStimmzettel() {
+    await _loadStimmzettel(true);
+  }
 
   async function saveOrUpdateStimmzettel(
     stimmzettelToSave: PersistedStimmzettel
@@ -43,18 +48,30 @@ export function useStimmzettelState(
       wahlID,
       wahlbezirkID,
       teamID,
-      newStimmzettelCollectionToSave
+      newStimmzettelCollectionToSave,
+      true,
+      true
     );
+    saveSingleStimmzettel(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      stimmzettelToSave,
+      false
+    );
+
     savedStimmzettel.value = newStimmzettelCollectionToSave;
   }
 
-  async function _loadStimmzettel() {
+  async function _loadStimmzettel(forceRefresh: boolean) {
     isStimmzettelLoading.value = true;
     try {
       savedStimmzettel.value = await getStimmzettel(
         wahlID,
         wahlbezirkID,
-        teamID
+        teamID,
+        true,
+        forceRefresh
       );
     } finally {
       isStimmzettelLoading.value = false;
@@ -65,6 +82,7 @@ export function useStimmzettelState(
     isStimmzettelLoading: readonly(isStimmzettelLoading),
     savedStimmzettel: computed(() => savedStimmzettel.value),
     hasStimmzettel,
+    forceRefreshStimmzettel,
     saveOrUpdateStimmzettel,
   };
 }

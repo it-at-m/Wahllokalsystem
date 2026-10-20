@@ -77,6 +77,27 @@ public class StimmzettelController {
         new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID), modelValuesToSave);
   }
 
+  @Operation(
+      description =
+          "Schreiben eines konkreten Stimmzettels eines Team in einem Wahlbezirk einer Wahl")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "201", description = "Der Stimmzettel wurde gespeichert"),
+      })
+  @PostMapping(
+      "wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/stimmzettel/{stimmzettelkennung}")
+  @ResponseStatus(HttpStatus.CREATED)
+  public void postSingleStimmzettel(
+      @PathVariable("wahlID") final String wahlID,
+      @PathVariable("wahlbezirkID") final String wahlbezirkID,
+      @PathVariable("teamID") final String teamID,
+      @PathVariable("stimmzettelkennung") final Integer stimmzettelkennung,
+      @RequestBody SingleStimmzettelDTO stimmzettel) {
+    val modelValuesToSave = stimmzettelDTOMapper.toModel(stimmzettel, stimmzettelkennung);
+    stimmzettelService.saveStimmzettel(
+        new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID), modelValuesToSave);
+  }
+
   @Operation(description = "Lesen der Anzahl an Stimmzetteln in einem Wahlbezirk einer Wahl")
   @ApiResponses(
       value = {

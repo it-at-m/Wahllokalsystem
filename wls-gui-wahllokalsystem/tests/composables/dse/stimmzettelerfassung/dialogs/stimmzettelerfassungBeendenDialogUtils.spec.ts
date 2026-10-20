@@ -177,6 +177,7 @@ describe("StimmzettelerfassungBeendenDialogUtils.ts", () => {
         wahlbezirkId,
         "TEAM-ERFASSUNG",
         { status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN },
+        true,
         true
       );
       expect(mockDefinitions.routerPush).toHaveBeenCalledWith({

@@ -106,6 +106,31 @@ class StimmzettelControllerTest {
   }
 
   @Nested
+  class PostSingleStimmzettel {
+
+    @Test
+    void should_callServiceWithMappedValue_when_called() {
+      val wahlID = Instancio.create(String.class);
+      val wahlbezirkID = Instancio.create(String.class);
+      val teamID = Instancio.create(String.class);
+      val stimmzettelkennung = Instancio.create(Integer.class);
+      val requestBody = Instancio.create(SingleStimmzettelDTO.class);
+      val mappedStimmzettel = Instancio.create(StimmzettelOfTeamModel.class);
+
+      Mockito.when(stimmzettelDTOMapper.toModel(requestBody, stimmzettelkennung))
+          .thenReturn(mappedStimmzettel);
+
+      unitUnderTest.postSingleStimmzettel(
+          wahlID, wahlbezirkID, teamID, stimmzettelkennung, requestBody);
+
+      Mockito.verify(stimmzettelDTOMapper).toModel(requestBody, stimmzettelkennung);
+      Mockito.verify(stimmzettelService)
+          .saveStimmzettel(
+              new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID), mappedStimmzettel);
+    }
+  }
+
+  @Nested
   class GetAnzahlStimmzettel {
 
     @Test

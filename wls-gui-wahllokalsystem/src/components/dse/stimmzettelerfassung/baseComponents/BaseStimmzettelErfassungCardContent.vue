@@ -93,7 +93,7 @@
           stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
             .systemBeschlussvorschlag
         "
-        :stimmzettelkennung="stimmzettel.stimmzettelkennung"
+        :stimmzettelkennung="stimmzettel?.stimmzettelkennung ?? 0"
         :is-b-w-b="isBWB"
       />
     </div>
@@ -127,7 +127,7 @@ const stimmzettelManager = defineModel("modelValue", {
 
 const props = defineProps({
   stimmzettel: {
-    type: Object as PropType<PersistedStimmzettel>,
+    type: [Object, null] as PropType<PersistedStimmzettel | null>,
     required: true,
   },
   wahlvorschlaege: {

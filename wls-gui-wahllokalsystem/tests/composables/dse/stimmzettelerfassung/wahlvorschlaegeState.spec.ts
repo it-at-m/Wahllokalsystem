@@ -121,5 +121,35 @@ describe("wahlvorschlaegeState", () => {
 
       spyOnIsWahlvorschlaegeLoading.mockRestore();
     });
+
+    it("should_reuseRunningRequest_when_wahlvorschlaegeAreRequestedMultipleTimes", async () => {
+      const mockedLoadedWahlvorschlaege = prepareWahlvorschlaege()
+        .wahlvorschlaege([createWahlvorschlag(), createWahlvorschlag()])
+        .build();
+      let resolveLoadingRequest: (
+        value: typeof mockedLoadedWahlvorschlaege
+      ) => void = () => {
+        throw new Error("Loading request was not initialized");
+      };
+      mockDefinitions.loadWahlvorschlaege.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            resolveLoadingRequest = resolve;
+          })
+      );
+
+      const firstRequest = unitUnderTest.loadWahlvorschlaege();
+      const secondRequest = unitUnderTest.loadWahlvorschlaege();
+
+      expect(secondRequest).toBe(firstRequest);
+      expect(mockDefinitions.loadWahlvorschlaege).toHaveBeenCalledOnce();
+
+      resolveLoadingRequest(mockedLoadedWahlvorschlaege);
+      await firstRequest;
+
+      expect(unitUnderTest.wahlvorschlaege.value).toStrictEqual(
+        mockedLoadedWahlvorschlaege.wahlvorschlaege
+      );
+    });
   });
 });

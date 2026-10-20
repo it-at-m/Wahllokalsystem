@@ -1,7 +1,11 @@
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { PersistedKandidat } from "@/types/dse/stimmzettelerfassung/PersistedKandidat.ts";
 
+import { useCloneTools } from "@/composables/common/cloneTools.ts";
+
 export function useKandidatTools() {
+  const { cloneStructured } = useCloneTools();
+
   function hasAnyKennzeichenOrReststimme(kandidat: DseKandidat): boolean {
     return hasAnyKennzeichen(kandidat) || !!kandidat.reststimmen;
   }
@@ -86,14 +90,7 @@ export function useKandidatTools() {
           _compareKandidatenByNennung(kandidat1, kandidat2)
         );
       })
-      .map((k) => ({
-        kandidatId: k.kandidatId,
-        nennung: k.nennung,
-        isDiscarded: k.isDiscarded,
-        votesByVoter: k.votesByVoter ?? null,
-        invalidVotes: k.invalidVotes ?? null,
-        votesByWahlvorschlag: k.votesByWahlvorschlag ?? null,
-      }));
+      .map((k) => cloneStructured(k));
   }
 
   function _compareKandidatenById(

@@ -92,7 +92,8 @@ describe("stimmzettelerfassungTeamStatusListState.ts", () => {
       expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        true
+        true,
+        false
       );
       expect(unitUnderTest.teamstatusList.value).toEqual(mockedListe);
       expect(unitUnderTest.lastTeamstatusLoadingTime.value).toBeInstanceOf(
@@ -101,6 +102,19 @@ describe("stimmzettelerfassungTeamStatusListState.ts", () => {
       expect(unitUnderTest.isTeamStatusListLoading.value).toBe(false);
       expect(spy.mock.calls).toStrictEqual([[true], [false]]);
       spy.mockReset();
+    });
+
+    it("should_forceRefresh_when_calledWithForceRefresh", async () => {
+      mockDefinitions.loadTeamStatusListe.mockResolvedValue([]);
+
+      await unitUnderTest.loadTeamStatusListe(true);
+
+      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        true,
+        true
+      );
     });
 
     it("should_resetLoadingAndRethrow_when_loadFails", async () => {

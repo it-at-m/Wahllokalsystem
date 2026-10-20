@@ -74,6 +74,8 @@ management:
       enabled: true
     readinessstate:
       enabled: true
+    db:
+      enabled: false
 
 info:
   application:

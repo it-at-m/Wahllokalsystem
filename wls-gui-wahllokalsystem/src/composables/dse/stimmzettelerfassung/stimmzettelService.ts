@@ -1,3 +1,4 @@
+import type { StimmzettelOfTeamDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import {
@@ -14,7 +15,7 @@ export function useStimmzettelService() {
   const { addNotification } = useUserNotificationService();
   const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
     useCommonApiUtils();
-  const { toModel, toDTO } = useStimmzettelMapper();
+  const { toModel, toDTO, toSingleStimmzettelDTO } = useStimmzettelMapper();
 
   const ergebnismeldungConfiguration = new Configuration({
     basePath: ERGEBNISMELDUNG_SERVICE_API_URL,
@@ -28,14 +29,18 @@ export function useStimmzettelService() {
     wahlID: string,
     wahlbezirkID: string,
     teamID: string,
-    sendNotification = true
+    sendNotification = true,
+    forceRefresh = false
   ): Promise<PersistedStimmzettel[]> {
     try {
-      const response = await stimmzettelControllerApi.getStimmzettel(
-        wahlID,
-        wahlbezirkID,
-        teamID
-      );
+      const response = forceRefresh
+        ? await _getStimmzettelAndRefreshOfflineData(
+            wahlID,
+            wahlbezirkID,
+            teamID
+          )
+        : await _getStimmzettelOfflineFirst(wahlID, wahlbezirkID, teamID);
+
       const responseData = getNullOn204OrElseResponseData(response);
       return (
         responseData?.map((stimmzettelDTO) =>
@@ -58,18 +63,29 @@ export function useStimmzettelService() {
     wahlbezirkID: string,
     teamID: string,
     stimmzettelList: PersistedStimmzettel[],
-    sendNotification = true
+    sendNotification = true,
+    justStore = false
   ) {
     try {
       const dtosToSend = stimmzettelList.map((stimmzettel) =>
         toDTO(stimmzettel)
       );
-      await stimmzettelControllerApi.postStimmzettel(
-        wahlID,
-        wahlbezirkID,
-        teamID,
-        dtosToSend
-      );
+      if (justStore) {
+        await _saveStimmzettelListToStore(
+          wahlID,
+          wahlbezirkID,
+          teamID,
+          dtosToSend
+        );
+      } else {
+        await _saveStimmzettelListToBackend(
+          wahlID,
+          wahlbezirkID,
+          teamID,
+          dtosToSend
+        );
+      }
+
       if (sendNotification) {
         addNotification(
           "Speichern der Stimmzettel erfolgreich",
@@ -80,6 +96,39 @@ export function useStimmzettelService() {
       if (sendNotification) {
         addNotification(
           "Speichern der Stimmzettel ist fehlgeschlagen",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw error;
+    }
+  }
+
+  async function saveSingleStimmzettel(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string,
+    stimmzettel: PersistedStimmzettel,
+    sendNotification = true
+  ) {
+    try {
+      const dtoToSend = toSingleStimmzettelDTO(stimmzettel);
+      await stimmzettelControllerApi.postSingleStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        stimmzettel.stimmzettelkennung,
+        dtoToSend
+      );
+      if (sendNotification) {
+        addNotification(
+          "Speichern des Stimmzettels erfolgreich",
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+    } catch (error) {
+      if (sendNotification) {
+        addNotification(
+          "Speichern des Stimmzettels ist fehlgeschlagen",
           UserNotificationCategoryEnum.ERROR
         );
       }
@@ -110,9 +159,65 @@ export function useStimmzettelService() {
     }
   }
 
+  async function _getStimmzettelAndRefreshOfflineData(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string
+  ) {
+    return await stimmzettelControllerApi.getStimmzettel(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      axiosConfigWrapper().requestAsForceRefresh()
+    );
+  }
+
+  async function _getStimmzettelOfflineFirst(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string
+  ) {
+    return await stimmzettelControllerApi.getStimmzettel(
+      wahlID,
+      wahlbezirkID,
+      teamID
+    );
+  }
+
+  async function _saveStimmzettelListToStore(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string,
+    stimmzettelList: StimmzettelOfTeamDTO[]
+  ) {
+    await stimmzettelControllerApi.postStimmzettel(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      stimmzettelList,
+      axiosConfigWrapper().requestAsSaveOfflineOnly()
+    );
+  }
+
+  async function _saveStimmzettelListToBackend(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string,
+    stimmzettelList: StimmzettelOfTeamDTO[]
+  ) {
+    await stimmzettelControllerApi.postStimmzettel(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      stimmzettelList,
+      axiosConfigWrapper().requestAsOnlineFirst()
+    );
+  }
+
   return {
     getStimmzettel,
     saveStimmzettel,
+    saveSingleStimmzettel,
     getAnzahlStimmzettel,
   };
 }

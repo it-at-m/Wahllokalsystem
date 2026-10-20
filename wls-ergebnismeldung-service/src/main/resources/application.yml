@@ -48,6 +48,8 @@ server:
     whitelabel:
       enabled: false
   max-http-request-header-size: 32KB
+  compression:
+    enabled: true
 
 # Config for spring actuator endpoints
 management:
@@ -64,6 +66,9 @@ management:
     health.enabled: true
     info.enabled: true
     prometheus.enabled: true
+  health:
+    db:
+      enabled: false
   info:
     env:
       enabled: true

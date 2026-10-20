@@ -11,7 +11,8 @@ const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 export function useStimmzettelErfassungViewUtils(
   wahlID: string,
   wahlbezirkID: string,
-  teamID: string
+  teamID: string,
+  forceRefreshStimmzettel: () => Promise<void>
 ) {
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
   const isStatusLoading = ref(false);
@@ -23,7 +24,7 @@ export function useStimmzettelErfassungViewUtils(
 
   //Hooks
   onActivated(async () => {
-    await _loadTeamStatus();
+    await _loadTeamStatus(false);
   });
 
   //Public functions
@@ -47,18 +48,43 @@ export function useStimmzettelErfassungViewUtils(
   }
 
   async function reloadTeamStatus() {
-    await _loadTeamStatus();
+    await _loadTeamStatus(false);
+    const lastOfflineFirstTeamStatus = teamStatus.value;
+    await _loadTeamStatus(true);
+    const currentActiveTeamStatus = teamStatus.value;
+
+    if (
+      _hasTeamStatusSwitchedFromAbgeschlossenToInBearbeitung(
+        lastOfflineFirstTeamStatus,
+        currentActiveTeamStatus
+      )
+    ) {
+      await forceRefreshStimmzettel();
+    }
   }
 
   //private functions
-  async function _loadTeamStatus() {
+  function _hasTeamStatusSwitchedFromAbgeschlossenToInBearbeitung(
+    lastOfflineFirstTeamStatus: StimmzettelerfassungTeamStatus | null,
+    currentActiveTeamStatus: StimmzettelerfassungTeamStatus | null
+  ) {
+    return (
+      lastOfflineFirstTeamStatus?.status ===
+        StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN &&
+      currentActiveTeamStatus?.status ===
+        StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+    );
+  }
+
+  async function _loadTeamStatus(forceRefresh: boolean) {
     isStatusLoading.value = true;
     try {
       const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
         wahlID,
         wahlbezirkID,
         teamID,
-        false
+        false,
+        forceRefresh
       );
       if (loaded) {
         teamStatus.value = loaded;

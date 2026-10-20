@@ -109,6 +109,7 @@ describe("appUtils.ts", () => {
         teamName,
         { status: StimmzettelerfassungTeamStatusEnum.REGISTRIERT },
         false,
+        true,
       ]);
       expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });

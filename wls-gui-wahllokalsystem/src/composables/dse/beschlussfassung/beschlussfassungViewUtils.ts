@@ -12,7 +12,8 @@ import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/Sti
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { getStimmzettel, saveStimmzettel } = useStimmzettelService();
+const { getStimmzettel, saveStimmzettel, saveSingleStimmzettel } =
+  useStimmzettelService();
 const { isSamePersistedStimmzettel } = useStimmzettelTools();
 const { addNotification } = useUserNotificationService();
 
@@ -82,8 +83,18 @@ export function useBeschlussfassungViewUtils(
         wahlID,
         wahlbezirkID,
         stimmzettelToSave.teamID,
-        teamStimmzettelList
+        teamStimmzettelList,
+        true,
+        true
       );
+      saveSingleStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        stimmzettelToSave.teamID,
+        stimmzettelToSave,
+        false
+      );
+
       await loadStimmzettelOfWahlbezirk();
     } else {
       const stimmzettelkennung = `${stimmzettelToSave.teamID} ${stimmzettelToSave.stimmzettelkennung}`;

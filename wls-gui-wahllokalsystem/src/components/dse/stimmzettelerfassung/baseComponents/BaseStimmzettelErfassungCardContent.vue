@@ -8,6 +8,7 @@
       style="flex: 0 0 250px; min-width: 0"
     >
       <the-eingabehistorie-card
+        v-if="!isReadonly"
         :change-history="changeHistory.changeHistoryInReverseOrder.value"
         class="d-flex flex-column"
       />

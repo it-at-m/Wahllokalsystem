@@ -9,7 +9,6 @@ import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/besch
 import { useSystemBeschlussgrundReasonEnumFormatter } from "@/composables/dse/beschlussfassung/useSystemBeschlussgrundReasonEnumFormatter.ts";
 import { useWahlvorschlagTools } from "@/composables/dse/stimmzettelerfassung/wahlvorschlagTools.ts";
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const {

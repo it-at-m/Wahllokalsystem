@@ -21,33 +21,8 @@
         :wahlvorschlaege="wahlvorschlaege"
         :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
       />
-      <v-card-actions>
-        <base-text-button
-          v-if="!isReadonly"
-          :disabled="isResetDisabled"
-          @click="onResetClicked"
-        >
-          Zurücksetzen
-        </base-text-button>
-        <base-text-button
-          v-if="!isReadonly"
-          @click="onLeerenClicked"
-        >
-          Stimmzettel leeren
-        </base-text-button>
+      <v-card-actions v-if="isReadonly">
         <v-spacer />
-        <base-text-button
-          v-if="!isReadonly"
-          :disabled="isCancelButtonDisabled"
-          @click="onCancelClicked"
-          >Abbrechen</base-text-button
-        >
-        <base-save-button-with-action-menu
-          v-if="!isReadonly"
-          :disabled="isSaveDisabled"
-          :model-value="currentAction"
-          :actions="actions"
-        />
         <base-text-button
           v-if="isReadonly"
           :active="true"
@@ -55,6 +30,28 @@
         >
           Schließen
         </base-text-button>
+      </v-card-actions>
+      <v-card-actions v-else>
+        <base-text-button
+          :disabled="isResetDisabled"
+          @click="onResetClicked"
+        >
+          Zurücksetzen
+        </base-text-button>
+        <base-text-button @click="onLeerenClicked">
+          Stimmzettel leeren
+        </base-text-button>
+        <v-spacer />
+        <base-text-button
+          :disabled="isCancelButtonDisabled"
+          @click="onCancelClicked"
+          >Abbrechen</base-text-button
+        >
+        <base-save-button-with-action-menu
+          :disabled="isSaveDisabled"
+          :model-value="currentAction"
+          :actions="actions"
+        />
       </v-card-actions>
       <the-stimmzettel-erfassung-cancel-confirmation-dialog
         :visible="isCancelConfirmationDialogVisible"

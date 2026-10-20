@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="isDialogVisibleModel"
+    v-model="isDialogVisible"
     eager
     persistent
     fullscreen
@@ -72,7 +72,7 @@ import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-const isDialogVisibleModel = ref(false);
+const isDialogVisible = ref(false);
 const stimmzettelkennung = ref(0);
 
 const properties = defineProps({
@@ -163,7 +163,7 @@ const stimmzettelGueltigkeit = computed(
 const isCancelConfirmationDialogVisible = ref(false);
 
 function closeDialog() {
-  isDialogVisibleModel.value = false;
+  isDialogVisible.value = false;
 }
 
 async function focusCommandProcessingTextField() {
@@ -175,7 +175,7 @@ function onCancelClicked() {
   if (
     stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
   ) {
-    isDialogVisibleModel.value = false;
+    isDialogVisible.value = false;
   } else {
     isCancelConfirmationDialogVisible.value = true;
   }
@@ -220,23 +220,21 @@ function onLeerenClicked() {
 }
 
 function showDialog(
-  stimmzettelToApplyOrKennungOfNext: PersistedStimmzettel | number
+  stimmzettelToEditOrKennungOfNew: PersistedStimmzettel | number
 ) {
-  if (typeof stimmzettelToApplyOrKennungOfNext === "number") {
-    stimmzettelkennung.value = stimmzettelToApplyOrKennungOfNext;
+  if (typeof stimmzettelToEditOrKennungOfNew === "number") {
+    stimmzettelkennung.value = stimmzettelToEditOrKennungOfNew;
     stimmzettelManager.startNewStimmzettel(currentUserTeamName.value);
     currentAction.value = confirmActions.saveAndContinue;
   } else {
     stimmzettelkennung.value =
-      stimmzettelToApplyOrKennungOfNext.stimmzettelkennung;
-    const copyOfStimmzettel = cloneStructured(
-      stimmzettelToApplyOrKennungOfNext
-    );
+      stimmzettelToEditOrKennungOfNew.stimmzettelkennung;
+    const copyOfStimmzettel = cloneStructured(stimmzettelToEditOrKennungOfNew);
     copyOfStimmzettel.beschlussfassung = null;
     stimmzettelManager.startEditStimmzettel(copyOfStimmzettel);
     currentAction.value = confirmActions.saveAndClose;
   }
-  isDialogVisibleModel.value = true;
+  isDialogVisible.value = true;
   focusCommandProcessingTextField();
 }
 </script>

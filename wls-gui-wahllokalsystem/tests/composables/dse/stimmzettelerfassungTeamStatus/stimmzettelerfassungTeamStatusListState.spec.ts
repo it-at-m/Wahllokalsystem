@@ -10,6 +10,7 @@ const mockDefinitions = vi.hoisted(() => ({
   loadTeamStatusListe: vi.fn(),
   postErfassungTeamStatus: vi.fn(),
   addNotification: vi.fn(),
+  compareByTeamID: vi.fn(),
 }));
 
 vi.mock(
@@ -40,6 +41,15 @@ vi.mock(
   }
 );
 
+vi.mock(
+  import("@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusEntryTools.ts"),
+  () => ({
+    useStimmzettelerfassungTeamStatusEntryTools: () => ({
+      compareByTeamID: mockDefinitions.compareByTeamID,
+    }),
+  })
+);
+
 describe("stimmzettelerfassungTeamStatusListState.ts", () => {
   let unitUnderTest: ReturnType<
     typeof useStimmzettelerfassungTeamStatusListState
@@ -61,6 +71,7 @@ describe("stimmzettelerfassungTeamStatusListState.ts", () => {
       wahlID,
       wahlbezirkID
     );
+    mockDefinitions.compareByTeamID.mockReturnValue(0);
   });
 
   afterEach(() => {
@@ -92,7 +103,8 @@ describe("stimmzettelerfassungTeamStatusListState.ts", () => {
       expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        true
+        true,
+        false
       );
       expect(unitUnderTest.teamstatusList.value).toEqual(mockedListe);
       expect(unitUnderTest.lastTeamstatusLoadingTime.value).toBeInstanceOf(
@@ -100,7 +112,21 @@ describe("stimmzettelerfassungTeamStatusListState.ts", () => {
       );
       expect(unitUnderTest.isTeamStatusListLoading.value).toBe(false);
       expect(spy.mock.calls).toStrictEqual([[true], [false]]);
+      expect(mockDefinitions.compareByTeamID).toHaveBeenCalled();
       spy.mockReset();
+    });
+
+    it("should_forceRefresh_when_calledWithForceRefresh", async () => {
+      mockDefinitions.loadTeamStatusListe.mockResolvedValue([]);
+
+      await unitUnderTest.loadTeamStatusListe(true);
+
+      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        true,
+        true
+      );
     });
 
     it("should_resetLoadingAndRethrow_when_loadFails", async () => {

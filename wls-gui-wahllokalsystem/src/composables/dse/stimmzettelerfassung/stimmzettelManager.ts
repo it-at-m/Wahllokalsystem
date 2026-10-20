@@ -48,6 +48,14 @@ export function useStimmzettelManager(
     }
   });
 
+  function getStimmzettelSnapshot(): PersistedStimmzettel {
+    return toPersistedStimmzettel(
+      managedBearbeitenDialogStimmzettel.value,
+      stimmzettelkennung.value,
+      activeTeamID.value
+    );
+  }
+
   function startEditStimmzettel(stimmzettelToSet: PersistedStimmzettel) {
     stimmzettelBeforeEdit.value = stimmzettelToSet;
     bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
@@ -58,14 +66,6 @@ export function useStimmzettelManager(
     mapPersistedStimmzettelValuesToExistingDseStimmzettel(
       managedBearbeitenDialogStimmzettel.value,
       stimmzettelToSet
-    );
-  }
-
-  function getStimmzettelSnapshot(): PersistedStimmzettel {
-    return toPersistedStimmzettel(
-      managedBearbeitenDialogStimmzettel.value,
-      stimmzettelkennung.value,
-      activeTeamID.value
     );
   }
 

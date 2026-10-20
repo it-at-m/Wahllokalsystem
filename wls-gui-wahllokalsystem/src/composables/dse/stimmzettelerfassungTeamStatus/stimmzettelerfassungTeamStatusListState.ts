@@ -2,12 +2,15 @@ import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzette
 
 import { readonly, ref } from "vue";
 
+import { useStimmzettelerfassungTeamStatusEntryTools } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusEntryTools.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 
 export function useStimmzettelerfassungTeamStatusListState(
   wahlID: string,
   wahlbezirkID: string
 ) {
+  const { compareByTeamID } = useStimmzettelerfassungTeamStatusEntryTools();
+
   const { loadErfassungTeamStatusListe } =
     useStimmzettelerfassungTeamStatusService();
 
@@ -25,6 +28,7 @@ export function useStimmzettelerfassungTeamStatusListState(
         forceRefresh
       );
       if (loaded) {
+        loaded.sort(compareByTeamID);
         teamstatusList.value = loaded;
         lastTeamstatusLoadingTime.value = new Date();
       }

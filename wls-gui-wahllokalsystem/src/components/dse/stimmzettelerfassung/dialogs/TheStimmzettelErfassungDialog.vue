@@ -66,7 +66,6 @@ import BaseSaveButtonWithActionMenu from "@/components/common/buttons/BaseSaveBu
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseStimmzettelErfassungCardContent from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelErfassungCardContent.vue";
 import TheStimmzettelErfassungCancelConfirmationDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungCancelConfirmationDialog.vue";
-import { useCloneTools } from "@/composables/common/cloneTools.ts";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";

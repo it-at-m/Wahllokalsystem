@@ -14,7 +14,7 @@ const {
   preparePersistedStimmzettelKandidat,
 } = usePersistedStimmzettelTestDataFactory();
 
-describe("stimmzettelGueltigeKandidatenstimmenUtils", () => {
+describe("stimmzettelZusammenfassungUtils", () => {
   it("should_calculateGueltigeKandidatenstimmen_ when_votesAcrossMultipleStimmzettel", () => {
     const wv1 = prepareWahlvorschlag()
       .identifikator("wv1")

@@ -222,4 +222,64 @@ describe("stimmzettelZusammenfassungUtils", () => {
       });
     }
   });
+
+  it("should_sumVotesForKandidatEntriesWithinSameWahlvorschlag_when_kandidatHasMehrfachnennungen", () => {
+    const wahlvorschlagID = "wahlvorschlagID";
+    const kandidatID1 = "kandidatID1";
+    const kandidatID2 = "kandidatID2";
+    const wv = prepareWahlvorschlag()
+      .identifikator(wahlvorschlagID)
+      .kandidaten([
+        prepareKandidat().identifikator(kandidatID1).build(),
+        prepareKandidat().identifikator(kandidatID2).build(),
+      ])
+      .build();
+
+    const stimmzettel = preparePersistedStimmzettel()
+      .wahlvorschlaege([
+        preparePersistedStimmzettelWahlvorschlag()
+          .wahlvorschlagID(wahlvorschlagID)
+          .kandidaten([
+            preparePersistedStimmzettelKandidat()
+              .kandidatId(kandidatID1)
+              .votesByVoter(2)
+              .votesByWahlvorschlag(1)
+              .build(),
+            preparePersistedStimmzettelKandidat()
+              .kandidatId(kandidatID1)
+              .votesByVoter(3)
+              .votesByWahlvorschlag(null)
+              .build(),
+            preparePersistedStimmzettelKandidat()
+              .kandidatId(kandidatID2)
+              .votesByVoter(5)
+              .votesByWahlvorschlag(null)
+              .build(),
+          ])
+          .build(),
+      ])
+      .build();
+
+    const { wahlvorschlaegeWithKandidatenErgebnissen } =
+      useStimmzettelZusammenfassungUtils(ref([stimmzettel]), ref([wv]));
+
+    const result = wahlvorschlaegeWithKandidatenErgebnissen.value[0];
+    expect(result.identifikator).toBe(wahlvorschlagID);
+    expect(result.kandidatenErgebnisse).toHaveLength(2);
+
+    const kandidatK1 = result.kandidatenErgebnisse.find(
+      (ke) => ke.kandidat.identifikator === kandidatID1
+    );
+    const kandidatK2 = result.kandidatenErgebnisse.find(
+      (ke) => ke.kandidat.identifikator === kandidatID2
+    );
+
+    if (kandidatK1) {
+      expect(kandidatK1.ergebnis.ergebnis).toStrictEqual(6);
+    }
+
+    if (kandidatK2) {
+      expect(kandidatK2.ergebnis.ergebnis).toStrictEqual(5);
+    }
+  });
 });

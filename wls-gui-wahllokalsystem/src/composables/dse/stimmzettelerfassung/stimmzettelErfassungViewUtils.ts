@@ -16,7 +16,7 @@ export function useStimmzettelErfassungViewUtils(
 ) {
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
   const isStatusLoading = ref(false);
-  const statusBeingWritten = ref<StimmzettelerfassungTeamStatusEnum | null>(
+  const teamStatusBeingWritten = ref<StimmzettelerfassungTeamStatusEnum | null>(
     null
   );
 
@@ -104,7 +104,7 @@ export function useStimmzettelErfassungViewUtils(
     const newStatus: StimmzettelerfassungTeamStatus = {
       status: statusToChange,
     };
-    statusBeingWritten.value = statusToChange;
+    teamStatusBeingWritten.value = statusToChange;
     try {
       await erfassungTeamStatusService.postErfassungTeamStatus(
         wahlID,
@@ -115,7 +115,7 @@ export function useStimmzettelErfassungViewUtils(
       );
       teamStatus.value = newStatus;
     } finally {
-      statusBeingWritten.value = null;
+      teamStatusBeingWritten.value = null;
     }
   }
 
@@ -124,7 +124,7 @@ export function useStimmzettelErfassungViewUtils(
     teamStatus: readonly(teamStatus),
     isKennungsDialogVisible,
     isStatusLoading: readonly(isStatusLoading),
-    statusBeingWritten: readonly(statusBeingWritten),
+    statusBeingWritten: readonly(teamStatusBeingWritten),
 
     //actions
     ensureStatusInBearbeitung,

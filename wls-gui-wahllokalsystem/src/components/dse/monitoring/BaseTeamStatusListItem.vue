@@ -32,7 +32,7 @@
             class="ml-10"
             active
             :disabled="isWiederOeffnenButtonDisabled"
-            :loading="isWiederOffnenInProgress"
+            :loading="isWiederOffnenButtonLoading"
             @click="onSTEWiederOeffnenClicked"
           >
             wieder öffnen
@@ -61,7 +61,7 @@ defineProps({
     type: String,
     required: true,
   },
-  isWiederOffnenInProgress: {
+  isWiederOffnenButtonLoading: {
     type: Boolean,
     required: true,
   },

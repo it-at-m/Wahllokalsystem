@@ -136,7 +136,12 @@ export function useStimmzettelerfassungTeamStatusService() {
             teamID,
             dto
           );
-
+      if (sendNotification) {
+        addNotification(
+            `Team-Status für ${wahlname} erfolgreich gespeichert.`,
+            UserNotificationCategoryEnum.SUCCESS
+        );
+      }
       return dtoToModel(savedStatus.data);
     } catch {
       if (sendNotification) {

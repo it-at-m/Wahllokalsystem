@@ -57,7 +57,7 @@
               isElectionFinished(wahlID, wahlbezirkID) ||
               isAnyTeamBeingReopened
             "
-            :is-wieder-offnen-in-progress="item.teamID === teamBeingReopened"
+            :is-wieder-offnen-button-loading="item.teamID === teamBeingReopened"
             @open-stimmzettelerfassung="
               onOpenStimmzettelerfassungClicked(item.teamID)
             "
@@ -68,7 +68,7 @@
         <base-button-refresh
           :active="isRefreshBtnActive"
           :is-disabled="isAnyTeamBeingReopened"
-          :loading="isMonitoringStatusLoading"
+          :loading="isTeamOrWorkflowStatusLoading"
           @click="onAktualisierenClicked"
         />
         <base-text-button
@@ -143,7 +143,7 @@ const { isElectionFinished } = useWorkflowStore();
 const isAnyTeamBeingReopened = computed(() => teamBeingReopened.value !== null);
 const isRefreshBtnActive = computed(() => !isBeschlussfassungBtnActive.value);
 
-const isMonitoringStatusLoading = computed(
+const isTeamOrWorkflowStatusLoading = computed(
   () => isTeamStatusListLoading.value || isWorkflowStatusLoading.value
 );
 

@@ -24,14 +24,18 @@
           :active="startenBtnActive"
           :is-disabled="
             isWahlvorschlaegeLoading ||
-            isAnotherStatusBeingWritten(
-              StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+            isTeamStatusBeingWritten(
+              statusBeingWritten,
+              StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+              false
             )
           "
           :loading="
             isStatusLoading ||
-            statusBeingWritten ===
+            isTeamStatusBeingWritten(
+              statusBeingWritten,
               StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+            )
           "
           class="mr-5"
           @click="onErfassungStartenClicked"
@@ -41,14 +45,18 @@
         <base-text-button
           :is-disabled="
             unterbrechenBtnIsDisabled ||
-            isAnotherStatusBeingWritten(
-              StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
+            isTeamStatusBeingWritten(
+              statusBeingWritten,
+              StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
+              false
             )
           "
           :loading="
             isStatusLoading ||
-            statusBeingWritten ===
+            isTeamStatusBeingWritten(
+              statusBeingWritten,
               StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
+            )
           "
           @click="onErfassungUnterbrechenClicked"
         >
@@ -123,6 +131,7 @@ import TheStimmzettelerfassungBeendenDialog from "@/components/dse/stimmzetteler
 import TheStimmzettelErfassungDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungDialog.vue";
 import TheStimmzettelkennungDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelkennungDialog.vue";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
+import { isTeamStatusBeingWritten } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusTools.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
@@ -193,14 +202,6 @@ watch(
   },
   { immediate: true }
 );
-
-function isAnotherStatusBeingWritten(
-  status: StimmzettelerfassungTeamStatusEnum
-) {
-  return (
-    statusBeingWritten.value !== null && statusBeingWritten.value !== status
-  );
-}
 
 function onErfassungStartenClicked() {
   isKennungsDialogVisible.value = true;

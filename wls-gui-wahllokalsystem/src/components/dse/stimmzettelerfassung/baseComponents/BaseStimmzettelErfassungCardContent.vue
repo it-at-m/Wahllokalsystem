@@ -8,6 +8,7 @@
       style="flex: 0 0 250px; min-width: 0"
     >
       <the-eingabehistorie-card
+        v-if="!isReadonly"
         :change-history="changeHistory.changeHistoryInReverseOrder.value"
         class="d-flex flex-column"
       />
@@ -44,6 +45,7 @@
       style="min-height: 0; min-width: 0"
     >
       <the-stimmzettel-command-processing-text-field
+        v-if="!isReadonly"
         :ref="COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME"
         class="flex-0-0"
         :stimmzettel-manager="stimmzettelManager"
@@ -88,6 +90,7 @@
           stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
             .value
         "
+        :is-readonly="isReadonly"
         :team-id="currentUserTeamName"
         :system-beschlussgruende="
           stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
@@ -138,6 +141,11 @@ const props = defineProps({
     required: true,
   },
   denySelectionOfStimmzettelFehlt: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  isReadonly: {
     type: Boolean,
     required: false,
     default: false,

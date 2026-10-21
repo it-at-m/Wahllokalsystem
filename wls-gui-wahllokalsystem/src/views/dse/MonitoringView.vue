@@ -54,7 +54,8 @@
             :is-wieder-oeffnen-button-disabled="
               item.status !==
                 StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN ||
-              isElectionFinished(wahlID, wahlbezirkID)
+              isElectionFinished(wahlID, wahlbezirkID) ||
+              isAnyTeamBeingReopened
             "
             :is-wieder-offnen-in-progress="item.teamID === teamBeingReopened"
             @open-stimmzettelerfassung="

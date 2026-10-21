@@ -274,12 +274,9 @@ describe("stimmzettelZusammenfassungUtils", () => {
       (ke) => ke.kandidat.identifikator === kandidatID2
     );
 
-    if (kandidatK1) {
-      expect(kandidatK1.ergebnis.ergebnis).toStrictEqual(6);
-    }
-
-    if (kandidatK2) {
-      expect(kandidatK2.ergebnis.ergebnis).toStrictEqual(5);
-    }
+    // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+    expect(kandidatK1!.ergebnis.ergebnis).toStrictEqual(6);
+    // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+    expect(kandidatK2!.ergebnis.ergebnis).toStrictEqual(5);
   });
 });

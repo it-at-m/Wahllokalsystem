@@ -40,6 +40,7 @@ export function withSetup<T>(composable: () => T): [T, App] {
 
 export const COMPONENT_RENDER_TESTS = "visual logic";
 export const COMPONENT_EVENT_TESTS = "behavioral logic";
+export const COMPONENT_PERFORMANCE_TESTS = "performance";
 
 /**
  * Mocks dynamic components

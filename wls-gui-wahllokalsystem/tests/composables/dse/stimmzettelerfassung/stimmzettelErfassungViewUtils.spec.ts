@@ -1,8 +1,6 @@
-import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -15,9 +13,9 @@ const mockDefinitions = await vi.hoisted(async () => {
   return {
     loadErfassungTeamStatus: vi.fn(),
     postErfassungTeamStatus: vi.fn(),
-    getEmptyStimmzettelWithStimmzettelkennung: vi.fn(),
     logError: vi.fn(),
     onActivated: vi.fn(),
+    forceRefreshStimmzettel: vi.fn(),
 
     registerActivated: (cb: () => Promise<void> | void) => {
       activatedCallbacks.length = 0;
@@ -55,20 +53,6 @@ vi.mock(
   }
 );
 
-vi.mock(
-  import("@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts"),
-  async (importOriginal) => {
-    const mod = await importOriginal();
-    return {
-      useStimmzettelTools: () => ({
-        ...mod.useStimmzettelTools(),
-        getEmptyStimmzettelWithStimmzettelkennung:
-          mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung,
-      }),
-    };
-  }
-);
-
 vi.mock(import("@/composables/common/logging.ts"), async (importOriginal) => {
   const mod = await importOriginal();
   return {
@@ -80,10 +64,7 @@ vi.mock(import("@/composables/common/logging.ts"), async (importOriginal) => {
 });
 
 describe("stimmzettelErfassungViewUtils.ts", () => {
-  const { generateRandomString, generateRandomNumber } =
-    useCommonTestDataFactory();
-  const { preparePersistedStimmzettel } =
-    usePersistedStimmzettelTestDataFactory();
+  const { generateRandomString } = useCommonTestDataFactory();
   const { createStimmzettelerfassungTeamStatusModel } =
     useStimmzettelerfassungTeamStatusTestDataFactory();
 
@@ -97,7 +78,8 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
     unitUnderTest = useStimmzettelErfassungViewUtils(
       mockedWahlId,
       mockedWahlbezirkId,
-      mockedTeamId
+      mockedTeamId,
+      mockDefinitions.forceRefreshStimmzettel
     );
   });
 
@@ -109,7 +91,6 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
   describe("initial state", () => {
     it("should_haveInitialDialogVisibilityFalse_when_initialized", () => {
       expect(unitUnderTest.isKennungsDialogVisible.value).toBe(false);
-      expect(unitUnderTest.isErfassungsDialogVisible.value).toBe(false);
     });
 
     it("should_haveInitialTeamStatusAndStatusLoading_when_initialized", () => {
@@ -140,7 +121,13 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       await mockDefinitions.runActivatedCallbacks();
 
       expect(mockDefinitions.loadErfassungTeamStatus.mock.calls).toStrictEqual([
-        [mockedWahlId, mockedWahlbezirkId, mockedTeamId, NO_NOTIFICATION],
+        [
+          mockedWahlId,
+          mockedWahlbezirkId,
+          mockedTeamId,
+          NO_NOTIFICATION,
+          false,
+        ],
       ]);
       expect(spyOnIsStatusLoadingSetter.mock.calls).toStrictEqual([
         [true],
@@ -170,7 +157,13 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       ).rejects.toThrowError("mocked service error");
 
       expect(mockDefinitions.loadErfassungTeamStatus.mock.calls).toStrictEqual([
-        [mockedWahlId, mockedWahlbezirkId, mockedTeamId, NO_NOTIFICATION],
+        [
+          mockedWahlId,
+          mockedWahlbezirkId,
+          mockedTeamId,
+          NO_NOTIFICATION,
+          false,
+        ],
       ]);
       expect(spyOnIsStatusLoadingSetter.mock.calls).toStrictEqual([
         [true],
@@ -179,31 +172,6 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       expect(unitUnderTest.teamStatus.value).toStrictEqual(null);
 
       spyOnIsStatusLoadingSetter.mockRestore();
-    });
-
-    describe("startNewEmptyStimmzettelWithStimmzettelkennung", () => {
-      it("should_setActiveStimmzettel_when_calledWithKennung", () => {
-        const mockedKennung = generateRandomNumber(3);
-        const mockedEmptyStimmzettel: PersistedStimmzettel =
-          preparePersistedStimmzettel()
-            .stimmzettelkennung(mockedKennung)
-            .build();
-
-        mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung.mockReturnValue(
-          mockedEmptyStimmzettel
-        );
-
-        unitUnderTest.startNewEmptyStimmzettelWithStimmzettelkennung(
-          mockedKennung
-        );
-
-        expect(
-          mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung
-        ).toHaveBeenCalledWith(mockedKennung);
-        expect(unitUnderTest.activeStimmzettel.value).toStrictEqual(
-          mockedEmptyStimmzettel
-        );
-      });
     });
 
     describe("ensureStatusInBearbeitung", () => {
@@ -349,6 +317,66 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         ]);
 
         spyOnStatusBeingWrittenSetter.mockRestore();
+      });
+    });
+
+    describe("reloadTeamStatus", () => {
+      it("should_forceRefreshStimmzettel_when_statusSwitchedFromAbgeschlossenToInBearbeitung", async () => {
+        const offlineFirstStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+        );
+        const refreshedStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+        );
+        mockDefinitions.loadErfassungTeamStatus
+          .mockResolvedValueOnce(offlineFirstStatus)
+          .mockResolvedValueOnce(refreshedStatus);
+        mockDefinitions.forceRefreshStimmzettel.mockResolvedValueOnce(
+          undefined
+        );
+
+        await unitUnderTest.reloadTeamStatus();
+
+        expect(
+          mockDefinitions.loadErfassungTeamStatus.mock.calls
+        ).toStrictEqual([
+          [mockedWahlId, mockedWahlbezirkId, mockedTeamId, false, false],
+          [mockedWahlId, mockedWahlbezirkId, mockedTeamId, false, true],
+        ]);
+        expect(mockDefinitions.forceRefreshStimmzettel).toHaveBeenCalledOnce();
+        expect(unitUnderTest.teamStatus.value).toStrictEqual(refreshedStatus);
+      });
+
+      it("should_notForceRefreshStimmzettel_when_offlineFirstStatusIsNotAbgeschlossen", async () => {
+        const offlineFirstStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.REGISTRIERT
+        );
+        const refreshedStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+        );
+        mockDefinitions.loadErfassungTeamStatus
+          .mockResolvedValueOnce(offlineFirstStatus)
+          .mockResolvedValueOnce(refreshedStatus);
+
+        await unitUnderTest.reloadTeamStatus();
+
+        expect(mockDefinitions.forceRefreshStimmzettel).not.toHaveBeenCalled();
+      });
+
+      it("should_notForceRefreshStimmzettel_when_refreshedStatusIsNotInBearbeitung", async () => {
+        const offlineFirstStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+        );
+        const refreshedStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
+        );
+        mockDefinitions.loadErfassungTeamStatus
+          .mockResolvedValueOnce(offlineFirstStatus)
+          .mockResolvedValueOnce(refreshedStatus);
+
+        await unitUnderTest.reloadTeamStatus();
+
+        expect(mockDefinitions.forceRefreshStimmzettel).not.toHaveBeenCalled();
       });
     });
   });

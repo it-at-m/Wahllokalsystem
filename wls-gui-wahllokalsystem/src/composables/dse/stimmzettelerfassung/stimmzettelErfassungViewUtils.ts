@@ -1,49 +1,36 @@
-import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
-import type { Ref } from "vue";
 
 import { onActivated, readonly, ref } from "vue";
 
 import { useStimmzettelErfassungViewButtonStateUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewButtonStateUtils.ts";
-import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 
 const erfassungTeamStatusService = useStimmzettelerfassungTeamStatusService();
 
-const { getEmptyStimmzettelWithStimmzettelkennung } = useStimmzettelTools();
-
 export function useStimmzettelErfassungViewUtils(
   wahlID: string,
   wahlbezirkID: string,
-  teamID: string
+  teamID: string,
+  forceRefreshStimmzettel: () => Promise<void>
 ) {
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
   const isStatusLoading = ref(false);
   const statusBeingWritten = ref<StimmzettelerfassungTeamStatusEnum | null>(
     null
   );
-  const activeStimmzettel: Ref<PersistedStimmzettel | null> = ref(null);
 
   //DialogVisibilityState
   const isKennungsDialogVisible = ref(false);
-  const isErfassungsDialogVisible = ref(false);
 
   const buttonUtils = useStimmzettelErfassungViewButtonStateUtils(teamStatus);
 
   //Hooks
   onActivated(async () => {
-    await _loadTeamStatus();
+    await _loadTeamStatus(false);
   });
 
   //Public functions
-  function startNewEmptyStimmzettelWithStimmzettelkennung(
-    stimmzettelkennung: number
-  ) {
-    activeStimmzettel.value =
-      getEmptyStimmzettelWithStimmzettelkennung(stimmzettelkennung);
-  }
-
   async function ensureStatusInBearbeitung(sendNotification = false) {
     if (
       teamStatus.value?.status !==
@@ -64,18 +51,43 @@ export function useStimmzettelErfassungViewUtils(
   }
 
   async function reloadTeamStatus() {
-    await _loadTeamStatus();
+    await _loadTeamStatus(false);
+    const lastOfflineFirstTeamStatus = teamStatus.value;
+    await _loadTeamStatus(true);
+    const currentActiveTeamStatus = teamStatus.value;
+
+    if (
+      _hasTeamStatusSwitchedFromAbgeschlossenToInBearbeitung(
+        lastOfflineFirstTeamStatus,
+        currentActiveTeamStatus
+      )
+    ) {
+      await forceRefreshStimmzettel();
+    }
   }
 
   //private functions
-  async function _loadTeamStatus() {
+  function _hasTeamStatusSwitchedFromAbgeschlossenToInBearbeitung(
+    lastOfflineFirstTeamStatus: StimmzettelerfassungTeamStatus | null,
+    currentActiveTeamStatus: StimmzettelerfassungTeamStatus | null
+  ) {
+    return (
+      lastOfflineFirstTeamStatus?.status ===
+        StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN &&
+      currentActiveTeamStatus?.status ===
+        StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+    );
+  }
+
+  async function _loadTeamStatus(forceRefresh: boolean) {
     isStatusLoading.value = true;
     try {
       const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
         wahlID,
         wahlbezirkID,
         teamID,
-        false
+        false,
+        forceRefresh
       );
       if (loaded) {
         teamStatus.value = loaded;
@@ -109,9 +121,7 @@ export function useStimmzettelErfassungViewUtils(
 
   return {
     //Props
-    activeStimmzettel,
     teamStatus: readonly(teamStatus),
-    isErfassungsDialogVisible,
     isKennungsDialogVisible,
     isStatusLoading: readonly(isStatusLoading),
     statusBeingWritten: readonly(statusBeingWritten),
@@ -119,7 +129,6 @@ export function useStimmzettelErfassungViewUtils(
     //actions
     ensureStatusInBearbeitung,
     sendStatusUnterbrochen,
-    startNewEmptyStimmzettelWithStimmzettelkennung,
     reloadTeamStatus,
 
     //imported functions

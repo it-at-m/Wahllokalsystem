@@ -1,3 +1,4 @@
+import type { StimmzettelerfassungTeamStatusDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 import type { StimmzettelerfassungTeamStatusEntry } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEntry.ts";
 
@@ -32,17 +33,23 @@ export function useStimmzettelerfassungTeamStatusService() {
     wahlID: string,
     wahlbezirkID: string,
     teamID: string,
-    sendNotification = true
+    sendNotification = true,
+    forceRefresh = false
   ): Promise<StimmzettelerfassungTeamStatus | null> {
     const { wahlenActions } = useWahlenStore();
     try {
-      const response =
-        await stimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatus(
-          wahlID,
-          wahlbezirkID,
-          teamID,
-          axiosConfigWrapper().requestAsOnlineOnly()
-        );
+      const response = forceRefresh
+        ? await _loadErfassungTeamStatusAndRefreshOfflineData(
+            wahlID,
+            wahlbezirkID,
+            teamID
+          )
+        : await _loadErfassungTeamStatusOfflineFirst(
+            wahlID,
+            wahlbezirkID,
+            teamID
+          );
+
       const responseData = getNullOn204OrElseResponseData(response);
 
       const result = responseData ? dtoToModel(responseData) : null;
@@ -70,16 +77,20 @@ export function useStimmzettelerfassungTeamStatusService() {
   async function loadErfassungTeamStatusListe(
     wahlID: string,
     wahlbezirkID: string,
-    sendNotification = true
+    sendNotification = true,
+    forceRefresh = false
   ): Promise<StimmzettelerfassungTeamStatusEntry[]> {
     const { wahlenActions } = useWahlenStore();
     try {
-      const response =
-        await stimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatusList(
-          wahlID,
-          wahlbezirkID,
-          axiosConfigWrapper().requestAsOnlineOnly()
-        );
+      const response = forceRefresh
+        ? await _getStimmzettelerfassungTeamStatusListAndRefreshOfflineData(
+            wahlID,
+            wahlbezirkID
+          )
+        : await _getStimmzettelerfassungTeamStatusListOfflineFirst(
+            wahlID,
+            wahlbezirkID
+          );
       const responseData = getNullOn204OrElseResponseData(response);
 
       return (
@@ -104,20 +115,27 @@ export function useStimmzettelerfassungTeamStatusService() {
     wahlbezirkID: string,
     teamID: string,
     status: StimmzettelerfassungTeamStatus,
-    sendNotification = true
+    sendNotification = true,
+    forceOnline = false
   ) {
     const { wahlenActions } = useWahlenStore();
     const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
     try {
       isSaving.value = true;
-      const savedStatus =
-        await stimmzettelerfassungTeamStatusControllerApi.saveStimmzettelerfassungTeamStatus(
-          wahlID,
-          wahlbezirkID,
-          teamID,
-          modelToDto(status),
-          axiosConfigWrapper().requestAsOnlineOnly()
-        );
+      const dto = modelToDto(status);
+      const savedStatus = forceOnline
+        ? await _postErfassungTeamStatusOnlineOnlyWithStoreOnSuccess(
+            wahlID,
+            wahlbezirkID,
+            teamID,
+            dto
+          )
+        : await _postErfassungTeamStatusOnlineFirst(
+            wahlID,
+            wahlbezirkID,
+            teamID,
+            dto
+          );
 
       return dtoToModel(savedStatus.data);
     } catch {
@@ -168,6 +186,80 @@ export function useStimmzettelerfassungTeamStatusService() {
     } finally {
       isSaving.value = false;
     }
+  }
+
+  async function _getStimmzettelerfassungTeamStatusListOfflineFirst(
+    wahlID: string,
+    wahlbezirkID: string
+  ) {
+    return await stimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatusList(
+      wahlID,
+      wahlbezirkID
+    );
+  }
+  async function _getStimmzettelerfassungTeamStatusListAndRefreshOfflineData(
+    wahlID: string,
+    wahlbezirkID: string
+  ) {
+    return await stimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatusList(
+      wahlID,
+      wahlbezirkID,
+      axiosConfigWrapper().requestAsForceRefresh()
+    );
+  }
+
+  async function _loadErfassungTeamStatusOfflineFirst(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string
+  ) {
+    return await stimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatus(
+      wahlID,
+      wahlbezirkID,
+      teamID
+    );
+  }
+
+  async function _loadErfassungTeamStatusAndRefreshOfflineData(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string
+  ) {
+    return await stimmzettelerfassungTeamStatusControllerApi.getStimmzettelerfassungTeamStatus(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      axiosConfigWrapper().requestAsForceRefresh()
+    );
+  }
+
+  async function _postErfassungTeamStatusOnlineOnlyWithStoreOnSuccess(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string,
+    dto: StimmzettelerfassungTeamStatusDTO
+  ) {
+    return await stimmzettelerfassungTeamStatusControllerApi.saveStimmzettelerfassungTeamStatus(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      dto,
+      axiosConfigWrapper().requestAsPostOnlineOnlyAndStoreOnSuccess()
+    );
+  }
+
+  async function _postErfassungTeamStatusOnlineFirst(
+    wahlID: string,
+    wahlbezirkID: string,
+    teamID: string,
+    dto: StimmzettelerfassungTeamStatusDTO
+  ) {
+    return await stimmzettelerfassungTeamStatusControllerApi.saveStimmzettelerfassungTeamStatus(
+      wahlID,
+      wahlbezirkID,
+      teamID,
+      dto
+    );
   }
 
   return {

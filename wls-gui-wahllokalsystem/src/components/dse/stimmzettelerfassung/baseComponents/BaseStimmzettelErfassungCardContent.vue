@@ -93,7 +93,7 @@
           stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
             .systemBeschlussvorschlag
         "
-        :stimmzettelkennung="stimmzettel.stimmzettelkennung"
+        :stimmzettelkennung="stimmzettelkennung"
         :is-b-w-b="isBWB"
       />
     </div>
@@ -103,7 +103,6 @@
 <script setup lang="ts">
 import type { StimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
-import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
@@ -126,16 +125,16 @@ const stimmzettelManager = defineModel("modelValue", {
 });
 
 const props = defineProps({
-  stimmzettel: {
-    type: Object as PropType<PersistedStimmzettel>,
-    required: true,
-  },
   wahlvorschlaege: {
     type: Array as PropType<Wahlvorschlag[]>,
     required: true,
   },
   stimmzettelGueltigkeit: {
     type: String,
+    required: true,
+  },
+  stimmzettelkennung: {
+    type: Number,
     required: true,
   },
   denySelectionOfStimmzettelFehlt: {

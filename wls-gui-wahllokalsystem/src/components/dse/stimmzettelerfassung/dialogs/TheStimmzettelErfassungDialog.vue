@@ -16,11 +16,21 @@
       <base-stimmzettel-erfassung-card-content
         :ref="BASE_CONTENT_TEMPLATE_REF_NAME"
         v-model="stimmzettelManager"
+        :is-readonly="isReadonly"
         :stimmzettelkennung="stimmzettelkennung"
         :wahlvorschlaege="wahlvorschlaege"
         :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
       />
-      <v-card-actions>
+      <v-card-actions v-if="isReadonly">
+        <v-spacer />
+        <base-text-button
+          :active="true"
+          @click="onCloseClicked"
+        >
+          Schließen
+        </base-text-button>
+      </v-card-actions>
+      <v-card-actions v-else>
         <base-text-button
           :disabled="isResetDisabled"
           @click="onResetClicked"
@@ -72,6 +82,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisible = ref(false);
+const isReadonly = ref(false);
 const stimmzettelkennung = ref(0);
 
 const properties = defineProps({
@@ -184,6 +195,10 @@ function onCancelConfirmationDialogCancelled() {
   focusCommandProcessingTextField();
 }
 
+function onCloseClicked() {
+  closeDialog();
+}
+
 function onCancelConfirmationDialogConfirmed() {
   isCancelConfirmationDialogVisible.value = false;
   emit("cancel");
@@ -218,8 +233,11 @@ function onLeerenClicked() {
 }
 
 function showDialog(
-  stimmzettelToEditOrKennungOfNew: PersistedStimmzettel | number
+  stimmzettelToEditOrKennungOfNew: PersistedStimmzettel | number,
+  readonly = false
 ) {
+  isReadonly.value = readonly;
+
   if (typeof stimmzettelToEditOrKennungOfNew === "number") {
     stimmzettelkennung.value = stimmzettelToEditOrKennungOfNew;
     stimmzettelManager.startNewStimmzettel(currentUserTeamName.value);

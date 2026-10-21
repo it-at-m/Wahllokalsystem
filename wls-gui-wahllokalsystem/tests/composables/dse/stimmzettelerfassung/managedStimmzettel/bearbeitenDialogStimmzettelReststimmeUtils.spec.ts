@@ -433,6 +433,44 @@ describe("bearbeitenDialogStimmzettelReststimmeUtils.ts", () => {
       expect(wahlvorschlag.kandidaten[11].reststimmen).toStrictEqual(null);
     });
 
+    it("should_notGiveReststimmen_when_sumOfVotesForKandidatWouldExceedNennungen", () => {
+      const wahlvorschlag = prepareDseWahlvorschlag().selected(true).build();
+      wahlvorschlag.kandidaten = [
+        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag, "kA", 1)
+          .einzelstimmen(1)
+          .build(),
+
+        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag, "kB", 1)
+          .einzelstimmen(2)
+          .build(),
+        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag, "kB", 2).build(),
+
+        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag, "kC", 1)
+          .einzelstimmen(1)
+          .build(),
+        _prepareKandidatWithoutAnyKennzeichen(wahlvorschlag, "kC", 2).build(),
+      ];
+
+      const unitUnderTest = useBearbeitenDialogStimmzettelReststimmeUtils(
+        ref(
+          prepareDseStimmzettel()
+            .wahlvorschlaege([wahlvorschlag])
+            .invalideVotes(0)
+            .build()
+        ),
+        ref(20),
+        3
+      );
+
+      unitUnderTest.refreshWahlvorschlaegeVotes();
+
+      expect(wahlvorschlag.kandidaten[0].reststimmen).toStrictEqual(null);
+      expect(wahlvorschlag.kandidaten[1].reststimmen).toStrictEqual(null);
+      expect(wahlvorschlag.kandidaten[2].reststimmen).toStrictEqual(null);
+      expect(wahlvorschlag.kandidaten[3].reststimmen).toStrictEqual(null);
+      expect(wahlvorschlag.kandidaten[4].reststimmen).toStrictEqual(1);
+    });
+
     function _prepareKandidatWithoutAnyKennzeichen(
       owningWahlvorschlag: DseWahlvorschlag,
       kandidatID: string,

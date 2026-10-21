@@ -12,6 +12,7 @@
         isElectionFinished
       "
       @stimmzettel-bearbeiten="onStimmzettelBearbeitenClicked"
+      @stimmzettel-ansehen="onStimmzettelAnsehenClicked"
     />
     <v-card-actions v-if="!isStatusLoading">
       <div
@@ -217,6 +218,10 @@ async function onStimmzettelBearbeitenClicked(
   await ensureStatusInBearbeitung();
   await enableErfassungsDialog();
   templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettel);
+}
+async function onStimmzettelAnsehenClicked(stimmzettel: PersistedStimmzettel) {
+  await enableErfassungsDialog();
+  templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettel, true);
 }
 
 async function enableErfassungsDialog() {

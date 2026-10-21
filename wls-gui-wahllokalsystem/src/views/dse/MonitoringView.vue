@@ -57,7 +57,9 @@
               isElectionFinished(wahlID, wahlbezirkID) ||
               isAnyTeamBeingReopened
             "
-            :is-wieder-offnen-button-loading="item.teamID === teamBeingReopened"
+            :is-wieder-offnen-button-loading="
+              item.teamID === teamBeingReopened || isTeamOrWorkflowStatusLoading
+            "
             @open-stimmzettelerfassung="
               onOpenStimmzettelerfassungClicked(item.teamID)
             "

@@ -138,8 +138,8 @@ export function useStimmzettelerfassungTeamStatusService() {
           );
       if (sendNotification) {
         addNotification(
-            `Team-Status für ${wahlname} erfolgreich gespeichert.`,
-            UserNotificationCategoryEnum.SUCCESS
+          `Team-Status für ${wahlname} erfolgreich gespeichert.`,
+          UserNotificationCategoryEnum.SUCCESS
         );
       }
       return dtoToModel(savedStatus.data);

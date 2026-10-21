@@ -24,7 +24,6 @@
       <v-card-actions v-if="isReadonly">
         <v-spacer />
         <base-text-button
-          v-if="isReadonly"
           :active="true"
           @click="onCloseClicked"
         >

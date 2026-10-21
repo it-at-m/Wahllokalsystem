@@ -3,7 +3,7 @@
     class="primary-button-border"
     active-color="primary"
     variant="flat"
-    :disabled="isDisabled"
+    :disabled="isDisabled || loading"
     :loading="loading"
   >
     <slot />

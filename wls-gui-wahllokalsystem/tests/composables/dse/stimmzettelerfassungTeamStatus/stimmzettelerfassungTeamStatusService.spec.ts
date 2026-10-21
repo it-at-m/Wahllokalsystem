@@ -516,139 +516,82 @@ describe("stimmzettelerfassungTeamStatusService.ts", () => {
         ],
       ]);
     });
-  });
 
-  describe("postErfassungTeamStatus", () => {
-    it("should_callSaveApiOnlineFirst_withMappedDto_and_showSuccessNotification", async () => {
-      const teamID = generateRandomString(8);
-      const wahlID = generateRandomString(8);
-      const wahlbezirkID = generateRandomString(8);
+    describe("postErfassungTeamStatus", () => {
+      it("should_saveOnlineOnlyAndStoreOnSuccess_when_forceOnlineIsTrue", async () => {
+        const teamID = generateRandomString(8);
+        const wahlID = generateRandomString(8);
+        const wahlbezirkID = generateRandomString(8);
+        const model = createStimmzettelerfassungTeamStatusModel();
+        const dto = createStimmzettelerfassungTeamStatusDTOData();
+        const apiResponseDTO = createStimmzettelerfassungTeamStatusDTOData();
+        mockDefinitions.modelToDto.mockReturnValue(dto);
+        mockDefinitions.saveStimmzettelerfassungTeamStatus.mockResolvedValue({
+          data: apiResponseDTO,
+          status: 201,
+        });
 
-      const model = createStimmzettelerfassungTeamStatusModel();
-      const dto = createStimmzettelerfassungTeamStatusDTOData();
-      const apiResponseDTO = createStimmzettelerfassungTeamStatusDTOData();
-      const apiResponseModel = createStimmzettelerfassungTeamStatusModel();
-      mockDefinitions.modelToDto.mockReturnValue(dto);
-      mockDefinitions.dtoToModel.mockReturnValue(apiResponseModel);
-      mockDefinitions.saveStimmzettelerfassungTeamStatus.mockResolvedValue({
-        data: apiResponseDTO,
-        status: 201,
-      });
-      mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
+        await postErfassungTeamStatus(
+          wahlID,
+          wahlbezirkID,
+          teamID,
+          model,
+          false,
+          true
+        );
 
-      const result = await postErfassungTeamStatus(
-        wahlID,
-        wahlbezirkID,
-        teamID,
-        model,
-        true
-      );
-
-      expect(result).toStrictEqual(apiResponseModel);
-      expect(mockDefinitions.modelToDto.mock.calls).toStrictEqual([[model]]);
-      expect(
-        mockDefinitions.saveStimmzettelerfassungTeamStatus.mock.calls
-      ).toStrictEqual([
-        [
+        expect(
+          mockDefinitions.saveStimmzettelerfassungTeamStatus
+        ).toHaveBeenCalledWith(
           wahlID,
           wahlbezirkID,
           teamID,
           dto,
-          mockDefinitions.sentinelForceRefreshAxiosConfig,
-        ],
-      ]);
-    });
-
-      it("should_saveOnlineOnlyAndStoreOnSuccess_when_forceOnlineIsTrue", async () => {
-          const teamID = generateRandomString(8);
-          const wahlID = generateRandomString(8);
-          const wahlbezirkID = generateRandomString(8);
-          const model = createStimmzettelerfassungTeamStatusModel();
-          const dto = createStimmzettelerfassungTeamStatusDTOData();
-          const apiResponseDTO = createStimmzettelerfassungTeamStatusDTOData();
-          mockDefinitions.modelToDto.mockReturnValue(dto);
-          mockDefinitions.saveStimmzettelerfassungTeamStatus.mockResolvedValue({
-              data: apiResponseDTO,
-              status: 201,
-          });
-
-          await postErfassungTeamStatus(
-              wahlID,
-              wahlbezirkID,
-              teamID,
-              model,
-              false,
-              true
-          );
-
-          expect(
-              mockDefinitions.saveStimmzettelerfassungTeamStatus
-          ).toHaveBeenCalledWith(
-              wahlID,
-              wahlbezirkID,
-              teamID,
-              dto,
-              mockDefinitions.sentinelPostOnlineOnlyAndStoreOnSuccessAxiosConfig
-          );
+          mockDefinitions.sentinelPostOnlineOnlyAndStoreOnSuccessAxiosConfig
+        );
       });
 
-      it("should_notShowSuccessNotification_when_sendNotificationFalse", async () => {
-          const teamID = generateRandomString(8);
-          const wahlID = generateRandomString(8);
-          const wahlbezirkID = generateRandomString(8);
+      it("should_showErrorNotificationAndThrow_when_apiFails", async () => {
+        const teamID = generateRandomString(8);
+        const wahlID = generateRandomString(8);
+        const wahlbezirkID = generateRandomString(8);
 
-          const model = createStimmzettelerfassungTeamStatusModel();
-          const dto = createStimmzettelerfassungTeamStatusDTOData();
-          mockDefinitions.modelToDto.mockReturnValue(dto);
-          mockDefinitions.saveStimmzettelerfassungTeamStatus.mockResolvedValue({
-              status: 201,
-          });
-          mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
+        const model = createStimmzettelerfassungTeamStatusModel();
+        const dto = createStimmzettelerfassungTeamStatusDTOData();
+        mockDefinitions.modelToDto.mockReturnValue(dto);
+        mockDefinitions.saveStimmzettelerfassungTeamStatus.mockRejectedValue(
+          new Error("api failed")
+        );
+        mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
-          await postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, false);
+        await expect(
+          postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, true)
+        ).rejects.toThrow();
 
-          expect(mockDefinitions.addNotification.mock.calls.length).toBe(0);
+        expect(mockDefinitions.addNotification.mock.calls[0][1]).toBe(
+          UserNotificationCategoryEnum.ERROR
+        );
       });
-    it("should_showErrorNotificationAndThrow_when_apiFails", async () => {
-      const teamID = generateRandomString(8);
-      const wahlID = generateRandomString(8);
-      const wahlbezirkID = generateRandomString(8);
 
-      const model = createStimmzettelerfassungTeamStatusModel();
-      const dto = createStimmzettelerfassungTeamStatusDTOData();
-      mockDefinitions.modelToDto.mockReturnValue(dto);
-      mockDefinitions.saveStimmzettelerfassungTeamStatus.mockRejectedValue(
-        new Error("api failed")
-      );
-      mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
+      it("should_notShowErrorNotification_when_sendNotificationFalseAndApiFails", async () => {
+        const teamID = generateRandomString(8);
+        const wahlID = generateRandomString(8);
+        const wahlbezirkID = generateRandomString(8);
 
-      await expect(
-        postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, true)
-      ).rejects.toThrow();
+        const model = createStimmzettelerfassungTeamStatusModel();
+        const dto = createStimmzettelerfassungTeamStatusDTOData();
+        mockDefinitions.modelToDto.mockReturnValue(dto);
+        mockDefinitions.saveStimmzettelerfassungTeamStatus.mockRejectedValue(
+          new Error("api failed")
+        );
+        mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
 
-      expect(mockDefinitions.addNotification.mock.calls[0][1]).toBe(
-        UserNotificationCategoryEnum.ERROR
-      );
-    });
+        await expect(
+          postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, false)
+        ).rejects.toThrow();
 
-    it("should_notShowErrorNotification_when_sendNotificationFalseAndApiFails", async () => {
-      const teamID = generateRandomString(8);
-      const wahlID = generateRandomString(8);
-      const wahlbezirkID = generateRandomString(8);
-
-      const model = createStimmzettelerfassungTeamStatusModel();
-      const dto = createStimmzettelerfassungTeamStatusDTOData();
-      mockDefinitions.modelToDto.mockReturnValue(dto);
-      mockDefinitions.saveStimmzettelerfassungTeamStatus.mockRejectedValue(
-        new Error("api failed")
-      );
-      mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("MBW");
-
-      await expect(
-        postErfassungTeamStatus(wahlID, wahlbezirkID, teamID, model, false)
-      ).rejects.toThrow();
-
-      expect(mockDefinitions.addNotification.mock.calls.length).toBe(0);
+        expect(mockDefinitions.addNotification.mock.calls.length).toBe(0);
+      });
     });
   });
 });

@@ -7,6 +7,7 @@
       class="mt-3"
       :bearbeitung-disabled="
         isStatusLoading ||
+        isWahlvorschlaegeLoading ||
         statusBeingWritten !== null ||
         hasTeamFinishedErfassung ||
         isElectionFinished
@@ -21,6 +22,7 @@
         <base-text-button
           :active="startenBtnActive"
           :is-disabled="
+            isWahlvorschlaegeLoading ||
             isAnotherStatusBeingWritten(
               StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
             )
@@ -179,6 +181,16 @@ const startNewStimmzettelButtonText = computed(() =>
   teamStatus.value?.status === StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
     ? "Fortsetzen"
     : "Starten"
+);
+
+watch(
+  () => [props.isWahlvorschlaegeLoading, props.wahlvorschlaege.length] as const,
+  async ([isLoading, numberOfWahlvorschlaege]) => {
+    if (!isLoading && numberOfWahlvorschlaege > 0) {
+      await enableErfassungsDialog();
+    }
+  },
+  { immediate: true }
 );
 
 function isAnotherStatusBeingWritten(

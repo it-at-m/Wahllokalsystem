@@ -228,3 +228,5 @@ und die Zuordnung zu den Rollen vorgenommen.
 
 Für ein einheitliches Logging über alle Services hinweg, sollte analog zu den bestehenden Microservices eine
 `logback-spring.xml`-Datei erstellt werden.
+
+Zur Nachverfolgung eingehender Requests in den REST-Controller-Methoden kann die Bibliothek `monitoring-x.y.z` aus dem Modul `wls-common/monitoring`  importiert und verwendet werden. Eine detaillierte Anleitung hierzu finden Sie im Guide [Logging Requests in Controller](https://github.com/it-at-m/Wahllokalsystem/technik/guides/request-mdc-logging.html).

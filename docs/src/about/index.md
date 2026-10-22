@@ -328,7 +328,7 @@ Stapel für die **Migrationsbeiratswahl**:
   | `B_C`         | Zweifelsfrei gültige Stimmen: verändert, mehrere Wahlvorschläge | Kandidat*innenstimmen     |
   | `D_Ungueltig` | Leere und ungekennzeichnete Stimmzettel                         |                           |
 
-Eine [neue Auszählungsmethodik](../dse/) (digitale Stimmzettelerfassung, ohne Stapel) wird aktuell getestet.
+Eine [neue Auszählungsmethodik](../dse/) (digitale Stimmzettelerfassung, ohne vorgelagerte Stapelbildung) wird aktuell getestet.
 
 #### Nach der Auszählung
 

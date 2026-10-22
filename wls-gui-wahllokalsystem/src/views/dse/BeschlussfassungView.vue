@@ -15,7 +15,9 @@
           :stimmzettel-loading="
             isStimmzettelForBeschlussLoading || isWahlvorschlaegeLoading
           "
-          :is-beschluss-bearbeiten-disabled="isBeschlussBearbeitenDisabled"
+          :is-beschluss-bearbeiten-disabled="
+            isBeschlussBearbeitenDisabled || isBeschlussfassungBeendenLoading
+          "
           @edit-beschluss-stimmzettel="onBeschlussBearbeitenClicked($event)"
       /></v-card-text>
       <v-card-actions>
@@ -23,7 +25,11 @@
         <base-wls-button-save
           save-text="Beschlussentscheidungen drucken"
           prepend-icon="$printer"
-          :loading="isBeschlussentscheidungenDruckenLoading"
+          :loading="
+            isStimmzettelForBeschlussLoading ||
+            isBeschlussentscheidungenDruckenLoading
+          "
+          :disabled="isBeschlussfassungBeendenLoading"
           @click="onBeschlussentscheidungenDruckenClicked"
         />
         <base-text-button

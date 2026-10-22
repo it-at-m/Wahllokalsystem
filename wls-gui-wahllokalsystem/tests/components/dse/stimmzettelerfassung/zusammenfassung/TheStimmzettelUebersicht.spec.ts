@@ -38,6 +38,7 @@ vi.mock(
       isErfassungsDialogVisible: ref(false),
       isKennungsDialogVisible: ref(false),
       isStatusLoading: ref(false),
+      statusBeingWritten: ref(null),
       startenBtnActive: computed(() => true),
       unterbrechenBtnIsDisabled: computed(() => false),
       ensureStatusInBearbeitung: mocks.ensureStatusInBearbeitung,

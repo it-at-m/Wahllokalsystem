@@ -12,8 +12,12 @@
           color="success" />
         <base-beschlussfassung-uebersicht-table
           :stimmzettel-liste="stimmzettelForBeschlussfassung"
-          :stimmzettel-loading="isStimmzettelForBeschlussLoading"
-          :is-beschluss-bearbeiten-disabled="isBeschlussBearbeitenDisabled"
+          :stimmzettel-loading="
+            isStimmzettelForBeschlussLoading || isWahlvorschlaegeLoading
+          "
+          :is-beschluss-bearbeiten-disabled="
+            isBeschlussBearbeitenDisabled || isBeschlussfassungBeendenLoading
+          "
           @edit-beschluss-stimmzettel="onBeschlussBearbeitenClicked($event)"
       /></v-card-text>
       <v-card-actions>
@@ -21,12 +25,21 @@
         <base-wls-button-save
           save-text="Beschlussentscheidungen drucken"
           prepend-icon="$printer"
-          :loading="isBeschlussentscheidungenDruckenLoading"
+          :loading="
+            isStimmzettelForBeschlussLoading ||
+            isBeschlussentscheidungenDruckenLoading
+          "
+          :disabled="isBeschlussfassungBeendenLoading"
           @click="onBeschlussentscheidungenDruckenClicked"
         />
         <base-text-button
           active
           :disabled="isBeschlussfassungBeendenButtonDisabled"
+          :loading="
+            isStimmzettelForBeschlussLoading ||
+            isTeamStatusListLoading ||
+            isBeschlussfassungBeendenLoading
+          "
           @click="onBeschlussfassungBeendenClicked"
         >
           Beschlussfassung Beenden
@@ -89,9 +102,11 @@ const isBeschlussentscheidungenDruckenDialogVisble = ref(false);
 const activeStimmzettelForBeschluss = ref<PersistedStimmzettel>();
 const isBeschlussentscheidungenDruckenLoading = ref<boolean>(false);
 const isBeschlussfassungDialogPreloaded = ref(false);
+const isBeschlussfassungBeendenLoading = ref<boolean>(false);
 
 const {
   isStimmzettelForBeschlussLoading,
+  isTeamStatusListLoading,
   stimmzettelForBeschlussfassung,
   isBeschlussfassungBeendenButtonDisabled,
   isBeschlussBearbeitenDisabled,
@@ -109,13 +124,16 @@ const { wahlvorschlaege, isWahlvorschlaegeLoading } = useWahlvorschlaegeState(
 const { buildTemplate } = useBeschlussentscheidungenDruckTemplateTools();
 
 async function onBeschlussfassungBeendenClicked() {
-  await saveDseWorkflowStatus(wahlID, wahlbezirkID, {
-    status: StimmzettelerfassungStatusEnum.BeAbgeschlossen,
-  });
-
-  setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG);
-
-  await router.push(getNextRoute());
+  isBeschlussfassungBeendenLoading.value = true;
+  try {
+    await saveDseWorkflowStatus(wahlID, wahlbezirkID, {
+      status: StimmzettelerfassungStatusEnum.BeAbgeschlossen,
+    });
+    setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG);
+    await router.push(getNextRoute());
+  } finally {
+    isBeschlussfassungBeendenLoading.value = false;
+  }
 }
 
 async function onBeschlussBearbeitenClicked(

@@ -25,8 +25,12 @@ export function useBeschlussfassungViewUtils(
     wahlID,
     wahlbezirkID
   );
-  const { isLoading, stimmzettelOfWahlbezirk, loadStimmzettelOfWahlbezirk } =
-    useAllStimmzettelOfWahlbezirkState(wahlID, wahlbezirkID);
+  const {
+    isLoading,
+    isTeamStatusListLoading,
+    stimmzettelOfWahlbezirk,
+    loadStimmzettelOfWahlbezirk,
+  } = useAllStimmzettelOfWahlbezirkState(wahlID, wahlbezirkID);
   const { isBeschlussRequired } = useStimmzettelTools();
   const { isElectionFinished } = useWorkflowStore();
 
@@ -112,6 +116,7 @@ export function useBeschlussfassungViewUtils(
     stimmzettelForBeschlussfassung,
     completedStimmzettelForBeschlussfassung,
     isStimmzettelForBeschlussLoading: isLoading,
+    isTeamStatusListLoading,
     isBeschlussfassungBeendenButtonDisabled,
     isBeschlussBearbeitenDisabled,
     saveBeschlussStimmzettel,

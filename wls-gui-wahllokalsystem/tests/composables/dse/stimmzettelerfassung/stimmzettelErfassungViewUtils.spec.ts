@@ -1,8 +1,6 @@
-import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { StimmzettelerfassungTeamStatus } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatus.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useStimmzettelerfassungTeamStatusTestDataFactory } from "@tests/utils/dse/StimmzettelerfassungTeamStatusTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -15,9 +13,9 @@ const mockDefinitions = await vi.hoisted(async () => {
   return {
     loadErfassungTeamStatus: vi.fn(),
     postErfassungTeamStatus: vi.fn(),
-    getEmptyStimmzettelWithStimmzettelkennung: vi.fn(),
     logError: vi.fn(),
     onActivated: vi.fn(),
+    forceRefreshStimmzettel: vi.fn(),
 
     registerActivated: (cb: () => Promise<void> | void) => {
       activatedCallbacks.length = 0;
@@ -55,20 +53,6 @@ vi.mock(
   }
 );
 
-vi.mock(
-  import("@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts"),
-  async (importOriginal) => {
-    const mod = await importOriginal();
-    return {
-      useStimmzettelTools: () => ({
-        ...mod.useStimmzettelTools(),
-        getEmptyStimmzettelWithStimmzettelkennung:
-          mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung,
-      }),
-    };
-  }
-);
-
 vi.mock(import("@/composables/common/logging.ts"), async (importOriginal) => {
   const mod = await importOriginal();
   return {
@@ -80,10 +64,7 @@ vi.mock(import("@/composables/common/logging.ts"), async (importOriginal) => {
 });
 
 describe("stimmzettelErfassungViewUtils.ts", () => {
-  const { generateRandomString, generateRandomNumber } =
-    useCommonTestDataFactory();
-  const { preparePersistedStimmzettel } =
-    usePersistedStimmzettelTestDataFactory();
+  const { generateRandomString } = useCommonTestDataFactory();
   const { createStimmzettelerfassungTeamStatusModel } =
     useStimmzettelerfassungTeamStatusTestDataFactory();
 
@@ -97,7 +78,8 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
     unitUnderTest = useStimmzettelErfassungViewUtils(
       mockedWahlId,
       mockedWahlbezirkId,
-      mockedTeamId
+      mockedTeamId,
+      mockDefinitions.forceRefreshStimmzettel
     );
   });
 
@@ -109,12 +91,12 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
   describe("initial state", () => {
     it("should_haveInitialDialogVisibilityFalse_when_initialized", () => {
       expect(unitUnderTest.isKennungsDialogVisible.value).toBe(false);
-      expect(unitUnderTest.isErfassungsDialogVisible.value).toBe(false);
     });
 
     it("should_haveInitialTeamStatusAndStatusLoading_when_initialized", () => {
       expect(unitUnderTest.teamStatus.value).toBeNull();
-      expect(unitUnderTest.isStatusLoading.value).toBe(false);
+      expect(unitUnderTest.isTeamStatusLoading.value).toBe(false);
+      expect(unitUnderTest.teamStatusBeingWritten.value).toBeNull();
     });
   });
 
@@ -123,7 +105,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
     it("should_loadTeamStatus_when_activatedLoadIsSuccessful", async () => {
       const spyOnIsStatusLoadingSetter = vi.spyOn(
-        unitUnderTest.isStatusLoading,
+        unitUnderTest.isTeamStatusLoading,
         "value",
         "set"
       );
@@ -133,13 +115,19 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         mockedRepsonse
       );
 
-      expect(unitUnderTest.isStatusLoading.value).toStrictEqual(false);
+      expect(unitUnderTest.isTeamStatusLoading.value).toStrictEqual(false);
       expect(unitUnderTest.teamStatus.value).toStrictEqual(null);
 
       await mockDefinitions.runActivatedCallbacks();
 
       expect(mockDefinitions.loadErfassungTeamStatus.mock.calls).toStrictEqual([
-        [mockedWahlId, mockedWahlbezirkId, mockedTeamId, NO_NOTIFICATION],
+        [
+          mockedWahlId,
+          mockedWahlbezirkId,
+          mockedTeamId,
+          NO_NOTIFICATION,
+          false,
+        ],
       ]);
       expect(spyOnIsStatusLoadingSetter.mock.calls).toStrictEqual([
         [true],
@@ -152,7 +140,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
     it("should_loadTeamStatusButKeepDefaultValue_when_activatedLoadIsFails", async () => {
       const spyOnIsStatusLoadingSetter = vi.spyOn(
-        unitUnderTest.isStatusLoading,
+        unitUnderTest.isTeamStatusLoading,
         "value",
         "set"
       );
@@ -161,7 +149,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         new Error("mocked service error")
       );
 
-      expect(unitUnderTest.isStatusLoading.value).toStrictEqual(false);
+      expect(unitUnderTest.isTeamStatusLoading.value).toStrictEqual(false);
       expect(unitUnderTest.teamStatus.value).toStrictEqual(null);
 
       await expect(
@@ -169,7 +157,13 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       ).rejects.toThrowError("mocked service error");
 
       expect(mockDefinitions.loadErfassungTeamStatus.mock.calls).toStrictEqual([
-        [mockedWahlId, mockedWahlbezirkId, mockedTeamId, NO_NOTIFICATION],
+        [
+          mockedWahlId,
+          mockedWahlbezirkId,
+          mockedTeamId,
+          NO_NOTIFICATION,
+          false,
+        ],
       ]);
       expect(spyOnIsStatusLoadingSetter.mock.calls).toStrictEqual([
         [true],
@@ -180,33 +174,13 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       spyOnIsStatusLoadingSetter.mockRestore();
     });
 
-    describe("startNewEmptyStimmzettelWithStimmzettelkennung", () => {
-      it("should_setActiveStimmzettel_when_calledWithKennung", () => {
-        const mockedKennung = generateRandomNumber(3);
-        const mockedEmptyStimmzettel: PersistedStimmzettel =
-          preparePersistedStimmzettel()
-            .stimmzettelkennung(mockedKennung)
-            .build();
-
-        mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung.mockReturnValue(
-          mockedEmptyStimmzettel
-        );
-
-        unitUnderTest.startNewEmptyStimmzettelWithStimmzettelkennung(
-          mockedKennung
-        );
-
-        expect(
-          mockDefinitions.getEmptyStimmzettelWithStimmzettelkennung
-        ).toHaveBeenCalledWith(mockedKennung);
-        expect(unitUnderTest.activeStimmzettel.value).toStrictEqual(
-          mockedEmptyStimmzettel
-        );
-      });
-    });
-
     describe("ensureStatusInBearbeitung", () => {
       it("should_sendStatusInBearbeitungAndUpdateInternalState_when_sendingWasSuccessful", async () => {
+        const spyOnStatusBeingWrittenSetter = vi.spyOn(
+          unitUnderTest.teamStatusBeingWritten,
+          "value",
+          "set"
+        );
         mockDefinitions.postErfassungTeamStatus.mockResolvedValue(undefined);
 
         await unitUnderTest.ensureStatusInBearbeitung();
@@ -226,6 +200,12 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         expect(unitUnderTest.teamStatus.value).toStrictEqual(
           mockedExpectedTeamStatusModel
         );
+        expect(spyOnStatusBeingWrittenSetter.mock.calls).toStrictEqual([
+          [expectedStatusToSend],
+          [null],
+        ]);
+
+        spyOnStatusBeingWrittenSetter.mockRestore();
       });
 
       it("should_notSendStatus_when_teamsStatusIsCurrentlyInBearbeitung", async () => {
@@ -239,6 +219,11 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       });
 
       it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
+        const spyOnStatusBeingWrittenSetter = vi.spyOn(
+          unitUnderTest.teamStatusBeingWritten,
+          "value",
+          "set"
+        );
         const mockedPostApiError = new Error("mocked post error");
         mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
           mockedPostApiError
@@ -258,11 +243,22 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
           false
         );
         expect(unitUnderTest.teamStatus.value).toBeNull();
+        expect(spyOnStatusBeingWrittenSetter.mock.calls).toStrictEqual([
+          [expectedStatusToSend],
+          [null],
+        ]);
+
+        spyOnStatusBeingWrittenSetter.mockRestore();
       });
     });
 
     describe("sendStatusUnterbrochen", () => {
       it("should_sendStatusUnterbrochenAndUpdateInternalState_when_sendingWasSuccessful", async () => {
+        const spyOnStatusBeingWrittenSetter = vi.spyOn(
+          unitUnderTest.teamStatusBeingWritten,
+          "value",
+          "set"
+        );
         mockDefinitions.postErfassungTeamStatus.mockResolvedValue(undefined);
 
         await unitUnderTest.sendStatusUnterbrochen();
@@ -282,9 +278,20 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         expect(unitUnderTest.teamStatus.value).toStrictEqual(
           mockedExpectedTeamStatusModel
         );
+        expect(spyOnStatusBeingWrittenSetter.mock.calls).toStrictEqual([
+          [expectedStatusToSend],
+          [null],
+        ]);
+
+        spyOnStatusBeingWrittenSetter.mockRestore();
       });
 
       it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
+        const spyOnStatusBeingWrittenSetter = vi.spyOn(
+          unitUnderTest.teamStatusBeingWritten,
+          "value",
+          "set"
+        );
         const mockedPostApiError = new Error("mocked post error");
         mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
           mockedPostApiError
@@ -304,6 +311,72 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
           false
         );
         expect(unitUnderTest.teamStatus.value).toBeNull();
+        expect(spyOnStatusBeingWrittenSetter.mock.calls).toStrictEqual([
+          [expectedStatusToSend],
+          [null],
+        ]);
+
+        spyOnStatusBeingWrittenSetter.mockRestore();
+      });
+    });
+
+    describe("reloadTeamStatus", () => {
+      it("should_forceRefreshStimmzettel_when_statusSwitchedFromAbgeschlossenToInBearbeitung", async () => {
+        const offlineFirstStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+        );
+        const refreshedStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+        );
+        mockDefinitions.loadErfassungTeamStatus
+          .mockResolvedValueOnce(offlineFirstStatus)
+          .mockResolvedValueOnce(refreshedStatus);
+        mockDefinitions.forceRefreshStimmzettel.mockResolvedValueOnce(
+          undefined
+        );
+
+        await unitUnderTest.reloadTeamStatus();
+
+        expect(
+          mockDefinitions.loadErfassungTeamStatus.mock.calls
+        ).toStrictEqual([
+          [mockedWahlId, mockedWahlbezirkId, mockedTeamId, false, false],
+          [mockedWahlId, mockedWahlbezirkId, mockedTeamId, false, true],
+        ]);
+        expect(mockDefinitions.forceRefreshStimmzettel).toHaveBeenCalledOnce();
+        expect(unitUnderTest.teamStatus.value).toStrictEqual(refreshedStatus);
+      });
+
+      it("should_notForceRefreshStimmzettel_when_offlineFirstStatusIsNotAbgeschlossen", async () => {
+        const offlineFirstStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.REGISTRIERT
+        );
+        const refreshedStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+        );
+        mockDefinitions.loadErfassungTeamStatus
+          .mockResolvedValueOnce(offlineFirstStatus)
+          .mockResolvedValueOnce(refreshedStatus);
+
+        await unitUnderTest.reloadTeamStatus();
+
+        expect(mockDefinitions.forceRefreshStimmzettel).not.toHaveBeenCalled();
+      });
+
+      it("should_notForceRefreshStimmzettel_when_refreshedStatusIsNotInBearbeitung", async () => {
+        const offlineFirstStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN
+        );
+        const refreshedStatus = createStimmzettelerfassungTeamStatusModel(
+          StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
+        );
+        mockDefinitions.loadErfassungTeamStatus
+          .mockResolvedValueOnce(offlineFirstStatus)
+          .mockResolvedValueOnce(refreshedStatus);
+
+        await unitUnderTest.reloadTeamStatus();
+
+        expect(mockDefinitions.forceRefreshStimmzettel).not.toHaveBeenCalled();
       });
     });
   });

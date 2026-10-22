@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="isDialogVisibleModel"
+    v-model="isDialogVisible"
     eager
     persistent
     fullscreen
@@ -11,16 +11,26 @@
     >
       <v-card-title>
         Erfassung Stimmzettel Nummer {{ currentUserTeamName }}
-        {{ stimmzettel?.stimmzettelkennung }}
+        {{ stimmzettelkennung }}
       </v-card-title>
       <base-stimmzettel-erfassung-card-content
         :ref="BASE_CONTENT_TEMPLATE_REF_NAME"
         v-model="stimmzettelManager"
-        :stimmzettel="stimmzettel"
+        :is-readonly="isReadonly"
+        :stimmzettelkennung="stimmzettelkennung"
         :wahlvorschlaege="wahlvorschlaege"
         :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
       />
-      <v-card-actions>
+      <v-card-actions v-if="isReadonly">
+        <v-spacer />
+        <base-text-button
+          :active="true"
+          @click="onCloseClicked"
+        >
+          Schließen
+        </base-text-button>
+      </v-card-actions>
+      <v-card-actions v-else>
         <base-text-button
           :disabled="isResetDisabled"
           @click="onResetClicked"
@@ -45,7 +55,7 @@
       <the-stimmzettel-erfassung-cancel-confirmation-dialog
         :visible="isCancelConfirmationDialogVisible"
         :team-name="currentUserTeamName"
-        :stimmzettelkennung="stimmzettel?.stimmzettelkennung ?? 0"
+        :stimmzettelkennung="stimmzettelkennung"
         @confirm="onCancelConfirmationDialogConfirmed"
         @cancel="onCancelConfirmationDialogCancelled"
       />
@@ -59,7 +69,7 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed, nextTick, ref, useTemplateRef, watch } from "vue";
+import { computed, nextTick, ref, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseSaveButtonWithActionMenu from "@/components/common/buttons/BaseSaveButtonWithActionMenu.vue";
@@ -71,16 +81,11 @@ import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-const isDialogVisibleModel = defineModel("modelValue", {
-  type: Boolean,
-  required: false,
-});
+const isDialogVisible = ref(false);
+const isReadonly = ref(false);
+const stimmzettelkennung = ref(0);
 
 const properties = defineProps({
-  stimmzettel: {
-    type: Object as PropType<PersistedStimmzettel | null>,
-    default: null,
-  },
   wahlvorschlaege: {
     type: Array as PropType<Wahlvorschlag[]>,
     required: true,
@@ -93,7 +98,7 @@ const wahlID = route.params.wahlId as string;
 const { currentUserTeamName } = storeToRefs(useUserStore());
 
 const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
-  computed(() => properties.stimmzettel?.stimmzettelkennung ?? 0),
+  computed(() => stimmzettelkennung.value),
   properties.wahlvorschlaege,
   wahlID
 );
@@ -104,18 +109,20 @@ const emit = defineEmits<{
   confirmNext: [stimmzettel: PersistedStimmzettel];
 }>();
 
-defineExpose({ focusCommandProcessingTextField });
+defineExpose({ closeDialog, focusCommandProcessingTextField, showDialog });
 
-const actions = [
-  {
+const confirmActions = {
+  saveAndContinue: {
     title: SAVE_CONTINUE,
     action: () => onSavedClickedAndNext(),
   },
-  {
+  saveAndClose: {
     title: "Speichern und Schließen",
     action: () => onSavedClickedAndClose(),
   },
-];
+};
+
+const actions = Object.values(confirmActions);
 
 const BASE_CONTENT_TEMPLATE_REF_NAME =
   "baseStimmzettelErfassungCardContent" as const;
@@ -123,27 +130,7 @@ const baseContentRef = useTemplateRef<
   InstanceType<typeof BaseStimmzettelErfassungCardContent>
 >(BASE_CONTENT_TEMPLATE_REF_NAME);
 
-const currentAction = ref(actions[0]);
-
-watch(
-  () => isDialogVisibleModel.value,
-  () => {
-    if (isDialogVisibleModel.value) {
-      if (properties.stimmzettel) {
-        stimmzettelManager.setActiveStimmzettelWhenEditing(
-          properties.stimmzettel
-        );
-
-        currentAction.value = stimmzettelManager
-          .bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
-          ? actions[1]
-          : actions[0];
-      }
-    }
-    void focusCommandProcessingTextField();
-  },
-  { immediate: true }
-);
+const currentAction = ref(confirmActions.saveAndContinue);
 
 const isCancelButtonDisabled = computed(
   () => stimmzettelManager.hasStimmzettelBeenEdited.value
@@ -184,6 +171,10 @@ const stimmzettelGueltigkeit = computed(
 
 const isCancelConfirmationDialogVisible = ref(false);
 
+function closeDialog() {
+  isDialogVisible.value = false;
+}
+
 async function focusCommandProcessingTextField() {
   await nextTick();
   baseContentRef.value?.focusCommandProcessingTextField();
@@ -193,7 +184,7 @@ function onCancelClicked() {
   if (
     stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value
   ) {
-    isDialogVisibleModel.value = false;
+    isDialogVisible.value = false;
   } else {
     isCancelConfirmationDialogVisible.value = true;
   }
@@ -202,6 +193,10 @@ function onCancelClicked() {
 function onCancelConfirmationDialogCancelled() {
   isCancelConfirmationDialogVisible.value = false;
   focusCommandProcessingTextField();
+}
+
+function onCloseClicked() {
+  closeDialog();
 }
 
 function onCancelConfirmationDialogConfirmed() {
@@ -235,5 +230,25 @@ function onResetClicked() {
 function onLeerenClicked() {
   stimmzettelManager.startWithClearedStimmzettel();
   void focusCommandProcessingTextField();
+}
+
+function showDialog(
+  stimmzettelToEditOrKennungOfNew: PersistedStimmzettel | number,
+  readonly = false
+) {
+  isReadonly.value = readonly;
+
+  if (typeof stimmzettelToEditOrKennungOfNew === "number") {
+    stimmzettelkennung.value = stimmzettelToEditOrKennungOfNew;
+    stimmzettelManager.startNewStimmzettel(currentUserTeamName.value);
+    currentAction.value = confirmActions.saveAndContinue;
+  } else {
+    stimmzettelkennung.value =
+      stimmzettelToEditOrKennungOfNew.stimmzettelkennung;
+    stimmzettelManager.startEditStimmzettel(stimmzettelToEditOrKennungOfNew);
+    currentAction.value = confirmActions.saveAndClose;
+  }
+  isDialogVisible.value = true;
+  focusCommandProcessingTextField();
 }
 </script>

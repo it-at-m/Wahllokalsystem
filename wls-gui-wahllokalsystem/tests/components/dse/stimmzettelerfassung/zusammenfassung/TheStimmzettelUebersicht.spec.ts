@@ -38,6 +38,7 @@ vi.mock(
       isErfassungsDialogVisible: ref(false),
       isKennungsDialogVisible: ref(false),
       isStatusLoading: ref(false),
+      statusBeingWritten: ref(null),
       startenBtnActive: computed(() => true),
       unterbrechenBtnIsDisabled: computed(() => false),
       ensureStatusInBearbeitung: mocks.ensureStatusInBearbeitung,
@@ -128,6 +129,7 @@ function mountOverview({
       hasStimmzettel: false,
       wahlvorschlaege,
       saveStimmzettel: vi.fn(),
+      forceRefreshStimmzettel: vi.fn(),
     },
     global: {
       plugins: [vuetify],

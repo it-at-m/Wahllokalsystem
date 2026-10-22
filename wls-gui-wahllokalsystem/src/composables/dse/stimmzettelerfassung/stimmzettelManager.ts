@@ -1,10 +1,10 @@
-import type { DseStimmzettel } from "@/types/dse/stimmzettelerfassung/DseStimmzettel.ts";
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { ComputedRef, Ref } from "vue";
 
 import { computed, ref } from "vue";
 
+import { useCloneTools } from "@/composables/common/cloneTools.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useBearbeitenDialogStimmzettelUtils } from "@/composables/dse/stimmzettelerfassung/bearbeitenDialogStimmzettelUtils.ts";
 import { COMMAND_HANDLERS } from "@/composables/dse/stimmzettelerfassung/command/commandHandlers.ts";
@@ -19,10 +19,9 @@ export function useStimmzettelManager(
   wahlvorschlaege: Wahlvorschlag[],
   wahlID: string
 ) {
-  const {
-    createStimmzettelWithWahlvorschlaege,
-    normalizePersistedStimmzettel,
-  } = useStimmzettelTools();
+  const { createStimmzettelWithWahlvorschlaege, isDeepEqualIgnoreGueltigkeit } =
+    useStimmzettelTools();
+  const { cloneStructured } = useCloneTools();
   const {
     toPersistedStimmzettel,
     mapPersistedStimmzettelValuesToExistingDseStimmzettel,
@@ -41,35 +40,41 @@ export function useStimmzettelManager(
 
   const hasStimmzettelBeenEdited = computed<boolean>(() => {
     if (stimmzettelBeforeEdit.value) {
-      return !_isDeepEqual(
-        stimmzettelBeforeEdit.value,
-        managedBearbeitenDialogStimmzettel.value
+      const mappedFromDse: PersistedStimmzettel = toPersistedStimmzettel(
+        managedBearbeitenDialogStimmzettel.value,
+        stimmzettelkennung.value,
+        activeTeamID.value
+      );
+      return !isDeepEqualIgnoreGueltigkeit(
+        mappedFromDse,
+        stimmzettelBeforeEdit.value
       );
     } else {
       return bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value;
     }
   });
 
-  function setActiveStimmzettelWhenEditing(
-    sourceStimmzettel: PersistedStimmzettel
-  ) {
-    activeTeamID.value = sourceStimmzettel.teamID;
-    stimmzettelBeforeEdit.value = sourceStimmzettel;
-    bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
-      sourceStimmzettel
-    );
-
-    mapPersistedStimmzettelValuesToExistingDseStimmzettel(
-      managedBearbeitenDialogStimmzettel.value,
-      sourceStimmzettel
-    );
-  }
-
   function getStimmzettelSnapshot(): PersistedStimmzettel {
     return toPersistedStimmzettel(
       managedBearbeitenDialogStimmzettel.value,
       stimmzettelkennung.value,
       activeTeamID.value
+    );
+  }
+
+  function startEditStimmzettel(stimmzettelToEdit: PersistedStimmzettel) {
+    const copyOfStimmzettelToEdit = cloneStructured(stimmzettelToEdit);
+    copyOfStimmzettelToEdit.beschlussfassung = null;
+
+    stimmzettelBeforeEdit.value = copyOfStimmzettelToEdit;
+    bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
+      copyOfStimmzettelToEdit
+    );
+    activeTeamID.value = copyOfStimmzettelToEdit.teamID;
+
+    mapPersistedStimmzettelValuesToExistingDseStimmzettel(
+      managedBearbeitenDialogStimmzettel.value,
+      copyOfStimmzettelToEdit
     );
   }
 
@@ -107,29 +112,13 @@ export function useStimmzettelManager(
     );
   }
 
-  function _isDeepEqual(
-    persistedStimmzettel: PersistedStimmzettel,
-    dseStimmzettel: DseStimmzettel
-  ): boolean {
-    const mappedFromDse: PersistedStimmzettel = toPersistedStimmzettel(
-      dseStimmzettel,
-      stimmzettelkennung.value,
-      activeTeamID.value
-    );
-
-    const normA = normalizePersistedStimmzettel(persistedStimmzettel);
-    const normB = normalizePersistedStimmzettel(mappedFromDse);
-
-    return JSON.stringify(normA) === JSON.stringify(normB);
-  }
-
   return {
     getStimmzettelSnapshot,
     parseCommandOrThrowError,
     startNewStimmzettel,
     startWithClearedStimmzettel,
     bearbeitenDialogStimmzettelUtils,
-    setActiveStimmzettelWhenEditing,
+    startEditStimmzettel,
     hasStimmzettelBeenEdited,
     stimmzettelBeforeEdit: stimmzettelBeforeEdit,
   };

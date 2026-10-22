@@ -8,6 +8,7 @@
       style="flex: 0 0 250px; min-width: 0"
     >
       <the-eingabehistorie-card
+        v-if="!isReadonly"
         :change-history="changeHistory.changeHistoryInReverseOrder.value"
         class="d-flex flex-column"
       />
@@ -44,6 +45,7 @@
       style="min-height: 0; min-width: 0"
     >
       <the-stimmzettel-command-processing-text-field
+        v-if="!isReadonly"
         :ref="COMMAND_PROCESSING_TEXT_FIELD_TEMPLATE_REF_NAME"
         class="flex-0-0"
         :stimmzettel-manager="stimmzettelManager"
@@ -88,12 +90,13 @@
           stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
             .value
         "
+        :is-readonly="isReadonly"
         :team-id="currentUserTeamName"
         :system-beschlussgruende="
           stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
             .systemBeschlussvorschlag
         "
-        :stimmzettelkennung="stimmzettel?.stimmzettelkennung ?? 0"
+        :stimmzettelkennung="stimmzettelkennung"
         :is-b-w-b="isBWB"
       />
     </div>
@@ -103,7 +106,6 @@
 <script setup lang="ts">
 import type { StimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
-import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
@@ -126,10 +128,6 @@ const stimmzettelManager = defineModel("modelValue", {
 });
 
 const props = defineProps({
-  stimmzettel: {
-    type: [Object, null] as PropType<PersistedStimmzettel | null>,
-    required: true,
-  },
   wahlvorschlaege: {
     type: Array as PropType<Wahlvorschlag[]>,
     required: true,
@@ -138,7 +136,16 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  stimmzettelkennung: {
+    type: Number,
+    required: true,
+  },
   denySelectionOfStimmzettelFehlt: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  isReadonly: {
     type: Boolean,
     required: false,
     default: false,

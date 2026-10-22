@@ -3,6 +3,8 @@ import { useStimmzettelDTOTestDataFactory } from "@tests/utils/dse/StimmzettelDT
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmzettelService } from "@/composables/dse/stimmzettelerfassung/stimmzettelService.ts";
+import { REQUEST_HEADER_OFFLINE_STRATEGY } from "@/constants.ts";
+import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { createStimmzettelOfTeamDTO } = useStimmzettelDTOTestDataFactory();
@@ -11,10 +13,12 @@ const { createPersistedStimmzettel } = usePersistedStimmzettelTestDataFactory();
 const mockDefinitions = vi.hoisted(() => ({
   mapDtoToModel: vi.fn(),
   mapModelToDto: vi.fn(),
+  mapModelToSingleStimmzettelDto: vi.fn(),
   addNotification: vi.fn(),
   configurationConstructor: vi.fn(),
   getStimmzettel: vi.fn(),
   postStimmzettel: vi.fn(),
+  postSingleStimmzettel: vi.fn(),
   getAnzahlStimmzettel: vi.fn(),
 }));
 
@@ -27,6 +31,7 @@ vi.mock(
       StimmzettelControllerApi: class {
         getStimmzettel = mockDefinitions.getStimmzettel;
         postStimmzettel = mockDefinitions.postStimmzettel;
+        postSingleStimmzettel = mockDefinitions.postSingleStimmzettel;
         getAnzahlStimmzettel = mockDefinitions.getAnzahlStimmzettel;
       },
       Configuration: vi.fn(),
@@ -43,6 +48,7 @@ vi.mock(
         ...original.useStimmzettelMapper(),
         toModel: mockDefinitions.mapDtoToModel,
         toDTO: mockDefinitions.mapModelToDto,
+        toSingleStimmzettelDTO: mockDefinitions.mapModelToSingleStimmzettelDto,
       }),
     };
   }
@@ -58,8 +64,12 @@ vi.mock(
 );
 
 describe("stimmzettelService.ts", () => {
-  const { getStimmzettel, saveStimmzettel, getAnzahlStimmzettel } =
-    useStimmzettelService();
+  const {
+    getStimmzettel,
+    saveStimmzettel,
+    saveSingleStimmzettel,
+    getAnzahlStimmzettel,
+  } = useStimmzettelService();
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -141,6 +151,26 @@ describe("stimmzettelService.ts", () => {
       expect(mockDefinitions.mapDtoToModel).not.toHaveBeenCalled();
     });
 
+    it("should_forceRefreshOfflineData_when_forceRefreshIsTrue", async () => {
+      const wahlID = "wahlID";
+      const wahlbezirkID = "wahlbezirkID";
+      const teamID = "teamID";
+
+      mockDefinitions.getStimmzettel.mockResolvedValue({
+        status: 204,
+        data: null,
+      });
+
+      await getStimmzettel(wahlID, wahlbezirkID, teamID, true, true);
+
+      const requestConfig = mockDefinitions.getStimmzettel.mock.calls[0][3] as {
+        headers: { get: (header: string) => string };
+      };
+      expect(
+        requestConfig.headers.get(REQUEST_HEADER_OFFLINE_STRATEGY)
+      ).toStrictEqual(FetchStrategiesEnum.STRATEGY_REFRESH_OFFLINE_DATA);
+    });
+
     it("should_triggerErrorNotification_when_anExceptionOccurredDuringApiCall", async () => {
       const wahlID = "wahlID";
       const wahlbezirkID = "wahlbezirkID";
@@ -195,15 +225,48 @@ describe("stimmzettelService.ts", () => {
 
       await saveStimmzettel(wahlID, wahlbezirkID, teamID, stimmzettel);
 
-      expect(mockDefinitions.postStimmzettel.mock.calls).toStrictEqual([
-        [wahlID, wahlbezirkID, teamID, [mockedDto]],
-      ]);
+      expect(
+        mockDefinitions.postStimmzettel.mock.calls[0].slice(0, 4)
+      ).toStrictEqual([wahlID, wahlbezirkID, teamID, [mockedDto]]);
+      const requestConfig = mockDefinitions.postStimmzettel.mock
+        .calls[0][4] as {
+        headers: { get: (header: string) => string };
+      };
+      expect(
+        requestConfig.headers.get(REQUEST_HEADER_OFFLINE_STRATEGY)
+      ).toStrictEqual(FetchStrategiesEnum.STRATEGY_ONLINE_FIRST);
       expect(mockDefinitions.mapModelToDto.mock.calls).toStrictEqual([
         stimmzettel,
       ]);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
       ]);
+    });
+
+    it("should_storeStimmzettelOffline_when_justStoreIsTrue", async () => {
+      const wahlID = "wahlID";
+      const wahlbezirkID = "wahlbezirkID";
+      const teamID = "teamID";
+      const stimmzettel = [createPersistedStimmzettel()];
+      const mockedDto = createStimmzettelOfTeamDTO();
+      mockDefinitions.mapModelToDto.mockReturnValue(mockedDto);
+
+      await saveStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        stimmzettel,
+        true,
+        true
+      );
+
+      const requestConfig = mockDefinitions.postStimmzettel.mock
+        .calls[0][4] as {
+        headers: { get: (header: string) => string };
+      };
+      expect(
+        requestConfig.headers.get(REQUEST_HEADER_OFFLINE_STRATEGY)
+      ).toStrictEqual(FetchStrategiesEnum.STRATEGY_SAVE_OFFLINE_ONLY);
     });
 
     it("should_triggerErrorNotification_when_anExceptionOccurredDuringApiCall", async () => {
@@ -246,6 +309,69 @@ describe("stimmzettelService.ts", () => {
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
+    });
+  });
+
+  describe("saveSingleStimmzettel", () => {
+    it("should_sendSingleStimmzettelDto_when_modelIsGiven", async () => {
+      const wahlID = "wahlID";
+      const wahlbezirkID = "wahlbezirkID";
+      const teamID = "teamID";
+      const stimmzettel = createPersistedStimmzettel();
+      const mockedDto = createStimmzettelOfTeamDTO();
+      mockDefinitions.mapModelToSingleStimmzettelDto.mockReturnValue(mockedDto);
+
+      await saveSingleStimmzettel(wahlID, wahlbezirkID, teamID, stimmzettel);
+
+      expect(
+        mockDefinitions.mapModelToSingleStimmzettelDto
+      ).toHaveBeenCalledWith(stimmzettel);
+      expect(mockDefinitions.postSingleStimmzettel).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        stimmzettel.stimmzettelkennung,
+        mockedDto
+      );
+      expect(mockDefinitions.addNotification).toHaveBeenCalledWith(
+        "Speichern des Stimmzettels erfolgreich",
+        UserNotificationCategoryEnum.SUCCESS
+      );
+    });
+
+    it("should_triggerErrorNotification_when_anExceptionOccurredDuringApiCall", async () => {
+      const stimmzettel = createPersistedStimmzettel();
+      mockDefinitions.postSingleStimmzettel.mockRejectedValue(
+        new Error("api call failed")
+      );
+
+      await expect(async () =>
+        saveSingleStimmzettel("wahlID", "wahlbezirkID", "teamID", stimmzettel)
+      ).rejects.toThrowError();
+
+      expect(mockDefinitions.addNotification).toHaveBeenCalledWith(
+        "Speichern des Stimmzettels ist fehlgeschlagen",
+        UserNotificationCategoryEnum.ERROR
+      );
+    });
+
+    it("should_notTriggerErrorNotification_when_anExceptionOccurredDuringApiCallButSendNotificationIsFalse", async () => {
+      const stimmzettel = createPersistedStimmzettel();
+      mockDefinitions.postSingleStimmzettel.mockRejectedValue(
+        new Error("api call failed")
+      );
+
+      await expect(async () =>
+        saveSingleStimmzettel(
+          "wahlID",
+          "wahlbezirkID",
+          "teamID",
+          stimmzettel,
+          false
+        )
+      ).rejects.toThrowError();
+
+      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });
   });
 

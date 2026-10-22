@@ -2,23 +2,13 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Ergebnismeldung Service",
-    "contact": {
-      "name": "Your Name",
-      "email": "Your E-Mail-Address"
-    },
+    "contact": { "name": "Your Name", "email": "Your E-Mail-Address" },
     "version": "0.12.0-SNAPSHOT"
   },
   "servers": [
-    {
-      "url": "http://localhost:8080",
-      "description": "Generated server url"
-    }
+    { "url": "http://localhost:8080", "description": "Generated server url" }
   ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
+  "security": [{ "bearerAuth": [] }],
   "paths": {
     "/stimmzettelerfassungsWorkflow/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}": {
       "get": {
@@ -30,17 +20,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -54,29 +40,21 @@
               }
             }
           },
-          "204": {
-            "description": "Es wurden kein Status gepflegt"
-          },
+          "204": { "description": "Es wurden kein Status gepflegt" },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -91,17 +69,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
@@ -115,29 +89,21 @@
           "required": true
         },
         "responses": {
-          "201": {
-            "description": "Der Status wurde erfasst"
-          },
+          "201": { "description": "Der Status wurde erfasst" },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -154,25 +120,19 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "teamID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -189,29 +149,21 @@
               }
             }
           },
-          "204": {
-            "description": "Es sind keine Stimmzettel gespeichert"
-          },
+          "204": { "description": "Es sind keine Stimmzettel gespeichert" },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -226,25 +178,19 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "teamID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
@@ -252,25 +198,19 @@
             "application/json": {
               "schema": {
                 "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/StimmzettelOfTeamDTO"
-                }
+                "items": { "$ref": "#/components/schemas/StimmzettelOfTeamDTO" }
               }
             }
           },
           "required": true
         },
         "responses": {
-          "201": {
-            "description": "Die Stimmzettel wurden gespeichert"
-          },
+          "201": { "description": "Die Stimmzettel wurden gespeichert" },
           "409": {
             "description": "Die Daten der übermittelten Stimmzettel sind widersprüchlich",
             "content": {
               "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
@@ -278,22 +218,85 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stimmzettelerfassung/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/team/{teamID}/stimmzettel/{stimmzettelkennung}": {
+      "post": {
+        "tags": ["stimmzettel-controller"],
+        "description": "Schreiben von Stimmzetteln eines Team in einem Wahlbezirk einer Wahl",
+        "operationId": "postSingleStimmzettel",
+        "parameters": [
+          {
+            "name": "wahlID",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "wahlbezirkID",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "teamID",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "stimmzettelkennung",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SingleStimmzettelDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": { "description": "Die Stimmzettel wurden gespeichert" },
+          "409": {
+            "description": "Die Daten der übermittelten Stimmzettel sind widersprüchlich",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validierung des Requestbody fehlgeschlagen",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+              }
+            }
+          },
+          "404": { "description": "Ressource nicht gefunden" },
+          "500": {
+            "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -310,25 +313,19 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "teamID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -342,29 +339,21 @@
               }
             }
           },
-          "204": {
-            "description": "Es wurden kein Status gepflegt"
-          },
+          "204": { "description": "Es wurden kein Status gepflegt" },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -379,25 +368,19 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "teamID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
@@ -425,22 +408,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -457,51 +434,37 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "teamID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
-          "201": {
-            "description": "Die Status wurden erfasst"
-          },
+          "201": { "description": "Die Status wurden erfasst" },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -518,17 +481,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -552,22 +511,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -582,17 +535,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
@@ -616,22 +565,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -648,17 +591,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -666,9 +605,7 @@
             "description": "Es existieren Stimmabgabevermerke",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WahlscheineDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WahlscheineDTO" }
               }
             }
           },
@@ -679,22 +616,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -709,25 +640,19 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WahlscheineDTO"
-              }
+              "schema": { "$ref": "#/components/schemas/WahlscheineDTO" }
             }
           },
           "required": true
@@ -740,22 +665,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -772,17 +691,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -803,22 +718,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -833,17 +742,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
@@ -864,22 +769,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -896,26 +795,19 @@
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "waehlerverzeichnisNummer",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "schema": { "type": "integer", "format": "int64" }
           }
         ],
         "responses": {
@@ -936,22 +828,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -966,26 +852,19 @@
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "waehlerverzeichnisNummer",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "schema": { "type": "integer", "format": "int64" }
           }
         ],
         "requestBody": {
@@ -1006,22 +885,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -1038,17 +911,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -1056,9 +925,7 @@
             "description": "Es existiert ein Zustand",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatusDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/StatusDTO" }
               }
             }
           },
@@ -1069,22 +936,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -1099,53 +960,39 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/StatusDTO"
-              }
+              "schema": { "$ref": "#/components/schemas/StatusDTO" }
             }
           },
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "Zustand erfolgreich gespeichert"
-          },
+          "200": { "description": "Zustand erfolgreich gespeichert" },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -1162,64 +1009,46 @@
             "name": "forceergebnismeldung",
             "in": "header",
             "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "waehlerverzeichnisNummer",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "schema": { "type": "integer", "format": "int64" }
           },
           {
             "name": "meldungsart",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string",
-              "enum": ["V1", "V3"]
-            }
+            "schema": { "type": "string", "enum": ["V1", "V3"] }
           },
           {
             "name": "hauptwahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
-          "200": {
-            "description": "Die Übermittlung war erfolgreich"
-          },
+          "200": { "description": "Die Übermittlung war erfolgreich" },
           "409": {
             "description": "Die Übermittlung konnte auf Grund fehlender Daten nicht durchgeführt werden",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
@@ -1227,22 +1056,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -1259,17 +1082,13 @@
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "stapelart",
@@ -1339,9 +1158,7 @@
             "description": "Es existieren Ergebnisse",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErgebnisseDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/ErgebnisseDTO" }
               }
             }
           },
@@ -1352,22 +1169,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -1382,17 +1193,13 @@
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "stapelart",
@@ -1460,37 +1267,27 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ErgebnisseDTO"
-              }
+              "schema": { "$ref": "#/components/schemas/ErgebnisseDTO" }
             }
           },
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "Ergebnisse erfolgreich gespeichert"
-          },
+          "200": { "description": "Ergebnisse erfolgreich gespeichert" },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -1507,17 +1304,13 @@
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "stapelart",
@@ -1587,9 +1380,7 @@
             "description": "Es existiert eine Begruendung.",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BegruendungDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/BegruendungDTO" }
               }
             }
           },
@@ -1600,22 +1391,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -1630,17 +1415,13 @@
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "stapelart",
@@ -1708,37 +1489,27 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BegruendungDTO"
-              }
+              "schema": { "$ref": "#/components/schemas/BegruendungDTO" }
             }
           },
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "Begruendung erfolgreich gespeichert"
-          },
+          "200": { "description": "Begruendung erfolgreich gespeichert" },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -1753,40 +1524,27 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
+              "schema": { "type": "array", "items": { "type": "string" } }
             }
           },
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "A-Werte erfolgreich synchronisiert."
-          },
+          "200": { "description": "A-Werte erfolgreich synchronisiert." },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -1803,17 +1561,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "dokumentart",
@@ -1830,9 +1584,7 @@
             "description": "Es existiert ein Ausdruck",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AusdruckReadDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/AusdruckReadDTO" }
               }
             }
           },
@@ -1843,22 +1595,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -1873,17 +1619,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "dokumentart",
@@ -1898,9 +1640,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AusdruckWriteDTO"
-              }
+              "schema": { "$ref": "#/components/schemas/AusdruckWriteDTO" }
             }
           },
           "required": true
@@ -1908,21 +1648,13 @@
         "responses": {
           "200": {
             "description": "Ausdruck erfolgreich gespeichert",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
@@ -1930,15 +1662,11 @@
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          }
+          "404": { "description": "Ressource nicht gefunden" }
         }
       }
     },
@@ -1952,17 +1680,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -1979,29 +1703,21 @@
               }
             }
           },
-          "204": {
-            "description": "Es wurde kein Team-Status gefunden"
-          },
+          "204": { "description": "Es wurde kein Team-Status gefunden" },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -2018,51 +1734,36 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "Liefert die Menge an vorhandenen Stimmzetteln. Gibt es zu den IDs keine Stimmzettel ist das Ergebnis 0.",
             "content": {
-              "*/*": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
+              "*/*": { "schema": { "type": "integer", "format": "int32" } }
             }
           },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -2079,17 +1780,13 @@
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2097,9 +1794,7 @@
             "description": "Es existieren Ergebnisse",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErgebnisseDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/ErgebnisseDTO" }
               }
             }
           },
@@ -2110,22 +1805,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -2142,9 +1831,7 @@
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2154,9 +1841,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AWerteDTO"
-                  }
+                  "items": { "$ref": "#/components/schemas/AWerteDTO" }
                 }
               }
             }
@@ -2165,22 +1850,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -2197,17 +1876,13 @@
             "name": "wahlID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "wahlbezirkID",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2217,9 +1892,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AusdruckReadDTO"
-                  }
+                  "items": { "$ref": "#/components/schemas/AusdruckReadDTO" }
                 }
               }
             }
@@ -2231,22 +1904,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -2263,9 +1930,7 @@
             "description": "Auskunft über Bearbeitungszustand erhalten",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AsyncProgressDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/AsyncProgressDTO" }
               }
             }
           },
@@ -2273,22 +1938,16 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           },
-          "404": {
-            "description": "Ressource nicht gefunden"
-          },
+          "404": { "description": "Ressource nicht gefunden" },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WlsExceptionDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
               }
             }
           }
@@ -2311,68 +1970,36 @@
       "BeschlussfassungDTO": {
         "type": "object",
         "properties": {
-          "pro": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "contra": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "text": {
-            "type": "string"
-          }
+          "pro": { "type": "integer", "format": "int32" },
+          "contra": { "type": "integer", "format": "int32" },
+          "text": { "type": "string" }
         },
         "required": ["contra", "pro", "text"]
       },
       "KandidatDTO": {
         "type": "object",
         "properties": {
-          "id": {
-            "$ref": "#/components/schemas/KandidatIdDTO"
-          },
-          "discarded": {
-            "type": "boolean"
-          },
-          "votesByVoter": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "invalidVotes": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "votesByWahlvorschlag": {
-            "type": "integer",
-            "format": "int32"
-          }
+          "id": { "$ref": "#/components/schemas/KandidatIdDTO" },
+          "discarded": { "type": "boolean" },
+          "votesByVoter": { "type": "integer", "format": "int32" },
+          "invalidVotes": { "type": "integer", "format": "int32" },
+          "votesByWahlvorschlag": { "type": "integer", "format": "int32" }
         },
         "required": ["discarded", "id"]
       },
       "KandidatIdDTO": {
         "type": "object",
         "properties": {
-          "kandidatID": {
-            "type": "string"
-          },
-          "nennungsNummer": {
-            "type": "integer",
-            "format": "int32"
-          }
+          "kandidatID": { "type": "string" },
+          "nennungsNummer": { "type": "integer", "format": "int32" }
         },
         "required": ["kandidatID", "nennungsNummer"]
       },
       "StimmzettelOfTeamDTO": {
         "type": "object",
         "properties": {
-          "stimmzettelkennung": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "invalideVotes": {
-            "type": "integer",
-            "format": "int32"
-          },
+          "stimmzettelkennung": { "type": "integer", "format": "int32" },
+          "invalideVotes": { "type": "integer", "format": "int32" },
           "gueltigkeit": {
             "type": "string",
             "enum": [
@@ -2391,18 +2018,14 @@
           },
           "systemBeschlussvorschlag": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SystemBeschlussgrundDTO"
-            }
+            "items": { "$ref": "#/components/schemas/SystemBeschlussgrundDTO" }
           },
           "beschlussfassung": {
             "$ref": "#/components/schemas/BeschlussfassungDTO"
           },
           "wahlvorschlaege": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WahlvorschlagDTO"
-            }
+            "items": { "$ref": "#/components/schemas/WahlvorschlagDTO" }
           }
         },
         "required": ["gueltigkeit", "invalideVotes", "stimmzettelkennung"]
@@ -2426,47 +2049,62 @@
       "WahlvorschlagDTO": {
         "type": "object",
         "properties": {
-          "wahlvorschlagID": {
-            "type": "string"
-          },
-          "selected": {
-            "type": "boolean"
-          },
+          "wahlvorschlagID": { "type": "string" },
+          "selected": { "type": "boolean" },
           "kandidaten": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/KandidatDTO"
-            }
+            "items": { "$ref": "#/components/schemas/KandidatDTO" }
           }
         },
         "required": ["selected", "wahlvorschlagID"]
       },
       "WahlvorstandBeschlussgrundDTO": {
         "type": "object",
-        "properties": {
-          "text": {
-            "type": "string"
-          }
-        },
+        "properties": { "text": { "type": "string" } },
         "required": ["text"]
       },
       "WlsExceptionDTO": {
         "properties": {
-          "category": {
-            "type": "string",
-            "enum": ["F", "T", "S", "I"]
-          },
-          "code": {
-            "type": "string"
-          },
-          "service": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          }
+          "category": { "type": "string", "enum": ["F", "T", "S", "I"] },
+          "code": { "type": "string" },
+          "service": { "type": "string" },
+          "message": { "type": "string" }
         },
         "required": ["category", "code", "message", "service"]
+      },
+      "SingleStimmzettelDTO": {
+        "type": "object",
+        "properties": {
+          "invalideVotes": { "type": "integer", "format": "int32" },
+          "gueltigkeit": {
+            "type": "string",
+            "enum": [
+              "VALID",
+              "INVALID",
+              "BESCHLUSS_AUSSTEHEND",
+              "BWB_PSEUDO_STIMMZETTEL_LEERER_UMSCHLAG",
+              "LEER"
+            ]
+          },
+          "wahlvorstandBeschlussvorschlag": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WahlvorstandBeschlussgrundDTO"
+            }
+          },
+          "systemBeschlussvorschlag": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SystemBeschlussgrundDTO" }
+          },
+          "beschlussfassung": {
+            "$ref": "#/components/schemas/BeschlussfassungDTO"
+          },
+          "wahlvorschlaege": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/WahlvorschlagDTO" }
+          }
+        },
+        "required": ["gueltigkeit", "invalideVotes"]
       },
       "StimmzettelerfassungTeamStatusDTO": {
         "type": "object",
@@ -2486,10 +2124,7 @@
       "BedenklicherStimmzettelDTO": {
         "type": "object",
         "properties": {
-          "orderIndex": {
-            "type": "integer",
-            "format": "int32"
-          },
+          "orderIndex": { "type": "integer", "format": "int32" },
           "supplements": {
             "type": "array",
             "items": {
@@ -2511,11 +2146,7 @@
       "BezirkUndWahlID": {
         "type": "object",
         "properties": {
-          "wahlID": {
-            "type": "string",
-            "maxLength": 1000,
-            "minLength": 0
-          },
+          "wahlID": { "type": "string", "maxLength": 1000, "minLength": 0 },
           "wahlbezirkID": {
             "type": "string",
             "maxLength": 1000,
@@ -2527,44 +2158,28 @@
       "WahlscheineDTO": {
         "type": "object",
         "properties": {
-          "bezirkUndWahlID": {
-            "$ref": "#/components/schemas/BezirkUndWahlID"
-          },
-          "stimmabgabevermerke": {
-            "type": "integer",
-            "format": "int64"
-          }
+          "bezirkUndWahlID": { "$ref": "#/components/schemas/BezirkUndWahlID" },
+          "stimmabgabevermerke": { "type": "integer", "format": "int64" }
         },
         "required": ["bezirkUndWahlID", "stimmabgabevermerke"]
       },
       "StimmzettelumschlaegeDTO": {
         "type": "object",
         "properties": {
-          "bezirkUndWahlID": {
-            "$ref": "#/components/schemas/BezirkUndWahlID"
-          },
+          "bezirkUndWahlID": { "$ref": "#/components/schemas/BezirkUndWahlID" },
           "urneneroeffnungsUhrzeit": {
             "type": "string",
             "format": "date-time"
           },
-          "anzahlWaehler": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "anzahlWaehler2": {
-            "type": "integer",
-            "format": "int64"
-          }
+          "anzahlWaehler": { "type": "integer", "format": "int64" },
+          "anzahlWaehler2": { "type": "integer", "format": "int64" }
         },
         "required": ["anzahlWaehler", "bezirkUndWahlID"]
       },
       "EingenommenerWahlscheinDTO": {
         "type": "object",
         "properties": {
-          "anzahl": {
-            "type": "integer",
-            "format": "int64"
-          },
+          "anzahl": { "type": "integer", "format": "int64" },
           "stimmzettelart": {
             "type": "string",
             "enum": ["GROSS", "KLEIN", "BEIDE"]
@@ -2575,21 +2190,12 @@
       "StimmabgabevermerkeDTO": {
         "type": "object",
         "properties": {
-          "wahlbezirkID": {
-            "type": "string"
-          },
-          "wahlID": {
-            "type": "string"
-          },
-          "waehlerverzeichnisNummer": {
-            "type": "integer",
-            "format": "int64"
-          },
+          "wahlbezirkID": { "type": "string" },
+          "wahlID": { "type": "string" },
+          "waehlerverzeichnisNummer": { "type": "integer", "format": "int64" },
           "vermerke": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/VermerkDTO"
-            },
+            "items": { "$ref": "#/components/schemas/VermerkDTO" },
             "uniqueItems": true
           },
           "eingenommeneWahlscheine": {
@@ -2611,10 +2217,7 @@
       "StimmzettelDTO": {
         "type": "object",
         "properties": {
-          "anzahl": {
-            "type": "integer",
-            "format": "int64"
-          },
+          "anzahl": { "type": "integer", "format": "int64" },
           "stimmzettelart": {
             "type": "string",
             "enum": ["GROSS", "KLEIN", "BEIDE"]
@@ -2625,15 +2228,10 @@
       "VermerkDTO": {
         "type": "object",
         "properties": {
-          "blattnummer": {
-            "type": "integer",
-            "format": "int64"
-          },
+          "blattnummer": { "type": "integer", "format": "int64" },
           "stimmzettel": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StimmzettelDTO"
-            },
+            "items": { "$ref": "#/components/schemas/StimmzettelDTO" },
             "uniqueItems": true
           }
         },
@@ -2646,43 +2244,26 @@
             "type": "string",
             "enum": ["NICHT_VALIDIERT", "NICHT_GESENDET", "VALIDE", "INVALIDE"]
           },
-          "gedruckt": {
-            "type": "boolean"
-          },
-          "uebermittelt": {
-            "type": "boolean"
-          },
-          "sendeuhrzeit": {
-            "type": "string",
-            "format": "date-time"
-          }
+          "gedruckt": { "type": "boolean" },
+          "uebermittelt": { "type": "boolean" },
+          "sendeuhrzeit": { "type": "string", "format": "date-time" }
         },
         "required": ["gedruckt", "validierungsstatus"]
       },
       "StatusDTO": {
         "type": "object",
         "properties": {
-          "bezirkUndWahlID": {
-            "$ref": "#/components/schemas/BezirkUndWahlID"
-          },
-          "schnellmeldung": {
-            "$ref": "#/components/schemas/MeldungDTO"
-          },
-          "niederschrift": {
-            "$ref": "#/components/schemas/MeldungDTO"
-          }
+          "bezirkUndWahlID": { "$ref": "#/components/schemas/BezirkUndWahlID" },
+          "schnellmeldung": { "$ref": "#/components/schemas/MeldungDTO" },
+          "niederschrift": { "$ref": "#/components/schemas/MeldungDTO" }
         },
         "required": ["bezirkUndWahlID", "niederschrift", "schnellmeldung"]
       },
       "BezirkUndWahlIDStapelartDTO": {
         "type": "object",
         "properties": {
-          "wahlbezirkID": {
-            "type": "string"
-          },
-          "wahlID": {
-            "type": "string"
-          },
+          "wahlbezirkID": { "type": "string" },
+          "wahlID": { "type": "string" },
           "stapelart": {
             "type": "string",
             "enum": [
@@ -2746,24 +2327,14 @@
       "ErgebnisDTO": {
         "type": "object",
         "properties": {
-          "wahlvorschlagID": {
-            "type": "string"
-          },
-          "kandidatID": {
-            "type": "string"
-          },
+          "wahlvorschlagID": { "type": "string" },
+          "kandidatID": { "type": "string" },
           "wahlvorschlagsordnungszahl": {
             "type": "integer",
             "format": "int64"
           },
-          "ergebnis": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "numIndex": {
-            "type": "integer",
-            "format": "int64"
-          }
+          "ergebnis": { "type": "integer", "format": "int64" },
+          "numIndex": { "type": "integer", "format": "int64" }
         },
         "required": ["ergebnis"]
       },
@@ -2775,9 +2346,7 @@
           },
           "ergebnisse": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ErgebnisDTO"
-            }
+            "items": { "$ref": "#/components/schemas/ErgebnisDTO" }
           }
         },
         "required": ["bezirkUndWahlIDStapelart", "ergebnisse"]
@@ -2788,35 +2357,21 @@
           "bezirkUndWahlIDStapelart": {
             "$ref": "#/components/schemas/BezirkUndWahlIDStapelartDTO"
           },
-          "grund": {
-            "type": "string"
-          },
-          "grund2": {
-            "type": "string"
-          },
-          "nachzaehlung": {
-            "type": "boolean"
-          },
-          "unstimmigkeiten": {
-            "type": "boolean"
-          }
+          "grund": { "type": "string" },
+          "grund2": { "type": "string" },
+          "nachzaehlung": { "type": "boolean" },
+          "unstimmigkeiten": { "type": "boolean" }
         },
         "required": ["bezirkUndWahlIDStapelart"]
       },
       "AusdruckWriteDTO": {
         "type": "object",
-        "properties": {
-          "content": {
-            "type": "string"
-          }
-        }
+        "properties": { "content": { "type": "string" } }
       },
       "StimmzettelerfassungTeamStatusEntryDTO": {
         "type": "object",
         "properties": {
-          "teamID": {
-            "type": "string"
-          },
+          "teamID": { "type": "string" },
           "status": {
             "type": "string",
             "enum": [
@@ -2832,68 +2387,35 @@
       "AWerteDTO": {
         "type": "object",
         "properties": {
-          "bezirkUndWahlID": {
-            "$ref": "#/components/schemas/BezirkUndWahlID"
-          },
-          "a1": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "a2": {
-            "type": "integer",
-            "format": "int64"
-          }
+          "bezirkUndWahlID": { "$ref": "#/components/schemas/BezirkUndWahlID" },
+          "a1": { "type": "integer", "format": "int64" },
+          "a2": { "type": "integer", "format": "int64" }
         },
         "required": ["a1", "bezirkUndWahlID"]
       },
       "AusdruckReadDTO": {
         "type": "object",
         "properties": {
-          "wahlbezirkID": {
-            "type": "string"
-          },
-          "wahlID": {
-            "type": "string"
-          },
+          "wahlbezirkID": { "type": "string" },
+          "wahlID": { "type": "string" },
           "dokumentart": {
             "type": "string",
             "enum": ["V1", "V3", "BESCHLUSSENTSCHEIDUNGEN"]
           },
-          "content": {
-            "type": "string"
-          },
-          "erstelltAm": {
-            "type": "string",
-            "format": "date-time"
-          }
+          "content": { "type": "string" },
+          "erstelltAm": { "type": "string", "format": "date-time" }
         },
         "required": ["dokumentart", "erstelltAm", "wahlID", "wahlbezirkID"]
       },
       "AsyncProgressDTO": {
         "type": "object",
         "properties": {
-          "lastStartTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastFinishTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "aWerteLoadingActive": {
-            "type": "boolean"
-          },
-          "aWerteTotal": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "aWerteFinished": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "aWerteNext": {
-            "type": "string"
-          }
+          "lastStartTime": { "type": "string", "format": "date-time" },
+          "lastFinishTime": { "type": "string", "format": "date-time" },
+          "aWerteLoadingActive": { "type": "boolean" },
+          "aWerteTotal": { "type": "integer", "format": "int32" },
+          "aWerteFinished": { "type": "integer", "format": "int32" },
+          "aWerteNext": { "type": "string" }
         }
       }
     },

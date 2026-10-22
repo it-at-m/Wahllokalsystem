@@ -43,6 +43,27 @@ class StimmzettelDTOMapperTest {
       Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
     }
 
+    @Test
+    void
+        should_mapCompleteModelAndSetStimmzettelkennung_when_completeSingleDTOAndStimmzettelkennungAreGiven() {
+      val dtoToMap = Instancio.create(SingleStimmzettelDTO.class);
+      val stimmzettelkennung = Instancio.create(Integer.class);
+
+      val result = unitUnderTest.toModel(dtoToMap, stimmzettelkennung);
+
+      val expectedResult =
+          createExpectedModel(
+              new StimmzettelOfTeamDTO(
+                  stimmzettelkennung,
+                  dtoToMap.invalideVotes(),
+                  dtoToMap.gueltigkeit(),
+                  dtoToMap.wahlvorstandBeschlussvorschlag(),
+                  dtoToMap.systemBeschlussvorschlag(),
+                  dtoToMap.beschlussfassung(),
+                  dtoToMap.wahlvorschlaege()));
+      Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+    }
+
     private StimmzettelOfTeamModel createExpectedModel(final StimmzettelOfTeamDTO dto) {
       val expectedWahlvorstandBeschlussvorschlag =
           dto.wahlvorstandBeschlussvorschlag().stream()

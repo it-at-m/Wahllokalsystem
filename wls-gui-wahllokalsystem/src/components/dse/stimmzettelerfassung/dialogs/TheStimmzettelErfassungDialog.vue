@@ -47,8 +47,8 @@
           >Abbrechen</base-text-button
         >
         <v-tooltip
-          v-if="
-            stimmzettelGueltigkeit ===
+          :disabled="
+            stimmzettelGueltigkeit !==
             StimmzettelGueltigkeitEnum.BeschlussAusstehend
           "
           location="top"
@@ -69,14 +69,9 @@
               :disabled="isSaveDisabled"
               :model-value="currentAction"
               :actions="actions"
-          /></template>
+            />
+          </template>
         </v-tooltip>
-        <base-save-button-with-action-menu
-          v-else
-          :disabled="isSaveDisabled"
-          :model-value="currentAction"
-          :actions="actions"
-        />
       </v-card-actions>
       <the-stimmzettel-erfassung-cancel-confirmation-dialog
         :visible="isCancelConfirmationDialogVisible"

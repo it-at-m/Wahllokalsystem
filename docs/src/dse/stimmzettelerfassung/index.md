@@ -114,7 +114,7 @@ dabei unverändert, beziehungsweise werden durch die Bereichsstimmen ergänzt.
 > | | | Befehl(e) | Screenshot |
 > | --- | --- | --- | --- |
 > | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 5. Die Positionen 1 bis 2 und Position 5 haben bereits eine Einzelstimme erhalten. Der/die Wähler\*in vergibt nun jeweils 2 Stimmen für den Bereich 1-3. | `601`, `602`, `605` | ![wahlvorschlag6mit3Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag6mit3Stimmen.png) |
-> | **Ergebnis** | Die Positionen 1 und 2 haben nun insgesamt jeweils 3 Stimmen und Position 3 hat 2 Stimmen während Position 6 immer noch 1 Stimme hat. | `601-603+2` | ![wahlvorschlag6mit9Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag6mit9Stimmen.png) |
+> | **Ergebnis** | Die Positionen 1 und 2 haben nun insgesamt jeweils 3 Stimmen und Position 3 hat 2 Stimmen während Position 5 immer noch 1 Stimme hat. | `601-603+2` | ![wahlvorschlag6mit9Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag6mit9Stimmen.png) |
 
 </details>
 
@@ -245,7 +245,7 @@ wenn sie noch nicht die maximal erlaubte Menge an Stimmen erreicht haben.
 >
 > | | | Befehl(e) | Screenshot |
 > | --- | --- | --- | --- |
-> | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 5, jeweils in dreifacher Nennung. Für jede kandidierende Person dürfen maximal 3 Stimmen vergeben werden. <br><br> Die Position 1 hat bei jeder der 3 Nennungen ein Kreuz. <br> Die Position 2 hat bei der ersten Nennung eine 2 stehen. <br> Die Position 3 hat bei den ersten beiden Nennungen eine 2 stehen. <br> Bei Position 4 wurde die erste Nennung gestrichen. | `901-901`, `902+2`, `903+4`, `s904` | ![wahlvorschlag9mit9Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag9mit9Stimmen.png) |
+> | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 5, jeweils in dreifacher Nennung. Für jede kandidierende Person dürfen maximal 3 Stimmen vergeben werden. <br><br> Die Position 1 hat bei jeder der 3 Nennungen ein Kreuz. <br> Die Position 2 hat bei der ersten Nennung eine 2 stehen. <br> Die Position 3 hat bei der ersten Nennung eine 4 stehen. <br> Bei Position 4 wurde die erste Nennung gestrichen. | `901-901`, `902+2`, `903+4`, `s904` | ![wahlvorschlag9mit9Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag9mit9Stimmen.png) |
 > | **Ergebnis** | Über die Reststimmenvergabe bekommt die Position 1 keine Stimmen, weil für die kandidierenden Person bereits die maximale Menge an Stimmen erreicht ist. <br><br> Die Position 2 bekommt noch eine Reststimme, womit sie das Maximum an Stimmen erreicht. <br> Die Position 3 bekommt keine Reststimmen, weil für die kandidierenden Person bereits die maximale Menge an Stimmen überschritten wurde. Eine der 4 Stimmen wird als ungültig gewertet. <br> Die Position 4 bekommt noch 2 Reststimmen. Für die gestrichene Nennung gibt es keine Reststimme. <br> Die restlichen Positionen bekommen jeweils 1 Reststimme pro Nennung. | `900` | ![wahlvorschlag9mit9Stimmen15Reststimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag9mit9Stimmen15Reststimmen.png) |
 
 </details>

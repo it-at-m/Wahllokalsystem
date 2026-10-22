@@ -109,23 +109,6 @@ dabei unverändert, beziehungsweise werden durch die Bereichsstimmen ergänzt.
 
 <details><summary>Beispiele</summary>
 
-> [!NOTE] Ungültiger Bereich über Grenze hinweg
-> Ein Wahlvorschlag enthält die Kandidatenordnungszahlen 501 bis 505.
->
-> Der Befehl 501-510 wird abgelehnt, weil die Ordnungszahlen 506 bis 510 nicht existieren.
-
-> [!NOTE] Ungültiger Bereich über Wahlvorschläge hinweg
-> Es existieren die Wahlvorschläge mit den Ordnungszahlen 100 und 200.
->
-> Der Befehl 101-201 wird abgelehnt, weil die Ordnungszahlen 101 und 201 zu unterschiedlichen
-> Wahlvorschlägen gehören.
-
-> [!NOTE] Ungültiger Bereich, weil Streichung vorhanden
-> Es gibt die Listenpositionen 1 bis 10. Die Position 2 ist bereits gestrichen worden. Der/die Wähler\*in vergibt
-> nun jeweils 2 Stimmen für den Bereich 1-3.
->
-> Der Befehl wird abgelehnt.
-
 > [!NOTE] Ergänzen von Bereichsstimmen zu bestehenden Einzelstimmen
 >
 > | | | Befehl(e) | Screenshot |

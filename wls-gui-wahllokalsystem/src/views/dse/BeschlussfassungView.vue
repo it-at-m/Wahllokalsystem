@@ -12,7 +12,9 @@
           color="success" />
         <base-beschlussfassung-uebersicht-table
           :stimmzettel-liste="stimmzettelForBeschlussfassung"
-          :stimmzettel-loading="isStimmzettelForBeschlussLoading"
+          :stimmzettel-loading="
+            isStimmzettelForBeschlussLoading || isWahlvorschlaegeLoading
+          "
           :is-beschluss-bearbeiten-disabled="isBeschlussBearbeitenDisabled"
           @edit-beschluss-stimmzettel="onBeschlussBearbeitenClicked($event)"
       /></v-card-text>
@@ -27,6 +29,9 @@
         <base-text-button
           active
           :disabled="isBeschlussfassungBeendenButtonDisabled"
+          :loading="
+            isStimmzettelForBeschlussLoading || isBeschlussfassungBeendenLoading
+          "
           @click="onBeschlussfassungBeendenClicked"
         >
           Beschlussfassung Beenden
@@ -88,6 +93,7 @@ const isBearbeitenDialogVisible = ref(false);
 const isBeschlussentscheidungenDruckenDialogVisble = ref(false);
 const activeStimmzettelForBeschluss = ref<PersistedStimmzettel>();
 const isBeschlussentscheidungenDruckenLoading = ref<boolean>(false);
+const isBeschlussfassungBeendenLoading = ref<boolean>(false);
 
 const {
   isStimmzettelForBeschlussLoading,
@@ -101,17 +107,23 @@ const {
   sendAusdruckBeschlussentscheidungen,
   prepareDataForBeschlussentscheidungenDruck,
 } = useBeschlussentscheidungenDruckenTools(wahlID, wahlbezirkID);
-const { wahlvorschlaege } = useWahlvorschlaegeState(wahlID, wahlbezirkID);
+const { wahlvorschlaege, isWahlvorschlaegeLoading } = useWahlvorschlaegeState(
+  wahlID,
+  wahlbezirkID
+);
 const { buildTemplate } = useBeschlussentscheidungenDruckTemplateTools();
 
 async function onBeschlussfassungBeendenClicked() {
-  await saveDseWorkflowStatus(wahlID, wahlbezirkID, {
-    status: StimmzettelerfassungStatusEnum.BeAbgeschlossen,
-  });
-
-  setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG);
-
-  await router.push(getNextRoute());
+  isBeschlussfassungBeendenLoading.value = true;
+  try {
+    await saveDseWorkflowStatus(wahlID, wahlbezirkID, {
+      status: StimmzettelerfassungStatusEnum.BeAbgeschlossen,
+    });
+    setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG);
+    await router.push(getNextRoute());
+  } finally {
+    isBeschlussfassungBeendenLoading.value = false;
+  }
 }
 
 function onBeschlussBearbeitenClicked(stimmzettelToEdit: PersistedStimmzettel) {

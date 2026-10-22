@@ -59,6 +59,10 @@
         @confirm="onCancelConfirmationDialogConfirmed"
         @cancel="onCancelConfirmationDialogCancelled"
       />
+      <the-stimmzettel-erfassung-beschluss-ausstehend-confirmation-dialog
+        :visible="isBeschlussAusstehendConfirmationDialogVisible"
+        @confirm="onBeschlussAusstehendConfirmationDialogConfirmed"
+      />
     </v-card>
   </v-dialog>
 </template>
@@ -75,6 +79,7 @@ import { useRoute } from "vue-router";
 import BaseSaveButtonWithActionMenu from "@/components/common/buttons/BaseSaveButtonWithActionMenu.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseStimmzettelErfassungCardContent from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelErfassungCardContent.vue";
+import TheStimmzettelErfassungBeschlussAusstehendConfirmationDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungBeschlussAusstehendConfirmationDialog.vue";
 import TheStimmzettelErfassungCancelConfirmationDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungCancelConfirmationDialog.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
@@ -114,11 +119,11 @@ defineExpose({ closeDialog, focusCommandProcessingTextField, showDialog });
 const confirmActions = {
   saveAndContinue: {
     title: SAVE_CONTINUE,
-    action: () => onSavedClickedAndNext(),
+    action: () => onSaveClicked(onSavedClickedAndNext),
   },
   saveAndClose: {
     title: "Speichern und Schließen",
-    action: () => onSavedClickedAndClose(),
+    action: () => onSaveClicked(onSavedClickedAndClose),
   },
 };
 
@@ -170,6 +175,8 @@ const stimmzettelGueltigkeit = computed(
 );
 
 const isCancelConfirmationDialogVisible = ref(false);
+const isBeschlussAusstehendConfirmationDialogVisible = ref(false);
+const confirmedSaveAction = ref<(() => void) | null>(null);
 
 function closeDialog() {
   isDialogVisible.value = false;
@@ -202,6 +209,25 @@ function onCloseClicked() {
 function onCancelConfirmationDialogConfirmed() {
   isCancelConfirmationDialogVisible.value = false;
   emit("cancel");
+}
+
+function onSaveClicked(saveAction: () => void) {
+  if (
+    stimmzettelGueltigkeit.value ===
+    StimmzettelGueltigkeitEnum.BeschlussAusstehend
+  ) {
+    confirmedSaveAction.value = saveAction;
+    isBeschlussAusstehendConfirmationDialogVisible.value = true;
+    return;
+  }
+
+  saveAction();
+}
+
+function onBeschlussAusstehendConfirmationDialogConfirmed() {
+  isBeschlussAusstehendConfirmationDialogVisible.value = false;
+  confirmedSaveAction.value?.();
+  confirmedSaveAction.value = null;
 }
 
 function onSavedClickedAndClose() {

@@ -39,7 +39,7 @@
       </v-card-actions>
     </v-card>
     <the-beschlussfassung-bearbeiten-dialog
-      v-if="activeStimmzettelForBeschluss"
+      v-if="isBeschlussfassungDialogPreloaded"
       v-model="isBearbeitenDialogVisible"
       v-model:stimmzettel="activeStimmzettelForBeschluss"
       :wahlvorschlaege="wahlvorschlaege"
@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
-import { ref } from "vue";
+import { nextTick, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -93,6 +93,7 @@ const isBearbeitenDialogVisible = ref(false);
 const isBeschlussentscheidungenDruckenDialogVisble = ref(false);
 const activeStimmzettelForBeschluss = ref<PersistedStimmzettel>();
 const isBeschlussentscheidungenDruckenLoading = ref<boolean>(false);
+const isBeschlussfassungDialogPreloaded = ref(false);
 const isBeschlussfassungBeendenLoading = ref<boolean>(false);
 
 const {
@@ -126,8 +127,11 @@ async function onBeschlussfassungBeendenClicked() {
   }
 }
 
-function onBeschlussBearbeitenClicked(stimmzettelToEdit: PersistedStimmzettel) {
+async function onBeschlussBearbeitenClicked(
+  stimmzettelToEdit: PersistedStimmzettel
+) {
   activeStimmzettelForBeschluss.value = stimmzettelToEdit;
+  await enableBeschlussfassungDialog();
   isBearbeitenDialogVisible.value = true;
 }
 
@@ -179,5 +183,23 @@ async function onBeschlussentscheidungenDruckenClicked() {
   } finally {
     isBeschlussentscheidungenDruckenLoading.value = false;
   }
+}
+
+watch(
+  () => [isWahlvorschlaegeLoading.value, wahlvorschlaege.value.length] as const,
+  async ([isLoading, numberOfWahlvorschlaege]) => {
+    if (!isLoading && numberOfWahlvorschlaege > 0) {
+      await enableBeschlussfassungDialog();
+    }
+  },
+  { immediate: true }
+);
+
+async function enableBeschlussfassungDialog() {
+  if (!isBeschlussfassungDialogPreloaded.value) {
+    isBeschlussfassungDialogPreloaded.value = true;
+  }
+  // update dialog DOM
+  await nextTick();
 }
 </script>

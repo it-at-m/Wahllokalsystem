@@ -57,10 +57,10 @@ so für die weitere Bearbeitung auf einem separaten Stapel.
 
 Sind alle Teams mit der Erfassung fertig und der [Stimmzettelerfassungs-Workflow-Status](#neue-statuswerte) `(f) STE abgeschlossen`
 wurde erfolgreich übermittelt, startet die Beschlussdokumentation. Der Wahlvorstand fasst die Beschlüsse zu den zuvor
-markierten Stimmzetteln und überträgt die Ergebnisse ins System. Eine Zusammenfassung mehrerer
-`Vormerkungsgründe` stellt einen `Beschlussvorschlag` dar, über welchen im Gremium abgestimmt wird. Der Vorschlag,
-der am Ende die Abstimmung gewinnt, wird als `Entscheidungsgrund` gespeichert. Sind alle Beschlüsse vollständig im System
-dokumentiert, wird der Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschlossen` gespeichert.
+markierten Stimmzetteln und überträgt die Ergebnisse ins System. Die Summe aller erfassten `Vormerkungsgründe` stellt
+einen `Beschlussvorschlag` dar, über welchen im Gremium abgestimmt wird. Der Vorschlag, der am Ende die Abstimmung
+gewinnt, wird als `Entscheidungsgrund` gespeichert. Sind alle Beschlüsse vollständig im System dokumentiert, wird der
+Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschlossen` gespeichert.
 
 ## Neue Statuswerte {#neue-statuswerte}
 

@@ -61,17 +61,18 @@ können nur entfernt werden, wenn mindestens die angegebene Menge an ungültigen
 <details><summary>Beispiele</summary>
 
 > [!NOTE] Ergänzen von Einzelstimmen
-> Bei einer Wahl dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Der/die Wähler\*in hat eine 5 bei
-> einer kandidierenden Person eingetragen.
 >
-> Es wurden 5 Stimmen vergeben, davon sind 3 gültig und 2 vom System automatisch als ungültig erkannt.
+> | | | Befehl | Screenshot |
+> | --- | --- | --- | --- |
+> | **Ausgangssituation** | Bei einer Wahl dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Der/die Wähler\*in hat eine 5 bei einer kandidierenden Person eingetragen | | ![person301mit5Stimmen.png](../../public/dse/erfassungBeispiele/person301mit5Stimmen.png) |
+> | **Ergebnis** | Es wurden 5 Stimmen vergeben, davon sind 3 gültig und 2 vom System automatisch als ungültig erkannt. | `301+5` | ![person301ohneStimmen.png](../../public/dse/erfassungBeispiele/person301ohneStimmen.png) |
 
 > [!NOTE] Entfernen von Einzelstimmen
-> Bei einer Wahl dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Der/die Wähler\*in hat eine 5 bei
-> einer kandidierenden Person eingetragen und möchte nun 3 davon wieder entfernen.
 >
-> Es sind 3 gültige und 2 ungültige Stimmen vorhanden. Nach der Entfernung von 3 Stimmen, angefangen bei den
-> ungültigen, sind noch 2 gültige Stimmen übrig.
+> | | | Befehl | Screenshot |
+> | --- | --- | --- | --- |
+> | **Ausgangssituation** | Bei einer Wahl dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Der/die Wähler\*in hat eine 5 bei einer kandidierenden Person eingetragen und möchte nun 3 davon wieder entfernen. | `301+5` | ![person301ohneStimmen.png](../../public/dse/erfassungBeispiele/person301ohneStimmen.png) |
+> | **Ergebnis** | Es sind 3 gültige und 2 ungültige Stimmen vorhanden. Nach der Entfernung von 3 Stimmen, angefangen bei den ungültigen, sind noch 2 gültige Stimmen übrig. | `301-3` | ![person301mit2Stimmen.png](../../public/dse/erfassungBeispiele/person301mit2Stimmen.png) |
 
 </details>
 
@@ -85,17 +86,17 @@ bereits gestrichenen Nennung hinzugefügt werden, als ungültige Stimmen erfasst
 <details><summary>Beispiele</summary>
 
 > [!NOTE] Ergänzen einer Streichung, obwohl Stimmen vergeben wurden
-> Es gibt kandidierende Personen mit den Listenpositionen 1 bis 10. Die Position 2 hat bereits 3 Einzelstimmen. Der/die
-> Wähler\*in vergibt nun eine Streichung für diese Position.
 >
-> Die zuvor gültigen Stimmen werden vom System automatisch als 3 ungültige Stimmen erkannt und die kandidierende Person
-> ist gestrichen.
+> | | | Befehl | Screenshot |
+> | --- | --- | --- | --- |
+> | **Ausgangssituation** | Es gibt kandidierende Personen mit den Listenpositionen 1 bis 3. Die Position 2 hat bereits 3 Einzelstimmen. Der/die Wähler\*in vergibt nun eine Streichung für diese Position. | `502+3` | ![person502mit3Stimmen.png](../../public/dse/erfassungBeispiele/person502mit3Stimmen.png) |
+> | **Ergebnis** | Die zuvor gültigen Stimmen werden vom System automatisch als 3 ungültige Stimmen erkannt und die kandidierende Person ist gestrichen. | `s502` | ![person502gestrichenMit3Stimmen.png](../../public/dse/erfassungBeispiele/person502gestrichenMit3Stimmen.png) |
 
 </details>
 
 > [!IMPORTANT] Entfernen einer Streichung wandelt ungültige Stimmen nicht in gültige um
 > Wenn eine kandidierende Person mit 3 Einzelstimmen gestrichen wird, werden diese gültigen Stimmen in ungültige
-> umgewandelt. Wird die Streichung nun wieder entfernt bleiben die Stimmen ungültig und müssen ggf. manuell wieder
+> umgewandelt (siehe Beispiel). Wird die Streichung nun wieder entfernt bleiben die Stimmen ungültig und müssen ggf. manuell wieder
 > zu gültigen gemacht werden.
 
 #### Bereiche
@@ -126,10 +127,11 @@ dabei unverändert, beziehungsweise werden durch die Bereichsstimmen ergänzt.
 > Der Befehl wird abgelehnt.
 
 > [!NOTE] Ergänzen von Bereichsstimmen zu bestehenden Einzelstimmen
-> Es gibt die Listenpositionen 1 bis 10. Die Positionen 1 bis 3 und Position 6 haben bereits eine Einzelstimme
-> erhalten. Der/die Wähler\*in vergibt nun jeweils 2 Stimmen für den Bereich 1-3.
 >
-> Die Positionen 1-3 haben nun insgesamt jeweils 3 Stimmen, während Position 6 immer noch 1 Stimme hat.
+> | | | Befehl(e) | Screenshot |
+> | --- | --- | --- | --- |
+> | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 5. Die Positionen 1 bis 2 und Position 5 haben bereits eine Einzelstimme erhalten. Der/die Wähler\*in vergibt nun jeweils 2 Stimmen für den Bereich 1-3. | `601`, `602`, `605` | ![wahlvorschlag6mit3Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag6mit3Stimmen.png) |
+> | **Ergebnis** | Die Positionen 1 und 2 haben nun insgesamt jeweils 3 Stimmen und Position 3 hat 2 Stimmen während Position 6 immer noch 1 Stimme hat. | `601-603+2` | ![wahlvorschlag6mit9Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag6mit9Stimmen.png) |
 
 </details>
 
@@ -148,16 +150,18 @@ entfernenden Stimmen oder die Streichung vorhanden sind. Ein Befehl kann sich im
 <details><summary>Beispiele</summary>
 
 > [!NOTE] Ergänzen von Stimmen
-> Es gibt die Listenpositionen 1 bis 10, jeweils in dreifacher Nennung. Die kandidierende Person 102 hat bereits 2 Stimmen bei
-> der ersten Nennung und der/die Wähler\*in möchte eine weitere Einzelstimme eintragen.
 >
-> Die erste Nennung der kandidierenden Person 102 hat jetzt 3 Stimmen.
+> | | | Befehl | Screenshot |
+> | --- | --- | --- | --- |
+> | **Ausgangssituation** | Es gibt eine Listenposition in dreifacher Nennung. Die kandidierende Person 502 hat bereits 2 Stimmen bei der ersten Nennung und der/die Wähler\*in möchte eine weitere Einzelstimme eintragen. | `502+2` | ![person502mit2StimmenBeiNennung1.png](../../public/dse/erfassungBeispiele/person502mit2StimmenBeiNennung1.png) |
+> | **Ergebnis** | Die erste Nennung der kandidierenden Person 502 hat jetzt 3 Stimmen. | `502` | ![person502mit2StimmenBeiNennung1.png](../../public/dse/erfassungBeispiele/person502mit3StimmenBeiNennung1.png) |
 
 > [!NOTE] Ergänzen von Stimmen mit vorhandener Streichung
-> Es gibt die Listenpositionen 1 bis 10, jeweils in dreifacher Nennung. Die kandidierende Person 102 hat bereits eine Streichung
-> bei der ersten Nennung und der/die Wähler\*in möchte eine weitere Einzelstimme eintragen.
 >
-> Die erste Nennung der kandidierenden Person 102 ist weiterhin gestrichen und die zweite Nennung hat 1 Stimme.
+> | | | Befehl | Screenshot |
+> | --- | --- | --- | --- |
+> | **Ausgangssituation** | Es gibt eine Listenposition in dreifacher Nennung. Die kandidierende Person 502 hat bereits eine Streichung bei der ersten Nennung und der/die Wähler\*in möchte eine weitere Einzelstimme eintragen. | `s502` | ![person502mitStreichungBeiNennung1.png](../../public/dse/erfassungBeispiele/person502mitStreichungBeiNennung1.png) |
+> | **Ergebnis** | Die erste Nennung der kandidierenden Person 502 ist weiterhin gestrichen und die zweite Nennung hat 1 Stimme. | `502` | ![person502mitStreichungBeiNennung1und1StimmeBeiNennung2.png](../../public/dse/erfassungBeispiele/person502mitStreichungBeiNennung1und1StimmeBeiNennung2.png) |
 >
 > Hinweis: Analog wird bei umgedrehter Ausgangslage bei einer kandidierenden Person mit vorhandenen Stimmen bei Nennung 1 die
 > zweite Nennung gestrichen.
@@ -169,21 +173,18 @@ Ein Bereichsbefehl betrifft dagegen alle Nennungen jeder enthaltenen Kandidateno
 <details><summary>Beispiele</summary>
 
 > [!NOTE] Ergänzen von Bereichsstimmen
-> Es gibt die Listenpositionen 1 bis 10, jeweils in zweifacher Nennung. Es dürfen für jede kandidierende Person maximal 3 Stimmen
-> vergeben werden. Der/die Wähler\*in vergibt nun jeweils 2 Stimmen für den Bereich 1-3.
 >
-> Die Positionen 1 bis 3 haben jeweils 2 gültige Stimmen bei der ersten Nennung und eine gültige sowie eine ungültige
-> Stimme bei der zweiten Nennung.
+> | | | Befehl | Screenshot |
+> | --- | --- | --- | --- |
+> | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 3, jeweils in zweifacher Nennung. Es dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Der/die Wähler\*in vergibt nun jeweils 2 Stimmen für den Bereich 1-3. | | ![wahlvorschlag1ohneStimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag1ohneStimmen.png) |
+> | **Ergebnis** | Die Positionen 1 bis 3 haben jeweils 2 gültige Stimmen bei der ersten Nennung und eine gültige sowie eine ungültige Stimme bei der zweiten Nennung. | `101-103+2` | ![wahlvorschlag1mit12Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag1mit12Stimmen.png) |
 
 > [!NOTE] Ergänzen von Bereichsstimmen zu bestehenden Einzelstimmen
-> Es gibt die Listenpositionen 1 bis 10, jeweils in zweifacher Nennung. Es dürfen für jede kandidierende Person maximal 3 Stimmen
-> vergeben werden. Die Position 1 hat bereits 2 Einzelstimmen für die erste Nennung erhalten. Der/die Wähler\*in
-> vergibt nun jeweils 2 Stimmen für den Bereich 1-3.
 >
-> Die Position 1 hat nun insgesamt 6 Stimmen, davon sind 3 gültige und eine ungültige bei der ersten Nennung und 2
-> ungültige bei der zweiten Nennung.  
-> Die Positionen 2 und 3 haben jeweils 2 gültige Stimmen bei der ersten Nennung und eine gültige sowie eine ungültige
-> Stimme bei der zweiten Nennung.
+> | | | Befehl | Screenshot |
+> | --- | --- | --- | --- |
+> | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 3, jeweils in zweifacher Nennung. Es dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Die Position 1 hat bereits 2 Einzelstimmen für die erste Nennung erhalten. Der/die Wähler\*in vergibt nun jeweils 2 Stimmen für den Bereich 1-3. | `101+2` | ![wahlvorschlag1mit2Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag1mit2Stimmen.png) |
+> | **Ergebnis** | Die Position 1 hat nun insgesamt 6 Stimmen, davon sind 3 gültige und eine ungültige bei der ersten Nennung und 2 ungültige bei der zweiten Nennung. Die Positionen 2 und 3 haben jeweils 2 gültige Stimmen bei der ersten Nennung und eine gültige sowie eine ungültige Stimme bei der zweiten Nennung. | `101-103+2` | ![wahlvorschlag1mit14Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag1mit14Stimmen.png) |
 
 </details>
 
@@ -244,31 +245,25 @@ wenn sie noch nicht die maximal erlaubte Menge an Stimmen erreicht haben.
 <details><summary>Beispiele</summary>
 
 > [!NOTE] Reststimmenvergabe bei vorhandener Einzelstimmenvergabe
-> Es gibt die Listenpositionen 1 bis 10. Die Positionen 1 bis 3 und Position 6 haben bereits Einzelstimmen erhalten.
 >
-> Über die Reststimmenvergabe bekommen die Positionen 4, 7, 8, 9 und 10 jeweils eine Reststimme.
+> | | | Befehl(e) | Screenshot |
+> | --- | --- | --- | --- |
+> | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 10. Die Positionen 1 bis 3 und Position 6 haben bereits Einzelstimmen erhalten. | `201-203`, `206` | ![wahlvorschlag2mit4Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag2mit4Stimmen.png) |
+> | **Ergebnis** | Über die Reststimmenvergabe bekommen die Positionen 4, 5, 7, 8, 9 und 10 jeweils eine Reststimme. | `200` | ![wahlvorschlag2mit4Stimmen6Reststimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag2mit4Stimmen6Reststimmen.png) |
 
 > [!NOTE] Reststimmenvergabe bei vorhandener Einzelstimmenvergabe und Streichung
-> Es gibt die Listenpositionen 1 bis 10. Die Positionen 1 bis 3 haben bereits Einzelstimmen erhalten. Die Position 6
-> wurde gestrichen.
 >
-> Über die Reststimmenvergabe bekommen die Positionen 4, 7, 8, 9 und 10 jeweils eine Reststimme.
+> | | | Befehl(e) | Screenshot |
+> | --- | --- | --- | --- |
+> | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 10. Die Positionen 1 bis 3 haben bereits Einzelstimmen erhalten. Die Position 6 wurde gestrichen. | `201-203`, `s206` | ![wahlvorschlag2mit3Stimmen](../../public/dse/erfassungBeispiele/wahlvorschlag2mit3Stimmen.png) |
+> | **Ergebnis** | Über die Reststimmenvergabe bekommen die Positionen 4, 5, 7, 8, 9 und 10 jeweils eine Reststimme. | `200` | ![wahlvorschlag2mit3Stimmen6Reststimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag2mit3Stimmen6Reststimmen.png) |
 
 > [!NOTE] Reststimmenvergabe bei vorhandener Mehrfachnennung
-> Es gibt die Listenpositionen 1 bis 10, jeweils in dreifacher Nennung. Für jede kandidierende Person dürfen maximal 3 Stimmen vergeben werden.
 >
-> Die Position 1 hat bei jeder der 3 Nennungen ein Kreuz.
-> Die Position 2 hat bei der ersten Nennung eine 2 stehen.  
-> Die Position 3 hat bei den ersten beiden Nennungen eine 2 stehen.  
-> Bei Position 4 wurde die erste Nennung gestrichen.
->
-> Über die Reststimmenvergabe bekommt die Position 1 keine Stimmen, weil für die kandidierenden Person bereits die maximale
-> Menge an Stimmen erreicht ist.  
-> Die Position 2 bekommt noch eine Reststimme, womit sie das Maximum an Stimmen erreicht.  
-> Die Position 3 bekommt keine Reststimmen, weil für die kandidierenden Person bereits die maximale
-> Menge an Stimmen überschritten wurde. Eine der 4 Stimmen wird als ungültig gewertet.  
-> Die Position 4 bekommt noch 2 Reststimmen. Für die gestrichene Nennung gibt es keine Reststimme.  
-> Die restlichen Positionen bekommen jeweils 1 Reststimme pro Nennung.
+> | | | Befehl(e) | Screenshot |
+> | --- | --- | --- | --- |
+> | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 5, jeweils in dreifacher Nennung. Für jede kandidierende Person dürfen maximal 3 Stimmen vergeben werden. <br><br> Die Position 1 hat bei jeder der 3 Nennungen ein Kreuz. <br> Die Position 2 hat bei der ersten Nennung eine 2 stehen. <br> Die Position 3 hat bei den ersten beiden Nennungen eine 2 stehen. <br> Bei Position 4 wurde die erste Nennung gestrichen. | `901-901`, `902+2`, `903+4`, `s904` | ![wahlvorschlag9mit9Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag9mit9Stimmen.png) |
+> | **Ergebnis** | Über die Reststimmenvergabe bekommt die Position 1 keine Stimmen, weil für die kandidierenden Person bereits die maximale Menge an Stimmen erreicht ist. <br><br> Die Position 2 bekommt noch eine Reststimme, womit sie das Maximum an Stimmen erreicht. <br> Die Position 3 bekommt keine Reststimmen, weil für die kandidierenden Person bereits die maximale Menge an Stimmen überschritten wurde. Eine der 4 Stimmen wird als ungültig gewertet. <br> Die Position 4 bekommt noch 2 Reststimmen. Für die gestrichene Nennung gibt es keine Reststimme. <br> Die restlichen Positionen bekommen jeweils 1 Reststimme pro Nennung. | `900` | ![wahlvorschlag9mit9Stimmen15Reststimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag9mit9Stimmen15Reststimmen.png) |
 
 </details>
 

@@ -36,7 +36,9 @@
           active
           :disabled="isBeschlussfassungBeendenButtonDisabled"
           :loading="
-            isStimmzettelForBeschlussLoading || isBeschlussfassungBeendenLoading
+            isStimmzettelForBeschlussLoading ||
+            isTeamStatusListLoading ||
+            isBeschlussfassungBeendenLoading
           "
           @click="onBeschlussfassungBeendenClicked"
         >
@@ -104,6 +106,7 @@ const isBeschlussfassungBeendenLoading = ref<boolean>(false);
 
 const {
   isStimmzettelForBeschlussLoading,
+  isTeamStatusListLoading,
   stimmzettelForBeschlussfassung,
   isBeschlussfassungBeendenButtonDisabled,
   isBeschlussBearbeitenDisabled,

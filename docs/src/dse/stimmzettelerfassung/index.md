@@ -64,14 +64,14 @@ können nur entfernt werden, wenn mindestens die angegebene Menge an ungültigen
 >
 > | | | Befehl | Screenshot |
 > | --- | --- | --- | --- |
-> | **Ausgangssituation** | Bei einer Wahl dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Der/die Wähler\*in hat eine 5 bei einer kandidierenden Person eingetragen | | ![person301mit5Stimmen.png](../../public/dse/erfassungBeispiele/person301mit5Stimmen.png) |
-> | **Ergebnis** | Es wurden 5 Stimmen vergeben, davon sind 3 gültig und 2 vom System automatisch als ungültig erkannt. | `301+5` | ![person301ohneStimmen.png](../../public/dse/erfassungBeispiele/person301ohneStimmen.png) |
+> | **Ausgangssituation** | Bei einer Wahl dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Der/die Wähler\*in hat eine 5 bei einer kandidierenden Person eingetragen | | ![person301ohneStimmen.png](../../public/dse/erfassungBeispiele/person301ohneStimmen.png) |
+> | **Ergebnis** | Es wurden 5 Stimmen vergeben, davon sind 3 gültig und 2 vom System automatisch als ungültig erkannt. | `301+5` | ![person301mit5Stimmen.png](../../public/dse/erfassungBeispiele/person301mit5Stimmen.png) |
 
 > [!NOTE] Entfernen von Einzelstimmen
 >
 > | | | Befehl | Screenshot |
 > | --- | --- | --- | --- |
-> | **Ausgangssituation** | Bei einer Wahl dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Der/die Wähler\*in hat eine 5 bei einer kandidierenden Person eingetragen und möchte nun 3 davon wieder entfernen. | `301+5` | ![person301ohneStimmen.png](../../public/dse/erfassungBeispiele/person301ohneStimmen.png) |
+> | **Ausgangssituation** | Bei einer Wahl dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Der/die Wähler\*in hat eine 5 bei einer kandidierenden Person eingetragen und möchte nun 3 davon wieder entfernen. | `301+5` | ![person301mit5Stimmen.png](../../public/dse/erfassungBeispiele/person301mit5Stimmen.png) |
 > | **Ergebnis** | Es sind 3 gültige und 2 ungültige Stimmen vorhanden. Nach der Entfernung von 3 Stimmen, angefangen bei den ungültigen, sind noch 2 gültige Stimmen übrig. | `301-3` | ![person301mit2Stimmen.png](../../public/dse/erfassungBeispiele/person301mit2Stimmen.png) |
 
 </details>

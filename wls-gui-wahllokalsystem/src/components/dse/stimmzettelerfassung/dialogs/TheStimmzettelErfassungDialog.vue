@@ -65,7 +65,7 @@
           </template>
           <template #activator="{ props }">
             <base-save-button-with-action-menu
-              v-bind="props"
+              :tooltip-activator-props="props"
               :disabled="isSaveDisabled"
               :model-value="currentAction"
               :actions="actions"

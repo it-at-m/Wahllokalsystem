@@ -95,8 +95,8 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
     it("should_haveInitialTeamStatusAndStatusLoading_when_initialized", () => {
       expect(unitUnderTest.teamStatus.value).toBeNull();
-      expect(unitUnderTest.isStatusLoading.value).toBe(false);
-      expect(unitUnderTest.statusBeingWritten.value).toBeNull();
+      expect(unitUnderTest.isTeamStatusLoading.value).toBe(false);
+      expect(unitUnderTest.teamStatusBeingWritten.value).toBeNull();
     });
   });
 
@@ -105,7 +105,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
     it("should_loadTeamStatus_when_activatedLoadIsSuccessful", async () => {
       const spyOnIsStatusLoadingSetter = vi.spyOn(
-        unitUnderTest.isStatusLoading,
+        unitUnderTest.isTeamStatusLoading,
         "value",
         "set"
       );
@@ -115,7 +115,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         mockedRepsonse
       );
 
-      expect(unitUnderTest.isStatusLoading.value).toStrictEqual(false);
+      expect(unitUnderTest.isTeamStatusLoading.value).toStrictEqual(false);
       expect(unitUnderTest.teamStatus.value).toStrictEqual(null);
 
       await mockDefinitions.runActivatedCallbacks();
@@ -140,7 +140,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
     it("should_loadTeamStatusButKeepDefaultValue_when_activatedLoadIsFails", async () => {
       const spyOnIsStatusLoadingSetter = vi.spyOn(
-        unitUnderTest.isStatusLoading,
+        unitUnderTest.isTeamStatusLoading,
         "value",
         "set"
       );
@@ -149,7 +149,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         new Error("mocked service error")
       );
 
-      expect(unitUnderTest.isStatusLoading.value).toStrictEqual(false);
+      expect(unitUnderTest.isTeamStatusLoading.value).toStrictEqual(false);
       expect(unitUnderTest.teamStatus.value).toStrictEqual(null);
 
       await expect(
@@ -177,7 +177,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
     describe("ensureStatusInBearbeitung", () => {
       it("should_sendStatusInBearbeitungAndUpdateInternalState_when_sendingWasSuccessful", async () => {
         const spyOnStatusBeingWrittenSetter = vi.spyOn(
-          unitUnderTest.statusBeingWritten,
+          unitUnderTest.teamStatusBeingWritten,
           "value",
           "set"
         );
@@ -220,7 +220,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
       it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
         const spyOnStatusBeingWrittenSetter = vi.spyOn(
-          unitUnderTest.statusBeingWritten,
+          unitUnderTest.teamStatusBeingWritten,
           "value",
           "set"
         );
@@ -255,7 +255,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
     describe("sendStatusUnterbrochen", () => {
       it("should_sendStatusUnterbrochenAndUpdateInternalState_when_sendingWasSuccessful", async () => {
         const spyOnStatusBeingWrittenSetter = vi.spyOn(
-          unitUnderTest.statusBeingWritten,
+          unitUnderTest.teamStatusBeingWritten,
           "value",
           "set"
         );
@@ -288,7 +288,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
       it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
         const spyOnStatusBeingWrittenSetter = vi.spyOn(
-          unitUnderTest.statusBeingWritten,
+          unitUnderTest.teamStatusBeingWritten,
           "value",
           "set"
         );

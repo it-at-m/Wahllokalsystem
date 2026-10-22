@@ -6,9 +6,9 @@
       :stimmzettel-loading="isStimmzettelLoading || isWahlvorschlaegeLoading"
       class="mt-3"
       :bearbeitung-disabled="
-        isStatusLoading ||
+        isTeamStatusLoading ||
         isWahlvorschlaegeLoading ||
-        statusBeingWritten !== null ||
+        teamStatusBeingWritten !== null ||
         hasTeamFinishedErfassung ||
         isElectionFinished
       "
@@ -25,15 +25,15 @@
           :is-disabled="
             isWahlvorschlaegeLoading ||
             isTeamStatusBeingWritten(
-              statusBeingWritten,
+              teamStatusBeingWritten,
               StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
               false
             )
           "
           :loading="
-            isStatusLoading ||
+            isTeamStatusLoading ||
             isTeamStatusBeingWritten(
-              statusBeingWritten,
+              teamStatusBeingWritten,
               StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
             )
           "
@@ -46,15 +46,15 @@
           :is-disabled="
             unterbrechenBtnIsDisabled ||
             isTeamStatusBeingWritten(
-              statusBeingWritten,
+              teamStatusBeingWritten,
               StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
               false
             )
           "
           :loading="
-            isStatusLoading ||
+            isTeamStatusLoading ||
             isTeamStatusBeingWritten(
-              statusBeingWritten,
+              teamStatusBeingWritten,
               StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
             )
           "
@@ -65,8 +65,8 @@
         <base-text-button
           class="ms-auto"
           :active="beendenBtnActive"
-          :is-disabled="statusBeingWritten !== null"
-          :loading="isStatusLoading"
+          :is-disabled="teamStatusBeingWritten !== null"
+          :loading="isTeamStatusLoading"
           @click="onErfassungBeendenClicked"
         >
           Beenden
@@ -86,7 +86,7 @@
           <base-button-refresh
             active
             class="ml-5"
-            :loading="isStatusLoading"
+            :loading="isTeamStatusLoading"
             @click="onErfassungAktualisierenClicked"
           />
         </base-feedback-card>
@@ -170,8 +170,8 @@ const {
   teamStatus,
   beendenBtnActive,
   isKennungsDialogVisible,
-  isStatusLoading,
-  statusBeingWritten,
+  isTeamStatusLoading,
+  teamStatusBeingWritten,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
   ensureStatusInBearbeitung,

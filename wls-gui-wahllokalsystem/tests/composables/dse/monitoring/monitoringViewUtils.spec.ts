@@ -1,9 +1,14 @@
+import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatus.ts";
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = await vi.hoisted(async () => {
+  const { ref } = await import("vue");
   const activatedCallbacks: (() => Promise<void> | void)[] = [];
 
   return {
@@ -21,7 +26,10 @@ const mockDefinitions = await vi.hoisted(async () => {
     setStepDone: vi.fn(),
     getNextRoute: vi.fn(),
     routerPush: vi.fn(),
+    synchronizeOfflineData: vi.fn(),
+    addNotification: vi.fn(),
     currentUserTeamName: { value: "teamID" },
+    workflowStatus: ref<StimmzettelerfassungStatus | null>(null),
   };
 });
 
@@ -48,9 +56,22 @@ vi.mock(
   () => ({
     useStimmzettelerfassungStatusState: () => ({
       loadWorkflowStatus: mockDefinitions.loadWorkflowStatus,
+      workflowStatus: mockDefinitions.workflowStatus,
     }),
   })
 );
+
+vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
+  useUserNotificationService: () => ({
+    addNotification: mockDefinitions.addNotification,
+  }),
+}));
+
+vi.mock("@/stores/dataSyncStore.ts", () => ({
+  useDataSyncStore: () => ({
+    synchronizeOfflineData: mockDefinitions.synchronizeOfflineData,
+  }),
+}));
 
 vi.mock(
   "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts",
@@ -91,6 +112,7 @@ describe("monitoringViewUtils.ts", () => {
     mockDefinitions.loadTeamStatusListe.mockResolvedValue([]);
     mockDefinitions.currentUserTeamName.value = "teamID";
     mockDefinitions.getNextRoute.mockReturnValue({ name: "nextRoute" });
+    mockDefinitions.workflowStatus.value = null;
 
     unit = useMonitoringViewUtils("wahlID", "wahlbezirkID");
   });
@@ -102,7 +124,7 @@ describe("monitoringViewUtils.ts", () => {
   describe("onMonitoringSynchronisierenClicked", async () => {
     it("should_loadTeamStatusListe_when_onMonitoringSynchronisierenClicked", async () => {
       await unit.onMonitoringSynchronisierenClicked();
-      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalled();
+      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledWith(true);
     });
   });
 
@@ -110,7 +132,7 @@ describe("monitoringViewUtils.ts", () => {
     it("should_loadTeamStatusListeAndWorkflowStatus_when_onActivatedSuccess", async () => {
       await mockDefinitions.runActivatedCallbacks();
 
-      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalled();
+      expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledWith(true);
       expect(mockDefinitions.loadWorkflowStatus).toHaveBeenCalled();
     });
   });
@@ -159,6 +181,53 @@ describe("monitoringViewUtils.ts", () => {
       );
       expect(mockDefinitions.setStepDone).toHaveBeenCalledTimes(2);
       expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledOnce();
+      expect(mockDefinitions.routerPush).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      StimmzettelerfassungStatusEnum.SteAbgeschlossen,
+      StimmzettelerfassungStatusEnum.BeAbgeschlossen,
+    ])(
+      "should_reopenTeam_when_workflowIsCompletedAndSynchronizationIsSuccessful",
+      async (stateWhereChangeOfStimmzettelArePossible) => {
+        mockDefinitions.workflowStatus.value = {
+          status: stateWhereChangeOfStimmzettelArePossible,
+        };
+        mockDefinitions.synchronizeOfflineData.mockResolvedValue({
+          numberOfTasksRan: 1,
+          numberOfTasksFailed: 0,
+          numberOfTasksSucceeded: 1,
+          numberOfDirtyTasksRemaining: 0,
+        });
+
+        await unit.reopenStimmzettelerfassung("teamID");
+
+        expect(mockDefinitions.synchronizeOfflineData).toHaveBeenCalledOnce();
+        expect(mockDefinitions.reopenStimmzettelerfassung).toHaveBeenCalledWith(
+          "wahlID",
+          "wahlbezirkID",
+          "teamID",
+          true
+        );
+        expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
+      }
+    );
+
+    it("should_showErrorNotificationAndNotReopenTeam_when_synchronizationFails", async () => {
+      mockDefinitions.workflowStatus.value = {
+        status: StimmzettelerfassungStatusEnum.SteAbgeschlossen,
+      };
+      mockDefinitions.synchronizeOfflineData.mockResolvedValue(null);
+
+      await unit.reopenStimmzettelerfassung("teamID");
+
+      expect(mockDefinitions.synchronizeOfflineData).toHaveBeenCalledOnce();
+      expect(mockDefinitions.addNotification).toHaveBeenCalledWith(
+        "Synchronisierung der Daten fehlgeschlagen, probieren sie es bitte erneut.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      expect(mockDefinitions.reopenStimmzettelerfassung).not.toHaveBeenCalled();
+      expect(mockDefinitions.setStepDone).not.toHaveBeenCalled();
       expect(mockDefinitions.routerPush).not.toHaveBeenCalled();
     });
   });

@@ -6,9 +6,13 @@
       :stimmzettel-loading="isStimmzettelLoading"
       class="mt-3"
       :bearbeitung-disabled="
-        isStatusLoading || hasTeamFinishedErfassung || isElectionFinished
+        isStatusLoading ||
+        isWahlvorschlaegeLoading ||
+        hasTeamFinishedErfassung ||
+        isElectionFinished
       "
       @stimmzettel-bearbeiten="onStimmzettelBearbeitenClicked"
+      @stimmzettel-ansehen="onStimmzettelAnsehenClicked"
     />
     <v-card-actions v-if="!isStatusLoading">
       <div
@@ -17,6 +21,7 @@
       >
         <base-text-button
           :active="startenBtnActive"
+          :is-disabled="isWahlvorschlaegeLoading"
           class="mr-5"
           @click="onErfassungStartenClicked"
         >
@@ -63,10 +68,8 @@
       @cancel="onStimmzettelkennungCanceled"
     />
     <the-stimmzettel-erfassung-dialog
-      v-if="activeStimmzettel"
+      v-if="isErfassungsDialogPreloaded"
       :ref="STIMMZETTEL_ERFASSUNG_DIALOG_TEMPLATE_REF_NAME"
-      v-model="isErfassungsDialogVisible"
-      :stimmzettel="activeStimmzettel"
       :wahlvorschlaege="wahlvorschlaege"
       @cancel="onStimmzettelErfassungCanceled"
       @confirm-close="onStimmzettelErfassungConfirmed"
@@ -85,7 +88,7 @@
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
-import { computed, useTemplateRef } from "vue";
+import { computed, nextTick, ref, useTemplateRef, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
@@ -104,9 +107,11 @@ const props = defineProps<{
   teamId: string;
   stimmzettelListe: PersistedStimmzettel[];
   isStimmzettelLoading: boolean;
+  isWahlvorschlaegeLoading: boolean;
   hasStimmzettel: boolean;
   wahlvorschlaege: Wahlvorschlag[];
   saveStimmzettel: (stimmzettel: PersistedStimmzettel) => Promise<void>;
+  forceRefreshStimmzettel: () => Promise<void>;
 }>();
 
 const STIMMZETTEL_BEENDEN_DIALOG_TEMPLATE_REF_NAME = "stimmzettelBeendenDialog";
@@ -118,6 +123,7 @@ const userStore = useUserStore();
 const teamID = userStore.currentUserTeamName || "";
 const wahlID = (route.params.wahlId as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
+const isErfassungsDialogPreloaded = ref(false);
 
 const templateRefStimmzettelBeendenDialog = useTemplateRef<
   InstanceType<typeof TheStimmzettelerfassungBeendenDialog>
@@ -129,18 +135,20 @@ const templateRefStimmzettelErfassenDialog = useTemplateRef<
 
 const {
   teamStatus,
-  activeStimmzettel,
   beendenBtnActive,
-  isErfassungsDialogVisible,
   isKennungsDialogVisible,
   isStatusLoading,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
   ensureStatusInBearbeitung,
   sendStatusUnterbrochen,
-  startNewEmptyStimmzettelWithStimmzettelkennung,
   reloadTeamStatus,
-} = useStimmzettelErfassungViewUtils(wahlID, wahlbezirkID, teamID);
+} = useStimmzettelErfassungViewUtils(
+  wahlID,
+  wahlbezirkID,
+  teamID,
+  props.forceRefreshStimmzettel
+);
 
 const startNewStimmzettelButtonText = computed(() =>
   props.hasStimmzettel ||
@@ -151,6 +159,16 @@ const startNewStimmzettelButtonText = computed(() =>
     : "Starten"
 );
 
+watch(
+  () => [props.isWahlvorschlaegeLoading, props.wahlvorschlaege.length] as const,
+  async ([isLoading, numberOfWahlvorschlaege]) => {
+    if (!isLoading && numberOfWahlvorschlaege > 0) {
+      await enableErfassungsDialog();
+    }
+  },
+  { immediate: true }
+);
+
 function onErfassungStartenClicked() {
   isKennungsDialogVisible.value = true;
 }
@@ -158,17 +176,13 @@ function onErfassungStartenClicked() {
 async function onStimmzettelkennungConfirmed(stimmzettelKennung: number) {
   await ensureStatusInBearbeitung();
   isKennungsDialogVisible.value = false;
-  startNewEmptyStimmzettelWithStimmzettelkennung(stimmzettelKennung);
-  if (isErfassungsDialogVisible.value) {
-    templateRefStimmzettelErfassenDialog.value?.focusCommandProcessingTextField();
-  } else {
-    isErfassungsDialogVisible.value = true;
-  }
+  await enableErfassungsDialog();
+  templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettelKennung);
 }
 
 function onStimmzettelkennungCanceled() {
   isKennungsDialogVisible.value = false;
-  isErfassungsDialogVisible.value = false;
+  templateRefStimmzettelErfassenDialog.value?.closeDialog();
 }
 
 async function onErfassungUnterbrechenClicked() {
@@ -184,13 +198,13 @@ async function onErfassungAktualisierenClicked() {
 }
 
 async function onStimmzettelErfassungCanceled() {
-  isErfassungsDialogVisible.value = false;
+  templateRefStimmzettelErfassenDialog.value?.closeDialog();
 }
 async function onStimmzettelErfassungConfirmed(
   confirmedStimmzettel: PersistedStimmzettel
 ) {
   await props.saveStimmzettel(confirmedStimmzettel);
-  isErfassungsDialogVisible.value = false;
+  templateRefStimmzettelErfassenDialog.value?.closeDialog();
 }
 async function onStimmzettelErfassungConfirmedAndOpenNextStimmzettel(
   confirmedStimmzettel: PersistedStimmzettel
@@ -202,9 +216,20 @@ async function onStimmzettelBearbeitenClicked(
   stimmzettel: PersistedStimmzettel
 ) {
   await ensureStatusInBearbeitung();
+  await enableErfassungsDialog();
+  templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettel);
+}
+async function onStimmzettelAnsehenClicked(stimmzettel: PersistedStimmzettel) {
+  await enableErfassungsDialog();
+  templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettel, true);
+}
 
-  activeStimmzettel.value = stimmzettel;
-  isErfassungsDialogVisible.value = true;
+async function enableErfassungsDialog() {
+  if (!isErfassungsDialogPreloaded.value) {
+    isErfassungsDialogPreloaded.value = true;
+  }
+  // update dialog DOM
+  await nextTick();
 }
 
 const hasTeamFinishedErfassung = computed(

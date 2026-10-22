@@ -4,6 +4,7 @@
     scrollable
     persistent
     fullscreen
+    eager
   >
     <v-card class="h-screen">
       <v-tabs
@@ -38,11 +39,10 @@
         class="v-card-text"
       />
       <base-stimmzettel-erfassung-card-content
-        v-if="stimmzettelForBeschlussfassung"
         v-model="stimmzettelManager"
         :stimmzettel-gueltigkeit="stimmzettelGueltigkeit"
         :wahlvorschlaege="wahlvorschlaege"
-        :stimmzettel="stimmzettelForBeschlussfassung"
+        :stimmzettelkennung="stimmzettelKennung"
         :deny-selection-of-stimmzettel-fehlt="true"
         class="v-card-text"
         :style="{ display: tab === 'two' ? 'flex' : 'none !important' }"
@@ -138,7 +138,7 @@ watch(
       stimmzettelChanged.value = false;
       if (stimmzettel.value) {
         stimmzettelForBeschlussfassung.value = stimmzettel.value;
-        stimmzettelManager.setActiveStimmzettelWhenEditing(stimmzettel.value);
+        stimmzettelManager.startEditStimmzettel(stimmzettel.value);
       }
     }
   },

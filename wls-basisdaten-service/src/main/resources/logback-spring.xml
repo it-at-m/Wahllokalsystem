@@ -51,13 +51,6 @@
             <appender-ref ref="STDOUT" />
         </logger>
 
-        <!-- use debug to see how headers and payload are nfc handled -->
-        <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.nfcconverter"
-                level="debug"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
         <!-- use debug to see sql queries logged -->
         <logger name="org.hibernate.SQL"
                 level="debug"
@@ -72,6 +65,17 @@
                 additivity="false">
             <appender-ref ref="STDOUT" />
         </logger>
+
+        <!-- PathVars, URL & Parameter -->
+        <logger name="org.springframework.web.servlet.DispatcherServlet" level="debug" />
+        <!-- Methodennamen -->
+        <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="debug" />
+        <!-- User, URL, Status -->
+        <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice.security.RequestResponseLoggingFilter" level="debug" />
+        <!-- Specific NfcHelper Filter for Payload (specific loglevel can be set) -->
+        <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.nfcconverter.NfcHelper" level="debug" />
+        <!-- Logger for other Nfc Logging-Data -->
+        <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.nfcconverter" level="debug" />
 
         <!-- Logger usage -->
         <root level="info">
@@ -139,21 +143,14 @@
         <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.UserInfoAuthoritiesRetriever"
                 level="warn"
                 additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
-        <!-- use debug to see how headers and payload are nfc handled -->
-        <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.nfcconverter"
-                level="warn"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
+            <appender-ref ref="JSON_STDOUT" />
         </logger>
 
         <!-- use debug to see sql queries logged -->
         <logger name="org.hibernate.SQL"
                 level="warn"
                 additivity="false">
-            <appender-ref ref="STDOUT" />
+            <appender-ref ref="JSON_STDOUT" />
         </logger>
 
         <!-- use info to see hibernate statistics -->
@@ -161,8 +158,19 @@
         <logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener"
                 level="warn"
                 additivity="false">
-            <appender-ref ref="STDOUT" />
+            <appender-ref ref="JSON_STDOUT" />
         </logger>
+
+        <!-- PathVars, URL & Parameter -->
+        <logger name="org.springframework.web.servlet.DispatcherServlet" level="warn" />
+        <!-- Methodennamen -->
+        <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="info" />
+        <!-- User, URL, Status -->
+        <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice.security.RequestResponseLoggingFilter" level="info" />
+        <!-- Specific NfcHelper Filter for Payload (specific loglevel can be set) -->
+        <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.nfcconverter.NfcHelper" level="warn" />
+        <!-- Logger for other Nfc Logging-Data -->
+        <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.nfcconverter" level="warn" />
 
         <!-- Logger usage -->
         <root level="info">

@@ -127,15 +127,15 @@ public class SecurityConfigurationTest {
       }
       if (bearerIndex != -1 && userMdcIndex != -1) {
         Assertions.assertThat(userMdcIndex)
-                .as("UserMdcFilter must be registered after BearerTokenAuthenticationFilter")
-                .isGreaterThan(bearerIndex);
+            .as("UserMdcFilter must be registered after BearerTokenAuthenticationFilter")
+            .isGreaterThan(bearerIndex);
         foundChainWithBothFilters = true;
         break;
       }
     }
     if (!foundChainWithBothFilters) {
       Assertions.fail(
-              "No security filter chain contains both BearerTokenAuthenticationFilter and UserMdcFilter");
+          "No security filter chain contains both BearerTokenAuthenticationFilter and UserMdcFilter");
     }
   }
 

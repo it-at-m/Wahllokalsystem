@@ -3,7 +3,8 @@
     class="primary-button-border"
     active-color="primary"
     variant="flat"
-    :disabled="isDisabled"
+    :disabled="isDisabled || loading"
+    :loading="loading"
   >
     <slot />
   </v-btn>
@@ -12,5 +13,6 @@
 <script setup lang="ts">
 defineProps<{
   isDisabled?: boolean;
+  loading?: boolean;
 }>();
 </script>

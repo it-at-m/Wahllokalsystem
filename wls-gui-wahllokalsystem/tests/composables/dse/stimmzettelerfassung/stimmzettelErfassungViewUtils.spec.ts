@@ -95,7 +95,8 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
     it("should_haveInitialTeamStatusAndStatusLoading_when_initialized", () => {
       expect(unitUnderTest.teamStatus.value).toBeNull();
-      expect(unitUnderTest.isStatusLoading.value).toBe(false);
+      expect(unitUnderTest.isTeamStatusLoading.value).toBe(false);
+      expect(unitUnderTest.teamStatusBeingWritten.value).toBeNull();
     });
   });
 
@@ -104,7 +105,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
     it("should_loadTeamStatus_when_activatedLoadIsSuccessful", async () => {
       const spyOnIsStatusLoadingSetter = vi.spyOn(
-        unitUnderTest.isStatusLoading,
+        unitUnderTest.isTeamStatusLoading,
         "value",
         "set"
       );
@@ -114,7 +115,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         mockedRepsonse
       );
 
-      expect(unitUnderTest.isStatusLoading.value).toStrictEqual(false);
+      expect(unitUnderTest.isTeamStatusLoading.value).toStrictEqual(false);
       expect(unitUnderTest.teamStatus.value).toStrictEqual(null);
 
       await mockDefinitions.runActivatedCallbacks();
@@ -139,7 +140,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
     it("should_loadTeamStatusButKeepDefaultValue_when_activatedLoadIsFails", async () => {
       const spyOnIsStatusLoadingSetter = vi.spyOn(
-        unitUnderTest.isStatusLoading,
+        unitUnderTest.isTeamStatusLoading,
         "value",
         "set"
       );
@@ -148,7 +149,7 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         new Error("mocked service error")
       );
 
-      expect(unitUnderTest.isStatusLoading.value).toStrictEqual(false);
+      expect(unitUnderTest.isTeamStatusLoading.value).toStrictEqual(false);
       expect(unitUnderTest.teamStatus.value).toStrictEqual(null);
 
       await expect(
@@ -175,6 +176,11 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
 
     describe("ensureStatusInBearbeitung", () => {
       it("should_sendStatusInBearbeitungAndUpdateInternalState_when_sendingWasSuccessful", async () => {
+        const spyOnStatusBeingWrittenSetter = vi.spyOn(
+          unitUnderTest.teamStatusBeingWritten,
+          "value",
+          "set"
+        );
         mockDefinitions.postErfassungTeamStatus.mockResolvedValue(undefined);
 
         await unitUnderTest.ensureStatusInBearbeitung();
@@ -194,6 +200,12 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         expect(unitUnderTest.teamStatus.value).toStrictEqual(
           mockedExpectedTeamStatusModel
         );
+        expect(spyOnStatusBeingWrittenSetter.mock.calls).toStrictEqual([
+          [expectedStatusToSend],
+          [null],
+        ]);
+
+        spyOnStatusBeingWrittenSetter.mockRestore();
       });
 
       it("should_notSendStatus_when_teamsStatusIsCurrentlyInBearbeitung", async () => {
@@ -207,6 +219,11 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
       });
 
       it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
+        const spyOnStatusBeingWrittenSetter = vi.spyOn(
+          unitUnderTest.teamStatusBeingWritten,
+          "value",
+          "set"
+        );
         const mockedPostApiError = new Error("mocked post error");
         mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
           mockedPostApiError
@@ -226,11 +243,22 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
           false
         );
         expect(unitUnderTest.teamStatus.value).toBeNull();
+        expect(spyOnStatusBeingWrittenSetter.mock.calls).toStrictEqual([
+          [expectedStatusToSend],
+          [null],
+        ]);
+
+        spyOnStatusBeingWrittenSetter.mockRestore();
       });
     });
 
     describe("sendStatusUnterbrochen", () => {
       it("should_sendStatusUnterbrochenAndUpdateInternalState_when_sendingWasSuccessful", async () => {
+        const spyOnStatusBeingWrittenSetter = vi.spyOn(
+          unitUnderTest.teamStatusBeingWritten,
+          "value",
+          "set"
+        );
         mockDefinitions.postErfassungTeamStatus.mockResolvedValue(undefined);
 
         await unitUnderTest.sendStatusUnterbrochen();
@@ -250,9 +278,20 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
         expect(unitUnderTest.teamStatus.value).toStrictEqual(
           mockedExpectedTeamStatusModel
         );
+        expect(spyOnStatusBeingWrittenSetter.mock.calls).toStrictEqual([
+          [expectedStatusToSend],
+          [null],
+        ]);
+
+        spyOnStatusBeingWrittenSetter.mockRestore();
       });
 
       it("should_throwErrorAndNotUpdateTeamStatus_when_serviceCallFailed", async () => {
+        const spyOnStatusBeingWrittenSetter = vi.spyOn(
+          unitUnderTest.teamStatusBeingWritten,
+          "value",
+          "set"
+        );
         const mockedPostApiError = new Error("mocked post error");
         mockDefinitions.postErfassungTeamStatus.mockRejectedValue(
           mockedPostApiError
@@ -272,6 +311,12 @@ describe("stimmzettelErfassungViewUtils.ts", () => {
           false
         );
         expect(unitUnderTest.teamStatus.value).toBeNull();
+        expect(spyOnStatusBeingWrittenSetter.mock.calls).toStrictEqual([
+          [expectedStatusToSend],
+          [null],
+        ]);
+
+        spyOnStatusBeingWrittenSetter.mockRestore();
       });
     });
 

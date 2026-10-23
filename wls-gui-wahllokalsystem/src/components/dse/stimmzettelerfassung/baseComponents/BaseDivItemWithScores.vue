@@ -4,7 +4,10 @@
       <slot />
     </div>
 
-    <div class="flex-grow-1 mr-4">
+    <div
+      class="flex-grow-1 mr-4"
+      style="min-width: 0"
+    >
       <div>
         {{ ordnungszahl }}
       </div>

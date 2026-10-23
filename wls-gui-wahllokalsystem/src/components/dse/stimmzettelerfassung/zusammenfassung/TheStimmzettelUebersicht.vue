@@ -28,6 +28,7 @@
           :active="startenBtnActive"
           :is-disabled="
             isWahlvorschlaegeLoading ||
+            isTeamStatusReloading ||
             isTeamStatusBeingWritten(
               teamStatusBeingWritten,
               StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
@@ -209,6 +210,9 @@ watch(
 );
 
 function onErfassungStartenClicked() {
+  if (isTeamStatusReloading.value) {
+    return;
+  }
   isKennungsDialogVisible.value = true;
 }
 

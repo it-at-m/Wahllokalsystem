@@ -277,7 +277,7 @@ In folgenden Fällen wird ein eingegebener Befehl abgelehnt und es erfolgt keine
 
 - Entspricht die Eingabe keinem unterstützten Format, enthält sie Leerzeichen oder verwendet sie keine positive
   ganze Anzahl.
-- Existiert die angegebene Ordnungszahl für die kandidierenden Person oder den Wahlvorschlag nicht.
+- Existiert die angegebene Ordnungszahl für die kandidierende Person oder den Wahlvorschlag nicht.
 - Ist ein Bereich größer als die vorhandene Kandidat\*innenliste, oder umfasst er mehrere Wahlvorschläge.
 - Enthält ein Stimmenbereich mindestens eine gestrichene Nennung.
 - Sollen mehr Stimmen entfernt werden, als für die ausgewählte Nennung vorhanden sind.

@@ -3,7 +3,11 @@
     <base-stimmzettel-uebersicht-table
       :team-id="teamId"
       :stimmzettel-liste="stimmzettelListe"
-      :stimmzettel-loading="isStimmzettelLoading || isWahlvorschlaegeLoading"
+      :stimmzettel-loading="
+        isStimmzettelLoading ||
+        isWahlvorschlaegeLoading ||
+        isTeamStatusReloading
+      "
       class="mt-3"
       :bearbeitung-disabled="
         isTeamStatusLoading ||
@@ -157,6 +161,7 @@ const teamID = userStore.currentUserTeamName || "";
 const wahlID = (route.params.wahlId as string) || "";
 const wahlbezirkID = (route.params.wahlbezirkId as string) || "";
 const isErfassungsDialogPreloaded = ref(false);
+const isTeamStatusReloading = ref(false);
 
 const templateRefStimmzettelBeendenDialog = useTemplateRef<
   InstanceType<typeof TheStimmzettelerfassungBeendenDialog>
@@ -228,7 +233,12 @@ function onErfassungBeendenClicked() {
 }
 
 async function onErfassungAktualisierenClicked() {
-  await reloadTeamStatus();
+  isTeamStatusReloading.value = true;
+  try {
+    await reloadTeamStatus();
+  } finally {
+    isTeamStatusReloading.value = false;
+  }
 }
 
 async function onStimmzettelErfassungCanceled() {

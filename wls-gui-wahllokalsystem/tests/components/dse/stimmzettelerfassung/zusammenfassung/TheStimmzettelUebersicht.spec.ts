@@ -8,6 +8,7 @@ import { computed, ref } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseStimmzettelUebersichtTable from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelUebersichtTable.vue";
+import TheStimmzettelkennungDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelkennungDialog.vue";
 import TheStimmzettelUebersicht from "@/components/dse/stimmzettelerfassung/zusammenfassung/TheStimmzettelUebersicht.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
@@ -18,6 +19,11 @@ const mocks = vi.hoisted(() => ({
   sendStatusUnterbrochen: vi.fn(),
   startNewEmptyStimmzettelWithStimmzettelkennung: vi.fn(),
 }));
+
+const isTeamStatusLoading = ref(false);
+const teamStatus = ref<{ status: StimmzettelerfassungTeamStatusEnum }>({
+  status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+});
 
 vi.mock("vue-router", async (importOriginal) => ({
   ...(await importOriginal<typeof import("vue-router")>()),
@@ -30,15 +36,13 @@ vi.mock(
   "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts",
   () => ({
     useStimmzettelErfassungViewUtils: () => ({
-      teamStatus: ref({
-        status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
-      }),
+      teamStatus,
       activeStimmzettel: ref(null),
       beendenBtnActive: computed(() => false),
       isErfassungsDialogVisible: ref(false),
       isKennungsDialogVisible: ref(false),
-      isStatusLoading: ref(false),
-      statusBeingWritten: ref(null),
+      isTeamStatusLoading,
+      teamStatusBeingWritten: ref(null),
       startenBtnActive: computed(() => true),
       unterbrechenBtnIsDisabled: computed(() => false),
       ensureStatusInBearbeitung: mocks.ensureStatusInBearbeitung,
@@ -110,16 +114,90 @@ describe("TheStimmzettelUebersicht", () => {
         true
       );
     });
+
+    it("should_showStimmzettelLoading_when_isTeamStatusReloading", async () => {
+      let resolveReloadTeamStatus: (() => void) | undefined;
+      mocks.reloadTeamStatus.mockImplementationOnce(
+        () =>
+          new Promise<void>((resolve) => {
+            resolveReloadTeamStatus = resolve;
+          })
+      );
+      const wrapper = mountOverview({
+        isWahlvorschlaegeLoading: false,
+        wahlvorschlaege: [],
+        teamStatus: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN,
+      });
+
+      await wrapper.find("base-button-refresh-stub").trigger("click");
+
+      expect(
+        wrapper
+          .findComponent(BaseStimmzettelUebersichtTable)
+          .props("stimmzettelLoading")
+      ).toBe(true);
+
+      if (resolveReloadTeamStatus === undefined) {
+        throw new Error("Expected reloadTeamStatus resolver to be set");
+      }
+      resolveReloadTeamStatus();
+      await flushPromises();
+
+      expect(
+        wrapper
+          .findComponent(BaseStimmzettelUebersichtTable)
+          .props("stimmzettelLoading")
+      ).toBe(false);
+    });
+
+    it("should_disableStartAndKeepKennungsDialogClosed_when_teamStatusIsReloading", async () => {
+      let resolveReloadTeamStatus: (() => void) | undefined;
+      mocks.reloadTeamStatus.mockImplementationOnce(
+        () =>
+          new Promise<void>((resolve) => {
+            teamStatus.value = {
+              status: StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+            };
+            resolveReloadTeamStatus = resolve;
+          })
+      );
+      const wrapper = mountOverview({
+        isWahlvorschlaegeLoading: false,
+        wahlvorschlaege: [],
+        teamStatus: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN,
+      });
+
+      await wrapper.find("base-button-refresh-stub").trigger("click");
+      await flushPromises();
+
+      const startButton = wrapper.findComponent(BaseTextButton);
+      expect(startButton.props("isDisabled")).toBe(true);
+
+      await startButton.trigger("click");
+
+      expect(
+        wrapper.findComponent(TheStimmzettelkennungDialog).props("visible")
+      ).toBe(false);
+
+      if (resolveReloadTeamStatus === undefined) {
+        throw new Error("Expected reloadTeamStatus resolver to be set");
+      }
+      resolveReloadTeamStatus();
+    });
   });
 });
 
 function mountOverview({
   isWahlvorschlaegeLoading,
   wahlvorschlaege,
+  teamStatus:
+    teamStatusValue = StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
 }: {
   isWahlvorschlaegeLoading: boolean;
   wahlvorschlaege: Wahlvorschlag[];
+  teamStatus?: StimmzettelerfassungTeamStatusEnum;
 }) {
+  teamStatus.value = { status: teamStatusValue };
   return mount(TheStimmzettelUebersicht, {
     props: {
       teamId: "team-id",
@@ -136,7 +214,8 @@ function mountOverview({
       stubs: {
         "base-stimmzettel-uebersicht-table": true,
         "base-text-button": true,
-        "base-feedback-card": true,
+        "base-button-refresh": true,
+        "base-feedback-card": { template: "<div><slot /></div>" },
         "the-stimmzettelkennung-dialog": true,
         "the-stimmzettel-erfassung-dialog": true,
         "the-stimmzettelerfassung-beenden-dialog": true,

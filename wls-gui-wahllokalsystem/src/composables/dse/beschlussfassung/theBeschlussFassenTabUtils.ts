@@ -1,48 +1,18 @@
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
-import { storeToRefs } from "pinia";
-import { ref } from "vue";
-
 import { useBeschlussgrundOptionTools } from "@/composables/dse/beschlussfassung/beschlussgrundOptionTools.ts";
-import { useUserStore } from "@/stores/userStore.ts";
-import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
-import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
+import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
 
 const {
   mapGruendeToBeschlussgrundOptions,
   setSystemBeschlussgruendeTrueWhenFoundInStimmzettel,
   setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel,
   setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
+  setSystemBeschlussgrundKeineGueltigenStimmen,
 } = useBeschlussgrundOptionTools();
 
 export function useTheBeschlussFassenTabUtils() {
-  const { isBWB } = storeToRefs(useUserStore());
-
-  const beschlussGruende = {
-    common: {
-      gueltig: [
-        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleIstZweifelsfreiErkennbar,
-        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
-        SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
-        SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
-      ],
-      ungueltig: [
-        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
-        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
-        WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
-        WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
-      ],
-    },
-    bwb: {
-      gueltig: [
-        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagIdentischGekennzeichnet,
-        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagLeerUndGekennzeichnet,
-      ],
-      ungueltig: [
-        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagUnterschiedlichGekennzeichnet,
-      ],
-    },
-  };
+  const { getBeschlussGruendeBasedOnGueltigkeit } = useBeschlussgrundTools();
 
   function createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
     isStimmzettelGueltig: boolean | null,
@@ -52,27 +22,30 @@ export function useTheBeschlussFassenTabUtils() {
       return { andererGrund: "", beschlussgruende: [] };
 
     const gruendeList =
-      _getBeschlussGruendeBasedOnGueltigkeit(isStimmzettelGueltig);
-    const beschlussgrundOptions = ref(
-      mapGruendeToBeschlussgrundOptions(gruendeList)
-    );
+      getBeschlussGruendeBasedOnGueltigkeit(isStimmzettelGueltig);
+    const beschlussgrundOptions =
+      mapGruendeToBeschlussgrundOptions(gruendeList);
 
     setSystemBeschlussgruendeTrueWhenFoundInStimmzettel(
       stimmzettel?.systemBeschlussvorschlag ?? [],
-      beschlussgrundOptions.value
+      beschlussgrundOptions
     );
     setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel(
       stimmzettel?.wahlvorstandBeschlussvorschlag ?? [],
-      beschlussgrundOptions.value
+      beschlussgrundOptions
+    );
+    setSystemBeschlussgrundKeineGueltigenStimmen(
+      stimmzettel,
+      beschlussgrundOptions
     );
 
     const andererGrund =
       setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList(
         stimmzettel?.wahlvorstandBeschlussvorschlag ?? [],
         stimmzettel?.systemBeschlussvorschlag ?? [],
-        beschlussgrundOptions.value
+        beschlussgrundOptions
       );
-    const beschlussgruende = beschlussgrundOptions.value;
+    const beschlussgruende = beschlussgrundOptions;
 
     return {
       andererGrund,
@@ -80,46 +53,7 @@ export function useTheBeschlussFassenTabUtils() {
     };
   }
 
-  function isStimmzettelGueltigBasedOnVormerkungsgruenden(
-    stimmzettel: PersistedStimmzettel
-  ) {
-    const ungueltigOptions =
-      createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit(
-        false,
-        undefined
-      ).beschlussgruende;
-    const ungueltigSet = new Set(ungueltigOptions.map((o) => o.grund));
-
-    const hasUngueltigerSystemGrund = (
-      stimmzettel.systemBeschlussvorschlag ?? []
-    ).some((beschlussvorschlag) => {
-      return ungueltigSet.has(beschlussvorschlag.reason);
-    });
-
-    const hasUngueltigerWahlvorstandGrund = (
-      stimmzettel.wahlvorstandBeschlussvorschlag ?? []
-    ).some((beschlussvorschlag) => {
-      return ungueltigSet.has(beschlussvorschlag.text);
-    });
-
-    return !(hasUngueltigerSystemGrund || hasUngueltigerWahlvorstandGrund);
-  }
-
-  function _getBeschlussGruendeBasedOnGueltigkeit(isGueltig: boolean) {
-    return isGueltig
-      ? isBWB.value
-        ? [...beschlussGruende.common.gueltig, ...beschlussGruende.bwb.gueltig]
-        : beschlussGruende.common.gueltig
-      : isBWB.value
-        ? [
-            ...beschlussGruende.common.ungueltig,
-            ...beschlussGruende.bwb.ungueltig,
-          ]
-        : beschlussGruende.common.ungueltig;
-  }
-
   return {
     createAndSetSelectedBeschlussgrundOptionsBasedOnStimmzettelAndGueltigkeit,
-    isStimmzettelGueltigBasedOnVormerkungsgruenden,
   };
 }

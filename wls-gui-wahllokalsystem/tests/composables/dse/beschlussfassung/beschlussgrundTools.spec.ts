@@ -1,9 +1,13 @@
+import { createTestingPinia } from "@pinia/testing";
 import { useBeschlussgrundTestDataFactory } from "@tests/utils/dse/BeschlussgrundTestDataFacytory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
 import { WahlvorstandBeschlussvorschlaegeEnum } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussvorschlaegeEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText: vi.fn(),
@@ -25,8 +29,12 @@ const { createSystemBeschlussgrund, createWahlvorstandBeschlussgrund } =
 
 describe("useBeschlussgrundTools.ts", () => {
   let unitUnderTest: ReturnType<typeof useBeschlussgrundTools>;
+  let userStore: ReturnType<typeof useUserStore>;
+  const { prepareUser } = useUserTestDataFactory();
 
   beforeEach(() => {
+    const pinia = createTestingPinia({ stubActions: false, createSpy: vi.fn });
+    userStore = useUserStore(pinia);
     unitUnderTest = useBeschlussgrundTools();
   });
 
@@ -160,6 +168,77 @@ describe("useBeschlussgrundTools.ts", () => {
       expect(
         mockDefinitions.mapSystemBeschlussgrundReasonEnumToBeschlussvorschlagText
       ).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("getBeschlussGruendeBasedOnGueltigkeit", () => {
+    it("should_returnCommonGueltig_when_UWBAndGueltig", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .build();
+
+      const result = unitUnderTest.getBeschlussGruendeBasedOnGueltigkeit(true);
+      const expectedResult = [
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleIstZweifelsfreiErkennbar,
+        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+        SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+        SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+      ];
+
+      expect(result).toEqual(expectedResult);
+    });
+
+    it("should_returnCommonUngueltig_when_UWBAndUngueltig", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .build();
+
+      const result = unitUnderTest.getBeschlussGruendeBasedOnGueltigkeit(false);
+      const expectedResult = [
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
+        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+        WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
+        WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
+        SystemBeschlussgrundReasonEnum.KeineGueltigenStimmen,
+      ];
+
+      expect(result).toEqual(expectedResult);
+    });
+
+    it("should_returnCommonPlusBwbGueltig_when_BWBAndGueltig", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .build();
+
+      const result = unitUnderTest.getBeschlussGruendeBasedOnGueltigkeit(true);
+      const expectedResult = [
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleIstZweifelsfreiErkennbar,
+        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenAberImGesamtstimmenlimit,
+        SystemBeschlussgrundReasonEnum.KeineReststimmenvergabeMoeglich,
+        SystemBeschlussgrundReasonEnum.EinzelneStimmenUngueltig,
+        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagIdentischGekennzeichnet,
+        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagLeerUndGekennzeichnet,
+      ];
+
+      expect(result).toEqual(expectedResult);
+    });
+
+    it("should_returnCommonPlusBwbUngueltig_when_BWBAndUngueltig", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .build();
+
+      const result = unitUnderTest.getBeschlussGruendeBasedOnGueltigkeit(false);
+      const expectedResult = [
+        WahlvorstandBeschlussvorschlaegeEnum.WaehlerwilleNichtZweifelsfreiErkennbar,
+        SystemBeschlussgrundReasonEnum.ZuVieleEinzelstimmenOderListenkreuze,
+        WahlvorstandBeschlussvorschlaegeEnum.StimmzettelMitBesonderemZusatz,
+        WahlvorstandBeschlussvorschlaegeEnum.NichtAmtlicherStimmzettel,
+        SystemBeschlussgrundReasonEnum.KeineGueltigenStimmen,
+        WahlvorstandBeschlussvorschlaegeEnum.BriefwahlMehrereStimmzettelInUmschlagUnterschiedlichGekennzeichnet,
+      ];
+
+      expect(result).toEqual(expectedResult);
     });
   });
 });

@@ -4,7 +4,9 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -39,7 +41,8 @@ public class MBWStimmzettelService {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
     return mbwStimmzettelRepository
-        .getStapelB(bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
+        .getStapelBGroupedByWahlvorschlag(
+            bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
         .stream()
         .map(stimmzettelModelMapper::toModel)
         .toList();
@@ -52,10 +55,22 @@ public class MBWStimmzettelService {
       @P("param") final BezirkUndWahlID bezirkUndWahlID) {
     stimmzettelValidator.validOrThrow(bezirkUndWahlID);
 
-    return mbwStimmzettelRepository
-        .getStapelBC(bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
-        .stream()
-        .map(stimmzettelModelMapper::toModel)
+    val kandidatenStimmenStapelB =
+        mbwStimmzettelRepository
+            .getStapelBGroupedByKandidat(
+                bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
+            .stream()
+            .map(stimmzettelModelMapper::toModel)
+            .toList();
+
+    val kandidatenStimmenStapelC =
+        mbwStimmzettelRepository
+            .getStapelC(bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID())
+            .stream()
+            .map(stimmzettelModelMapper::toModel)
+            .toList();
+
+    return Stream.concat(kandidatenStimmenStapelB.stream(), kandidatenStimmenStapelC.stream())
         .toList();
   }
 

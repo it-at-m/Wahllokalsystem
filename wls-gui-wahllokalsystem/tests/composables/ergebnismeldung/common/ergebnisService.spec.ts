@@ -430,7 +430,7 @@ describe("ergebnisService.ts", () => {
             SendErgebnisseMeldungsartEnum.V3,
             hauptwahlbezirkID,
             undefined,
-            axiosConfigWrapper().requestAsOnlineOnly(),
+            axiosConfigWrapper().requestAsPostOnlineOnlyButDirtyOnFail(),
           ],
         ]);
 

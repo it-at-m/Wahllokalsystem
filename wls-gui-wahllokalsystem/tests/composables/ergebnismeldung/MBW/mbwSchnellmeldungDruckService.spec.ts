@@ -32,6 +32,7 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 const mockDefinitions = vi.hoisted(() => ({
   createBarcode: vi.fn(),
   createFooter: vi.fn(),
+  printInWindow: vi.fn(),
   getErgebnisse: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   getWahlvorschlaege: vi.fn(),
@@ -49,6 +50,7 @@ vi.mock(import("@/composables/drucken/commonPrintService.ts"), () => ({
   useCommonPrintService: () => ({
     createBarcode: mockDefinitions.createBarcode,
     createFooter: mockDefinitions.createFooter,
+    printInWindow: mockDefinitions.printInWindow,
   }),
 }));
 
@@ -56,6 +58,7 @@ const mockedStimmzettelOfWahlbezirk = ref<PersistedStimmzettel[]>([]);
 vi.mock(import("@/composables/dse/allStimmzettelOfWahlbezirkState.ts"), () => ({
   useAllStimmzettelOfWahlbezirkState: () => ({
     isLoading: ref(false),
+    isTeamStatusListLoading: ref(false),
     stimmzettelOfWahlbezirk: mockedStimmzettelOfWahlbezirk,
     loadStimmzettelOfWahlbezirk: mockDefinitions.loadStimmzettelOfWahlbezirk,
   }),

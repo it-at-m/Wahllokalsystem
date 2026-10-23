@@ -9,11 +9,13 @@ import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/besch
 import { useSystemBeschlussgrundReasonEnumFormatter } from "@/composables/dse/beschlussfassung/useSystemBeschlussgrundReasonEnumFormatter.ts";
 import { useWahlvorschlagTools } from "@/composables/dse/stimmzettelerfassung/wahlvorschlagTools.ts";
 import { WAHLVORSCHLAG_NUMBER_MULTIPLIER_FOR_ORDNUNGSZAHL } from "@/constants.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
-const { sortWahlvorstandBeschlussgruende, sortSystemBeschlussgruende } =
-  useBeschlussgrundTools();
+const {
+  allBeschlussGruendeUngueltig,
+  sortWahlvorstandBeschlussgruende,
+  sortSystemBeschlussgruende,
+} = useBeschlussgrundTools();
 const { sortAndDeepCloneWahlvorschlaege } = useWahlvorschlagTools();
 
 export function useStimmzettelTools() {
@@ -28,21 +30,6 @@ export function useStimmzettelTools() {
       gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
       invalideVotes: 0,
       wahlvorschlaege: initWahlvorschlaege,
-    };
-  }
-
-  function getEmptyStimmzettelWithStimmzettelkennung(
-    stimmzettelkennung: number
-  ): PersistedStimmzettel {
-    return {
-      stimmzettelkennung: stimmzettelkennung,
-      teamID: useUserStore().currentUserTeamName,
-      gueltigkeit: StimmzettelGueltigkeitEnum.Valid,
-      invalideVotes: 0,
-      beschlussfassung: null,
-      wahlvorstandBeschlussvorschlag: [],
-      systemBeschlussvorschlag: [],
-      wahlvorschlaege: [],
     };
   }
 
@@ -132,6 +119,63 @@ export function useStimmzettelTools() {
     );
   }
 
+  function isStimmzettelGueltigBasedOnVormerkungsgruenden(
+    stimmzettel: PersistedStimmzettel
+  ) {
+    const hasUngueltigerSystemGrund = (
+      stimmzettel.systemBeschlussvorschlag ?? []
+    ).some((beschlussvorschlag) =>
+      allBeschlussGruendeUngueltig.has(beschlussvorschlag.reason)
+    );
+
+    const hasUngueltigerWahlvorstandGrund = (
+      stimmzettel.wahlvorstandBeschlussvorschlag ?? []
+    ).some((beschlussvorschlag) =>
+      allBeschlussGruendeUngueltig.has(beschlussvorschlag.text)
+    );
+
+    const isLeererStimmzettel =
+      stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Leer ||
+      isStimmzettelEmpty(stimmzettel);
+
+    return !(
+      hasUngueltigerSystemGrund ||
+      hasUngueltigerWahlvorstandGrund ||
+      isLeererStimmzettel
+    );
+  }
+
+  function isStimmzettelEmpty(stimmzettel: PersistedStimmzettel) {
+    return !stimmzettel.wahlvorschlaege.find(
+      (wahlvorschlag) =>
+        wahlvorschlag.selected ||
+        wahlvorschlag.kandidaten.find(
+          (kandidat) =>
+            (kandidat.invalidVotes ?? 0) > 0 ||
+            (kandidat.votesByVoter ?? 0) > 0 ||
+            kandidat.isDiscarded
+        )
+    );
+  }
+
+  function isDeepEqualIgnoreGueltigkeit(
+    stimmzettelA: PersistedStimmzettel,
+    stimmzettelB: PersistedStimmzettel
+  ) {
+    const normalizedStimmzettelA = {
+      ...normalizePersistedStimmzettel(stimmzettelA),
+      gueltigkeit: undefined,
+    };
+    const normalizedStimmzettelB = {
+      ...normalizePersistedStimmzettel(stimmzettelB),
+      gueltigkeit: undefined,
+    };
+    return (
+      JSON.stringify(normalizedStimmzettelA) ===
+      JSON.stringify(normalizedStimmzettelB)
+    );
+  }
+
   function _toDSEWahlvorschlag(wahlvorschlag: Wahlvorschlag): DseWahlvorschlag {
     const dseWahlvorschlag: DseWahlvorschlag = {
       wahlvorschlagID: wahlvorschlag.identifikator,
@@ -179,12 +223,14 @@ export function useStimmzettelTools() {
 
   return {
     createStimmzettelWithWahlvorschlaege,
-    getEmptyStimmzettelWithStimmzettelkennung,
     isBeschlussRequired,
     isVorgemerktFuerBeschluss,
     getVormerkungsgrund,
     normalizePersistedStimmzettel,
     resetDseStimmzettel,
     isSamePersistedStimmzettel,
+    isStimmzettelGueltigBasedOnVormerkungsgruenden,
+    isStimmzettelEmpty,
+    isDeepEqualIgnoreGueltigkeit,
   };
 }

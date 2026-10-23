@@ -19,30 +19,11 @@
             </encoder>
         </appender>
 
-        <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem.apigateway"
-                level="debug"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
-        <logger name="de.muenchen.allgemein"
-                level="debug"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
-        <logger name="org.springframework.cache"
-                level="trace"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
-        <logger name="org.springframework.web"
-                level="debug"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
+        <!-- Logger: only set levels; appenders are configured on the root logger -->
+        <logger name="de.muenchen.oss.wahllokalsystem.apigateway" level="debug" />
+        <logger name="de.muenchen.allgemein" level="debug" />
+        <logger name="org.springframework.cache" level="trace" />
+        <logger name="org.springframework.web" level="debug" />
 
         <!-- Logger usage -->
         <root level="info">
@@ -87,24 +68,10 @@
             </encoder>
         </appender>
 
-        <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem.apigateway"
-                level="info"
-                additivity="false">
-            <appender-ref ref="JSON_STDOUT" />
-        </logger>
-
-        <logger name="de.muenchen.allgemein"
-                level="info"
-                additivity="false">
-            <appender-ref ref="JSON_STDOUT" />
-        </logger>
-
-        <logger name="org.springframework.web"
-                level="info"
-                additivity="false">
-            <appender-ref ref="JSON_STDOUT" />
-        </logger>
+        <!-- Logger: only set levels; appenders are configured on the root logger -->
+        <logger name="de.muenchen.oss.wahllokalsystem.apigateway" level="info" />
+        <logger name="de.muenchen.allgemein" level="info" />
+        <logger name="org.springframework.web" level="info" />
 
         <!-- Logger usage -->
         <root level="info">

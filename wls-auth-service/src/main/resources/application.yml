@@ -68,6 +68,11 @@ management:
     health.enabled: true
     info.enabled: true
     prometheus.enabled: true
+  health:
+    db:
+      enabled: false
+    ldap:
+      enabled: false
   info:
     env:
       enabled: true

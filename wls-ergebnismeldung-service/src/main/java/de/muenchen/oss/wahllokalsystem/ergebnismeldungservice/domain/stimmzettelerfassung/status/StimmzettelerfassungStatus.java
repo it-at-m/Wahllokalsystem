@@ -21,4 +21,8 @@ public class StimmzettelerfassungStatus {
 
   @Enumerated(EnumType.STRING)
   @Valid @NotNull private ErfassungStatus status;
+
+  public boolean isStimmzettelerfassungAbgeschlossen() {
+    return !ErfassungStatus.STE_BEARBEITUNG.equals(status);
+  }
 }

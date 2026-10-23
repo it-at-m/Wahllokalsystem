@@ -51,6 +51,7 @@ export function useStimmzettelerfassungBeendenDialogUtils(
       wahlbezirkId,
       currentUserTeamName.value,
       { status: StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN },
+      true,
       true
     );
 

@@ -5,17 +5,28 @@ import { useMonitoringViewBeschlussfassungButtonsUtils } from "@/composables/dse
 import { useStimmzettelerfassungTeamStatusListState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
+import { useSynchronizeDataResultTools } from "@/composables/indexDB/synchronizeDataResultTools.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import router from "@/plugins/router.ts";
+import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   const stimmzettelerfassungState = useStimmzettelerfassungStatusState(
     wahlID,
     wahlbezirkID
   );
+  const { addNotification } = useUserNotificationService();
+
+  const { synchronizeOfflineData } = useDataSyncStore();
+  const { hasRunAndSuccessfullySynchronizedAllDirtyData } =
+    useSynchronizeDataResultTools();
+
   const stimmzettelerfassungTeamState =
     useStimmzettelerfassungTeamStatusListState(wahlID, wahlbezirkID);
   const monitoringViewBeschlussfassungButtonProperties =
@@ -43,6 +54,18 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     const { setStepDone } = useWorkflowStore();
     const { currentUserTeamName } = storeToRefs(useUserStore());
     const { getNextRoute } = useNavigationService();
+
+    if (_canStimmzettelBeChanged()) {
+      const syncResult = await synchronizeOfflineData();
+      if (!hasRunAndSuccessfullySynchronizedAllDirtyData(syncResult)) {
+        addNotification(
+          "Synchronisierung der Daten fehlgeschlagen, probieren sie es bitte erneut.",
+          UserNotificationCategoryEnum.ERROR
+        );
+
+        return;
+      }
+    }
 
     await useStimmzettelerfassungTeamStatusService().reopenStimmzettelerfassung(
       wahlID,
@@ -81,8 +104,17 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
+  function _canStimmzettelBeChanged() {
+    return (
+      stimmzettelerfassungState.workflowStatus.value?.status ===
+        StimmzettelerfassungStatusEnum.SteAbgeschlossen ||
+      stimmzettelerfassungState.workflowStatus.value?.status ===
+        StimmzettelerfassungStatusEnum.BeAbgeschlossen
+    );
+  }
+
   async function _loadTeamstatusListe() {
-    await stimmzettelerfassungTeamState.loadTeamStatusListe();
+    await stimmzettelerfassungTeamState.loadTeamStatusListe(true);
   }
 
   return {

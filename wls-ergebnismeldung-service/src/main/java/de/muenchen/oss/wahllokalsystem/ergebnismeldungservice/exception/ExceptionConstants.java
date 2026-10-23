@@ -143,6 +143,10 @@ public class ExceptionConstants {
       POST_STIMMZETTELERFASSUNG_STATUS_PARAMETER_UNVOLLSTAENDIG =
           new ExceptionDataWrapper(
               "645", "postStimmzettelerfassungStatus: Parameter unvollstaendig");
+  public static final ExceptionDataWrapper
+      IS_STIMMZETTELERFASSUNG_ABGESCHLOSSEN_PARAMETER_UNVOLLSTAENDIG =
+          new ExceptionDataWrapper(
+              "646", "isStimmzettelerfassungAbgeschlossen: Parameter unvollstaendig");
 
   public static final ExceptionDataWrapper STIMMZETTELKENNUNG_NON_UNIQUE =
       new ExceptionDataWrapper("701", "Stimmzettelkennung ist nicht eindeutig");

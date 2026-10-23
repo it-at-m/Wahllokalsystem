@@ -19,38 +19,13 @@
             </encoder>
         </appender>
 
-        <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem.adminservice"
-                level="debug"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
-        <logger name="de.muenchen.allgemein"
-                level="debug"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
-        <logger name="org.springframework.cache"
-                level="trace"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
-        <logger name="org.springframework.web"
-                level="debug"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
+        <!-- Logger: only set levels; appenders are configured on the root logger -->
+        <logger name="de.muenchen.oss.wahllokalsystem.adminservice" level="debug" />
+        <logger name="de.muenchen.allgemein" level="debug" />
+        <logger name="org.springframework.cache" level="trace" />
+        <logger name="org.springframework.web" level="debug" />
         <!-- use debug to see the users authorities -->
-        <logger name="de.muenchen.oss.wahllokalsystem.adminservice.configuration.UserInfoAuthoritiesRetriever"
-                level="debug"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
+        <logger name="de.muenchen.oss.wahllokalsystem.adminservice.configuration.UserInfoAuthoritiesRetriever" level="debug" />
         <!-- PathVars, URL & Parameter -->
         <logger name="org.springframework.web.servlet.DispatcherServlet" level="debug" />
         <!-- Methodennamen -->
@@ -104,33 +79,13 @@
                 </providers>
             </encoder>
         </appender>
-
-        <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem.adminservice"
-                level="warn"
-                additivity="false">
-            <appender-ref ref="JSON_STDOUT" />
-        </logger>
-
-        <logger name="de.muenchen.allgemein"
-                level="warn"
-                additivity="false">
-            <appender-ref ref="JSON_STDOUT" />
-        </logger>
-
-        <logger name="org.springframework.web"
-                level="warn"
-                additivity="false">
-            <appender-ref ref="JSON_STDOUT" />
-        </logger>
-
-        <!-- use debug to see the users authorities -->
-        <logger name="de.muenchen.oss.wahllokalsystem.adminservice.configuration.UserInfoAuthoritiesRetriever"
-                level="warn"
-                additivity="false">
-            <appender-ref ref="STDOUT" />
-        </logger>
-
+      
+        <!-- Logger: only set levels; appenders are configured on the root logger -->
+        <logger name="de.muenchen.oss.wahllokalsystem.adminservice" level="warn" />
+        <logger name="de.muenchen.allgemein" level="warn" />
+        <logger name="org.springframework.web" level="warn" />
+        <!-- use warn by default; set to debug locally if needed to see authorities -->
+        <logger name="de.muenchen.oss.wahllokalsystem.adminservice.configuration.UserInfoAuthoritiesRetriever" level="warn" />
         <!-- PathVars, URL & Parameter -->
         <logger name="org.springframework.web.servlet.DispatcherServlet" level="warn" />
         <!-- Methodennamen -->
@@ -140,7 +95,7 @@
         <!-- Specific NfcHelper Filter for Payload (specific loglevel can be set) -->
         <logger name="de.muenchen.oss.wahllokalsystem.adminservice.configuration.nfcconverter.NfcHelper" level="warn" />
         <!-- Logger for other Nfc Logging-Data -->
-        <logger name="de.muenchen.oss.wahllokalsystem.adminservice.configuration.nfcconverter" level="warn" />
+        <logger name="de.muenchen.oss.wahllokalsystem.adminservice.configuration.nfcconverter" level="warn" />       
 
         <!-- Logger usage -->
         <root level="info">

@@ -79,7 +79,7 @@ class MBWStimmzettelServiceTest {
       val bezirkUndWahlID = Instancio.create(BezirkUndWahlID.class);
 
       Mockito.when(
-              mbwStimmzettelRepository.getStapelB(
+              mbwStimmzettelRepository.getStapelBGroupedByWahlvorschlag(
                   bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
           .thenReturn(Collections.emptyList());
 
@@ -96,7 +96,7 @@ class MBWStimmzettelServiceTest {
 
       val mockedRepoResponse = Instancio.createList(WahlvorschlagStimmzettelAnzahl.class);
       Mockito.when(
-              mbwStimmzettelRepository.getStapelB(
+              mbwStimmzettelRepository.getStapelBGroupedByWahlvorschlag(
                   bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
           .thenReturn(mockedRepoResponse);
 
@@ -116,11 +116,15 @@ class MBWStimmzettelServiceTest {
   class GetStapelBC {
 
     @Test
-    void should_returnMappedCollection_when_repoReturnedData() {
+    void should_returnEmptyCollection_when_repoReturnedNoData() {
       val bezirkUndWahlID = Instancio.create(BezirkUndWahlID.class);
 
       Mockito.when(
-              mbwStimmzettelRepository.getStapelBC(
+              mbwStimmzettelRepository.getStapelBGroupedByKandidat(
+                  bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
+          .thenReturn(Collections.emptyList());
+      Mockito.when(
+              mbwStimmzettelRepository.getStapelC(
                   bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
           .thenReturn(Collections.emptyList());
 
@@ -132,23 +136,30 @@ class MBWStimmzettelServiceTest {
     }
 
     @Test
-    void should_returnEmptyCollection_when_repoReturnedNoData() {
+    void should_returnMappedCollection_when_repoReturnedData() {
       val bezirkUndWahlID = Instancio.create(BezirkUndWahlID.class);
 
-      val mockedRepoResponse = Instancio.createList(KandidatStimmenAnzahl.class);
+      val mockedStapelBRepoResponse = Instancio.createList(KandidatStimmenAnzahl.class);
       Mockito.when(
-              mbwStimmzettelRepository.getStapelBC(
+              mbwStimmzettelRepository.getStapelBGroupedByKandidat(
                   bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
-          .thenReturn(mockedRepoResponse);
+          .thenReturn(mockedStapelBRepoResponse);
+      val mockedStapelCRepoResponse = Instancio.createList(KandidatStimmenAnzahl.class);
+      Mockito.when(
+              mbwStimmzettelRepository.getStapelC(
+                  bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID()))
+          .thenReturn(mockedStapelCRepoResponse);
 
       Mockito.when(stimmzettelModelMapper.toModel(any(KandidatStimmenAnzahl.class)))
           .thenReturn(Instancio.create(KandidatStimmenAnzahlModel.class));
 
       val result = unitUnderTest.getStapelBC(bezirkUndWahlID);
 
-      Assertions.assertThat(result).hasSize(mockedRepoResponse.size());
+      val expectedNumberOfElements =
+          mockedStapelBRepoResponse.size() + mockedStapelCRepoResponse.size();
+      Assertions.assertThat(result).hasSize(expectedNumberOfElements);
       Mockito.verify(stimmzettelValidator).validOrThrow(bezirkUndWahlID);
-      Mockito.verify(stimmzettelModelMapper, times(mockedRepoResponse.size()))
+      Mockito.verify(stimmzettelModelMapper, times(expectedNumberOfElements))
           .toModel(any(KandidatStimmenAnzahl.class));
     }
   }

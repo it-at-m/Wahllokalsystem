@@ -1,10 +1,15 @@
 import type { BeschlussgrundOption } from "@/types/dse/beschlussfassung/BeschlussgrundOption.ts";
 import type { SystemBeschlussgrund } from "@/types/dse/beschlussfassung/SystemBeschlussgrund.ts";
 import type { WahlvorstandBeschlussgrund } from "@/types/dse/beschlussfassung/WahlvorstandBeschlussgrund.ts";
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
 import { useBeschlussgrundTools } from "@/composables/dse/beschlussfassung/beschlussgrundTools.ts";
+import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
+import { SystemBeschlussgrundReasonEnum } from "@/types/dse/beschlussfassung/SystemBeschlussgrundReasonEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const { getBeschlussgrundEnumValueAsString } = useBeschlussgrundTools();
+const { isStimmzettelEmpty } = useStimmzettelTools();
 
 export function useBeschlussgrundOptionTools() {
   function mapGruendeToBeschlussgrundOptions(
@@ -79,10 +84,32 @@ export function useBeschlussgrundOptionTools() {
     return result.join(", ");
   }
 
+  function setSystemBeschlussgrundKeineGueltigenStimmen(
+    stimmzettel: PersistedStimmzettel | undefined,
+    beschlussgrundOptions: BeschlussgrundOption[]
+  ) {
+    if (stimmzettel) {
+      if (
+        stimmzettel.gueltigkeit === StimmzettelGueltigkeitEnum.Leer ||
+        isStimmzettelEmpty(stimmzettel)
+      ) {
+        const beschlussgrundKeineGueltigenStimmen = beschlussgrundOptions.find(
+          (beschlussgrundOption) =>
+            beschlussgrundOption.grund ===
+            SystemBeschlussgrundReasonEnum.KeineGueltigenStimmen
+        );
+        if (beschlussgrundKeineGueltigenStimmen) {
+          beschlussgrundKeineGueltigenStimmen.selected = true;
+        }
+      }
+    }
+  }
+
   return {
     mapGruendeToBeschlussgrundOptions,
     setSystemBeschlussgruendeTrueWhenFoundInStimmzettel,
     setWahlvorstandBeschlussgruendeTrueWhenFoundInStimmzettel,
     setBeschlussgruendeToAndererGrundWhenNotFoundInBeschlussGruendeList,
+    setSystemBeschlussgrundKeineGueltigenStimmen,
   };
 }

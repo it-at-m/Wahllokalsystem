@@ -132,19 +132,22 @@ werden nach bestimmten Regeln den Stapeln zugeordnet.
 
 ##### Stapel A
 
-Auf diesem Stapel befinden sich alle gültigen Stimmzettel, die genau ein Listenkreuz haben.
+Auf diesem Stapel befinden sich alle gültigen Stimmzettel, die genau ein Listenkreuz haben und sonst keine Kennzeichen.
 
 ##### Stapel B
 
-Auf diesem Stapel befinden sich alle gültigen Stimmzettel, die genau ein Listenkreuz aufweisen, aber zusätzlich noch weitere
-Kennzeichen (z. B. Streichungen, Einzelstimmen) bei dem Wahlvorschlag mit dem Listenkreuz haben.
+Auf diesem Stapel befinden sich alle gültigen Stimmzettel, bei denen die Stimmabgabe bei genau einem Wahlvorschlag
+erfolgte, aber zusätzlich noch weitere Kennzeichen (z. B. Streichungen, Einzelstimmen) bei dem Wahlvorschlag vorhanden sind.
 
-Stapel B fließt indirekt über den Stapel BC in die Ergebnismeldung ein.
+Stimmzettel, die nur ein Listenkreuz haben, bei denen es jedoch durch weitere Kennzeichen zu ungültigen Stimmen kam,
+die keinem/keiner konkreten Kandidaten/Kandidatin zugewiesen werden konnten, sind ebenfalls auf diesem Stapel.
 
-##### Stapel BC
+##### Stapel C
 
-Zusätzlich zu Stapel B sind auf diesem Stapel alle gültigen Stimmzettel, bei denen die
-Stimmen auf mehr als einen Wahlvorschlag entfallen.
+Auf diesem Stapel sind alle gültigen Stimmzettel, bei denen die Stimmen auf mehr als einen Wahlvorschlag entfallen.
+
+Ob dies über Listenkreuze, Einzelstimmen, Streichungen oder ungültige Stimmen bei Nennungen erfolgte, ist dabei nicht
+von Bedeutung.
 
 ##### Stapel D
 

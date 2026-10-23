@@ -101,6 +101,7 @@
           v-model="stimmzettelWahlvorstandBeschlussgruende"
           :items="wahlvorstandBeschlussvorschlaegeItems"
           class="combobox-as-textarea mt-1"
+          :readonly="isReadonly"
           multiple
           chips
           closable-chips
@@ -175,6 +176,11 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  isReadonly: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   showBeschlussfassung: {
     type: Boolean,
     required: false,
@@ -229,6 +235,8 @@ const isCheckboxMarkForBeschlussfassungSelected = computed(
 );
 
 const isCheckboxStimmzettelFehltDisabled = computed(() => {
+  if (props.isReadonly) return true;
+
   if (isStimmzettelFehltSelected.value) return false;
   else
     return (
@@ -240,6 +248,8 @@ const isCheckboxStimmzettelFehltDisabled = computed(() => {
 });
 
 const isCheckboxStimmzettelLeerDisabled = computed(() => {
+  if (props.isReadonly) return true;
+
   if (isStimmzettelLeerSelected.value) return false;
   else
     return (
@@ -252,6 +262,7 @@ const isCheckboxStimmzettelLeerDisabled = computed(() => {
 
 const isInputOfInvalidVotesDisabled = computed(
   () =>
+    props.isReadonly ||
     props.denyInputForInvalidVotes ||
     isStimmzettelFehltSelected.value ||
     isStimmzettelLeerSelected.value

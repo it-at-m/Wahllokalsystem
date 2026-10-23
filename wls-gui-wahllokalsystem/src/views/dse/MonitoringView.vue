@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-card-title class="d-flex align-center justify-space-between">
-        <span>Statusübersicht Stimmzettelerfassung</span>
+        <span>Statusübersicht Stimmzettelerfassung der Teams</span>
         <div class="d-flex flex-column align-start">
           <base-latest-load-div
             :last-loading-date="lastTeamstatusLoadingTime"
@@ -54,7 +54,11 @@
             :is-wieder-oeffnen-button-disabled="
               item.status !==
                 StimmzettelerfassungTeamStatusEnum.ABGESCHLOSSEN ||
-              isElectionFinished(wahlID, wahlbezirkID)
+              isElectionFinished(wahlID, wahlbezirkID) ||
+              isAnyTeamBeingReopened
+            "
+            :is-wieder-offnen-button-loading="
+              item.teamID === teamBeingReopened || isTeamOrWorkflowStatusLoading
             "
             @open-stimmzettelerfassung="
               onOpenStimmzettelerfassungClicked(item.teamID)
@@ -65,13 +69,16 @@
       <v-card-actions>
         <base-button-refresh
           :active="isRefreshBtnActive"
-          :loading="isTeamStatusListLoading"
+          :is-disabled="isAnyTeamBeingReopened"
+          :loading="isTeamOrWorkflowStatusLoading"
           @click="onAktualisierenClicked"
         />
         <base-text-button
           v-if="isBeschlussfassungStartenBtnVisible"
           :active="isBeschlussfassungBtnActive"
-          :is-disabled="isMoveOnToBeschlussfassungDisabled"
+          :is-disabled="
+            isMoveOnToBeschlussfassungDisabled || isAnyTeamBeingReopened
+          "
           :loading="isWorkflowStatusLoading"
           @click="onBeschlussfassungStartenClicked"
           >Beschlussfassung starten</base-text-button
@@ -79,7 +86,9 @@
         <base-text-button
           v-if="isBeschlussfassungContinueBtnVisible"
           :active="isBeschlussfassungBtnActive"
-          :is-disabled="isMoveOnToBeschlussfassungDisabled"
+          :is-disabled="
+            isMoveOnToBeschlussfassungDisabled || isAnyTeamBeingReopened
+          "
           :loading="isWorkflowStatusLoading"
           @click="onBeschlussfassungContinueClicked"
           >Beschlussfassung fortsetzen</base-text-button
@@ -108,10 +117,11 @@ import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringV
 import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
-import { DseStepsEnum } from "@/types/navigation/DseStepsEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const minWidth = "220px";
 const beschlussfassungStartenDialogVisible = ref(false);
+const teamBeingReopened = ref<string | null>(null);
 
 const route = useRoute();
 const wahlID = (route.params.wahlId as string) || "";
@@ -132,7 +142,12 @@ const {
 } = useMonitoringViewUtils(wahlID, wahlbezirkID);
 const { isElectionFinished } = useWorkflowStore();
 
+const isAnyTeamBeingReopened = computed(() => teamBeingReopened.value !== null);
 const isRefreshBtnActive = computed(() => !isBeschlussfassungBtnActive.value);
+
+const isTeamOrWorkflowStatusLoading = computed(
+  () => isTeamStatusListLoading.value || isWorkflowStatusLoading.value
+);
 
 const totalNumberOfTeams = computed(() => teamstatusList.value.length);
 
@@ -144,7 +159,7 @@ const abgeschlossenNumberOfTeams = computed(() => {
 
 async function onBeschlussfassungContinueClicked() {
   await router.push({
-    name: DseStepsEnum.DSE_BESCHLUSSFASSUNG,
+    name: MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
     params: { wahlId: wahlID, wahlbezirkId: wahlbezirkID },
   });
 }
@@ -158,6 +173,11 @@ async function onAktualisierenClicked() {
 }
 
 async function onOpenStimmzettelerfassungClicked(teamID: string) {
-  await reopenStimmzettelerfassung(teamID);
+  try {
+    teamBeingReopened.value = teamID;
+    await reopenStimmzettelerfassung(teamID);
+  } finally {
+    teamBeingReopened.value = null;
+  }
 }
 </script>

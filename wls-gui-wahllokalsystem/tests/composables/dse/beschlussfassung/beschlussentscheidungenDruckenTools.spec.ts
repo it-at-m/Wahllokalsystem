@@ -14,6 +14,7 @@ import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.
 
 const mockDefinitions = vi.hoisted(() => ({
   logError: vi.fn(),
+  getAusdruck: vi.fn(),
   postAusdruck: vi.fn(),
 }));
 
@@ -30,6 +31,7 @@ vi.mock(
   import("@/composables/ergebnismeldung/common/ausdruckService.ts"),
   () => ({
     useAusdruckService: () => ({
+      getAusdruck: mockDefinitions.getAusdruck,
       postAusdruck: mockDefinitions.postAusdruck,
     }),
   })
@@ -63,7 +65,7 @@ describe("beschlussentscheidungenDruckenTools", () => {
 
       await unitUnderTest.sendAusdruckBeschlussentscheidungen(
         MeldungsArtEnum.Schnellmeldung,
-        "<html>ausdruck</html>"
+        '<html lang="en">ausdruck</html>'
       );
 
       expect(mockDefinitions.postAusdruck).toHaveBeenCalledTimes(1);
@@ -71,7 +73,7 @@ describe("beschlussentscheidungenDruckenTools", () => {
         wahlbezirkID,
         wahlID,
         MeldungsArtEnum.Schnellmeldung,
-        "<html>ausdruck</html>"
+        '<html lang="en">ausdruck</html>'
       );
       expect(mockDefinitions.logError).not.toHaveBeenCalled();
     });

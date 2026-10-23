@@ -10,9 +10,11 @@
           :team-id="teamID"
           :stimmzettel-liste="savedStimmzettel"
           :is-stimmzettel-loading="isStimmzettelLoading"
+          :is-wahlvorschlaege-loading="isWahlvorschlaegeLoading"
           :wahlvorschlaege="wahlvorschlaege"
           :has-stimmzettel="hasStimmzettel"
           :save-stimmzettel="saveOrUpdateStimmzettel"
+          :force-refresh-stimmzettel="forceRefreshStimmzettel"
           class="mt-3"
         />
       </v-tabs-window-item>
@@ -50,10 +52,14 @@ const {
   isStimmzettelLoading,
   savedStimmzettel,
   hasStimmzettel,
+  forceRefreshStimmzettel,
   saveOrUpdateStimmzettel,
 } = useStimmzettelState(wahlID, wahlbezirkID, teamID);
 
-const { wahlvorschlaege } = useWahlvorschlaegeState(wahlID, wahlbezirkID);
+const { isWahlvorschlaegeLoading, wahlvorschlaege } = useWahlvorschlaegeState(
+  wahlID,
+  wahlbezirkID
+);
 
 const tab = ref("one");
 </script>

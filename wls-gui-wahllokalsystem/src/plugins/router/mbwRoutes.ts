@@ -70,7 +70,6 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
       requireRoleSchriftfuehrung,
       requiresIsDseAktiv,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
-      isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG),
     ],
   },
   [MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG]: {

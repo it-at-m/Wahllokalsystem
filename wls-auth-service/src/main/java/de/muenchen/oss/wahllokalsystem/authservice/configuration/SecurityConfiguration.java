@@ -14,6 +14,7 @@ import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAK
 import de.muenchen.oss.wahllokalsystem.authservice.security.AuthUtils;
 import de.muenchen.oss.wahllokalsystem.authservice.security.WlsUserTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.filter.UserMdcFilter;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
@@ -49,6 +50,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
@@ -98,7 +100,7 @@ public class SecurityConfiguration {
 
   @Bean
   @Order(2)
-  public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry)
+  public SecurityFilterChain filterChain(HttpSecurity http, UserMdcFilter userMdcFilter)
       throws Exception {
     http.apply(wlsFormLoginConfigurer);
 
@@ -147,6 +149,8 @@ public class SecurityConfiguration {
                             log.info(
                                 "logout successful for {}", AuthUtils.getUsername(authentication))))
         .securityContext(securityContext -> securityContext.requireExplicitSave(false));
+
+    http.addFilterAfter(userMdcFilter, BearerTokenAuthenticationFilter.class);
 
     return http.build();
   }

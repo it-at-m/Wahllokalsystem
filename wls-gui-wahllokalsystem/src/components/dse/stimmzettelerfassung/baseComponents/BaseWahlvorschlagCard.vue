@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-1 d-flex flex-column">
+  <v-card class="d-flex flex-column">
     <v-card-title class="flex-0-0 d-flex flex-column w-100">
       <div>Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}</div>
       <div class="text-subtitle-2">

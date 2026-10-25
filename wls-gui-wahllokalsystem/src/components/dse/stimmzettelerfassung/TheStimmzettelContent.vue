@@ -1,44 +1,19 @@
 <template>
   <div
     class="flex-1-1-0 d-flex flex-column"
-    style="min-width: 0"
+    style="min-width: 0; min-height: 0"
   >
-    <v-slide-group
-      show-arrows
-      center-active
-      :model-value="activeWahlvorschlagId"
-      class="flex-1-1-0"
-    >
-      <template #prev="{ prev }">
-        <v-icon
-          color="primary"
-          icon="$slideLeft"
-          size="x-large"
-          variant="outlined"
-          @click="prev()"
-        />
-      </template>
-      <template #next="{ next }">
-        <v-icon
-          color="primary"
-          icon="$slideRight"
-          size="x-large"
-          variant="outlined"
-          @click="next()"
-        />
-      </template>
-      <v-slide-group-item
+    <div class="wahlvorschlaege-container flex-1-1-0 ga-2">
+      <base-wahlvorschlag-card
         v-for="wv in renderedWahlvorschlaege"
         :key="wv.wahlvorschlagID"
-        :value="wv.wahlvorschlagID"
-      >
-        <base-wahlvorschlag-card
-          :wahlvorschlag="wv"
-          :active-kandidat="activeKandidat"
-          style="min-width: 0"
-        />
-      </v-slide-group-item>
-    </v-slide-group>
+        :id="`wahlvorschlag-${wv.wahlvorschlagID}`"
+        :wahlvorschlag="wv"
+        :active-kandidat="activeKandidat"
+        class="wahlvorschlag-item h-100"
+        style="min-width: 0; min-height: 0"
+      />
+    </div>
     <div
       v-if="isPreloadingWahlvorschlaege"
       class="px-4 pb-4"
@@ -59,7 +34,14 @@
 import type { DseKandidat } from "@/types/dse/stimmzettelerfassung/DseKandidat.ts";
 import type { DseWahlvorschlag } from "@/types/dse/stimmzettelerfassung/DseWahlvorschlag.ts";
 
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 
 import BaseWahlvorschlagCard from "./baseComponents/BaseWahlvorschlagCard.vue";
 
@@ -87,6 +69,12 @@ let preloadTimeoutId: number | undefined;
 
 onMounted(() => scheduleNextWahlvorschlag());
 
+watch(
+  [() => props.activeWahlvorschlagId, renderedWahlvorschlaegeCount],
+  () => scrollToActiveWahlvorschlag(),
+  { immediate: true }
+);
+
 onBeforeUnmount(() => {
   if (idleCallbackId !== undefined) {
     window.cancelIdleCallback(idleCallbackId);
@@ -112,7 +100,45 @@ async function scheduleNextWahlvorschlag() {
 
 async function preloadNextWahlvorschlag() {
   renderedWahlvorschlaegeCount.value += 1;
+  const startedAt = performance.now();
   await nextTick();
+  console.debug(
+    `nextTicket ${renderedWahlvorschlaegeCount.value}: ${performance.now() - startedAt} ms`
+  );
   scheduleNextWahlvorschlag();
 }
+
+async function scrollToActiveWahlvorschlag() {
+  if (!props.activeWahlvorschlagId) {
+    return;
+  }
+
+  const el = document.getElementById(
+    `wahlvorschlag-${props.activeWahlvorschlagId}`
+  );
+  if (!el) {
+    return;
+  }
+
+  await nextTick();
+  el.scrollIntoView({
+    behavior: "smooth",
+    block: "nearest",
+    inline: "nearest",
+  });
+}
 </script>
+
+<style scoped>
+.wahlvorschlaege-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+}
+
+.wahlvorschlag-item {
+  flex: 0 0 auto;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+</style>

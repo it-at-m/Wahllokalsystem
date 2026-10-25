@@ -100,11 +100,7 @@ async function scheduleNextWahlvorschlag() {
 
 async function preloadNextWahlvorschlag() {
   renderedWahlvorschlaegeCount.value += 1;
-  const startedAt = performance.now();
   await nextTick();
-  console.debug(
-    `nextTicket ${renderedWahlvorschlaegeCount.value}: ${performance.now() - startedAt} ms`
-  );
   scheduleNextWahlvorschlag();
 }
 

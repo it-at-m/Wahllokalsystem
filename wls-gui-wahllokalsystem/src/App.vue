@@ -52,6 +52,7 @@ import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import {useChatbotTools} from "@/composables/chatbot/chatbotTools.ts";
 
 const { awaitServiceWorkerActive } = useServiceWorkerUtils();
 const { syncPin } = useServiceWorkerPinSyncer();
@@ -65,6 +66,7 @@ const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions } = useWahlenStore();
 const { isOfflineCacheReady } = storeToRefs(useOnlineOfflineStore());
 const { isTodayOrFuture } = useDateTimeUtils();
+const { injectChatWidget } = useChatbotTools();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
@@ -101,6 +103,8 @@ onMounted(async () => {
     await useKopfdatenStore().initKopfdaten();
     await initStimmzettelerfassungTeamStatus();
     await initTasks();
+
+    injectChatWidget();
 
     showTestdruckDialog.value = true;
     useLogoutOnInactivity();

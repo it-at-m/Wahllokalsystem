@@ -2,17 +2,29 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Infomanagement Service",
-    "contact": { "name": "Your Name", "email": "Your E-Mail-Address" },
-    "version": "0.6.0"
+    "contact": {
+      "name": "Your Name",
+      "email": "Your E-Mail-Address"
+    },
+    "version": "0.7.0-SNAPSHOT"
   },
   "servers": [
-    { "url": "http://localhost:8080", "description": "Generated server url" }
+    {
+      "url": "http://localhost:8201",
+      "description": "Generated server url"
+    }
   ],
-  "security": [{ "bearerAuth": [] }],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "paths": {
     "/businessActions/konfigurierterWahltag": {
       "get": {
-        "tags": ["konfigurierter-wahltag-controller"],
+        "tags": [
+          "konfigurierter-wahltag-controller"
+        ],
         "description": "Sucht den Konfigurierten Wahltag.",
         "operationId": "getKonfigurierterWahltag",
         "responses": {
@@ -40,23 +52,31 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           },
-          "404": { "description": "Ressource nicht gefunden" },
+          "404": {
+            "description": "Ressource nicht gefunden"
+          },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           }
         }
       },
       "post": {
-        "tags": ["konfigurierter-wahltag-controller"],
+        "tags": [
+          "konfigurierter-wahltag-controller"
+        ],
         "description": "Speichert den Konfigurierten Wahltag.",
         "operationId": "setKonfigurierterWahltag",
         "requestBody": {
@@ -77,16 +97,22 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           },
-          "404": { "description": "Ressource nicht gefunden" },
+          "404": {
+            "description": "Ressource nicht gefunden"
+          },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           }
@@ -95,7 +121,9 @@
     },
     "/businessActions/konfiguration/{key}": {
       "get": {
-        "tags": ["konfiguration-controller"],
+        "tags": [
+          "konfiguration-controller"
+        ],
         "description": "Gibt die Konfiguration { key } zurück.",
         "operationId": "getKonfiguration",
         "parameters": [
@@ -111,6 +139,7 @@
                 "ABSCHLUSSTEXT",
                 "WAHLLOKALFINDER_URL",
                 "WAEHLERVERZEICHNIS_URL",
+                "CHATBOT_URL",
                 "FRUEHESTE_LOGIN_UHRZEIT",
                 "SPAETESTE_LOGIN_UHRZEIT",
                 "FRUEHESTE_EROEFFNUNGSZEIT_UW",
@@ -135,7 +164,9 @@
             "description": "Konfiguration erfolgreich zurückgegeben.",
             "content": {
               "*/*": {
-                "schema": { "$ref": "#/components/schemas/KonfigurationDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/KonfigurationDTO"
+                }
               }
             }
           },
@@ -143,7 +174,9 @@
             "description": "Keine Konfiguration vorhanden.",
             "content": {
               "*/*": {
-                "schema": { "$ref": "#/components/schemas/KonfigurationDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/KonfigurationDTO"
+                }
               }
             }
           },
@@ -151,23 +184,31 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           },
-          "404": { "description": "Ressource nicht gefunden" },
+          "404": {
+            "description": "Ressource nicht gefunden"
+          },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           }
         }
       },
       "post": {
-        "tags": ["konfiguration-controller"],
+        "tags": [
+          "konfiguration-controller"
+        ],
         "description": "Speichert die Konfiguration { key }.",
         "operationId": "postKonfiguration",
         "parameters": [
@@ -183,6 +224,7 @@
                 "ABSCHLUSSTEXT",
                 "WAHLLOKALFINDER_URL",
                 "WAEHLERVERZEICHNIS_URL",
+                "CHATBOT_URL",
                 "FRUEHESTE_LOGIN_UHRZEIT",
                 "SPAETESTE_LOGIN_UHRZEIT",
                 "FRUEHESTE_EROEFFNUNGSZEIT_UW",
@@ -205,27 +247,37 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/KonfigurationSetDTO" }
+              "schema": {
+                "$ref": "#/components/schemas/KonfigurationSetDTO"
+              }
             }
           },
           "required": true
         },
         "responses": {
-          "200": { "description": "Konfiguration erfolgreich gespeichert." },
+          "200": {
+            "description": "Konfiguration erfolgreich gespeichert."
+          },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           },
-          "404": { "description": "Ressource nicht gefunden" },
+          "404": {
+            "description": "Ressource nicht gefunden"
+          },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           }
@@ -234,7 +286,9 @@
     },
     "/businessActions/loginCheck/{wahltagID}": {
       "get": {
-        "tags": ["konfigurierter-wahltag-controller"],
+        "tags": [
+          "konfigurierter-wahltag-controller"
+        ],
         "description": "Überprüft ob ein Wahltag { wahltagID } aktiv ist.",
         "operationId": "isWahltagActive",
         "parameters": [
@@ -242,32 +296,52 @@
             "name": "wahltagID",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Erfolgreiche Rückmeldung ob Wahltag aktiv ist .",
-            "content": { "*/*": { "schema": { "type": "boolean" } } }
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           },
           "204": {
             "description": "Wahltag konnte nicht gefunden werden.",
-            "content": { "*/*": { "schema": { "type": "boolean" } } }
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           },
           "400": {
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           },
-          "404": { "description": "Ressource nicht gefunden" },
+          "404": {
+            "description": "Ressource nicht gefunden"
+          },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           }
@@ -276,7 +350,9 @@
     },
     "/businessActions/konfigurierteWahltage": {
       "get": {
-        "tags": ["konfigurierter-wahltag-controller"],
+        "tags": [
+          "konfigurierter-wahltag-controller"
+        ],
         "description": "Sucht alle Konfigurierten Wahltage.",
         "operationId": "getKonfigurierteWahltage",
         "responses": {
@@ -310,16 +386,22 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           },
-          "404": { "description": "Ressource nicht gefunden" },
+          "404": {
+            "description": "Ressource nicht gefunden"
+          },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           }
@@ -328,7 +410,9 @@
     },
     "/businessActions/konfiguration": {
       "get": {
-        "tags": ["konfiguration-controller"],
+        "tags": [
+          "konfiguration-controller"
+        ],
         "description": "Gibt alle Konfigurationen zurück.",
         "operationId": "getKonfigurations",
         "responses": {
@@ -338,7 +422,9 @@
               "*/*": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/KonfigurationDTO" }
+                  "items": {
+                    "$ref": "#/components/schemas/KonfigurationDTO"
+                  }
                 }
               }
             }
@@ -349,7 +435,9 @@
               "*/*": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/KonfigurationDTO" }
+                  "items": {
+                    "$ref": "#/components/schemas/KonfigurationDTO"
+                  }
                 }
               }
             }
@@ -358,16 +446,22 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           },
-          "404": { "description": "Ressource nicht gefunden" },
+          "404": {
+            "description": "Ressource nicht gefunden"
+          },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           }
@@ -376,7 +470,9 @@
     },
     "/businessActions/konfigurationUnauthorized/{key}": {
       "get": {
-        "tags": ["konfiguration-controller"],
+        "tags": [
+          "konfiguration-controller"
+        ],
         "description": "Gibt eine Konfiguration anhand der Loginzeit { key } zurück.",
         "operationId": "getKonfigurationUnauthorized",
         "parameters": [
@@ -392,6 +488,7 @@
                 "ABSCHLUSSTEXT",
                 "WAHLLOKALFINDER_URL",
                 "WAEHLERVERZEICHNIS_URL",
+                "CHATBOT_URL",
                 "FRUEHESTE_LOGIN_UHRZEIT",
                 "SPAETESTE_LOGIN_UHRZEIT",
                 "FRUEHESTE_EROEFFNUNGSZEIT_UW",
@@ -416,7 +513,9 @@
             "description": "Keine Konfiguration für den { key } vorhanden.",
             "content": {
               "*/*": {
-                "schema": { "$ref": "#/components/schemas/KonfigurationDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/KonfigurationDTO"
+                }
               }
             }
           },
@@ -424,16 +523,22 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           },
-          "404": { "description": "Ressource nicht gefunden" },
+          "404": {
+            "description": "Ressource nicht gefunden"
+          },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           }
@@ -442,7 +547,9 @@
     },
     "/businessActions/kennbuchstaben": {
       "get": {
-        "tags": ["konfiguration-controller"],
+        "tags": [
+          "konfiguration-controller"
+        ],
         "description": "Gibt die Objekt mit einer Liste aller Kennbuchstaben zurück.",
         "operationId": "getKennbuchstabenListen",
         "responses": {
@@ -460,16 +567,22 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           },
-          "404": { "description": "Ressource nicht gefunden" },
+          "404": {
+            "description": "Ressource nicht gefunden"
+          },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           }
@@ -478,7 +591,9 @@
     },
     "/businessActions/konfigurierterWahltag/{wahltagID}": {
       "delete": {
-        "tags": ["konfigurierter-wahltag-controller"],
+        "tags": [
+          "konfigurierter-wahltag-controller"
+        ],
         "description": "Löscht den Konfigurierten Wahltag anhand der { wahltagID }.",
         "operationId": "deleteKonfigurierterWahltag",
         "parameters": [
@@ -486,7 +601,9 @@
             "name": "wahltagID",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -497,16 +614,22 @@
             "description": "Validierung des Requestbody fehlgeschlagen",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           },
-          "404": { "description": "Ressource nicht gefunden" },
+          "404": {
+            "description": "Ressource nicht gefunden"
+          },
           "500": {
             "description": "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/WlsExceptionDTO" }
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
               }
             }
           }
@@ -519,17 +642,43 @@
       "KonfigurierterWahltagDTO": {
         "type": "object",
         "properties": {
-          "wahltag": { "type": "string", "format": "date" },
-          "wahltagID": { "type": "string", "maxLength": 255, "minLength": 0 },
-          "wahltagStatus": { "type": "string", "enum": ["AKTIV", "INAKTIV"] },
-          "nummer": { "type": "string", "maxLength": 255, "minLength": 0 }
+          "wahltag": {
+            "type": "string",
+            "format": "date"
+          },
+          "wahltagID": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 0
+          },
+          "wahltagStatus": {
+            "type": "string",
+            "enum": [
+              "AKTIV",
+              "INAKTIV"
+            ]
+          },
+          "nummer": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 0
+          }
         },
-        "required": ["nummer", "wahltag", "wahltagID", "wahltagStatus"]
+        "required": [
+          "nummer",
+          "wahltag",
+          "wahltagID",
+          "wahltagStatus"
+        ]
       },
       "KonfigurationSetDTO": {
         "type": "object",
         "properties": {
-          "wert": { "type": "string", "maxLength": 1024, "minLength": 0 },
+          "wert": {
+            "type": "string",
+            "maxLength": 1024,
+            "minLength": 0
+          },
           "beschreibung": {
             "type": "string",
             "maxLength": 1024,
@@ -545,8 +694,16 @@
       "KonfigurationDTO": {
         "type": "object",
         "properties": {
-          "schluessel": { "type": "string", "maxLength": 255, "minLength": 0 },
-          "wert": { "type": "string", "maxLength": 1024, "minLength": 0 },
+          "schluessel": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 0
+          },
+          "wert": {
+            "type": "string",
+            "maxLength": 1024,
+            "minLength": 0
+          },
           "beschreibung": {
             "type": "string",
             "maxLength": 1024,
@@ -558,12 +715,19 @@
             "minLength": 0
           }
         },
-        "required": ["schluessel"]
+        "required": [
+          "schluessel"
+        ]
       },
       "KennbuchstabenDTO": {
         "type": "object",
         "properties": {
-          "kennbuchstaben": { "type": "array", "items": { "type": "string" } }
+          "kennbuchstaben": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         }
       },
       "KennbuchstabenListeDTO": {
@@ -571,7 +735,9 @@
         "properties": {
           "kennbuchstabenListe": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/KennbuchstabenDTO" }
+            "items": {
+              "$ref": "#/components/schemas/KennbuchstabenDTO"
+            }
           }
         }
       },
@@ -580,18 +746,39 @@
         "properties": {
           "kennbuchstabenListen": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/KennbuchstabenListeDTO" }
+            "items": {
+              "$ref": "#/components/schemas/KennbuchstabenListeDTO"
+            }
           }
         }
       },
       "WlsExceptionDTO": {
         "properties": {
-          "category": { "type": "string", "enum": ["F", "T", "S", "I"] },
-          "code": { "type": "string" },
-          "service": { "type": "string" },
-          "message": { "type": "string" }
+          "category": {
+            "type": "string",
+            "enum": [
+              "F",
+              "T",
+              "S",
+              "I"
+            ]
+          },
+          "code": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
         },
-        "required": ["category", "code", "message", "service"]
+        "required": [
+          "category",
+          "code",
+          "message",
+          "service"
+        ]
       }
     },
     "securitySchemes": {

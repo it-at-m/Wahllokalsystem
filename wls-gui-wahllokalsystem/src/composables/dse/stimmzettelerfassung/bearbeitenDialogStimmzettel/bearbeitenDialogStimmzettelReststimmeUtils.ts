@@ -130,6 +130,13 @@ export function useBearbeitenDialogStimmzettelReststimmeUtils(
     logger.logDebug(
       `placing reststimmen on ${wahlvorschlag.kurzname}, votesLeftToPlace > ${votesLeftToPlace}`
     );
+    const maxNennungByKandidatId = new Map<string, number>();
+    wahlvorschlag.kandidaten.forEach((k) => {
+      const current = maxNennungByKandidatId.get(k.kandidatId) ?? 0;
+      if (k.nennung > current) {
+        maxNennungByKandidatId.set(k.kandidatId, k.nennung);
+      }
+    });
     let restStimmenSpent = 0;
     wahlvorschlag.kandidaten.forEach((kandidat) => {
       //is kandidat allowed to get reststimmen
@@ -138,7 +145,10 @@ export function useBearbeitenDialogStimmzettelReststimmeUtils(
         restStimmenSpent + countVotesGivenAsReststimme <= votesLeftToPlace &&
         votesKandidatenAlreadyGotTool.getOrDefault(kandidat.kandidatId) +
           countVotesGivenAsReststimme <=
-          maxEinzelstimmen
+          Math.min(
+            maxEinzelstimmen,
+            maxNennungByKandidatId.get(kandidat.kandidatId) ?? kandidat.nennung
+          )
       ) {
         kandidat.reststimmen = countVotesGivenAsReststimme;
 

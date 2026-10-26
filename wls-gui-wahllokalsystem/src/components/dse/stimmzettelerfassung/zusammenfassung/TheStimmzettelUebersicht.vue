@@ -3,31 +3,61 @@
     <base-stimmzettel-uebersicht-table
       :team-id="teamId"
       :stimmzettel-liste="stimmzettelListe"
-      :stimmzettel-loading="isStimmzettelLoading"
+      :stimmzettel-loading="isStimmzettelLoading || isWahlvorschlaegeLoading"
       class="mt-3"
       :bearbeitung-disabled="
-        isStatusLoading ||
+        isTeamStatusLoading ||
         isWahlvorschlaegeLoading ||
+        teamStatusBeingWritten !== null ||
         hasTeamFinishedErfassung ||
         isElectionFinished
       "
       @stimmzettel-bearbeiten="onStimmzettelBearbeitenClicked"
+      @stimmzettel-ansehen="onStimmzettelAnsehenClicked"
     />
-    <v-card-actions v-if="!isStatusLoading">
+    <v-card-actions>
       <div
         v-if="!hasTeamFinishedErfassung && !isElectionFinished"
         class="d-flex w-100"
       >
         <base-text-button
           :active="startenBtnActive"
-          :is-disabled="isWahlvorschlaegeLoading"
+          :is-disabled="
+            isWahlvorschlaegeLoading ||
+            isTeamStatusBeingWritten(
+              teamStatusBeingWritten,
+              StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG,
+              false
+            )
+          "
+          :loading="
+            isTeamStatusLoading ||
+            isTeamStatusBeingWritten(
+              teamStatusBeingWritten,
+              StimmzettelerfassungTeamStatusEnum.IN_BEARBEITUNG
+            )
+          "
           class="mr-5"
           @click="onErfassungStartenClicked"
         >
           {{ startNewStimmzettelButtonText }}
         </base-text-button>
         <base-text-button
-          :is-disabled="unterbrechenBtnIsDisabled"
+          :is-disabled="
+            unterbrechenBtnIsDisabled ||
+            isTeamStatusBeingWritten(
+              teamStatusBeingWritten,
+              StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN,
+              false
+            )
+          "
+          :loading="
+            isTeamStatusLoading ||
+            isTeamStatusBeingWritten(
+              teamStatusBeingWritten,
+              StimmzettelerfassungTeamStatusEnum.UNTERBROCHEN
+            )
+          "
           @click="onErfassungUnterbrechenClicked"
         >
           Unterbrechen
@@ -35,6 +65,8 @@
         <base-text-button
           class="ms-auto"
           :active="beendenBtnActive"
+          :is-disabled="teamStatusBeingWritten !== null"
+          :loading="isTeamStatusLoading"
           @click="onErfassungBeendenClicked"
         >
           Beenden
@@ -54,6 +86,7 @@
           <base-button-refresh
             active
             class="ml-5"
+            :loading="isTeamStatusLoading"
             @click="onErfassungAktualisierenClicked"
           />
         </base-feedback-card>
@@ -98,6 +131,7 @@ import TheStimmzettelerfassungBeendenDialog from "@/components/dse/stimmzetteler
 import TheStimmzettelErfassungDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungDialog.vue";
 import TheStimmzettelkennungDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelkennungDialog.vue";
 import { useStimmzettelErfassungViewUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelErfassungViewUtils.ts";
+import { isTeamStatusBeingWritten } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusTools.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
@@ -136,7 +170,8 @@ const {
   teamStatus,
   beendenBtnActive,
   isKennungsDialogVisible,
-  isStatusLoading,
+  isTeamStatusLoading,
+  teamStatusBeingWritten,
   startenBtnActive,
   unterbrechenBtnIsDisabled,
   ensureStatusInBearbeitung,
@@ -217,6 +252,10 @@ async function onStimmzettelBearbeitenClicked(
   await ensureStatusInBearbeitung();
   await enableErfassungsDialog();
   templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettel);
+}
+async function onStimmzettelAnsehenClicked(stimmzettel: PersistedStimmzettel) {
+  await enableErfassungsDialog();
+  templateRefStimmzettelErfassenDialog.value?.showDialog(stimmzettel, true);
 }
 
 async function enableErfassungsDialog() {

@@ -28,7 +28,7 @@ class AuthUtilsTest {
             @Test
             void should_returnUserName_when_jwtAuthenticationTokenIsGiven() {
                 val authentication = new JwtAuthenticationToken(
-                        new Jwt("tokenValue", Instant.now(), Instant.MAX, Map.of("key", "value"), Map.of("user_name", USERNAME)));
+                        new Jwt("tokenValue", Instant.now(), Instant.MAX, Map.of("key", "value"), Map.of("sub", USERNAME)));
 
                 val result = AuthUtils.getUsername(authentication);
                 Assertions.assertThat(result).isEqualTo(USERNAME);

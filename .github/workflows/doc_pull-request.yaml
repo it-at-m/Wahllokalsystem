@@ -15,4 +15,4 @@ jobs:
         working-directory: ./docs
     steps:
       - id: build_docs
-        uses: it-at-m/lhm_actions/action-templates/actions/action-build-docs@c91b86cbed26bc9388abe8d86a4ccdec280cc08e # v1.6.1
+        uses: it-at-m/lhm_actions/action-templates/actions/action-build-docs@808f574bd8867b31524b254679fc34fb1fd78ea2 # v1.6.2

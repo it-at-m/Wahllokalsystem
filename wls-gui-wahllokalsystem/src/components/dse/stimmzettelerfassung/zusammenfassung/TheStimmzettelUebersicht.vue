@@ -210,9 +210,6 @@ watch(
 );
 
 function onErfassungStartenClicked() {
-  if (isTeamStatusReloading.value) {
-    return;
-  }
   isKennungsDialogVisible.value = true;
 }
 

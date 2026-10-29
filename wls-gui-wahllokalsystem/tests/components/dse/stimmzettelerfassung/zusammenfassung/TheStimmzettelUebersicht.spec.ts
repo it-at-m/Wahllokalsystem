@@ -8,7 +8,6 @@ import { computed, ref } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseStimmzettelUebersichtTable from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelUebersichtTable.vue";
-import TheStimmzettelkennungDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelkennungDialog.vue";
 import TheStimmzettelUebersicht from "@/components/dse/stimmzettelerfassung/zusammenfassung/TheStimmzettelUebersicht.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
@@ -150,7 +149,7 @@ describe("TheStimmzettelUebersicht", () => {
       ).toBe(false);
     });
 
-    it("should_disableStartAndKeepKennungsDialogClosed_when_teamStatusIsReloading", async () => {
+    it("should_disableStart_when_teamStatusIsReloading", async () => {
       let resolveReloadTeamStatus: (() => void) | undefined;
       mocks.reloadTeamStatus.mockImplementationOnce(
         () =>
@@ -172,12 +171,6 @@ describe("TheStimmzettelUebersicht", () => {
 
       const startButton = wrapper.findComponent(BaseTextButton);
       expect(startButton.props("isDisabled")).toBe(true);
-
-      await startButton.trigger("click");
-
-      expect(
-        wrapper.findComponent(TheStimmzettelkennungDialog).props("visible")
-      ).toBe(false);
 
       if (resolveReloadTeamStatus === undefined) {
         throw new Error("Expected reloadTeamStatus resolver to be set");

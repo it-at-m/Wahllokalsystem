@@ -27,6 +27,7 @@
     <template #[`item.actions`]="{ item }">
       <v-btn
         v-if="bearbeitungDisabled"
+        :disabled="props.stimmzettelLoading"
         aria-label="Stimmzettel ansehen"
         icon="$view"
         size="small"
@@ -35,6 +36,7 @@
       />
       <v-btn
         v-else
+        :disabled="props.stimmzettelLoading"
         aria-label="Stimmzettel bearbeiten"
         icon="$edit"
         size="small"

@@ -34,7 +34,7 @@ class AuthUtilsTest {
                     Instant.now(),
                     Instant.MAX,
                     Map.of("key", "value"),
-                    Map.of("user_name", USERNAME)));
+                    Map.of("sub", USERNAME)));
 
         val result = AuthUtils.getUsername(authentication);
         Assertions.assertThat(result).isEqualTo(USERNAME);

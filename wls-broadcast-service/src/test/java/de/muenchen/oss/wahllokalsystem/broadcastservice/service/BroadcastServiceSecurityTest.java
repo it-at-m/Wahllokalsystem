@@ -197,7 +197,7 @@ public class BroadcastServiceSecurityTest {
                   Instant.now(),
                   Instant.MAX,
                   Map.of("key", "value"),
-                  Map.of("user_name", "USERNAME", "wahlbezirkID", wahlbezirkID)),
+                  Map.of("sub", "USERNAME", "wahlbezirkID", wahlbezirkID)),
               userAuthorities);
 
       SecurityContextHolder.getContext().setAuthentication(userJwtAuthenticationToken);
@@ -230,7 +230,7 @@ public class BroadcastServiceSecurityTest {
                   Instant.now(),
                   Instant.MAX,
                   Map.of("key", "value"),
-                  Map.of("user_name", "USERNAME", "wahlbezirkID", wahlbezirkID)),
+                  Map.of("sub", "USERNAME", "wahlbezirkID", wahlbezirkID)),
               userAuthorities);
 
       SecurityContextHolder.getContext().setAuthentication(userJwtAuthenticationToken);

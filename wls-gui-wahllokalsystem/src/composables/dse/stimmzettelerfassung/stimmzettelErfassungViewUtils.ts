@@ -15,7 +15,10 @@ export function useStimmzettelErfassungViewUtils(
   forceRefreshStimmzettel: () => Promise<void>
 ) {
   const teamStatus = ref<StimmzettelerfassungTeamStatus | null>(null);
-  const isStatusLoading = ref(false);
+  const isTeamStatusLoading = ref(false);
+  const teamStatusBeingWritten = ref<StimmzettelerfassungTeamStatusEnum | null>(
+    null
+  );
 
   //DialogVisibilityState
   const isKennungsDialogVisible = ref(false);
@@ -77,7 +80,7 @@ export function useStimmzettelErfassungViewUtils(
   }
 
   async function _loadTeamStatus(forceRefresh: boolean) {
-    isStatusLoading.value = true;
+    isTeamStatusLoading.value = true;
     try {
       const loaded = await erfassungTeamStatusService.loadErfassungTeamStatus(
         wahlID,
@@ -90,7 +93,7 @@ export function useStimmzettelErfassungViewUtils(
         teamStatus.value = loaded;
       }
     } finally {
-      isStatusLoading.value = false;
+      isTeamStatusLoading.value = false;
     }
   }
 
@@ -101,21 +104,27 @@ export function useStimmzettelErfassungViewUtils(
     const newStatus: StimmzettelerfassungTeamStatus = {
       status: statusToChange,
     };
-    await erfassungTeamStatusService.postErfassungTeamStatus(
-      wahlID,
-      wahlbezirkID,
-      teamID,
-      newStatus,
-      sendNotification
-    );
-    teamStatus.value = newStatus;
+    teamStatusBeingWritten.value = statusToChange;
+    try {
+      await erfassungTeamStatusService.postErfassungTeamStatus(
+        wahlID,
+        wahlbezirkID,
+        teamID,
+        newStatus,
+        sendNotification
+      );
+      teamStatus.value = newStatus;
+    } finally {
+      teamStatusBeingWritten.value = null;
+    }
   }
 
   return {
     //Props
     teamStatus: readonly(teamStatus),
     isKennungsDialogVisible,
-    isStatusLoading: readonly(isStatusLoading),
+    isTeamStatusLoading: readonly(isTeamStatusLoading),
+    teamStatusBeingWritten: readonly(teamStatusBeingWritten),
 
     //actions
     ensureStatusInBearbeitung,

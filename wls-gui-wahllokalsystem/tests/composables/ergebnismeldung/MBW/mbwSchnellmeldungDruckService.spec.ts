@@ -58,6 +58,7 @@ const mockedStimmzettelOfWahlbezirk = ref<PersistedStimmzettel[]>([]);
 vi.mock(import("@/composables/dse/allStimmzettelOfWahlbezirkState.ts"), () => ({
   useAllStimmzettelOfWahlbezirkState: () => ({
     isLoading: ref(false),
+    isTeamStatusListLoading: ref(false),
     stimmzettelOfWahlbezirk: mockedStimmzettelOfWahlbezirk,
     loadStimmzettelOfWahlbezirk: mockDefinitions.loadStimmzettelOfWahlbezirk,
   }),

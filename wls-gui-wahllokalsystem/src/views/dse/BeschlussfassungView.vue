@@ -12,8 +12,12 @@
           color="success" />
         <base-beschlussfassung-uebersicht-table
           :stimmzettel-liste="stimmzettelForBeschlussfassung"
-          :stimmzettel-loading="isStimmzettelForBeschlussLoading"
-          :is-beschluss-bearbeiten-disabled="isBeschlussBearbeitenDisabled"
+          :stimmzettel-loading="
+            isStimmzettelForBeschlussLoading || isWahlvorschlaegeLoading
+          "
+          :is-beschluss-bearbeiten-disabled="
+            isBeschlussBearbeitenDisabled || isBeschlussfassungBeendenLoading
+          "
           @edit-beschluss-stimmzettel="onBeschlussBearbeitenClicked($event)"
       /></v-card-text>
       <v-card-actions>
@@ -21,12 +25,21 @@
         <base-wls-button-save
           save-text="Beschlussentscheidungen drucken"
           prepend-icon="$printer"
-          :loading="isBeschlussentscheidungenDruckenLoading"
+          :loading="
+            isStimmzettelForBeschlussLoading ||
+            isBeschlussentscheidungenDruckenLoading
+          "
+          :disabled="isBeschlussfassungBeendenLoading"
           @click="onBeschlussentscheidungenDruckenClicked"
         />
         <base-text-button
           active
           :disabled="isBeschlussfassungBeendenButtonDisabled"
+          :loading="
+            isStimmzettelForBeschlussLoading ||
+            isTeamStatusListLoading ||
+            isBeschlussfassungBeendenLoading
+          "
           @click="onBeschlussfassungBeendenClicked"
         >
           Beschlussfassung Beenden
@@ -34,7 +47,7 @@
       </v-card-actions>
     </v-card>
     <the-beschlussfassung-bearbeiten-dialog
-      v-if="activeStimmzettelForBeschluss"
+      v-if="isBeschlussfassungDialogPreloaded"
       v-model="isBearbeitenDialogVisible"
       v-model:stimmzettel="activeStimmzettelForBeschluss"
       :wahlvorschlaege="wahlvorschlaege"
@@ -50,7 +63,7 @@
 <script setup lang="ts">
 import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 
-import { ref } from "vue";
+import { nextTick, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -88,9 +101,12 @@ const isBearbeitenDialogVisible = ref(false);
 const isBeschlussentscheidungenDruckenDialogVisble = ref(false);
 const activeStimmzettelForBeschluss = ref<PersistedStimmzettel>();
 const isBeschlussentscheidungenDruckenLoading = ref<boolean>(false);
+const isBeschlussfassungDialogPreloaded = ref(false);
+const isBeschlussfassungBeendenLoading = ref<boolean>(false);
 
 const {
   isStimmzettelForBeschlussLoading,
+  isTeamStatusListLoading,
   stimmzettelForBeschlussfassung,
   isBeschlussfassungBeendenButtonDisabled,
   isBeschlussBearbeitenDisabled,
@@ -101,21 +117,30 @@ const {
   sendAusdruckBeschlussentscheidungen,
   prepareDataForBeschlussentscheidungenDruck,
 } = useBeschlussentscheidungenDruckenTools(wahlID, wahlbezirkID);
-const { wahlvorschlaege } = useWahlvorschlaegeState(wahlID, wahlbezirkID);
+const { wahlvorschlaege, isWahlvorschlaegeLoading } = useWahlvorschlaegeState(
+  wahlID,
+  wahlbezirkID
+);
 const { buildTemplate } = useBeschlussentscheidungenDruckTemplateTools();
 
 async function onBeschlussfassungBeendenClicked() {
-  await saveDseWorkflowStatus(wahlID, wahlbezirkID, {
-    status: StimmzettelerfassungStatusEnum.BeAbgeschlossen,
-  });
-
-  setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG);
-
-  await router.push(getNextRoute());
+  isBeschlussfassungBeendenLoading.value = true;
+  try {
+    await saveDseWorkflowStatus(wahlID, wahlbezirkID, {
+      status: StimmzettelerfassungStatusEnum.BeAbgeschlossen,
+    });
+    setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG);
+    await router.push(getNextRoute());
+  } finally {
+    isBeschlussfassungBeendenLoading.value = false;
+  }
 }
 
-function onBeschlussBearbeitenClicked(stimmzettelToEdit: PersistedStimmzettel) {
+async function onBeschlussBearbeitenClicked(
+  stimmzettelToEdit: PersistedStimmzettel
+) {
   activeStimmzettelForBeschluss.value = stimmzettelToEdit;
+  await enableBeschlussfassungDialog();
   isBearbeitenDialogVisible.value = true;
 }
 
@@ -167,5 +192,23 @@ async function onBeschlussentscheidungenDruckenClicked() {
   } finally {
     isBeschlussentscheidungenDruckenLoading.value = false;
   }
+}
+
+watch(
+  () => [isWahlvorschlaegeLoading.value, wahlvorschlaege.value.length] as const,
+  async ([isLoading, numberOfWahlvorschlaege]) => {
+    if (!isLoading && numberOfWahlvorschlaege > 0) {
+      await enableBeschlussfassungDialog();
+    }
+  },
+  { immediate: true }
+);
+
+async function enableBeschlussfassungDialog() {
+  if (!isBeschlussfassungDialogPreloaded.value) {
+    isBeschlussfassungDialogPreloaded.value = true;
+  }
+  // update dialog DOM
+  await nextTick();
 }
 </script>

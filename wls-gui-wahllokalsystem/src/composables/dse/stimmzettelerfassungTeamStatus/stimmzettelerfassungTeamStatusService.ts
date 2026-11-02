@@ -93,17 +93,11 @@ export function useStimmzettelerfassungTeamStatusService() {
           );
       const responseData = getNullOn204OrElseResponseData(response);
 
-      const result =
+      return (
         responseData?.map((teamStatusDTO) =>
           dtoEntryToModelEntry(teamStatusDTO)
-        ) ?? [];
-      if (sendNotification) {
-        addNotification(
-          `Status der Teams wurden aktualisiert`,
-          UserNotificationCategoryEnum.SUCCESS
-        );
-      }
-      return result;
+        ) ?? []
+      );
     } catch {
       const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
       if (sendNotification) {
@@ -142,7 +136,6 @@ export function useStimmzettelerfassungTeamStatusService() {
             teamID,
             dto
           );
-
       if (sendNotification) {
         addNotification(
           `Team-Status für ${wahlname} erfolgreich gespeichert.`,

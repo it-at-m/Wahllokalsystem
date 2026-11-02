@@ -46,11 +46,32 @@
           @click="onCancelClicked"
           >Abbrechen</base-text-button
         >
-        <base-save-button-with-action-menu
-          :disabled="isSaveDisabled"
-          :model-value="currentAction"
-          :actions="actions"
-        />
+        <v-tooltip
+          :disabled="
+            stimmzettelGueltigkeit !==
+            StimmzettelGueltigkeitEnum.BeschlussAusstehend
+          "
+          location="top"
+          content-class="noPadding"
+        >
+          <template #default>
+            <base-feedback-card
+              title="Beschluss notwendig"
+              :type="InputFeedbackTypeEnum.information"
+            >
+              Bitte legen Sie den Stimmzettel für die Beschlussfassung separat
+              ab.
+            </base-feedback-card>
+          </template>
+          <template #activator="{ props }">
+            <base-save-button-with-action-menu
+              :tooltip-activator-props="props"
+              :disabled="isSaveDisabled"
+              :model-value="currentAction"
+              :actions="actions"
+            />
+          </template>
+        </v-tooltip>
       </v-card-actions>
       <the-stimmzettel-erfassung-cancel-confirmation-dialog
         :visible="isCancelConfirmationDialogVisible"
@@ -74,11 +95,13 @@ import { useRoute } from "vue-router";
 
 import BaseSaveButtonWithActionMenu from "@/components/common/buttons/BaseSaveButtonWithActionMenu.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseStimmzettelErfassungCardContent from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelErfassungCardContent.vue";
 import TheStimmzettelErfassungCancelConfirmationDialog from "@/components/dse/stimmzettelerfassung/dialogs/TheStimmzettelErfassungCancelConfirmationDialog.vue";
 import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
 const isDialogVisible = ref(false);

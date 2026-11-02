@@ -165,6 +165,9 @@ describe("dataSyncer.ts", () => {
           "https://example.test/cache/businessActions/Ereignisse/identifier"
         ),
         createTask(
+          "https://example.test/cache/businessActions/Ereignisse/another-identifier"
+        ),
+        createTask(
           "https://example.test/cache/stimmzettelerfassung/election/identifier/team/identifier/stimmzettel/2"
         ),
         createTask(
@@ -182,9 +185,10 @@ describe("dataSyncer.ts", () => {
       ]);
     });
 
-    it("should_returnAdministration_when_noHandlerCanHandleUrl", () => {
+    it("should_returnAdministrationOnce_when_noHandlerCanHandleDeviatingUrls", () => {
       unitUnderTest.dirtyTasksAfterSync.value = [
         createTask("https://example.test/cache/unknown-resource"),
+        createTask("https://example.test/cache/another-unknown-resource"),
       ];
 
       expect(unitUnderTest.dirtyIDBTaskLabels.value).toStrictEqual([

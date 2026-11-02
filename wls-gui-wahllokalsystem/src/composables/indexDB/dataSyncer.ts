@@ -40,7 +40,7 @@ export function useDataSyncer() {
     }
 
     const stimmzettelKennungen = [];
-    const taskLabels = [];
+    const taskLabels = new Set<string>();
 
     for (const task of tasks) {
       const label = _mapIndexedDBUrlToLabel(task.name);
@@ -49,18 +49,18 @@ export function useDataSyncer() {
       if (stimmzettelLabelMatch) {
         stimmzettelKennungen.push(Number(stimmzettelLabelMatch[1]));
       } else {
-        taskLabels.push(label);
+        taskLabels.add(label);
       }
     }
     stimmzettelKennungen.sort((a, b) => a - b);
 
     if (stimmzettelKennungen.length > 0) {
-      taskLabels.push(
+      taskLabels.add(
         `Stimmzettel ${groupConsecutiveNumbers(stimmzettelKennungen)}`
       );
     }
 
-    return taskLabels;
+    return [...taskLabels];
   });
 
   async function getSyncTasks() {

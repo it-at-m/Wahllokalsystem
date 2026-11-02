@@ -7,14 +7,17 @@ import { computed, ref } from "vue";
 
 import { basicPostConfig } from "@/api/axios-utils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
+import { useNumberTools } from "@/composables/common/numberTools.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useIndexDBUtils } from "@/composables/indexDB/indexDBUtils.ts";
+import { INDEXED_DB_URL_HANDLERS } from "@/composables/indexDB/indexedDBUrlHandlers.ts";
 import { useTaskManager } from "@/composables/tasks/taskManager.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 
 const indexDBSingleton = useIndexDB();
 const { compareByTimestamp } = useIndexDBUtils();
 const { logDebug } = useLogging("dataSyncer");
+const { groupConsecutiveNumbers } = useNumberTools();
 
 export function useDataSyncer() {
   const taskManager = useTaskManager();
@@ -25,6 +28,40 @@ export function useDataSyncer() {
   const numberOfDirtyTasksAfterSync = computed(
     (): number | undefined => dirtyTasksAfterSync.value?.length
   );
+
+  const dirtyIDBTaskLabels = computed(() => {
+    const tasks = dirtyTasksAfterSync.value ?? [];
+
+    if (tasks.length > 0) {
+      logDebug(
+        "Dirty Tasks nach Sync:",
+        tasks.map((task) => task.name)
+      );
+    }
+
+    const stimmzettelKennungen = [];
+    const taskLabels = [];
+
+    for (const task of tasks) {
+      const label = _mapIndexedDBUrlToLabel(task.name);
+
+      const stimmzettelLabelMatch = /^Stimmzettel (\d+)$/.exec(label);
+      if (stimmzettelLabelMatch) {
+        stimmzettelKennungen.push(Number(stimmzettelLabelMatch[1]));
+      } else {
+        taskLabels.push(label);
+      }
+    }
+    stimmzettelKennungen.sort((a, b) => a - b);
+
+    if (stimmzettelKennungen.length > 0) {
+      taskLabels.push(
+        `Stimmzettel ${groupConsecutiveNumbers(stimmzettelKennungen)}`
+      );
+    }
+
+    return taskLabels;
+  });
 
   async function getSyncTasks() {
     const itemsToSync = await indexDBSingleton.getDirtyItems();
@@ -84,6 +121,28 @@ export function useDataSyncer() {
     }
   }
 
+  function _mapIndexedDBUrlToLabel(url: string): string {
+    const indexedDBUrl = new URL(url);
+    const handler = INDEXED_DB_URL_HANDLERS.find((candidate) =>
+      candidate.canHandle(indexedDBUrl)
+    );
+
+    /** fallback to "Administration" for these endpoints:
+     * /authserver/logouturl
+     * /deleteWahllokalbenutzer/{wahltagID}
+     * /demo
+     * /exportWahllokalbenutzer/{wahltagID}
+     * /generateAndExportWahllokalbenutzer/{wahltagID}
+     * /mbw/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/bedenklicheStimmzettel
+     * /oauthsessions/
+     * /oauthsessions/{sessionID}/invalidate
+     * /roles/mappings
+     * /user
+     * /user/{username}/unlock
+     */
+    return handler?.getLabel(indexedDBUrl) ?? "Administration";
+  }
+
   return {
     ...taskManager,
     getSyncTasks,
@@ -92,5 +151,6 @@ export function useDataSyncer() {
     lastSyncUpdateTime,
     isOfflineDataSyncing,
     dirtyTasksAfterSync,
+    dirtyIDBTaskLabels,
   };
 }

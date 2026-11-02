@@ -51,7 +51,10 @@
         />
         Fehlgeschlagene Datensätze: {{ numberOfDirtyTasksAfterSync }}
       </v-row>
-      <ul class="ml-10">
+      <ul
+        v-if="!isOfflineDataSyncing"
+        class="ml-10"
+      >
         <li
           v-for="taskName in dirtyIDBTaskLabels"
           :key="taskName"

@@ -8,6 +8,8 @@ import vuetify from "./plugins/vuetify";
 import "./custom.css";
 import "vuetify/styles";
 
+import { createMermaidRenderer } from "vitepress-mermaid-renderer";
+
 import status from "../components/adr/status.vue";
 import statusOverview from "../components/adr/status/overview.vue";
 import architectureTheServiceRelationVisualizerDiv from "../components/architecture/TheServiceRelationVisualizerDiv.vue";
@@ -26,5 +28,7 @@ export default {
       architectureTheServiceRelationVisualizerDiv
     );
     app.component("mermaidDiagram", MermaidDiagram);
+
+    createMermaidRenderer();
   },
 } satisfies Theme;

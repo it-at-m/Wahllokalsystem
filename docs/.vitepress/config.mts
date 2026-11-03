@@ -1,4 +1,4 @@
-import { withMermaid } from "vitepress-plugin-mermaid";
+import { defineConfig } from "vitepress";
 
 const PATH_SERVICES = "/services/";
 const PATH_SERVICES_BACKEND = PATH_SERVICES + "backend-services/";
@@ -20,7 +20,7 @@ const PATH_DSE_PROZESS = PATH_DSE + "prozess/";
 const PATH_DSE_ERFASSUNG = PATH_DSE + "stimmzettelerfassung/";
 
 // https://vitepress.dev/reference/site-config
-export default withMermaid({
+const vitepressConfig = defineConfig({
   title: "Wahllokalsystem",
   description: "Datenerfassung am Wahltag",
   lang: "de-DE",
@@ -444,12 +444,14 @@ export default withMermaid({
       },
     },
   },
-  mermaidPlugin: {
+  /*mermaidPlugin: {
     class: "mermaid my-class", // set additional css classes for parent container
-  },
-  mermaid: {
+  },*/
+  /*mermaid: {
     flowchart: {
       wrappingWidth: 600,
     },
-  },
+  },*/
 });
+
+export default vitepressConfig;

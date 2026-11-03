@@ -9,7 +9,6 @@
     </parent>
 
     <artifactId>exception</artifactId>
-    <version>1.9.1-SNAPSHOT</version>
     <name>wls-common-exception</name>
     <description>Übergreifende Exception Aspekte</description>
     <url>${wls.github.url}</url>
@@ -18,8 +17,11 @@
         <url>${wls.github.url}</url>
         <connection>${wls.github.scm.connection}</connection>
         <developerConnection>${wls.github.scm.connection}</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
+    <properties>
+        <wls.common.version>1.9.1-SNAPSHOT</wls.common.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -75,7 +77,7 @@
         <dependency>
             <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
             <artifactId>testing</artifactId>
-            <version>1.9.1-SNAPSHOT</version>
+            <version>${wls.common.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

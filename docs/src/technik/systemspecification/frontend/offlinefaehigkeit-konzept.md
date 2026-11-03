@@ -341,9 +341,11 @@ sequenceDiagram
 Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden konnten, bei wiederhergestellter
 Verbindung zu übermitteln, erfolgt eine Synchronisierung:
 
-- beim Wechseln vom `offline` in den `online` Status (die sog. Hintergrund-Synchronisation)
-- beim Senden der Ergebnismeldung (Schnellmeldung oder Niederschrift; die sog. Vordergrund-Synchronisation)
-- beim Ausloggen des Benutzerkontos
+- beim Wechseln vom `offline` in den `online` Status (Hintergrund-Synchronisation)
+- beim Beenden der Stimmzettelerfassung [nur [DSE](../../../dse/index.md)] (Vordergrund-Synchronisation)
+- beim Senden der Ergebnismeldung (Schnellmeldung oder Niederschrift; Vordergrund-Synchronisation)
+- beim Ausloggen des Benutzerkontos (Hintergrund-Synchronisation)
+- jederzeit manuell über das Hilfe-Menü (Vordergrund-Synchronisation)
 
 ![Skizze OfflineSyncer](/offlinesyncer/offlinesyncher.png)
 
@@ -356,12 +358,13 @@ Der `Offline-Syncer` prüft, ob in den lokalen Daten mit `dirty=true` markierte 
 diese anhand der ursprünglichen Speicherungsreihenfolge ([timestamp](#beispieleintrag-in-der-indexeddb)). Dann
 versucht er jeden dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich
 durchgeführten Anfragen wird das `dirty` auf `false` gesetzt. Nicht erfolgreiche Anfragen haben keine Konsequenzen.
-Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzeige unten rechts wieder.
+Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzeige wieder.
 
 #### Vordergrundsynchronisation beim Senden der Ergebnismeldung
 
-Vor dem Senden einer Schnellmeldung oder Niederschrift muss der `Offline-Syncer` erfolgreich durchlaufen. War die
-Synchronisierung nicht erfolgreich kann kein Senden erfolgen.
+In einigen Fällen muss der `Offline-Syncer` verpflichtend erfolgreich durchlaufen. Dazu zählt das Beenden der
+Stimmzettelerfassung in der DSE, sowie das Senden einer Schnellmeldung oder Niederschrift. War die Synchronisierung nicht
+erfolgreich kann kein Senden erfolgen und die weiterarbeit in der Anwendung ist blockiert.
 
 Zur Besseren Nachvollziehbarkeit wird der Synchronisierungsfortschritt den Nutzer\*innen angezeigt.
 

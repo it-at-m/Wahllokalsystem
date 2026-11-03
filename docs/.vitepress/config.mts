@@ -28,7 +28,7 @@ export default withMermaid({
   srcDir: "src", //markdown files are located in that directory
   vite: {
     optimizeDeps: {
-      // defective fastdom export triggered transitively via mermaid: leads to "Uncaught Syntax Error: module doesn't provide default export", if not included here
+      // defective fastdom export triggered transitively since mermaid@11.17.0: leads to "Uncaught Syntax Error: module doesn't provide default export", if not included here
       include: ["fastdom"],
     },
     ssr: {

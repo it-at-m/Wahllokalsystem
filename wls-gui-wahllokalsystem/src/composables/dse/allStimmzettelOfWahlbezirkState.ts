@@ -9,7 +9,7 @@ export function useAllStimmzettelOfWahlbezirkState(
   wahlID: string,
   wahlbezirkID: string
 ) {
-  const { teamstatusList, loadTeamStatusListe } =
+  const { teamstatusList, isTeamStatusListLoading, loadTeamStatusListe } =
     useStimmzettelerfassungTeamStatusListState(wahlID, wahlbezirkID);
   const { getStimmzettel } = useStimmzettelService();
 
@@ -41,6 +41,7 @@ export function useAllStimmzettelOfWahlbezirkState(
 
   return {
     isLoading,
+    isTeamStatusListLoading,
     stimmzettelOfWahlbezirk,
 
     loadStimmzettelOfWahlbezirk,

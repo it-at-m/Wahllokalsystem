@@ -4,6 +4,7 @@
     density="compact"
   >
     <base-wls-button-save
+      v-bind="tooltipActivatorProps"
       :disabled="disabled"
       :save-text="currentAction.title"
       @click="executeSelectedAction"
@@ -59,6 +60,11 @@ defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  tooltipActivatorProps: {
+    type: Object as PropType<Record<string, unknown>>,
+    required: false,
+    default: () => ({}),
   },
 });
 

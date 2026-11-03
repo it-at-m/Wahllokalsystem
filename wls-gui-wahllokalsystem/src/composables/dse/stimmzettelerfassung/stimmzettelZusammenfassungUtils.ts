@@ -57,14 +57,18 @@ export function useStimmzettelZusammenfassungUtils(
           return 0;
         }
 
-        const kandidat = wahlvorschlag.kandidaten.find(
+        const kandidaten = wahlvorschlag.kandidaten.filter(
           (k) => k.kandidatId === kandidatId
         );
-        if (!kandidat) {
+        if (kandidaten.length === 0) {
           return 0;
         }
-        return (
-          (kandidat.votesByVoter ?? 0) + (kandidat.votesByWahlvorschlag ?? 0)
+        return kandidaten.reduce(
+          (sum, kandidat) =>
+            sum +
+            ((kandidat.votesByVoter ?? 0) +
+              (kandidat.votesByWahlvorschlag ?? 0)),
+          0
         );
       })
       .reduce((sum, value) => sum + value, 0);

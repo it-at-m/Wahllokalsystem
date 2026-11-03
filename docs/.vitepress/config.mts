@@ -27,6 +27,10 @@ export default withMermaid({
   base: "/Wahllokalsystem/",
   srcDir: "src", //markdown files are located in that directory
   vite: {
+    optimizeDeps: {
+      // defective fastdom export triggered transitively via mermaid: leads to "Uncaught Syntax Error: module doesn't provide default export", if not included here
+      include: ["fastdom"],
+    },
     ssr: {
       noExternal: ["vuetify"],
     },

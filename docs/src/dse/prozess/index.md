@@ -24,23 +24,23 @@ flowchart TD
     class S3,S4,S5,S6 newProcessStep;
 ```
 
-Mit dem Schritt `Stimmzettel vorbereiten` beginnt der neue Prozess. Mit dem Schritt `Schnellmeldung ans Wahlamt übermitteln`
-ist man wieder im gewohnten Prozess.
-
-Die separate Übermittlung einer Schnellmeldung und Niederschrift hat wahlrechtliche Gründe.
-
 ## Neuer Prozess zur DSE
+
+Die nummerierten Schritte 1 `Stimmzettel vorbereiten` bis 4 `Beschlüsse zu Stimmzetteln fassen` weichen vom
+[gewohnten "Stapelbildungs"-Prozess](/about/index#usecase-stimmen-zaehlen) ab und werden im Folgenden näher erläutert.
+Die separate Übermittlung einer Schnellmeldung und Niederschrift hat wahlrechtliche Gründe.
 
 ### (1) Stimmzettel vorbereiten
 
 In diesem Schritt erfolgen vorbereitende Maßnahmen, um die Erfassung zu erleichtern. Der Stimmzettel wird z.B. vollständig
-entfaltet, und es werden Markierungen vorgenommen, die zeigen, wo man Stimmen findet.
+entfaltet, und es werden vom Wahlhelfer-Team Markierungen angebracht. Diese Maßnahmen erleichtern im weiteren Verlauf der Auszählung
+das Auffinden der von der wählenden Person gesetzten Stimmen.
 
 ### (2) Stimmzettel erfassen {#stimmzettel-erfassen}
 
-In diesem Schritt erfolgt die Erfassung der Stimmzettel im System. Der Stimmzettelerfassungs-Workflow-Status wird
-auf `(e) STE in Bearbeitung` gesetzt. Stimmzettel, über die der gesamte Wahlvorstand einen Beschluss fassen muss,
-werden entsprechend markiert und mit einem oder mehreren `Vormerkungsgründen` versehen.
+In diesem Schritt erfolgt die Erfassung der Stimmzettel im System. Der [Stimmzettelerfassungs-Workflow-Status](#neue-statuswerte)
+wird auf `(e) STE in Bearbeitung` gesetzt. Stimmzettel, über die der gesamte Wahlvorstand einen Beschluss fassen muss,
+werden im System mit einem oder mehreren `Vormerkungsgründen` versehen und für die Beschlussfassung zur Seite gelegt.
 
 Um eine möglichst intuitive Erfassung der Stimmen des Stimmzettels zu ermöglichen, haben wir
 [Regeln](/technik/adr/ui/adr010-dse-stimmvergabe-stimmen-ergaenzen) definiert.
@@ -49,21 +49,23 @@ Für die Erfassung werden spezielle [Kurzbefehle](/dse/stimmzettelerfassung/inde
 
 ### (3) Stimmzettel ablegen
 
-Die erfassten Stimmzettel werden entsprechend der Regeln der Wahl für die Ablage vorbereitet. Stimmzettel, über die noch
-ein Beschluss zu fassen ist, landen so auf einem separaten Stapel.
+Die im System erfassten Stimmzettel werden anschließend, entsprechend der Regeln der Wahl, nach
+[Stapeln](/about/index#usecase-stimmen-zaehlen) sortiert. Stimmzettel, über die noch ein Beschluss zu fassen ist, landen
+so für die weitere Bearbeitung auf einem separaten Stapel.
 
 ### (4) Beschlüsse zu Stimmzetteln fassen {#beschluesse-erfassen}
 
-Sind alle Teams mit der Erfassung fertig und der Stimmzettelerfassungs-Workflow-Status `(f) STE abgeschlossen` wurde
-erfolgreich übermittelt, startet die Beschlussdokumentation. Der Wahlvorstand fasst die Beschlüsse zu den zuvor
-markierten Stimmzetteln und überträgt die Ergebnisse ins System. Eine Zusammenfassung mehrerer
-`Vormerkungsgründe` stellt einen `Beschlussvorschlag` dar, über welchen im Gremium abgestimmt wird. Der Vorschlag,
-der am Ende die Abstimmung gewinnt, wird als `Entscheidungsgrund` gespeichert. Sind alle Beschlüsse vollständig
-dokumentiert, wird der Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschlossen` gespeichert.
+Sind alle Teams mit der Erfassung fertig und der [Stimmzettelerfassungs-Workflow-Status](#neue-statuswerte) `(f) STE abgeschlossen`
+wurde erfolgreich übermittelt, startet die Beschlussdokumentation. Der Wahlvorstand fasst die Beschlüsse zu den zuvor
+markierten Stimmzetteln und überträgt die Ergebnisse ins System. Die Summe aller erfassten `Vormerkungsgründe` stellt
+einen `Beschlussvorschlag` dar, über welchen im Gremium abgestimmt wird. Der Vorschlag, der am Ende die Abstimmung
+gewinnt, wird als `Entscheidungsgrund` gespeichert. Sind alle Beschlüsse vollständig im System dokumentiert, wird der
+Stimmzettelerfassungs-Workflow-Status `(g) BF abgeschlossen` gespeichert.
 
-## Neue Statuswerte
+## Neue Statuswerte {#neue-statuswerte}
 
-Mit dem neuen Prozess wurden neue Statuswerte für die einzelnen Erfassungsteams sowie Wahlbezirke eingeführt:
+Mit dem neuen Prozess und der neuen [Rolle Erfassungsteam](../../services/backend-services/auth-service/index#benutzerrollen)
+wurden neue Statuswerte für die einzelnen Erfassungsteams sowie Wahlbezirke eingeführt:
 
 ```mermaid
 stateDiagram-v2 

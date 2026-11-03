@@ -109,14 +109,13 @@ async function scrollToActiveWahlvorschlag() {
     return;
   }
 
+  await nextTick();
   const el = document.getElementById(
     `wahlvorschlag-${props.activeWahlvorschlagId}`
   );
   if (!el) {
     return;
   }
-
-  await nextTick();
   el.scrollIntoView({
     behavior: "smooth",
     block: "nearest",

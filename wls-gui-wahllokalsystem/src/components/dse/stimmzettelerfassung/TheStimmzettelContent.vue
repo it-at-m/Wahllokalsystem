@@ -6,8 +6,8 @@
     <div class="wahlvorschlaege-container flex-1-1-0 ga-2">
       <base-wahlvorschlag-card
         v-for="wv in renderedWahlvorschlaege"
-        :key="wv.wahlvorschlagID"
         :id="`wahlvorschlag-${wv.wahlvorschlagID}`"
+        :key="wv.wahlvorschlagID"
         :wahlvorschlag="wv"
         :active-kandidat="activeKandidat"
         class="wahlvorschlag-item h-100"

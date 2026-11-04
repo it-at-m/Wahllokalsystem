@@ -5,22 +5,16 @@ export function useChatbotTools() {
 
   const { konfigurationsparameter } = storeToRefs(useInfomanagementStore());
 
-  const CHAT_WIDGET_PARAM_KEY = "CHAT_WIDGET_URL"; // wird serverseitig geliefert
-  const CHAT_WIDGET_ENDPOINT = "/chat/widget/"; // fester Endpoint wie im Altcode
-  const CHAT_WIDGET_SCRIPT_ID = "ut-widget"; // Script-ID aus Altcode
+  const CHAT_WIDGET_ENDPOINT = "/chat/widget/";
+  const CHAT_WIDGET_SCRIPT_ID = "ut-widget";
 
   function injectChatWidget() {
-
     const src = "https://bot-test.muenchen.ubitec.bot/widget/widget/";
 
-    // In Testumgebung nicht laden, verhindert Seiteneffekte in Vitest/Storybook
-    if (import.meta.env.MODE === "test") return;
-    // Ohne sinnvolle URL nicht fortfahren
     if (!src) return;
-    // Duplicate-Injektion vermeiden (z. B. HMR oder Mehrfachaufrufe)
     if (document.getElementById(CHAT_WIDGET_SCRIPT_ID)) return;
-    // Optional: nur laden, wenn online
-    if (typeof navigator !== "undefined" && navigator && !navigator.onLine) return;
+    if (typeof navigator !== "undefined" && navigator && !navigator.onLine)
+      return;
 
     const script = document.createElement("script");
     script.async = true;
@@ -30,7 +24,12 @@ export function useChatbotTools() {
     document.head.appendChild(script);
   }
 
+  function updateChatWidgetVisibility(isVisible: boolean) {
+    document.documentElement.classList.toggle("chatbot-hidden", !isVisible);
+  }
+
   return {
     injectChatWidget,
+    updateChatWidgetVisibility,
   };
 }

@@ -364,7 +364,7 @@ Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzei
 
 In einigen Fällen muss der `Offline-Syncer` verpflichtend erfolgreich durchlaufen. Dazu zählt das Beenden der
 Stimmzettelerfassung in der DSE, sowie das Senden einer Schnellmeldung oder Niederschrift. War die Synchronisierung nicht
-erfolgreich kann kein Senden erfolgen und die weiterarbeit in der Anwendung ist blockiert.
+erfolgreich, kann kein Senden erfolgen und die fachliche Weiterarbeit in der Anwendung ist blockiert.
 
 Zur Besseren Nachvollziehbarkeit wird der Synchronisierungsfortschritt den Nutzer\*innen angezeigt.
 

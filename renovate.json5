@@ -26,6 +26,14 @@
     "ghcr.io/it-at-m/wahllokalsystem-wls-gui-admintool",
     "ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway"
   ],
+  "packageRules": [
+    {
+      // defective fastdom export triggered transitively since mermaid@11.17.0 -> leads to "Uncaught Syntax Error: module doesn't provide default export"
+      // TODO #3774 Remove this rule when vitepress-plugin-mermaid supports Mermaid 12.
+      "matchPackageNames": ["mermaid"],
+      "allowedVersions": "11.16.1"
+    }
+  ],
   prConcurrentLimit: 5,
   schedule: [
     "* * * * 1"

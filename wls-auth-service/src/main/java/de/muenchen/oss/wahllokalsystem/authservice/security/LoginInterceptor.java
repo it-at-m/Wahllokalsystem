@@ -79,13 +79,19 @@ public class LoginInterceptor {
   }
 
   private boolean isLoginTimeToCheck(LdapUserDetails principal) {
-    val sysAdminName = userService.getSystemAdminAuthorityName();
-
     val userWithAuthorities = userService.getUser(principal.getUsername());
+
     if (userWithAuthorities.isPresent()) {
       Collection<String> authorities = userWithAuthorities.get().authorities();
-      return !authorities.contains(sysAdminName);
+      return !hasAnyAdminRole(authorities);
     }
     return true;
+  }
+
+  private boolean hasAnyAdminRole(Collection<String> authorities) {
+    val sysAdminName = userService.getSystemAdminAuthorityName();
+    val adminName = userService.getAdminAuthorityName();
+
+    return authorities.contains(sysAdminName) || authorities.contains(adminName);
   }
 }

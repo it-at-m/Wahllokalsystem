@@ -32,8 +32,8 @@ import org.springframework.security.ldap.userdetails.LdapUserDetails;
 class LoginInterceptorTest {
 
   private static final String SYSTEM_ADMIN_AUTHORITY = "systemadmin";
+  private static final String ADMIN_AUTHORITY = "admin";
   private static final String AUTHORITY_SCHRIFTFUEHRUNG = "schriftfuehrung";
-  private static final String AUTHORITY_ERFASSUNGSTEAM = "erfassungsteam";
 
   @Mock LoginTimeClient loginTimeClient;
 
@@ -48,6 +48,7 @@ class LoginInterceptorTest {
     Mockito.lenient()
         .when(userService.getSystemAdminAuthorityName())
         .thenReturn(SYSTEM_ADMIN_AUTHORITY);
+    Mockito.lenient().when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
   }
 
   @Nested
@@ -69,27 +70,27 @@ class LoginInterceptorTest {
     }
 
     @Test
+    void should_notThrowException_when_userIsAdmin() {
+      val username = "username";
+      val ldapUserDetails = new TestLdapUserDetails(username, ADMIN_AUTHORITY);
+      val mockedUserModelFromUserService = createUserModel("wahltagID", ADMIN_AUTHORITY);
+
+      Mockito.when(userService.getUser(username))
+          .thenReturn(Optional.of(mockedUserModelFromUserService));
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
+
+      Mockito.verifyNoInteractions(wahltagClient, loginTimeClient);
+    }
+
+    @Test
     void should_throwDisabledException_when_userIsNotAssignedToActiveWahltag() {
       val wahltagID = "wahltagID";
       val username = "username";
       val ldapUserDetails = new TestLdapUserDetails(username, AUTHORITY_SCHRIFTFUEHRUNG);
 
       val mockedUserModelFromUserService = createUserModel(wahltagID, AUTHORITY_SCHRIFTFUEHRUNG);
-
-      Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(false);
-      Mockito.when(userService.getUser(username))
-          .thenReturn(Optional.of(mockedUserModelFromUserService));
-      Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
-          .isInstanceOf(DisabledException.class);
-    }
-
-    @Test
-    void should_throwDisabledException_when_erfassungsteamUserIsNotAssignedToActiveWahltag() {
-      val wahltagID = "wahltagID";
-      val username = "username";
-      val ldapUserDetails = new TestLdapUserDetails(username, AUTHORITY_ERFASSUNGSTEAM);
-
-      val mockedUserModelFromUserService = createUserModel(wahltagID, AUTHORITY_ERFASSUNGSTEAM);
 
       Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(false);
       Mockito.when(userService.getUser(username))

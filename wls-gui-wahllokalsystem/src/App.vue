@@ -59,9 +59,8 @@ const { awaitServiceWorkerActive } = useServiceWorkerUtils();
 const { syncPin } = useServiceWorkerPinSyncer();
 
 const { loadUser, initIsNachlieferungsbezirk } = useUserStore();
-const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss } = storeToRefs(
-  useInfomanagementStore()
-);
+const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss, chatbotUrl } =
+  storeToRefs(useInfomanagementStore());
 const { isUWB, isBWB, hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions } = useWahlenStore();
@@ -73,6 +72,7 @@ const { isChatbotVisible } = storeToRefs(useChatbotStore());
 watch(isChatbotVisible, (isVisible) => updateChatWidgetVisibility(isVisible), {
   immediate: true,
 });
+watch(chatbotUrl, () => injectChatWidget(), { immediate: true });
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
@@ -109,8 +109,6 @@ onMounted(async () => {
     await useKopfdatenStore().initKopfdaten();
     await initStimmzettelerfassungTeamStatus();
     await initTasks();
-
-    injectChatWidget();
 
     showTestdruckDialog.value = true;
     useLogoutOnInactivity();

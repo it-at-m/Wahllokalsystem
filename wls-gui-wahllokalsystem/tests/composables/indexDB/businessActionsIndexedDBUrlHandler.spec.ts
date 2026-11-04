@@ -16,12 +16,14 @@ describe("businessActionsIndexedDBUrlHandler.ts", () => {
       ).toStrictEqual(true);
     });
 
-    it("should_returnFalse_when_urlDoesNotContainBusinessActions", () => {
+    it.each([
+      [["DoesNotContain"], "stimmzettelerfassung"],
+      [["ContainsNotOnly"], "fakeBusinessActions"],
+      [["ContainsNotOnly"], "businessAction123"],
+    ])("should_returnFalse_when_url'%s'BusinessActionsBut'%s'", (text, url) => {
       expect(
         unitUnderTest.canHandle(
-          new URL(
-            "https://example.test/cache/stimmzettelerfassung/election/identifier"
-          )
+          new URL(`https://example.test/cache/${url}/election/identifier`)
         )
       ).toStrictEqual(false);
     });

@@ -26,15 +26,20 @@ describe("stimmzettelerfassungIndexedDBUrlHandler.ts", () => {
       ).toStrictEqual(true);
     });
 
-    it("should_returnFalse_when_urlDoesNotContainStimmzettelerfassung", () => {
-      expect(
-        unitUnderTest.canHandle(
-          new URL(
-            "https://example.test/cache/businessActions/assignTeam/identifier"
+    it.each([
+      [["DoesNotContain"], "businessActions"],
+      [["ContainsNotOnly"], "fakeStimmzettelerfassung"],
+      [["ContainsNotOnly"], "timmzettelerfassung123"],
+    ])(
+      "should_returnFalse_when_url'%s'StimmzettelerfassungBut'%s'",
+      (text, url) => {
+        expect(
+          unitUnderTest.canHandle(
+            new URL(`https://example.test/cache/${url}/election/identifier`)
           )
-        )
-      ).toStrictEqual(false);
-    });
+        ).toStrictEqual(false);
+      }
+    );
   });
 
   describe("getLabel", () => {

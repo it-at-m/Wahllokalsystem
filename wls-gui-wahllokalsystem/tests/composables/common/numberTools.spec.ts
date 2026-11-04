@@ -17,12 +17,12 @@ describe("numberTools.ts", () => {
 
   describe("groupConsecutiveNumbers", () => {
     it.each([
-      [[], ""],
-      [[4], "4"],
-      [[1, 2, 3], "1-3"],
+      [[], []],
+      [[4], ["4"]],
+      [[1, 2, 3], ["1-3"]],
       [
         [1, 2, 3, 5, 7, 8, 9, 10, 13, 15, 19, 20],
-        "1-3, 5, 7-10, 13, 15, 19-20",
+        ["1-3", "5", "7-10", "13", "15", "19-20"],
       ],
     ])("should_return'%s'_when_numbersAre'%s'", (numbers, expectedResult) => {
       expect(unitUnderTest.groupConsecutiveNumbers(numbers)).toStrictEqual(

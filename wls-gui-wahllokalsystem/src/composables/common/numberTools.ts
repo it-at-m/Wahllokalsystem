@@ -5,7 +5,7 @@ export function useNumberTools() {
 
   function groupConsecutiveNumbers(nummern: number[]) {
     if (nummern.length === 0) {
-      return "";
+      return [];
     }
 
     const bereiche = [];
@@ -27,7 +27,7 @@ export function useNumberTools() {
 
     bereiche.push(start === ende ? `${start}` : `${start}-${ende}`);
 
-    return `${bereiche.join(", ")}`;
+    return bereiche;
   }
 
   return { zeroAsNull, groupConsecutiveNumbers };

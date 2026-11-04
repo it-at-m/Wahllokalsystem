@@ -55,9 +55,9 @@ export function useDataSyncer() {
     stimmzettelKennungen.sort((a, b) => a - b);
 
     if (stimmzettelKennungen.length > 0) {
-      taskLabels.add(
-        `Stimmzettel ${groupConsecutiveNumbers(stimmzettelKennungen)}`
-      );
+      const groupedJoinedKennungen =
+        groupConsecutiveNumbers(stimmzettelKennungen).join(", ");
+      taskLabels.add(`Stimmzettel ${groupedJoinedKennungen}`);
     }
 
     return [...taskLabels];

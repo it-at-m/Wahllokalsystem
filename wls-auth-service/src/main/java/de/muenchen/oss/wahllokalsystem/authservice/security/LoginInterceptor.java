@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.stereotype.Component;
 
@@ -52,7 +51,7 @@ public class LoginInterceptor {
       if (!nowIsAfterOrEqualEarliestLoginWhenEarliestExists
           || !nowIsBeforeOrEqualLatestLoginWhenLatestExists) {
         throw new DisabledException(
-            "Login ausßerhalb der gültigen Login-Zeiten zwischen "
+            "Login außerhalb der gültigen Login-Zeiten zwischen "
                 + legalLoginInterval.earliestLogin()
                 + " und "
                 + legalLoginInterval.latestLogin()
@@ -60,7 +59,7 @@ public class LoginInterceptor {
       }
     } catch (final WlsException wlsException) {
       log.warn(
-          "Login wird erlaubt, jedoch war das Abrufen der Frühesten/Spätesten Loginuhrzeit nicht möglich. Fehlermeldung: {}",
+          "Login wird erlaubt, jedoch war das Abrufen der frühesten/spätesten Login–Uhrzeit nicht möglich. Fehlermeldung: {}",
           wlsException.getMessage(),
           wlsException);
     }
@@ -70,8 +69,7 @@ public class LoginInterceptor {
     log.debug("Benutzer ist: {}", principal.getUsername());
     val userWithAuthorities = userService.getUser(principal.getUsername());
     try {
-      if (userWithAuthorities.isPresent()
-          && hasWahllokalAuthority(userWithAuthorities.get().authorities())) {
+      if (userWithAuthorities.isPresent()) {
         return wahltagClient.isWahltagActive(userWithAuthorities.get().wahltagID());
       }
     } catch (Exception e) {
@@ -80,20 +78,14 @@ public class LoginInterceptor {
     return true;
   }
 
-  private boolean hasWahllokalAuthority(Collection<String> authorities) {
-    return authorities.contains(userService.getSchriftfuehrungAuthorityName());
-  }
-
   private boolean isLoginTimeToCheck(LdapUserDetails principal) {
-    val schriftfuehrungAuthorityName = userService.getSchriftfuehrungAuthorityName().toLowerCase();
-    val adminAuthorityName = userService.getAdminAuthorityName().toLowerCase();
+    val sysAdminName = userService.getSystemAdminAuthorityName();
 
-    for (GrantedAuthority eAuthority : principal.getAuthorities()) {
-      if (eAuthority.getAuthority().toLowerCase().contains(schriftfuehrungAuthorityName)
-          || eAuthority.getAuthority().toLowerCase().contains(adminAuthorityName)) {
-        return true;
-      }
+    val userWithAuthorities = userService.getUser(principal.getUsername());
+    if (userWithAuthorities.isPresent()) {
+      Collection<String> authorities = userWithAuthorities.get().authorities();
+      return !authorities.contains(sysAdminName);
     }
-    return false;
+    return true;
   }
 }

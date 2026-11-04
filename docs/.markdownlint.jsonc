@@ -15,6 +15,7 @@
       "summary",
       "em",
     ],
+    "table_allowed_elements": ["br"],
   },
   "MD028": false,
 }

@@ -9,7 +9,6 @@
     </parent>
 
     <artifactId>monitoring</artifactId>
-    <version>1.9.1-SNAPSHOT</version>
     <description>Übergreifende Monitoring Aspekte</description>
     <url>${wls.github.url}</url>
 

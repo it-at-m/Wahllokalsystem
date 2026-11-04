@@ -22,9 +22,7 @@
   "paths": {
     "/businessActions/konfigurierterWahltag": {
       "get": {
-        "tags": [
-          "konfigurierter-wahltag-controller"
-        ],
+        "tags": ["konfigurierter-wahltag-controller"],
         "description": "Sucht den Konfigurierten Wahltag.",
         "operationId": "getKonfigurierterWahltag",
         "responses": {
@@ -74,9 +72,7 @@
         }
       },
       "post": {
-        "tags": [
-          "konfigurierter-wahltag-controller"
-        ],
+        "tags": ["konfigurierter-wahltag-controller"],
         "description": "Speichert den Konfigurierten Wahltag.",
         "operationId": "setKonfigurierterWahltag",
         "requestBody": {
@@ -121,9 +117,7 @@
     },
     "/businessActions/konfiguration/{key}": {
       "get": {
-        "tags": [
-          "konfiguration-controller"
-        ],
+        "tags": ["konfiguration-controller"],
         "description": "Gibt die Konfiguration { key } zurück.",
         "operationId": "getKonfiguration",
         "parameters": [
@@ -206,9 +200,7 @@
         }
       },
       "post": {
-        "tags": [
-          "konfiguration-controller"
-        ],
+        "tags": ["konfiguration-controller"],
         "description": "Speichert die Konfiguration { key }.",
         "operationId": "postKonfiguration",
         "parameters": [
@@ -286,9 +278,7 @@
     },
     "/businessActions/loginCheck/{wahltagID}": {
       "get": {
-        "tags": [
-          "konfigurierter-wahltag-controller"
-        ],
+        "tags": ["konfigurierter-wahltag-controller"],
         "description": "Überprüft ob ein Wahltag { wahltagID } aktiv ist.",
         "operationId": "isWahltagActive",
         "parameters": [
@@ -350,9 +340,7 @@
     },
     "/businessActions/konfigurierteWahltage": {
       "get": {
-        "tags": [
-          "konfigurierter-wahltag-controller"
-        ],
+        "tags": ["konfigurierter-wahltag-controller"],
         "description": "Sucht alle Konfigurierten Wahltage.",
         "operationId": "getKonfigurierteWahltage",
         "responses": {
@@ -410,9 +398,7 @@
     },
     "/businessActions/konfiguration": {
       "get": {
-        "tags": [
-          "konfiguration-controller"
-        ],
+        "tags": ["konfiguration-controller"],
         "description": "Gibt alle Konfigurationen zurück.",
         "operationId": "getKonfigurations",
         "responses": {
@@ -470,9 +456,7 @@
     },
     "/businessActions/konfigurationUnauthorized/{key}": {
       "get": {
-        "tags": [
-          "konfiguration-controller"
-        ],
+        "tags": ["konfiguration-controller"],
         "description": "Gibt eine Konfiguration anhand der Loginzeit { key } zurück.",
         "operationId": "getKonfigurationUnauthorized",
         "parameters": [
@@ -547,9 +531,7 @@
     },
     "/businessActions/kennbuchstaben": {
       "get": {
-        "tags": [
-          "konfiguration-controller"
-        ],
+        "tags": ["konfiguration-controller"],
         "description": "Gibt die Objekt mit einer Liste aller Kennbuchstaben zurück.",
         "operationId": "getKennbuchstabenListen",
         "responses": {
@@ -591,9 +573,7 @@
     },
     "/businessActions/konfigurierterWahltag/{wahltagID}": {
       "delete": {
-        "tags": [
-          "konfigurierter-wahltag-controller"
-        ],
+        "tags": ["konfigurierter-wahltag-controller"],
         "description": "Löscht den Konfigurierten Wahltag anhand der { wahltagID }.",
         "operationId": "deleteKonfigurierterWahltag",
         "parameters": [
@@ -653,10 +633,7 @@
           },
           "wahltagStatus": {
             "type": "string",
-            "enum": [
-              "AKTIV",
-              "INAKTIV"
-            ]
+            "enum": ["AKTIV", "INAKTIV"]
           },
           "nummer": {
             "type": "string",
@@ -664,12 +641,7 @@
             "minLength": 0
           }
         },
-        "required": [
-          "nummer",
-          "wahltag",
-          "wahltagID",
-          "wahltagStatus"
-        ]
+        "required": ["nummer", "wahltag", "wahltagID", "wahltagStatus"]
       },
       "KonfigurationSetDTO": {
         "type": "object",
@@ -715,9 +687,7 @@
             "minLength": 0
           }
         },
-        "required": [
-          "schluessel"
-        ]
+        "required": ["schluessel"]
       },
       "KennbuchstabenDTO": {
         "type": "object",
@@ -756,12 +726,7 @@
         "properties": {
           "category": {
             "type": "string",
-            "enum": [
-              "F",
-              "T",
-              "S",
-              "I"
-            ]
+            "enum": ["F", "T", "S", "I"]
           },
           "code": {
             "type": "string"
@@ -773,12 +738,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "category",
-          "code",
-          "message",
-          "service"
-        ]
+        "required": ["category", "code", "message", "service"]
       }
     },
     "securitySchemes": {

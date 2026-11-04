@@ -17,7 +17,7 @@ import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 const indexDBSingleton = useIndexDB();
 const { compareByTimestamp } = useIndexDBUtils();
 const { logDebug } = useLogging("dataSyncer");
-const { groupConsecutiveNumbers } = useNumberTools();
+const { sortAndGroupConsecutiveNumbers } = useNumberTools();
 
 export function useDataSyncer() {
   const taskManager = useTaskManager();
@@ -52,11 +52,10 @@ export function useDataSyncer() {
         taskLabels.add(label);
       }
     }
-    stimmzettelKennungen.sort((a, b) => a - b);
 
     if (stimmzettelKennungen.length > 0) {
       const groupedJoinedKennungen =
-        groupConsecutiveNumbers(stimmzettelKennungen).join(", ");
+        sortAndGroupConsecutiveNumbers(stimmzettelKennungen).join(", ");
       taskLabels.add(`Stimmzettel ${groupedJoinedKennungen}`);
     }
 

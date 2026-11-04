@@ -3,32 +3,33 @@ export function useNumberTools() {
     return value === 0 ? null : value;
   }
 
-  function groupConsecutiveNumbers(nummern: number[]) {
-    if (nummern.length === 0) {
+  function sortAndGroupConsecutiveNumbers(numbers: number[]) {
+    if (numbers.length === 0) {
       return [];
     }
 
-    const bereiche = [];
-    let start = nummern[0];
-    let ende = nummern[0];
+    const sortedNumbers = numbers.sort((a, b) => a - b);
+    const ranges = [];
+    let start = sortedNumbers[0];
+    let end = sortedNumbers[0];
 
-    for (let i = 1; i < nummern.length; i++) {
-      const nummer = nummern[i];
+    for (let i = 1; i < sortedNumbers.length; i++) {
+      const nummer = sortedNumbers[i];
 
-      if (nummer === ende + 1) {
-        ende = nummer;
+      if (nummer === end + 1) {
+        end = nummer;
       } else {
-        bereiche.push(start === ende ? `${start}` : `${start}-${ende}`);
+        ranges.push(start === end ? `${start}` : `${start}-${end}`);
 
         start = nummer;
-        ende = nummer;
+        end = nummer;
       }
     }
 
-    bereiche.push(start === ende ? `${start}` : `${start}-${ende}`);
+    ranges.push(start === end ? `${start}` : `${start}-${end}`);
 
-    return bereiche;
+    return ranges;
   }
 
-  return { zeroAsNull, groupConsecutiveNumbers };
+  return { zeroAsNull, sortAndGroupConsecutiveNumbers };
 }

@@ -12,14 +12,12 @@ interface CommandArguments {
 }
 
 export function useAddVotesToKandidatenRangeHandler(): CommandHandler {
-  const REGEX_ADD_VOTES_TO_KANDIDATEN_RANGE =
-    /^([1-9]\d{2,})-([1-9]\d{2,})(\+(\d+))?$/;
+  const REGEX_ADD_VOTES_TO_KANDIDATEN_RANGE = /^([1-9]\d{2,})-([1-9]\d{2,})$/;
   const {
     isValidCount,
     isValidKandidatOrdnungszahl,
     isValidRange,
     normalizeBounds,
-    parseOptionalCountToNumber,
   } = useHandlerTools();
 
   function canHandle(command: string): boolean {
@@ -61,14 +59,13 @@ export function useAddVotesToKandidatenRangeHandler(): CommandHandler {
     const match = REGEX_ADD_VOTES_TO_KANDIDATEN_RANGE.exec(command);
 
     if (match?.[1] !== undefined) {
-      const votesText = match[4];
       const bound1 = Number.parseInt(match[1]);
       const bound2 = Number.parseInt(match[2]);
       const { lower, upper } = normalizeBounds(bound1, bound2);
       const commandArgs = {
         kandidatOrdnungszahlLowerBound: lower,
         kandidatOrdnungszahlUpperBound: upper,
-        countVotes: parseOptionalCountToNumber(votesText),
+        countVotes: 1,
       };
       return _isCommandArgumentsValid(commandArgs) ? commandArgs : null;
     } else {

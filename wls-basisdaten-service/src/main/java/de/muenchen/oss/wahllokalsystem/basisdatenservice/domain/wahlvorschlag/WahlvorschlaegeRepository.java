@@ -38,10 +38,10 @@ public interface WahlvorschlaegeRepository extends CrudRepository<Wahlvorschlaeg
 
   @Override
   @Modifying(clearAutomatically = true, flushAutomatically = true)
-  @Query("DELETE FROM Wahlvorschlaege w WHERE w.bezirkUndWahlID = :bezirkUndWahlID")
+  @Query("DELETE FROM Wahlvorschlaege w WHERE w.id = :id")
   @CacheEvict(value = CACHE, key = "#p0")
   @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-  void deleteById(@Param("bezirkUndWahlID") UUID bezirkUndWahlID);
+  void deleteById(@Param("id") UUID id);
 
   @Override
   @Modifying(clearAutomatically = true, flushAutomatically = true)

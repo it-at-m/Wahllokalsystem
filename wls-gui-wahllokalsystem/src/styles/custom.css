@@ -39,3 +39,8 @@
 .noPadding {
   padding: 0 !important;
 }
+
+html.chatbot-hidden [class^="widget-v2__container__"],
+html.chatbot-hidden [class*=" widget-v2__container__"] {
+  display: none !important;
+}

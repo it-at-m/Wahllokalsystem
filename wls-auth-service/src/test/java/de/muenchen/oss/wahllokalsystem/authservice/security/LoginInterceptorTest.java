@@ -15,6 +15,7 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,7 @@ import org.springframework.security.ldap.userdetails.LdapUserDetails;
 @ExtendWith(MockitoExtension.class)
 class LoginInterceptorTest {
 
+  private static final String SYSTEM_ADMIN_AUTHORITY = "systemadmin";
   private static final String ADMIN_AUTHORITY = "admin";
   private static final String AUTHORITY_SCHRIFTFUEHRUNG = "schriftfuehrung";
 
@@ -41,19 +43,45 @@ class LoginInterceptorTest {
 
   @InjectMocks LoginInterceptor unitUnderTest;
 
+  @BeforeEach
+  void setup() {
+    Mockito.lenient()
+        .when(userService.getSystemAdminAuthorityName())
+        .thenReturn(SYSTEM_ADMIN_AUTHORITY);
+    Mockito.lenient().when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
+  }
+
   @Nested
   class ValidateLoginOrThrow {
 
     @Test
-    void should_notThrowException_when_loginTimeIsNotToCheck() {
-      val ldapUserDetails = new TestLdapUserDetails("");
+    void should_notThrowException_when_userIsSystemAdmin() {
+      val username = "username";
+      val ldapUserDetails = new TestLdapUserDetails(username, SYSTEM_ADMIN_AUTHORITY);
+      val mockedUserModelFromUserService = createUserModel("wahltagID", SYSTEM_ADMIN_AUTHORITY);
 
-      Mockito.when(userService.getSchriftfuehrungAuthorityName())
-          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
-      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
+      Mockito.when(userService.getUser(username))
+          .thenReturn(Optional.of(mockedUserModelFromUserService));
 
       Assertions.assertThatNoException()
           .isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
+
+      Mockito.verifyNoInteractions(wahltagClient, loginTimeClient);
+    }
+
+    @Test
+    void should_notThrowException_when_userIsAdmin() {
+      val username = "username";
+      val ldapUserDetails = new TestLdapUserDetails(username, ADMIN_AUTHORITY);
+      val mockedUserModelFromUserService = createUserModel("wahltagID", ADMIN_AUTHORITY);
+
+      Mockito.when(userService.getUser(username))
+          .thenReturn(Optional.of(mockedUserModelFromUserService));
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
+
+      Mockito.verifyNoInteractions(wahltagClient, loginTimeClient);
     }
 
     @Test
@@ -67,10 +95,6 @@ class LoginInterceptorTest {
       Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(false);
       Mockito.when(userService.getUser(username))
           .thenReturn(Optional.of(mockedUserModelFromUserService));
-      Mockito.when(userService.getSchriftfuehrungAuthorityName())
-          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
-      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
-
       Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
           .isInstanceOf(DisabledException.class);
     }
@@ -89,9 +113,6 @@ class LoginInterceptorTest {
       Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(true);
       Mockito.when(userService.getUser(username))
           .thenReturn(Optional.of(mockedUserModelFromUserService));
-      Mockito.when(userService.getSchriftfuehrungAuthorityName())
-          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
-      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
       Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
 
       Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
@@ -112,9 +133,6 @@ class LoginInterceptorTest {
       Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(true);
       Mockito.when(userService.getUser(username))
           .thenReturn(Optional.of(mockedUserModelFromUserService));
-      Mockito.when(userService.getSchriftfuehrungAuthorityName())
-          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
-      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
       Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
 
       Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
@@ -135,9 +153,6 @@ class LoginInterceptorTest {
       Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(true);
       Mockito.when(userService.getUser(username))
           .thenReturn(Optional.of(mockedUserModelFromUserService));
-      Mockito.when(userService.getSchriftfuehrungAuthorityName())
-          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
-      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
       Mockito.doThrow(mockedLegalLoginClientException)
           .when(loginTimeClient)
           .getLegalLoginInterval();
@@ -165,9 +180,6 @@ class LoginInterceptorTest {
           .isWahltagActive(wahltagID);
       Mockito.when(userService.getUser(username))
           .thenReturn(Optional.of(mockedUserModelFromUserService));
-      Mockito.when(userService.getSchriftfuehrungAuthorityName())
-          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
-      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
       Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
 
       Assertions.assertThatNoException()

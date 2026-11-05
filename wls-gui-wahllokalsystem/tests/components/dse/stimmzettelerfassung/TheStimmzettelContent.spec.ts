@@ -30,8 +30,6 @@ describe("TheStimmzettelContent", () => {
         },
         global: {
           stubs: {
-            "v-slide-group": { template: "<div><slot /></div>" },
-            "v-slide-group-item": { template: "<div><slot /></div>" },
             "base-wahlvorschlag-card": true,
             "v-progress-linear": true,
           },
@@ -55,6 +53,55 @@ describe("TheStimmzettelContent", () => {
 
       expect(wrapper.findAll("base-wahlvorschlag-card-stub")).toHaveLength(2);
       expect(wrapper.text()).not.toContain("Stimmzettel wird vorbereitet");
+    });
+
+    it("should_scrollToActiveWahlvorschlag_when_activeWahlvorschlagIsRendered", async () => {
+      let idleCallback: IdleRequestCallback | undefined;
+      vi.stubGlobal(
+        "requestIdleCallback",
+        vi.fn((callback: IdleRequestCallback) => {
+          idleCallback = callback;
+          return 1;
+        })
+      );
+      const { createDseWahlvorschlag } = useDseStimmzettelTestDataFactory();
+      const wahlvorschlag = createDseWahlvorschlag();
+      const wrapper = mount(TheStimmzettelContent, {
+        attachTo: document.body,
+        props: {
+          activeWahlvorschlagId: null,
+          activeKandidat: null,
+          wahlvorschlaege: [wahlvorschlag],
+        },
+        global: {
+          stubs: {
+            "base-wahlvorschlag-card": true,
+            "v-progress-linear": true,
+          },
+        },
+      });
+
+      await idleCallback?.({ didTimeout: false, timeRemaining: () => 50 });
+      const scrollIntoView = vi.fn();
+      Object.defineProperty(
+        wrapper.find(`#wahlvorschlag-${wahlvorschlag.wahlvorschlagID}`).element,
+        "scrollIntoView",
+        {
+          value: scrollIntoView,
+        }
+      );
+
+      await wrapper.setProps({
+        activeWahlvorschlagId: wahlvorschlag.wahlvorschlagID,
+      });
+
+      await vi.waitFor(() => {
+        expect(scrollIntoView).toHaveBeenCalledWith({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
+        });
+      });
     });
   });
 });

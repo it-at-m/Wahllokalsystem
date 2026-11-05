@@ -19,6 +19,7 @@ const KONFIG_KEY_CHECK_WAHLSCHLUSS = "MELDUNGSZEIT_WAHL_SCHLIESSEN";
 const KONFIG_KEY_DELAY_BEFORE_INAKTIV = "WLK_TIME_OUT";
 const KONFIG_KEY_WAEHLERVERZEICHNIS_URL = "WAEHLERVERZEICHNIS_URL";
 const KONFIG_KEY_WAHLLOKALFINDER_URL = "WAHLLOKALFINDER_URL";
+const KONFIG_KEY_CHATBOT_URL = "CHATBOT_URL";
 const KONFIG_KEY_DSE_AKTIV = "DSE_AKTIV";
 const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_UW = "08:00:00";
 const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_BW = "15:00:00";
@@ -87,6 +88,11 @@ export const useInfomanagementStore = defineStore(storeID, () => {
       return true;
     }
     return String(dseAktiv).toLowerCase() === "true";
+  });
+
+  const chatbotUrl = computed(() => {
+    const url = _getKonfigParamValue(KONFIG_KEY_CHATBOT_URL);
+    return url ? url : null;
   });
 
   const wahlraumUrl = computed(() => {
@@ -208,6 +214,7 @@ export const useInfomanagementStore = defineStore(storeID, () => {
      * und den frühesten Wert, zu dem die Wahlhandlung geschlossen werden kann. */
     fruehesteSchliessungsuhrzeit,
     isDseAktiv,
+    chatbotUrl,
   };
 });
 

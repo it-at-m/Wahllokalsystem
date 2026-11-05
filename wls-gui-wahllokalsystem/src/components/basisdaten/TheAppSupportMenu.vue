@@ -21,6 +21,18 @@
           thickness="2"
           color="black"
         />
+        <v-list-item @click.stop>
+          <v-switch
+            v-model="isChatbotVisible"
+            :label="'Chatbot ' + (isChatbotVisible ? 'ausblenden' : 'anzeigen')"
+            color="primary"
+            density="compact"
+            hide-details
+            inset
+            data-test="switch-chatbot-visible"
+          />
+        </v-list-item>
+        <v-divider />
         <base-info-help-list-item
           v-for="item in infoHelpData"
           :key="item.title"
@@ -41,6 +53,7 @@ import BaseInfoHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.v
 import { useHandbuchService } from "@/composables/basisdaten/handbuchService.ts";
 import { useHelpIconCallbacks } from "@/composables/basisdaten/helpIconCallbacks.ts";
 import { WAHLHOTLINE } from "@/constants.ts";
+import { useChatbotStore } from "@/stores/chatbotStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { downloadHandbuch } = useHandbuchService();
@@ -55,6 +68,7 @@ const {
 } = useHelpIconCallbacks();
 
 const { isUWB, hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
+const { isChatbotVisible } = storeToRefs(useChatbotStore());
 
 const WAHLHOTLINE_TITLE = "Wahl-Hotline";
 const WAEHLERVERZEICHNIS_TITLE = "Wählerverzeichnis";

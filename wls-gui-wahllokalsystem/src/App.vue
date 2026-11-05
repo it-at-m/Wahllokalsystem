@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import TheWahlschlussCheckPopupDialog from "@/components/wahlhandlung/TheWahlschlussCheckPopupDialog.vue";
@@ -41,11 +41,13 @@ import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDr
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useAppUtils } from "@/composables/appUtils.ts";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useChatbotTools } from "@/composables/chatbot/chatbotTools.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useServiceWorkerPinSyncer } from "@/composables/serviceWorker/serviceWorkerPinSyncer.ts";
 import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorkerUtils.ts";
 import { useLogoutOnInactivity } from "@/composables/user/logoutOnInactivity.ts";
+import { useChatbotStore } from "@/stores/chatbotStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
@@ -57,14 +59,20 @@ const { awaitServiceWorkerActive } = useServiceWorkerUtils();
 const { syncPin } = useServiceWorkerPinSyncer();
 
 const { loadUser, initIsNachlieferungsbezirk } = useUserStore();
-const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss } = storeToRefs(
-  useInfomanagementStore()
-);
+const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss, chatbotUrl } =
+  storeToRefs(useInfomanagementStore());
 const { isUWB, isBWB, hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions } = useWahlenStore();
 const { isOfflineCacheReady } = storeToRefs(useOnlineOfflineStore());
 const { isTodayOrFuture } = useDateTimeUtils();
+const { injectChatWidget, updateChatWidgetVisibility } = useChatbotTools();
+const { isChatbotVisible } = storeToRefs(useChatbotStore());
+
+watch(isChatbotVisible, (isVisible) => updateChatWidgetVisibility(isVisible), {
+  immediate: true,
+});
+watch(chatbotUrl, () => injectChatWidget(), { immediate: true });
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();

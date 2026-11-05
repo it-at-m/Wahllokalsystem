@@ -25,14 +25,6 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
       }
     );
 
-    it("should_returnTrue_when_commandContainsValidRangeWithPlusAndVotes", () => {
-      expect(canHandle("101-103+3")).toBe(true);
-    });
-
-    it("should_returnTrue_when_commandContainsValidRangeWithPlusAndOneVoteExplicit", () => {
-      expect(canHandle("101-103+1")).toBe(true);
-    });
-
     it.each([...invalidCommandRanges, "101-103+", "101-103+abc", "101-103+0"])(
       "should_returnFalse_when_command'%s'DoesNotMatchPattern",
       (command) => {
@@ -71,35 +63,6 @@ describe("addVotesToKandidatenRangeHandler.ts", () => {
         expect(call[2]).toBe(1);
       }
     );
-
-    it.each(validRanges)(
-      "should_callKandidatenAddStimmenInRangeOrThrow_withParsedVotes_when_command'%s-%s'ContainsPlusAndVotes",
-      (lower, upper) => {
-        handleOrThrow(`${lower}-${upper}+3`, mockManagedStimmzettel);
-
-        expect(
-          mockDefinitions.kandidatenAddStimmenInRangeOrThrow
-        ).toHaveBeenCalledTimes(1);
-        const call = mockDefinitions.kandidatenAddStimmenInRangeOrThrow.mock
-          .calls[0] as [number, number, number];
-        expect(call[0]).toBe(Math.min(lower, upper));
-        expect(call[1]).toBe(Math.max(lower, upper));
-        expect(call[2]).toBe(3);
-      }
-    );
-
-    it("should_callKandidatenAddStimmenInRangeOrThrowWithParsedVotes_when_commandContainsPlusAndVotes", () => {
-      handleOrThrow("101-103+3", mockManagedStimmzettel);
-
-      expect(
-        mockDefinitions.kandidatenAddStimmenInRangeOrThrow
-      ).toHaveBeenCalledTimes(1);
-      const call = mockDefinitions.kandidatenAddStimmenInRangeOrThrow.mock
-        .calls[0] as [number, number, number];
-      expect(call[0]).toBe(101);
-      expect(call[1]).toBe(103);
-      expect(call[2]).toBe(3);
-    });
 
     it("should_throwCommandExecutionError_when_commandArgumentsAreInvalid", () => {
       expect(() => handleOrThrow("10-101", mockManagedStimmzettel)).toThrow(

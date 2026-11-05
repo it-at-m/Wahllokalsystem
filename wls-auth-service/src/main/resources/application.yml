@@ -121,6 +121,7 @@ service:
       csv:
         eol: "\r\n"
       authority:
+        systemadmin: ROLE_ADMIN_ADMIN
         schriftfuehrung: WLS_WAHLVORSTAND
         admin: MONITORING_HELPDESK
         erfassungsteam: ERFASSUNGSTEAM

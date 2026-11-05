@@ -36,6 +36,10 @@ public class UserService {
   @Value("${service.config.user.csv.eol}")
   String EOL = "\r\n";
 
+  @Value("${service.config.user.authority.systemadmin}")
+  @Getter
+  String systemAdminAuthorityName = "ROLE_ADMIN_ADMIN";
+
   @Value("${service.config.user.authority.schriftfuehrung}")
   @Getter
   String schriftfuehrungAuthorityName = "WLS_WAHLVORSTAND";

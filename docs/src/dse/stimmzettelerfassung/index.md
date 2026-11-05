@@ -17,7 +17,6 @@ Um eine schnelle Erfassung der Daten des Stimmzettels zu ermöglichen, können B
 | `[u/U]<Kandidatenordnungszahl>-`    | Entfernt 1 ungültige Stimme bei der kandidierenden Person mit der `Ordnungszahl`                                                                                    | u101-     |
 | `[u/U]<Kandidatenordnungszahl>-<n>` | Entfernt `n` ungültige Stimmen bei der kandidierenden Person mit der `Ordnungszahl`                                                                                 | u101-3    |
 | `<untere>-<obere>`                  | Fügt je 1 Stimme bei allen kandidierenden Personen im Bereich der `Ordnungszahl` von `untere`–`obere` hinzu                                                         | 501-510   |
-| `<untere>-<obere>+<n>`              | Fügt je `n` Stimmen im Bereich der `Ordnungszahl` von `untere`–`obere` hinzu                                                                                        | 527-535+2 |
 | **Listenkreuze**                    |                                                                                                                                                                     |           |
 | `<Wahlvorschlagsnummer>`            | Kennzeichnet den Wahlvorschlag mit der `Ordnungszahl` (Die Eingabe erfolgt entweder als Wahlvorschlagsnummer oder als Ordnungszahl mit „00“ am Ende)                | 5, 500    |
 | `<Wahlvorschlagsnummer>-`           | Entfernt die Kennzeichnung des Wahlvorschlags mit der `Ordnungszahl` (Die Eingabe erfolgt entweder als Wahlvorschlagsnummer oder als Ordnungszahl mit „00“ am Ende) | 5-, 500-  |
@@ -114,7 +113,7 @@ dabei unverändert, beziehungsweise werden durch die Bereichsstimmen ergänzt.
 > | | | Befehl(e) | Screenshot |
 > | --- | --- | --- | --- |
 > | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 5. Die Positionen 1 bis 2 und Position 5 haben bereits eine Einzelstimme erhalten. Der/die Wähler\*in vergibt nun jeweils 2 Stimmen für den Bereich 1-3. | `601`, `602`, `605` | ![wahlvorschlag6mit3Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag6mit3Stimmen.png) |
-> | **Ergebnis** | Die Positionen 1 und 2 haben nun insgesamt jeweils 3 Stimmen und Position 3 hat 2 Stimmen während Position 5 immer noch 1 Stimme hat. | `601-603+2` | ![wahlvorschlag6mit9Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag6mit9Stimmen.png) |
+> | **Ergebnis** | Die Positionen 1 und 2 haben nun insgesamt jeweils 3 Stimmen und Position 3 hat 2 Stimmen während Position 5 immer noch 1 Stimme hat. | `601-603`, `601-603` | ![wahlvorschlag6mit9Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag6mit9Stimmen.png) |
 
 </details>
 
@@ -160,14 +159,14 @@ Ein Bereichsbefehl betrifft dagegen alle Nennungen jeder enthaltenen Kandidateno
 > | | | Befehl | Screenshot |
 > | --- | --- | --- | --- |
 > | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 3, jeweils in zweifacher Nennung. Es dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Der/die Wähler\*in vergibt nun jeweils 2 Stimmen für den Bereich 1-3. | | ![wahlvorschlag1ohneStimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag1ohneStimmen.png) |
-> | **Ergebnis** | Die Positionen 1 bis 3 haben jeweils 2 gültige Stimmen bei der ersten Nennung und eine gültige sowie eine ungültige Stimme bei der zweiten Nennung. | `101-103+2` | ![wahlvorschlag1mit12Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag1mit12Stimmen.png) |
+> | **Ergebnis** | Die Positionen 1 bis 3 haben jeweils 2 gültige Stimmen bei der ersten Nennung und eine gültige sowie eine ungültige Stimme bei der zweiten Nennung. | `101-103`, `101-103` | ![wahlvorschlag1mit12Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag1mit12Stimmen.png) |
 
 > [!NOTE] Ergänzen von Bereichsstimmen zu bestehenden Einzelstimmen
 >
 > | | | Befehl | Screenshot |
 > | --- | --- | --- | --- |
 > | **Ausgangssituation** | Es gibt die Listenpositionen 1 bis 3, jeweils in zweifacher Nennung. Es dürfen für jede kandidierende Person maximal 3 Stimmen vergeben werden. Die Position 1 hat bereits 2 Einzelstimmen für die erste Nennung erhalten. Der/die Wähler\*in vergibt nun jeweils 2 Stimmen für den Bereich 1-3. | `101+2` | ![wahlvorschlag1mit2Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag1mit2Stimmen.png) |
-> | **Ergebnis** | Die Position 1 hat nun insgesamt 6 Stimmen, davon sind 3 gültige und eine ungültige bei der ersten Nennung und 2 ungültige bei der zweiten Nennung. Die Positionen 2 und 3 haben jeweils 2 gültige Stimmen bei der ersten Nennung und eine gültige sowie eine ungültige Stimme bei der zweiten Nennung. | `101-103+2` | ![wahlvorschlag1mit14Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag1mit14Stimmen.png) |
+> | **Ergebnis** | Die Position 1 hat nun insgesamt 6 Stimmen, davon sind 3 gültige und eine ungültige bei der ersten Nennung und 2 ungültige bei der zweiten Nennung. Die Positionen 2 und 3 haben jeweils 2 gültige Stimmen bei der ersten Nennung und eine gültige sowie eine ungültige Stimme bei der zweiten Nennung. | `101-103`, `101-103` | ![wahlvorschlag1mit14Stimmen.png](../../public/dse/erfassungBeispiele/wahlvorschlag1mit14Stimmen.png) |
 
 </details>
 

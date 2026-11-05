@@ -3,7 +3,7 @@
     class="flex-1-1-0 d-flex flex-column"
     style="min-width: 0; min-height: 0"
   >
-    <div class="wahlvorschlaege-container flex-1-1-0 ga-2">
+    <div class="wahlvorschlaege-container flex-1-1-0 ga-2 pa-1">
       <base-wahlvorschlag-card
         v-for="wv in renderedWahlvorschlaege"
         :id="`wahlvorschlag-${wv.wahlvorschlagID}`"

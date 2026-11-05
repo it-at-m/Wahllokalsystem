@@ -51,6 +51,17 @@
         />
         Fehlgeschlagene Datensätze: {{ numberOfDirtyTasksAfterSync }}
       </v-row>
+      <ul
+        v-if="!isOfflineDataSyncing"
+        class="ml-10"
+      >
+        <li
+          v-for="taskName in dirtyIDBTaskLabels"
+          :key="taskName"
+        >
+          {{ taskName }}
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -62,6 +73,7 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 
 const {
+  dirtyIDBTaskLabels,
   hasTasksToRun,
   isOfflineDataSyncing,
   numberOfDirtyTasksAfterSync,

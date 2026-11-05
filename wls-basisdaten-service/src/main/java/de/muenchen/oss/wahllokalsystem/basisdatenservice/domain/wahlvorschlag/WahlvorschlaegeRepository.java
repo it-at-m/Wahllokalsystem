@@ -8,7 +8,10 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,14 +37,18 @@ public interface WahlvorschlaegeRepository extends CrudRepository<Wahlvorschlaeg
   <S extends Wahlvorschlaege> S save(S wahlvorschlaege);
 
   @Override
+  @Modifying(clearAutomatically = true, flushAutomatically = true)
+  @Query("DELETE FROM Wahlvorschlaege w WHERE w.id = :id")
   @CacheEvict(value = CACHE, key = "#p0")
   @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-  void deleteById(UUID bezirkUndWahlID);
+  void deleteById(@Param("id") UUID id);
 
   @Override
-  @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")
+  @Modifying(clearAutomatically = true, flushAutomatically = true)
+  @Query("DELETE FROM Wahlvorschlaege w WHERE w.id = :#{#entity.id}")
+  @CacheEvict(value = CACHE, key = "#p0.id")
   @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-  void delete(Wahlvorschlaege entity);
+  void delete(@Param("entity") Wahlvorschlaege entity);
 
   @Override
   @CacheEvict(value = CACHE, allEntries = true)
@@ -49,10 +56,15 @@ public interface WahlvorschlaegeRepository extends CrudRepository<Wahlvorschlaeg
   void deleteAll(Iterable<? extends Wahlvorschlaege> entities);
 
   @Override
+  @Modifying(clearAutomatically = true, flushAutomatically = true)
+  @Query("DELETE FROM Wahlvorschlaege")
   @CacheEvict(value = CACHE, allEntries = true)
   @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
   void deleteAll();
 
+  @Modifying(clearAutomatically = true, flushAutomatically = true)
+  @Query("DELETE FROM Wahlvorschlaege w WHERE w.bezirkUndWahlID.wahlID = :wahlID")
+  @CacheEvict(value = CACHE, allEntries = true)
   @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-  void deleteAllByBezirkUndWahlID_WahlID(String wahlID);
+  void deleteAllByBezirkUndWahlID_WahlID(@Param("wahlID") String wahlID);
 }

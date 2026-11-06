@@ -10,13 +10,13 @@ export function useNiederschriftDruckUWB() {
     return `
             <!DOCTYPE html>
             <html lang="de">
-            ${_dataForHeader(data)}
-            <body>    
+            ${_dataForHeader(data)}            
             ${_dataForChapterOneWahlvorstand(data)}
             ${_dataForChapterTwo(data)}
             ${_dataForChapterThree(data)}
             ${_dataForChapterFour(data)}
             ${_dataForChapterFive(data)}  
+            </main>
             </body>
             <div class="footer">${data.footer}</div>
             </html>
@@ -32,6 +32,7 @@ export function useNiederschriftDruckUWB() {
                 <title>${data.aktuelleWahl.wahlart} Urnenwahl Niederschrift</title>
             </head>
             <body>
+                <main class="printContent">
             <svg height="25px" width="100%">
                 <rect width="1000" height="25" style="fill: #ffffff;" />
             </svg>
@@ -723,7 +724,7 @@ export function useNiederschriftDruckUWB() {
             </div>
 
             <!-- 3.13 -->
-            <div class="gridContainer_2_column_miniright marginBottom_2">
+            <div class="gridContainer_2_column_miniright marginBottom_2 paddingTopNewPage">
                 <div>
                     <div class="horizontal marginBottom_2">
                         <div class="widthNumber bold">3.13</div>
@@ -1472,6 +1473,11 @@ export function useNiederschriftDruckUWB() {
                     }
 
                     @media print {
+                        main.printContent {
+                           padding-top: 0.5cm;
+                           box-decoration-break: clone;
+                        }
+                        
                         div.footer {
                             position: fixed;
                             bottom: 0;

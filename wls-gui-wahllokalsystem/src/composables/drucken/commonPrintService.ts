@@ -84,7 +84,7 @@ export function useCommonPrintService() {
     const meldungsartKurzbezeichnung =
       meldungsart == MeldungsArtEnum.Schnellmeldung ? "S" : "N";
     const wahlbezirkNummerAsInt = parseInt(wahlbezirkNummer, 10);
-    const wahlDatum = toGermanDate(wahl.wahltag).replace(/\./g, "");
+    const wahlDatum = toGermanDate(wahl?.wahltag)?.replace(/\./g, "") ?? "";
     if (wahl.kennzeichen && wahlbezirkNummerAsInt && wahlDatum) {
       return `${wahl.kennzeichen}${wahlDatum}-${meldungsartKurzbezeichnung}-${wahlbezirkKurzbezeichnung}-${wahlbezirkNummer}`;
     } else {

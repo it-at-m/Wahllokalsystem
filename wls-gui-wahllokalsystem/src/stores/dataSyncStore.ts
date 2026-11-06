@@ -9,6 +9,7 @@ export const useDataSyncStore = defineStore(storeID, () => {
     synchronizeOfflineData,
     getSyncTasks,
     dirtyTasksAfterSync,
+    dirtyIDBTaskLabels,
     hasTasksToRun,
     isOfflineDataSyncing,
     numberOfDirtyTasksAfterSync,
@@ -19,6 +20,7 @@ export const useDataSyncStore = defineStore(storeID, () => {
 
   return {
     dirtyTasksAfterSync,
+    dirtyIDBTaskLabels,
     hasTasksToRun,
     numberOfDirtyTasksAfterSync,
     numberOfTasksFinished,

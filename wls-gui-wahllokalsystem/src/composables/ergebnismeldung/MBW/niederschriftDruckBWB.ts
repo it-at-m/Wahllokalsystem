@@ -209,7 +209,7 @@ export function useNiederschriftDruckBWB() {
                 <div class="widthNumber"></div>
                 <div>
                     Textausgaben der Migrationsbeiratswahlordnung, der Migrationsbeiratssatzung, des Gemeinde- und Landkreiswahlgesetzes
-                    sowie der Gemeinde- und Landkreiswahlordnung waren im Auszählungsraum vorhanden.
+                    sowie der Gemeinde- und Landkreiswahlordnung standen digital zur Verfügung.
                 </div>
             </div>
             
@@ -539,7 +539,7 @@ export function useNiederschriftDruckBWB() {
             <div class="horizontal marginBottom_5">
                 <div class="widthNumber">3.2.2</div>
                 <div>
-                    _____________ Stimmzettelumschläge enthielten keinen Stimmzettel für die Migrationsbeiratswahl, was auf dem
+                    <span class="backendData paddingLeftRight underline">${data.anzahlLeereStimmzettelumschlaege ?? "_____________"}</span> Stimmzettelumschläge enthielten keinen Stimmzettel für die Migrationsbeiratswahl, was auf dem
                     Stimmzettelumschlag vermerkt wurde. Diese leeren Stimmzettelumschläge wurden als 
                     <span class="bold redtext">
                         ungültige Stimmzettel = nicht gekennzeichnete Stimmzettel (Stapel Buchst. d) → rot)
@@ -551,6 +551,10 @@ export function useNiederschriftDruckBWB() {
             <div class="horizontal marginBottom_5 ">
                 <div class="widthNumber bold">3.3</div>
                 <div class="bold">Sortieren der Stimmzettel</div>
+            </div>
+            <div class="horizontal marginBottom_2">
+                <div class="widthNumber"></div>
+                <div>Bei Einsatz einer Datenverarbeitungsanlage wurde auf die Bildung von Stapeln verzichtet.</div>
             </div>
             <div class="horizontal marginBottom_1">
                 <div class="widthNumber"></div>
@@ -1456,32 +1460,14 @@ export function useNiederschriftDruckBWB() {
                 <div class="widthNumber">5.6.1</div>
                 <div class="backendDataColor fontSize_14 marginCheckbox">&#9744;</div>
                 <div class="paddingLeft">
-                    ein Paket mit den nicht beschlussmäßig behandelten gültigen Stimmzetteln. Es wurden getrennt nach Wahlvorschlägen</br>
-                    - die unveränderten Stimmzettel mit nur einem Kopfleistenkreuz <span class="yellowBG">(gelb)</span>,</br>
-                    - die nur innerhalb eines Wahlvorschlages gekennzeichneten Stimmzettel <span class="greenBG">(hellgrün)</span>,</br>
-                    verpackt.
+                    ein Paket mit den nicht beschlussmäßig behandelten gültigen Stimmzetteln und nicht gekennzeichneten Stimmzetteln, sowie den leeren Stimmzettelumschlägen
                 </div>
             </div>
              <div class="horizontal marginBottom_2">
                 <div class="widthNumber">5.6.2</div>
                 <div class="backendDataColor fontSize_14 marginCheckbox">&#9744;</div>
                 <div class="paddingLeft">
-                    ein Paket mit den gültigen Stimmzettel, auf denen verschiedene Wahlvorschläge verändert gekennzeichnet wurden <span class="green_3_text">(dunkelgrün)</span>,
-                </div>
-            </div>
-            <div class="horizontal marginBottom_2">
-                <div class="widthNumber">5.6.3</div>
-                <div class="backendDataColor fontSize_14 marginCheckbox">&#9744;</div>
-                <div class="paddingLeft">
-                    ein Paket mit den nicht gekennzeichneten Stimmzetteln und leeren Stimmzettelumschlägen (Stapel gemäß 3.3 → <span class="bold redtext">Stapel d</span>),
-                </div>
-            </div>
-            
-            <div class="horizontal marginBottom_5">
-                <div class="widthNumber">5.6.4</div>
-                <div class="backendDataColor fontSize_14 marginCheckbox">&#9744;</div>
-                <div class="paddingLeft">
-                    die beschlussmäßig behandelten Stimmzettel (gültig und ungültig) wurden spätestens jetzt in die Wahlverhandlungstasche eingelegt (Stapel gemäß 3.3 → <span class="bold purpurtext">Stapel e</span>),
+                    die beschlussmäßig behandelten Stimmzettel (gültig und ungültig) wurden spätestens jetzt in die Wahlverhandlungstasche eingelegt</span>,
                 </div>
             </div>
             
@@ -1503,7 +1489,6 @@ export function useNiederschriftDruckBWB() {
                         <div>- diese Niederschrift,</div>
                         <div>- die beschlussmäßig behandelten Stimmzettel (Nr. 5.6.4),</div>
                         <div>- die Schnellmeldung V3,</div>
-                        <div>- Zähllisten für alle Wahlvorschläge.</div>
                     </div>
                 </div>
             </div>

@@ -127,7 +127,7 @@ describe("commonPrintService.ts", () => {
 
       expect(mockDefinitions.jsBarcode).toHaveBeenCalledWith(
         expect.anything(),
-        "BTW2625.09.2026-S-SBZ-0012",
+        "BTW2625092026-S-SBZ-0012",
         { displayValue: false }
       );
     });

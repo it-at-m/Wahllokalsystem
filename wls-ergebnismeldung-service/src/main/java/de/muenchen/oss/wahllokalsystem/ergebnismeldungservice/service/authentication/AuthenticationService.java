@@ -34,9 +34,7 @@ public class AuthenticationService {
                     retriever.getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication))
             .map(WahlbezirkArtModel::valueOf);
 
-    return wahlbezirkOfUser.orElseThrow(
-        () ->
-            exceptionFactory.createFachlicheWlsException(
-                ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE));
+    return wahlbezirkOfUser.orElse(
+        WahlbezirkArtModel.UWB);
   }
 }

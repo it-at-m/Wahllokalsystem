@@ -9,6 +9,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzette
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface StimmzettelModelMapper {
@@ -39,6 +40,8 @@ public interface StimmzettelModelMapper {
   @Mapping(target = "systemBeschlussvorschlag.id", ignore = true)
   @Mapping(target = "systemBeschlussvorschlag.stimmzettel", ignore = true)
   Stimmzettel toEntity(TeamBezirkUndWahlIDModel owner, StimmzettelOfTeamModel stimmzettelModel);
+
+  void replaceStimmzettelEntityByStimmzettel(@MappingTarget Stimmzettel entityToUpdate, Stimmzettel stimmzettel);
 
   WahlvorschlagStimmzettelAnzahlModel toModel(
       WahlvorschlagStimmzettelAnzahl wahlvorschlagStimmzettelAnzahl);

@@ -3,6 +3,8 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzette
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Objects;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,10 +16,21 @@ import lombok.Setter;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class KandidatId implements Serializable {
 
   @NotNull private String kandidatID;
 
   @NotNull private int nennungsNummer;
+
+  @Override
+  public int hashCode() {
+    return 42;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if  (this == obj) return true;
+
+    return Objects.equals(kandidatID, ((KandidatId) obj).kandidatID) && Objects.equals(nennungsNummer, ((KandidatId) obj).nennungsNummer);
+  }
 }

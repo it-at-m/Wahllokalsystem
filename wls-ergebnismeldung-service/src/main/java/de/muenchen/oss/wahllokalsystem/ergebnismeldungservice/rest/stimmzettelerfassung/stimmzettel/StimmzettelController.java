@@ -73,8 +73,8 @@ public class StimmzettelController {
       @PathVariable("teamID") final String teamID,
       @RequestBody List<StimmzettelOfTeamDTO> stimmzettel) {
     val modelValuesToSave = stimmzettel.stream().map(stimmzettelDTOMapper::toModel).toList();
-    stimmzettelService.saveStimmzettel(
-        new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID), modelValuesToSave);
+//    stimmzettelService.saveStimmzettel(
+//        new TeamBezirkUndWahlIDModel(teamID, wahlbezirkID, wahlID), modelValuesToSave);
   }
 
   @Operation(

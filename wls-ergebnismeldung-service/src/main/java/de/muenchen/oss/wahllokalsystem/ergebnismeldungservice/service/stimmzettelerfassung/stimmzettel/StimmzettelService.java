@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.stimmzettel;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelID;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelerfassung.stimmzettel.StimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelerfassung.TeamBezirkUndWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -17,6 +18,7 @@ public class StimmzettelService {
 
   private final StimmzettelValidator stimmzettelValidator;
   private final StimmzettelModelMapper stimmzettelModelMapper;
+  private final StimmzettelReplacingModelMapper  stimmzettelReplacingModelMapper;
   private final StimmzettelRepository stimmzettelRepository;
 
   @PreAuthorize(
@@ -75,7 +77,14 @@ public class StimmzettelService {
     stimmzettelValidator.validOrThrow(stimmzettelToSave);
 
     val entityToSave = stimmzettelModelMapper.toEntity(stimmzettelOwner, stimmzettelToSave);
-    stimmzettelRepository.save(entityToSave);
+
+    val existingStimmzettel = stimmzettelRepository.findById(entityToSave.getId());
+    if (existingStimmzettel.isPresent()) {
+      stimmzettelReplacingModelMapper.replaceStimmzettelEntityByStimmzettel(existingStimmzettel.get(), entityToSave);
+      stimmzettelRepository.save(existingStimmzettel.get());
+    } else {
+      stimmzettelRepository.save(entityToSave);
+    }
   }
 
   @PreAuthorize(

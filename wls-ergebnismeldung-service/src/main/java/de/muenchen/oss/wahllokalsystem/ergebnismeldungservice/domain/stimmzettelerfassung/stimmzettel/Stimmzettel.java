@@ -11,14 +11,19 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.envers.Audited;
 
 @Getter
 @Setter
@@ -27,6 +32,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Audited
 public class Stimmzettel {
 
   @EmbeddedId @ToString.Include @EqualsAndHashCode.Include private StimmzettelID id;
@@ -51,7 +57,7 @@ public class Stimmzettel {
   private Beschlussfassung beschlussfassung;
 
   @OneToMany(mappedBy = "stimmzettel", orphanRemoval = true, cascade = CascadeType.ALL)
-  private List<Wahlvorschlag> wahlvorschlaege = new LinkedList<>();
+  private Set<Wahlvorschlag> wahlvorschlaege = new HashSet<>();
 
   public void addWahlvorstandBeschlussvorschlag(
       final WahlvorstandBeschlussgrund wahlvorstandBeschlussgrund) {

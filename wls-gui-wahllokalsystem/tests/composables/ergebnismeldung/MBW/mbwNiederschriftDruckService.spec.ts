@@ -157,7 +157,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
   const { prepareBWerte } = useBWerteTestDataFactory();
   const { prepareAWerte } = useAWerteTestDataFactory();
   const { createWahlbriefdaten } = useWahlbriefdatenTestDataFactory();
-  const { prepareStimmabgabevermerke, prepareVermerk, prepareStimmzettel } =
+  const { prepareStimmabgabevermerke } =
     useStimmabgabevermerkeTestDataFactory();
   const { prepareErgebnisse } = useErgebnisseTestDataFactory();
   const { createStatus } = useStatusTestDataFactory();

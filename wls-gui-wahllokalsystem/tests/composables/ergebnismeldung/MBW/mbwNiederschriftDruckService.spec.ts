@@ -157,7 +157,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
   const { prepareBWerte } = useBWerteTestDataFactory();
   const { prepareAWerte } = useAWerteTestDataFactory();
   const { createWahlbriefdaten } = useWahlbriefdatenTestDataFactory();
-  const { prepareStimmabgabevermerke } =
+  const { prepareStimmabgabevermerke, prepareVermerk, prepareStimmzettel } =
     useStimmabgabevermerkeTestDataFactory();
   const { prepareErgebnisse } = useErgebnisseTestDataFactory();
   const { createStatus } = useStatusTestDataFactory();
@@ -452,7 +452,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
         },
         ereignisse: { hasEreignisse: false, vorfaelle: [], vorkommnisse: [] },
         footer: mockedFooter,
-        anzahlStimmabgabevermerke: mockedBWerte.b,
+        anzahlStimmabgabevermerke: mockedBWerte.b1,
         aWerte: mockedAWerte.a1 + mockedAWerte.a2,
         a1: mockedAWerte.a1,
         a2: mockedAWerte.a2,

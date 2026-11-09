@@ -35,6 +35,11 @@
         :kandidatenstimmen="wahlvorschlaegeWithKandidatenErgebnissen"
       />
     </div>
+    <v-card-actions>
+      <base-text-button @click="onPrintSummaryClicked"
+        >Zusammenfassung ausdrucken</base-text-button
+      >
+    </v-card-actions>
   </div>
 </template>
 
@@ -46,22 +51,49 @@ import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseCardUngueltigeStimmenAnzeigen from "@/components/ergebnismeldung/common/BaseCardUngueltigeStimmenAnzeigen.vue";
 import BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/common/BaseCardWahlvorschlaegeKandidatenstimmenAnzeigen.vue";
 import TheMBWGueltigeStimmenAnzeigenNiederschriftTable from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenNiederschriftTable.vue";
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
+import { useLogging } from "@/composables/common/logging.ts";
+import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
 import { useMbwStimmzettelFilterService } from "@/composables/dse/mbwStimmzettelFilterService.ts";
 import { useStimmzettelZusammenfassungUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelZusammenfassungUtils.ts";
+import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper.ts";
+import { useMbwNiederschriftDruckService } from "@/composables/ergebnismeldung/MBW/mbwNiederschriftDruckService.ts";
+import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckBWB.ts";
+import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { isStimmzettelUngueltig } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
+const { hasRoleSchriftfuehrung, currentUserWahlbezirksArt } =
+  storeToRefs(useUserStore());
+const { wahlenActions } = useWahlenStore();
 const route = useRoute();
+
+const { printInWindow } = useCommonPrintService();
+const { logError } = useLogging("TheStimmzettelZusammenfassung");
+const { addNotification } = useUserNotificationService();
+const { getInitialStatus } = useStatusUtils();
 
 const wahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
+
+const {
+  buildNiederschriftTemplateFromData: buildNiederschriftTemplateFromDataUWB,
+} = useNiederschriftDruckUWB();
+const {
+  buildNiederschriftTemplateFromData: buildNiederschriftTemplateFromDataBWB,
+} = useNiederschriftDruckBWB();
+
+const status = getInitialStatus(wahlID, wahlbezirkID);
 
 const props = defineProps<{
   stimmzettelListe: PersistedStimmzettel[];
@@ -74,6 +106,12 @@ const {
   stapelB,
   stapelC,
 } = useMbwStimmzettelFilterService(computed(() => props.stimmzettelListe));
+
+const { prepareDataForNiederschriftDruck } = useMbwNiederschriftDruckService(
+  wahlID,
+  wahlbezirkID,
+  computed(() => props.stimmzettelListe)
+);
 const { wahlvorschlaegeErgebnisseStapelAAndB } =
   useMbwErgebnisseAndWahlvorschlagStapelSumReactiveMapper(
     computed(() => props.wahlvorschlaege),
@@ -93,4 +131,33 @@ const ungueltigeStimmen = computed(
       isStimmzettelUngueltig(stimmzettel.gueltigkeit)
     ).length
 );
+
+async function onPrintSummaryClicked() {
+  try {
+    const pdfText = await buildNiederschriftTemplate();
+
+    await printInWindow(pdfText);
+  } catch (e) {
+    logError("Fehler während des Druckvorgangs oder der Datenvorbereitung", e);
+    addNotification(
+      "Fehler beim Drucken der Zusammenfassung",
+      UserNotificationCategoryEnum.ERROR
+    );
+  }
+}
+
+async function buildNiederschriftTemplate() {
+  const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+  if (wahl) {
+    const templateData = await prepareDataForNiederschriftDruck(status, wahl);
+    if (currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB) {
+      // @ts-expect-error correct data is determined by the if check
+      return buildNiederschriftTemplateFromDataUWB(templateData);
+    } else {
+      // @ts-expect-error correct data is determined by the if check
+      return buildNiederschriftTemplateFromDataBWB(templateData);
+    }
+  }
+  return " ";
+}
 </script>

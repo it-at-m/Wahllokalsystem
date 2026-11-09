@@ -16,6 +16,7 @@ import type { NiederschriftWahlbriefdaten } from "@/types/ergebnismeldung/MBW/ni
 import type { NiederschriftWahlvorstandsmitglied } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftWahlvorstandsmitglied";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
@@ -24,7 +25,6 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStringNumberMapTools } from "@/composables/common/stringNumberMapTools.ts";
 import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
-import { useAllStimmzettelOfWahlbezirkState } from "@/composables/dse/allStimmzettelOfWahlbezirkState.ts";
 import { useMbwStimmzettelFilterService } from "@/composables/dse/mbwStimmzettelFilterService.ts";
 import { useStimmzettelZusammenfassungUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelZusammenfassungUtils.ts";
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
@@ -58,7 +58,8 @@ const { createWithWahlvorschlagIDAndErgebnis } = useErgebnisTools();
 
 export function useMbwNiederschriftDruckService(
   wahlID: string,
-  wahlbezirkID: string
+  wahlbezirkID: string,
+  stimmzettelToPrint: Ref<PersistedStimmzettel[]>
 ) {
   const { getAWerteForWahlbezirkAndWahl } = useAWerteService();
   const { getUrnenwahlvorbereitung } = useWahlvorbereitungService();
@@ -69,15 +70,13 @@ export function useMbwNiederschriftDruckService(
   const { getWahlscheine } = useWahlscheineService();
   const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
 
-  const { stimmzettelOfWahlbezirk, loadStimmzettelOfWahlbezirk } =
-    useAllStimmzettelOfWahlbezirkState(wahlID, wahlbezirkID);
   const {
     stapelA: stapelAStimmzettel,
     stapelB: stapelBStimmzettel,
     stapelC: stapelCStimmzettel,
     stapelDUngueltig,
     stapelEUngueltig,
-  } = useMbwStimmzettelFilterService(stimmzettelOfWahlbezirk);
+  } = useMbwStimmzettelFilterService(stimmzettelToPrint);
 
   const { getWahlvorschlaegeByWahlIDAndWahlbezirkID } =
     useWahlvorschlaegeStore();
@@ -123,10 +122,6 @@ export function useMbwNiederschriftDruckService(
       currentUserWahlbezirkNummer.value
     );
     const wahlbezirkNummer = currentUserWahlbezirkNummer.value;
-
-    if (isDseAktiv.value) {
-      await loadStimmzettelOfWahlbezirk();
-    }
 
     const wahlvorstaende = await _getWahlvorstand();
     const eroeffnungsuhrzeit: NiederschriftUhrzeit = _getEroeffnungsuhrzeit();

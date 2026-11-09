@@ -7,6 +7,7 @@ import { computed, onActivated, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { useCommonPrintService } from "@/composables/drucken/commonPrintService.ts";
+import { useAllStimmzettelOfWahlbezirkState } from "@/composables/dse/allStimmzettelOfWahlbezirkState.ts";
 import { useBeschlussentscheidungenDruckenTools } from "@/composables/dse/beschlussfassung/beschlussentscheidungenDruckenTools.ts";
 import { useBeschlussentscheidungenDruckTemplateTools } from "@/composables/dse/beschlussfassung/beschlussentscheidungenDruckTemplateTools.ts";
 import { useBeschlussfassungViewUtils } from "@/composables/dse/beschlussfassung/beschlussfassungViewUtils.ts";
@@ -20,6 +21,7 @@ import { useUserNotificationService } from "@/composables/userNotification/userN
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -40,10 +42,13 @@ export function useMbwNiederschriftViewUtils(
   const { getEreignisse } = useEreignisService();
   const { isStepDone, setStepDone, getElectionWorkflowState } =
     useWorkflowStore();
+  const { isDseAktiv } = storeToRefs(useInfomanagementStore());
   const { getNextRoute } = useNavigationService();
   const { logError } = useLogging("mbwNiederschriftView");
   const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
   const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+  const { stimmzettelOfWahlbezirk, loadStimmzettelOfWahlbezirk } =
+    useAllStimmzettelOfWahlbezirkState(wahlID, wahlbezirkID);
 
   const isBeschlussentscheidungenDruckenLoading = ref(false);
   const isDruckenLoading = ref(false);
@@ -78,7 +83,8 @@ export function useMbwNiederschriftViewUtils(
   } = useNiederschriftDruckBWB();
   const { prepareDataForNiederschriftDruck } = useMbwNiederschriftDruckService(
     wahlID,
-    wahlbezirkID
+    wahlbezirkID,
+    stimmzettelOfWahlbezirk
   );
 
   if (!wahl) {
@@ -170,6 +176,10 @@ export function useMbwNiederschriftViewUtils(
 
   async function buildNiederschriftTemplate() {
     if (status.value && wahl) {
+      if (isDseAktiv.value) {
+        await loadStimmzettelOfWahlbezirk();
+      }
+      await loadStimmzettelOfWahlbezirk();
       const templateData = await prepareDataForNiederschriftDruck(
         status.value,
         wahl

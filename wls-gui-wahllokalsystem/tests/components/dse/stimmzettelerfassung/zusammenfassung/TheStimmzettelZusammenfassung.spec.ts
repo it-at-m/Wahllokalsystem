@@ -143,6 +143,34 @@ describe("TheStimmzettelZusammenfassung", () => {
         mockDefinitions.buildNiederschriftTemplateFromDataUWB
       ).toHaveBeenCalledWith({});
       expect(mockDefinitions.printInWindow).toHaveBeenCalledWith(template);
+      await vi.waitFor(() => {
+        expect(wrapper.find("button").attributes("data-loading")).toBe("false");
+      });
+    });
+
+    it("should_notStartAnotherPrint_when_printingIsAlreadyInProgress", async () => {
+      let resolvePreparation: (value: object) => void = () => undefined;
+      const preparationPromise = new Promise<object>((resolve) => {
+        resolvePreparation = resolve;
+      });
+      mockDefinitions.prepareDataForNiederschriftDruck.mockReturnValue(
+        preparationPromise
+      );
+      const wrapper = mountSummary();
+
+      await wrapper.find("button").trigger("click");
+      await wrapper.find("button").trigger("click");
+
+      expect(
+        mockDefinitions.prepareDataForNiederschriftDruck
+      ).toHaveBeenCalledOnce();
+      expect(wrapper.find("button").attributes("data-loading")).toBe("true");
+
+      resolvePreparation({});
+      await preparationPromise;
+      await vi.waitFor(() => {
+        expect(wrapper.find("button").attributes("data-loading")).toBe("false");
+      });
     });
 
     it("should_printBwbSummary_when_printButtonIsClicked", async () => {
@@ -175,6 +203,7 @@ describe("TheStimmzettelZusammenfassung", () => {
         "Fehler beim Drucken der Zusammenfassung",
         UserNotificationCategoryEnum.ERROR
       );
+      expect(wrapper.find("button").attributes("data-loading")).toBe("false");
     });
 
     function mountSummary() {
@@ -184,7 +213,10 @@ describe("TheStimmzettelZusammenfassung", () => {
           stubs: {
             "base-card-ungueltige-stimmen-anzeigen": true,
             "base-card-wahlvorschlaege-kandidatenstimmen-anzeigen": true,
-            "base-text-button": { template: "<button><slot /></button>" },
+            "base-text-button": {
+              props: ["loading"],
+              template: '<button :data-loading="loading"><slot /></button>',
+            },
             "the-m-b-w-gueltige-stimmen-anzeigen-niederschrift-table": true,
             "the-m-b-w-waehler-anzeigen-card": true,
             "the-m-b-w-wahlberechtigte-anzeigen-card": true,

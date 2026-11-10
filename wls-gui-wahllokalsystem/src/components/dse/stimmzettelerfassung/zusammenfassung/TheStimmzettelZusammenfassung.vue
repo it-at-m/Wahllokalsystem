@@ -36,7 +36,9 @@
       />
     </div>
     <v-card-actions>
-      <base-text-button @click="onPrintSummaryClicked"
+      <base-text-button
+        :loading="isPrinting"
+        @click="onPrintSummaryClicked"
         >Zusammenfassung ausdrucken</base-text-button
       >
     </v-card-actions>
@@ -48,7 +50,7 @@ import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/Pers
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -131,8 +133,14 @@ const ungueltigeStimmen = computed(
       isStimmzettelUngueltig(stimmzettel.gueltigkeit)
     ).length
 );
+const isPrinting = ref(false);
 
 async function onPrintSummaryClicked() {
+  if (isPrinting.value) {
+    return;
+  }
+
+  isPrinting.value = true;
   try {
     const pdfText = await buildNiederschriftTemplate();
 
@@ -143,6 +151,8 @@ async function onPrintSummaryClicked() {
       "Fehler beim Drucken der Zusammenfassung",
       UserNotificationCategoryEnum.ERROR
     );
+  } finally {
+    isPrinting.value = false;
   }
 }
 

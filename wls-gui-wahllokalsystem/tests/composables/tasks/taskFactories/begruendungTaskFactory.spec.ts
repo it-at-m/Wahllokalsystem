@@ -17,7 +17,7 @@ vi.mock("@/stores/ergebnismeldungStore.ts", () => ({
 }));
 
 describe("begruendungTaskFactory.ts", () => {
-  const { prepareTaskFactoryContext } = useTasksTestDataFactory();
+  const { createTaskFactoryContext } = useTasksTestDataFactory();
   const { createTasks } = useBegruendungTaskFactory();
   const { prepareWahl } = useWahlTestDataFactory();
 
@@ -26,61 +26,42 @@ describe("begruendungTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    describe("userHasRoleSchriftfuehrung", () => {
-      it("should_returnTaskList_when_userHasRoleSchriftfuehrung", () => {
-        const taskFactoryContext = prepareTaskFactoryContext()
-          .isSchriftfuehrung(true)
-          .build();
-        const wahlenStore = useWahlenStore();
+    it("should_returnTaskList_when_userHasRoleSchriftfuehrung", () => {
+      const taskFactoryContext = createTaskFactoryContext();
+      const wahlenStore = useWahlenStore();
 
-        wahlenStore.wahlenState.wahlen = [
-          prepareWahl()
-            // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-            .wahlID(taskFactoryContext.extendedWahlMetaData[0]!.wahlID)
-            .build(),
-        ];
-
-        const result = createTasks(taskFactoryContext);
-
-        expect(result.length).toStrictEqual(1);
-      });
-
-      it("should_haveExpectedCallback_when_userHasRoleSchriftfuehrung", () => {
-        const taskFactoryContext = prepareTaskFactoryContext()
-          .isSchriftfuehrung(true)
-          .build();
-        const wahlenStore = useWahlenStore();
-
-        wahlenStore.wahlenState.wahlen = [
-          prepareWahl()
-            // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-            .wahlID(taskFactoryContext.extendedWahlMetaData[0]!.wahlID)
-            .build(),
-        ];
-
-        mockDefinitions.loadBegruendungForWahl.mockReturnValue(
-          Promise.resolve()
-        );
-
-        const result = createTasks(taskFactoryContext);
-
-        expect(result.length).toStrictEqual(1);
-
-        result[0]?.callback();
-        expect(mockDefinitions.loadBegruendungForWahl).toHaveBeenCalledOnce();
-        expect(result[0]?.name).toContain("Stimmzettel");
-      });
-    });
-  });
-
-  describe("userHasNotRoleSchriftfuehrung", () => {
-    it("should_returnEmptyList_when_userHasNotRoleSchriftfuehrung", () => {
-      const taskFactoryContext = prepareTaskFactoryContext()
-        .isSchriftfuehrung(false)
-        .build();
+      wahlenStore.wahlenState.wahlen = [
+        prepareWahl()
+          // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+          .wahlID(taskFactoryContext.extendedWahlMetaData[0]!.wahlID)
+          .build(),
+      ];
 
       const result = createTasks(taskFactoryContext);
-      expect(result.length).toStrictEqual(0);
+
+      expect(result.length).toStrictEqual(1);
+    });
+
+    it("should_haveExpectedCallback_when_userHasRoleSchriftfuehrung", () => {
+      const taskFactoryContext = createTaskFactoryContext();
+      const wahlenStore = useWahlenStore();
+
+      wahlenStore.wahlenState.wahlen = [
+        prepareWahl()
+          // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+          .wahlID(taskFactoryContext.extendedWahlMetaData[0]!.wahlID)
+          .build(),
+      ];
+
+      mockDefinitions.loadBegruendungForWahl.mockReturnValue(Promise.resolve());
+
+      const result = createTasks(taskFactoryContext);
+
+      expect(result.length).toStrictEqual(1);
+
+      result[0]?.callback();
+      expect(mockDefinitions.loadBegruendungForWahl).toHaveBeenCalledOnce();
+      expect(result[0]?.name).toContain("Stimmzettel");
     });
   });
 });

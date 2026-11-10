@@ -43,44 +43,29 @@ describe("waehlverzeichnisTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    describe("userHasRoleSchriftfuehrung", () => {
-      it("should_returnTask_when_wahlbezirksArtIsUWB", async () => {
-        const taskFactoryContext = prepareTaskFactoryContext()
-          .isSchriftfuehrung(true)
-          .wahlbezirkArt(WahlbezirksArtEnum.UWB)
-          .build();
-
-        const result = unitUnderTest.createTasks(taskFactoryContext);
-        await result[0]?.callback();
-
-        expect(result.length).toStrictEqual(1);
-        expect(result[0]?.name).toStrictEqual("Wählerverzeichnis");
-        expect(
-          mockDefinitions.loadPflegeWaehlerverzeichnis.mock.calls
-        ).toStrictEqual([[false]]);
-      });
-
-      it("should_returnNoTask_when_wahlbezirksArtIsBWB", async () => {
-        const taskFactoryContext = prepareTaskFactoryContext()
-          .isSchriftfuehrung(true)
-          .wahlbezirkArt(WahlbezirksArtEnum.BWB)
-          .build();
-
-        const result = unitUnderTest.createTasks(taskFactoryContext);
-
-        expect(result).toStrictEqual([]);
-      });
-    });
-  });
-
-  describe("userHasNotRoleSchriftfuehrung", () => {
-    it("should_returnNoTask_when_called", () => {
+    it("should_returnTask_when_wahlbezirksArtIsUWB", async () => {
       const taskFactoryContext = prepareTaskFactoryContext()
-        .isSchriftfuehrung(false)
+        .wahlbezirkArt(WahlbezirksArtEnum.UWB)
         .build();
 
       const result = unitUnderTest.createTasks(taskFactoryContext);
-      expect(result.length).toStrictEqual(0);
+      await result[0]?.callback();
+
+      expect(result.length).toStrictEqual(1);
+      expect(result[0]?.name).toStrictEqual("Wählerverzeichnis");
+      expect(
+        mockDefinitions.loadPflegeWaehlerverzeichnis.mock.calls
+      ).toStrictEqual([[false]]);
+    });
+
+    it("should_returnNoTask_when_wahlbezirksArtIsBWB", async () => {
+      const taskFactoryContext = prepareTaskFactoryContext()
+        .wahlbezirkArt(WahlbezirksArtEnum.BWB)
+        .build();
+
+      const result = unitUnderTest.createTasks(taskFactoryContext);
+
+      expect(result).toStrictEqual([]);
     });
   });
 });

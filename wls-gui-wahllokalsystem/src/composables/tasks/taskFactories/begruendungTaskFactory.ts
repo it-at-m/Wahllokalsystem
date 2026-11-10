@@ -4,11 +4,8 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
-import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-
-const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
 
 export function useBegruendungTaskFactory(): TaskFactory {
   const { getStimmzettelTermForWahl } = useTextFormatter();
@@ -35,5 +32,7 @@ export function useBegruendungTaskFactory(): TaskFactory {
     }
   }
 
-  return whenUserIsSchriftfuehrung(createTasks);
+  return {
+    createTasks,
+  };
 }

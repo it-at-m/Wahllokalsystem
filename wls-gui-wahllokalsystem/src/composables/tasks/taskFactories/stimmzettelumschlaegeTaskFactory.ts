@@ -4,10 +4,7 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
-import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-
-const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
 
 export function useStimmzettelumschlaegeTaskFactory(): TaskFactory {
   const { stimmzettelumschlaegeActions, wahlenActions } = useWahlenStore();
@@ -38,5 +35,7 @@ export function useStimmzettelumschlaegeTaskFactory(): TaskFactory {
     }
   }
 
-  return whenUserIsSchriftfuehrung(createTasks);
+  return {
+    createTasks,
+  };
 }

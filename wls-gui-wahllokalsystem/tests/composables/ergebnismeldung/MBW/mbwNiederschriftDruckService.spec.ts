@@ -378,7 +378,11 @@ describe("mbwUtilsNiederschrift.ts", () => {
 
       const status = createStatus();
       status.niederschrift.validierungsstatus = "VALIDE";
-      unitUnderTest = useMbwNiederschriftDruckService(wahlID, wahlbezirkID);
+      unitUnderTest = useMbwNiederschriftDruckService(
+        wahlID,
+        wahlbezirkID,
+        ref([])
+      );
       const result = await unitUnderTest.prepareDataForNiederschriftDruck(
         status,
         inputWahl
@@ -657,7 +661,11 @@ describe("mbwUtilsNiederschrift.ts", () => {
 
       const status = createStatus();
       status.niederschrift.validierungsstatus = "VALIDE";
-      unitUnderTest = useMbwNiederschriftDruckService(wahlID, wahlbezirkID);
+      unitUnderTest = useMbwNiederschriftDruckService(
+        wahlID,
+        wahlbezirkID,
+        ref([])
+      );
       const result = await unitUnderTest.prepareDataForNiederschriftDruck(
         status,
         inputWahl

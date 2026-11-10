@@ -27,6 +27,7 @@ const mockDefinitions = vi.hoisted(() => ({
   isStepDone: vi.fn(),
   loadStatusByWahlIdAndWahlbezirkId: vi.fn(),
   logError: vi.fn(),
+  loadStimmzettelOfWahlbezirk: vi.fn(),
   prepareDataForBeschlussentscheidungenDruck: vi.fn(),
   prepareDataForNiederschriftDruck: vi.fn(),
   sendAusdruckBeschlussentscheidungen: vi.fn(),
@@ -36,7 +37,9 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 const currentUserWahlbezirksArt = ref(WahlbezirksArtEnum.UWB);
+const isDseAktiv = ref(false);
 const isSendingNiederschrift = ref(false);
+const stimmzettelOfWahlbezirk = ref([]);
 
 vi.mock("vue", async (importOriginal) => {
   const module = await importOriginal<typeof import("vue")>();
@@ -46,7 +49,7 @@ vi.mock("vue", async (importOriginal) => {
   };
 });
 vi.mock("pinia", () => ({
-  storeToRefs: () => ({ currentUserWahlbezirksArt }),
+  storeToRefs: () => ({ currentUserWahlbezirksArt, isDseAktiv }),
 }));
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
@@ -56,6 +59,15 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
   }),
 }));
 vi.mock("@/stores/userStore.ts", () => ({ useUserStore: vi.fn() }));
+vi.mock("@/stores/infomanagementStore.ts", () => ({
+  useInfomanagementStore: vi.fn(),
+}));
+vi.mock("@/composables/dse/allStimmzettelOfWahlbezirkState.ts", () => ({
+  useAllStimmzettelOfWahlbezirkState: () => ({
+    loadStimmzettelOfWahlbezirk: mockDefinitions.loadStimmzettelOfWahlbezirk,
+    stimmzettelOfWahlbezirk,
+  }),
+}));
 vi.mock("@/stores/workflowStore.ts", () => ({
   useWorkflowStore: () => ({
     getElectionWorkflowState: mockDefinitions.getElectionWorkflowState,
@@ -177,6 +189,7 @@ describe("mbwNiederschriftViewUtils", () => {
     );
     routerPush.mockResolvedValue(undefined);
     currentUserWahlbezirksArt.value = WahlbezirksArtEnum.UWB;
+    isDseAktiv.value = false;
     printWindow.document.querySelectorAll.mockReturnValue([]);
     vi.spyOn(window, "open").mockReturnValue(printWindow as unknown as Window);
   });
@@ -273,6 +286,24 @@ describe("mbwNiederschriftViewUtils", () => {
         MeldungsArtEnum.Niederschrift,
         '<html lang="en">niederschrift</html>'
       );
+    });
+
+    it("should_loadStimmzettelOnce_when_dseIsActiveAndPrintingNewNiederschrift", async () => {
+      isDseAktiv.value = true;
+      mockDefinitions.prepareDataForNiederschriftDruck.mockResolvedValue({});
+      mockDefinitions.buildNiederschriftTemplateFromDataUWB.mockReturnValue(
+        '<html lang="en">niederschrift</html>'
+      );
+      mockDefinitions.loadStatusByWahlIdAndWahlbezirkId.mockResolvedValue(
+        status
+      );
+      const unitUnderTest = await createComposable();
+
+      await unitUnderTest.onDruckenClicked();
+
+      expect(
+        mockDefinitions.loadStimmzettelOfWahlbezirk
+      ).toHaveBeenCalledOnce();
     });
 
     it("should_showErrorNotification_when_printingNiederschriftFails", async () => {

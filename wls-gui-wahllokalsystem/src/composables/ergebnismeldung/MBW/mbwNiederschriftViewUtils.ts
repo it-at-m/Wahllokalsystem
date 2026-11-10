@@ -179,7 +179,6 @@ export function useMbwNiederschriftViewUtils(
       if (isDseAktiv.value) {
         await loadStimmzettelOfWahlbezirk();
       }
-      await loadStimmzettelOfWahlbezirk();
       const templateData = await prepareDataForNiederschriftDruck(
         status.value,
         wahl

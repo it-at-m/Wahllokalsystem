@@ -99,13 +99,13 @@ public class ErgebnismeldungController {
                   wahlID, wahlbezirkID, waehlerverzeichnisNummer, modelEnum, hauptwahlbezirkID));
       log.debug("#sendergebnis 1");
     } catch (Exception e) {
-      log.debug("exception during sendErgebnisse occurred", e);
+      log.error("exception during sendErgebnisse occurred", e);
       if (e instanceof WlsException wlsException)
         return new ResponseEntity<>(dtoMapper.toDTO(wlsException), HttpStatus.CONFLICT);
     }
     if (!valid) {
       log.debug("#sendergebnis 2");
-      log.debug("#sendergebnis 3 valid:" + valid);
+      log.warn("#sendergebnis 3: sendErgebnisse response is false, return conflict");
       return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
     return null;

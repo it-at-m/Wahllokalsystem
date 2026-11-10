@@ -28,7 +28,7 @@ public class InfomanagementClientImpl implements CurrentWahltagClient {
     try {
       konfigurierterWahltag = konfigurierterWahltagControllerApi.getKonfigurierterWahltag();
     } catch (final WlsException wlsException) {
-      log.debug("found WlsException", wlsException);
+      log.error("found WlsException", wlsException);
       throw wlsException;
     } catch (final Exception e) {
       throw exceptionFactory.createTechnischeWlsException(

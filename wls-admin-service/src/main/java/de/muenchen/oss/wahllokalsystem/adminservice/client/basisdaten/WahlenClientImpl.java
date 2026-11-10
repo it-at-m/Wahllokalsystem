@@ -32,7 +32,7 @@ public class WahlenClientImpl implements WahlenClient {
     try {
       wahlenControllerApi.resetWahlen();
     } catch (WlsException wlsException) {
-      log.debug("#resetWahlen found WlsException:", wlsException);
+      log.error("#resetWahlen found WlsException:", wlsException);
       throw wlsException;
     } catch (Exception exception) {
       throw exceptionFactory.createTechnischeWlsException(

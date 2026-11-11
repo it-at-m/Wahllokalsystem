@@ -84,7 +84,7 @@ public class DefaultElectionTypeValidator {
 
     for (Stapelart stapelart : benoetigteStapel) {
       if (!stapelartList.contains(stapelart)) {
-        log.error(
+        log.warn(
             "Wahlbezirk {} hat Stapel {} noch nicht erfasst. Invalide!", wahlbezirkID, stapelart);
         val exceptionWrapperForStapel =
             new ExceptionDataWrapper(
@@ -110,7 +110,7 @@ public class DefaultElectionTypeValidator {
     // Nur dann Fehlermeldung erzeugen, wenn stimmabgabevermerke null ist.
     boolean stimmabgabevermerkeErfasst = stimmabgabevermerke.isPresent();
     if (!stimmabgabevermerkeErfasst) {
-      log.error(
+      log.warn(
           "Urnenwahlbezirk {} hat Stimmabgabevermerke noch nicht erfasst. Invalide!", wahlbezirkID);
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.SENDERGEBNISSE_STIMMABGABEVERMERKE_UNVOLLSTAENDIG);
@@ -123,7 +123,7 @@ public class DefaultElectionTypeValidator {
     val wahlscheine = wahlscheineRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID));
     boolean wahlscheineErfasst = wahlscheine.isPresent();
     if (!wahlscheineErfasst) {
-      log.error("Briefwahlbezirk {} hat Wahlscheine noch nicht erfasst. Invalide!", wahlbezirkID);
+      log.warn("Briefwahlbezirk {} hat Wahlscheine noch nicht erfasst. Invalide!", wahlbezirkID);
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.SENDERGEBNISSE_WAHLSCHEINE_UNVOLLSTAENDIG);
     }
@@ -138,7 +138,7 @@ public class DefaultElectionTypeValidator {
       aWerte = aWerteRepo.findById(bezirkUndWahlID);
       boolean aWerteVorhanden = aWerte.isPresent();
       if (!aWerteVorhanden) {
-        log.error("Keine A-Werte für Urnenwahlbezirk {} gefunden. Invalide!", wahlbezirkID);
+        log.warn("Keine A-Werte für Urnenwahlbezirk {} gefunden. Invalide!", wahlbezirkID);
         throw exceptionFactory.createFachlicheWlsException(
             ExceptionConstants.SENDERGEBNISSE_AWERTE_UNVOLLSTAENDIG);
       }

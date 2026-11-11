@@ -99,7 +99,7 @@ class GlobalExceptionHandlerTest {
       // Check Logging
       Assertions.assertThat(listAppender.list).hasSize(1);
       val logEvent = listAppender.list.getFirst();
-      Assertions.assertThat(logEvent.getLevel()).isEqualTo(Level.WARN);
+      Assertions.assertThat(logEvent.getLevel()).isEqualTo(Level.ERROR);
       Assertions.assertThat(logEvent.getFormattedMessage()).isEqualTo("handling throwable");
       Assertions.assertThat(logEvent.getThrowableProxy()).isNotNull();
       Assertions.assertThat(logEvent.getThrowableProxy().getMessage())

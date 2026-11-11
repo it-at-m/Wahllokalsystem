@@ -71,7 +71,7 @@ public class MonitoringClient implements StatusClient {
     try {
       apiCall.run();
     } catch (final WlsException wlsException) {
-      log.error("found WlsException: {}", wlsException.getMessage());
+      log.warn("found WlsException: {}", wlsException.getMessage());
       throw wlsException;
     } catch (final Exception exception) {
       throw exceptionFactory.createTechnischeWlsException(

@@ -47,8 +47,9 @@ public class DummyClientImpl
 
   @Override
   public void postWahlvorstand(WahlvorstandModel wahlvorstand) {
-    log.warn("Dummy client postWahlvorstand() called instead of EAI for wahlbezirkID: {}",
-            wahlvorstand == null ? null : wahlvorstand.wahlbezirkID());
+    log.warn(
+        "Dummy client postWahlvorstand() called instead of EAI for wahlbezirkID: {}",
+        wahlvorstand == null ? null : wahlvorstand.wahlbezirkID());
   }
 
   @Override

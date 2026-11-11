@@ -81,11 +81,7 @@ public class CryptoUtils {
         val finalized = encryptionCipher.doFinal(value.getBytes());
         value = Base64.getUrlEncoder().encodeToString(finalized);
       } catch (IllegalBlockSizeException | BadPaddingException e) {
-        log.error(
-            "Unable to encrypt the value due to "
-                + e.getClass().getSimpleName()
-                + ". Using direct object reference!",
-            e);
+          log.warn("Unable to encrypt the value due to {}. Using direct object reference!", e.getClass().getSimpleName(), e);
         throw TechnischeWlsException.withCode(ExceptionConstants.CRYPTO_EXCEPTION_CODE)
             .inService(formatter.getId())
             .buildWithMessage("Problem bei der Verschlüsselung von Objekt-Referenzen");

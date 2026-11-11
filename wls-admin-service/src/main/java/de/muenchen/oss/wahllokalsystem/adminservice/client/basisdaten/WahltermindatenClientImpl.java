@@ -26,7 +26,7 @@ public class WahltermindatenClientImpl implements WahltermindatenClient {
     try {
       wahltermindatenControllerApi.putWahltermindaten(wahltagID);
     } catch (WlsException wlsException) {
-      log.error("#putWahltermindaten found WlsException:", wlsException);
+      log.warn("#putWahltermindaten found WlsException:", wlsException);
       throw wlsException;
     } catch (Exception exception) {
       throw exceptionFactory.createTechnischeWlsException(
@@ -41,7 +41,7 @@ public class WahltermindatenClientImpl implements WahltermindatenClient {
     try {
       wahltermindatenControllerApi.deleteWahltermindaten(wahltagID);
     } catch (final WlsException wlsException) {
-      log.error("#deleteWahltermindaten found WlsException:", wlsException);
+      log.warn("#deleteWahltermindaten found WlsException:", wlsException);
       throw wlsException;
     } catch (final Exception exception) {
       throw exceptionFactory.createTechnischeWlsException(

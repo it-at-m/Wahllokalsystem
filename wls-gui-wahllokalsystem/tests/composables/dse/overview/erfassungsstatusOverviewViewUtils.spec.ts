@@ -2,7 +2,7 @@ import type { StimmzettelerfassungStatus } from "@/types/dse/stimmzettelerfassun
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
+import { useErfassungsstatusOverviewViewUtils } from "@/composables/dse/overview/erfassungsstatusOverviewViewUtils.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -104,8 +104,8 @@ vi.mock("@/plugins/router.ts", () => ({
   default: { push: mockDefinitions.routerPush },
 }));
 
-describe("monitoringViewUtils.ts", () => {
-  let unit: ReturnType<typeof useMonitoringViewUtils>;
+describe("erfassungsstatusOverviewViewUtils.ts", () => {
+  let unit: ReturnType<typeof useErfassungsstatusOverviewViewUtils>;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -114,16 +114,16 @@ describe("monitoringViewUtils.ts", () => {
     mockDefinitions.getNextRoute.mockReturnValue({ name: "nextRoute" });
     mockDefinitions.workflowStatus.value = null;
 
-    unit = useMonitoringViewUtils("wahlID", "wahlbezirkID");
+    unit = useErfassungsstatusOverviewViewUtils("wahlID", "wahlbezirkID");
   });
 
   afterEach(() => {
     vi.resetAllMocks();
   });
 
-  describe("onMonitoringSynchronisierenClicked", async () => {
-    it("should_loadTeamStatusListe_when_onMonitoringSynchronisierenClicked", async () => {
-      await unit.onMonitoringSynchronisierenClicked();
+  describe("onErfassungsstatusSynchronisierenClicked", async () => {
+    it("should_loadTeamStatusListe_when_onErfassungsstatusSynchronisierenClicked", async () => {
+      await unit.onErfassungsstatusSynchronisierenClicked();
       expect(mockDefinitions.loadTeamStatusListe).toHaveBeenCalledWith(true);
     });
   });
@@ -150,7 +150,7 @@ describe("monitoringViewUtils.ts", () => {
       expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
         "wahlID",
         "wahlbezirkID",
-        MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+        MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS,
         false
       );
       expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(

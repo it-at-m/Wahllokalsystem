@@ -191,7 +191,7 @@ describe("StimmzettelerfassungBeendenDialogUtils.ts", () => {
       mockDefinitions.hasRoleSchriftfuehrungValue.value = true;
       mockDefinitions.currentUserTeamNameValue.value = "TEAM-SONSTIG";
       mockDefinitions.getNextRoute.mockReturnValue({
-        name: MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+        name: MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS,
         params: { wahlId, wahlbezirkId },
       });
       mockDefinitions.synchronizeOfflineData.mockResolvedValue({
@@ -203,7 +203,7 @@ describe("StimmzettelerfassungBeendenDialogUtils.ts", () => {
 
       expect(mockDefinitions.postErfassungTeamStatus).toHaveBeenCalled();
       expect(mockDefinitions.routerPush).toHaveBeenCalledWith({
-        name: MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+        name: MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS,
         params: { wahlId, wahlbezirkId },
       });
       expect(mockDefinitions.closeDialogCallback).toHaveBeenCalledTimes(1);

@@ -58,7 +58,7 @@ export function useBeschlussfassungStartenDialogUtils(
     setStepDone(
       wahlId,
       wahlbezirkId,
-      MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+      MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS
     );
 
     await router.push(getNextRoute());

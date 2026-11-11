@@ -6,7 +6,7 @@ import { useNavigationGuards } from "@/composables/navigation/navigationGuards.t
 import { allGuards, anyGuard } from "@/composables/navigation/routerUtils.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import BeschlussfassungView from "@/views/dse/BeschlussfassungView.vue";
-import MonitoringView from "@/views/dse/MonitoringView.vue";
+import ErfassungsstatusOverviewView from "@/views/dse/ErfassungsstatusOverviewView.vue";
 import StimmzettelerfassungView from "@/views/dse/StimmzettelerfassungView.vue";
 import ErfassungStimmzettelView from "@/views/ergebnismeldung/common/ErfassungStimmzettelView.vue";
 import MBWNiederschriftView from "@/views/ergebnismeldung/MBW/MBWNiederschriftView.vue";
@@ -63,9 +63,9 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
       allGuards(requiresIsDseAktiv, requireRoleErfassungteam)
     ),
   },
-  [MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS]: {
-    path: BASE_PATH_DSE + "/monitoring",
-    component: MonitoringView,
+  [MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS]: {
+    path: BASE_PATH_DSE + "/erfassungsstatusOverview",
+    component: ErfassungsstatusOverviewView,
     beforeEnter: [
       requireRoleSchriftfuehrung,
       requiresIsDseAktiv,
@@ -80,9 +80,7 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
       requiresIsDseAktiv,
       isStepDoneInElectionState(MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG),
-      isStepDoneInElectionState(
-        MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
-      ),
+      isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS),
     ],
   },
   [MbwStepsEnum.MBW_STAPEL_E]: {
@@ -137,7 +135,7 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
         allGuards(
           isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG),
           isStepDoneInElectionState(
-            MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+            MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS
           ),
           isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG)
         ),
@@ -180,7 +178,7 @@ const mbwRoutesRecord: Record<MbwStepsEnum, RouteRecordRawWithoutName> = {
         allGuards(
           isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG),
           isStepDoneInElectionState(
-            MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+            MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS
           ),
           isStepDoneInElectionState(MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG)
         ),

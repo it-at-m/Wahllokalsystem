@@ -29,12 +29,11 @@ class GlobalExceptionHandlerTest {
 
   @InjectMocks GlobalExceptionHandler unitUnderTest;
 
-
   private ListAppender<ILoggingEvent> listAppender;
   private Logger logger;
 
   @BeforeEach
-  void setUpLogger() {
+  void setup() {
     logger = (Logger) LoggerFactory.getLogger(GlobalExceptionHandler.class);
     listAppender = new ListAppender<>();
     listAppender.start();
@@ -42,7 +41,7 @@ class GlobalExceptionHandlerTest {
   }
 
   @AfterEach
-  void tearDownLogger() {
+  void teardown() {
     logger.detachAppender(listAppender);
   }
 
@@ -52,10 +51,8 @@ class GlobalExceptionHandlerTest {
     @Test
     void should_createResponseEntityWithWlsException_when_dataConflictExceptionIsGiven() {
       val serviceID = Instancio.create(String.class);
-      val dataConflictException = new DataConflictException(
-              Instancio.create(String.class),
-              Instancio.create(String.class)
-      );
+      val dataConflictException =
+          new DataConflictException(Instancio.create(String.class), Instancio.create(String.class));
 
       Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceID);
 
@@ -75,12 +72,10 @@ class GlobalExceptionHandlerTest {
       val logEvent = listAppender.list.getFirst();
       Assertions.assertThat(logEvent.getLevel()).isEqualTo(Level.WARN);
       Assertions.assertThat(logEvent.getFormattedMessage())
-              .isEqualTo(
-                      String.format(
-                              "Datenkonflikt aufgetreten (Code: %s, Service %s): %s",
-                              dataConflictException.getCode(),
-                              serviceID,
-                              dataConflictException.getMessage()));
+          .isEqualTo(
+              String.format(
+                  "Datenkonflikt aufgetreten (Code: %s, Service %s): %s",
+                  dataConflictException.getCode(), serviceID, dataConflictException.getMessage()));
       Assertions.assertThat(logEvent.getThrowableProxy()).isNull();
     }
   }
@@ -108,22 +103,7 @@ class GlobalExceptionHandlerTest {
       Assertions.assertThat(logEvent.getFormattedMessage()).isEqualTo("handling throwable");
       Assertions.assertThat(logEvent.getThrowableProxy()).isNotNull();
       Assertions.assertThat(logEvent.getThrowableProxy().getMessage())
-              .isEqualTo("Unerwarteter Fehler");
-    }
-  }
-
-  @Nested
-  class GetService {
-
-    @Test
-    void should_returnServiceIdFromFormatter_when_called() {
-      val expectedServiceId = Instancio.create(String.class);
-      Mockito.when(serviceIDFormatter.getId()).thenReturn(expectedServiceId);
-
-      val result = unitUnderTest.getService();
-
-      Assertions.assertThat(result).isEqualTo(expectedServiceId);
-      Mockito.verify(serviceIDFormatter).getId();
+          .isEqualTo("Unerwarteter Fehler");
     }
   }
 }

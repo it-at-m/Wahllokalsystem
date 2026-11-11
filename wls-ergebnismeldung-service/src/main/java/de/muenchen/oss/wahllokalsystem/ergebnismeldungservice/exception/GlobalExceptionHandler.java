@@ -26,8 +26,11 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
   @ExceptionHandler
   public ResponseEntity<WlsExceptionDTO> handleWlsExceptions(
       final DataConflictException dataConflictException) {
-    log.warn("Datenkonflikt aufgetreten (Code: {}, Service {}): {}",
-            dataConflictException.getCode(), getService(), dataConflictException.getMessage());
+    log.warn(
+        "Datenkonflikt aufgetreten (Code: {}, Service {}): {}",
+        dataConflictException.getCode(),
+        getService(),
+        dataConflictException.getMessage());
 
     return new ResponseEntity<>(
         new WlsExceptionDTO(

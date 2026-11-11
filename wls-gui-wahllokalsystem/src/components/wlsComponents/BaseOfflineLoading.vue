@@ -64,6 +64,7 @@ import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
+import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const router = useRouter();
@@ -83,6 +84,7 @@ const {
 } = storeToRefs(useInitTaskManagerStore());
 const { rerunFailedTasks } = useInitTaskManagerStore();
 const { isTestseiteGedruckt } = storeToRefs(useWorkflowStore());
+const { isOfflineCacheReady } = storeToRefs(useOnlineOfflineStore());
 
 const isLoading = computed(() => {
   return (
@@ -92,7 +94,11 @@ const isLoading = computed(() => {
 });
 
 watch([hasAllTasksRunSuccessfully, isTestseiteGedruckt], () => {
-  if (hasAllTasksRunSuccessfully.value && isTestseiteGedruckt.value) {
+  if (
+    hasAllTasksRunSuccessfully.value &&
+    isTestseiteGedruckt.value &&
+    isOfflineCacheReady.value
+  ) {
     router.push(getNextRoute());
   }
 });

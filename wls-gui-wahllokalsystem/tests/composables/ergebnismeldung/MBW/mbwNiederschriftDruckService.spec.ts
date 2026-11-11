@@ -452,7 +452,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
         },
         ereignisse: { hasEreignisse: false, vorfaelle: [], vorkommnisse: [] },
         footer: mockedFooter,
-        anzahlStimmabgabevermerke: mockedBWerte.b,
+        anzahlStimmabgabevermerke: mockedBWerte.b1,
         aWerte: mockedAWerte.a1 + mockedAWerte.a2,
         a1: mockedAWerte.a1,
         a2: mockedAWerte.a2,

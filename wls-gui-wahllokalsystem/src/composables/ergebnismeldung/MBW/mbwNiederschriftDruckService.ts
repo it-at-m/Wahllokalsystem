@@ -170,7 +170,7 @@ export function useMbwNiederschriftDruckService(
       const aWerteGesamt = aWerte.a1 + (aWerte.a2 || 0);
       return {
         ...niederschriftDruckInputBaseData,
-        anzahlStimmabgabevermerke: bWerte.b,
+        anzahlStimmabgabevermerke: bWerte.b1,
         aWerte: aWerteGesamt,
         a1: aWerte.a1,
         a2: aWerte.a2 || 0,

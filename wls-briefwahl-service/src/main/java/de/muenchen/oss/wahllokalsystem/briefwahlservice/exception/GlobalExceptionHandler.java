@@ -23,7 +23,7 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
 
   @ExceptionHandler
   public ResponseEntity<WlsExceptionDTO> handleThrowables(final Throwable throwable) {
-    log.info("handling throwable", throwable);
+    log.warn("handling throwable", throwable);
     return createResponse(getWahlExceptionDTO(throwable));
   }
 

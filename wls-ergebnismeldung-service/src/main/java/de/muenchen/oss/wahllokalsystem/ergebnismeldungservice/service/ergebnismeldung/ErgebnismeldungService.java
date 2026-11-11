@@ -137,7 +137,7 @@ public class ErgebnismeldungService {
     }
 
     if (!isGeschlossen) {
-      log.error(
+      log.warn(
           "Es wurde keine Schließungsuhrzeit für die Wahl {} vom Bezirk {} erfasst",
           bezirkUndWahlID.getWahlID(),
           bezirkUndWahlID.getWahlbezirkID());
@@ -158,7 +158,7 @@ public class ErgebnismeldungService {
           log.error("#sendRelevantStatus Exception:", e);
         }
       } else {
-        log.error(
+        log.warn(
             "#sendRelevantStatus Error: sendRelevantStatus sollte nie in Benutzung sein während beide Validierungstatus auf NICHT_GESENDET stehen.");
         throw exceptionFactory.createFachlicheWlsException(
             ExceptionConstants.FORCEERGEBNISSE_WRONG_USAGE);

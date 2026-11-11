@@ -52,7 +52,7 @@ public class StimmabgabevermerkeService {
       val entityToSave = stimmabgabevermerkeModelMapper.toEntity(wahldaten);
       stimmabgabevermerkeRepository.save(entityToSave);
     } catch (final Exception e) {
-      log.error("#postStimmabgabevermerke unsaveable:", e);
+      log.warn("#postStimmabgabevermerke unsaveable:", e);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.STIMMABGABEVERMERKE_UNSAVEABLE);
     }

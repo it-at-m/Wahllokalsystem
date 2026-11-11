@@ -34,7 +34,7 @@ public class WahlvorbereitungClientImpl implements UrnenwahlClient {
       urnenwahlSchliessungsUhrzeitDTO =
           urnenwahlSchliessungsUhrzeitControllerApi.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
     } catch (final WlsException wlsException) {
-      log.debug("found WlsException", wlsException);
+      log.warn("found WlsException", wlsException);
       throw wlsException;
     } catch (final Exception e) {
       throw exceptionFactory.createTechnischeWlsException(

@@ -34,7 +34,7 @@ public class WahlenClientImpl implements WahlenClient {
           wahldatenControllerApi.loadWahlen(
               wahltagWithNummerModel.wahltag(), wahltagWithNummerModel.wahltagNummer());
     } catch (final Exception exception) {
-      log.info("exception on loadwahl from external", exception);
+      log.warn("exception on loadwahl from external", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
     }

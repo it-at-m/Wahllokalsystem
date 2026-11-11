@@ -41,7 +41,7 @@ public class WaehleranzahlService {
     try {
       waehleranzahlRepository.save(waehleranzahlModelMapper.toEntity(waehleranzahl));
     } catch (Exception e) {
-      log.error(
+      log.warn(
           "#postWahlbeteiligung: Die Wahlen konnten aufgrund eines Fehlers nicht gespeichert werden:",
           e);
       throw exceptionFactory.createTechnischeWlsException(

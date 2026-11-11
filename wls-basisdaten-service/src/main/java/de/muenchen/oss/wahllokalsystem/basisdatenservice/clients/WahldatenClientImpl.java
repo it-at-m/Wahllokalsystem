@@ -33,7 +33,7 @@ public class WahldatenClientImpl implements WahldatenClient {
           wahldatenControllerApi.loadBasisdaten(
               wahltagWithNummerModel.wahltag(), wahltagWithNummerModel.wahltagNummer());
     } catch (final Exception exception) {
-      log.info("exception on getBasisdaten from external", exception);
+      log.warn("exception on getBasisdaten from external", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
     }

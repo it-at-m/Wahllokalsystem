@@ -158,6 +158,45 @@ describe("dataSyncer.ts", () => {
     });
   });
 
+  describe("dirtyIDBTaskLabels", () => {
+    it("should_returnGroupedStimmzettelAndMappedLabels_when_dirtyTasksExist", () => {
+      unitUnderTest.dirtyTasksAfterSync.value = [
+        createTask(
+          "https://example.test/cache/businessActions/Ereignisse/identifier"
+        ),
+        createTask(
+          "https://example.test/cache/businessActions/Ereignisse/another-identifier"
+        ),
+        createTask(
+          "https://example.test/cache/stimmzettelerfassung/election/identifier/team/identifier/stimmzettel/2"
+        ),
+        createTask(
+          "https://example.test/cache/stimmzettelerfassung/election/identifier/team/identifier/stimmzettel/1"
+        ),
+        createTask(
+          "https://example.test/cache/stimmzettelerfassung/election/identifier/team/identifier/status"
+        ),
+      ];
+
+      expect(unitUnderTest.dirtyIDBTaskLabels.value).toStrictEqual([
+        "Ereignisse",
+        "Stimmzettelerfassung oder Bearbeitungsstatus",
+        "Stimmzettel 1-2",
+      ]);
+    });
+
+    it("should_returnAdministrationOnce_when_noHandlerCanHandleDeviatingUrls", () => {
+      unitUnderTest.dirtyTasksAfterSync.value = [
+        createTask("https://example.test/cache/unknown-resource"),
+        createTask("https://example.test/cache/another-unknown-resource"),
+      ];
+
+      expect(unitUnderTest.dirtyIDBTaskLabels.value).toStrictEqual([
+        "Administration",
+      ]);
+    });
+  });
+
   describe("getSyncTasks", () => {
     it("should_returnTasksForDirtyItemsSortedByTimestamp_when_dirtyItemsAreGiven", async () => {
       mockDefinitions.getDirtyItems.mockResolvedValue(

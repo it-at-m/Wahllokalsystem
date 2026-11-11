@@ -233,8 +233,6 @@ function onSavedClickedAndClose() {
 
 function onSavedClickedAndNext() {
   emit("confirmNext", stimmzettelManager.getStimmzettelSnapshot());
-  stimmzettelManager.startNewStimmzettel(currentUserTeamName.value);
-  void focusCommandProcessingTextField();
 }
 
 function onResetClicked() {

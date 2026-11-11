@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-wahlvorstand-service</artifactId>
-    <version>0.5.27-SNAPSHOT</version>
+    <version>0.5.28-SNAPSHOT</version>
     <name>wls_wahlvorstand_service</name>
 
     <properties>
@@ -558,7 +558,7 @@
                     <dependency>
                         <groupId>de.muenchen.oss</groupId>
                         <artifactId>itm-java-codeformat</artifactId>
-                        <version>1.0.9</version>
+                        <version>1.0.10</version>
                     </dependency>
                 </dependencies>
                 <configuration>

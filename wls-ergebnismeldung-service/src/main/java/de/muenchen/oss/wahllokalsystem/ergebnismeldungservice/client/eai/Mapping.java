@@ -11,8 +11,11 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisme
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -22,6 +25,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class Mapping {
+
+  private final BiFunction<ErgebnisDTO, ErgebnisDTO, ErgebnisDTO> SUM_ERGEBNIS_INTO_FIRST_ARGUMENT =
+      (vorhandenesErgebnis, neuesErgebnis) -> {
+        vorhandenesErgebnis.setErgebnis(
+            Math.addExact(vorhandenesErgebnis.getErgebnis(), neuesErgebnis.getErgebnis()));
+        return vorhandenesErgebnis;
+      };
 
   public AWerteDTO toClientDTO(final AWerte aWerte) {
     AWerteDTO aoueaiAWerte = new AWerteDTO();
@@ -33,7 +43,7 @@ public class Mapping {
   }
 
   public Set<ErgebnisDTO> toDtoErgebnisseSet(final Collection<ErgebnisseModel> ergebnisse) {
-    Set<ErgebnisDTO> ergebnisSet = new HashSet<>();
+    final Map<ErgebnisKey, ErgebnisDTO> aggregierteErgebnisse = new HashMap<>();
 
     ergebnisse.forEach(
         ergebnisList -> {
@@ -58,11 +68,13 @@ public class Mapping {
                     aoueaiErgebnis.setWahlvorschlagsordnungszahl(wahlvorschlagsordnungszahl);
 
                     aoueaiErgebnis.setStimmenart(stapelart.name());
-                    ergebnisSet.add(aoueaiErgebnis);
+                    val key = createErgebnisKey(stapelart, ergebnis);
+                    aggregierteErgebnisse.merge(
+                        key, aoueaiErgebnis, SUM_ERGEBNIS_INTO_FIRST_ARGUMENT);
                   });
         });
 
-    return ergebnisSet;
+    return new HashSet<>(aggregierteErgebnisse.values());
   }
 
   public ErgebnismeldungDTO.WahlartEnum toWahlartDTO(final WahlartModel wahlart) {
@@ -102,4 +114,19 @@ public class Mapping {
     ungueltigeStimmzettel.setStimmenart(stapelart.name());
     return ungueltigeStimmzettel;
   }
+
+  private ErgebnisKey createErgebnisKey(
+      final StapelartModel stapelart, final ErgebnisModel ergebnis) {
+    return new ErgebnisKey(
+        stapelart.name(),
+        ergebnis.wahlvorschlagsordnungszahl(),
+        ergebnis.wahlvorschlagID(),
+        ergebnis.kandidatID());
+  }
 }
+
+record ErgebnisKey(
+    String stimmenart,
+    Long wahlvorschlagsordnungszahl,
+    String wahlvorschlagID,
+    String kandidatID) {}

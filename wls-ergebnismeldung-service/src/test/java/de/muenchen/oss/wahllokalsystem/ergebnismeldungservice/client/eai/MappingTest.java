@@ -22,8 +22,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -113,6 +116,141 @@ class MappingTest {
           .usingRecursiveComparison()
           .ignoringCollectionOrder()
           .isEqualTo(expectedResult);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+      "10, 10, 20, false",
+      "10, 15, 25, false",
+      "10, 10, 20, true",
+      "10, 15, 25, true",
+      "2147483648, 2147483648, 4294967296, false",
+      "2147483648, 2147483648, 4294967296, true"
+    })
+    void should_sumResults_when_duplicateKeysAreGiven(
+        final long firstCount,
+        final long secondCount,
+        final long expectedCount,
+        final boolean acrossModels) {
+      val first = new ErgebnisModel("wahlvorschlag", "kandidat", 1L, firstCount, 1L);
+      val second = new ErgebnisModel("wahlvorschlag", "kandidat", 1L, secondCount, 2L);
+      val entitiesToMap =
+          acrossModels
+              ? List.of(
+                  new ErgebnisseModel("wbzID", "wahlID", StapelartModel.BTW_A, List.of(first)),
+                  new ErgebnisseModel("wbzID", "wahlID", StapelartModel.BTW_A, List.of(second)))
+              : List.of(
+                  new ErgebnisseModel(
+                      "wbzID", "wahlID", StapelartModel.BTW_A, List.of(first, second)));
+
+      val result = unitUnderTest.toDtoErgebnisseSet(entitiesToMap);
+
+      val expectedResult =
+          new ErgebnisDTO()
+              .stimmenart("BTW_A")
+              .wahlvorschlagsordnungszahl(1L)
+              .wahlvorschlagID("wahlvorschlag")
+              .kandidatID("kandidat")
+              .ergebnis(expectedCount);
+      Assertions.assertThat(result).containsExactly(expectedResult);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+      "EUW_C_GUELTIG, 1, wahlvorschlag, kandidat",
+      "BTW_A, 2, wahlvorschlag, kandidat",
+      "BTW_A, 1, andererWahlvorschlag, kandidat",
+      "BTW_A, 1, wahlvorschlag, andererKandidat"
+    })
+    void should_keepResultsSeparate_when_anyKeyFieldDiffers(
+        final StapelartModel stapelart,
+        final Long ordnungszahl,
+        final String wahlvorschlagID,
+        final String kandidatID) {
+      val entitiesToMap =
+          List.of(
+              new ErgebnisseModel(
+                  "wbzID",
+                  "wahlID",
+                  StapelartModel.BTW_A,
+                  List.of(new ErgebnisModel("wahlvorschlag", "kandidat", 1L, 10, null))),
+              new ErgebnisseModel(
+                  "wbzID",
+                  "wahlID",
+                  stapelart,
+                  List.of(new ErgebnisModel(wahlvorschlagID, kandidatID, ordnungszahl, 10, null))));
+
+      val result = unitUnderTest.toDtoErgebnisseSet(entitiesToMap);
+
+      Assertions.assertThat(result)
+          .containsExactlyInAnyOrder(
+              new ErgebnisDTO()
+                  .stimmenart("BTW_A")
+                  .wahlvorschlagsordnungszahl(1L)
+                  .wahlvorschlagID("wahlvorschlag")
+                  .kandidatID("kandidat")
+                  .ergebnis(10L),
+              new ErgebnisDTO()
+                  .stimmenart(stapelart.name())
+                  .wahlvorschlagsordnungszahl(ordnungszahl)
+                  .wahlvorschlagID(wahlvorschlagID)
+                  .kandidatID(kandidatID)
+                  .ergebnis(10L));
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(longs = {-1L, 1L})
+    void should_sumResults_when_candidateIsNullAndOrdinalIsNullable(final Long ordnungszahl) {
+      val entitiesToMap =
+          List.of(
+              new ErgebnisseModel(
+                  "wbzID",
+                  "wahlID",
+                  StapelartModel.BTW_A,
+                  List.of(
+                      new ErgebnisModel("wahlvorschlag", null, ordnungszahl, 10, null),
+                      new ErgebnisModel("wahlvorschlag", null, ordnungszahl, 15, null))));
+
+      val result = unitUnderTest.toDtoErgebnisseSet(entitiesToMap);
+
+      Assertions.assertThat(result)
+          .containsExactly(
+              new ErgebnisDTO()
+                  .stimmenart("BTW_A")
+                  .wahlvorschlagsordnungszahl(ordnungszahl)
+                  .wahlvorschlagID("wahlvorschlag")
+                  .kandidatID(null)
+                  .ergebnis(25L));
+    }
+
+    @Test
+    void should_returnEmptySet_when_collectionIsEmpty() {
+      Assertions.assertThat(unitUnderTest.toDtoErgebnisseSet(List.of())).isEmpty();
+    }
+
+    @Test
+    void should_returnEmptySet_when_resultListIsEmpty() {
+      val entitiesToMap =
+          List.of(new ErgebnisseModel("wbzID", "wahlID", StapelartModel.BTW_A, List.of()));
+
+      Assertions.assertThat(unitUnderTest.toDtoErgebnisseSet(entitiesToMap)).isEmpty();
+    }
+
+    @Test
+    void should_throwArithmeticException_when_sumOverflows() {
+      val entitiesToMap =
+          List.of(
+              new ErgebnisseModel(
+                  "wbzID",
+                  "wahlID",
+                  StapelartModel.BTW_A,
+                  List.of(
+                      new ErgebnisModel("wahlvorschlag", "kandidat", 1L, Long.MAX_VALUE, null),
+                      new ErgebnisModel("wahlvorschlag", "kandidat", 1L, 1, null))));
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.toDtoErgebnisseSet(entitiesToMap))
+          .isInstanceOf(ArithmeticException.class);
     }
   }
 

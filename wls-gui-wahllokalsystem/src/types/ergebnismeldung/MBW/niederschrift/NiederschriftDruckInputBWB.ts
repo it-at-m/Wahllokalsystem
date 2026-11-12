@@ -8,6 +8,7 @@ export interface NiederschriftUhrzeit {
 }
 
 export interface NiederschriftDruckInputBWB extends NiederschriftDruckInputBase {
+  anzahlLeereStimmzettelumschlaege: number | null;
   wahlbriefdaten: NiederschriftWahlbriefdaten;
   beanstandeteWahlbriefe: NiederschriftBeanstandeteWahlbriefe;
 }

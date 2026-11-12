@@ -11,7 +11,9 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisme
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +35,13 @@ public class Mapping {
   }
 
   public Set<ErgebnisDTO> toDtoErgebnisseSet(final Collection<ErgebnisseModel> ergebnisse) {
-    Set<ErgebnisDTO> ergebnisSet = new HashSet<>();
+    record ErgebnisKey(
+        String stimmenart,
+        Long wahlvorschlagsordnungszahl,
+        String wahlvorschlagID,
+        String kandidatID) {}
+
+    Map<ErgebnisKey, ErgebnisDTO> aggregierteErgebnisse = new HashMap<>();
 
     ergebnisse.forEach(
         ergebnisList -> {
@@ -58,11 +66,25 @@ public class Mapping {
                     aoueaiErgebnis.setWahlvorschlagsordnungszahl(wahlvorschlagsordnungszahl);
 
                     aoueaiErgebnis.setStimmenart(stapelart.name());
-                    ergebnisSet.add(aoueaiErgebnis);
+                    val key =
+                        new ErgebnisKey(
+                            stapelart.name(),
+                            wahlvorschlagsordnungszahl,
+                            ergebnis.wahlvorschlagID(),
+                            ergebnis.kandidatID());
+                    aggregierteErgebnisse.merge(
+                        key,
+                        aoueaiErgebnis,
+                        (vorhandenesErgebnis, neuesErgebnis) -> {
+                          vorhandenesErgebnis.setErgebnis(
+                              Math.addExact(
+                                  vorhandenesErgebnis.getErgebnis(), neuesErgebnis.getErgebnis()));
+                          return vorhandenesErgebnis;
+                        });
                   });
         });
 
-    return ergebnisSet;
+    return new HashSet<>(aggregierteErgebnisse.values());
   }
 
   public ErgebnismeldungDTO.WahlartEnum toWahlartDTO(final WahlartModel wahlart) {

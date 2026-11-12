@@ -120,7 +120,14 @@ const wahlID = route.params.wahlId as string;
 
 const { currentUserTeamName } = storeToRefs(useUserStore());
 
-const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
+const {
+  stimmzettelManager,
+  stimmzettelGueltigkeit,
+  isSaveDisabled,
+  isResetDisabled,
+  isCancelButtonDisabled,
+  onResetClicked,
+} = useStimmzettelerfassungDialogUtils(
   computed(() => stimmzettelkennung.value),
   properties.wahlvorschlaege,
   wahlID
@@ -154,43 +161,6 @@ const baseContentRef = useTemplateRef<
 >(BASE_CONTENT_TEMPLATE_REF_NAME);
 
 const currentAction = ref(confirmActions.saveAndContinue);
-
-const isCancelButtonDisabled = computed(
-  () => stimmzettelManager.hasStimmzettelBeenEdited.value
-);
-
-const isSaveDisabled = computed(() => {
-  if (
-    stimmzettelManager.stimmzettelBeforeEdit.value !== null &&
-    stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet.value &&
-    !stimmzettelManager.hasStimmzettelBeenEdited.value
-  )
-    return true;
-
-  return (
-    !stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
-      .value &&
-    stimmzettelGueltigkeit.value !== StimmzettelGueltigkeitEnum.Leer &&
-    stimmzettelGueltigkeit.value !==
-      StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag &&
-    stimmzettelGueltigkeit.value !==
-      StimmzettelGueltigkeitEnum.BeschlussAusstehend &&
-    !!stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
-  );
-});
-const isResetDisabled = computed(() => {
-  if (stimmzettelManager.stimmzettelBeforeEdit.value !== null) {
-    return !stimmzettelManager.hasStimmzettelBeenEdited.value;
-  }
-  return !stimmzettelManager.bearbeitenDialogStimmzettelUtils.hasAnyValuesSet
-    .value;
-});
-
-const stimmzettelGueltigkeit = computed(
-  () =>
-    stimmzettelManager.bearbeitenDialogStimmzettelUtils.stimmzettel.value
-      .gueltigkeit
-);
 
 const isCancelConfirmationDialogVisible = ref(false);
 
@@ -233,19 +203,6 @@ function onSavedClickedAndClose() {
 
 function onSavedClickedAndNext() {
   emit("confirmNext", stimmzettelManager.getStimmzettelSnapshot());
-}
-
-function onResetClicked() {
-  if (
-    stimmzettelManager.hasStimmzettelBeenEdited.value &&
-    stimmzettelManager.stimmzettelBeforeEdit.value !== null
-  ) {
-    stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory(
-      stimmzettelManager.stimmzettelBeforeEdit.value
-    );
-  } else {
-    stimmzettelManager.bearbeitenDialogStimmzettelUtils.resetStimmzettelAndHistory();
-  }
 }
 
 function onLeerenClicked() {

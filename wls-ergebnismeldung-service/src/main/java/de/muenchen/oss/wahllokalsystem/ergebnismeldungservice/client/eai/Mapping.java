@@ -69,7 +69,6 @@ public class Mapping {
 
                     aoueaiErgebnis.setStimmenart(stapelart.name());
                     val key = createErgebnisKey(stapelart, ergebnis);
-                    ;
                     aggregierteErgebnisse.merge(
                         key, aoueaiErgebnis, SUM_ERGEBNIS_INTO_FIRST_ARGUMENT);
                   });

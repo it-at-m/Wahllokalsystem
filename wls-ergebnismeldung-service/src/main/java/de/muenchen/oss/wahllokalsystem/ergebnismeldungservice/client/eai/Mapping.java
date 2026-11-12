@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -24,6 +25,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class Mapping {
+
+  private final BiFunction<ErgebnisDTO, ErgebnisDTO, ErgebnisDTO> SUM_ERGEBNIS_INTO_FIRST_ARGUMENT =
+      (vorhandenesErgebnis, neuesErgebnis) -> {
+        vorhandenesErgebnis.setErgebnis(
+            Math.addExact(vorhandenesErgebnis.getErgebnis(), neuesErgebnis.getErgebnis()));
+        return vorhandenesErgebnis;
+      };
 
   public AWerteDTO toClientDTO(final AWerte aWerte) {
     AWerteDTO aoueaiAWerte = new AWerteDTO();
@@ -35,13 +43,7 @@ public class Mapping {
   }
 
   public Set<ErgebnisDTO> toDtoErgebnisseSet(final Collection<ErgebnisseModel> ergebnisse) {
-    record ErgebnisKey(
-        String stimmenart,
-        Long wahlvorschlagsordnungszahl,
-        String wahlvorschlagID,
-        String kandidatID) {}
-
-    Map<ErgebnisKey, ErgebnisDTO> aggregierteErgebnisse = new HashMap<>();
+    final Map<ErgebnisKey, ErgebnisDTO> aggregierteErgebnisse = new HashMap<>();
 
     ergebnisse.forEach(
         ergebnisList -> {
@@ -66,21 +68,10 @@ public class Mapping {
                     aoueaiErgebnis.setWahlvorschlagsordnungszahl(wahlvorschlagsordnungszahl);
 
                     aoueaiErgebnis.setStimmenart(stapelart.name());
-                    val key =
-                        new ErgebnisKey(
-                            stapelart.name(),
-                            wahlvorschlagsordnungszahl,
-                            ergebnis.wahlvorschlagID(),
-                            ergebnis.kandidatID());
+                    val key = createErgebnisKey(stapelart, ergebnis);
+                    ;
                     aggregierteErgebnisse.merge(
-                        key,
-                        aoueaiErgebnis,
-                        (vorhandenesErgebnis, neuesErgebnis) -> {
-                          vorhandenesErgebnis.setErgebnis(
-                              Math.addExact(
-                                  vorhandenesErgebnis.getErgebnis(), neuesErgebnis.getErgebnis()));
-                          return vorhandenesErgebnis;
-                        });
+                        key, aoueaiErgebnis, SUM_ERGEBNIS_INTO_FIRST_ARGUMENT);
                   });
         });
 
@@ -124,4 +115,19 @@ public class Mapping {
     ungueltigeStimmzettel.setStimmenart(stapelart.name());
     return ungueltigeStimmzettel;
   }
+
+  private ErgebnisKey createErgebnisKey(
+      final StapelartModel stapelart, final ErgebnisModel ergebnis) {
+    return new ErgebnisKey(
+        stapelart.name(),
+        ergebnis.wahlvorschlagsordnungszahl(),
+        ergebnis.wahlvorschlagID(),
+        ergebnis.kandidatID());
+  }
 }
+
+record ErgebnisKey(
+    String stimmenart,
+    Long wahlvorschlagsordnungszahl,
+    String wahlvorschlagID,
+    String kandidatID) {}

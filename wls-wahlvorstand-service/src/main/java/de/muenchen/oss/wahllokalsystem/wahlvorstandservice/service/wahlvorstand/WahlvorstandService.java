@@ -78,7 +78,7 @@ public class WahlvorstandService {
       try {
         wahlvorstandRepository.save(wahlvorstandModelMapper.toEntity(wahlvorstandModel));
       } catch (Exception e) {
-        log.error("#postWahlvorstand unsaveable: ", e);
+        log.warn("#postWahlvorstand unsaveable: ", e);
         throw exceptionFactory.createTechnischeWlsException(
             ExceptionConstants.POSTWAHLVORSTAND_NOT_SAVEABLE);
       }

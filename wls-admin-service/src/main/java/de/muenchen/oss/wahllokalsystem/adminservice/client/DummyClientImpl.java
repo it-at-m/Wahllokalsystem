@@ -37,28 +37,28 @@ public class DummyClientImpl
 
   @Override
   public void initialiseAWerte(List<String> wahlbezirkIDs) {
-    log.info(
+    log.warn(
         "dummy client initialiseAWerte({}) called instead of ergebnismeldung-service",
         wahlbezirkIDs);
   }
 
   @Override
   public void postKonfigurierterWahltag(KonfigurierterWahltagModel konfigurierterWahltag) {
-    log.info(
+    log.warn(
         "dummy client postKonfigurierterWahltag({}) called instead of infomanagement-service",
         konfigurierterWahltag);
   }
 
   @Override
   public void deleteKonfigurierterWahltag(String wahltagID) {
-    log.info(
+    log.warn(
         "dummy client deleteKonfigurierterWahltag({}) called instead of infomanagement-service",
         wahltagID);
   }
 
   @Override
   public List<WahlbezirkModel> getWahlbezirke(String wahltagID) {
-    log.info("dummy client getWahlbezirke({}) called instead of basisdaten-service", wahltagID);
+    log.warn("dummy client getWahlbezirke({}) called instead of basisdaten-service", wahltagID);
     return List.of(
         new WahlbezirkModel(
             "wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", LocalDate.now(), "0", "wahlID1"),
@@ -70,7 +70,7 @@ public class DummyClientImpl
 
   @Override
   public List<WahltagModel> getWahltage() {
-    log.info("dummy client getWahltage() called instead of infomanagement-service");
+    log.warn("dummy client getWahltage() called instead of infomanagement-service");
     return List.of(
         new WahltagModel(
             "wahltagID", LocalDate.now().minusMonths(2), "Beschreibung Wahltag 1", "0"),
@@ -81,18 +81,18 @@ public class DummyClientImpl
 
   @Override
   public void putWahltermindaten(String wahltagID) {
-    log.info("dummy client putWahltermindaten({}) called instead of basisdaten-service", wahltagID);
+    log.warn("dummy client putWahltermindaten({}) called instead of basisdaten-service", wahltagID);
   }
 
   @Override
   public void deleteWahltermindaten(String wahltagID) {
-    log.info(
+    log.warn(
         "dummy client deleteWahltermindaten({}) called instead of basisdaten-service", wahltagID);
   }
 
   @Override
   public List<KonfigurierterWahltagModel> getKonfigurierteWahltage() {
-    log.info("dummy client getKonfigurierteWahltage() called instead of infomanagement-service");
+    log.warn("dummy client getKonfigurierteWahltage() called instead of infomanagement-service");
     return List.of(
         new KonfigurierterWahltagModel(LocalDate.now(), "wahltagID1", true, "0"),
         new KonfigurierterWahltagModel(LocalDate.now().minusMonths(1), "wahltagID2", false, "1"),
@@ -101,13 +101,13 @@ public class DummyClientImpl
 
   @Override
   public void resetWahlen() {
-    log.info("dummy client resetWahlen() called instead of basisdaten-service");
+    log.warn("dummy client resetWahlen() called instead of basisdaten-service");
   }
 
   @Override
   public String generateAndExportWahllokalBenutzer(
       String wahltagID, List<WahllokalBenutzerModel> wahllokalUserInfoModel) {
-    log.info(
+    log.warn(
         "dummy client generateWahllokalBenutzer({}) called instead of auth-service", wahltagID);
     return "dummy:ftpprs-1503\r\n"
         + "dummy:c94m3c-0365\r\n"
@@ -122,12 +122,12 @@ public class DummyClientImpl
 
   @Override
   public void deleteWahllokalBenutzer(String wahltagID) {
-    log.info("dummy client deleteWahllokalBenutzer({}) called instead of auth-service", wahltagID);
+    log.warn("dummy client deleteWahllokalBenutzer({}) called instead of auth-service", wahltagID);
   }
 
   @Override
   public String exportWahllokalBenutzer(String wahltagID) {
-    log.info("dummy client exportWahllokalBenutzer({}) called instead of auth-service", wahltagID);
+    log.warn("dummy client exportWahllokalBenutzer({}) called instead of auth-service", wahltagID);
     return "dummy:ftpprs-1503\r\n"
         + "dummy:c94m3c-0365\r\n"
         + "dummy:v7jnkr-2161\r\n"
@@ -140,7 +140,7 @@ public class DummyClientImpl
   }
 
   public List<WahlModel> getWahlen(String wahltagID) throws WlsException {
-    log.info("dummy client getWahlen() called instead of basisdaten-service");
+    log.warn("dummy client getWahlen() called instead of basisdaten-service");
     return List.of(
         new WahlModel(
             wahltagID,
@@ -170,6 +170,6 @@ public class DummyClientImpl
 
   @Override
   public void postWahlen(String wahltagID, List<WahlModel> wahlen) {
-    log.info("dummy client postWahlen() called instead of basisdaten-service");
+    log.warn("dummy client postWahlen() called instead of basisdaten-service");
   }
 }

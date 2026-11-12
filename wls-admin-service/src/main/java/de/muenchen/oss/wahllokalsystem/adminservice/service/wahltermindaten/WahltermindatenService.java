@@ -120,7 +120,7 @@ public class WahltermindatenService {
                     return e;
                   })
               .get();
-      log.error("#deleteWahltermindaten exception: ", reducedException);
+      log.warn("#deleteWahltermindaten exception: ", reducedException);
       throw reducedException;
     }
   }

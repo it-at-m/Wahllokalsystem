@@ -53,7 +53,7 @@ public class UrnenwahlvorbereitungService {
       urnenwahlVorbereitungRepository.save(
           urnenwahlvorbereitungModelMapper.toEntity(vorbereitungToSet));
     } catch (final Exception onSaveException) {
-      log.error("Fehler beim speichern: ", onSaveException);
+      log.warn("Fehler beim speichern: ", onSaveException);
       throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
     }
   }

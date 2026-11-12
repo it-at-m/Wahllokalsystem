@@ -36,7 +36,7 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
       val konfigurierterWahltagDTO = konfigurierterWahltagClientMapper.toDto(konfigurierterWahltag);
       konfigurierterWahltagControllerApi.setKonfigurierterWahltag(konfigurierterWahltagDTO);
     } catch (final WlsException wlsException) {
-      log.debug("#postKonfigurierterWahltag found WlsException:", wlsException);
+      log.warn("#postKonfigurierterWahltag found WlsException:", wlsException);
       throw wlsException;
     } catch (final Exception exception) {
       throw exceptionFactory.createTechnischeWlsException(
@@ -55,7 +55,7 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
       }
 
     } catch (WlsException wlsException) {
-      log.debug("#getKonfigurierteWahltage found WlsException:", wlsException);
+      log.warn("#getKonfigurierteWahltage found WlsException:", wlsException);
       throw wlsException;
     } catch (Exception exception) {
       throw exceptionFactory.createTechnischeWlsException(
@@ -73,7 +73,7 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
     try {
       konfigurierterWahltagControllerApi.deleteKonfigurierterWahltag(wahltagID);
     } catch (final WlsException wlsException) {
-      log.debug("#deleteKonfigurierterWahltag found WlsException:", wlsException);
+      log.warn("#deleteKonfigurierterWahltag found WlsException:", wlsException);
       throw wlsException;
     } catch (Exception exception) {
       throw exceptionFactory.createTechnischeWlsException(

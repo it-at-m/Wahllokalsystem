@@ -32,7 +32,7 @@ public class WahlenClientImpl implements WahlenClient {
     try {
       wahlenControllerApi.resetWahlen();
     } catch (WlsException wlsException) {
-      log.debug("#resetWahlen found WlsException:", wlsException);
+      log.warn("#resetWahlen found WlsException:", wlsException);
       throw wlsException;
     } catch (Exception exception) {
       throw exceptionFactory.createTechnischeWlsException(
@@ -52,10 +52,10 @@ public class WahlenClientImpl implements WahlenClient {
       }
       wahlen = wahlenClientMapper.toModelList(wahlenDTO);
     } catch (final WlsException wlsException) {
-      log.error("#getWahlen found WlsException:", wlsException);
+      log.warn("#getWahlen found WlsException:", wlsException);
       throw wlsException;
     } catch (final Exception exception) {
-      log.error("#getWahlen exception:", exception);
+      log.warn("#getWahlen exception:", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }
@@ -69,10 +69,10 @@ public class WahlenClientImpl implements WahlenClient {
     try {
       wahlenControllerApi.postWahlen(wahltagID, wahlenClientMapper.toDtoList(wahlen));
     } catch (final WlsException wlsException) {
-      log.error("#postWahlen found WlsException:", wlsException);
+      log.warn("#postWahlen found WlsException:", wlsException);
       throw wlsException;
     } catch (final Exception exception) {
-      log.error("#postWahlen exception:", exception);
+      log.warn("#postWahlen exception:", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }

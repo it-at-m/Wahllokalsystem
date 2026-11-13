@@ -112,8 +112,8 @@ import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseLatestLoadDiv from "@/components/common/div/BaseLatestLoadDiv.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
 import TheBeschlussfassungStartenDialog from "@/components/dse/beschlussfassung/TheBeschlussfassungStartenDialog.vue";
-import BaseTeamStatusListItem from "@/components/dse/monitoring/BaseTeamStatusListItem.vue";
-import { useMonitoringViewUtils } from "@/composables/dse/monitoring/monitoringViewUtils.ts";
+import BaseTeamStatusListItem from "@/components/dse/overview/BaseTeamStatusListItem.vue";
+import { useErfassungsstatusOverviewViewUtils } from "@/composables/dse/overview/erfassungsstatusOverviewViewUtils.ts";
 import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
@@ -136,10 +136,10 @@ const {
   isMoveOnToBeschlussfassungDisabled,
   isTeamStatusListLoading,
   isWorkflowStatusLoading,
-  onMonitoringSynchronisierenClicked,
+  onErfassungsstatusSynchronisierenClicked,
   loadWorkflowStatus,
   reopenStimmzettelerfassung,
-} = useMonitoringViewUtils(wahlID, wahlbezirkID);
+} = useErfassungsstatusOverviewViewUtils(wahlID, wahlbezirkID);
 const { isElectionFinished } = useWorkflowStore();
 
 const isAnyTeamBeingReopened = computed(() => teamBeingReopened.value !== null);
@@ -169,7 +169,7 @@ async function onBeschlussfassungStartenClicked() {
 }
 async function onAktualisierenClicked() {
   await loadWorkflowStatus();
-  await onMonitoringSynchronisierenClicked();
+  await onErfassungsstatusSynchronisierenClicked();
 }
 
 async function onOpenStimmzettelerfassungClicked(teamID: string) {

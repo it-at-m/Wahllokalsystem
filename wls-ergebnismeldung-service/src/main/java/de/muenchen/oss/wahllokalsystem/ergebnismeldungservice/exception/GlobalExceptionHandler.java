@@ -26,6 +26,12 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
   @ExceptionHandler
   public ResponseEntity<WlsExceptionDTO> handleWlsExceptions(
       final DataConflictException dataConflictException) {
+    log.warn(
+        "Datenkonflikt aufgetreten (Code: {}, Service {}): {}",
+        dataConflictException.getCode(),
+        getService(),
+        dataConflictException.getMessage());
+
     return new ResponseEntity<>(
         new WlsExceptionDTO(
             WlsExceptionCategory.F,
@@ -37,7 +43,7 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
 
   @ExceptionHandler
   public ResponseEntity<WlsExceptionDTO> handleThrowables(final Throwable throwable) {
-    log.info("handling throwable", throwable);
+    log.error("handling throwable", throwable);
     return createResponse(getWahlExceptionDTO(throwable));
   }
 

@@ -32,7 +32,7 @@ public class WahlbezirkeClientImpl implements WahlbezirkeClient {
     try {
       wahlbezirkDTOS = wahldatenControllerApi.loadWahlbezirke(forDate, wahltagNummer);
     } catch (final Exception exception) {
-      log.info("exception on loadWahlbezirke from external", exception);
+      log.warn("exception on loadWahlbezirke from external", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
     }

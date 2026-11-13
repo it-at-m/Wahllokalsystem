@@ -44,7 +44,7 @@ public abstract class AbstractAWerteService {
               aWerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID));
 
       if (aWerteList == null || aWerteList.isEmpty()) {
-        log.error("#getAWerte Keine Daten erhalten und keine gespeicherten A-Werte vorhanden!");
+        log.warn("#getAWerte Keine Daten erhalten und keine gespeicherten A-Werte vorhanden!");
         throw exceptionFactory.createTechnischeWlsException(
             ExceptionConstants.GETAWERTE_UNSAVEABLE);
       }

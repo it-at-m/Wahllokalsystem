@@ -58,7 +58,7 @@ public class StatusService {
     try {
       statusRepository.save(statusModelMapper.toEntity(status));
     } catch (Exception e) {
-      log.error("#postStatus unsaveable:", e);
+      log.warn("#postStatus unsaveable:", e);
       throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.STATUS_UNSAVEABLE);
     }
   }

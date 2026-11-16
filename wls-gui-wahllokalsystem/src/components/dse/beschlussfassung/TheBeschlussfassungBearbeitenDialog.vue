@@ -73,7 +73,7 @@ import TheBeschlussFassenTab from "@/components/dse/beschlussfassung/TheBeschlus
 import BaseStimmzettelErfassungCardContent from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelErfassungCardContent.vue";
 import BaseStimmzettelkennungStrongText from "@/components/dse/stimmzettelerfassung/baseComponents/BaseStimmzettelkennungStrongText.vue";
 import { useTheBeschlussfassungBearbeitenDialogUtils } from "@/composables/dse/beschlussfassung/theBeschlussfassungBearbeitenDialogUtils.ts";
-import { useStimmzettelerfassungDialogUtils } from "@/composables/dse/stimmzettelerfassung/stimmzettelerfassungDialogUtils.ts";
+import { useStimmzettelManager } from "@/composables/dse/stimmzettelerfassung/stimmzettelManager.ts";
 import { useStimmzettelTools } from "@/composables/dse/stimmzettelerfassung/stimmzettelTools.ts";
 import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 
@@ -93,7 +93,7 @@ const props = defineProps<{
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
 
-const { stimmzettelManager } = useStimmzettelerfassungDialogUtils(
+const stimmzettelManager = useStimmzettelManager(
   computed(() => stimmzettelKennung.value),
   props.wahlvorschlaege,
   wahlID

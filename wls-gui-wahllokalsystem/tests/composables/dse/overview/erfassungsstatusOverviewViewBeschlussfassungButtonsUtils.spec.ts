@@ -5,7 +5,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
 import { ref } from "vue";
 
-import { useMonitoringViewBeschlussfassungButtonsUtils } from "@/composables/dse/monitoring/monitoringViewBeschlussfassungButtonsUtils.ts";
+import { useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils } from "@/composables/dse/overview/erfassungsstatusOverviewViewBeschlussfassungButtonsUtils.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
@@ -18,7 +18,7 @@ const { createStimmzettelerfassungStatus, prepareStimmzettelerfassungStatus } =
   useStimmzettelerfassungStatusTestDataFactory();
 const { generateRandomBoolean, getRandomItem } = useCommonTestDataFactory();
 
-describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
+describe("useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils", () => {
   const wahlID = "wahlID";
   const wahlbezirkID = "wahlbezirkID";
   const teamNotDoneStates = Object.values(
@@ -51,7 +51,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
   describe("isBeschlussfassungBtnActive", () => {
     it("should_returnFalse_when_noTeamStatusAreGiven", () => {
       const { isBeschlussfassungBtnActive } =
-        useMonitoringViewBeschlussfassungButtonsUtils(
+        useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
           ref(generateRandomBoolean()),
           ref(generateRandomBoolean()),
           ref([]),
@@ -69,7 +69,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
         .build();
 
       const { isBeschlussfassungBtnActive } =
-        useMonitoringViewBeschlussfassungButtonsUtils(
+        useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
           ref(generateRandomBoolean()),
           ref(generateRandomBoolean()),
           ref([teamStatusEntry]),
@@ -90,7 +90,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
         .build();
 
       const { isBeschlussfassungBtnActive } =
-        useMonitoringViewBeschlussfassungButtonsUtils(
+        useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
           ref(generateRandomBoolean()),
           ref(generateRandomBoolean()),
           ref([teamStatusEntry1, teamStatusEntry2]),
@@ -110,7 +110,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           .build();
 
         const { isBeschlussfassungBtnActive } =
-          useMonitoringViewBeschlussfassungButtonsUtils(
+          useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
             ref(generateRandomBoolean()),
             ref(generateRandomBoolean()),
             ref([teamStatusEntry]),
@@ -131,7 +131,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
         .build();
 
       const { isMoveOnToBeschlussfassungDisabled } =
-        useMonitoringViewBeschlussfassungButtonsUtils(
+        useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
           ref(false),
           ref(false),
           ref([teamStatusEntry]),
@@ -153,7 +153,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
         .build();
 
       const { isMoveOnToBeschlussfassungDisabled } =
-        useMonitoringViewBeschlussfassungButtonsUtils(
+        useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
           ref(false),
           ref(false),
           ref([teamStatusEntry]),
@@ -174,7 +174,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
       workflowStore.electionWorkflowsStates[0].isNiederschriftDone = true;
 
       const { isMoveOnToBeschlussfassungDisabled } =
-        useMonitoringViewBeschlussfassungButtonsUtils(
+        useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
           ref(false),
           ref(false),
           ref([teamStatusEntry]),
@@ -195,7 +195,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
         .build();
 
       const { isMoveOnToBeschlussfassungDisabled } =
-        useMonitoringViewBeschlussfassungButtonsUtils(
+        useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
           ref(false),
           ref(false),
           ref([teamStatusEntry1, teamStatusEntry2]),
@@ -213,7 +213,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
         .build();
 
       const { isMoveOnToBeschlussfassungDisabled } =
-        useMonitoringViewBeschlussfassungButtonsUtils(
+        useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
           ref(true),
           ref(false),
           ref([teamStatusEntry]),
@@ -231,7 +231,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
         .build();
 
       const { isMoveOnToBeschlussfassungDisabled } =
-        useMonitoringViewBeschlussfassungButtonsUtils(
+        useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
           ref(false),
           ref(true),
           ref([teamStatusEntry]),
@@ -245,7 +245,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
 
     it("should_returnTrue_when_noTeamsWithStatusExists", () => {
       const { isMoveOnToBeschlussfassungDisabled } =
-        useMonitoringViewBeschlussfassungButtonsUtils(
+        useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
           ref(false),
           ref(false),
           ref([]),
@@ -265,7 +265,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           .build();
 
         const { isMoveOnToBeschlussfassungDisabled } =
-          useMonitoringViewBeschlussfassungButtonsUtils(
+          useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
             ref(false),
             ref(false),
             ref([teamStatusEntry]),
@@ -291,7 +291,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
             .build();
 
         const { isMoveOnToBeschlussfassungDisabled } =
-          useMonitoringViewBeschlussfassungButtonsUtils(
+          useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
             ref(false),
             ref(false),
             ref([
@@ -329,7 +329,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           .build();
 
         const { isBeschlussfassungContinueBtnVisible } =
-          useMonitoringViewBeschlussfassungButtonsUtils(
+          useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
             ref(generateRandomBoolean()),
             ref(generateRandomBoolean()),
             ref([createStimmzettelerfassungTeamStatusEntry()]),
@@ -350,7 +350,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           .build();
 
         const { isBeschlussfassungContinueBtnVisible } =
-          useMonitoringViewBeschlussfassungButtonsUtils(
+          useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
             ref(generateRandomBoolean()),
             ref(generateRandomBoolean()),
             ref([createStimmzettelerfassungTeamStatusEntry()]),
@@ -373,7 +373,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           .build();
 
         const { isBeschlussfassungStartenBtnVisible } =
-          useMonitoringViewBeschlussfassungButtonsUtils(
+          useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
             ref(generateRandomBoolean()),
             ref(generateRandomBoolean()),
             ref([createStimmzettelerfassungTeamStatusEntry()]),
@@ -394,7 +394,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
           .build();
 
         const { isBeschlussfassungStartenBtnVisible } =
-          useMonitoringViewBeschlussfassungButtonsUtils(
+          useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
             ref(generateRandomBoolean()),
             ref(generateRandomBoolean()),
             ref([createStimmzettelerfassungTeamStatusEntry()]),
@@ -409,7 +409,7 @@ describe("useMonitoringViewBeschlussfassungButtonsUtils", () => {
 
     it("should_returnTrue_when_noStatusExists", () => {
       const { isBeschlussfassungStartenBtnVisible } =
-        useMonitoringViewBeschlussfassungButtonsUtils(
+        useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
           ref(generateRandomBoolean()),
           ref(generateRandomBoolean()),
           ref([createStimmzettelerfassungTeamStatusEntry()]),

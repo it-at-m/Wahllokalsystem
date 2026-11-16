@@ -133,12 +133,7 @@ const {
   onCancelConfirmationDialogCancelled,
   onCancelConfirmationDialogConfirmed,
   onLeerenClicked,
-} = useStimmzettelerfassungDialogUtils(
-  properties.wahlvorschlaege,
-  emit,
-);
-
-
+} = useStimmzettelerfassungDialogUtils(properties.wahlvorschlaege, emit);
 
 defineExpose({ closeDialog, focusCommandProcessingTextField, showDialog });
 </script>

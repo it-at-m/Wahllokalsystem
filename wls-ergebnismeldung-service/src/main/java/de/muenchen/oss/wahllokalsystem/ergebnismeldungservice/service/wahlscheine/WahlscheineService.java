@@ -53,7 +53,7 @@ public class WahlscheineService {
     try {
       wahlscheineRepository.save(wahlscheineModelMapper.toEntity(wahlscheine));
     } catch (Exception e) {
-      log.error("#postWahlscheine unsaveable:", e);
+      log.warn("#postWahlscheine unsaveable:", e);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.WAHLSCHEINE_UNSAVEABLE);
     }

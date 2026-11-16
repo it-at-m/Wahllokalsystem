@@ -38,10 +38,10 @@ public class WahllokalBenutzerClientImpl implements WahllokalBenutzerClient {
               wahltagID, wahllokalUserInfoDTOs);
       log.info("#generateAndExportWahllokalBenutzer, response: {}", csvBenutzer);
     } catch (final WlsException wlsException) {
-      log.error("#generateAndExportWahllokalBenutzer found WlsException:", wlsException);
+      log.warn("#generateAndExportWahllokalBenutzer found WlsException:", wlsException);
       throw wlsException;
     } catch (final Exception exception) {
-      log.error("#generateAndExportWahllokalBenutzer exception:", exception);
+      log.warn("#generateAndExportWahllokalBenutzer exception:", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AUTH);
     }
@@ -54,10 +54,10 @@ public class WahllokalBenutzerClientImpl implements WahllokalBenutzerClient {
     try {
       wahllokalBenutzerControllerApi.deleteWahllokalBenutzer(wahltagID);
     } catch (final WlsException wlsException) {
-      log.error("#deleteWahllokalBenutzer found WlsException:", wlsException);
+      log.warn("#deleteWahllokalBenutzer found WlsException:", wlsException);
       throw wlsException;
     } catch (final Exception exception) {
-      log.error("#WahllokalBenutzer nicht geloescht. Exception:", exception);
+      log.warn("#WahllokalBenutzer nicht geloescht. Exception:", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AUTH);
     }
@@ -71,10 +71,10 @@ public class WahllokalBenutzerClientImpl implements WahllokalBenutzerClient {
       csvBenutzer = wahllokalBenutzerControllerApi.exportWahllokalBenutzer(wahltagID);
       log.info("#exportWahllokalBenutzer, response: {}", csvBenutzer);
     } catch (final WlsException wlsException) {
-      log.error("#exportWahllokalBenutzer found WlsException:", wlsException);
+      log.warn("#exportWahllokalBenutzer found WlsException:", wlsException);
       throw wlsException;
     } catch (final Exception exception) {
-      log.error("#WahllokalBenutzer nicht exportiert. Exception:", exception);
+      log.warn("#WahllokalBenutzer nicht exportiert. Exception:", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AUTH);
     }

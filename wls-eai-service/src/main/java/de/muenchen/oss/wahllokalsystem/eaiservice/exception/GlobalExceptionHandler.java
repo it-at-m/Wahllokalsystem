@@ -38,7 +38,7 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
 
   @ExceptionHandler
   public ResponseEntity<WlsExceptionDTO> handleThrowables(final Throwable throwable) {
-    log.info("handling throwable", throwable);
+    log.warn("handling throwable", throwable);
     return createResponse(getWahlExceptionDTO(throwable));
   }
 
@@ -51,8 +51,8 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
     val requestParameterName = missingRequestParameter.getParameterName();
     val requestURI = webRequest.getRequest().getRequestURI();
 
-    log.info("missing request parameter -> {}", requestParameterName);
-    log.info("path > {}", requestURI);
+    log.warn("missing request parameter -> {}", requestParameterName);
+    log.warn("path > {}", requestURI);
 
     return missingRequestParameterExceptionDataWrapperMapper
         .getExceptionDataWrapperForMissingRequestParameterByName(requestURI, requestParameterName)

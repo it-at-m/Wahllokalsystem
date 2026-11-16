@@ -44,6 +44,7 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
@@ -170,7 +171,7 @@ export function useMbwNiederschriftDruckService(
       const aWerteGesamt = aWerte.a1 + (aWerte.a2 || 0);
       return {
         ...niederschriftDruckInputBaseData,
-        anzahlStimmabgabevermerke: bWerte.b,
+        anzahlStimmabgabevermerke: bWerte.b1,
         aWerte: aWerteGesamt,
         a1: aWerte.a1,
         a2: aWerte.a2 || 0,
@@ -185,6 +186,13 @@ export function useMbwNiederschriftDruckService(
         ...niederschriftDruckInputBaseData,
         beanstandeteWahlbriefe: beanstandeteWahlbriefe,
         wahlbriefdaten: wahlbriefdaten,
+        anzahlLeereStimmzettelumschlaege: isDseAktiv.value
+          ? stimmzettelOfWahlbezirk.value.filter(
+              (stimmzettel) =>
+                stimmzettel.gueltigkeit ===
+                StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag
+            ).length
+          : null,
       };
     }
   }

@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class StimmzettelumschlaegeService {
 
-  private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
-
   private final StimmzettelumschlaegeRepository stimmzettelumschlaegeRepository;
   private final StimmzettelumschlaegeModelMapper stimmzettelumschlaegeModelMapper;
   private final StimmzettelumschlaegeValidator stimmzettelumschlaegeValidator;
@@ -64,7 +62,7 @@ public class StimmzettelumschlaegeService {
       stimmzettelumschlaegeRepository.save(
           stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaege));
     } catch (Exception e) {
-      log.error("#postStimmzettelumschlaege unsaveable:", e);
+      log.warn("#postStimmzettelumschlaege unsaveable:", e);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.STIMMZETTELUMSCHLAEGE_UNSAVEABLE);
     }

@@ -53,7 +53,7 @@ public class UnterbrechungsUhrzeitService {
       unterbrechungsUhrzeitRepository.save(
           unterbrechungsUhrzeitModelMapper.toEntity(unterbrechungsUhrzeitToSet));
     } catch (Exception e) {
-      log.error("Fehler beim speichern: ", e);
+      log.warn("Fehler beim speichern: ", e);
       throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
     }
   }

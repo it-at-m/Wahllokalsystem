@@ -31,7 +31,7 @@ public class WahlenClientImpl implements WahlenClient {
     try {
       wahlDTOs = wahlenControllerApi.getWahlen(wahltag.wahltagID());
     } catch (final Exception exception) {
-      log.info("exception on loadwahl from external", exception);
+      log.warn("exception on loadwahl from external", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }

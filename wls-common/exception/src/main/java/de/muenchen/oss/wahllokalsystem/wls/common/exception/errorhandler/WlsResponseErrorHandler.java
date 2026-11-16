@@ -34,9 +34,9 @@ public class WlsResponseErrorHandler extends DefaultResponseErrorHandler {
       log.debug("HttpStatus: {} - {}", response.getStatusCode(), response.getStatusText());
 
       createdException = createException(wlsExceptionDTO);
-      log.debug("Erstellte Exception: {}", createdException.toString());
+      log.warn("Erstellte Exception: {}", createdException.toString());
     } catch (Exception e) {
-      log.error(
+      log.warn(
           "Beim Erzeugen der WLS-Exception kam es zu einem Fehler. Erzeuge einen Standard-WlsException",
           e);
       throw createUnknownTechnischeWlsExceptionWithCause(e);

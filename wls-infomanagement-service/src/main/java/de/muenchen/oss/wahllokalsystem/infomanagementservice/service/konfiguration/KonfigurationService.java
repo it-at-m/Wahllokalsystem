@@ -98,7 +98,7 @@ public class KonfigurationService {
     try {
       konfigurationRepository.save(entityToSave);
     } catch (final Exception onSaveException) {
-      log.error("#setKonfiguration unsaveable: ", onSaveException);
+      log.warn("#setKonfiguration unsaveable: ", onSaveException);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.POSTKONFIGURATION_NOT_SAVEABLE);
     }

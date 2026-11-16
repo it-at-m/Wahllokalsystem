@@ -92,7 +92,7 @@ describe("commonPrintService.ts", () => {
       expect(document.createElement).toHaveBeenCalledExactlyOnceWith("canvas");
       expect(mockDefinitions.jsBarcode).toHaveBeenCalledExactlyOnceWith(
         expect.anything(),
-        "BTW2625.09.2026-S-SBZ-12",
+        "BTW2625092026-S-SBZ-12",
         { displayValue: false }
       );
       expect(mockDefinitions.toDataUrl).toHaveBeenCalledExactlyOnceWith(
@@ -112,7 +112,7 @@ describe("commonPrintService.ts", () => {
 
       expect(mockDefinitions.jsBarcode).toHaveBeenCalledExactlyOnceWith(
         expect.anything(),
-        "BTW2625.09.2026-N-BWBZ-12",
+        "BTW2625092026-N-BWBZ-12",
         { displayValue: false }
       );
     });
@@ -127,7 +127,7 @@ describe("commonPrintService.ts", () => {
 
       expect(mockDefinitions.jsBarcode).toHaveBeenCalledWith(
         expect.anything(),
-        "BTW2625.09.2026-S-SBZ-0012",
+        "BTW2625092026-S-SBZ-0012",
         { displayValue: false }
       );
     });

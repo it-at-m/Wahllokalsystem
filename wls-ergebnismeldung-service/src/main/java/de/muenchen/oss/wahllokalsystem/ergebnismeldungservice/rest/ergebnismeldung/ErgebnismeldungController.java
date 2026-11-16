@@ -98,14 +98,16 @@ public class ErgebnismeldungController {
               new ErgebnisseToSendCriteriaModel(
                   wahlID, wahlbezirkID, waehlerverzeichnisNummer, modelEnum, hauptwahlbezirkID));
       log.debug("#sendergebnis 1");
+    } catch (WlsException wlsException) {
+      log.warn("WlsException during sendErgebnisse occurred", wlsException);
+      return new ResponseEntity<>(dtoMapper.toDTO(wlsException), HttpStatus.CONFLICT);
     } catch (Exception e) {
-      log.debug("exception during sendErgebnisse occurred", e);
-      if (e instanceof WlsException wlsException)
-        return new ResponseEntity<>(dtoMapper.toDTO(wlsException), HttpStatus.CONFLICT);
+      log.error("exception during sendErgebnisse occurred", e);
     }
     if (!valid) {
       log.debug("#sendergebnis 2");
-      log.debug("#sendergebnis 3 valid:" + valid);
+      log.warn(
+          "#sendergebnis 3: sendErgebnisse response is false or error was thrown, return conflict");
       return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
     return null;

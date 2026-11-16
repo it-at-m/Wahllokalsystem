@@ -24,6 +24,7 @@ import BaseOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vu
 import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
+import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import HomeView from "@/views/HomeView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
@@ -224,7 +225,7 @@ describe("BaseOfflineLoading.vue", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_triggerRouting_when_allTasksRunSuccessfullyAndTestdruckIsPrinted", async () => {
+    it("should_triggerRouting_when_allTasksRunSuccessfullyAndTestdruckIsPrintedAndOfflineCacheIsReady", async () => {
       const pushMock = vi.fn();
       vi.spyOn(router, "push").mockImplementation(pushMock);
 
@@ -235,6 +236,8 @@ describe("BaseOfflineLoading.vue", () => {
       const taskManagerStore = useInitTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasAllTasksRunSuccessfully = false;
+      const onlineOfflineStore = useOnlineOfflineStore();
+      onlineOfflineStore.isOfflineCacheReady = true;
 
       await nextTick();
 

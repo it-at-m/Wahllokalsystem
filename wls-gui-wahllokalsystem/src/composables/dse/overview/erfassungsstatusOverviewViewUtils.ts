@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 import { onActivated } from "vue";
 
-import { useMonitoringViewBeschlussfassungButtonsUtils } from "@/composables/dse/monitoring/monitoringViewBeschlussfassungButtonsUtils.ts";
+import { useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils } from "@/composables/dse/overview/erfassungsstatusOverviewViewBeschlussfassungButtonsUtils.ts";
 import { useStimmzettelerfassungTeamStatusListState } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusListState.ts";
 import { useStimmzettelerfassungTeamStatusService } from "@/composables/dse/stimmzettelerfassungTeamStatus/stimmzettelerfassungTeamStatusService.ts";
 import { useStimmzettelerfassungStatusState } from "@/composables/dse/stimmzettelerfassungWorkflowStatus/stimmzettelerfassungStatusState.ts";
@@ -16,7 +16,10 @@ import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassung
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
+export function useErfassungsstatusOverviewViewUtils(
+  wahlID: string,
+  wahlbezirkID: string
+) {
   const stimmzettelerfassungState = useStimmzettelerfassungStatusState(
     wahlID,
     wahlbezirkID
@@ -29,8 +32,8 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
 
   const stimmzettelerfassungTeamState =
     useStimmzettelerfassungTeamStatusListState(wahlID, wahlbezirkID);
-  const monitoringViewBeschlussfassungButtonProperties =
-    useMonitoringViewBeschlussfassungButtonsUtils(
+  const erfassungsstatusOverviewViewBeschlussfassungButtonProperties =
+    useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
       stimmzettelerfassungTeamState.isTeamStatusListLoading,
       stimmzettelerfassungState.isWorkflowStatusLoading,
       stimmzettelerfassungTeamState.teamstatusList,
@@ -39,7 +42,7 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
       wahlbezirkID
     );
 
-  async function onMonitoringSynchronisierenClicked() {
+  async function onErfassungsstatusSynchronisierenClicked() {
     await _loadTeamstatusListe();
   }
 
@@ -77,7 +80,7 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
     setStepDone(
       wahlID,
       wahlbezirkID,
-      MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+      MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS,
       false
     );
     setStepDone(
@@ -118,11 +121,11 @@ export function useMonitoringViewUtils(wahlID: string, wahlbezirkID: string) {
   }
 
   return {
-    onMonitoringSynchronisierenClicked,
+    onErfassungsstatusSynchronisierenClicked,
     reopenStimmzettelerfassung,
 
     ...stimmzettelerfassungTeamState,
     ...stimmzettelerfassungState,
-    ...monitoringViewBeschlussfassungButtonProperties,
+    ...erfassungsstatusOverviewViewBeschlussfassungButtonProperties,
   };
 }

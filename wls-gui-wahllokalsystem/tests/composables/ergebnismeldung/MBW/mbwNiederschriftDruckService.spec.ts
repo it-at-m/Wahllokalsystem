@@ -1,10 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+import type { PersistedStimmzettel } from "@/types/dse/stimmzettelerfassung/PersistedStimmzettel.ts";
 import type { NiederschriftDruckInputBWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
 import type { NiederschriftDruckInputUWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputUWB.ts";
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand.ts";
+import type { App } from "vue";
 
 import { useWahlbriefdatenTestDataFactory } from "@tests/utils/briefwahl/WahlbriefdatenTestDataFactory.ts";
+import { usePersistedStimmzettelTestDataFactory } from "@tests/utils/dse/PersistedStimmzettelTestDataFactory.ts";
 import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
 import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
 import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bWerteTestDataFactory.ts";
@@ -13,6 +16,7 @@ import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/st
 import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/common/wahlscheineTestDataFactory.ts";
 import { useBedenklicherStimmzettelTestDataFactory } from "@tests/utils/ergebnismeldung/MBW/bedenklicherStimmzettelTestDataFactory.ts";
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
+import { withSetup } from "@tests/utils/testutils.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
@@ -26,11 +30,13 @@ import { ref } from "vue";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useMbwNiederschriftDruckService } from "@/composables/ergebnismeldung/MBW/mbwNiederschriftDruckService.ts";
+import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckBWB.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
+import { StimmzettelGueltigkeitEnum } from "@/types/dse/stimmzettelerfassung/StimmzettelGueltigkeitEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
@@ -54,6 +60,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createFooter: vi.fn(),
   printInWindow: vi.fn(),
   getBedenklicheStimmzettel: vi.fn(),
+  loadStimmzettelOfWahlbezirk: vi.fn(),
 }));
 
 vi.mock(import("jsbarcode"));
@@ -144,6 +151,13 @@ vi.mock(
 );
 
 const mockIsDseAktiv = ref(false);
+const mockStimmzettelOfWahlbezirk = ref<PersistedStimmzettel[]>([]);
+vi.mock("@/composables/dse/allStimmzettelOfWahlbezirkState.ts", () => ({
+  useAllStimmzettelOfWahlbezirkState: () => ({
+    stimmzettelOfWahlbezirk: mockStimmzettelOfWahlbezirk,
+    loadStimmzettelOfWahlbezirk: mockDefinitions.loadStimmzettelOfWahlbezirk,
+  }),
+}));
 vi.mock("@/stores/infomanagementStore.ts", () => ({
   useInfomanagementStore: () => ({
     isDseAktiv: mockIsDseAktiv,
@@ -181,6 +195,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
 
   beforeEach(() => {
     mockIsDseAktiv.value = false;
+    mockStimmzettelOfWahlbezirk.value = [];
     setActivePinia(createPinia());
   });
 
@@ -452,7 +467,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
         },
         ereignisse: { hasEreignisse: false, vorfaelle: [], vorkommnisse: [] },
         footer: mockedFooter,
-        anzahlStimmabgabevermerke: mockedBWerte.b,
+        anzahlStimmabgabevermerke: mockedBWerte.b1,
         aWerte: mockedAWerte.a1 + mockedAWerte.a2,
         a1: mockedAWerte.a1,
         a2: mockedAWerte.a2,
@@ -668,6 +683,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
       const eroeffnungsuhrzeitInHhMm = toHhMm(eroeffnungsuhrzeit).split(":");
 
       const expectedResult: NiederschriftDruckInputBWB = {
+        anzahlLeereStimmzettelumschlaege: null,
         aktuelleWahl: inputWahl,
         wahltagFormatiert: expectedWahltagFormatiert,
         barcode: expectedBarcode,
@@ -764,5 +780,114 @@ describe("mbwUtilsNiederschrift.ts", () => {
         mockedWahlbezirkNummer
       );
     });
+  });
+
+  describe("empty envelopes in chapter 3.2.2", () => {
+    const { preparePersistedStimmzettel } =
+      usePersistedStimmzettelTestDataFactory();
+    let app: App;
+    let template: ReturnType<typeof useNiederschriftDruckBWB>;
+
+    beforeEach(() => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      mockDefinitions.getWahlvorstand.mockResolvedValue(createWahlvorstand(0));
+      mockDefinitions.getBWerteForWahlbezirkAndWahl.mockResolvedValue(
+        prepareBWerte().build()
+      );
+      mockDefinitions.getBegruendungStimmzettelumschlaege.mockResolvedValue(
+        null
+      );
+      mockDefinitions.getErgebnisse.mockResolvedValue(undefined);
+      mockDefinitions.getBedenklicheStimmzettel.mockResolvedValue([]);
+      [unitUnderTest, app] = withSetup(() =>
+        useMbwNiederschriftDruckService(wahlID, wahlbezirkID)
+      );
+      template = useNiederschriftDruckBWB();
+    });
+
+    afterEach(() => {
+      app.unmount();
+    });
+
+    it.each([
+      {
+        isDseAktiv: true,
+        emptyEnvelopes: 2,
+        expected: 2,
+        state: "emptyEnvelopesFromMultipleTeamsExist",
+      },
+      {
+        isDseAktiv: true,
+        emptyEnvelopes: 0,
+        expected: 0,
+        state: "noEmptyEnvelopesExist",
+      },
+      {
+        isDseAktiv: false,
+        emptyEnvelopes: 2,
+        expected: null,
+        state: "dseIsInactive",
+      },
+    ])(
+      "should_printEmptyEnvelopeCountOrPlaceholder_when_$state",
+      async ({ isDseAktiv, emptyEnvelopes, expected }) => {
+        mockIsDseAktiv.value = isDseAktiv;
+        mockDefinitions.loadStimmzettelOfWahlbezirk.mockImplementation(
+          async () => {
+            mockStimmzettelOfWahlbezirk.value = [
+              ...Array.from({ length: emptyEnvelopes }, (_, index) =>
+                preparePersistedStimmzettel()
+                  .teamID(`${index + 1}`)
+                  .gueltigkeit(
+                    StimmzettelGueltigkeitEnum.BwbPseudoStimmzettelLeererUmschlag
+                  )
+                  .build()
+              ),
+              preparePersistedStimmzettel()
+                .gueltigkeit(StimmzettelGueltigkeitEnum.Leer)
+                .build(),
+              preparePersistedStimmzettel()
+                .gueltigkeit(StimmzettelGueltigkeitEnum.Invalid)
+                .build(),
+            ];
+          }
+        );
+
+        const result = (await unitUnderTest.prepareDataForNiederschriftDruck(
+          createStatus(),
+          prepareWahl().wahlID(wahlID).build()
+        )) as NiederschriftDruckInputBWB;
+
+        expect(result.anzahlLeereStimmzettelumschlaege).toBe(expected);
+        expect(
+          mockDefinitions.loadStimmzettelOfWahlbezirk
+        ).toHaveBeenCalledTimes(isDseAktiv ? 1 : 0);
+
+        const html = template.buildNiederschriftTemplateFromData({
+          ...result,
+          parteienListe: [],
+          gueltigeStimmenListe: [
+            {
+              ordnungszahl: 1,
+              bewerbername: "Bewerber",
+              parteiname: "Wahlvorschlag",
+              stapelA: 0,
+              stapelB: 0,
+              stapelBC: 0,
+              gesamt: 0,
+            },
+          ],
+        });
+        const document = new DOMParser().parseFromString(html, "text/html");
+        const chapter = Array.from(
+          document.querySelectorAll(".widthNumber")
+        ).find((element) => element.textContent === "3.2.2")?.parentElement;
+        expect(chapter?.textContent?.replace(/\s+/g, " ")).toContain(
+          `${expected ?? "_____________"} Stimmzettelumschläge enthielten keinen Stimmzettel`
+        );
+      }
+    );
   });
 });

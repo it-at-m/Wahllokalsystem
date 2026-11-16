@@ -63,7 +63,7 @@ public class EroeffnungsUhrzeitService {
         MDC.remove("result");
       }
     } catch (Exception e) {
-      log.error("Fehler beim speichern: ", e);
+      log.warn("Fehler beim speichern: ", e);
       throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
     }
   }

@@ -37,7 +37,7 @@ public class WahlvorschlaegeClientImpl implements WahlvorschlaegeClient, Referen
           wahlvorschlagControllerApi.loadWahlvorschlaege(
               bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID());
     } catch (final Exception exception) {
-      log.info("exception on loadwahlvorschlaege from external", exception);
+      log.warn("exception on loadwahlvorschlaege from external", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
     }
@@ -58,7 +58,7 @@ public class WahlvorschlaegeClientImpl implements WahlvorschlaegeClient, Referen
               referendumvorlagenReferenceModel.wahlID(),
               referendumvorlagenReferenceModel.wahlbezirkID());
     } catch (final Exception exception) {
-      log.info("exception on loadrefendumvorlagen from external", exception);
+      log.warn("exception on loadrefendumvorlagen from external", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
     }

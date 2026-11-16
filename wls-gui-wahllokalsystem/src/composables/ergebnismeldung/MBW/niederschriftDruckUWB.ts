@@ -10,13 +10,12 @@ export function useNiederschriftDruckUWB() {
     return `
             <!DOCTYPE html>
             <html lang="de">
-            ${_dataForHeader(data)}
-            <body>    
+            ${_dataForHeader(data)}            
             ${_dataForChapterOneWahlvorstand(data)}
             ${_dataForChapterTwo(data)}
             ${_dataForChapterThree(data)}
             ${_dataForChapterFour(data)}
-            ${_dataForChapterFive(data)}  
+            ${_dataForChapterFive(data)} 
             </body>
             <div class="footer">${data.footer}</div>
             </html>
@@ -208,7 +207,7 @@ export function useNiederschriftDruckUWB() {
             <div class="horizontal marginBottom_2">
                 <div class="widthNumber"></div>
                 <div>Textausgaben der Migrationsbeiratswahlordnung, der Migrationsbeiratssatzung, des Gemeinde- und Landkreiswahlgesetzes
-                    sowie der Gemeinde- und Landkreiswahlordnung waren im Wahlraum vorhanden. Am oder im
+                    sowie der Gemeinde- und Landkreiswahlordnung standen digital zur Verfügung. Am oder im
                     Eingang des Gebäudes, in dem sich der Wahlraum befand, wurden ein Abdruck der Wahlbekanntmachung sowie
                     ein Muster des Stimmzettels angebracht.
                 </div>
@@ -471,6 +470,10 @@ export function useNiederschriftDruckUWB() {
                 <div class="widthNumber bold">3.4</div>
                 <div class="bold">Sortieren der Stimmzettel</div>
             </div>
+            <div class="horizontal marginBottom_2">
+                <div class="widthNumber"></div>
+                <div>Bei Einsatz einer Datenverarbeitungsanlage wurde auf die Bildung von Stapeln verzichtet.</div>
+            </div>
             <div class="horizontal marginBottom_1">
                 <div class="widthNumber"></div>
                 <div>Die Stimmzettel wurden auf ihre Gültigkeit geprüft und auf folgende Stapeln sortiert:</div>
@@ -717,9 +720,13 @@ export function useNiederschriftDruckUWB() {
                 </div>
                 <div class="greenBG"></div>
             </div>
-
+            
+            <svg class="page_break" height="25px" width="100%">
+                <rect width="1000" height="25" style="fill: #ffffff;" />
+            </svg>
+            
             <!-- 3.13 -->
-            <div class="gridContainer_2_column_miniright marginBottom_2">
+            <div class="gridContainer_2_column_miniright marginTopBottom_2 paddingTopNewPage">
                 <div>
                     <div class="horizontal marginBottom_2">
                         <div class="widthNumber bold">3.13</div>
@@ -1342,40 +1349,23 @@ export function useNiederschriftDruckUWB() {
                 <div class="widthNumber">5.5.1</div>
                 <div class="backendDataColor fontSize_14 marginCheckbox">&#9744;</div>
                 <div class="paddingLeft">
-                    ein Paket mit den gültigen Stimmzetteln (nur solche ohne Beschluss). Es wurden getrennt nach Wahlvorschlägen</br>
-                    - die unveränderten Stimmzettel mit nur einem Kopfleistenkreuz <span class="yellowBG">(Stapel a) gelb)</span>,</br>
-                    - die nur innerhalb eines Wahlvorschlages gekennzeichneten Stimmzettel <span class="greenBG">(Stapel b) hellgrün)</span>,</br> 
-                    verpackt.
+                    ein Paket mit den nicht beschlussmäßig behandelten gültigen Stimmzetteln und nicht gekennzeichneten Stimmzetteln.
                 </div>
             </div>
             <div class="horizontal marginBottom_2">
                 <div class="widthNumber">5.5.2</div>
                 <div class="backendDataColor fontSize_14 marginCheckbox">&#9744;</div>
                 <div class="paddingLeft">
-                    ein Paket mit den gültigen Stimmzettel, auf denen verschiedene Wahlvorschläge verändert gekennzeichnet wurden <span class="green_3_text">(Stapel c) dunkelgrün)</span>,
+                   die beschlussmäßig behandelten Stimmzettel (gültig und ungültig) wurden spätestens jetzt in die Wahlverhandlungstasche eingelegt.
                 </div>
             </div>
             <div class="horizontal marginBottom_2">
                 <div class="widthNumber">5.5.3</div>
                 <div class="backendDataColor fontSize_14 marginCheckbox">&#9744;</div>
                 <div class="paddingLeft">
-                    ein Paket mit den nicht gekennzeichneten Stimmzetteln (Stapel gemäß 3.4 → <span class="bold redtext">Stapel d</span>),
-                </div>
-            </div>
-            <div class="horizontal marginBottom_2">
-                <div class="widthNumber">5.5.4</div>
-                <div class="backendDataColor fontSize_14 marginCheckbox">&#9744;</div>
-                <div class="paddingLeft">
-                    die beschlussmäßig behandelten Stimmzettel (gültig und ungültig) <b>wurden spätestens jetzt in die Wahlverhandlungstasche</b> eingelegt (Stapel gemäß 3.4 → <span class="bold purpurtext">Stapel e</span>),
-                </div>
-            </div>
-            <div class="horizontal marginBottom_2">
-                <div class="widthNumber">5.5.5</div>
-                <div class="backendDataColor fontSize_14 marginCheckbox">&#9744;</div>
-                <div class="paddingLeft">
                     ein Paket mit den unbenutzten Stimmzetteln.
                 </div>
-            </div>
+            </div>            
             
 
             <svg class="page_break" height="25px" width="100%">
@@ -1400,7 +1390,6 @@ export function useNiederschriftDruckUWB() {
                         <div>- diese (unterschriebene) Niederschrift,</div>
                         <div>- die Schnellmeldung V3,</div>
                         <div>- die beschlussmäßig behandelten Stimmzettel,</div>
-                        <div>- Zähllisten für alle Wahlvorschläge</div>
                         <div>- eingenommene Wahlscheine.</div>
                     </div>
                 </div>
@@ -1485,7 +1474,7 @@ export function useNiederschriftDruckUWB() {
                         margin-right: 0;
                     }
 
-                    @media print {
+                    @media print { 
                         div.footer {
                             position: fixed;
                             bottom: 0;

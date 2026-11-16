@@ -2,7 +2,7 @@
   <v-container max-width="800px">
     <base-feedback-card
       v-if="!isOfflineCacheReady"
-      title="Service-Worker deaktiviert"
+      title="Offlinefähigkeit nicht verfügbar"
       type="warning"
     >
       <div>

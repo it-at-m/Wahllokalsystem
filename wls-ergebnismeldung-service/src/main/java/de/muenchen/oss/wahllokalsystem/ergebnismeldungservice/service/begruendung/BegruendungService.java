@@ -52,7 +52,7 @@ public class BegruendungService {
     try {
       begruendungRepository.save(begruendungModelMapper.toEntity(begruendungToAdd));
     } catch (final Exception e) {
-      log.error("#postBegruendung unsaveable:", e);
+      log.warn("#postBegruendung unsaveable:", e);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.BEGRUENDUNG_UNSAVEABLE);
     }

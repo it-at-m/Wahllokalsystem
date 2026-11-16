@@ -50,7 +50,7 @@ public class EreignisService {
       ereignisseRepository.deleteByWahlbezirkID(ereignisse.wahlbezirkID());
       ereignisseRepository.save(ereignisseModelMapper.toEntity(ereignisse));
     } catch (Exception e) {
-      log.error("postEreignis: Ereignis konnte nicht gespeichert werden. " + e);
+      log.warn("postEreignis: Ereignis konnte nicht gespeichert werden. " + e);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.SAVEEREIGNIS_UNSAVABLE);
     }

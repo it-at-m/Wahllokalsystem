@@ -29,7 +29,7 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
     try {
       konfigurierterWahltagDTO = konfigurierterWahltagControllerApi.getKonfigurierterWahltag();
     } catch (final Exception exception) {
-      log.info("exception on getKonfigurierterWahltag from external", exception);
+      log.warn("exception on getKonfigurierterWahltag from external", exception);
       throw exceptionFactory.createTechnischeWlsException(
           ExceptionConstants.FAILED_COMMUNICATION_WITH_SERVICE);
     }

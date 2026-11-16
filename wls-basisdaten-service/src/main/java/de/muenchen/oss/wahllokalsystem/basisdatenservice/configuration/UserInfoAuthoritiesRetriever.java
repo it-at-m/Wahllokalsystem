@@ -97,7 +97,7 @@ public class UserInfoAuthoritiesRetriever {
       // store
       this.cache.put(jwt.getSubject(), authorities);
     } catch (Exception e) {
-      log.error(
+      log.warn(
           String.format(
               "Could not fetch user details from %s - user is granted NO authorities",
               this.userInfoUri),

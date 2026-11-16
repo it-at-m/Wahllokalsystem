@@ -39,7 +39,7 @@ public class EncryptionBuilder {
         val finalized = decryptionCipher.doFinal(decode);
         return new String(finalized);
       } catch (IllegalBlockSizeException | BadPaddingException e) {
-        log.error(
+        log.warn(
             "Unable to decrypt the given value <"
                 + value
                 + "> as of an "
@@ -60,7 +60,7 @@ public class EncryptionBuilder {
         val finalized = encryptionCipher.doFinal(value.getBytes());
         value = Base64.getUrlEncoder().encodeToString(finalized);
       } catch (IllegalBlockSizeException | BadPaddingException e) {
-        log.error(
+        log.warn(
             "Unable to encrypt the given value <"
                 + value
                 + "> as of an "

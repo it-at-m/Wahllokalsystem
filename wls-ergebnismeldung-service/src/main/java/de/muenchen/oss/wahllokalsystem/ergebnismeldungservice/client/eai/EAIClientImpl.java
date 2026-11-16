@@ -38,7 +38,7 @@ public class EAIClientImpl implements AWerteClient, EaiClient {
     try {
       wahlberechtigteDTOSet = wahldatenControllerApi.loadWahlberechtigte(wahlbezirkID);
     } catch (final Exception exception) {
-      log.info("exception on getAWerte from external", exception);
+      log.warn("exception on getAWerte from external", exception);
       return null;
     }
     return aWerteClientMapper.fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(
@@ -71,7 +71,7 @@ public class EAIClientImpl implements AWerteClient, EaiClient {
           };
       MDC.put("eid", mdcEIDValue);
       MDC.put("result", "3");
-      log.info("AOUEAI nicht erreichbar!");
+      log.warn("AOUEAI nicht erreichbar!");
     } finally {
       MDC.remove("eid");
       MDC.remove("result");

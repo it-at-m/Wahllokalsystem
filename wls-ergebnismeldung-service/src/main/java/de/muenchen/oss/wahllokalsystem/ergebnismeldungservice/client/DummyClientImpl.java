@@ -40,7 +40,7 @@ public class DummyClientImpl
   public void postSchnellmeldungSendungsuhrzeit(
       BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungSendungsuhrzeit)
       throws WlsException {
-    log.info(
+    log.warn(
         "dummy client postSchnellmeldungSendungsuhrzeit of {} on {} called instead of monitoring",
         bezirkUndWahlID,
         schnellmeldungSendungsuhrzeit);
@@ -50,7 +50,7 @@ public class DummyClientImpl
   public void postSchnellmeldungDruckuhrzeit(
       BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungDruckuhrzeit)
       throws WlsException {
-    log.info(
+    log.warn(
         "dummy client postSchnellmeldungDruckuhrzeit of {} on {} called instead of monitoring",
         bezirkUndWahlID,
         schnellmeldungDruckuhrzeit);
@@ -60,7 +60,7 @@ public class DummyClientImpl
   public void postNiederschriftSendungsuhrzeit(
       BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftSendungsuhrzeit)
       throws WlsException {
-    log.info(
+    log.warn(
         "dummy client postNiederschriftSendungsuhrzeit of {} on {} called instead of monitoring",
         bezirkUndWahlID,
         niederschriftSendungsuhrzeit);
@@ -70,7 +70,7 @@ public class DummyClientImpl
   public void postNiederschriftDruckuhrzeit(
       BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftDruckuhrzeit)
       throws WlsException {
-    log.info(
+    log.warn(
         "dummy client postNiederschriftDruckuhrzeit of {} on {} called instead of monitoring",
         bezirkUndWahlID,
         niederschriftDruckuhrzeit);
@@ -94,7 +94,7 @@ public class DummyClientImpl
 
   @Override
   public void sendErgebnismeldung(final ErgebnismeldungDTO ergebnismeldungDTO) {
-    log.info("dummy client sendErgebnismeldung {}", ergebnismeldungDTO);
+    log.warn("dummy client sendErgebnismeldung {}", ergebnismeldungDTO);
   }
 
   @Override

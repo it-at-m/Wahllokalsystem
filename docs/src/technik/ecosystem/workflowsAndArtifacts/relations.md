@@ -15,7 +15,7 @@ flowchart LR
 
 <em>Legende zu den verwendeten Symbolen</em>
 
-### Pull-Requests nach Dev
+### Pull-Requests nach default Branch
 
 ```mermaid
 flowchart LR
@@ -94,7 +94,7 @@ flowchart LR
 
 <em>Workflow und Action, die bei einem Pull-Request zur Dokumentation ausgeführt werden</em>
 
-### Push auf Dev
+### Push auf default Branch
 
 ```mermaid
 flowchart LR

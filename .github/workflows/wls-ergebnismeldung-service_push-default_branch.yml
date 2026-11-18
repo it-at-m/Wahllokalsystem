@@ -1,12 +1,12 @@
-name: build push dev ergebnismeldung-service
+name: build push default branch ergebnismeldung-service
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - 'wls-ergebnismeldung-service/**'
-      - '.github/workflows/wls-ergebnismeldung-service_push-dev.yml'
+      - '.github/workflows/wls-ergebnismeldung-service_push-default_branch.yml'
 
 jobs:
   build-github-container-image:

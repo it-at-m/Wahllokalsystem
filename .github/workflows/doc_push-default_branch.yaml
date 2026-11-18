@@ -1,12 +1,12 @@
-name: build push dev docs
+name: build push default branch docs
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - 'docs/**'
-      - '.github/workflows/doc_push-dev.yaml'
+      - '.github/workflows/doc_push-default_branch.yaml'
 
 jobs:
   build-and-publish:

@@ -1,12 +1,12 @@
-name: build push dev gui wahllokalsystem
+name: build push default branch gui wahllokalsystem
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - 'wls-gui-wahllokalsystem/**'
-      - '.github/workflows/wls-gui-wahllokalsystem_push-dev.yml'
+      - '.github/workflows/wls-gui-wahllokalsystem_push-default_branch.yml'
 
 jobs:
   build-github-container-image:

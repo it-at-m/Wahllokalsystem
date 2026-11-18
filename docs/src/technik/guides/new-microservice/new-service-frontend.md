@@ -162,7 +162,7 @@ Releases für den Sprint XX erstellt.
 ## Routing im Gateway einrichten
 
 Damit der Port und die URL für das neue Frontend-Projekt korrekt verknüpft wird, muss das
-[`application-routes.yml`-File](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/gateway_config_wls/application-routes.yml)
+[`application-routes.yml`-File](https://github.com/it-at-m/Wahllokalsystem/blob/main/stack/gateway_config_wls/application-routes.yml)
 entsprechend angepasst werden:
 
 ```yaml

@@ -121,7 +121,7 @@ describe("DseWorkflowStatusService.ts", () => {
       expect(useWorkflowStore().setStepDone).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+        MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS
       );
     });
 

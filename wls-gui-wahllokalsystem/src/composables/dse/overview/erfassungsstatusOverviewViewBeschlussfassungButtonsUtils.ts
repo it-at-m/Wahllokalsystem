@@ -8,7 +8,7 @@ import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StimmzettelerfassungTeamStatusEnum } from "@/types/dse/stimmzettelerfassungTeamStatus/StimmzettelerfassungTeamStatusEnum.ts";
 import { StimmzettelerfassungStatusEnum } from "@/types/dse/stimmzettelerfassungWorkflowStatus/StimmzettelerfassungStatusEnum.ts";
 
-export function useMonitoringViewBeschlussfassungButtonsUtils(
+export function useErfassungsstatusOverviewViewBeschlussfassungButtonsUtils(
   isTeamStatusListLoading: Ref<boolean>,
   isWorkflowStatusLoading: Ref<boolean>,
   teamstatusList: Ref<StimmzettelerfassungTeamStatusEntry[]>,

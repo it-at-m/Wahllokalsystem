@@ -51,14 +51,14 @@ export function useDseWorkflowStatusService() {
         setStepDone(
           wahlID,
           wahlbezirkID,
-          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+          MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS
         );
       }
       if (StimmzettelerfassungStatusEnum.BeAbgeschlossen == result?.status) {
         setStepDone(
           wahlID,
           wahlbezirkID,
-          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS
+          MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS
         );
         setStepDone(
           wahlID,

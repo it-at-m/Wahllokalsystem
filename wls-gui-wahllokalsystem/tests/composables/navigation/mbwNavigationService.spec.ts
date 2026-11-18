@@ -33,7 +33,8 @@ describe("mbwNavigationService.ts", () => {
   const mbwStepsWithDseForSchriftfuehrung = {
     MBW_AUSZAEHLUNG_STIMMZETTEL: MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
     MBW_DSE_STIMMZETTELERFASSUNG: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-    MBW_DSE_MONITORING: MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+    MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS:
+      MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS,
     MBW_DSE_BESCHLUSSFASSUNG: MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
     MBW_SCHNELLMELDUNG: MbwStepsEnum.MBW_SCHNELLMELDUNG,
     MBW_NIEDERSCHRIFT: MbwStepsEnum.MBW_NIEDERSCHRIFT,
@@ -150,7 +151,7 @@ describe("mbwNavigationService.ts", () => {
     const dseStepsForSchriftfuehrung = [
       MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
       MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-      MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+      MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS,
       MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
       MbwStepsEnum.MBW_SCHNELLMELDUNG,
       MbwStepsEnum.MBW_NIEDERSCHRIFT,
@@ -175,7 +176,7 @@ describe("mbwNavigationService.ts", () => {
         enabledSteps: [
           MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
           MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+          MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS,
         ],
         expectedRoute: MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
       },
@@ -187,20 +188,20 @@ describe("mbwNavigationService.ts", () => {
         enabledSteps: [
           MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
           MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+          MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS,
         ],
-        expectedRoute: MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+        expectedRoute: MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS,
       },
       {
         stepsDone: {
           [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
           [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
-          [MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS]: true,
+          [MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS]: true,
         },
         enabledSteps: [
           MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
           MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+          MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS,
           MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
         ],
         expectedRoute: MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
@@ -209,13 +210,13 @@ describe("mbwNavigationService.ts", () => {
         stepsDone: {
           [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
           [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
-          [MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS]: true,
+          [MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS]: true,
           [MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG]: true,
         },
         enabledSteps: [
           MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
           MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG,
-          MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS,
+          MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS,
           MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG,
           MbwStepsEnum.MBW_SCHNELLMELDUNG,
         ],
@@ -225,7 +226,7 @@ describe("mbwNavigationService.ts", () => {
         stepsDone: {
           [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
           [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
-          [MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS]: true,
+          [MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS]: true,
           [MbwStepsEnum.MBW_DSE_BESCHLUSSFASSUNG]: true,
           [MbwStepsEnum.MBW_SCHNELLMELDUNG]: true,
         },
@@ -277,7 +278,7 @@ describe("mbwNavigationService.ts", () => {
       _setDseWorkflow({
         [MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: true,
         [MbwStepsEnum.MBW_DSE_STIMMZETTELERFASSUNG]: true,
-        [MbwStepsEnum.MBW_DSE_MONITORING_ERFASSUNGSSTATUS]: true,
+        [MbwStepsEnum.MBW_DSE_OVERVIEW_ERFASSUNGSSTATUS]: true,
         [MbwStepsEnum.MBW_SCHNELLMELDUNG]: true,
       });
 

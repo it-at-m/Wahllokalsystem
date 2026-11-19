@@ -124,7 +124,7 @@
         <dependency>
             <groupId>com.unboundid</groupId>
             <artifactId>unboundid-ldapsdk</artifactId>
-            <version>7.0.5</version>
+            <version>7.0.6</version>
             <scope>runtime</scope>
         </dependency>
         <!-- json etc. -->
@@ -165,7 +165,7 @@
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
-            <version>23.26.3.0.0</version>
+            <version>23.26.4.0.0</version>
         </dependency>
         <!-- Hibernate Model Gen for type safe criterias -->
         <dependency>

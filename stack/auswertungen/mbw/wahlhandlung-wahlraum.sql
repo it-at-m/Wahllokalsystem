@@ -10,7 +10,7 @@ SELECT wbz.NUMMER                   "Wahlbezirknummer",
        CASE
            WHEN w.MITTEILUNGUNGUELTIGESCHEINE = 1 THEN 'ja'
            WHEN w.MITTEILUNGUNGUELTIGESCHEINE = 0 THEN 'nein'
-           END                      "WVZ war nicht zuberichtigen?",
+           END                      "WVZ war nicht zu berichtigen?",
        CASE
            WHEN w.BERICHTIGUNGVORBEGINN = 1 THEN 'ja'
            WHEN w.BERICHTIGUNGVORBEGINN = 0 THEN 'nein'

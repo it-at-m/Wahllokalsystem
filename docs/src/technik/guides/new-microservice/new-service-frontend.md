@@ -22,16 +22,16 @@ Admintool bezeichnet werden.
 
 ::: code-group
 
-```yml {1,8-9,17} [wls-gui-&ltfrontend-name&gt_push-dev.yml]
-name: build push dev gui <frontend-name>
+```yml {1,8-9,17} [wls-gui-&ltfrontend-name&gt_push-default branch.yml]
+name: build push default branch gui <frontend-name>
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - "wls-gui-<frontend-name>/**"
-      - ".github/workflows/wls-gui-<frontend-name>_push-dev.yml"
+      - ".github/workflows/wls-gui-<frontend-name>_push-default branch.yml"
 
 jobs:
   build-github-container-image:

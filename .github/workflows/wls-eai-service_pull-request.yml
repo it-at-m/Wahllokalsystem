@@ -14,4 +14,4 @@ jobs:
       ./.github/workflows/callable-run-mvn-verify.yml
     with:
       pom-dir: 'wls-eai-service'
-      javaVersion: '21'
+      javaVersion: '25'

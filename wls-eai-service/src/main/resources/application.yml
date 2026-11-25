@@ -17,6 +17,13 @@ spring:
       - classpath:db/migrations/{vendor}
   h2.console.enabled: false
 
+  web:
+    error:
+      include-exception: false
+      include-stacktrace: never
+      whitelabel:
+        enabled: false
+
   jpa:
     properties:
       hibernate:
@@ -38,14 +45,15 @@ service:
   info:
     oid: EAI-SERVICE
 
+wls:
+  forwarded:
+    # Set to true if the trusted proxy uses RFC 7239 Forwarded instead of X-Forwarded-*.
+    # The proxy must remove externally supplied Forwarded and X-Forwarded-* headers.
+    use-standard-header: false
+
 server:
   shutdown: "graceful"
   port: 8080
-  error:
-    include-exception: false
-    include-stacktrace: never
-    whitelabel:
-      enabled: false
   max-http-request-header-size: 32KB
 
 # Config for spring actuator endpoints
@@ -60,9 +68,12 @@ management:
     access:
       default: none
   endpoint:
-    health.enabled: true
-    info.enabled: true
-    prometheus.enabled: true
+    health:
+      access: unrestricted
+    info:
+      access: unrestricted
+    prometheus:
+      access: unrestricted
   health:
     db:
       enabled: false

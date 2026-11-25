@@ -1,12 +1,12 @@
-name: build push dev vorfaelleundvorkommnisse-service
+name: build push default branch vorfaelleundvorkommnisse-service
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - 'wls-vorfaelleundvorkommnisse-service/**'
-      - '.github/workflows/wls-vorfaelleundvorkommnisse-service_push-dev.yml'
+      - '.github/workflows/wls-vorfaelleundvorkommnisse-service_push-default_branch.yml'
 
 jobs:
   build-github-container-image:

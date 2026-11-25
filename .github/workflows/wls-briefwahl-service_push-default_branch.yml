@@ -1,12 +1,12 @@
-name: build push dev admin-service
+name: build push default branch briefwahl-service
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
-      - 'wls-admin-service/**'
-      - '.github/workflows/wls-admin-service_push-dev.yml'
+      - 'wls-briefwahl-service/**'
+      - '.github/workflows/wls-briefwahl-service_push-default_branch.yml'
 
 jobs:
   build-github-container-image:
@@ -15,5 +15,5 @@ jobs:
     uses:
       ./.github/workflows/callable-create-github-container-image.yml
     with:
-      service: 'wls-admin-service'
+      service: 'wls-briefwahl-service'
       javaVersion: '21'

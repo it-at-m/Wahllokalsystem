@@ -1,12 +1,12 @@
-name: build push dev infomanagement-service
+name: build push default branch infomanagement-service
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - 'wls-infomanagement-service/**'
-      - '.github/workflows/wls-infomanagement-service_push-dev.yml'
+      - '.github/workflows/wls-infomanagement-service_push-default_branch.yml'
 
 jobs:
   build-github-container-image:

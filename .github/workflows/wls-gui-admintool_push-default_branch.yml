@@ -1,12 +1,12 @@
-name: build push dev gui admintool
+name: build push default branch gui admintool
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - 'wls-gui-admintool/**'
-      - '.github/workflows/wls-gui-admintool_push-dev.yml'
+      - '.github/workflows/wls-gui-admintool_push-default_branch.yml'
 
 jobs:
   build-github-container-image:

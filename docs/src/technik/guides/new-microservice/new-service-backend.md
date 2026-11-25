@@ -30,16 +30,16 @@ funktionsfähig zu bekommen.
 <!-- prettier-ignore-start -->
 ::: code-group
 
-```yml {1,8-9,18} [wls-&lt;domain&gt;-service_push-dev.yml]
-name: build push dev <domain>-service
+```yml {1,8-9,18} [wls-&lt;domain&gt;-service_push-default branch.yml]
+name: build push default branch <domain>-service
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - 'wls-<domain>-service/**'
-      - '.github/workflows/wls-<domain>-service_push-dev.yml'
+      - '.github/workflows/wls-<domain>-service_push-default branch.yml'
 
 jobs:
   build-github-container-image:

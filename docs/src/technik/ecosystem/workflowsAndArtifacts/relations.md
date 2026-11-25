@@ -15,7 +15,7 @@ flowchart LR
 
 <em>Legende zu den verwendeten Symbolen</em>
 
-### Pull-Requests nach Dev
+### Pull-Requests nach default Branch
 
 ```mermaid
 flowchart LR
@@ -94,12 +94,12 @@ flowchart LR
 
 <em>Workflow und Action, die bei einem Pull-Request zur Dokumentation ausgeführt werden</em>
 
-### Push auf Dev
+### Push auf default Branch
 
 ```mermaid
 flowchart LR
     subgraph wls
-        backendServiceDevPush([Backend-Service Push])
+        backendServiceDefaultBranchPush([Backend-Service Push])
 
         buildImage[[callable-create-github-container-image]]
     end
@@ -112,7 +112,7 @@ flowchart LR
         docker/build-push-action
     end
 
-    backendServiceDevPush --> buildImage
+    backendServiceDefaultBranchPush --> buildImage
     buildImage --> checkout
     buildImage --> setup-java
     buildImage --> docker/login-action
@@ -125,7 +125,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     subgraph wls
-        frontendDevPush([Frontend Push])
+        frontendDefaultBranchPush([Frontend Push])
 
         buildImageFrontend[[callable-create-github-container-image-frontend]]
     end
@@ -138,7 +138,7 @@ flowchart LR
         docker/build-push-action
     end
 
-    frontendDevPush --> buildImageFrontend
+    frontendDefaultBranchPush --> buildImageFrontend
     buildImageFrontend --> checkout
     buildImageFrontend --> setup-node
     buildImageFrontend --> docker/login-action
@@ -151,7 +151,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     subgraph wls
-        docsDevPush([Docs Push])
+        docsDefaultBranchPush([Docs Push])
     end
 
     subgraph githubActions
@@ -160,9 +160,9 @@ flowchart LR
         peaceiris/actions-gh-pages
     end
 
-    docsDevPush --> checkout
-    docsDevPush --> setup-node
-    docsDevPush --> peaceiris/actions-gh-pages
+    docsDefaultBranchPush --> checkout
+    docsDefaultBranchPush --> setup-node
+    docsDefaultBranchPush --> peaceiris/actions-gh-pages
 ```
 
 <em>Workflow und Actions, die bei einem Push der Dokumentation ausgeführt werden</em>

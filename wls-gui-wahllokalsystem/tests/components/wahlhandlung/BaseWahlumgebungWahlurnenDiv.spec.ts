@@ -8,6 +8,7 @@ import {
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { reactive } from "vue";
 import { VNumberInput } from "vuetify/components";
 
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
@@ -98,7 +99,7 @@ describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
           plugins: [testPinia, vuetify],
         },
         props: {
-          wahlVorbereitung: twoWahlenWahlVorbereitungAnzahlNull,
+          wahlVorbereitung: reactive(twoWahlenWahlVorbereitungAnzahlNull),
         },
       });
 
@@ -135,7 +136,7 @@ describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
           plugins: [testPinia, vuetify],
         },
         props: {
-          wahlVorbereitung: twoWahlenWahlVorbereitungAnzahlNull,
+          wahlVorbereitung: reactive(twoWahlenWahlVorbereitungAnzahlNull),
         },
       });
 
@@ -169,7 +170,7 @@ describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
           plugins: [testPinia, vuetify],
         },
         props: {
-          wahlVorbereitung: twoWahlenWahlVorbereitungAnzahlNull,
+          wahlVorbereitung: reactive(twoWahlenWahlVorbereitungAnzahlNull),
         },
       });
 

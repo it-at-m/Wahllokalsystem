@@ -246,6 +246,23 @@ class UserInfoAuthoritiesRetrieverTest {
     server.verify();
   }
 
+  @Test
+  void should_retryWithoutAuthorities_when_userInfoReturnsEmptyBody() {
+    Assertions.assertThat(UserInfoAuthoritiesRetriever.class.desiredAssertionStatus()).isTrue();
+    setupHttpClient();
+    server.expect(requestTo(userInfoUri)).andRespond(withSuccess());
+    server
+        .expect(requestTo(userInfoUri))
+        .andRespond(withSuccess("{\"authorities\":[\"auth1\"]}", MediaType.APPLICATION_JSON));
+
+    Assertions.assertThat(retriever.loadAuthorities(jwt)).isEmpty();
+    Assertions.assertThat(retriever.loadAuthorities(jwt))
+        .containsExactly(new SimpleGrantedAuthority("auth1"));
+    Assertions.assertThat(retriever.loadAuthorities(jwt))
+        .containsExactly(new SimpleGrantedAuthority("auth1"));
+    server.verify();
+  }
+
   private void mockUserInfoResponse(Map<String, Object> responseBody) {
     Mockito.when(responseSpec.body(Map.class)).thenReturn(responseBody);
   }

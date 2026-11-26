@@ -77,7 +77,7 @@ public class UserInfoAuthoritiesRetriever {
               .body(Map.class);
 
       log.debug("Response from user-info Endpoint: {}", map);
-      assert map != null;
+      Objects.requireNonNull(map, "Empty user-info response");
       if (map.containsKey(CLAIM_AUTHORITIES)) {
         authorities = asAuthorities(map.get(CLAIM_AUTHORITIES));
       }

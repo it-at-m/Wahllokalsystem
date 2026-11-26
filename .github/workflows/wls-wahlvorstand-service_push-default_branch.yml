@@ -1,12 +1,12 @@
-name: build push dev basisdaten-service
+name: build push default branch wahlvorstand-service
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
-      - 'wls-basisdaten-service/**'
-      - '.github/workflows/wls-basisdaten-service_push-dev.yml'
+      - 'wls-wahlvorstand-service/**'
+      - '.github/workflows/wls-wahlvorstand-service_push-default_branch.yml'
 
 jobs:
   build-github-container-image:
@@ -15,5 +15,5 @@ jobs:
     uses:
       ./.github/workflows/callable-create-github-container-image.yml
     with:
-      service: 'wls-basisdaten-service'
+      service: 'wls-wahlvorstand-service'
       javaVersion: '21'

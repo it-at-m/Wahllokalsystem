@@ -1,12 +1,12 @@
-name: build push dev eai-service
+name: build push default branch eai-service
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - 'wls-eai-service/**'
-      - '.github/workflows/wls-eai-service_push-dev.yml'
+      - '.github/workflows/wls-eai-service_push-default_branch.yml'
 
 jobs:
   build-github-container-image:

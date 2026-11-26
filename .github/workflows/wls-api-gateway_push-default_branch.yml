@@ -1,12 +1,12 @@
-name: build push dev api-gateway
+name: build push default branch api-gateway
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - 'wls-api-gateway/**'
-      - '.github/workflows/wls-api-gateway_push-dev.yml'
+      - '.github/workflows/wls-api-gateway_push-default_branch.yml'
 
 jobs:
   build-github-container-image:

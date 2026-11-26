@@ -57,7 +57,7 @@ Es gibt nur Feedback für den Pull-Request.
 
 ## Push auf Defaultbranch
 
-Unser Defaultbranch ist `dev`. Mit einem Push auf den Branch werden neue Testversionen bereitgestellt.
+Unser Defaultbranch ist `main`. Mit einem Push auf den Branch werden neue Testversionen bereitgestellt.
 
 ```mermaid
 

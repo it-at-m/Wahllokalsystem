@@ -1,12 +1,12 @@
-name: build push dev broadcast-service
+name: build push default branch monitoring-service
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
-      - 'wls-broadcast-service/**'
-      - '.github/workflows/wls-broadcast-service_push-dev.yml'
+      - 'wls-monitoring-service/**'
+      - '.github/workflows/wls-monitoring-service_push-default_branch.yml'
 
 jobs:
   build-github-container-image:
@@ -15,5 +15,5 @@ jobs:
     uses:
       ./.github/workflows/callable-create-github-container-image.yml
     with:
-      service: 'wls-broadcast-service'
+      service: 'wls-monitoring-service'
       javaVersion: '21'

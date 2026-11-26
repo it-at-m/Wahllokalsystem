@@ -1,12 +1,12 @@
-name: build push dev wahlvorbereitung-service
+name: build push default branch wahlvorbereitung-service
 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - 'wls-wahlvorbereitung-service/**'
-      - '.github/workflows/wls-wahlvorbereitung-service_push-dev.yml'
+      - '.github/workflows/wls-wahlvorbereitung-service_push-default_branch.yml'
 
 jobs:
   build-github-container-image:

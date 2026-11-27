@@ -204,7 +204,7 @@ public class WahlvorstandControllerIntegrationTest {
               Set.of(expectedEntityMitglied1, expectedEntityMitglied2, expectedEntityMitglied3));
       expectedUpdatedEntity.setId(wahlvorstandToUpdate.getId());
 
-      Assertions.assertThat(updatedEntity.orElse(null))
+      Assertions.assertThat(updatedEntity.orElseThrow())
           .usingRecursiveComparison()
           .isEqualTo(expectedUpdatedEntity);
     }

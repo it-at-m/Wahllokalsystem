@@ -59,208 +59,218 @@ class UserInfoAuthoritiesRetrieverTest {
   @Nested
   class LoadAuthorities {
 
-    @BeforeEach
-    void setup() {
-      Mockito.doReturn(requestSpec).when(restClient).get();
-      Mockito.when(requestSpec.retrieve()).thenReturn(responseSpec);
+    @Nested
+    class MockedClient {
+
+      @BeforeEach
+      void setup() {
+        Mockito.doReturn(requestSpec).when(restClient).get();
+        Mockito.when(requestSpec.retrieve()).thenReturn(responseSpec);
+      }
+
+      @Test
+      void should_loadAuthoritiesFromClient_when_givenAsCollection() {
+        val jwtTokenValue = "myTokenValue";
+
+        val authority1 = "auth1";
+        val authority2 = "auth2";
+        val authority3 = "auth3";
+        val claimAuthorityValues = List.of(authority1, authority2, authority3);
+
+        val responseEntityBody = new HashMap<String, Object>();
+        responseEntityBody.put(RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES, claimAuthorityValues);
+
+        Mockito.when(jwt.getSubject()).thenReturn("subject");
+        Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
+        mockUserInfoResponse(responseEntityBody);
+
+        val expectedAuthorities =
+            List.of(
+                new SimpleGrantedAuthority(authority1),
+                new SimpleGrantedAuthority(authority2),
+                new SimpleGrantedAuthority(authority3));
+
+        val authorities = unitUnderTest.loadAuthorities(jwt);
+
+        Assertions.assertThat(authorities).hasSize(claimAuthorityValues.size());
+        Assertions.assertThat(authorities).containsAll(expectedAuthorities);
+      }
+
+      @Test
+      void should_loadAuthoritiesFromClient_when_givenAsArray() {
+        val jwtTokenValue = "myTokenValue";
+
+        val authority1 = "auth1";
+        val authority2 = "auth2";
+        val authority3 = "auth3";
+        val claimAuthorityValues = new String[] {authority1, authority2, authority3};
+
+        val responseEntityBody = new HashMap<String, Object>();
+        responseEntityBody.put(RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES, claimAuthorityValues);
+
+        Mockito.when(jwt.getSubject()).thenReturn("subject");
+        Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
+        mockUserInfoResponse(responseEntityBody);
+
+        val expctedAuthorities =
+            List.of(
+                new SimpleGrantedAuthority(authority1),
+                new SimpleGrantedAuthority(authority2),
+                new SimpleGrantedAuthority(authority3));
+
+        val authorities = unitUnderTest.loadAuthorities(jwt);
+
+        Assertions.assertThat(authorities).hasSize(claimAuthorityValues.length);
+        Assertions.assertThat(authorities).containsAll(expctedAuthorities);
+      }
+
+      @Test
+      void should_returnEmptyList_when_givenAsUnhandledDataStructure() {
+        val jwtTokenValue = "myTokenValue";
+
+        val claimAuthorityValues = "list;of;claims;as;CSV;that;is;not;supported";
+
+        val responseEntityBody = new HashMap<String, Object>();
+        responseEntityBody.put(RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES, claimAuthorityValues);
+
+        Mockito.when(jwt.getSubject()).thenReturn("subject");
+        Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
+        mockUserInfoResponse(responseEntityBody);
+
+        val authorities = unitUnderTest.loadAuthorities(jwt);
+
+        Assertions.assertThat(authorities).isEmpty();
+      }
+
+      @Test
+      void should_returnEmptyList_when_noAuthoritiesFound() {
+        val jwtTokenValue = "myTokenValue";
+
+        val responseEntityBody = new HashMap<String, Object>();
+
+        Mockito.when(jwt.getSubject()).thenReturn("subject");
+        Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
+        mockUserInfoResponse(responseEntityBody);
+
+        val authorities = unitUnderTest.loadAuthorities(jwt);
+
+        Assertions.assertThat(authorities).isEmpty();
+      }
+
+      @Test
+      void should_returnEmptyList_when_errorThrownWhileLoadingViaClient() {
+        val jwtTokenValue = "myTokenValue";
+
+        Mockito.when(jwt.getSubject()).thenReturn("subject");
+        Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
+        Mockito.when(responseSpec.body(Map.class)).thenThrow(new RuntimeException("sth happend"));
+
+        val authorities = unitUnderTest.loadAuthorities(jwt);
+
+        Assertions.assertThat(authorities).isEmpty();
+      }
+
+      @Test
+      void should_loadAuthoritiesFromCache_when_givenValidJwtToken() {
+        val jwtSubject = "subject";
+        val jwtTokenValue = "myTokenValue";
+        val jwtForCachMethodCall = Mockito.mock(Jwt.class);
+
+        val authority1 = "auth1";
+        val authority2 = "auth2";
+        val authority3 = "auth3";
+        val claimAuthorityValues = List.of(authority1, authority2, authority3);
+
+        val responseEntityBody = new HashMap<String, Object>();
+        responseEntityBody.put(RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES, claimAuthorityValues);
+
+        Mockito.when(jwt.getSubject()).thenReturn(jwtSubject);
+        Mockito.when(jwtForCachMethodCall.getSubject()).thenReturn(jwtSubject);
+        Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
+        mockUserInfoResponse(responseEntityBody);
+
+        val expectedAuthorities =
+            List.of(
+                new SimpleGrantedAuthority(authority1),
+                new SimpleGrantedAuthority(authority2),
+                new SimpleGrantedAuthority(authority3));
+
+        val authorities = unitUnderTest.loadAuthorities(jwt);
+
+        val authoritiesThatShouldComeFromCache =
+            unitUnderTest.loadAuthorities(jwtForCachMethodCall);
+
+        Assertions.assertThat(authorities).hasSize(claimAuthorityValues.size());
+        Assertions.assertThat(authorities).containsAll(expectedAuthorities);
+        Assertions.assertThat(authoritiesThatShouldComeFromCache).isSameAs(authorities);
+
+        Mockito.verify(restClient, Mockito.times(1)).get();
+        Mockito.verify(requestSpec).uri(userInfoUri);
+        Mockito.verify(requestSpec).header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtTokenValue);
+      }
     }
 
-    @Test
-    void should_loadAuthoritiesFromClient_when_givenAsCollection() {
-      val jwtTokenValue = "myTokenValue";
-
-      val authority1 = "auth1";
-      val authority2 = "auth2";
-      val authority3 = "auth3";
-      val claimAuthorityValues = List.of(authority1, authority2, authority3);
-
-      val responseEntityBody = new HashMap<String, Object>();
-      responseEntityBody.put(RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES, claimAuthorityValues);
-
+    private void setupHttpClient() {
+      val builder = RestClient.builder();
+      server = MockRestServiceServer.bindTo(builder).build();
+      retriever = new UserInfoAuthoritiesRetriever(userInfoUri, builder.build());
       Mockito.when(jwt.getSubject()).thenReturn("subject");
-      Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
-      mockUserInfoResponse(responseEntityBody);
-
-      val expectedAuthorities =
-          List.of(
-              new SimpleGrantedAuthority(authority1),
-              new SimpleGrantedAuthority(authority2),
-              new SimpleGrantedAuthority(authority3));
-
-      val authorities = unitUnderTest.loadAuthorities(jwt);
-
-      Assertions.assertThat(authorities).hasSize(claimAuthorityValues.size());
-      Assertions.assertThat(authorities).containsAll(expectedAuthorities);
+      Mockito.when(jwt.getTokenValue()).thenReturn("myTokenValue");
     }
 
-    @Test
-    void should_loadAuthoritiesFromClient_when_givenAsArray() {
-      val jwtTokenValue = "myTokenValue";
+    @Nested
+    class HttpClient {
 
-      val authority1 = "auth1";
-      val authority2 = "auth2";
-      val authority3 = "auth3";
-      val claimAuthorityValues = new String[] {authority1, authority2, authority3};
+      @Test
+      void should_sendBearerTokenAndLoadAuthorities_when_userInfoIsRequested() {
+        setupHttpClient();
+        server
+            .expect(requestTo(userInfoUri))
+            .andExpect(method(HttpMethod.GET))
+            .andExpect(header(HttpHeaders.AUTHORIZATION, "Bearer myTokenValue"))
+            .andRespond(
+                withSuccess("{\"authorities\":[\"auth1\",\"auth2\"]}", MediaType.APPLICATION_JSON));
 
-      val responseEntityBody = new HashMap<String, Object>();
-      responseEntityBody.put(RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES, claimAuthorityValues);
+        Assertions.assertThat(retriever.loadAuthorities(jwt))
+            .containsExactly(
+                new SimpleGrantedAuthority("auth1"), new SimpleGrantedAuthority("auth2"));
+        server.verify();
+      }
 
-      Mockito.when(jwt.getSubject()).thenReturn("subject");
-      Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
-      mockUserInfoResponse(responseEntityBody);
+      @ParameterizedTest
+      @EnumSource(
+          value = HttpStatus.class,
+          names = {"UNAUTHORIZED", "INTERNAL_SERVER_ERROR"})
+      void should_fetchAuthoritiesAgain_when_previousUserInfoRequestFailed(HttpStatus status) {
+        setupHttpClient();
+        server.expect(requestTo(userInfoUri)).andRespond(withStatus(status));
+        server
+            .expect(requestTo(userInfoUri))
+            .andRespond(withSuccess("{\"authorities\":[\"auth1\"]}", MediaType.APPLICATION_JSON));
 
-      val expctedAuthorities =
-          List.of(
-              new SimpleGrantedAuthority(authority1),
-              new SimpleGrantedAuthority(authority2),
-              new SimpleGrantedAuthority(authority3));
+        Assertions.assertThat(retriever.loadAuthorities(jwt)).isEmpty();
+        Assertions.assertThat(retriever.loadAuthorities(jwt))
+            .containsExactly(new SimpleGrantedAuthority("auth1"));
+        server.verify();
+      }
 
-      val authorities = unitUnderTest.loadAuthorities(jwt);
+      @Test
+      void should_fetchAuthoritiesAgain_when_userInfoReturnsEmptyBody() {
+        Assertions.assertThat(UserInfoAuthoritiesRetriever.class.desiredAssertionStatus()).isTrue();
+        setupHttpClient();
+        server.expect(requestTo(userInfoUri)).andRespond(withSuccess());
+        server
+            .expect(requestTo(userInfoUri))
+            .andRespond(withSuccess("{\"authorities\":[\"auth1\"]}", MediaType.APPLICATION_JSON));
 
-      Assertions.assertThat(authorities).hasSize(claimAuthorityValues.length);
-      Assertions.assertThat(authorities).containsAll(expctedAuthorities);
+        Assertions.assertThat(retriever.loadAuthorities(jwt)).isEmpty();
+        Assertions.assertThat(retriever.loadAuthorities(jwt))
+            .containsExactly(new SimpleGrantedAuthority("auth1"));
+        Assertions.assertThat(retriever.loadAuthorities(jwt))
+            .containsExactly(new SimpleGrantedAuthority("auth1"));
+        server.verify();
+      }
     }
-
-    @Test
-    void should_returnEmptyList_when_givenAsUnhandledDataStructure() {
-      val jwtTokenValue = "myTokenValue";
-
-      val claimAuthorityValues = "list;of;claims;as;CSV;that;is;not;supported";
-
-      val responseEntityBody = new HashMap<String, Object>();
-      responseEntityBody.put(RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES, claimAuthorityValues);
-
-      Mockito.when(jwt.getSubject()).thenReturn("subject");
-      Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
-      mockUserInfoResponse(responseEntityBody);
-
-      val authorities = unitUnderTest.loadAuthorities(jwt);
-
-      Assertions.assertThat(authorities).isEmpty();
-    }
-
-    @Test
-    void should_returnEmptyList_when_noAuthoritiesFound() {
-      val jwtTokenValue = "myTokenValue";
-
-      val responseEntityBody = new HashMap<String, Object>();
-
-      Mockito.when(jwt.getSubject()).thenReturn("subject");
-      Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
-      mockUserInfoResponse(responseEntityBody);
-
-      val authorities = unitUnderTest.loadAuthorities(jwt);
-
-      Assertions.assertThat(authorities).isEmpty();
-    }
-
-    @Test
-    void should_returnEmptyList_when_errorThrownWhileLoadingViaClient() {
-      val jwtTokenValue = "myTokenValue";
-
-      Mockito.when(jwt.getSubject()).thenReturn("subject");
-      Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
-      Mockito.when(responseSpec.body(Map.class)).thenThrow(new RuntimeException("sth happend"));
-
-      val authorities = unitUnderTest.loadAuthorities(jwt);
-
-      Assertions.assertThat(authorities).isEmpty();
-    }
-
-    @Test
-    void should_loadAuthoritiesFromCache_when_givenValidJwtToken() {
-      val jwtSubject = "subject";
-      val jwtTokenValue = "myTokenValue";
-      val jwtForCachMethodCall = Mockito.mock(Jwt.class);
-
-      val authority1 = "auth1";
-      val authority2 = "auth2";
-      val authority3 = "auth3";
-      val claimAuthorityValues = List.of(authority1, authority2, authority3);
-
-      val responseEntityBody = new HashMap<String, Object>();
-      responseEntityBody.put(RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES, claimAuthorityValues);
-
-      Mockito.when(jwt.getSubject()).thenReturn(jwtSubject);
-      Mockito.when(jwtForCachMethodCall.getSubject()).thenReturn(jwtSubject);
-      Mockito.when(jwt.getTokenValue()).thenReturn(jwtTokenValue);
-      mockUserInfoResponse(responseEntityBody);
-
-      val expectedAuthorities =
-          List.of(
-              new SimpleGrantedAuthority(authority1),
-              new SimpleGrantedAuthority(authority2),
-              new SimpleGrantedAuthority(authority3));
-
-      val authorities = unitUnderTest.loadAuthorities(jwt);
-
-      val authoritiesThatShouldComeFromCache = unitUnderTest.loadAuthorities(jwtForCachMethodCall);
-
-      Assertions.assertThat(authorities).hasSize(claimAuthorityValues.size());
-      Assertions.assertThat(authorities).containsAll(expectedAuthorities);
-      Assertions.assertThat(authoritiesThatShouldComeFromCache).isSameAs(authorities);
-
-      Mockito.verify(restClient, Mockito.times(1)).get();
-      Mockito.verify(requestSpec).uri(userInfoUri);
-      Mockito.verify(requestSpec).header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtTokenValue);
-    }
-  }
-
-  private void setupHttpClient() {
-    val builder = RestClient.builder();
-    server = MockRestServiceServer.bindTo(builder).build();
-    retriever = new UserInfoAuthoritiesRetriever(userInfoUri, builder.build());
-    Mockito.when(jwt.getSubject()).thenReturn("subject");
-    Mockito.when(jwt.getTokenValue()).thenReturn("myTokenValue");
-  }
-
-  @Test
-  void should_sendBearerTokenAndLoadAuthorities_when_userInfoIsRequested() {
-    setupHttpClient();
-    server
-        .expect(requestTo(userInfoUri))
-        .andExpect(method(HttpMethod.GET))
-        .andExpect(header(HttpHeaders.AUTHORIZATION, "Bearer myTokenValue"))
-        .andRespond(
-            withSuccess("{\"authorities\":[\"auth1\",\"auth2\"]}", MediaType.APPLICATION_JSON));
-
-    Assertions.assertThat(retriever.loadAuthorities(jwt))
-        .containsExactly(new SimpleGrantedAuthority("auth1"), new SimpleGrantedAuthority("auth2"));
-    server.verify();
-  }
-
-  @ParameterizedTest
-  @EnumSource(
-      value = HttpStatus.class,
-      names = {"UNAUTHORIZED", "INTERNAL_SERVER_ERROR"})
-  void should_fetchAuthoritiesAgain_when_previousUserInfoRequestFailed(HttpStatus status) {
-    setupHttpClient();
-    server.expect(requestTo(userInfoUri)).andRespond(withStatus(status));
-    server
-        .expect(requestTo(userInfoUri))
-        .andRespond(withSuccess("{\"authorities\":[\"auth1\"]}", MediaType.APPLICATION_JSON));
-
-    Assertions.assertThat(retriever.loadAuthorities(jwt)).isEmpty();
-    Assertions.assertThat(retriever.loadAuthorities(jwt))
-        .containsExactly(new SimpleGrantedAuthority("auth1"));
-    server.verify();
-  }
-
-  @Test
-  void should_fetchAuthoritiesAgain_when_userInfoReturnsEmptyBody() {
-    Assertions.assertThat(UserInfoAuthoritiesRetriever.class.desiredAssertionStatus()).isTrue();
-    setupHttpClient();
-    server.expect(requestTo(userInfoUri)).andRespond(withSuccess());
-    server
-        .expect(requestTo(userInfoUri))
-        .andRespond(withSuccess("{\"authorities\":[\"auth1\"]}", MediaType.APPLICATION_JSON));
-
-    Assertions.assertThat(retriever.loadAuthorities(jwt)).isEmpty();
-    Assertions.assertThat(retriever.loadAuthorities(jwt))
-        .containsExactly(new SimpleGrantedAuthority("auth1"));
-    Assertions.assertThat(retriever.loadAuthorities(jwt))
-        .containsExactly(new SimpleGrantedAuthority("auth1"));
-    server.verify();
   }
 
   private void mockUserInfoResponse(Map<String, Object> responseBody) {

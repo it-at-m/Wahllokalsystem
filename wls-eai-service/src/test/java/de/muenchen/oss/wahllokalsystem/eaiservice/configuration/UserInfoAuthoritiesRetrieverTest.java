@@ -44,6 +44,9 @@ class UserInfoAuthoritiesRetrieverTest {
 
   @Mock Jwt jwt;
 
+  MockRestServiceServer server;
+  UserInfoAuthoritiesRetriever retriever;
+
   String userInfoUri = "http://localhost:8080/userinfo";
 
   UserInfoAuthoritiesRetriever unitUnderTest;
@@ -203,9 +206,6 @@ class UserInfoAuthoritiesRetrieverTest {
     }
   }
 
-  MockRestServiceServer server;
-  UserInfoAuthoritiesRetriever retriever;
-
   private void setupHttpClient() {
     val builder = RestClient.builder();
     server = MockRestServiceServer.bindTo(builder).build();
@@ -215,7 +215,7 @@ class UserInfoAuthoritiesRetrieverTest {
   }
 
   @Test
-  void should_sendBearerTokenAndLoadAuthorities_when_userInfoResponds() {
+  void should_sendBearerTokenAndLoadAuthorities_when_userInfoIsRequested() {
     setupHttpClient();
     server
         .expect(requestTo(userInfoUri))
@@ -233,7 +233,7 @@ class UserInfoAuthoritiesRetrieverTest {
   @EnumSource(
       value = HttpStatus.class,
       names = {"UNAUTHORIZED", "INTERNAL_SERVER_ERROR"})
-  void should_retryWithoutAuthorities_when_userInfoReturnsError(HttpStatus status) {
+  void should_fetchAuthoritiesAgain_when_previousUserInfoRequestFailed(HttpStatus status) {
     setupHttpClient();
     server.expect(requestTo(userInfoUri)).andRespond(withStatus(status));
     server
@@ -247,7 +247,7 @@ class UserInfoAuthoritiesRetrieverTest {
   }
 
   @Test
-  void should_retryWithoutAuthorities_when_userInfoReturnsEmptyBody() {
+  void should_fetchAuthoritiesAgain_when_userInfoReturnsEmptyBody() {
     Assertions.assertThat(UserInfoAuthoritiesRetriever.class.desiredAssertionStatus()).isTrue();
     setupHttpClient();
     server.expect(requestTo(userInfoUri)).andRespond(withSuccess());

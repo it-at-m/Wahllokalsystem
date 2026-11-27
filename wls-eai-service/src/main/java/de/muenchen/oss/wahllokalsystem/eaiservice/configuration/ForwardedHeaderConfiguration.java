@@ -16,7 +16,7 @@ public class ForwardedHeaderConfiguration {
 
   @Bean
   public FilterRegistrationBean<ForwardedHeaderFilter> forwardedHeaderFilter(
-      @Value("${wls.forwarded.use-standard-header:false}") boolean useStandardHeader) {
+      @Value("${service.config.forwarded.use-standard-header:false}") boolean useStandardHeader) {
     final FilterRegistrationBean<ForwardedHeaderFilter> registration =
         new FilterRegistrationBean<>();
     final ForwardedHeaderFilter filter = new ForwardedHeaderFilter(useStandardHeader);

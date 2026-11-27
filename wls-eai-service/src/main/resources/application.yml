@@ -44,12 +44,11 @@ security:
 service:
   info:
     oid: EAI-SERVICE
-
-wls:
-  forwarded:
-    # Set to true if the trusted proxy uses RFC 7239 Forwarded instead of X-Forwarded-*.
-    # The proxy must remove externally supplied Forwarded and X-Forwarded-* headers.
-    use-standard-header: false
+  config.:
+    forwarded:
+      # Set to true if the trusted proxy uses RFC 7239 Forwarded instead of X-Forwarded-*.
+      # The proxy must remove externally supplied Forwarded and X-Forwarded-* headers.
+      use-standard-header: false
 
 server:
   shutdown: "graceful"

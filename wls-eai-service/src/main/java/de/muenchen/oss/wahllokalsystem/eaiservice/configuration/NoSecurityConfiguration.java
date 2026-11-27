@@ -4,7 +4,6 @@
  */
 package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
 
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -21,7 +20,7 @@ import org.springframework.security.web.servlet.util.matcher.PathPatternRequestM
 public class NoSecurityConfiguration {
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http) {
     // @formatter:off
     http.headers(
             customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
@@ -29,8 +28,6 @@ public class NoSecurityConfiguration {
             requests ->
                 requests
                     .requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/**"))
-                    .permitAll()
-                    .requestMatchers(PathRequest.toH2Console())
                     .permitAll()
                     .anyRequest()
                     .permitAll())

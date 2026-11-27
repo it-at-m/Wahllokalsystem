@@ -4,23 +4,24 @@
  */
 package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
-/**
- * This class provides the {@link ForwardedHeaderFilter} to handle the headers of type "Forwarded"
- * and "X-Forwarded-*".
- */
+/** Configures the {@link ForwardedHeaderFilter} for the header format used by the trusted proxy. */
 @Configuration
 public class ForwardedHeaderConfiguration {
 
   @Bean
-  public FilterRegistrationBean<ForwardedHeaderFilter> forwardedHeaderFilter() {
+  public FilterRegistrationBean<ForwardedHeaderFilter> forwardedHeaderFilter(
+      @Value("${service.config.forwarded.use-standard-header:false}") boolean useStandardHeader) {
     final FilterRegistrationBean<ForwardedHeaderFilter> registration =
         new FilterRegistrationBean<>();
-    registration.setFilter(new ForwardedHeaderFilter());
+    final ForwardedHeaderFilter filter = new ForwardedHeaderFilter(useStandardHeader);
+    filter.setUseForwardedPrefix(true);
+    registration.setFilter(filter);
     registration.addUrlPatterns("/*");
     return registration;
   }

@@ -5,13 +5,9 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.security.filter.UserMdcFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,23 +15,21 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.web.client.RestClient;
 
 /** The central class for configuration of all security aspects. */
 @Configuration
 @Profile("!no-security")
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
-@Import(RestTemplateAutoConfiguration.class)
 public class SecurityConfiguration {
-
-  @Autowired private RestTemplateBuilder restTemplateBuilder;
 
   @Value("${security.oauth2.resource.user-info-uri}")
   private String userInfoUri;
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http, UserMdcFilter userMdcFilter)
-      throws Exception {
+  public SecurityFilterChain filterChain(
+      HttpSecurity http, UserMdcFilter userMdcFilter, RestClient.Builder restClientBuilder) {
     http.authorizeHttpRequests(
             (requests) ->
                 requests
@@ -63,7 +57,7 @@ public class SecurityConfiguration {
                         jwtConfigurer.jwtAuthenticationConverter(
                             new JwtUserInfoAuthenticationConverter(
                                 new UserInfoAuthoritiesRetriever(
-                                    userInfoUri, restTemplateBuilder)))));
+                                    userInfoUri, restClientBuilder.build())))));
 
     http.addFilterAfter(userMdcFilter, BearerTokenAuthenticationFilter.class);
 

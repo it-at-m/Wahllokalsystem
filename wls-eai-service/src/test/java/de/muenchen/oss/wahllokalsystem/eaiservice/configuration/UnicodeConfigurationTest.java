@@ -18,16 +18,16 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.Ergeb
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.MeldungsartDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.UngueltigeStimmzettelDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.WahlbriefeWerteDTO;
-import java.net.URI;
 import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.client.RestTestClient;
 
 @SpringBootTest(
     classes = {MicroServiceApplication.class},
@@ -36,6 +36,7 @@ import org.springframework.test.context.ActiveProfiles;
       "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
       "refarch.gracefulshutdown.pre-wait-seconds=0"
     })
+@AutoConfigureRestTestClient
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 class UnicodeConfigurationTest {
 
@@ -47,7 +48,7 @@ class UnicodeConfigurationTest {
   /** Composed string: String "Ä-é" represented with unicode letters "Ä-é". */
   private static final String TEXT_ATTRIBUTE_COMPOSED = "\u00c4-\u00e9";
 
-  @Autowired private TestRestTemplate testRestTemplate;
+  @Autowired private RestTestClient restTestClient;
 
   @Autowired private ErgebnismeldungRepository ergebnismeldungRepository;
 
@@ -65,7 +66,13 @@ class UnicodeConfigurationTest {
         .isEqualTo(ergebnisMeldungDto.wahlbezirkID().length());
 
     // store Ergebnismeldung
-    testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), ergebnisMeldungDto, Void.class);
+    restTestClient
+        .post()
+        .uri(ENTITY_ENDPOINT_URL)
+        .body(ergebnisMeldungDto)
+        .exchange()
+        .expectStatus()
+        .isOk();
 
     // Check persisted entity contains a composed string via JPA repository.
     final Ergebnismeldung ergebnismeldung = ergebnismeldungRepository.findAll().iterator().next();

@@ -5,18 +5,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.eaiservice.Authorities;
 import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlbeteiligung.Wahlbeteiligung;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlbeteiligung.WahlbeteiligungRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlbeteiligung.dto.WahlbeteiligungsMeldungDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlbeteiligung.WahlbeteiligungMapper;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlbeteiligung.WahlbeteiligungValidator;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -25,9 +21,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -35,14 +30,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class WahlbeteiligungControllerIntegrationTest {
-
-  @Value("${service.info.oid}")
-  String serviceInfoOid;
 
   @Autowired MockMvc api;
 
@@ -50,13 +43,7 @@ public class WahlbeteiligungControllerIntegrationTest {
 
   @Autowired WahlbeteiligungRepository wahlbeteiligungRepository;
 
-  @Autowired WahlbeteiligungMapper wahlbeteiligungMapper;
-
   @MockitoSpyBean WahlbeteiligungValidator wahlbeteiligungValidator;
-
-  @Autowired ExceptionFactory exceptionFactory;
-
-  @Autowired EntityManager entityManager;
 
   @AfterEach
   void teardown() {
